@@ -175,13 +175,15 @@ $LIST(<0:F77>)
 
 $LIST(<1:executable_program>)
 
+	{
 	$LIST(<1:executable_program>) = SXML_CONCAT ("TTTLT",
 		"{\n",
 		SXML_QUOTE("main"),
 		":\n{\n",
 		$LIST(<2:main_program>),
 		"\n}\n}");
-
+	}
+	
 *------------------------------------------------------------------------------
 
 <1:executable_program>
@@ -189,12 +191,14 @@ $LIST(<1:executable_program>)
 
 $LIST(<1:executable_program>)
 
+	{
 	$LIST(<1:executable_program>) = SXML_CONCAT ("TTTTT",
 		"{\n",
 		SXML_QUOTE("function"),
 		":\n",
 		TODO (1),
 		"\n}");
+	}
 
 *------------------------------------------------------------------------------
 
@@ -203,12 +207,14 @@ $LIST(<1:executable_program>)
 
 $LIST(<1:executable_program>)
 
+	{
 	$LIST(<1:executable_program>) = SXML_CONCAT ("TTTTT",
 		"{\n",
 		SXML_QUOTE("subroutine"),
 		":\n",
 		TODO (2),
 		"\n}");
+	}
 
 *------------------------------------------------------------------------------
 
@@ -217,12 +223,15 @@ $LIST(<1:executable_program>)
 
 $LIST(<1:executable_program>)
 
+	{
 	$LIST(<1:executable_program>) = SXML_CONCAT ("TTTTT",
 		"{\n",
 		SXML_QUOTE("blockdata"),
 		":\n",
 		TODO (3),
 		"\n}");
+	}
+
 
 *******************************************************************************
 
@@ -232,10 +241,13 @@ $LIST(<1:executable_program>)
 
 $LIST(<1a:executable_program_list>)
 
+	{
 	$LIST(<1a:executable_program_list>) = SXML_CONCAT ("LTL",
 		$LIST(<1a:executable_program_list>'),
 		",\n",
 		$LIST(<1:executable_program>));
+	}
+
 
 *------------------------------------------------------------------------------
 
@@ -244,7 +256,9 @@ $LIST(<1a:executable_program_list>)
 
 $LIST(<1a:executable_program_list>)
 
+	{
 	$LIST(<1a:executable_program_list>) = SXML_L ($LIST(<1:executable_program>));
+	}
 
 *******************************************************************************
 
@@ -256,9 +270,12 @@ $LIST(<1a:executable_program_list>)
 
 $LIST(<2:main_program>)
 
+	{
 	$LIST(<2:main_program>) = SXML_LL (
 		$LIST(<8:program_statement>),
 		$LIST(<2a:end_statement>));
+	}
+
 
 *------------------------------------------------------------------------------
 
@@ -267,11 +284,14 @@ $LIST(<2:main_program>)
 
 $LIST(<2:main_program>)
 
+	{
 	$LIST(<2:main_program>) = SXML_CONCAT ("TTLL",
 		SXML_QUOTE("name"),
 		":null,\n",
 		LOCATION (0),
 		$LIST(<2a:end_statement>));
+	}
+
 
 *------------------------------------------------------------------------------
 
@@ -282,9 +302,12 @@ $LIST(<2:main_program>)
 
 $LIST(<2:main_program>)
 
+	{
 	$LIST(<2:main_program>) = SXML_LL (
 		$LIST(<8:program_statement>),
 		$LIST(<2a:end_statement>));
+	}
+
 
 *------------------------------------------------------------------------------
 
@@ -294,11 +317,14 @@ $LIST(<2:main_program>)
 
 $LIST(<2:main_program>)
 
+	{
 	$LIST(<2:main_program>) = SXML_CONCAT ("TTLL",
 		SXML_QUOTE("name"),
 		":null,\n",
 		LOCATION (0),
 		$LIST(<2a:end_statement>));
+	}
+
 
 *******************************************************************************
 
@@ -310,9 +336,12 @@ $LIST(<2:main_program>)
 
 $LIST(<2a:end_statement>)
 
+	{
 	$LIST(<2a:end_statement>) = SXML_TL (
 		",\n",
 		ENDING_LOCATION (0, "END"));
+	}
+
 
 *------------------------------------------------------------------------------
 
@@ -321,9 +350,12 @@ $LIST(<2a:end_statement>)
 
 $LIST(<2a:end_statement>)
 
+	{
 	$LIST(<2a:end_statement>) = SXML_TL (
 		",\n",
 		ENDING_LOCATION (0, "END"));
+	}
+
 
 *******************************************************************************
 
@@ -575,12 +607,15 @@ $LIST(<2a:end_statement>)
 
 $LIST(<8:program_statement>)
 
+	{
 	$LIST(<8:program_statement>) = SXML_CONCAT ("TTTTL",
 		SXML_QUOTE("name"),
 		":",
 		SXML_QUOTE($NAME(<99:symbolic_name>)),
 		",\n",
 		LOCATION (0));
+	}
+
 
 *******************************************************************************
 
