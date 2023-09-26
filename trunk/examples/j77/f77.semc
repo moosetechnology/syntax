@@ -45,7 +45,7 @@ SXBOOLEAN pclose_needed;
 
 #define TODO(N) "{\"TODO-" #N "\":null}"
 
-#define LOCATION(N) SXML_TTTTTTT ( \
+#define LOCATION(N) SXML_CONCAT ("TTTTTTT", \
 		"\"file\":\"", \
 		sxcurrent_parsed_file_name (N), \
 		"\",\n\"line\":\"", \
@@ -54,7 +54,7 @@ SXBOOLEAN pclose_needed;
 		SXML_UINT (sxcurrent_parsed_column (N)), \
 		"\"")
 
-#define ENDING_LOCATION(N,STRING) SXML_TTTTTTT ( \
+#define ENDING_LOCATION(N,STRING) SXML_CONCAT ("TTTTTTT", \
 		"\"ending-file\":\"", \
 		sxcurrent_parsed_file_name (N), \
 		"\",\n\"ending-line\":\"", \
@@ -119,7 +119,7 @@ $
 $LIST(<0:F77>)
 
 	{
-	$LIST(<0:F77>) = SXML_TLT (
+	$LIST(<0:F77>) = SXML_CONCAT ("TLT",
 		"\n\"program_units\":\n[\n",
 		$LIST(<1a:executable_program_list>),
 		"\n]");
@@ -165,7 +165,7 @@ $LIST(<0:F77>)
 
 $LIST(<1:executable_program>)
 
-	$LIST(<1:executable_program>) = SXML_TLT (
+	$LIST(<1:executable_program>) = SXML_CONCAT ("TLT",
 		"{\n\"main\":\n{\n",
 		$LIST(<2:main_program>),
 		"\n}\n}");
@@ -177,7 +177,7 @@ $LIST(<1:executable_program>)
 
 $LIST(<1:executable_program>)
 
-	$LIST(<1:executable_program>) = SXML_TTT (
+	$LIST(<1:executable_program>) = SXML_CONCAT ("TTT",
 		"{\n\"function\":\n",
 		TODO (1),
 		"\n}");
@@ -189,7 +189,7 @@ $LIST(<1:executable_program>)
 
 $LIST(<1:executable_program>)
 
-	$LIST(<1:executable_program>) = SXML_TTT (
+	$LIST(<1:executable_program>) = SXML_CONCAT ("TTT",
 		"{\n\"subroutine\":\n",
 		TODO (2),
 		"\n}");
@@ -201,7 +201,7 @@ $LIST(<1:executable_program>)
 
 $LIST(<1:executable_program>)
 
-	$LIST(<1:executable_program>) = SXML_TTT (
+	$LIST(<1:executable_program>) = SXML_CONCAT ("TTT",
 		"{\n\"blockdata\":\n",
 		TODO (3),
 		"\n}");
@@ -214,7 +214,7 @@ $LIST(<1:executable_program>)
 
 $LIST(<1a:executable_program_list>)
 
-	$LIST(<1a:executable_program_list>) = SXML_LTL (
+	$LIST(<1a:executable_program_list>) = SXML_CONCAT ("LTL",
 		$LIST(<1a:executable_program_list>'),
 		",\n",
 		$LIST(<1:executable_program>));
@@ -249,7 +249,7 @@ $LIST(<2:main_program>)
 
 $LIST(<2:main_program>)
 
-	$LIST(<2:main_program>) = SXML_TLL (
+	$LIST(<2:main_program>) = SXML_CONCAT ("TLL",
 		"\"name\":null,\n",
 		LOCATION (0),
 		$LIST(<2a:end_statement>));
@@ -275,7 +275,7 @@ $LIST(<2:main_program>)
 
 $LIST(<2:main_program>)
 
-	$LIST(<2:main_program>) = SXML_TLL (
+	$LIST(<2:main_program>) = SXML_CONCAT ("TLL",
 		"\"name\":null,\n",
 		LOCATION (0),
 		$LIST(<2a:end_statement>));
@@ -555,7 +555,7 @@ $LIST(<2a:end_statement>)
 
 $LIST(<8:program_statement>)
 
-	$LIST(<8:program_statement>) = SXML_TTTL (
+	$LIST(<8:program_statement>) = SXML_CONCAT ("TTTL",
 		"\"name\":\"",
 		$NAME(<99:symbolic_name>),
 		"\",\n",
