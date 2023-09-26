@@ -1,0 +1,71 @@
+.\" @(#)sxincl_mngr.3	- SYNTAX [unix] - 22 Septembre 1988
+.TH SXINCL_MNGR 3 "SYNTAX\*R"
+.SH NAME
+sxincl_mngr,
+sxpush_incl,
+sxpop_incl
+\- include manager for SYNTAX.
+.SH SYNOPSIS
+.nf
+.ta \w'\s-2VOID\s0  'u +\w'\s-2VOID\s0  'u
+.PP
+.B
+\s-2VOID\s0 sxincl_mngr (what)
+.B
+	int	 what\|;
+.PP
+.B
+\s-2BOOLEAN\s0 sxpush_incl (pathname)
+.B
+	char	*pathname\|;
+.PP
+.B
+\s-2BOOLEAN\s0 sxpop_incl ()
+.fi
+.SH DESCRIPTION
+The
+.B include manager
+module provides the user with a set of functions which may help his
+handling of the include mechanism.
+These functions must be called by the user actions of the lexical level.
+.LP
+.I sxincl_mngr
+is the first and last entry point of the module to be called for
+initialization and finalization.
+It has a single argument whose values must be
+.IR \s-2OPEN\s0 ,
+.IR \s-2INIT\s0 ,
+.IR \s-2FINAL\s0
+or
+.IR \s-2CLOSE\s0.
+.PP
+.I sxpush_incl
+must be call at the beginning of each include file.
+It stores the current value of the structure sxsrcmngr (see
+.BR sxsrc_mngr (3)
+) and opens a new input (include) file whose name is
+.I pathname
+and returns 
+.B TRUE
+on success\|; otherwise, it returns
+.B FALSE
+if the include file
+.I pathname
+cannot be opened or if it is a recursive call.
+.PP
+.I sxpop_incl
+must be call at the end of each include file.
+It closes the file and restores the context of its caller.
+Returns
+.B TRUE
+on success and
+.B FALSE
+otherwise (cannot close the include file or there is no caller).
+.SH "SEE ALSO"
+sxunix(3),
+sxscanner(3)
+and the \fISYNTAX Reference Manual\fP.
+.\" Local Variables:
+.\" mode: nroff
+.\" version-control: yes
+.\" End:

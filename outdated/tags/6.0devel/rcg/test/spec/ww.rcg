@@ -1,0 +1,12 @@
+%
+% L = {ww | w \in {a,b,c}*}
+% Temps d'analyse lineaire
+%
+
+% \_ est ANY, ca permet de faire de la reconnaissance/generation.
+% Par exemple, le texte "a_b___" est reconnu si les tables sont compilees avec l'option -DANY=1 (1 est le t_code de \_)
+% Et une procedure speciale permet de generer tous les bons textes verifiant ce modele
+S(\_\a\b\c)	--> &False() . 
+S(X Y)		--> &StrEq(X,Y) A(X) .
+A(X T)		--> &StrLen(1,T) A(X) .
+A()		--> .

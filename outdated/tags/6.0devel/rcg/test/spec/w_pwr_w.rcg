@@ -1,0 +1,36 @@
+%
+% L = {w^|w| | w \in T^*}
+%
+% Temps d'analyse lineaire (theorique et pratique)
+% La verif que x = w^|w| est ds L avec |w| = 520 (|x| = 270400) prend 1s sur ma SS10
+% La verif que x avec xa = w^|w| n'est pas ds L avec |w| = 520 (|x| = 270399) prend aussi 1s
+%
+% Doit etre compile avec l'option -increase_order
+%
+% Definit les predicats externes &XYgeqZ et &w_pwr_w
+% &XYgeqZ(X, Y, Z) <==> |X|*|Y| >= |Z|
+% &w_pwr_w(X, Y) <==> Y = X^|X|
+%
+
+
+S(\a\b\c)			--> &False() . % sert uniquement a definir l'ensemble T
+S(X Y)				--> !&StrLen(0, X) &XYgeqZ(X, X, X Y) &Cut(X) check_len(X, X, X Y) &w_pwr_w(X, X Y) .
+S()				--> .
+
+
+% We assume that |Y| <= |X|
+&XYgeqZ(X, Y, Z)		--> !&StrLen(0,Y) !&StrLen(0,Z) XYgeqZbody(X, Y, Z).
+&XYgeqZ(X, Y, )			--> . % |X|*|Y| >= 0
+
+% 0<|Y|<=|X| et 0<|Z|
+XYgeqZbody(X, Y1 Y2, Z1 Z2)	--> !&StrLen(0,Y1) &StrLen(1, Y2) &StrEqLen(X, Z2) !&StrLen(0,Z1)
+				    XYgeqZbody(X, Y1, Z1) . 
+XYgeqZbody(X1 X2, Y, Z)		--> &StrEqLen (X1, Z) . % |Z| <= |X|
+
+check_len(X, Y1 Y2, Z1 Z2)	--> &StrLen(1, Y2) &StrEqLen(X, Z2) check_len(X, Y1, Z1) .
+check_len(X, , )		--> .
+
+&w_pwr_w(X, Y) 			--> check_str(X, X, Y) .
+
+check_str(X, Y1 Y2, Z1 Z2)	--> &StrLen(1, Y2) &StrEq(X, Z2) check_str(X, Y1, Z1) .
+check_str(X, , )		--> .

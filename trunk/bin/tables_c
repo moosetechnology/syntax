@@ -1,0 +1,58 @@
+#! /bin/sh
+
+ME=`realpath -s "$0" 2> /dev/null`
+if [ $? != 0 ]
+then
+	# the "realpath" command does not exist (macOS version < 13)
+	DIR=`dirname "$0"`
+	BASE=`basename "$0"`
+	ME=`( cd "$DIR" ; pwd -P )`/"$BASE"
+fi
+
+case "$ME" in
+	*/examples/* )
+		SX=`echo "$ME" | sed -e 's+/examples/.*++'`
+		EXAMPLE=1
+		;;
+	*/bin/* )
+		SX=`echo "$ME" | sed -e 's+/bin/.*++'`
+		EXAMPLE=0
+		;;
+	*/bin.*/* )
+		SX=`echo "$ME" | sed -e 's+/bin[.].*/.*++'`
+		EXAMPLE=0
+		;;
+	* )
+		echo "$0: unexpected wrapper location"
+		exit 1
+esac
+	
+ARCH=`$SX/etc/bin/arch`
+
+if [ "$MALLOC_DEBUG" = "1" -a "$ARCH" = "mac64" ]
+then
+	. $SX/etc/scribble/malloc_options
+fi
+
+# target architecture in case of cross compilation
+TARGET_ARCH=`dirname "$ME" | sed -e 's+.*/bin++' | sed -e 's+^[.]++'`
+
+if [ $EXAMPLE = 1 ]
+then
+	# ME is located in "*/examples/*/bin" : provisory action
+	ME="$ME.out"
+elif [ "$TARGET_ARCH" = "$ARCH" ]
+then
+	# $ME is located in "*/bin.$ARCH": native compilation
+	ME="$ME.out"
+elif [ "$TARGET_ARCH" = "" ]
+then
+	# $ME is located in "*/bin": native compilation
+	ME=`echo "$ME.out" | sed -e "s+/bin/+/bin.$ARCH/+"`
+else
+	# $ME is located in "*/bin.$TARGET_ARCH": cross compilation
+	ME=`echo "$ME.out" | sed -e "s+/bin.$TARGET_ARCH/+/bin.$ARCH/+"`
+fi 
+
+exec ${VALGRIND:-} "$ME" "$@"
+

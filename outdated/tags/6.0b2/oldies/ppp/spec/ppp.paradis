@@ -1,0 +1,428 @@
+**********************************************************
+*							 *
+*							 *
+* Copyright (c) 1985 by Institut National de Recherche	 *
+*		     en Informatique et en Automatique.	 *
+*							 *
+*							 *
+**********************************************************
+
+
+**********************************************************
+*							 *
+*      Produit de l'equipe Langages et Traducteurs.	 *
+*							 *
+**********************************************************
+
+
+
+
+*********************************************************************************
+*										*
+*		A SPECIFICATION OF PRETTY-PRINTING FOR PASCAL-SMX		*
+*										*
+*********************************************************************************
+
+
+*********************************************************************************
+*										*
+*			  Author: Philippe Deschamp				*
+*										*
+*********************************************************************************
+*
+*********************************************************************************
+*										*
+*				 THE PROGRAM					*
+*										*
+*********************************************************************************
+<AXIOME>		= <PASCAL-SMX>						~~ ;
+<PASCAL-SMX>		= <PASCAL>						~~ ;
+<PASCAL-SMX>		= <PRE_PRO>						~~
+			  <PASCAL-SMX>						~~ ;
+<PRE_PRO>		= ~COL (1)~  %PRE_PRO  ~MARGIN~ ~INH~			~~ ;
+<PASCAL>		= module  <ID> <EXTERNALS> ";"				~~
+			      <DECL_LIST>					~~
+			      .							~
+	  COL(1)~	  ;
+<PASCAL>		= program  <ID> <EXTERNALS> ";"				~~
+			      <BLOCK> .						~
+	  COL(1)~	  ;
+<EXTERNALS>		=							~~ ;
+<EXTERNALS>		=  ( <ID_LIST> )					~~ ;
+*
+*********************************************************************************
+*										*
+*		      IDENTIFIERS AND IDENTIFIERS LISTS				*
+*										*
+*********************************************************************************
+<ID>			= %ID							~~ ;
+<ID>			= otherwise						~~ ;
+<ID>			= string						~~ ;
+<ID_LIST>		= <ID>							~~ ;
+<ID_LIST>		= <ID_LIST> ,  <ID>					~~ ;
+*
+*********************************************************************************
+*										*
+*				    BLOCKS					*
+*										*
+*********************************************************************************
+<BLOCK>			= <ID>							~~ ;
+<BLOCK>			= <DECL_LIST>
+			  <STMT_PART>						~~ ;
+*
+<DECL_LIST>		= ~INH~							~~ ;
+<DECL_LIST>		= <DECL_LIST>
+			  <DECL>						~~ ;
+<DECL>			= <LABEL_PART>						~~ ;
+<DECL>			= <CONST_PART>						~~ ;
+<DECL>			= <TYPE_PART>						~~ ;
+<DECL>			= <VAR_PART>						~~ ;
+<DECL>			= <PROC_PART>						~~ ;
+<DECL>			= <EXPORT_PART>						~~ ;
+<DECL>			= <IMPORT_PART>						~~ ;
+<DECL>			= ~SKIP (3)~ $private					~~ ;
+*
+<EXPORT_PART>		= ~COL (1)
+		    ~ export
+			  <VAR_DECL_LIST>					~~ ;
+<IMPORT_PART>		= ~COL (1)
+		    ~ import
+			  <VAR_DECL_LIST>					~~ ;
+*
+*********************************************************************************
+*										*
+*			      LABELS DECLARATIONS				*
+*										*
+*********************************************************************************
+<LABEL_PART>		= label
+			      <LABEL_LIST> ";"					~~ ;
+<LABEL_LIST>		= <LABEL>						~~ ;
+<LABEL_LIST>		= <LABEL_LIST> ,
+			  <LABEL>						~~ ;
+<LABEL>			= %NATUREL						~~ ;
+*
+*********************************************************************************
+*										*
+*			    CONSTANTS DECLARATIONS				*
+*										*
+*********************************************************************************
+<CONST_PART>		= const
+			      <CONST_DECL_LIST>					~~ ;
+<CONST_DECL_LIST>	= <CONST_DECL>						~~ ;
+<CONST_DECL_LIST>	= <CONST_DECL_LIST>
+			  <CONST_DECL>						~~ ;
+<CONST_DECL>		= <ID> ~TAB~  =	 <CONSTANT> ";"				~~ ;
+<CONST_DECL>		= <PRE_PRO>						~~ ;
+*
+*********************************************************************************
+*										*
+*				  CONSTANTS					*
+*										*
+*********************************************************************************
+<CONSTANT>		= <SIGN> <UNSIGNED_NUMBER>				~~ ;
+<CONSTANT>		= <UNSIGNED_NUMBER>					~~ ;
+<CONSTANT>		= <SIGN> <ID>						~~ ;
+<CONSTANT>		= <ID>							~~ ;
+<CONSTANT>		= <STRING>						~~ ;
+<UNSIGNED_NUMBER>	= %NATUREL						~~ ;
+<UNSIGNED_NUMBER>	= %REEL							~~ ;
+<SIGN>			= +							~~ ;
+<SIGN>			= -							~~ ;
+<STRING>		= %STRING						~~ ;
+*
+*********************************************************************************
+*										*
+*			      TYPES DECLARATIONS				*
+*										*
+*********************************************************************************
+<TYPE_PART>		= type
+			      <TYPE_DECL_LIST>					~~ ;
+<TYPE_DECL_LIST>	= <TYPE_DECL>						~~ ;
+<TYPE_DECL_LIST>	= <TYPE_DECL_LIST>
+			  <TYPE_DECL>						~~ ;
+<TYPE_DECL>		= <ID> ~TAB~  =	 <TYPE> ";"				~~ ;
+<TYPE_DECL>		= <PRE_PRO>						~~ ;
+*
+*********************************************************************************
+*										*
+*				    TYPES					*
+*										*
+*********************************************************************************
+<TYPE>			= <SIMPLE_TYPE>						~~ ;
+<TYPE>			= <STRUCT_TYPE>						~~ ;
+<TYPE>			= <POINTER_TYPE>					~~ ;
+<SIMPLE_TYPE>		= <SCALAR_TYPE>						~~ ;
+<SIMPLE_TYPE>		= <SUBRANGE_TYPE>					~~ ;
+<SIMPLE_TYPE>		= <ID>							~~ ;
+<SCALAR_TYPE>		= ( <ID_LIST> )						~~ ;
+<SUBRANGE_TYPE>		= <CONSTANT>  ..  <CONSTANT>				~~ ;
+<POINTER_TYPE>		= "^" <ID>						~~ ;
+<STRUCT_TYPE>		= <UNPACKED_STRUCT_TYPE>				~~ ;
+<STRUCT_TYPE>		= packed  <UNPACKED_STRUCT_TYPE>			~~ ;
+<UNPACKED_STRUCT_TYPE>	= <ARRAY_TYPE>						~~ ;
+<UNPACKED_STRUCT_TYPE>	= <RECORD_TYPE>						~~ ;
+<UNPACKED_STRUCT_TYPE>	= <SET_TYPE>						~~ ;
+<UNPACKED_STRUCT_TYPE>	= <FILE_TYPE>						~~ ;
+<ARRAY_TYPE>		= array	 [ <INDEX_TYPE_LIST> ]	of  <COMPONENT_TYPE>	~~ ;
+<ARRAY_TYPE>		= string  [ <CONSTANT> ]				~~ ;
+<INDEX_TYPE_LIST>	= <INDEX_TYPE>						~~ ;
+<INDEX_TYPE_LIST>	= <INDEX_TYPE_LIST> ,  <INDEX_TYPE>			~~ ;
+<INDEX_TYPE>		= <SIMPLE_TYPE>						~~ ;
+<COMPONENT_TYPE>	= <TYPE>						~~ ;
+<SET_TYPE>		= set  of  <SIMPLE_TYPE>				~~ ;
+<FILE_TYPE>		= file	of  <TYPE>					~~ ;
+<RECORD_TYPE>		= record						~~
+			      <FIELD_LIST>					~~
+			  end							~~ ;
+<FIELD_LIST>		= ~INH~							~~ ;
+<FIELD_LIST>		= <FIXED_PART> <;>					~~ ;
+<FIELD_LIST>		= <FIXED_PART> ";"					~~
+		      <VARIANT_PART>						~~ ;
+<FIELD_LIST>		= ~MARGIN - 4						~~
+	~	      <VARIANT_PART>						~~ ;
+<;>			= ";"							~~ ;
+<;>			=							~~ ;
+<FIXED_PART>		= <RECORD_SECTION>					~~ ;
+<FIXED_PART>		= <FIXED_PART> ";"
+			  <RECORD_SECTION>					~~ ;
+<RECORD_SECTION>	= <ID_LIST> ~TAB~ :  <TYPE>				~~ ;
+<VARIANT_PART>		= case	<TAG_FIELD>  of
+			      <VARIANT_LIST> <;>				~~ ;
+<TAG_FIELD>		= <ID>	:  <ID>						~~ ;
+* The first <ID> is a selector, the second should be a scalar type identifier
+<TAG_FIELD>		= <ID>							~~ ;
+* This <ID> should be a scalar type identifier
+<VARIANT_LIST>		= <VARIANT>						~~ ;
+<VARIANT_LIST>		= <VARIANT_LIST> ";"
+			  <VARIANT>						~~ ;
+<VARIANT>		= <CASE_LABEL_LIST>  :
+			      ( <FIELD_LIST> )					~~ ;
+*
+*********************************************************************************
+*										*
+*				 CASE LABELS					*
+*										*
+*********************************************************************************
+<CASE_LABEL_LIST>	= <CONSTANT>						~~ ;
+<CASE_LABEL_LIST>	= <CASE_LABEL_LIST> ,  <CONSTANT>			~~ ;
+*
+*********************************************************************************
+*										*
+*			    VARIABLES DECLARATIONS				*
+*										*
+*********************************************************************************
+<VAR_PART>		= var
+			      <VAR_DECL_LIST>					~~ ;
+<VAR_DECL_LIST>		= <VAR_DECL>						~~ ;
+<VAR_DECL_LIST>		= <VAR_DECL_LIST>
+			  <VAR_DECL>						~~ ;
+<VAR_DECL>		= <ID_LIST> ~TAB~ :  <TYPE> ";"				~~ ;
+<VAR_DECL>		= <PRE_PRO>						~~ ;
+*
+*********************************************************************************
+*										*
+*		    PROCEDURES AND FUNCTIONS DECLARATIONS			*
+*										*
+*********************************************************************************
+<PROC_PART>		= <PROC_DECL>						~~ ;
+<PROC_PART>		= <PROC_PART>
+			  <PRE_PRO>						~~ ;
+<PROC_DECL>		= ~SKIP (3)
+	~ ~MARGIN~	  <PROC_HEAD> ";"
+			      <BLOCK> ";"					~~ ;
+<PROC_HEAD>		= <PROCEDURE_HEAD>					~~ ;
+<PROC_HEAD>		= <FUNCTION_HEAD>					~~ ;
+<PROCEDURE_HEAD>	= procedure  <ID> <PARAMETERS>				~~ ;
+<:TYPE>			=							~~ ;
+<:TYPE>			=  :  <ID>						~~ ;
+<FUNCTION_HEAD>		= function  <ID> <PARAMETERS> <:TYPE>			~~ ;
+<PARAMETERS>		=							~~ ;
+<PARAMETERS>		=  ( <PARAM_SECTION_LIST> )				~~ ;
+<PARAM_SECTION_LIST>	= <PARAM_SECTION>					~~ ;
+<PARAM_SECTION_LIST>	= <PARAM_SECTION_LIST> ";"				~~
+			  <PARAM_SECTION>					~~ ;
+<PARAM_SECTION>		= <PARAM_GROUP>						~~ ;
+<PARAM_SECTION>		= var  <PARAM_GROUP>					~~ ;
+<PARAM_SECTION>		= procedure  <ID_LIST> <PARAMETERS>			~~ ;
+<PARAM_SECTION>		= function  <ID_LIST> <PARAMETERS>  :  <ID>		~~ ;
+<PARAM_GROUP>		= <ID_LIST>  :	<ID>					~~ ;
+*
+*********************************************************************************
+*										*
+*				  VARIABLES					*
+*										*
+*********************************************************************************
+<VARIABLE>		= <ID>							~~ ;
+<VARIABLE>		= <COMPONENT_VAR>					~~ ;
+<COMPONENT_VAR>		= <INDEXED_VAR>						~~ ;
+<COMPONENT_VAR>		= <FIELD_DESIGNATOR>					~~ ;
+<COMPONENT_VAR>		= <FILE_BUFFER_OR_REF_VAR>				~~ ;
+<INDEXED_VAR>		= <VARIABLE>  [ <INDEX_LIST> ]				~~ ;
+<INDEX_LIST>		= <EXPRESSION>						~~ ;
+<INDEX_LIST>		= <INDEX_LIST> ,  <EXPRESSION>				~~ ;
+<FIELD_DESIGNATOR>	= <VARIABLE> . <ID>					~~ ;
+<FILE_BUFFER_OR_REF_VAR>= <VARIABLE> "^"					~~ ;
+*
+*********************************************************************************
+*										*
+*				 EXPRESSIONS					*
+*										*
+*********************************************************************************
+<EXPRESSION>		= <SIMPLE_EXPR>						~~ ;
+<EXPRESSION>		= <SIMPLE_EXPR>	 <REL_OP>  <SIMPLE_EXPR>		~~ ;
+<SIMPLE_EXPR>		= <TERM>						~~ ;
+<SIMPLE_EXPR>		= <SIMPLE_EXPR> <ADD_OP> <TERM>				~~ ;
+<SIMPLE_EXPR>		= <SIGN> <TERM>						~~ ;
+<TERM>			= <FACTOR>						~~ ;
+<TERM>			= <TERM> <MUL_OP> <FACTOR>				~~ ;
+<FACTOR>		= <VARIABLE>						~~ ;
+<FACTOR>		= <FUNC_DESIGNATOR>					~~ ;
+<FACTOR>		= <UNSIGNED_CONST>					~~ ;
+<FACTOR>		= <SET>							~~ ;
+<FACTOR>		= ( <EXPRESSION> )					~~ ;
+<FACTOR>		= not  <FACTOR>						~~ ;
+* A named constant is processed by the productions
+* <FACTOR> = <VARIABLE> ; and
+* <VARIABLE> = <ID> ;
+<UNSIGNED_CONST>	= <UNSIGNED_NUMBER>					~~ ;
+<UNSIGNED_CONST>	= <STRING>						~~ ;
+<UNSIGNED_CONST>	= nil							~~ ;
+<SET>			= [ <ELEMENT_LIST> ]					~~ ;
+<SET>			= [ ]							~~ ;
+<ELEMENT_LIST>		= <ELEMENT>						~~ ;
+<ELEMENT_LIST>		= <ELEMENT_LIST> ,  <ELEMENT>				~~ ;
+<ELEMENT>		= <EXPRESSION>						~~ ;
+<ELEMENT>		= <EXPRESSION>	..  <EXPRESSION>			~~ ;
+*
+*********************************************************************************
+*										*
+*				  OPERATORS					*
+*										*
+*********************************************************************************
+<MUL_OP>		= *							~~ ;
+<MUL_OP>		= /							~~ ;
+<MUL_OP>		= ~SPACE~ div ~SPACE~					~~ ;
+<MUL_OP>		= ~SPACE~ mod ~SPACE~					~~ ;
+<MUL_OP>		= ~SPACE~ and ~SPACE~					~~ ;
+<ADD_OP>		= +							~~ ;
+<ADD_OP>		= -							~~ ;
+<ADD_OP>		= ~SPACE~ or ~SPACE~					~~ ;
+<REL_OP>		= "="							~~ ;
+<REL_OP>		= "<>"							~~ ;
+<REL_OP>		= "<"							~~ ;
+<REL_OP>		= "<="							~~ ;
+<REL_OP>		= ">="							~~ ;
+<REL_OP>		= ">"							~~ ;
+<REL_OP>		= in							~~ ;
+*
+*********************************************************************************
+*										*
+*				  STATEMENTS					*
+*										*
+*********************************************************************************
+<STMT_PART>		= <COMPOUND_STMT>					~~ ;
+<COMPOUND_STMT>		= begin
+			  <STMT_LIST>
+			  end							~~ ;
+<STMT_LIST>		= <STMT>						~~ ;
+<STMT_LIST>		= <STMT_LIST> ";"
+			  <STMT>						~~ ;
+<STMT>			= <CLOSED_LBL:STMT>					~~ ;
+<STMT>			= <OPEN_LBL:STMT>					~~ ;
+<CLOSED_LBL:STMT>	= <LABEL:> <CLOSED_STMT>				~~ ;
+<OPEN_LBL:STMT>		= <LABEL:> <OPEN_STMT>					~~ ;
+<LABEL:>		= ~COL (1)~ <LABEL> : ~MARGIN~				~~ ;
+<LABEL:>		=							~~ ;
+<CLOSED_STMT>		= <SIMPLE_STMT>						~~ ;
+<CLOSED_STMT>		= <STRUCT_CLOSED_STMT>					~~ ;
+<SIMPLE_STMT>		= <ASSIGN_STMT>						~~ ;
+<SIMPLE_STMT>		= <PROC_STMT>						~~ ;
+<SIMPLE_STMT>		= <GOTO_STMT>						~~ ;
+<SIMPLE_STMT>		= ~INH~							~~ ;
+<ASSIGN_STMT>		= <VARIABLE>  :=  <EXPRESSION>				~~ ;
+<GOTO_STMT>		= goto	<LABEL>						~~ ;
+<STRUCT_CLOSED_STMT>	= <COMPOUND_STMT>					~~ ;
+<STRUCT_CLOSED_STMT>	= <COND_STMT>						~~ ;
+<STRUCT_CLOSED_STMT>	= <REPETITIVE_CLOSED_STMT>				~~ ;
+<OPEN_STMT>		= <REPETITIVE_OPEN_STMT>				~~ ;
+<STRUCT_CLOSED_STMT>	= <WITH_CLOSED_STMT>					~~ ;
+<OPEN_STMT>		= <WITH_OPEN_STMT>					~~ ;
+<COND_STMT>		= <CASE_STMT>						~~ ;
+<COND_STMT>		= <CLOSED_IF_STMT>					~~ ;
+<CASE_STMT>		= case	<EXPRESSION>  of
+			  <CASE_ELT_LIST>
+			  end							~~ ;
+<CASE_STMT>		= case	<EXPRESSION>  of
+			  <CASE_ELT_LIST> ";"
+			  <OTHERS_PART>
+			  end							~~ ;
+<CASE_ELT_LIST>		= <CASE_ELT>						~~ ;
+<CASE_ELT_LIST>		= <CASE_ELT_LIST> ";"
+			  <CASE_ELT>						~~ ;
+<CASE_ELT>		= <CASE_LABEL_LIST>  :
+			      <STMT>						~~ ;
+<CASE_ELT>		= ~INH~							~~ ;
+<OTHERS_PART>		= otherwise
+			      <STMT_LIST>					~~ ;
+<CLOSED_IF_STMT>	= <IF_THEN_ELSE>
+			      <CLOSED_LBL:STMT>					~~ ;
+<OPEN_STMT>		= <IF_THEN_ELSE>
+			      <OPEN_LBL:STMT>					~~ ;
+<OPEN_STMT>		= <CLOSED_IF_THEN>					~~ ;
+<IF_THEN_ELSE>		= <CLOSED_IF_THEN>
+			  else							~~ ;
+<CLOSED_IF_THEN>	= <IF_THEN>
+			      <CLOSED_LBL:STMT>					~~ ;
+<OPEN_STMT>		= <IF_THEN>
+			      <OPEN_LBL:STMT>					~~ ;
+<IF_THEN>		= if  <EXPRESSION>  then				~~ ;
+<REPETITIVE_CLOSED_STMT>= <WHILE_CLOSED_STMT>					~~ ;
+<REPETITIVE_OPEN_STMT>	= <WHILE_OPEN_STMT>					~~ ;
+<REPETITIVE_CLOSED_STMT>= <REPEAT_STMT>						~~ ;
+<REPETITIVE_CLOSED_STMT>= <FOR_CLOSED_STMT>					~~ ;
+<REPETITIVE_OPEN_STMT>	= <FOR_OPEN_STMT>					~~ ;
+<WHILE_CLOSED_STMT>	= <WHILE_DO>
+			      <CLOSED_LBL:STMT>					~~ ;
+<WHILE_OPEN_STMT>	= <WHILE_DO>
+			      <OPEN_LBL:STMT>					~~ ;
+<WHILE_DO>		= while	 <EXPRESSION>  do				~~ ;
+<REPEAT_STMT>		= repeat
+			      <STMT_LIST>
+			  until	 <EXPRESSION>					~~ ;
+<FOR_CLOSED_STMT>	= <FOR_DO>
+			      <CLOSED_LBL:STMT>					~~ ;
+<FOR_OPEN_STMT>		= <FOR_DO>
+			      <OPEN_LBL:STMT>					~~ ;
+<FOR_DO>		= for  <ID>  :=	 <EXPRESSION>  <STEP>  <EXPRESSION>  do	~~ ;
+<STEP>			= to							~~ ;
+<STEP>			= downto						~~ ;
+<WITH_CLOSED_STMT>	= <WITH_DO>
+			      <CLOSED_LBL:STMT>					~~ ;
+<WITH_OPEN_STMT>	= <WITH_DO>
+			      <OPEN_LBL:STMT>					~~ ;
+<WITH_DO>		= with	<VARIABLE_LIST>	 do				~~ ;
+<VARIABLE_LIST>		= <VARIABLE>						~~ ;
+<VARIABLE_LIST>		= <VARIABLE_LIST> ,  <VARIABLE>				~~ ;
+*
+*********************************************************************************
+*										*
+*			 PROCEDURE AND FUNCTION CALLS				*
+*										*
+*********************************************************************************
+<PROC_STMT>		= <ID> <ARGUMENTS*>					~~ ;
+* A call to a function having no arguments is processed by the productions
+* <FACTOR> = <VARIABLE> ; and
+* <VARIABLE> = <ID> ;
+* The latter also deals with the return value of a function.
+<FUNC_DESIGNATOR>	= <ID> <ARGUMENTS>					~~ ;
+<ARGUMENTS*>		= <ARGUMENTS>						~~ ;
+<ARGUMENTS*>		=							~~ ;
+<ARGUMENTS>		=  ( <ACTUAL_LIST> )					~~ ;
+<ACTUAL_LIST>		= <ACTUAL>						~~ ;
+<ACTUAL_LIST>		= <ACTUAL_LIST> ,  <ACTUAL>				~~ ;
+<ACTUAL>		= <EXPRESSION>						~~ ;
+<ACTUAL>		= <EXPRESSION> : <EXPRESSION>				~~ ;
+<ACTUAL>		= <EXPRESSION> : <EXPRESSION> : <EXPRESSION>		~~ ;
+<ACTUAL>		= <ID>	:=  <EXPRESSION>				~~ ;
+$
+$

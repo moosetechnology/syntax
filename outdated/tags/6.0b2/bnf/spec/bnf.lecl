@@ -1,0 +1,60 @@
+Classes
+
+	
+	ANY		= #000..#377 ;
+	PRINT		= ANY - #000..#040 - #177..#241 ;
+	T_HEADER	= PRINT - "<#;\"~&@" ;
+	NT_BODY		= PRINT + SP - ">" ;
+	OCTAL		= "0".."7" ;
+
+
+Abbreviations
+
+	NUMBER_NORMAL_FORM
+			= @Mark {"0"&True}+ @Erase {DIGIT}+ | "0"&True | {DIGIT}+ ;
+
+
+Tokens
+
+	Comments	= -{SP | HT | VT | FF |
+			    "~" {^"~\n" | {EOL}+ ^"<~\n"} {EOL} "~" |
+			    EOL {"*" {^EOL} EOL}}+ ;
+			   Priority Shift>Reduce ;
+			   Context All But Comments ;
+	%LHS_NON_TERMINAL
+			= "<"&Is_First_Col @Set (0) {NT_BODY} ">" ;
+	%NON_TERMINAL	= "<" {NT_BODY} ">" ;
+	%TERMINAL	= (-"#" PRINT | T_HEADER) {PRINT} |
+			   -QUOTE {^"\"\n\\" |
+				   -"\\" {-EOL -"\\"}
+					 (-EOL ^"\"\n\\<" |
+					  -"n" @Put (EOL) |
+					  -"b" @Put (BS) |
+					  -"t" @Put (HT) |
+					  -"v" @Put (VT) |
+					  -"f" @Put (FF) |
+					  -"r" @Put (CR) |
+					  @Mark OCTAL&True [OCTAL&True [OCTAL&True]] @2 |
+					  ^"bnfrtv\n"
+					 )
+				  }+ {-"\\" -EOL} -QUOTE ;
+			   Priority Shift>Reduce ;
+			   Context Comments ;
+	%GENERIC_TERMINAL
+			= "%" LETTER {["_"] (LETTER | DIGIT)} ;
+			   Priority Reduce>Reduce, Shift>Reduce ;
+			   Context Comments ;
+	%ACTION		= "@" NUMBER_NORMAL_FORM ;
+			   Context Comments ;
+	%PREDICATE	= "&" NUMBER_NORMAL_FORM ; @3 ;
+			   Context Comments ;
+	"="		= -"="&Is_Set (0) @Reset (0) ;
+	";"		= -";" @1 ;
+
+
+--  scan_act (INIT)  : erase the source text from beginning until the 
+--			   first "<" laying at column 1
+--		       Reset is_predicate
+--  @1  : Skip the source text until the first "<" laying at column 1
+--  @2  : Convert octal code \nnn to character
+--  @3  : Set is_predicate

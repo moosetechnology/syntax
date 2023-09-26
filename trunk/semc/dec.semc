@@ -1,0 +1,149 @@
+$do(<axiome>,<attr_declarations>,<prologue>,<decl>,<open>,<close>,
+    <attr_decl>,<attr>,<nt_list>
+   );
+
+$
+decl=
+
+char WHAT_SEMC_DEC[] = "@(#)SYNTAX - $Id: dec.semc 3599 2023-09-18 12:57:19Z garavel $" WHAT_DEBUG;
+
+#include "B_tables.h"
+#include "semc_vars.h"
+
+extern struct sxtables bnf_tables;
+
+/* dans semc_put.c */
+extern SXVOID put_avant_decl (void);
+extern SXVOID put_entre_decl_open (void);
+extern SXVOID put_entre_open_close (void);
+extern SXVOID put_apres_close (void);
+
+/* dans semc.c */
+extern SXINT chercher_nt (SXINT ste);
+extern SXINT placer_attr (struct sxtoken ttok);
+
+static SXINT i, xnt, xattr;
+static char* ptr;
+$
+<axiome>	= <attr_declarations> <prologue>		;
+$do(<axiome>)
+
+<attr_declarations> =  <attr_decl_list> %DOLLAR 		;
+$do(<attr_declarations>)
+
+<attr_declarations> = %DOLLAR 					;
+$do(<attr_declarations>)
+    terminal_token = $ptoken ("%DOLLAR");
+    sxerror (terminal_token.source_index,
+             bnf_tables.err_titles[2][0],
+	     "%s You must provide at least one attribute declaration.",
+             bnf_tables.err_titles[2]+1
+	 );
+<attr_declarations> = 						;
+$do(<attr_declarations>)
+    terminal_token = SXSTACKtoken(SXSTACKtop());
+    sxerror (terminal_token.source_index,
+             bnf_tables.err_titles[2][0],
+             "%s You must provide at least one attribute declaration.",
+	      bnf_tables.err_titles[2]+1
+	 );
+<prologue>	= <decl> <open> <close>				;
+$do(<prologue>)
+    put_apres_close();
+<decl>	 	= decl %DOLLAR	 				;
+$do(<decl>)
+{
+    put_avant_decl ();
+    ptr = $pcomment ("%DOLLAR");
+    if (ptr != NULL) {
+	fputs (ptr, sxstdout);
+	/* sxfree (ptr); */
+    }
+}
+<decl>	 	= 			 			;
+$do(<decl>)
+     put_avant_decl ();
+<open> 		= open %DOLLAR		 			;
+$do(<open>)
+{
+    put_entre_decl_open ();
+    ptr = $pcomment ("%DOLLAR");
+    if (ptr != NULL) {
+	fputs (ptr, sxstdout);
+	/* sxfree (ptr); */
+    }
+    fputs ("break;\n", sxstdout);
+}
+<open> 		= 			 			;
+$do(<open>)
+{
+    put_entre_decl_open ();
+    fputs ("break;\n", sxstdout);
+}
+<close>		= close %DOLLAR		 			;
+$do(<close>)
+{
+    put_entre_open_close ();
+    ptr = $pcomment ("%DOLLAR");
+    if (ptr != NULL) {
+	fputs (ptr, sxstdout);
+	/* sxfree (ptr); */
+    }
+    fputs ("break;\n", sxstdout);
+}
+<close>		= 			 			;
+$do(<close>)
+{
+    put_entre_open_close ();
+    fputs ("break;\n", sxstdout);
+}
+********************************************************************
+*          Syntaxe des declarations d'attributs                    *
+********************************************************************
+<attr_decl_list>= <attr_decl_list> <attr_decl>			;
+<attr_decl_list>= <attr_decl>					;
+<attr_decl>	= <attr_nt_list> %TYPE		 		;
+$do(<attr_decl>)
+{
+    type_attr[xattr] = $pste ("%TYPE");
+}
+<attr_decl>	= <attr_nt_list> ";"	 			;
+$do(<attr_decl>)
+{
+    for (xnt = 1; xnt <= W.ntmax; xnt++) {
+	if (attr_nt[xattr][xnt] == 's')
+	    attr_nt[xattr][xnt] = 'v';
+    }
+    type_attr[xattr] = 0;
+}
+<attr_nt_list>	= <attr> "(" <nt_list> ")" 			;
+<attr>		= %ATTR						;
+$do(<attr>)
+    xattr = placer_attr ($ptoken ("%ATTR"));
+    i = (SXINT)strlen(sxstrget(attr_to_ste [xattr]));
+    if (i > M_at ) M_at = i;
+<nt_list>	= %NT						;
+$do(<nt_list>)
+{
+    terminal_token = $ptoken ("%NT");
+    xnt = chercher_nt ($pste ("%NT"));
+    if (xnt != 0) attr_nt[xattr][xnt] = 's';
+}
+<nt_list>	= <nt_list> "," %NT				;
+$do(<nt_list>)
+{
+    terminal_token = $ptoken ("%NT");
+    xnt = chercher_nt ($pste ("%NT"));
+    if (xnt != 0) {			/* non terminal connu */
+	if (attr_nt[xattr][xnt] != ' ') {
+		sxerror (terminal_token.source_index
+		,bnf_tables.err_titles[1][0]
+		,"%sMultiple occurrence of this non-terminal symbol."
+		,bnf_tables.err_titles[1]+1
+		);
+		is_err = SXTRUE;
+	}
+	else attr_nt[xattr][xnt] = 's';
+    }
+}
+*

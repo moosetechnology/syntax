@@ -1,0 +1,8 @@
+alias MPTOKX	"print sxplocals.matokx-(sxplocals.ptoks-sxplocals.atoks)"
+alias STACKtop	"print sxpglobals.xps"
+alias STACKnewtop	"print sxpglobals.xps-sxpglobals.pspl"
+alias STACKreduce	"print sxpglobals.reduce"
+alias STACKtoken	"print sxpglobals.parse_stack [!:1].token"
+alias VISITED	"print sxtt_state.visited"
+alias sxstrget	"print sxstrmngr.table[!:1].pointer"
+alias sxstrlen	"print sxstrmngr.table[!:1].length"

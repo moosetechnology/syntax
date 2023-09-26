@@ -1,0 +1,34 @@
+Classes
+
+	ANY		= #000..#377 ;
+	OCTAL           = "01234567" ;
+	PRINT		= ANY - #000..#040 - #177..#241 ;
+	T_HEADER	= PRINT - ",;\"{}[]" ;
+	T_BODY		= T_HEADER ;
+
+
+Tokens
+
+	Comments	= -{SP | HT | VT | FF | EOL | ",;{}[]"}+ ;
+			   Priority Shift>Reduce ;
+			   Context All But Comments ;
+	%TERMINAL	=  T_HEADER {T_BODY} |
+			   -QUOTE {^"\"\n\\" |
+				   -"\\" {-EOL -"\\"}
+					 (-EOL ^"\"\n\\<" |
+					  -"n" @Put (EOL) |
+					  -"b" @Put (BS) |
+					  -"t" @Put (HT) |
+					  -"v" @Put (VT) |
+					  -"f" @Put (FF) |
+					  -"r" @Put (CR) |
+					  @Mark OCTAL&True [OCTAL&True [OCTAL&True]] @1 |
+					  ^"bnfrtv\n"
+					 )
+				  }+ {-"\\" -EOL}
+			    -QUOTE ;
+			   Priority Shift>Reduce ;
+			   Context Comments ;
+
+
+--  @1  : Convert octal code \nnn to character

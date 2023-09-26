@@ -1,0 +1,13 @@
+	    integer J;
+	
+	    proc factorial (val I , var F )
+		begin
+		integer TEMP;
+		if I eq 0 then F := 1
+			  else 	call factorial(I-1, TEMP);
+				F := TEMP * I
+		fi
+		
+	    end;
+	
+	    call factorial (5, J)

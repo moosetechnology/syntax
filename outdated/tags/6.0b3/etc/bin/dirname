@@ -1,0 +1,56 @@
+#!/bin/sh
+# Print directory portion of file names -- the only real one!
+#
+# Copyright (c) 1990 Philippe Deschamp
+#
+#    Permission is granted to anyone to make or distribute verbatim
+#    copies of this document as received, in any medium, provided
+#    that the copyright notice and this permission notice are
+#    preserved, thus giving the recipient permission to redistribute
+#    in turn.
+#
+#    Permission is granted to distribute modified versions of this
+#    document, or of portions of it, under the above conditions,
+#    provided also that they carry prominent notices stating who last
+#    changed them.
+
+USAGE="Usage:	$0 [-l] file ...
+or	$0 -doc"
+case $1 in
+	-doc)echo "$USAGE
+Prints the \"directory\" portion of \"file\"(s). Under the \"-l\" option, attempts
+to give a \"neat\" version of its output (without \"//\", \".\" or \"..\")."
+	     exit;;
+	-l)L=-l;shift;;
+	*)L=no;;
+esac
+case $# in 0) echo "$USAGE">&2;exit 1;;esac
+
+STATUS=0
+DIRS=''
+
+for FILE do
+	case "$FILE" in
+	  '')	DIR=..;;
+	  .)	DIR=..;;
+	  ..)	DIR=../..;;
+	  */)	DIR="$FILE..";;
+	  */.)	DIR="$FILE.";;
+	  */..)	DIR="$FILE/..";;
+	  */*)	DIR="`echo \"$FILE\" | /bin/sed -e 's:\(.*\)/.*:\1/.:'`";;
+	  *)	DIR=.;;
+	esac
+	case $L in -l)	FULL="`(cd \"$DIR\";pwd)2>/dev/null`"
+			case "$FULL" in '')STATUS=1;;*)DIR="$FULL";;esac;;
+	esac
+	DIRS="$DIRS$DIR
+"
+done
+
+/bin/echo -n "$DIRS"
+exit $STATUS
+
+# GNU Emacs idiosyncrasies:
+# Local Variables:
+# version-control: yes
+# End:

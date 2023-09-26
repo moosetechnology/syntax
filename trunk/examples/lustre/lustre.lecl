@@ -1,0 +1,29 @@
+Classes
+
+	C_LETTER = "_" + LETTER ;
+	C_CHAR = DIGIT + C_LETTER ;
+	SPACE = SP + NL + FF + HT + LF + CR ;
+
+Abbreviations
+
+	DECIMAL_PART = "." {DIGIT}* ;
+	EXPONENT_PART = E ["+"|"-"]{DIGIT}+ ;
+	COMMENT_OPEN = "(" "*" ;
+	COMMENT_CLOSE = "*" ")" ;
+	COMMENT_INSIDE = (^"*") | "*" (^")") ;
+
+Tokens
+
+	Comments = SPACE | "-" "-" &true {^EOL} EOL |
+		  COMMENT_OPEN {COMMENT_INSIDE} COMMENT_CLOSE ;
+			Context All But Comments ; 
+
+	%Ident = C_LETTER [ {C_CHAR} ] ;
+			Context All But %Ident, %Integer, %Real ;
+
+	%Integer = {DIGIT}+;
+			Priority Shift > Reduce ;
+
+	%Real = {DIGIT}+ DECIMAL_PART [EXPONENT_PART] | {DIGIT}+ EXPONENT_PART ;
+			Priority Shift > Reduce ;
+

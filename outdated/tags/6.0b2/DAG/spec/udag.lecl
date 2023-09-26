@@ -1,0 +1,25 @@
+Classes
+        ANY             = #000..#377 ;
+        LETTER          = LETTER + "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ";
+	SUFFIX		= ANY - SP - HT - VT - NL ;
+	HEAD		= SUFFIX - "{%\\()[]|" ;	
+
+Tokens
+        Comments        = {-SP | -HT | -VT | -NL | -("%" {ANY} EOL&TRUE) |
+			   "{" @Reset(0)
+			       {
+			         "{"&True @Incr(0) |
+				 "}"&Is_Set(0) @Decr(0) |
+				 ^"{}"
+			       }*
+			   "}"
+			  }+ ; 
+                        Priority Shift > Reduce;
+
+        %state          = {DIGIT}+ ;
+                        Priority Shift > Reduce , Reduce > Reduce;
+
+        %form           = {-"\\" SUFFIX | HEAD}+ ;
+                        Priority Shift > Reduce;
+
+

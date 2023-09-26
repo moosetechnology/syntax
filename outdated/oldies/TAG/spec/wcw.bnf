@@ -1,0 +1,63 @@
+* Une TAG decrivant L = {wcw | w \in {a,b}*} est :
+
+* Initial
+*	S (c)
+*
+*Auxiliary
+*	S (a S (S a))
+*	S (b S (S b))
+*
+*Ces arbres sont numerotes 1, 2 et 3
+*
+*sa transformation en bnf donne :
+*
+*1.1:	<S> = c ;
+*
+*2.1	<S> = a <S> &(top == 2.2) @(Pop (1)) ;
+*2.2	<S> = S a @(Push (2.2)) ;
+*
+*3.1	<S> = b <S> &(top == 3.2) @(Pop (1)) ;
+*3.2	<S> = <S> b @(Push (3.2)) ;
+
+
+* &1 = &(top == a)
+* &2 = &(top == b)
+
+* @1 = @(Pop (1))
+* @2 = @(Push (a)) 
+* @3 =	@(Push (b))
+
+*<S> = c ;
+*
+*<S> = a <S> &1 @1 ;
+*<S> = <S> a @2 ;
+*
+*<S> = b <S> &2 @1 ;
+*<S> = <S> b @3 ;
+
+* Mais ca ne marche pas du fait de la "validation" par SYNTAX des
+* reductions par un symbole en avance => permutation des actions
+
+*<S> = c ;
+*
+*<S> = a <S> &1 @1 ;
+*<S> = <S> @2 a ;
+*
+*<S> = b <S> &2 @1 ;
+*<S> = <S> @3 b ;
+
+* Ca ne marche toujours pas car par exemple "&2" est teste' avant
+* l'exe'cution de @3
+
+* => Transfo non automatique!!
+
+* &1 <=> Sous_sommet de la parse-stack == a
+* &2 <=> Sous_sommet de la parse-stack == a
+
+<S> = @1 c ;
+
+<S> = @2 a <S> ;
+<S> = <S> &1 @1 a ;
+
+<S> = @3 b <S> ;
+<S> = <S> &2 @1 b ;

@@ -1,0 +1,8 @@
+#!/bin/sh
+# Wrapper around all the "real" executables.
+
+#for Malloc Debug Features (MacOSX only)
+SX=`dirname $0`/..
+. $SX/etc/malloc_scribble_options.sh
+
+exec ${VALGRIND:-} $0.out "$@"

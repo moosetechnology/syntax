@@ -1,0 +1,74 @@
+%
+% RCG qui decrit les beta-sheet structures de la proteine 1fas
+%
+
+% On a pris les 20 acides amines
+S(\A\C\D\E\F\G\H\I\K\L\M\N\P\Q\R\S\T\V\W\Y)
+				--> &False() . % sert uniquement a definir l'ensemble T
+S(X B1 Y B2 Z B3 T)		--> &StrLen (6, B1) &StrLen (6, B2) &StrLen (6, B3) 
+				    Beta1(B1, B2, B3) .
+
+Beta1(\C X, Y \C, Z \C)		--> Beta2(X, Y, Z) .
+
+Beta2(X1 X2, Y \G, Z \C)	--> &StrLen (1, X1) B21(X1)
+				    Beta3(X2, Y, Z) .
+B21(\Y)				--> .
+B21(\F)				--> .
+
+Beta3(X1 X2, Y \R, Z1 Z2)	--> &StrLen (1, X1) &StrLen (1, Z2) B31(X1) B33(Z2)
+				    Beta4(X2, Y, Z1) .
+B31(\K) 			--> .
+B31(\N) 			--> .
+B33(\K) 			--> .
+B33(\R) 			--> .
+B33(\N) 			--> .
+B33(\H) 			--> .
+B33(\V) 			--> .
+
+Beta4(X1 X2, Y1 Y2, Z1 Z2)	--> &StrLen (1, X1) &StrLen (1, Y2) &StrLen (1, Z2) B41(X1) B42(Y2) B43(Z2)
+			  	    Beta5(X2, Y1, Z1) .
+B41(\K) 			--> .
+B41(\F) 			--> .
+B41(\M) 			--> .
+B42(\E) 			--> .
+B42(\A) 			--> .
+B42(\G) 			--> .
+B42(\K) 			--> .
+B42(\R) 			--> .
+B43(\I) 			--> .
+B43(\L) 			--> .
+B43(\V) 			--> .
+B43(\Y) 			--> .
+
+Beta5(X, Y1 Y2, Z)		--> &StrLen (1, Y2) B52(Y2)
+			  	    Beta6(X, Y1, Z) .
+B52(\I) 			--> .
+B52(\L) 			--> .
+B52(\V) 			--> .
+B52(\T) 			--> .
+
+
+Beta6(X1 X2, Y1 Y2, Z1 Z2)	--> &StrLen (1, X1) &StrLen (1, Y2) &StrLen (1, Z2) B61(X1) B62(Y2) B63(Z2)
+			  	    Beta7(X2, Y1, Z1) .
+B61(\S) 			--> .
+B61(\T) 			--> .
+B61(\Q) 			--> .
+B61(\R) 			--> .
+B61(\F) 			--> .
+B61(\M) 			--> .
+B62(\I) 			--> .
+B62(\R) 			--> .
+B62(\P) 			--> .
+B63(\K) 			--> .
+B63(\E) 			--> .
+B63(\H) 			--> .
+B63(\Q) 			--> .
+
+Beta7(X, , Z)			--> &StrLen (1, X) &StrLen (1, Z) B71(X) B73(Z).
+B71(\W) 			--> .
+B71(\I) 			--> .
+B71(\L) 			--> .
+B71(\V) 			--> .
+B73(\I) 			--> .
+B73(\L) 			--> .
+B73(\V) 			--> .

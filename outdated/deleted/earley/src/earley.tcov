@@ -1,0 +1,2856 @@
+  ##### -> /* Ordre ds l'execution des actions et predicats.
+  ##### -> 
+  ##### ->    On suppose que la grammaire est ;
+  ##### ->       - non cyclique
+  ##### ->       - epsilon-free (pour le moment)
+  ##### -> 
+  ##### ->    Condition :
+  ##### ->       - un predicat associe au symbole X[i..j] ou une action associee a une regle
+  ##### ->         dont X[i..j] est un symbole en RHS ne peuvent s'executer que s'il n'y a pas
+  ##### -> 	de reduction ulterieure produisant (en LHS) le symbole X[i..j].
+  ##### -> 
+  ##### ->    Theoreme :
+  ##### ->       cette condition est verifiee si on impose les conditions suivantes :
+  ##### ->       - les items de X[j] sont generes avant (et ont donc des identifiants inferieurs)
+  ##### ->         a ceux de Y[l] si ;
+  ##### -> 	- j < l
+  ##### -> 	- ou j == l et X ->+ Y (chaine de reductions simples de X a Y).
+  ##### -> 
+  ##### ->    Demonstration :
+  ##### ->       - soit (A -> ... X., h) de X[j]
+  ##### ->       - soit (B -> ... Y., k) de Y[l]
+  ##### -> 
+  ##### ->       Par hypothese (A -> ... X., h) < (B -> ... Y., k) cad que la reduction B -> ... Y
+  ##### ->       sera effectuee avant A -> ... X
+  ##### ->       On suppose que cette sequence d'action est "lancee" apres le scan(/reduce) de ai.
+  ##### ->       On montre que A[h..i] est different de Y[l..i].
+  ##### -> 
+  ##### ->       1) Si j < l
+  ##### ->          on sait que h <= j => h < l et donc A[h..i] # Y[l..i]
+  ##### -> 
+  ##### ->       2) Si j < l
+  ##### ->             - Si |... X| > 1 => h < j => h < l et donc A[h..i] # Y[l..i]
+  ##### -> 	    - Si |... X| == 1 => j == l == h et A -> ... X est une production simple et les A[j] sont
+  ##### -> 	      generes avant les X[j]. Si A[h..i] == Y[l..i] => A == Y et on a une contradiction
+  ##### -> 	      avec le fait que X[j] est genere avant Y[l]==A[j].
+  ##### -> */
+  ##### -> 
+  ##### -> #include "sxalloc.h"
+  ##### -> #include "sxba.h"
+  ##### -> #include "XxYxZ.h"
+  ##### -> #include "XxY.h"
+  ##### -> #include "SS.h"
+  ##### -> 
+  ##### -> /*   POOL_MNGR */
+  ##### -> typedef struct {
+  ##### ->   char		**hd, *cur_top, *cur_bot, *pool_lim;
+  ##### ->   int		hd_size, hd_top, pool_size, elem_size;
+  ##### ->   int		used_size, total_size; /* #if EBUG */
+  ##### -> } pool_header;
+  ##### -> 
+  ##### -> #define pool_next(b,t)	(((((b).cur_top+=(b).elem_size)>=(b).pool_lim)?(t*)pool_oflw(&(b)):(t*)((b).cur_top)))
+  ##### -> 
+  ##### -> #define pool_close(b,t,bot,top) 			\
+  ##### ->                         (bot = ((t*)(b).cur_bot),	\
+  ##### ->                         top = ((t*)(b).cur_top),	\
+  ##### -> 			(b).cur_bot = (b).cur_top + (b).elem_size)
+  ##### -> 
+  ##### -> 
+  ##### -> #include <memory.h>
+  ##### -> 
+  ##### -> 
+  ##### -> static void
+  ##### -> pool_alloc (ppool, pool_size, elem_size)
+  ##### ->     pool_header	*ppool;
+  ##### ->     int 	pool_size, elem_size;
+      1 -> {
+      1 ->     ppool->hd_top = 0;
+      1 ->     ppool->hd_size = 1;
+      1 ->     ppool->elem_size = sizeof (char) * elem_size;
+      1 ->     ppool->pool_size = pool_size * ppool->elem_size;
+      1 ->     ppool->hd = (char**) sxalloc (ppool->hd_size, sizeof (char*));
+      1 ->     ppool->pool_lim = ppool->cur_top = ppool->cur_bot = ppool->hd [ppool->hd_top] =
+      1 -> 	    (char*) sxalloc (ppool->pool_size, ppool->elem_size);
+      1 ->     ppool->cur_bot += ppool->elem_size;
+      1 ->     ppool->pool_lim += ppool->pool_size;
+      1 -> 
+      1 -> #if EBUG
+      1 ->     ppool->total_size = ppool->pool_size;
+      1 -> #endif
+      1 -> }
+      1 -> 
+      1 -> 
+      1 -> 
+      1 -> static char*
+      1 -> pool_oflw (ppool)
+      1 ->     pool_header	*ppool;
+      3 -> {
+      3 ->     char	*ptr = ppool->cur_bot;
+      3 ->     int 	n = ppool->pool_lim - ppool->cur_bot;
+      3 -> 
+      3 ->     if (++ppool->hd_top >= ppool->hd_size)
+      2 -> 	ppool->hd = (char**) sxrealloc (ppool->hd, ppool->hd_size *= 2, sizeof (char*));
+      2 -> 
+      2 -> #if EBUG
+      2 ->     printf ("New pool of size %i is created.\n", ppool->pool_size);
+      2 ->     ppool->used_size = ppool->total_size;
+      2 ->     ppool->total_size += ppool->pool_size;
+      2 -> #endif
+      2 -> 
+      2 ->     ppool->pool_lim = ppool->cur_bot = ppool->hd [ppool->hd_top] =
+      3 -> 	(char*) sxalloc (ppool->pool_size, sizeof (char));
+      3 -> 
+      3 ->     ppool->cur_bot += ppool->elem_size;
+      3 ->     ppool->pool_lim += ppool->pool_size;
+      3 -> 
+      3 ->     memcpy (ppool->cur_bot, ptr, n);
+      3 -> 
+      3 ->     return ppool->cur_top = ppool->cur_bot + n;
+      3 -> }
+      3 -> 
+      3 -> 
+      3 -> 
+      3 -> static void
+      3 -> pool_free (ppool)
+      3 ->     pool_header	*ppool;
+      1 -> {
+      1 -> #if EBUG
+      1 ->     printf ("Pool: used_size = %i bytes, total_size = %i bytes\n",
+      1 -> 	    (ppool->used_size + (ppool->cur_bot - ppool->hd [ppool->hd_top]))
+      1 -> 	     + (ppool->hd_top + 1) * sizeof (int),
+      1 ->     	    ppool->total_size + ppool->hd_size * sizeof (int));
+      1 -> #endif
+      1 -> 
+      1 ->     while (--ppool->hd_top >= 0)
+      3 -> 	sxfree (ppool->hd [ppool->hd_top]);
+      3 -> 
+      1 ->     sxfree (ppool->hd);
+      1 -> }
+      1 -> 
+      1 -> /*   END of POOL_MNGR */
+      1 -> 
+      1 -> 
+      1 -> FILE	*sxtty, *sxstdout = {stdout}, *sxstderr = {stderr};
+      1 -> 
+      1 -> static struct LC0 {
+      1 ->   int NKshift, lgth;
+      1 -> };
+      1 -> 
+      1 -> struct for_parsact {
+      1 ->     void	(*new_symbol) (),
+      1 ->                 (*Aij_pool_oflw) ();
+      1 -> 
+      1 ->     SXBOOLEAN	(*action) (),
+      1 ->     		(*prdct) (),
+      1 ->                 (*constraint) ();
+      1 -> };
+      1 -> 
+      1 -> 
+      1 -> /* #if 0 */
+      1 -> /*
+      1 -> <RNA>		@1 = <RNA> <DoubleStrand> ;
+      1 -> <RNA>		@2 = <DoubleStrand> ;
+      1 -> <RNA>		@2 = <RNA> <Base> ;
+      1 -> <RNA>		@3 = <Base> ;
+      1 -> 
+      1 -> <DoubleStrand>	@4 = A <SingleStrand> &1 U ;
+      1 -> <DoubleStrand>	@5 = A <InternalLoop> &1 U ;
+      1 -> <DoubleStrand>	@6 = A <MultipleLoop> U ;
+      1 -> <DoubleStrand>	@4 = G <SingleStrand> &1 C ;
+      1 -> <DoubleStrand>	@5 = G <InternalLoop> &1 C ;
+      1 -> <DoubleStrand>	@6 = G <MultipleLoop> C ;
+      1 -> <DoubleStrand>	@4 = G <SingleStrand> &1 U ;
+      1 -> <DoubleStrand>	@5 = G <InternalLoop> &1 U ;
+      1 -> <DoubleStrand>	@6 = G <MultipleLoop> U ;
+      1 -> <DoubleStrand>	@4 = U <SingleStrand> &1 A ;
+      1 -> <DoubleStrand>	@5 = U <InternalLoop> &1 A ;
+      1 -> <DoubleStrand>	@6 = U <MultipleLoop> A ;
+      1 -> <DoubleStrand>	@4 = C <SingleStrand> &1 G ;
+      1 -> <DoubleStrand>	@5 = C <InternalLoop> &1 G ;
+      1 -> <DoubleStrand>	@6 = C <MultipleLoop> G ;
+      1 -> <DoubleStrand>	@4 = U <SingleStrand> &1 G ;
+      1 -> <DoubleStrand>	@5 = U <InternalLoop> &1 G ;
+      1 -> <DoubleStrand>	@6 = U <MultipleLoop> G ;
+      1 -> 
+      1 -> <InternalLoop>	@7 = <DoubleStrand> ;
+      1 -> <InternalLoop>	@8 = <InternalLoop> &1 <Base> ;
+      1 -> <InternalLoop>	@9 = <Base> <InternalLoop> &1 ;
+      1 -> 
+      1 -> <MultipleLoop>	@10 = <MultipleLoop> <DoubleStrand> ;
+      1 -> <MultipleLoop>	@11 = <DoubleStrand> ;
+      1 -> <MultipleLoop>	@12 = <MultipleLoop> <Base> ;
+      1 -> <MultipleLoop>	@13 = <Base> ;
+      1 -> 
+      1 -> <Base>		= A ;
+      1 -> <Base>		= U ;
+      1 -> <Base>		= C ;
+      1 -> <Base>		= G ;
+      1 -> 
+      1 -> <SingleStrand>	@14 = <SingleStrand> &1 <Base> ;
+      1 -> <SingleStrand>	@15 = <Base> ;
+      1 -> 
+      1 -> * @7 : len = 0;
+      1 -> * @8 : len = $1.len +1;
+      1 -> * @9 : len = $2.len +1;
+      1 -> 
+      1 -> * @14 :len = S1.len + 1;
+      1 -> * @15 : len = 0;
+      1 -> 
+      1 -> * &1 SXFALSE <==> len > 30
+      1 -> 
+      1 -> */
+      1 -> 
+      1 -> 
+      1 -> 
+      1 -> #define ntmax		6
+      1 -> #define tmax		(-5)
+      1 -> #define statemax	116 
+      1 -> #define prodmax		35
+      1 -> #define initial_state	1
+      1 -> #define	rhs_lgth	3
+      1 -> /* maxlon est le nombre maximal d'occurrence d'un nt (ici B) en position reduce (A -> alpha B)
+      1 ->    ici c'est <Base> */
+      1 -> #define maxntlon	7
+      1 -> #define maxtlon		7
+      1 -> 
+      1 -> 
+      1 -> static int lispro [] = 	{0,
+      1 -> 1, -5, 0,
+      1 -> 1, 2, 0,
+      1 -> 2, 0,
+      1 -> 1, 3, 0,
+      1 -> 3, 0,
+      1 -> -1, 4, -2, 0,
+      1 -> -1, 5, -2, 0,
+      1 -> -1, 6, -2, 0,
+      1 -> -3, 4, -4, 0,
+      1 -> -3, 5, -4, 0,
+      1 -> -3, 6, -4, 0,
+      1 -> -3, 4, -2, 0,
+      1 -> -3, 5, -2, 0,
+      1 -> -3, 6, -2, 0,
+      1 -> -2, 4, -1, 0,
+      1 -> -2, 5, -1, 0,
+      1 -> -2, 6, -1, 0,
+      1 -> -4, 4, -3, 0,
+      1 -> -4, 5, -3, 0,
+      1 -> -4, 6, -3, 0,
+      1 -> -2, 4, -3, 0,
+      1 -> -2, 5, -3, 0,
+      1 -> -2, 6, -3, 0,
+      1 -> 
+      1 -> 2, 0,
+      1 -> 5, 3, 0,
+      1 -> 3, 5, 0,
+      1 -> 
+      1 -> 6, 2, 0,
+      1 -> 2, 0,
+      1 -> 6, 3, 0,
+      1 -> 3, 0,
+      1 -> 
+      1 -> -1, 0,
+      1 -> -2, 0,
+      1 -> -4, 0,
+      1 -> -3, 0,
+      1 -> 
+      1 -> 4, 3, 0,
+      1 -> 3, 0
+      1 -> };
+      1 -> 
+      1 -> static int prolis [] = 	{0,
+      1 -> 0, 0, 0,
+      1 -> 1, 1, 1,
+      1 -> 2, 2,
+      1 -> 3, 3, 3,
+      1 -> 4, 4,
+      1 -> 5, 5, 5, 5,
+      1 -> 6, 6, 6, 6,
+      1 -> 7, 7, 7, 7,
+      1 -> 8, 8, 8, 8,
+      1 -> 9, 9, 9, 9,
+      1 -> 10, 10, 10, 10,
+      1 -> 11, 11, 11, 11,
+      1 -> 12, 12, 12, 12,
+      1 -> 13, 13, 13, 13,
+      1 -> 14, 14, 14, 14,
+      1 -> 15, 15, 15, 15,
+      1 -> 16, 16, 16, 16,
+      1 -> 17, 17, 17, 17,
+      1 -> 18, 18, 18, 18,
+      1 -> 19, 19, 19, 19,
+      1 -> 20, 20, 20, 20,
+      1 -> 21, 21, 21, 21,
+      1 -> 22, 22, 22, 22,
+      1 -> 
+      1 -> 23, 23,
+      1 -> 24, 24, 24,
+      1 -> 25, 25, 25,
+      1 -> 
+      1 -> 26, 26, 26,
+      1 -> 27, 27,
+      1 -> 28, 28, 28,
+      1 -> 29, 29,
+      1 -> 
+      1 -> 30, 30,
+      1 -> 31, 31,
+      1 -> 32, 32,
+      1 -> 33, 33,
+      1 -> 
+      1 -> 34, 34, 34,
+      1 -> 35, 35
+      1 -> };
+      1 -> 
+      1 -> 
+      1 -> static int prdct [] = 	{-1,
+      1 -> -1, -1, -1,
+      1 -> 
+      1 -> -1, -1, -1,
+      1 -> -1, -1,
+      1 -> -1, -1, -1,
+      1 -> -1, -1,
+      1 -> 
+      1 -> -1, 1, -1, -1,
+      1 -> -1, 1, -1, -1,
+      1 -> -1, -1, -1, -1,
+      1 -> -1, 1, -1, -1,
+      1 -> -1, 1, -1, -1,
+      1 -> -1, -1, -1, -1,
+      1 -> -1, 1, -1, -1,
+      1 -> -1, 1, -1, -1,
+      1 -> -1, -1, -1, -1,
+      1 -> -1, 1, -1, -1,
+      1 -> -1, 1, -1, -1,
+      1 -> -1, -1, -1, -1,
+      1 -> -1, 1, -1, -1,
+      1 -> -1, 1, -1, -1,
+      1 -> -1, -1, -1, -1,
+      1 -> -1, 1, -1, -1,
+      1 -> -1, 1, -1, -1,
+      1 -> -1, -1, -1, -1,
+      1 -> 
+      1 -> -1, -1,
+      1 -> 1, -1, -1,
+      1 -> -1, 1, -1,
+      1 -> 
+      1 -> -1, -1, -1,
+      1 -> -1, -1,
+      1 -> -1, -1, -1,
+      1 -> -1, -1,
+      1 -> 
+      1 -> -1, -1,
+      1 -> -1, -1,
+      1 -> -1, -1,
+      1 -> -1, -1,
+      1 -> 
+      1 -> 1, -1, -1,
+      1 -> -1, -1
+      1 -> };
+      1 -> 
+      1 -> 
+      1 -> static int prolon [] = {
+      1 ->   1,
+      1 -> 
+      1 ->   4,
+      1 ->   7,
+      1 ->   9,
+      1 ->   12,
+      1 -> 
+      1 ->   14,
+      1 ->   18,
+      1 ->   22,
+      1 ->   26,
+      1 ->   30,
+      1 ->   34,
+      1 ->   38,
+      1 ->   42,
+      1 ->   46,
+      1 ->   50,
+      1 ->   54,
+      1 ->   58,
+      1 ->   62,
+      1 ->   66,
+      1 ->   70,
+      1 ->   74,
+      1 ->   78,
+      1 ->   82,
+      1 -> 
+      1 ->   86,
+      1 ->   88,
+      1 ->   91,
+      1 -> 
+      1 ->   94,
+      1 ->   97,
+      1 ->   99,
+      1 ->   102,
+      1 -> 
+      1 ->   104,
+      1 ->   106,
+      1 ->   108,
+      1 ->   110,
+      1 -> 
+      1 ->   112,
+      1 ->   115,
+      1 ->   117
+      1 -> };
+      1 -> 
+      1 -> 
+      1 -> static int lhs [] = 	{
+      1 -> 0,
+      1 -> 
+      1 -> 1,
+      1 -> 1,
+      1 -> 1,
+      1 -> 1,
+      1 -> 
+      1 -> 2,
+      1 -> 2,
+      1 -> 2,
+      1 -> 2,
+      1 -> 2,
+      1 -> 2,
+      1 -> 2,
+      1 -> 2,
+      1 -> 2,
+      1 -> 2,
+      1 -> 2,
+      1 -> 2,
+      1 -> 2,
+      1 -> 2,
+      1 -> 2,
+      1 -> 2,
+      1 -> 2,
+      1 -> 2,
+      1 -> 
+      1 -> 5,
+      1 -> 5,
+      1 -> 5,
+      1 -> 
+      1 -> 6,
+      1 -> 6,
+      1 -> 6,
+      1 -> 6,
+      1 -> 
+      1 -> 3,
+      1 -> 3,
+      1 -> 3,
+      1 -> 3,
+      1 -> 
+      1 -> 4,
+      1 -> 4
+      1 -> };
+      1 -> 
+      1 -> 
+      1 -> static int parsact [] = 	{
+      1 -> -1,
+      1 -> 
+      1 -> 1,
+      1 -> 2,
+      1 -> 2,
+      1 -> 3,
+      1 -> 
+      1 -> 4,
+      1 -> 5,
+      1 -> 6,
+      1 -> 4,
+      1 -> 5,
+      1 -> 6,
+      1 -> 4,
+      1 -> 5,
+      1 -> 6,
+      1 -> 4,
+      1 -> 5,
+      1 -> 6,
+      1 -> 4,
+      1 -> 5,
+      1 -> 6,
+      1 -> 4,
+      1 -> 5,
+      1 -> 6,
+      1 -> 
+      1 -> 7,
+      1 -> 8,
+      1 -> 9,
+      1 -> 
+      1 -> 10,
+      1 -> 11,
+      1 -> 12,
+      1 -> 13,
+      1 -> 
+      1 -> -1,
+      1 -> -1,
+      1 -> -1,
+      1 -> -1,
+      1 -> 
+      1 -> 14,
+      1 -> 15
+      1 -> };
+      1 -> 
+      1 -> static int NKshift [] = {0,
+      1 -> /* RNA = 26 */
+      1 -> 111,
+      1 -> 109,
+      1 -> 107,
+      1 -> 105,
+      1 -> 83,
+      1 -> 79,
+      1 -> 75,
+      1 -> 71,
+      1 -> 67,
+      1 -> 63,
+      1 -> 59,
+      1 -> 55,
+      1 -> 51,
+      1 -> 47,
+      1 -> 43,
+      1 -> 39,
+      1 -> 35,
+      1 -> 31,
+      1 -> 27,
+      1 -> 23,
+      1 -> 19,
+      1 -> 15,
+      1 -> 13,
+      1 -> 10,
+      1 -> 8,
+      1 -> 5,
+      1 -> 
+      1 -> /* DoubleStrand = 18 */
+      1 -> 83,
+      1 -> 79,
+      1 -> 75,
+      1 -> 71,
+      1 -> 67,
+      1 -> 63,
+      1 -> 59,
+      1 -> 55,
+      1 -> 51,
+      1 -> 47,
+      1 -> 43,
+      1 -> 39,
+      1 -> 35,
+      1 -> 31,
+      1 -> 27,
+      1 -> 23,
+      1 -> 19,
+      1 -> 15,
+      1 -> 
+      1 -> /* Base = 4 */
+      1 -> 111,
+      1 -> 109,
+      1 -> 107,
+      1 -> 105,
+      1 -> 
+      1 -> /* SingleStrand = 6 */
+      1 -> 116,
+      1 -> 113,
+      1 -> 111,
+      1 -> 109,
+      1 -> 107,
+      1 -> 105,
+      1 -> 
+      1 -> /* InternalLoop = 25 */
+      1 -> 92,
+      1 -> 89,
+      1 -> 87,
+      1 -> 111,
+      1 -> 109,
+      1 -> 107,
+      1 -> 105,
+      1 -> 83,
+      1 -> 79,
+      1 -> 75,
+      1 -> 71,
+      1 -> 67,
+      1 -> 63,
+      1 -> 59,
+      1 -> 55,
+      1 -> 51,
+      1 -> 47,
+      1 -> 43,
+      1 -> 39,
+      1 -> 35,
+      1 -> 31,
+      1 -> 27,
+      1 -> 23,
+      1 -> 19,
+      1 -> 15,
+      1 -> 
+      1 -> /* MultipleLoop = 26 */
+      1 -> 103,
+      1 -> 100,
+      1 -> 98,
+      1 -> 95,
+      1 -> 111,
+      1 -> 109,
+      1 -> 107,
+      1 -> 105,
+      1 -> 83,
+      1 -> 79,
+      1 -> 75,
+      1 -> 71,
+      1 -> 67,
+      1 -> 63,
+      1 -> 59,
+      1 -> 55,
+      1 -> 51,
+      1 -> 47,
+      1 -> 43,
+      1 -> 39,
+      1 -> 35,
+      1 -> 31,
+      1 -> 27,
+      1 -> 23,
+      1 -> 19,
+      1 -> 15
+      1 -> };
+      1 -> 
+      1 -> 
+      1 -> static struct LC0 LC0 [] ={
+      1 ->               /* 0 */ {0, 0},
+      1 -> 	      /* 1 */ {1, 26},
+      1 -> 	      /* 2 */ {27, 18},
+      1 -> 	      /* 3 */ {45, 4},
+      1 -> 	      /* 4 */ {49, 6},
+      1 -> 	      /* 5 */ {55, 25},
+      1 -> 	      /* 6 */ {80, 26}
+      1 -> };
+      1 -> 
+      1 -> 
+      1 -> static int constraints [] = {-1,
+      1 -> 				 -1,
+      1 -> 				 -1,
+      1 -> 				 -1,
+      1 -> 				 1,
+      1 -> 				 1,
+      1 -> 				 -1
+      1 -> 			 };
+      1 -> 
+      1 -> static int nt2order [] = {0,
+      1 -> 			      1,
+      1 -> 			      4,
+      1 -> 			      6,
+      1 -> 			      5,
+      1 -> 			      2,
+      1 -> 			      3
+      1 -> 			  };
+      1 -> 
+      1 -> static int order2nt [] = {0,
+      1 -> 			      1, /* "RNA" */
+      1 -> 			      5, /* "InternalLoop" */
+      1 -> 			      6, /* "MultipleLoop" */
+      1 -> 			      2, /* "DoubleStrand" */
+      1 -> 			      4, /* "SingleStrand" */
+      1 -> 			      3  /* "Base" */
+      1 -> 			  };
+      1 -> 
+      1 -> static char	*ntstring [] = {"",
+      1 -> 				    "RNA",
+      1 -> 				    "DoubleStrand",
+      1 -> 				    "Base",
+      1 -> 				    "SingleStrand",
+      1 -> 				    "InternalLoop",
+      1 -> 				    "MultipleLoop"
+      1 -> 				};
+      1 -> 
+      1 -> static int char2tok (c)
+      1 ->     char c;
+    186 -> {
+    186 ->     int tok;
+    186 -> 
+    186 ->     switch (c)
+    186 ->     {
+     42 ->     case 'A': tok = -1; break;
+     58 ->     case 'U': tok = -2; break;
+     36 ->     case 'G': tok = -3; break;
+     50 ->     case 'C': tok = -4; break;
+  ##### ->     default: tok = 0; break;
+  ##### ->     }
+  ##### -> 
+    186 ->     return tok;
+    186 -> }
+    186 -> /* #endif */
+    186 -> 
+    186 -> 
+    186 -> 
+    186 -> #if 0
+    186 -> 
+    186 -> 
+    186 -> /* On code l'automate LC de la grammaire
+    186 ->    S' -> 1 S 2 $ 3
+    186 ->    S  -> 4 S 5 S 6
+    186 ->    S  -> 7 a 8
+    186 ->    a la main
+    186 ->    */
+    186 -> 
+    186 -> static int lispro [] = 	{0,
+    186 -> 			     1, -2, 0,
+    186 -> 			     1, 1, 0,
+    186 -> 			     -1, 0
+    186 -> 			 };
+    186 -> 
+    186 -> static int prolis [] = 	{0,
+    186 -> 			     0, 0, 0,
+    186 -> 			     1, 1, 1,
+    186 -> 			     2, 2
+    186 -> 			 };
+    186 -> 
+    186 -> static int prdct [] = 	{-1,
+    186 -> 			     -1, -1, -1,
+    186 -> 			     -1, -1, -1,
+    186 -> 			     -1, -1
+    186 -> 			 };
+    186 -> 
+    186 -> static int prolon [] = 	{1,
+    186 -> 			     4,
+    186 -> 			     7,
+    186 -> 			     9
+    186 -> 			 };
+    186 -> 
+    186 -> static int lhs [] = 	{0,
+    186 -> 			     1,
+    186 -> 			     1
+    186 -> 			 };
+    186 -> 
+    186 -> 
+    186 -> /* Ne contient pas les transitions "kernel" */
+    186 -> static struct LC0 LC0 [] = {
+    186 -> {0, 0},
+    186 -> {1, 2}
+    186 -> };
+    186 -> static int NKshift [] = {0, 5, 8};
+    186 -> 
+    186 -> static int constraints [] = {-1,
+    186 -> 				 -1
+    186 -> 			     };
+    186 -> static int nt2order [] = {0,
+    186 -> 			      1
+    186 -> 			  };
+    186 -> 
+    186 -> static int order2nt [] = {0,
+    186 -> 			      1 /* "S" */
+    186 -> 			  };
+    186 -> 
+    186 -> static char	*ntstring [] = {"",
+    186 -> 				    "S"
+    186 -> 				};
+    186 -> 
+    186 -> static int char2tok (c)
+    186 ->     char c;
+    186 -> {
+    186 ->     return (c != 'a') ? 0 : -1;
+    186 -> }
+    186 -> 
+    186 -> #define ntmax		1
+    186 -> #define tmax		(-2)
+    186 -> #define statemax	8 
+    186 -> #define prodmax		2
+    186 -> #define initial_state	1
+    186 -> #define	rhs_lgth	2
+    186 -> #define maxntlon	1
+    186 -> #define maxtlon		1
+    186 -> 
+    186 -> #endif
+    186 -> 
+    186 -> #define PUSH(s,x)	(s)[++*(s)]=(x)
+    186 -> #define POP(s)		(s)[(*(s))--]
+    186 -> #define IS_EMPTY(s)	(*(s)==0)
+    186 -> 
+    186 -> struct sprod2attr {
+    186 ->   int	A, B, state;
+    186 -> };
+    186 -> 
+    186 -> struct chains2attr {
+    186 ->   int	prod;
+    186 -> };
+    186 -> 
+    186 -> static int		sprodmax;
+    186 -> static int		*sprod2order;
+    186 -> static SXBA		sprod_set;
+    186 -> static struct sprod2attr	*sprod2attr;
+    186 -> 
+    186 -> static char	ME [] = "earley";
+    186 -> 
+    186 -> static char	Usage [] = "\
+    186 -> Usage:\t%s ('R' | 'r' |'P' | 'p') \"source string\"\n";
+    186 -> 
+    186 -> 
+    186 -> static int		n;
+    186 -> static int		*TOK;
+    186 -> static char		*source;
+    186 -> 
+    186 -> static SXBA		*INIT;
+    186 -> static SXBA		*FIRST_1;
+    186 -> static SXBA		*NT2CHAIN;
+    186 -> 
+    186 -> typedef struct {
+    186 ->   SXBA_ELT	**hd, *pool_top, *pool_lim;
+    186 ->   int		hd_size, hd_top, pool_size, room;
+    186 ->   int		used_size, total_size; /* #if EBUG */
+    186 -> } bag_header;
+    186 -> 
+    186 -> 
+    186 -> static SXBOOLEAN		is_parser;
+    186 -> 
+    186 -> typedef struct {
+    186 ->   int			state;
+    186 ->   SXBA			index_set;
+    186 -> } sis;
+    186 -> 
+    186 -> static pool_header	sis_pool;
+    186 -> 
+    186 -> 
+    186 -> struct R_shift {
+    186 ->   sis		*bot, *top;
+    186 ->   int		Ai, Aik;
+    186 -> };
+    186 -> 
+    186 -> static struct recognize_item {
+    186 ->   struct R_shift	nt [ntmax+1];
+    186 -> }			*RT;
+    186 -> 
+    186 -> static bag_header	shift_bag;
+    186 -> 
+    186 -> static struct working_item_set {
+    186 ->   int		state_stack [statemax + 1];
+    186 ->   SXBA		state_set;
+    186 ->   SXBA		index_sets [statemax + 1];
+    186 -> }			T1, T2;
+    186 -> 
+    186 -> 
+    186 -> static SXBA		*global_state_sets;
+    186 -> 
+    186 -> static SXBA		NT_set;
+    186 -> 
+    186 -> #if 0
+    186 -> static struct working_item_set	T0;
+    186 -> static int		scan_reduce_stack [statemax + 1], shift_reduce_stack [statemax + 1];
+    186 -> static SXBA		order_set;
+    186 -> #endif
+    186 -> 
+    186 -> static SXBA		init_state_set;
+    186 -> 
+    186 -> static SXBA		*ntXindex_set;
+    186 -> 
+    186 -> /* is_parser */
+    186 -> 
+    186 -> static struct for_parsact
+    186 ->                         for_parsact;
+    186 -> 
+    186 -> 
+    186 -> struct spf /* shared_parse_forest */
+    186 -> {
+    186 ->     struct G
+    186 ->     {
+    186 -> 	int		N, T, P, G, start_symbol, rhs_top, rhs_size, lhs_top, lhs_size;
+    186 ->     } G;
+    186 -> 
+    186 ->     struct rhs
+    186 ->     {
+    186 -> 	int		lispro, prolis, next_rhs;
+    186 ->     } *rhs;
+    186 -> 
+    186 ->     struct lhs
+    186 ->     {
+    186 -> 	int		prolon, reduc, next_lhs, init_prod;
+    186 -> 	SXBOOLEAN		is_erased;
+    186 ->     } *lhs;
+    186 -> };
+    186 -> 
+    186 -> static struct spf	spf;
+    186 -> 
+    186 -> static int		rhs_stack [rhs_lgth+1];
+    186 -> 
+    186 -> static XxY_header	Ai_hd;
+    186 -> 
+    186 -> static struct Aij_pool {
+    186 ->   int		A, i, j, first_lhs, first_rhs;
+    186 ->   SXBOOLEAN	is_erased;
+    186 -> }			*Aij_pool;
+    186 -> static int		Aij_top, Aij_size;
+    186 -> 
+    186 -> static int		***symbols;
+    186 -> /* Acces a l'element A,i,j de symbols se fait par symbols [A] [i] [j-i]. */
+    186 -> 
+    186 -> /* end is_parser */
+    186 -> 
+    186 -> 
+    186 -> 
+    186 -> 
+    186 -> 
+    186 -> static void
+    186 -> grammar ()
+      1 -> {
+      1 ->     /* On remplit INIT, NT2CHAIN et FIRST_1 */
+      1 ->     int		prod, state, X, Y, A, B, x, lim, t;
+      1 ->     SXBA	*NT2NT, *NT2T;
+      1 -> 
+      1 ->     INIT = sxbm_calloc (ntmax + 1, statemax + 1);
+      1 -> 
+      6 ->     for (X = 1; X <= ntmax; X++)
+      6 ->     {
+      6 -> 	for (x = LC0 [X].NKshift, lim = x + LC0 [X].lgth; x < lim; x++)
+      6 -> 	{
+    105 -> 	    state = NKshift [x] - 1;
+    105 -> 	    SXBA_1_bit (INIT [X], state);
+    105 -> 	}
+    105 ->     }
+    105 -> 
+    105 ->     /* NT2CHAIN [A] = { U -> alpha V. X beta | V ->* A} */
+    105 -> 
+      1 ->     NT2NT = sxbm_calloc (ntmax + 1, ntmax + 1);
+      1 -> 
+      1 ->     NT2CHAIN = sxbm_calloc (ntmax + 1, statemax + 1);
+      1 -> 
+     36 ->     for (prod = 0; prod <= prodmax; prod++)
+     36 ->     {
+     36 -> 	X = lispro [state];
+     36 -> 	Y = lispro [state+1];
+     36 -> 
+     36 -> 	if (X > 0 && Y == 0)
+     36 -> 	{
+     36 -> 	    /* A -> X */
+  ##### -> 	    A = lhs [prod];
+  ##### -> 	    SXBA_1_bit (NT2NT [A], X);
+  ##### -> 	}
+  ##### ->     }
+  ##### -> 
+      1 ->     fermer (NT2NT, ntmax+1);
+      1 -> 
+     36 ->     for (prod = 0; prod <= prodmax; prod++)
+     36 ->     {
+     36 -> 	state = prolon [prod];
+     36 -> 
+     36 -> 	X = lispro [state];
+     36 -> 
+     36 -> 	while ((Y = lispro [++state]) != 0)
+     36 -> 	{
+     44 -> 	    if (X > 0)
+     44 -> 	    {
+     44 -> 		/* A -> alpha X . Y beta */
+     26 -> 		SXBA_1_bit (NT2CHAIN [X], state);
+     26 -> 
+     26 -> 		B = 0;
+     26 -> 
+     26 -> 		while ((B = sxba_scan (NT2NT [X], B)) > 0)
+     26 -> 		{
+  ##### -> 		    SXBA_1_bit (NT2CHAIN [B], state);
+  ##### -> 		}
+  ##### -> 	    }
+  ##### -> 
+     44 -> 	    X = Y;
+     44 -> 	}
+     44 ->     }
+     44 -> 
+      1 ->     sxbm_free (NT2NT);
+      1 -> 
+      1 ->     /* FIRST_1 [a] = {U -> alpha . beta | a \in T et a \in FIRST(beta)LOOK-AHEAD(U -> alpha V beta)} */
+      1 -> 
+      1 ->     NT2NT = sxbm_calloc (ntmax + 1, ntmax + 1);
+      1 ->     NT2T = sxbm_calloc (ntmax + 1, -tmax + 1);
+      1 -> 
+      1 ->     FIRST_1 = sxbm_calloc (-tmax + 1, statemax + 1);
+      1 ->     
+     36 ->     for (prod = 0; prod <= prodmax; prod++)
+     36 ->     {
+     36 -> 	state = prolon [prod];
+     36 -> 	A = lhs [prod];
+     36 -> 	X = lispro [state];
+     36 -> 
+     36 -> 	if (X < 0)
+     22 -> 	    SXBA_1_bit (NT2T [A], -X);
+     22 -> 	else
+     14 -> 	    SXBA_1_bit (NT2NT [A], X);
+     14 ->     }
+     14 -> 
+      1 ->     fermer (NT2NT, ntmax+1);
+      1 -> 
+     36 ->     for (prod = 0; prod <= prodmax; prod++)
+     36 ->     {
+     36 -> 	state = prolon [prod];
+     36 -> 
+     36 -> 	while ((X = lispro [state]) != 0)
+     36 -> 	{
+     80 -> 	    if (X < 0)
+     41 -> 		SXBA_1_bit (FIRST_1 [-X], state);
+     41 -> 
+     41 -> 	    else
+     41 -> 	    {
+     39 -> 		t = 0;
+     39 -> 
+     39 -> 		while ((t = sxba_scan (NT2T [X], t)) > 0)
+     39 -> 		{
+     52 -> 		    SXBA_1_bit (FIRST_1 [t], state);
+     52 -> 		}
+     52 -> 
+     39 -> 		Y = 0;
+     39 -> 
+     39 -> 		while ((Y = sxba_scan (NT2NT [X], Y)) > 0)
+     39 -> 		{
+     71 -> 		    t = 0;
+     71 -> 
+     71 -> 		    while ((t = sxba_scan (NT2T [Y], t)) > 0)
+     71 -> 		    {
+    180 -> 			SXBA_1_bit (FIRST_1 [t], state);
+    180 -> 		    }
+    180 -> 		}
+    180 -> 	    }
+    180 -> 
+     80 -> 	    state++;
+     80 -> 	}
+     80 -> 
+     80 -> 	/* POUR L"INSTANT, ON FAIT DS LE GROSSIER!!! */
+     80 -> 	/* ON CALCULERA LE VRAI LOOK-AHEAD + TARD */
+     36 -> 	for (t = 1; t <= -tmax; t++)
+    180 -> 	    SXBA_1_bit (FIRST_1 [t], state);
+    180 ->     }
+    180 -> 
+      1 ->     sxbm_free (NT2NT);
+      1 ->     sxbm_free (NT2T);
+      1 -> }
+      1 -> 
+      1 -> 
+      1 -> static    struct chains2attr	*chains2attr;
+      1 -> 
+      1 -> static  void
+      1 -> chains_oflw (old_size, new_size)
+      1 ->     int		old_size, new_size;
+  ##### -> {
+  ##### ->     chains2attr = (struct chains2attr*) sxrealloc (chains2attr, new_size+1, sizeof (struct chains2attr));
+  ##### -> }
+  ##### -> 
+  ##### -> 
+  ##### -> static void
+  ##### -> grammar2 ()
+      1 -> {
+      1 ->     /* A chaque production simple r: A -> B on affecte un entier n(r) t.q.
+      1 ->        r1: A -> B et r2: B -> C => n(r1) < n(r2). */
+      1 ->     XxY_header		chains;
+      1 ->     SXBA		chain_set, nb0;
+      1 ->     int			nb [ntmax + 1];
+      1 -> 
+      1 ->     int			prod, x, A, B, AxB;
+      1 -> 
+      1 ->     XxY_alloc (&chains, "chains", prodmax, 1, 1, 0, chains_oflw,
+      1 -> #ifdef EBUG
+      1 -> 	       stdout
+      1 -> #else
+      1 -> 	       NULL
+      1 -> #endif
+      1 -> 	       );
+      1 -> 
+      1 ->     chains2attr = (struct chains2attr*) sxalloc (XxY_size (chains)+1, sizeof (chains2attr));
+      1 -> 
+      1 ->     chain_set = sxba_calloc (ntmax+1);
+      1 ->     nb0 = sxba_calloc (ntmax+1);
+      1 ->     /* nb = (int*) sxcalloc (ntmax+1, sizeof (int)); */
+      1 -> 
+      1 ->     x = 4;
+      1 -> 
+      1 ->     while (x <= statemax)
+      1 ->     {
+     35 -> 	if ((B = lispro [x]) > 0 && lispro [x+1] == 0)
+     35 -> 	{
+     35 -> 	    /* production simple */
+      6 -> 	    prod = prolis [x];
+      6 -> 	    A = lhs [prod];
+      6 -> 	    XxY_set (&chains, A, B, &AxB);
+      6 -> 	    chains2attr [AxB].prod = prod;
+      6 -> 
+      6 -> 	    if (SXBA_bit_is_reset_set (chain_set, A))
+      6 -> 	    {
+      4 -> 		SXBA_1_bit (nb0, A);
+      4 -> 	    }
+      4 -> 
+      6 -> 	    if (SXBA_bit_is_reset_set (chain_set, B))
+      6 -> 	    {
+      2 -> 		nb [B] = 1;
+      2 -> 	    }
+      2 -> 	    else
+      2 -> 	    {
+      4 -> 		if (nb [B] == 0)
+  ##### -> 		    SXBA_0_bit (nb0, B);
+  ##### -> 
+      4 -> 		nb [B]++;
+      4 -> 	    }
+      4 -> 	}
+      4 -> 
+     35 -> 	while (lispro [x++] != 0);
+     35 ->     }
+     35 ->     
+      1 ->     sprodmax = 0;
+      1 -> 
+      1 ->     while ((A = sxba_scan_reset (nb0, 0)) > 0)
+      1 ->     {
+      6 -> 	SXBA_0_bit (chain_set, A);
+      6 -> 
+      6 -> 	XxY_Xforeach (chains, A, AxB)
+      6 -> 	{
+      6 -> 	    prod = chains2attr [AxB].prod;
+      6 -> 	    sprod2order [prod] = ++sprodmax;
+      6 -> 
+      6 -> 	    B = XxY_Y (chains, AxB);
+      6 -> 
+      6 -> 	    if (--nb [B] == 0)
+      2 -> 		SXBA_1_bit (nb0, B);
+      2 -> 	}
+      2 ->     }
+      2 -> 
+      1 ->     XxY_free (&chains);
+      1 ->     sxfree (chains2attr);
+      1 ->     sxfree (chain_set);
+      1 ->     sxfree (nb0);
+      1 ->     /* sxfree (nb); */
+      1 -> 
+      1 -> }
+      1 -> 
+      1 -> static void
+      1 -> grammar_free ()
+      1 -> {
+      1 ->     sxbm_free (INIT);
+      1 ->     sxbm_free (NT2CHAIN);
+      1 ->     sxbm_free (FIRST_1);
+      1 -> }
+      1 -> 
+      1 -> 
+      1 -> #if 0
+      1 -> static void
+      1 -> EMPTY (bits_array, slices_number)
+      1 ->     SXBA	bits_array;
+      1 ->     int		slices_number;
+      1 -> {
+      1 ->     SXBA	bits_ptr = bits_array + slices_number;
+      1 -> 
+      1 ->     do
+      1 ->     {
+      1 -> 	*bits_ptr-- = 0;
+      1 ->     } while (bits_ptr > bits_array);
+      1 -> }
+      1 -> 
+      1 -> 
+      1 -> static void
+      1 -> MINUS (lhs_bits_array, rhs_bits_array, slices_number)
+      1 ->     SXBA	lhs_bits_array, rhs_bits_array;
+      1 ->     int		slices_number;
+      1 -> /*
+      1 ->  * "OR" puts into its first argument the result of the bitwise
+      1 ->  * "OR" of the prefix of its two arguments.  It returns its (modified) first
+      1 ->  * argument.
+      1 ->  */
+      1 -> {
+      1 ->     register SXBA	lhs_bits_ptr, rhs_bits_ptr;
+      1 -> 
+      1 ->     lhs_bits_ptr = lhs_bits_array + slices_number, rhs_bits_ptr = rhs_bits_array + slices_number;
+      1 -> 
+      1 ->     while (slices_number-- > 0)
+      1 ->       *lhs_bits_ptr-- &= ~(*rhs_bits_ptr--)
+      1 -> }
+      1 -> 
+      1 -> 
+      1 -> static void
+      1 -> COPY (lhs_bits_array, rhs_bits_array, slices_number)
+      1 ->     SXBA	lhs_bits_array, rhs_bits_array;
+      1 ->     int		slices_number;
+      1 -> /*
+      1 ->  * "OR" puts into its first argument the result of the bitwise
+      1 ->  * "OR" of the prefix of its two arguments.  It returns its (modified) first
+      1 ->  * argument.
+      1 ->  */
+      1 -> {
+      1 ->     register SXBA	lhs_bits_ptr, rhs_bits_ptr;
+      1 -> 
+      1 ->     lhs_bits_ptr = lhs_bits_array + slices_number, rhs_bits_ptr = rhs_bits_array + slices_number;
+      1 -> 
+      1 ->     while (slices_number-- > 0)
+      1 ->       *lhs_bits_ptr-- = *rhs_bits_ptr--;
+      1 -> }
+      1 -> 
+      1 -> 
+      1 -> static void
+      1 -> SHIFT (bits_array)
+      1 ->     SXBA	bits_array;
+      1 -> {
+      1 -> #define SHIFT_80 (~((~(0L))>>1))
+      1 -> 
+      1 ->     register SXBA	ptop = bits_array + NBLONGS (BASIZE (bits_array));
+      1 ->     SXBOOLEAN 		is_r2, is_r = SXFALSE;
+      1 -> 
+      1 -> 
+      1 ->     while (++bits_array <= ptop)
+      1 ->     {
+      1 -> 	is_r2 = *bits_array & SHIFT_80;
+      1 -> 
+      1 -> 	*bits_array <<= 1;
+      1 -> 
+      1 -> 	if (is_r)
+      1 -> 	    *bits_array |= 1;
+      1 -> 
+      1 -> 	is_r = is_r2;
+      1 ->     }
+      1 -> }
+      1 -> #endif
+      1 -> 
+      1 -> 
+      1 -> 
+      1 -> 
+      1 -> static void
+      1 -> OR (lhs_bits_array, rhs_bits_array)
+      1 ->     SXBA	lhs_bits_array, rhs_bits_array;
+  36472 -> {
+  36472 ->     /* La memoisation de OR par
+  36472 ->        if (XxY_set (&include_sets_hd, rhs_bits_array, lhs_bits_array, &dum))
+  36472 ->        return;
+  36472 ->        sur ARN_186 a donne' :
+  36472 ->           - nombre d'appels de OR : 		185206
+  36472 -> 	  - nombre d'appels deja memoise : 	 99190
+  36472 -> 	  - nombre d'inclusion non memoise :	  7508
+  36472 -> 	  - AUGMENTATION du temps d'execution total de 0.76s a 3.27s
+  36472 -> 
+  36472 ->        Il est donc beaucoup plus couteux de memoiser que de calculer des OR inutiles. */
+  36472 -> 
+  36472 ->     register SXBA	lhs_bits_ptr, rhs_bits_ptr;
+  36472 ->     register int	slices_number = NBLONGS (BASIZE (rhs_bits_array));
+  36472 -> 
+  36472 ->     lhs_bits_ptr = lhs_bits_array + slices_number, rhs_bits_ptr = rhs_bits_array + slices_number;
+  36472 -> 
+  36472 ->     while (slices_number-- > 0)
+  36472 ->     {
+  81058 -> 	*lhs_bits_ptr-- |= *rhs_bits_ptr--;
+  81058 ->     }
+  36472 -> }
+  36472 -> 
+  36472 -> 
+  36472 -> static void
+  36472 -> bag_alloc (pbag, size)
+  36472 ->     bag_header	*pbag;
+  36472 ->     int 	size;
+      1 -> {
+      1 ->     SXBA_ELT	*ptr;
+      1 -> 
+      1 ->     pbag->hd_top = 0;
+      1 ->     pbag->hd_size = 1;
+      1 ->     pbag->pool_size = size;
+      1 ->     pbag->hd = (SXBA_ELT**) sxalloc (pbag->hd_size, sizeof (SXBA_ELT*));
+      1 ->     pbag->pool_lim = pbag->pool_top = pbag->hd [pbag->hd_top] =
+      1 -> 	    (SXBA_ELT*) sxcalloc (pbag->pool_size + 2, sizeof (SXBA_ELT));
+      1 ->     pbag->pool_lim += pbag->pool_size + 1;
+      1 ->     pbag->room = MUL (pbag->pool_size);
+      1 -> 
+      1 -> #if EBUG
+      1 ->     pbag->total_size = pbag->pool_size + 2;
+      1 -> #endif
+      1 -> }
+      1 -> 
+      1 -> 
+      1 -> 
+      1 -> static SXBA
+      1 -> bag_get (pbag, size)
+      1 ->     bag_header	*pbag;
+      1 ->     int		size;
+   2769 -> {
+   2769 ->     int 	slice_nb = NBLONGS (size) + 1;
+   2769 ->     SXBA	set;
+   2769 -> 
+   2769 ->     if (size > pbag->room)
+   2769 ->     {
+      1 -> 	if (++pbag->hd_top >= pbag->hd_size)
+      1 -> 	    pbag->hd = (SXBA*) sxrealloc (pbag->hd, pbag->hd_size *= 2, sizeof (SXBA));
+      1 -> 
+      1 -> 	while (size > (pbag->room = MUL (pbag->pool_size)))
+  ##### -> 	    pbag->pool_size *= 2;
+  ##### -> 
+  ##### -> #if EBUG
+  ##### -> 	printf ("New bag of size %i is created.\n", pbag->pool_size);
+  ##### -> 	pbag->used_size = pbag->total_size;
+  ##### -> 	pbag->total_size += pbag->pool_size + 2;
+  ##### -> #endif
+  ##### -> 
+  ##### -> 	pbag->pool_lim = pbag->pool_top = pbag->hd [pbag->hd_top] =
+      1 -> 	    (SXBA) sxcalloc (pbag->pool_size + 2, sizeof (SXBA_ELT));
+      1 -> 
+      1 -> 	pbag->pool_lim += pbag->pool_size + 1;
+      1 ->     }
+      1 -> 
+   2769 ->     *(set = pbag->pool_top) = size;
+   2769 ->     pbag->pool_top += slice_nb;
+   2769 ->     pbag->room -= MUL (slice_nb);
+   2769 -> 
+   2769 ->     return set;
+   2769 -> }
+   2769 -> 
+   2769 -> 
+   2769 -> 
+   2769 -> static void
+   2769 -> bag_free (pbag)
+   2769 ->     bag_header	*pbag;
+      1 -> {
+      1 -> #if EBUG
+      1 ->     printf ("Bag: used_size = %i bytes, total_size = %i bytes\n",
+      1 -> 	    (pbag->used_size + (pbag->pool_top - pbag->hd [pbag->hd_top])) * sizeof (SXBA_ELT)
+      1 -> 	     + (pbag->hd_top + 1) * sizeof (int),
+      1 ->     	    pbag->total_size * sizeof (SXBA_ELT) + pbag->hd_size * sizeof (int));
+      1 -> #endif
+      1 -> 
+      1 ->     while (--pbag->hd_top >= 0)
+      1 -> 	sxfree (pbag->hd [pbag->hd_top]);
+      1 -> 
+      1 ->     sxfree (pbag->hd);
+      1 -> }
+      1 ->     
+      1 ->     
+      1 -> #if 0
+      1 -> static void
+      1 -> bag_or (lhs_bag_ptr, rhs_bag_ptr, slices_number)
+      1 ->     SXBA_ELT	*lhs_bag_ptr, *rhs_bag_ptr;
+      1 ->     int		slices_number;
+      1 -> {
+      1 ->     register SXBA_ELT	*lhs_bits_ptr = lhs_bag_ptr + slices_number, *rhs_bits_ptr = rhs_bag_ptr + slices_number;
+      1 -> 
+      1 ->     while (slices_number-- > 0)
+      1 ->       *--lhs_bits_ptr |= *--rhs_bits_ptr;
+      1 -> }
+      1 -> 
+      1 -> 
+      1 -> static void
+      1 -> bag_copy_reset (lhs_bag_ptr, rhs_bag_ptr, slices_number)
+      1 ->     SXBA_ELT	*lhs_bag_ptr, *rhs_bag_ptr;
+      1 ->     int		slices_number;
+      1 -> {
+      1 ->     register SXBA_ELT	*lhs_bits_ptr = lhs_bag_ptr + slices_number, *rhs_bits_ptr = rhs_bag_ptr + slices_number;
+      1 -> 
+      1 ->     while (slices_number-- > 0)
+      1 ->     {
+      1 -> 	*--lhs_bits_ptr = *--rhs_bits_ptr;
+      1 -> 	*rhs_bits_ptr = 0;
+      1 ->     }
+      1 -> }
+      1 -> #endif
+      1 -> 
+      1 -> 
+      1 -> #if 0
+      1 -> /* Pre-Calcul de toutes les reductions */
+      1 -> static void
+      1 -> fill_T0 (state, index_set, i)
+      1 ->     int 	state, i;
+      1 ->     SXBA	index_set;
+      1 -> {
+      1 ->     /* state : B -> beta A . */
+      1 ->     /* Cas du reconnaisseur, on vient de trouver la reduction B -> beta A . dans la liste i, on fait
+      1 ->        le "shift" sur B dans les listes index_set. */
+      1 ->     sis		*bot, *top;
+      1 ->     int		B, k;
+      1 ->     SXBA	index_set2;
+      1 -> 
+      1 ->     B = lhs [prolis [state]];
+      1 -> 
+      1 ->     if (index_set == NULL)
+      1 ->     {
+      1 -> 	for (top = RT [i].nt [B].top, bot = RT [i].nt [B].bot; bot <= top; bot++)
+      1 -> 	{
+      1 -> 	    state = bot->state;
+      1 -> 
+      1 -> 	    if (SXBA_bit_is_reset_set (T0.state_set, state))
+      1 -> 		PUSH (T0.state_stack, state);
+      1 -> 
+      1 -> 	    if ((index_set2 = T0.index_sets [state]) == NULL)
+      1 -> 		index_set2 = T0.index_sets [state] = bag_get (&shift_bag, i+1);
+      1 -> 
+      1 -> 	    if (bot->index_set == NULL)
+      1 -> 		SXBA_1_bit (index_set2, i);
+      1 -> 	    else
+      1 -> 		OR (index_set2, bot->index_set);
+      1 -> 	}
+      1 ->     }
+      1 ->     else
+      1 ->     {
+      1 -> 	k = i;
+      1 -> 
+      1 -> 	while ((k = sxba_1_rlscan (index_set, k)) >= 0)
+      1 -> 	{
+      1 -> 	    for (top = RT [k].nt [B].top, bot = RT [k].nt [B].bot; bot <= top; bot++)
+      1 -> 	    {
+      1 -> 		state = bot->state;
+      1 -> 
+      1 -> 		if (SXBA_bit_is_reset_set (T0.state_set, state))
+      1 -> 		    PUSH (T0.state_stack, state);
+      1 -> 
+      1 -> 		if ((index_set2 = T0.index_sets [state]) == NULL)
+      1 -> 		    index_set2 = T0.index_sets [state] = bag_get (&shift_bag, i+1);
+      1 -> 
+      1 -> 		if (bot->index_set == NULL)
+      1 -> 		    SXBA_1_bit (index_set2, k);
+      1 -> 		else
+      1 -> 		    OR (index_set2, bot->index_set);
+      1 -> 	    }
+      1 -> 	}
+      1 ->     }
+      1 -> }
+      1 -> 
+      1 -> 
+      1 -> static void
+      1 -> R_scan_reduce_memo (i)
+      1 ->     int 	i;
+      1 -> {
+      1 ->     int		state, A, j, prod;
+      1 ->     sis		*bot, *top;
+      1 ->     SXBA	index_set, index_set2;
+      1 -> 
+      1 ->     do
+      1 ->     {
+      1 -> 	state = POP (scan_reduce_stack);
+      1 -> 	/* A -> alpha . ai+1 */
+      1 -> 
+      1 -> 	A = lhs [prod = prolis [state]];
+      1 -> 
+      1 -> 	if (state == prolon [prod])
+      1 -> 	{
+      1 -> 	    /* A -> . ai+1 */
+      1 -> 	    for (top = RT [i].nt [A].top, bot = RT [i].nt [A].bot; bot <= top; bot++)
+      1 -> 	    {
+      1 -> 		state = bot->state;
+      1 -> 
+      1 -> 		if (SXBA_bit_is_set (FIRST_1[-TOK [i+2]], state))
+      1 -> 		{
+      1 -> 		    if (SXBA_bit_is_reset_set (T2.state_set, state))
+      1 -> 			PUSH (T2.state_stack, state);
+      1 -> 
+      1 -> 		    if ((index_set2 = T2.index_sets [state]) == NULL)
+      1 -> 			index_set2 = T2.index_sets [state] = bag_get (&shift_bag, i+1);
+      1 -> 
+      1 -> 		    if (bot->index_set == NULL)
+      1 -> 			SXBA_1_bit (index_set2, i);
+      1 -> 		    else
+      1 -> 			OR (index_set2, bot->index_set);
+      1 -> 		}
+      1 -> 	    }
+      1 -> 	}
+      1 -> 	else
+      1 -> 	{
+      1 -> 	    index_set = T1.index_sets [state];
+      1 -> 	    T1.index_sets [state] = NULL;
+      1 -> 
+      1 -> 	    j = i;
+      1 -> 
+      1 -> 	    while ((j = sxba_1_rlscan (index_set, j)) >= 0)
+      1 -> 	    {
+      1 -> 		for (top = RT [j].nt [A].top, bot = RT [j].nt [A].bot; bot <= top; bot++)
+      1 -> 		{
+      1 -> 		    state = bot->state;
+      1 -> 
+      1 -> 		    if (SXBA_bit_is_set (FIRST_1[-TOK [i+2]], state))
+      1 -> 		    {
+      1 -> 			if (SXBA_bit_is_reset_set (T2.state_set, state))
+      1 -> 			    PUSH (T2.state_stack, state);
+      1 -> 
+      1 -> 			if ((index_set2 = T2.index_sets [state]) == NULL)
+      1 -> 			    index_set2 = T2.index_sets [state] = bag_get (&shift_bag, i+1);
+      1 -> 
+      1 -> 			if (bot->index_set == NULL)
+      1 -> 			    SXBA_1_bit (index_set2, j);
+      1 -> 			else
+      1 -> 			    OR (index_set2, bot->index_set);
+      1 -> 		    }
+      1 -> 		}
+      1 -> 	    }
+      1 -> 	}
+      1 ->     } while (!IS_EMPTY (scan_reduce_stack));
+      1 -> }
+      1 -> 
+      1 -> 
+      1 -> 
+      1 -> 
+      1 -> static SXBOOLEAN
+      1 -> complete (i)
+      1 ->     int i;
+      1 -> {
+      1 ->     int		state, next_state, X, Y, A, B, j, order, prdct_no;
+      1 ->     SXBA	index_set;
+      1 ->     SXBOOLEAN	is_tok, is_scan_reduce = SXFALSE;
+      1 -> 
+      1 ->     sis		*psis;
+      1 ->     int		*sss;
+      1 ->     /* Le look-ahead est verifie pour tous les state de T1.state_set. */
+      1 -> 
+      1 ->     do
+      1 ->     {
+      1 -> 	/* A -> alpha Z . X Y beta	ou
+      1 -> 	   S' -> . S eof 		pour l'etat initial. */
+      1 -> 	state = POP (T1.state_stack);
+      1 -> 	SXBA_0_bit (T1.state_set, state);
+      1 -> 	X = lispro [state];
+      1 -> 
+      1 -> 	if (X > 0)
+      1 -> 	{
+      1 -> 	    if (SXBA_bit_is_reset_set (NT_set, X))
+      1 -> 	    {
+      1 -> 		PUSH (NT_stack, X);
+      1 -> 		sxba_or (init_state_set, INIT [X]);
+      1 -> 	    }
+      1 -> 
+      1 -> 	    order = nt2order [X];
+      1 -> 	    SXBA_1_bit (order_set, order);
+      1 -> 	    PUSH (shift_state_stack [X], state);
+      1 -> 	}
+      1 -> 	else
+      1 -> 	{
+      1 -> 	    next_state = state + 1;
+      1 -> 
+      1 -> 	    if (SXBA_bit_is_set (FIRST_1[-TOK [i+2]], next_state) &&
+      1 -> 		((prdct_no = prdct [state]) == -1 ||
+      1 -> 		 for_parsact.prdct == NULL ||
+      1 -> 		 (*for_parsact.prdct) (-i-1, prdct_no)))
+      1 -> 	    {
+      1 -> 		is_tok = SXTRUE;
+      1 -> 		Y = lispro [next_state];
+      1 -> 		index_set = T1.index_sets [state];
+      1 -> 
+      1 -> 		if (Y != 0)
+      1 -> 		{
+      1 -> 		    SXBA_1_bit (T2.state_set, next_state);
+      1 -> 		    PUSH (T2.state_stack, next_state);
+      1 -> 		    T2.index_sets [next_state] = index_set;
+      1 -> 		    T1.index_sets [state] = NULL;
+      1 -> 		}
+      1 -> 		else
+      1 -> 		{
+      1 -> 		    /* A -> alpha X . ai+1 */
+      1 -> 		    is_scan_reduce = SXTRUE;
+      1 -> 		    PUSH (scan_reduce_stack, state);
+      1 -> 		}
+      1 -> 	    }
+      1 -> 	}
+      1 ->     } while (!IS_EMPTY (T1.state_stack));
+      1 -> 
+      1 ->     if (!IS_EMPTY (NT_stack))
+      1 ->     {
+      1 -> 	sxba_and (init_state_set, FIRST_1[-TOK [i+1]]);
+      1 -> 
+      1 -> 	state = 0;
+      1 -> 
+      1 -> 	while ((state = sxba_scan_reset (init_state_set, state)) > 0)
+      1 -> 	{
+      1 -> 	    /* A -> . X beta */
+      1 -> 	    X = lispro [state];
+      1 -> 
+      1 -> 	    if (X > 0)
+      1 -> 	    {
+      1 -> 		if (SXBA_bit_is_reset_set (NT_set, X))
+      1 -> 		    PUSH (NT_stack, X);
+      1 -> 
+      1 -> 		order = nt2order [X];
+      1 -> 		SXBA_1_bit (order_set, order);
+      1 -> 		PUSH (shift_state_stack [X], -state);
+      1 -> 	    }
+      1 -> 	    else
+      1 -> 	    {
+      1 -> 		next_state = state + 1;
+      1 -> 
+      1 -> 		if (SXBA_bit_is_set (FIRST_1[-TOK [i+2]], next_state) &&
+      1 -> 		    ((prdct_no = prdct [state]) == -1 ||
+      1 -> 		     for_parsact.prdct == NULL ||
+      1 -> 		     (*for_parsact.prdct) (-i-1, prdct_no)))
+      1 -> 		{
+      1 -> 		    is_tok = SXTRUE;
+      1 -> 		    Y = lispro [next_state];
+      1 -> 
+      1 -> 		    if (Y != 0)
+      1 -> 		    {
+      1 -> 			SXBA_1_bit (T2.state_set, next_state);
+      1 -> 			PUSH (T2.state_stack, next_state);
+      1 -> 
+      1 -> 			index_set = T2.index_sets [next_state] = bag_get (&shift_bag, i+1);
+      1 -> 
+      1 -> 			SXBA_1_bit (index_set, i);
+      1 -> 		    }
+      1 -> 		    else
+      1 -> 		    {
+      1 -> 			/* A -> . ai+1, i */
+      1 -> 			is_scan_reduce = SXTRUE;
+      1 -> 			PUSH (scan_reduce_stack, state);
+      1 -> 		    }
+      1 -> 		}
+      1 -> 	    }
+      1 -> 	}
+      1 -> 
+      1 -> 	if (is_parser)
+      1 -> 	{
+      1 -> 	    struct parse_item	*ppi = PT + i;
+      1 -> 
+      1 -> 	    order = 0;
+      1 -> 
+      1 -> 	    while ((order = sxba_scan_reset (NT_set, order)) > 0)
+      1 -> 	    {
+      1 -> 		A = order2nt [order];
+      1 -> 		XxY_set (&Ai_hd, A, i, &(ppi->nt [A].Ai));
+      1 -> 		Ai_set++;
+      1 -> 	    }
+      1 -> 
+      1 -> 	    ppi->max_Ai = XxY_top (Ai_hd);
+      1 -> 	}
+      1 -> 
+      1 -> 	do
+      1 -> 	{
+      1 -> 	    X = POP (NT_stack);
+      1 -> 	    SXBA_0_bit (NT_set, X);
+      1 -> 	} while (!IS_EMPTY (NT_stack));
+      1 -> 
+      1 -> 	order = 0;
+      1 -> 
+      1 -> 	while ((order = sxba_scan_reset (order_set, order)) > 0)
+      1 -> 	{
+      1 -> 	    X = order2nt [order];
+      1 -> 	    sss = shift_state_stack [X];
+      1 -> 
+      1 -> 	    do
+      1 -> 	    {
+      1 -> 		state = POP (sss);
+      1 -> 
+      1 -> 		if (state > 0 && lispro [state+1]==0 || state<0 && lispro[-state+1]==0)
+      1 -> 		{
+      1 -> 		    /* shift_reduce : traitement differe */
+      1 -> 		    PUSH (shift_reduce_stack, state);
+      1 -> 		}
+      1 -> 		else
+      1 -> 		{
+      1 -> 		    /* shift */
+      1 -> 		    if (state > 0)
+      1 -> 		    {
+      1 -> 			T0.index_sets [state] = T1.index_sets [state];
+      1 -> 			T1.index_sets [state] = NULL;
+      1 -> 		    }
+      1 -> 		    else
+      1 -> 		    {
+      1 -> 			state = -state;
+      1 -> 			T0.index_sets [state] = NULL;
+      1 -> 		    }
+      1 -> 
+      1 -> 		    state++;
+      1 -> 
+      1 -> 		    if (SXBA_bit_is_reset_set (T0.state_set, state))
+      1 -> 			PUSH (T0.state_stack, state);
+      1 -> 		}
+      1 -> 	    } while (!IS_EMPTY (sss));
+      1 -> 
+      1 -> 	    while (!IS_EMPTY (shift_reduce_stack))
+      1 -> 	    {
+      1 -> 		state = POP (shift_reduce_stack);
+      1 -> 
+      1 -> 		if (state > 0)
+      1 -> 		{
+      1 -> 		    index_set = T1.index_sets [state];
+      1 -> 		    T1.index_sets [state] = NULL;
+      1 -> 		}
+      1 -> 		else
+      1 -> 		{
+      1 -> 		    state = -state;
+      1 -> 		    index_set = NULL;
+      1 -> 		}
+      1 -> 
+      1 -> 		fill_T0 (state + 1, index_set, i);
+      1 -> 	    }
+      1 -> 
+      1 -> 	    do
+      1 -> 	    {
+      1 -> 		state = POP (T0.state_stack);
+      1 -> 		SXBA_0_bit (T0.state_set, state);
+      1 -> 		psis = pool_next (sis_pool, sis);
+      1 -> 		psis->state = state;
+      1 -> 		psis->index_set = T0.index_sets [state];
+      1 -> 		T0.index_sets [state] = NULL;
+      1 -> 	    } while (!IS_EMPTY (T0.state_stack));
+      1 -> 
+      1 -> 	    pool_close (sis_pool, sis, RT [i].nt [X].bot, RT [i].nt [X].top);
+      1 -> 	}
+      1 -> 
+      1 ->     }
+      1 -> 
+      1 ->     if (is_scan_reduce)
+      1 -> 	R_scan_reduce_memo (i);
+      1 -> 
+      1 ->     return is_tok;
+      1 -> }
+      1 -> #endif
+      1 -> 
+      1 -> 
+      1 -> 
+      1 -> 
+      1 -> static int
+      1 -> set_symbol (A, i, j)
+      1 ->     int A, i, j;
+  39310 -> {
+  39310 ->     struct Aij_pool	*ppool;
+  39310 ->     int			old_size;
+  39310 -> 
+  39310 ->     if (++Aij_top >= Aij_size) {
+      6 -> 	old_size = Aij_size;
+      6 -> 	Aij_pool = (struct Aij_pool*) sxrealloc (Aij_pool, Aij_size *= 2, sizeof (struct Aij_pool));
+      6 -> 
+      6 -> 	if (for_parsact.Aij_pool_oflw != NULL)
+      6 -> 	    (*for_parsact.Aij_pool_oflw) (old_size, Aij_size);
+      6 ->     }
+      6 -> 
+  39310 ->     if (is_parser) {
+  39310 -> 	if (A == 1 /* axiome */ && i == 0 && j == n)
+      1 -> 	    spf.G.start_symbol = Aij_top;
+      1 ->     }
+      1 -> 
+  39310 ->     ppool = Aij_pool + Aij_top;
+  39310 -> 
+  39310 ->     ppool->A = A;
+  39310 ->     ppool->i = i;
+  39310 ->     ppool->j = j;
+  39310 ->     ppool->first_lhs = 0;
+  39310 ->     ppool->first_rhs = 0;
+  39310 -> 
+  39310 ->     if (for_parsact.new_symbol != NULL)
+  39310 -> 	(*for_parsact.new_symbol) (Aij_top);
+  39310 -> 
+  39310 ->     return symbols [A] [i] [j-i] = Aij_top;
+  39310 -> }
+  39310 -> 
+  39310 -> 
+  39310 -> 
+  39310 -> #if EBUG
+  39310 -> static void
+  39310 -> output_symb (symb)
+  39310 ->     int	   symb;
+  39310 -> {
+  39310 ->     struct Aij_pool	*ppool;
+  39310 -> 
+  39310 ->     if (symb < 0)
+  39310 ->     {
+  39310 -> 	printf ("%c(%i) ", source [-symb-1], -symb);
+  39310 ->     }
+  39310 ->     else
+  39310 ->     {
+  39310 -> 	ppool = Aij_pool + symb;
+  39310 -> 	printf ("%s[%i..%i] ", ntstring [ppool->A], ppool->i, ppool->j);
+  39310 ->     }
+  39310 -> }
+  39310 -> 
+  39310 -> 
+  39310 -> static void
+  39310 -> output_prod (prod)
+  39310 ->     int prod;
+  39310 -> {
+  39310 ->     int			x, symbol;
+  39310 ->     struct lhs		*plhs;
+  39310 -> 
+  39310 ->     plhs = spf.lhs+prod;
+  39310 -> 
+  39310 ->     if (plhs->is_erased)
+  39310 -> 	fputs ("*", stdout);
+  39310 -> 
+  39310 ->     printf ("%i\t: ", prod);
+  39310 ->     output_symb (plhs->reduc);
+  39310 ->     fputs ("\t = ", stdout);
+  39310 -> 
+  39310 ->     for (x = plhs->prolon; (symbol = spf.rhs [x].lispro) != 0; x++)
+  39310 -> 	output_symb (symbol);
+  39310 ->     
+  39310 ->     fputs (";\n", stdout);
+  39310 -> }
+  39310 -> #endif
+  39310 -> 
+  39310 -> 
+  39310 -> static int
+  39310 -> set_rule (init_prod, top)
+  39310 ->     int init_prod, top;
+ 447467 -> {
+ 447467 ->     int		x, X, Xij, prdct_no, state;
+ 447467 ->     int		Aik, k, A, i;
+ 447467 ->     struct lhs	*plhs;
+ 447467 ->     struct rhs	*prhs;
+ 447467 ->     struct Aij_pool	*ppool;
+ 447467 -> 
+ 447467 -> #if EBUG
+ 447467 ->     /* On verifie la coherence de rhs_stack */
+ 447467 ->     ppool = Aij_pool + rhs_stack [0];
+ 447467 ->     k = ppool->j;
+ 447467 ->     i = ppool->i;
+ 447467 ->     A = ppool->A;
+ 447467 -> 
+ 447467 ->     if (A != lhs [init_prod])
+ 447467 -> 	sxtrap (ME, "set_rule");
+ 447467 -> 
+ 447467 ->     for (x = 1, state = prolon [init_prod]; x <= top; x++, state++)
+ 447467 ->     {
+ 447467 -> 	if ((Xij = rhs_stack [x]) > 0)
+ 447467 -> 	{
+ 447467 -> 	    ppool = Aij_pool + Xij;
+ 447467 -> 
+ 447467 -> 	    if (ppool->i != i || ppool->A != lispro [state])
+ 447467 -> 		sxtrap (ME, "set_rule");
+ 447467 -> 
+ 447467 -> 	    i = ppool->j;
+ 447467 -> 	}
+ 447467 -> 	else
+ 447467 -> 	{
+ 447467 -> 	    i++;
+ 447467 -> 
+ 447467 -> 	    if (-i != Xij || TOK [-Xij] != lispro [state])
+ 447467 -> 		sxtrap (ME, "set_rule");
+ 447467 -> 	}
+ 447467 ->     }
+ 447467 -> 
+ 447467 ->     if (lispro [state] != 0 || i != k)
+ 447467 -> 	sxtrap (ME, "set_rule");
+ 447467 -> #endif
+ 447467 -> 
+ 447467 ->     if (++spf.G.lhs_top >  spf.G.lhs_size)
+ 447467 ->     {
+      9 -> 	spf.G.lhs_size *= 2;
+      9 -> 	spf.lhs = (struct lhs*) sxrealloc (spf.lhs, spf.G.lhs_size+1, sizeof (struct lhs));
+      9 ->     }
+      9 -> 
+      9 ->     if (for_parsact.action == NULL ||
+ 447467 -> 	(*for_parsact.action) (rhs_stack, top, spf.G.lhs_top, init_prod))
+ 447467 ->     {
+ 447467 -> 
+ 440366 -> 	if (spf.G.rhs_top+top >=  spf.G.rhs_size)
+ 440366 -> 	{
+      9 -> 	    spf.G.rhs_size *= 2;
+      9 -> 	    spf.rhs = (struct rhs*) sxrealloc (spf.rhs, spf.G.rhs_size+1, sizeof (struct rhs));
+      9 -> 	}
+      9 -> 
+ 440366 -> 	plhs = spf.lhs+spf.G.lhs_top;
+ 440366 -> 	Aik = rhs_stack [0];
+ 440366 -> 	ppool = Aij_pool + Aik;
+ 440366 -> 	plhs->prolon = ++spf.G.rhs_top;
+ 440366 -> 	plhs->reduc = Aik;
+ 440366 -> 	plhs->next_lhs = ppool->first_lhs;
+ 440366 -> 	ppool->first_lhs = spf.G.lhs_top;
+ 440366 -> 	plhs->init_prod = init_prod;
+ 440366 -> 	plhs->is_erased = SXFALSE;
+ 440366 -> 
+ 440366 -> 	for (x = 1; x <= top; x++)
+ 440366 -> 	{
+ 878615 -> 	    X = rhs_stack [x];
+ 878615 -> 	    prhs = spf.rhs+spf.G.rhs_top;
+ 878615 -> 	    prhs->lispro = X;
+ 878615 -> 	    prhs->prolis = spf.G.lhs_top;
+ 878615 -> 
+ 878615 -> 	    if (X > 0)
+ 878615 -> 	    {
+ 856741 -> 		ppool = Aij_pool + X;
+ 856741 -> 		prhs->next_rhs = ppool->first_rhs;
+ 856741 -> 		ppool->first_rhs = spf.G.rhs_top;
+ 856741 -> 	    }
+ 856741 -> 
+ 878615 -> 	    spf.G.rhs_top++;
+ 878615 -> 	}
+ 878615 -> 
+ 440366 -> 	prhs = spf.rhs+spf.G.rhs_top;
+ 440366 -> 	prhs->lispro = 0;
+ 440366 -> 	prhs->prolis = spf.G.lhs_top;
+ 440366 -> 
+ 440366 -> 
+ 440366 -> #if EBUG
+ 440366 -> 	output_prod (spf.G.lhs_top);
+ 440366 -> #endif	
+ 440366 -> 
+ 440366 -> 	return spf.G.lhs_top;
+ 440366 ->     }
+ 440366 -> 
+   7101 ->     spf.G.lhs_top--;
+   7101 ->     return 0;
+   7101 -> }
+   7101 -> 
+   7101 -> 
+   7101 -> static SXBOOLEAN
+   7101 -> parse_tree (state, bot, top, j, l)
+   7101 ->     int bot, top, state, j, l;
+ 445350 -> {
+ 445350 ->     /* state =  A -> X1  Xh . X  Xp Xp+1
+ 445350 ->        bot = h+1
+ 445350 ->        top = p+1
+ 445350 ->        Cette procedure recursive genere toutes les split-chaines de "X ... Xp"
+ 445350 ->        qui s'etendent entre j et l et les range entre bot et top-1
+ 445350 -> 
+ 445350 ->        Quand c'est complet, appelle set_rule. */
+ 445350 ->     int		X, Xj, Xjl, Xjk, k, prdct_no;
+ 445350 ->     SXBOOLEAN	ret_val;
+ 445350 ->     int		*pcur, *ptop;
+ 445350 -> 
+ 445350 -> #if EBUG
+ 445350 ->     if (bot >= top || j >= l)
+ 445350 -> 	sxtrap (ME, "parse_tree");
+ 445350 -> #endif
+ 445350 -> 
+ 445350 ->     X = lispro [state];
+ 445350 -> 
+ 445350 ->     if (X < 0)
+ 445350 ->     {
+ 445350 -> 	/* X \in T */
+  10844 -> 	k = j+1;
+  10844 -> 
+  10844 -> 	if (X == TOK [k])
+  10844 -> 	{
+  10844 -> 	    rhs_stack [bot] = -(k);
+  10844 -> 
+  10844 -> 	    if (bot+1 == top)
+  10844 -> 	    {
+  10844 -> #if EBUG
+  10844 -> 		if (k != l)
+  10844 -> 		    sxtrap (ME, "parse_tree");
+  10844 -> #endif
+  ##### -> 		ret_val = set_rule (prolis [state], top) > 0;
+  ##### -> 	    }
+  ##### -> 	    else
+  ##### -> 	    {
+  10844 -> 		ret_val = parse_tree (state+1, bot+1, top, k, l);
+  10844 -> 	    }
+  10844 -> 	}
+  10844 ->     }
+  10844 ->     else
+  10844 ->     {
+ 434506 -> 	ret_val = SXFALSE;
+ 434506 -> 
+ 434506 -> 	/* X \in N */
+ 434506 -> 	/* Xj = XxY_is_set (&Ai_hd, X, j); */
+ 434506 -> #if 0
+ 434506 -> 	Xj = RT [j].nt [X].Ai;
+ 434506 -> 
+ 434506 -> #if EBUG
+ 434506 -> 	if (Xj == 0)
+ 434506 -> 	    sxtrap (ME, "parse_tree");
+ 434506 -> #endif
+ 434506 -> #endif
+ 434506 -> 
+ 434506 -> 	if (bot+1 == top)
+ 434506 -> 	{
+ 434506 -> 	    Xjl = symbols [X] [j] [l-j];
+ 434506 -> 
+ 434506 -> 	    if (Xjl > 0 && Aij_pool [Xjl].first_lhs > 0)
+ 434506 -> 	    {
+ 434506 -> 		/* Si ==0 alors tous les arbres le definissant ont ete supprimes par
+ 434506 -> 		   "erase_elementary_tree". */
+ 434506 -> 		rhs_stack [bot] = Xjl;
+ 434506 -> 		ret_val = set_rule (prolis [state], top) > 0;
+ 434506 -> 	    }
+ 434506 -> 	}
+ 434506 -> 	else
+ 434506 -> 	{
+  ##### -> 	    Xjk = 0;
+  ##### -> 
+  ##### -> 	    for (ptop = (pcur = symbols [X] [j]) + (l-j), k = j; pcur < ptop; pcur++, k++) {
+  ##### -> 		Xjk = *pcur;
+  ##### -> 
+  ##### -> 		if (Xjk > 0 && Aij_pool [Xjk].first_lhs > 0)
+  ##### -> 		{
+  ##### -> 		    rhs_stack [bot] = Xjk;
+  ##### -> 		    ret_val |= parse_tree (state+1, bot+1, top, k, l);
+  ##### -> 		}
+  ##### -> 	    }
+  ##### -> 	}
+  ##### ->     }
+  ##### -> 
+ 445350 ->     return ret_val;
+ 445350 -> }
+ 445350 -> 
+ 445350 -> 
+ 445350 -> 
+ 445350 -> static void
+ 445350 -> reduce (A, j, i)
+ 445350 ->     int A, j, i;
+  39310 -> {
+  39310 ->     /* Toutes les reductions vers Aj ont ete effectuees
+  39310 ->        Cas du reconnaisseur : on fait le "shift" sur A dans la liste "j".
+  39310 ->        cas du parser : en plus, on fait les reductions eventuelles B -> alpha Aji */
+  39310 ->     sis		*bot, *top, *pbot, *ptop;
+  39310 ->     int		state, X, Y, B, order, k, prod;
+  39310 ->     SXBA	index_set, index_set2;
+  39310 -> 
+  39310 ->     int 	Aj, Aji, Bj, Bji, Bk, Bki, prdct_no, start, end, constraint_no;
+  39310 ->     SXBOOLEAN	constraint_checked;
+  39310 -> 
+  39310 -> 
+  39310 ->     if (is_parser)
+  39310 ->     {
+  39310 -> 	Aj = RT [j].nt [A].Ai;
+  39310 -> 	Aji = RT [j].nt [A].Aik;
+  39310 -> 
+  39310 -> #if EBUG
+  39310 -> 	if (Aj == 0 || Aji == 0)
+  39310 -> 	    sxtrap (ME, "reduce");
+  39310 -> #endif
+  39310 -> 	
+  39310 -> 	constraint_checked = SXTRUE;
+  39310 -> 
+  39310 -> 	/* On est su^r que toutes les reductions vers Aji ont ete effectuees. */
+  39310 -> 	if ((constraint_no = constraints [A]) == -1 ||
+  39310 -> 	    for_parsact.constraint == NULL ||
+  39310 -> 	    (constraint_checked = (*for_parsact.constraint) (Aji, constraint_no)))
+  39310 -> 	{
+  39310 -> 	}
+  39310 -> 	else
+   2984 -> 	    if (!constraint_checked)
+   2984 -> 		Aij_pool [Aji].is_erased = SXTRUE;
+   2984 -> 
+  39310 -> 	RT [j].nt [A].Aik = 0;
+  39310 -> 
+  39310 -> 	if (!constraint_checked)
+   2984 -> 	    return;
+   2984 ->     }
+   2984 -> 
+ 129893,   36326 ->     for (top = RT [j].nt [A].top, bot = RT [j].nt [A].bot; bot <= top; bot++)
+  36326 ->     {
+ 129893 -> 	state = bot->state;
+ 129893 -> 
+ 129893 -> #if EBUG
+ 129893 -> 	if (lispro [state] != A)
+ 129893 -> 	    sxtrap (ME, "reduce");
+ 129893 -> #endif
+ 129893 -> 
+ 129893 -> 	if (!is_parser ||
+ 129893 -> 	    (prdct_no = prdct [state]) == -1 ||
+ 129893 -> 	    for_parsact.prdct == NULL ||
+ 129893 -> 	    (*for_parsact.prdct) (Aji, prdct_no))
+ 129893 -> 	{
+ 129893 -> 	    state++;
+ 129893 -> 	    index_set = bot->index_set;
+ 129893 -> 
+ 129893 -> 	    Y = lispro [state];
+ 129893 -> 
+ 129893 -> 	    if (Y == 0)
+ 129893 -> 	    {
+ 129893 -> 		/* B -> beta . A */
+  37756 -> 		B = lhs [prod = prolis [state]];
+  37756 -> 
+  37756 -> 		if (index_set == NULL)
+  37756 -> 		{
+  37756 -> 		    /* B -> . A , j*/
+  12775 -> 		    SXBA_1_bit (ntXindex_set [B], j);
+  12775 -> 
+  12775 -> 		    if (is_parser)
+  12775 -> 		    {
+  12775 -> 			if ((Bj = RT [j].nt [B].Ai) == 0)
+  12775 -> 			{
+    462 -> 			    XxY_set (&Ai_hd, B, j, &Bj);
+    462 -> 			    RT [j].nt [B].Ai = Bj;
+    462 -> 			}
+    462 -> 
+  12775 -> 			if ((Bji = RT [j].nt [B].Aik) == 0)
+  12775 -> 			{
+    825 -> 			    RT [j].nt [B].Aik = Bji = set_symbol (B, j, i);
+    825 -> 			}
+    825 -> 
+  12775 -> 			rhs_stack [0] = Bji;
+  12775 -> 			rhs_stack [1] = Aji;
+  12775 -> 			set_rule (prod, 1);
+  12775 -> 		    }
+  12775 -> 		}
+  12775 -> 		else
+  12775 -> 		{
+  24981 -> 		    OR (ntXindex_set [B], index_set);
+  24981 -> 
+  24981 -> 		    if (is_parser)
+  24981 -> 		    {
+  24981 -> 			k = j;
+  24981 -> 
+  24981 -> 			while ((k = sxba_1_rlscan (index_set, k)) >= 0)
+  24981 -> 			{
+ 423662 -> 			    if ((Bk = RT [k].nt [B].Ai) == 0)
+ 423662 -> 			    {
+     92 -> 				XxY_set (&Ai_hd, B, k, &Bk);
+     92 -> 				RT [k].nt [B].Ai = Bk;
+     92 -> 			    }
+     92 -> 
+ 423662 -> 			    if ((Bki = RT [k].nt [B].Aik) == 0)
+ 423662 -> 			    {
+  32043 -> 				RT [k].nt [B].Aik = Bki = set_symbol (B, k, i);
+  32043 -> 			    }
+  32043 -> 
+ 423662 -> 			    rhs_stack [0] = Bki;
+ 423662 -> 			    start = prolon [prod];
+ 423662 -> 			    end = state - start;
+ 423662 -> 			    rhs_stack [end] = Aji;
+ 423662 -> 			    parse_tree (start, 1, end, k, j);
+ 423662 -> 			}
+ 423662 -> 		    }
+ 423662 -> 		}
+ 423662 -> 	    }
+ 423662 -> 	    else
+ 423662 -> 	    {
+ 423662 -> 		/* B -> beta . A Y gamma */
+ 423662 -> 		/* On met B -> beta A . Y gamma dans T2 */
+  92137 -> 		if (SXBA_bit_is_set (FIRST_1[-TOK [i+1]], state))
+  92137 -> 		{
+  57780 -> 		    if (SXBA_bit_is_reset_set (T2.state_set, state))
+   1935 -> 			PUSH (T2.state_stack, state);
+   1935 -> 
+  57780 -> 		    if ((index_set2 = T2.index_sets [state]) == NULL)
+   1935 -> 			index_set2 = T2.index_sets [state] = bag_get (&shift_bag, j+1);
+   1935 -> 
+  57780 -> 		    if (index_set == NULL)
+  46936 -> 			SXBA_1_bit (index_set2, j);
+  46936 -> 		    else
+  10844 -> 			OR (index_set2, index_set);
+  10844 -> 		}
+  10844 -> 	    }
+  10844 -> 	}
+  10844 ->     }
+  36326 -> }
+  36326 -> 
+  36326 -> 
+  36326 -> static void
+  36326 -> scan_reduce (i)
+  36326 ->     register int 	i;
+    186 -> {
+    186 ->     static SXBA		nt_hd [ntmax+1];
+    186 -> 
+    186 ->     register SXBA_ELT	filtre;
+    186 ->     register int	j, indice, order, A;
+    186 -> 
+    186 ->     filtre = 1 << MOD (i);
+    186 ->     indice = DIV (i) + 1;
+    186 -> 
+    186 ->     for (A = ntmax; A > 0; A--)
+   1116 -> 	nt_hd [A] = ntXindex_set [A] + indice;
+   1116 -> 
+    186 ->     j = i;
+    186 -> 
+  17205 ->     for (;;)
+  17205 ->     {
+ 104346,   17391 -> 	for (order = ntmax; order > 0; order--)
+  17391 -> 	{
+ 104346 -> 	    A = order2nt [order];
+ 104346 -> 
+ 104346 -> 	    /* if (SXBA_bit_is_set_reset (ntXindex_set [A], j)) */
+ 104346 -> 	    if (*(nt_hd [A]) & filtre)
+  39310 -> 		reduce (A, j, i+1);
+  39310 -> 	}
+  39310 -> 
+  17391 -> 	if ((filtre >>= 1) == 0)
+  17391 -> 	{
+    636 -> 	    for (A = ntmax; A > 0; A--)
+   3816 -> 		*((nt_hd [A])--) = 0;
+   3816 -> 
+    636 -> 	    if (--j < 0)
+    186 -> 		return;
+    186 -> 
+    450 -> 	    filtre = 1 << MOD (j);
+    450 -> 	}
+    450 -> 	else
+  16755 -> 	    j--;
+  16755 ->     }
+  16755 -> }
+  16755 -> 
+  16755 -> 
+  16755 -> 
+  16755 -> static SXBOOLEAN
+  16755 -> complete (i)
+  16755 ->     int i;
+    186 -> {
+    186 ->     static int	scan_reduce_prod_stack [prodmax + 1];
+    186 ->     static int	shift_state_stack [ntmax + 1] [statemax + 1];
+    186 ->     static int	NT_stack [ntmax+1];
+    186 -> 
+    186 ->     int		state, next_state, X, Y, A, B, j, order, prdct_no, prod, Ai, Aik, start, end;
+    186 ->     SXBA	index_set;
+    186 ->     SXBOOLEAN	is_tok, is_scan_reduce = SXFALSE;
+    186 -> 
+    186 ->     sis		*psis, *bot, *top;
+    186 ->     int		*sss;
+    186 ->     /* Le look-ahead est verifie pour tous les state de T1.state_set. */
+    186 -> 
+    186 ->     do
+    186 ->     {
+    186 -> 	/* A -> alpha Z . X Y beta	ou
+    186 -> 	   S' -> . S eof 		pour l'etat initial. */
+   2769 -> 	state = POP (T1.state_stack);
+   2769 -> 	SXBA_0_bit (T1.state_set, state);
+   2769 -> 	X = lispro [state];
+   2769 -> 
+   2769 -> 	if (X > 0)
+   2769 -> 	{
+   2122 -> 	    if (SXBA_bit_is_reset_set (NT_set, X))
+   2122 -> 	    {
+    926 -> 		PUSH (NT_stack, X);
+    926 -> 		sxba_or (init_state_set, INIT [X]);
+    926 -> 
+    926 -> 		if (is_parser)
+    926 -> 		    RT [i].nt [X].Ai = RT [i].nt [X].Aik = 0;
+    926 -> 	    }
+    926 -> 
+   2122 -> 	    PUSH (shift_state_stack [X], state);
+   2122 -> 	}
+   2122 -> 	else
+   2122 -> 	{
+    647 -> 	    next_state = state + 1;
+    647 -> 
+    647 -> 	    if (SXBA_bit_is_set (FIRST_1[-TOK [i+2]], next_state) &&
+    647 -> 		((prdct_no = prdct [state]) == -1 ||
+    647 -> 		 for_parsact.prdct == NULL ||
+    647 -> 		 (*for_parsact.prdct) (-i-1, prdct_no)))
+    647 -> 	    {
+    647 -> 		is_tok = SXTRUE;
+    647 -> 		Y = lispro [next_state];
+    647 -> 		index_set = T1.index_sets [state];
+    647 -> 
+    647 -> 		if (Y != 0)
+    647 -> 		{
+  ##### -> 		    SXBA_1_bit (T2.state_set, next_state);
+  ##### -> 		    PUSH (T2.state_stack, next_state);
+  ##### -> 		    T2.index_sets [next_state] = index_set;
+  ##### -> 		}
+  ##### -> 		else
+  ##### -> 		{
+  ##### -> 		    /* A -> alpha X . ai+1 */
+    647 -> 		    is_scan_reduce = SXTRUE;
+    647 -> 		    A = lhs [prod = prolis [state]];
+    647 -> 
+    647 -> 		    OR (ntXindex_set [A], index_set);
+    647 -> 
+    647 -> 		    if (is_parser)
+    647 -> 		    {
+    647 -> 			j = i;
+    647 -> 
+    647 -> 			while ((j = sxba_1_rlscan (index_set, j)) >= 0)
+    647 -> 			{
+  10844 -> 			    if ((Ai = RT [j].nt [A].Ai) == 0)
+  10844 -> 			    {
+    184 -> 				XxY_set (&Ai_hd, A, j, &Ai); /* Nouveau */
+    184 -> 				RT [j].nt [A].Ai = Ai;
+    184 -> 			    }
+    184 -> 
+  10844 -> 			    if ((Aik = RT [j].nt [A].Aik) == 0)
+  10844 -> 			    {
+   6256 -> 				RT [j].nt [A].Aik = Aik = set_symbol (A, j, i+1);
+   6256 -> 			    }
+   6256 -> 
+  10844 -> 			    rhs_stack [0] = Aik;
+  10844 -> 			    start = prolon [prod];
+  10844 -> 			    end = next_state - start;
+  10844 -> 			    rhs_stack [end] = -i - 1;
+  10844 -> 			    parse_tree (start, 1, end, j, i);
+  10844 -> 			}
+  10844 -> 		    }
+  10844 -> 		}
+  10844 -> 
+    647 -> 		T1.index_sets [state] = NULL;
+    647 -> 	    }
+    647 -> 	}
+   2769 ->     } while (!IS_EMPTY (T1.state_stack));
+   2769 -> 
+    186 ->     if (!IS_EMPTY (NT_stack))
+    186 ->     {
+    186 -> 	sxba_and (init_state_set, FIRST_1[-TOK [i+1]]);
+    186 -> 
+    186 -> 	state = 0;
+    186 -> 
+    186 -> 	while ((state = sxba_scan_reset (init_state_set, state)) > 0)
+    186 -> 	{
+    186 -> 	    /* A -> . X beta */
+   2695 -> 	    X = lispro [state];
+   2695 -> 
+   2695 -> 	    if (X > 0)
+   2695 -> 	    {
+   1669 -> 		if (SXBA_bit_is_reset_set (NT_set, X))
+   1669 -> 		{
+      2 -> 		    PUSH (NT_stack, X);
+      2 -> 
+      2 -> 		    if (is_parser)
+      2 -> 			RT [i].nt [X].Ai = RT [i].nt [X].Aik = 0;
+      2 -> 		}
+      2 -> 
+   1669 -> 		PUSH (shift_state_stack [X], -state);
+   1669 -> 	    }
+   1669 -> 	    else
+   1669 -> 	    {
+   1026 -> 		next_state = state + 1;
+   1026 -> 
+   1026 -> 		if (SXBA_bit_is_set (FIRST_1[-TOK [i+2]], next_state) &&
+   1026 -> 		    ((prdct_no = prdct [state]) == -1 ||
+   1026 -> 		     for_parsact.prdct == NULL ||
+   1026 -> 		     (*for_parsact.prdct) (-i-1, prdct_no)))
+   1026 -> 		{
+   1020 -> 		    is_tok = SXTRUE;
+   1020 -> 		    Y = lispro [next_state];
+   1020 -> 
+   1020 -> 		    if (Y != 0)
+   1020 -> 		    {
+   1020 -> 			/* A -> . ai+1 Y beta, i */
+    834 -> 			SXBA_1_bit (T2.state_set, next_state);
+    834 -> 			PUSH (T2.state_stack, next_state);
+    834 -> 
+    834 -> 			index_set = T2.index_sets [next_state] = bag_get (&shift_bag, i+1);
+    834 -> 
+    834 -> 			SXBA_1_bit (index_set, i);
+    834 -> 		    }
+    834 -> 		    else
+    834 -> 		    {
+    834 -> 			/* A -> . ai+1, i */
+    186 -> 			is_scan_reduce = SXTRUE;
+    186 -> 			A = lhs [prod = prolis [state]];
+    186 -> 
+    186 -> 			SXBA_1_bit (ntXindex_set [A], i);
+    186 -> 
+    186 -> 			if (is_parser)
+    186 -> 			    PUSH (scan_reduce_prod_stack, prod);
+    186 -> 		    }
+    186 -> 		}
+    186 -> 	    }
+    186 -> 	}
+    186 -> 
+    186 -> 	do
+    186 -> 	{
+    928 -> 	    X = POP (NT_stack);
+    928 -> 	    SXBA_0_bit (NT_set, X);
+    928 -> 	    sss = shift_state_stack [X];
+    928 -> 
+    928 -> 	    do
+    928 -> 	    {
+   3791 -> 		state = POP (sss);
+   3791 -> 		psis = pool_next (sis_pool, sis);
+   3791 -> 
+   3791 -> 		if (state > 0)
+   3791 -> 		{
+   2122 -> 		    psis->index_set = T1.index_sets [state];
+   2122 -> 		    T1.index_sets [state] = NULL;
+   2122 -> 		}
+   2122 -> 		else
+   2122 -> 		{
+   1669 -> 		    state = -state;
+   1669 -> 		    psis->index_set = NULL;
+   1669 -> 		}
+   1669 -> 
+   3791 -> 		psis->state = state;
+   3791 -> 	    } while (!IS_EMPTY (sss));
+   3791 -> 
+    928 -> 	    pool_close (sis_pool, sis, RT [i].nt [X].bot, RT [i].nt [X].top);
+    928 -> 	} while (!IS_EMPTY (NT_stack));
+    928 ->     }
+    928 -> 
+    186 ->     if (is_scan_reduce)
+    186 ->     {
+    186 -> 	if (is_parser && !IS_EMPTY (scan_reduce_prod_stack))
+    186 -> 	{
+    186 -> 	    do
+    186 -> 	    {
+    186 -> 		prod = POP (scan_reduce_prod_stack);
+    186 -> 		A = lhs [prod];
+    186 -> 		/* A -> . ai+1, i */
+    186 -> #if EBUG
+    186 -> 		if (RT [i].nt [A].Ai != 0 || RT [i].nt [A].Aik != 0)
+    186 -> 		    sxtrap (ME, "complete");
+    186 -> #endif
+    186 -> 
+    186 -> 		XxY_set (&Ai_hd, A, i, &Ai);
+    186 -> 		RT [i].nt [A].Ai = Ai;
+    186 -> 		rhs_stack [0] = RT [i].nt [A].Aik = set_symbol (A, i, i+1);
+    186 -> 		rhs_stack [1] = -i - 1;
+    186 -> 
+    186 -> 		set_rule (prod, 1);
+    186 -> 	    } while (!IS_EMPTY (scan_reduce_prod_stack));
+    186 -> 	}
+    186 -> 
+    186 -> 	scan_reduce (i);
+    186 ->     }
+    186 -> 
+    186 ->     return is_tok;
+    186 -> }
+    186 -> 
+    186 -> 
+    186 -> 
+    186 -> 
+    186 -> static int
+    186 -> recognize ()
+      1 -> {
+      1 ->     int			i;
+      1 ->     struct working_item_set	T0;
+      1 ->     SXBOOLEAN		is_in_LG;
+      1 -> 
+      1 ->     /* initial_state ne vaut pas toujours 1 (cas ou L(G)={epsilon}). */
+      1 -> 
+      1 ->     SXBA_1_bit (T1.state_set, initial_state);
+      1 ->     PUSH (T1.state_stack, initial_state);
+      1 ->     /* SXBA_1_bit (T1.index_sets [initial_state], 0); */
+      1 -> 
+      1 ->     if (SXBA_bit_is_set (FIRST_1[-TOK [1]], initial_state))
+      1 ->     {
+      1 -> 	i = 0;
+      1 -> 
+    185 -> 	for (;;)
+    185 -> 	{
+    186 -> 	    if (!complete (i)) break;
+    186 -> 
+    186 -> 	    T0 = T1, T1 = T2, T2 = T0;
+    186 -> 
+    186 -> 	    i++;
+    186 -> 
+    186 -> 	    if (i == n)
+      1 -> 		break;
+      1 -> 	}
+      1 ->     }
+      1 -> 
+      1 ->     is_in_LG = SXBA_bit_is_set (T1.state_set, 2) && SXBA_bit_is_set (T1.index_sets [2], 0);
+      1 ->     
+      1 ->     return is_in_LG ? n+1 : i+1;
+      1 -> }
+      1 -> 
+      1 -> 
+      1 -> 
+      1 -> 
+      1 -> 
+      1 -> 
+      1 -> /******************************************************************************************
+      1 -> 
+      1 ->                              P A R S E R
+      1 -> 
+      1 -> 
+      1 ->  ******************************************************************************************/
+      1 -> 
+      1 -> 
+      1 -> 
+      1 -> 
+      1 -> 
+      1 -> #if EBUG
+      1 -> static void
+      1 -> output_spf ()
+      1 -> {
+      1 ->     int		prod;
+      1 -> 
+      1 ->     printf ("\n*\t(|N| = %i, |T| = %i, |P| = %i, |G| = %i)\n",
+      1 -> 	  spf.G.N,  
+      1 -> 	  spf.G.T,  
+      1 -> 	  spf.G.P,  
+      1 -> 	  spf.G.G);
+      1 -> 
+      1 ->     fputs ("*\tThe start symbol is ", stdout);
+      1 -> 
+      1 ->     if (spf.G.start_symbol > 0)
+      1 -> 	output_symb (spf.G.start_symbol);
+      1 ->     else
+      1 -> 	fputs ("undefined", stdout);
+      1 -> 
+      1 ->     fputs ("\n\n", stdout);
+      1 -> 
+      1 ->     for (prod = 1; prod <= spf.G.lhs_top; prod++)
+      1 -> 	output_prod (prod);
+      1 -> }
+      1 -> #endif	
+      1 -> 
+      1 -> 
+      1 -> erase_elementary_tree (elementary_tree)
+      1 ->     int elementary_tree;
+   8105 -> {
+   8105 ->     int		lhs_symb;
+   8105 ->     int		*p, *q;
+   8105 ->     struct lhs	*pet = spf.lhs+elementary_tree;
+   8105 -> 
+   8105 ->     if (!pet->is_erased)
+   8105 ->     {
+   8105 -> 	pet->is_erased = SXTRUE;
+   8105 -> 
+  ##### -> 	for (q = p = &(Aij_pool [pet->reduc].first_lhs); *p != 0; p = &(spf.lhs [*p].next_lhs))
+  ##### -> 	{
+   8105 -> 	    if (*p == elementary_tree)
+   8105 -> 	    {
+   8105 -> 		*p = spf.lhs [*p].next_lhs;
+   8105 -> 		break;
+   8105 -> 	    }
+   8105 -> 	}
+   8105 -> 
+   8105 -> 	if (*q == 0)
+   8105 -> 	{
+   8105 -> 	    /* plus aucun arbre n'a lhs_symb comme racine. On supprime les arbres elementaires
+   8105 -> 	       qui ont lhs_symb en RHS. */
+   8105 -> 	    for (q = p = &(Aij_pool [pet->reduc].first_rhs); *p != 0; p = &(spf.rhs [*p].next_rhs))
+   8105 -> 	    {
+  ##### -> 		erase_elementary_tree (spf.rhs [*p].prolis);
+  ##### -> 	    }
+  ##### -> 
+   8105 -> 	    *q = 0;
+   8105 -> 	}
+   8105 ->     }
+   8105 -> }
+   8105 -> 
+   8105 -> 
+   8105 -> 
+   8105 -> 
+   8105 -> 
+   8105 -> static void
+   8105 -> useless_symbol_elimination ()
+      1 -> {
+      1 ->     int		*symbol_stack;
+      1 ->     SXBA	Aij_set;
+      1 ->     int		symbol, prod, x;
+      1 -> 
+      1 ->     symbol_stack = SS_alloc (Aij_top+3);
+      1 ->     Aij_set = sxba_calloc (Aij_top+1);
+      1 -> 
+      1 ->     SXBA_1_bit (Aij_set, spf.G.start_symbol);
+      1 ->     SS_push (symbol_stack, spf.G.start_symbol);
+      1 ->     spf.G.N = 1;
+      1 ->     spf.G.P = spf.G.G = 0;
+      1 -> 
+      1 ->     do
+      1 ->     {
+  29446 -> 	symbol = SS_pop (symbol_stack);
+  29446 -> 
+ 409606 -> 	for (prod = Aij_pool [symbol].first_lhs; prod != 0; prod = spf.lhs [prod].next_lhs)
+ 409606 -> 	{
+ 409606 -> 	    if (!spf.lhs [prod].is_erased)
+ 409606 -> 	    {
+ 409606 -> 		spf.G.P++;
+ 409606 -> 		spf.G.G++;
+ 409606 -> 
+ 819877 -> 		for (x = spf.lhs [prod].prolon; (symbol = spf.rhs [x].lispro) != 0; x++)
+ 819877 -> 		{
+ 819877 -> 		    spf.G.G++;
+ 819877 -> 
+ 819877 -> 		    if (symbol > 0 && SXBA_bit_is_reset_set (Aij_set, symbol))
+ 819877 -> 		    {
+  29445 -> 			spf.G.N++;
+  29445 -> 			SS_push (symbol_stack, symbol);
+  29445 -> 		    }
+  29445 -> 		}
+  29445 -> 	    }
+  29445 -> 	}
+  29446 ->     } while (!SS_is_empty (symbol_stack));
+  29446 -> 
+      1 ->     symbol = Aij_top+1;
+      1 -> 
+      1 ->     while ((symbol = sxba_0_rlscan (Aij_set, symbol)) > 0)
+      1 ->     {
+      1 -> 	/* symbol est inaccessible */
+   9864 -> 	for (prod = Aij_pool [symbol].first_lhs; prod != 0; prod = spf.lhs [prod].next_lhs)
+   9864 -> 	{
+   9864 -> 	    /* prod est inaccessible */
+  22655 -> 	    spf.lhs [prod].is_erased = SXTRUE;
+  22655 -> 	}
+  22655 -> 
+   9864 -> 	Aij_pool [symbol].first_lhs = Aij_pool [symbol].first_rhs = 0;
+   9864 ->     }
+   9864 -> 
+      1 ->     SS_free (symbol_stack);
+      1 ->     sxfree (Aij_set);
+      1 -> }
+      1 -> 
+      1 -> 
+      1 -> 
+      1 -> 
+      1 -> struct ARN_sem {
+      1 ->   int	elementary_tree, len;
+      1 -> };
+      1 -> 
+      1 -> static struct ARN_sem	*ARN_sem;
+      1 -> 
+      1 -> 
+      1 -> static void
+      1 -> ARN_sem_oflw (old_size, new_size)
+      1 ->     int old_size, new_size;
+      6 -> {
+      6 ->     ARN_sem = (struct ARN_sem*) sxrealloc (ARN_sem, new_size+1, sizeof (struct ARN_sem));
+      6 -> }
+      6 -> 
+      6 -> 
+      6 -> static void
+      6 -> ARN_new_symbol (new_symbol)
+      6 ->     int new_symbol;
+  39310 -> {
+  39310 ->     ARN_sem [new_symbol].elementary_tree = ARN_sem [new_symbol].len = 0;
+  39310 -> }
+  39310 -> 
+  39310 -> static SXBOOLEAN
+  39310 -> ARN_parsact (rhs_stack, top, elementary_tree, init_prod)
+  39310 ->     int *rhs_stack, top, elementary_tree, init_prod;
+ 447467 -> {
+ 447467 ->     int			new_len;
+ 447467 ->     struct ARN_sem	*psem;
+ 447467 -> 
+ 447467 ->     psem = ARN_sem+rhs_stack [0];
+ 447467 -> 
+ 447467 ->     switch (parsact [init_prod])
+ 447467 ->     {
+ 447467 ->     case -1:
+ 447467 ->     case 0:
+ 447467 ->     case 1:
+ 447467 ->     case 2:
+ 447467 ->     case 3:
+ 447467 ->     case 4:
+ 447467 ->     case 5:
+ 447467 ->     case 6:
+ 447467 ->     case 10:
+ 447467 ->     case 11:
+ 447467 ->     case 12:
+ 447467 ->     case 13:
+ 416784 -> 	return SXTRUE;
+ 416784 ->        
+ 416784 ->     case 7:
+   6148 -> 	new_len = 1;
+   6148 -> 	break;
+   6148 ->     case 8:
+  11974 -> 	new_len = ARN_sem [rhs_stack [1]].len+1;
+  11974 -> 	break;
+  11974 ->     case 9:
+  12009 -> 	new_len = ARN_sem [rhs_stack [2]].len+1;
+  12009 -> 	break;
+  12009 -> 
+  12009 ->     case 14:
+    367 -> 	psem->len = ARN_sem [rhs_stack [1]].len+1; 
+    367 -> 	return SXTRUE;
+    367 ->     case 15:
+    185 -> 	psem->len = 1;
+    185 -> 	return SXTRUE;
+    185 -> 
+    185 ->     default:
+  ##### -> 	fprintf (sxstderr, "The function \"ARN_parsact\" is out of date with respect to its specification.\n");
+  ##### -> 	abort ();
+  ##### ->     }
+  ##### -> 
+  30131 ->     if (psem->elementary_tree == 0)
+  30131 ->     {
+  30131 -> 	/* 1ere occurrence */
+  14925 -> 	psem->elementary_tree = elementary_tree;
+  14925 -> 	psem->len = new_len;
+  14925 ->     }
+  14925 ->     else
+  15206 -> 	if (psem->len <= new_len)
+  15206 -> 	{
+  15206 -> 	    /* On conserve la precedente */
+   7101 -> 	    return SXFALSE;
+   7101 -> 	    /* erase_elementary_tree (elementary_tree); n'a pas (encore) ete entre'! */
+   7101 -> 	}
+   7101 ->     else
+   7101 ->     {
+   8105 -> 	erase_elementary_tree (psem->elementary_tree);
+   8105 -> 	psem->elementary_tree = elementary_tree;
+   8105 -> 	psem->len = new_len;
+   8105 ->     }
+   8105 -> 
+  23030 ->     return SXTRUE;
+  23030 -> }
+  23030 -> 
+  23030 -> static SXBOOLEAN
+  23030 -> ARN_constraint (symbol, prdct_no)
+  23030 ->     int symbol, prdct_no;
+  15477 -> {
+  15477 ->     if (prdct_no == 1)
+  15477 ->     {
+  15477 -> 	return ARN_sem [symbol].len <= 2 /* 30 */;
+  15477 ->     }
+  15477 ->     else
+  15477 ->     {
+  ##### -> 	fprintf (sxstderr, "The function \"ARN_constraint\" is out of date with respect to its specification.\n");
+  ##### -> 	abort ();
+  ##### ->     }
+  ##### -> }
+  ##### -> 
+  ##### -> 
+  ##### -> main (argc, argv)
+  ##### ->     int		argc;
+  ##### ->     char	*argv [];
+      1 -> {
+      1 -> static int	**N, *P;
+      1 ->     int l, t, *tok, nt;
+      1 ->     char	*s, c;
+      1 -> 
+      1 ->     if (argc != 3)
+      1 ->     {
+  ##### -> 	printf (Usage, ME);
+  ##### -> 	return 1;
+  ##### ->     }
+  ##### -> 
+      1 ->     sxopentty ();
+      1 -> 
+      1 ->     c = argv [1] [0];
+      1 -> 
+      1 ->     if (c == 'R' || c == 'r')
+  ##### -> 	is_parser = SXFALSE;
+  ##### ->     else
+      1 -> 	if (c == 'P' || c == 'p')
+      1 -> 	    is_parser = SXTRUE;
+      1 ->     else
+      1 ->     {
+  ##### -> 	printf (Usage, ME);
+  ##### -> 	return 1;
+  ##### ->     }
+  ##### -> 	    
+      1 ->     s = source = argv [2];
+      1 ->     n = strlen (source);
+      1 -> 
+      1 ->     if (n == 0)
+      1 ->     {
+  ##### -> 	printf (Usage, ME);
+  ##### -> 	return 1;
+  ##### ->     }
+  ##### -> 
+      1 ->     tok = TOK = (int*) sxalloc (n + 2, sizeof (int));
+      1 -> 
+      1 ->     while ((c = *s++) != '\0')
+      1 ->     {
+    186 -> 	if ((t = char2tok (c)) == 0)
+    186 -> 	{
+    186 -> 	    printf ("\
+  ##### -> \t%s Lexical error at char #%i\n", ME, (TOK - tok) + 1);
+  ##### -> 	    return 1;
+  ##### -> 	}
+  ##### -> 
+    186 -> 	*++tok = t;
+    186 ->     }
+    186 -> 
+      1 ->     *++tok = tmax;
+      1 -> 
+      1 ->     pool_alloc (&sis_pool, (n+1)*ntmax, sizeof (sis));
+      1 -> 
+      1 ->     bag_alloc (&shift_bag, (n + 1) * ntmax * NBLONGS (n + 1));
+      1 -> 
+      1 ->     RT = (struct recognize_item*) sxalloc (n+1, sizeof (struct recognize_item));
+      1 -> 
+      1 ->     global_state_sets = sxbm_calloc (3, statemax+1);
+      1 -> 
+      1 -> #if 0
+      1 ->     global_state_sets = sxbm_calloc (4, statemax+1);
+      1 -> #endif
+      1 -> 
+      1 ->     init_state_set = global_state_sets [0];
+      1 ->     T1.state_set = global_state_sets [1];
+      1 ->     T2.state_set = global_state_sets [2];
+      1 -> 
+      1 -> #if 0
+      1 ->     T0.state_set = global_state_sets [3];
+      1 -> #endif
+      1 -> 
+      1 ->     NT_set = sxba_calloc (ntmax+1);
+      1 -> 
+      1 ->     ntXindex_set = sxbm_calloc (ntmax+1, n+1);
+      1 -> 
+      1 ->     if (is_parser)
+      1 ->     {
+      1 -> 	XxY_alloc (&Ai_hd, "Ai_hd", ntmax * (n+1), 1, 0, 0, NULL,
+      1 -> #ifdef EBUG
+      1 -> 		   stdout
+      1 -> #else
+      1 -> 		   NULL
+      1 -> #endif
+      1 -> 		   );
+      1 -> 
+      1 -> 	Aij_pool = (struct Aij_pool*) sxalloc (Aij_size = ntmax * (n+1), sizeof (struct Aij_pool));
+      1 -> 	/* Aij_top = 0; */
+      1 -> 
+      1 ->         {
+      1 -> 	    int			**CN, *CP;
+      1 -> 	    int 		A, i;
+      1 -> 
+      1 -> 	    symbols = (int***) sxalloc (ntmax+1, sizeof (int**));
+      1 -> 	    CN = N = (int**) sxalloc ((n+1)*ntmax, sizeof (int*));
+      1 -> 	    /* Acces a l'element A,i,j de symbols se fait par symbols [A] [i] [j-i]. */
+      1 -> 	    CP = P = (int*) sxcalloc (((n+1)*(n+2)/2)*ntmax, sizeof (int));
+      1 -> 
+      6 -> 	    for (A = 1; A <= ntmax; A++)
+      6 -> 	    {
+      6 -> 		symbols [A] = CN;
+      6 -> 
+      6 -> 		for (i = 0; i <= n; i++) {
+   1122 -> 		    *CN++ = CP;
+   1122 -> 		    CP += n+1-i;
+   1122 -> 		}
+   1122 -> 	    }
+   1122 -> 	}
+   1122 -> 	
+   1122 -> 
+      1 -> 	spf.G.lhs_size = ntmax * (n+1);
+      1 -> 	spf.lhs = (struct lhs*) sxalloc (spf.G.lhs_size+1, sizeof (struct lhs));
+      1 -> 
+      1 -> 	spf.G.rhs_size = spf.G.lhs_size * (rhs_lgth+1);
+      1 -> 	spf.rhs = (struct rhs*) sxalloc (spf.G.rhs_size+1, sizeof (struct rhs));
+      1 -> 
+      1 -> 
+      1 -> 	ARN_sem = (struct ARN_sem*) sxalloc (Aij_size+1, sizeof (struct ARN_sem));
+      1 ->     }
+      1 -> 
+      1 -> 
+      1 ->     grammar ();
+      1 -> 
+      1 ->     sprod2order = (int*) sxcalloc (prodmax+1, sizeof (int));
+      1 -> 
+      1 ->     grammar2 ();
+      1 -> 
+      1 ->     sprod_set = sxba_calloc (sprodmax+1);
+      1 ->     sprod2attr = (struct sprod2attr*) sxalloc (sprodmax+1, sizeof (struct sprod2attr));
+      1 -> 
+      1 ->     for_parsact.action = ARN_parsact;
+      1 ->     for_parsact.new_symbol = ARN_new_symbol;
+      1 ->     for_parsact.Aij_pool_oflw = ARN_sem_oflw;
+      1 ->     for_parsact.prdct = NULL;
+      1 ->     for_parsact.constraint = ARN_constraint;
+      1 -> 
+      1 ->     if ((l = recognize ()) <= n)
+  ##### -> 	printf ("Syntax error at %i\n", l);
+  ##### ->     else
+  ##### ->     {
+      1 -> 	if (is_parser)
+      1 -> 	{
+      1 -> 	    spf.G.N = Aij_top;
+      1 -> 	    spf.G.P = spf.G.lhs_top;
+      1 -> 	    spf.G.T = n;
+      1 -> 	    spf.G.G = spf.G.rhs_top;
+      1 -> 
+      1 -> 	    if (spf.G.start_symbol != 0)
+      1 -> 		useless_symbol_elimination ();
+      1 -> 
+      1 -> #if EBUG
+      1 -> 	    output_spf ();
+      1 -> #endif
+      1 -> 	}
+      1 ->     }
+      1 -> 
+      1 ->     grammar_free ();
+      1 -> 
+      1 ->     sxfree (sprod2order);
+      1 ->     sxfree (sprod_set);
+      1 ->     sxfree (sprod2attr);
+      1 -> 
+      1 ->     pool_free (&sis_pool);
+      1 -> 
+      1 ->     bag_free (&shift_bag);
+      1 -> 
+      1 ->     sxfree (RT);
+      1 ->     sxbm_free (global_state_sets);
+      1 ->     sxfree (NT_set);
+      1 -> 
+      1 ->     sxbm_free (ntXindex_set);
+      1 -> 
+      1 ->     if (is_parser)
+      1 ->     {
+      1 -> 	XxY_free (&Ai_hd);
+      1 -> 	sxfree (Aij_pool);
+      1 -> 
+      1 -> 	sxfree (P), sxfree (N), sxfree (symbols);
+      1 -> 
+      1 -> 	sxfree (spf.rhs);
+      1 -> 	sxfree (spf.lhs);
+      1 -> 
+      1 -> 	sxfree (ARN_sem);
+      1 ->     }
+      1 -> 
+      1 ->     sxfree (TOK);
+      1 -> 
+      1 ->     return 0;
+      1 -> }
+      1 -> 
+
+
+		 Top 10 Blocks
+
+		 Line	   Count
+
+		 1827	  878615
+		 1839	  878615
+		 1834	  856741
+		 2498	  819877
+		 2500	  819877
+		 1758	  447467
+		 1806	  447467
+		 2558	  447467
+		 1862	  445350
+		 1947	  445350
+
+
+	  284	Basic blocks in this file
+	  262	Basic blocks executed
+	92.25	Percent of the file executed
+
+     14356798	Total basic block executions
+     50552.11	Average executions per basic block

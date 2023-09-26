@@ -1,0 +1,57 @@
+Classes
+	ANY		= #000..#377 ;
+	BLANK		= SP + HT + VT + FF ;
+
+
+Abbreviations
+
+	IDENT		= LETTER {["_"] (LETTER | DIGIT)} ;
+	DARK_LET	= LETTER -{BS @1 LETTER}+ ;
+	BOLD_LET	= LETTER -{BS @1 LETTER} ;
+	BOLD_US		= "_" -{BS "_"} ;
+	DARK_US		= "_" -{BS "_"}+ ;
+	BOLD_COMMERCIAL_AT
+			= "@" -{BS "@"} ;
+	DARK_AMPERSAND	= "&" -{BS "&"}+ ;
+	BOLD_WORD	= BOLD_LET {[BOLD_US] BOLD_LET} ;
+	DARK_WORD	= DARK_LET {[DARK_US] DARK_LET} ;
+	COMMENT		= "-" "-" {^EOL} EOL ;
+
+
+Tokens
+
+	Comments	= -{BLANK}+ | -{BLANK} {(COMMENT | EOL) {BLANK}}+ @2 ;
+			   Priority Shift>Reduce ;
+			   Unbounded Context All But Comments ;
+	%IDENTIFIER	= IDENT @Upper_Case ;
+			   Context All But %IDENTIFIER, KEYWORD,
+				%INTEGER_NUMBER ;
+	%PREDICATE_NAME = "&" IDENT @Upper_Case ;
+			   Context All But %IDENTIFIER ;
+	%STRING_LITERAL = QUOTE {^"\"\n" | "\\"&True ANY}+ QUOTE ;
+			   Context All But %STRING_LITERAL ;
+	%OCTAL_CODE	= "#" {"0".."7"}+ ;
+	%GENERIC_NAME	= "%" IDENT @Upper_Case ;
+	%INTEGER_NUMBER = {DIGIT}+ ;
+	%PREDICATE_NO	= "&" {DIGIT}+ ;
+	%ACTION_NO	= "@" {DIGIT}+ ;
+	KEYWORD		= {DARK_LET}+ @Upper_Case ;
+			   Context All But %IDENTIFIER, KEYWORD ;
+	ACTION_KEYWORD	= BOLD_COMMERCIAL_AT BOLD_WORD @Upper_Case ;
+			   Context All But %IDENTIFIER ;
+	PREDICATE_KEYWORD
+			= DARK_AMPERSAND DARK_WORD @Upper_Case ;
+			   Context All But %IDENTIFIER ;
+	"-"		= "-" ;
+			   Priority Shift>Reduce ;
+
+
+Synonyms
+
+	"EOF"		= "END_OF_FILE" ;
+
+
+
+-- @1 : Is_The_Same_Letter
+-- @2 : rtrim EOL | HT | SP except least EOL
+

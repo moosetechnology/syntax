@@ -1,0 +1,134 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 				LE PLURIEL DES NOMS COMMUNS SIMPLES				%
+%												%
+%				Le Petit Larousse Illustre 1987					%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+Pluriel(\a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z\ )
+					--> &False() . % sert uniquement a definir l'ensemble T
+% Un texte source est un couple de mots, singulier pluriel, separe par un blanc
+Pluriel(Singulier " " Pluriel)		--> regle_generale(Singulier, Pluriel) .
+
+% Les racines des mots sont identiques et de longueur non nulle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Regle Generale : le pluriel des noms communs se forme en ajoutant un "s" au singulier		%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+regle_generale(R1, R2\s)		--> &StrEq(R1, R2) !&StrLen(0, R1) !fautes_en_s(R1, R2\s) .
+regle_generale(Singulier, Pluriel)	--> exceptions(Singulier, Pluriel) .
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Le pluriel et le singulier sont semblables dans les noms termines -s, -x, -z			%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+exceptions(Singulier, Pluriel)		--> noms_en_s(Singulier, Pluriel) .
+exceptions(Singulier, Pluriel)		--> noms_en_x(Singulier, Pluriel) .
+exceptions(Singulier, Pluriel)		--> noms_en_z(Singulier, Pluriel) .
+fautes_en_s(R1\s, R2\s\s)		--> &StrEq(R1, R2) !&StrLen(0, R1) .
+fautes_en_s(R1\x, R2\x\s)		--> &StrEq(R1, R2) !&StrLen(0, R1) .
+fautes_en_s(R1\z, R2\z\s)		--> &StrEq(R1, R2) !&StrLen(0, R1) .
+noms_en_s(R1\s, R2\s)			--> &StrEq(R1, R2) !&StrLen(0, R1) .
+noms_en_x(R1\x, R2\x)			--> &StrEq(R1, R2) !&StrLen(0, R1) .
+noms_en_z(R1\z, R2\z)			--> &StrEq(R1, R2) !&StrLen(0, R1) .
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Les noms en -al ont le pluriel en -aux.  mais bal, carnaval, ceremonial, chacal, choral,	%
+% festival, nopal, pal, recital, santal, etc., suivent la regle generale			%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+exceptions(Singulier, Pluriel)		--> noms_en_al(Singulier, Pluriel) .
+fautes_en_s(R1\a\l, R2\a\l\s)		--> &StrEq(R1, R2) !&StrLen(0, R1) .
+noms_en_al(R1\a\l, R2\a\u\x)		--> &StrEq(R1, R2) !&StrLen(0, R1) !fautes_en_al(R1\a\l, R2\a\u\x) .
+noms_en_al(Singulier, Pluriel)		--> exceptions_en_al(Singulier, Pluriel) .
+fautes_en_al(\b\a\l, \b\a\u\x)					--> .
+fautes_en_al(\c\a\r\n\a\v\a\l, \c\a\r\n\a\v\a\u\x)		--> .
+fautes_en_al(\c\e\r\e\m\o\n\i\a\l, \c\e\r\e\m\o\n\i\a\u\x)	--> .
+fautes_en_al(\c\h\a\c\a\l, \c\h\a\c\a\u\x)			--> .
+fautes_en_al(\c\h\o\r\a\l, \c\h\o\r\a\u\x)			--> .
+fautes_en_al(\f\e\s\t\i\v\a\l, \f\e\s\t\i\v\a\u\x)		--> .
+fautes_en_al(\n\o\p\a\l, \n\o\p\a\u\x)				--> .
+fautes_en_al(\p\a\l, \p\a\u\x)					--> .
+fautes_en_al(\r\e\c\i\t\a\l, \r\e\c\i\t\a\u\x)			--> .
+fautes_en_al(\s\a\n\t\a\l, \s\a\n\t\a\u\x)			--> .
+exceptions_en_al(\b\a\l, \b\a\l\s)				--> .
+exceptions_en_al(\c\a\r\n\a\v\a\l, \c\a\r\n\a\v\a\l\s)		--> .
+exceptions_en_al(\c\e\r\e\m\o\n\i\a\l, \c\e\r\e\m\o\n\i\a\l\s)	--> .
+exceptions_en_al(\c\h\a\c\a\l, \c\h\a\c\a\l\s)			--> .
+exceptions_en_al(\c\h\o\r\a\l, \c\h\o\r\a\l\s)			--> .
+exceptions_en_al(\f\e\s\t\i\v\a\l, \f\e\s\t\i\v\a\l\s)		--> .
+exceptions_en_al(\n\o\p\a\l, \n\o\p\a\l\s)			--> .
+exceptions_en_al(\p\a\l, \p\a\l\s)				--> .
+exceptions_en_al(\r\e\c\i\t\a\l, \r\e\c\i\t\a\l\s)		--> .
+exceptions_en_al(\s\a\n\t\a\l, \s\a\n\t\a\l\s)			--> .
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Le pluriel des noms termines en -eau, -au, -eu se forme en ajoutant un x au singulier.	%
+% Font exception : landau, sarrau, bleu, emeu, pneu, qui prennent un s au pluriel		%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+exceptions(Singulier, Pluriel)		--> noms_en_au(Singulier, Pluriel) .
+exceptions(Singulier, Pluriel)		--> noms_en_eu(Singulier, Pluriel) .
+fautes_en_s(R1\a\u, R2\a\u\s)		--> &StrEq(R1, R2) !&StrLen(0, R1) .
+fautes_en_s(R1\e\u, R2\e\u\s)		--> &StrEq(R1, R2) !&StrLen(0, R1) .
+noms_en_au(R1\a\u, R2\a\u\x)		--> &StrEq(R1, R2) !&StrLen(0, R1) !fautes_en_au(R1\a\u, R2\a\u\x) .
+noms_en_au(Singulier, Pluriel)		--> exceptions_en_au(Singulier, Pluriel) .
+noms_en_eu(R1\e\u, R2\e\u\x)		--> &StrEq(R1, R2) !&StrLen(0, R1) !fautes_en_eu(R1\e\u, R2\e\u\x) .
+noms_en_eu(Singulier, Pluriel)		--> exceptions_en_eu(Singulier, Pluriel) .
+fautes_en_au(\l\a\n\d\a\u, \l\a\n\d\a\u\x)	--> .
+fautes_en_au(\s\a\r\r\a\u, \s\a\r\r\a\u\x)	--> .
+exceptions_en_au(\l\a\n\d\a\u, \l\a\n\d\a\u\s)	--> .
+exceptions_en_au(\s\a\r\r\a\u, \s\a\r\r\a\u\s)	--> .
+fautes_en_eu(\b\l\e\u, \b\l\e\u\x)		--> .
+fautes_en_eu(\e\m\e\u, \e\m\e\u\x)		--> .
+fautes_en_eu(\p\n\e\u, \p\n\e\u\x)		--> .
+exceptions_en_eu(\b\l\e\u, \b\l\e\u\s)		--> .
+exceptions_en_eu(\e\m\e\u, \e\m\e\u\s)		--> .
+exceptions_en_eu(\p\n\e\u, \p\n\e\u\s)		--> .
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Le pluriel des noms termines par -ou est en general en -ous.					%
+% Font exception : bijou, caillou, chou, genou, hibou, joujou, pou, qui prennent un x au pluriel%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+fautes_en_s(\b\i\j\o\u, \b\i\j\o\u\s)		--> .
+fautes_en_s(\c\a\i\l\l\o\u, \c\a\i\l\l\o\u\s)	--> .
+fautes_en_s(\c\h\o\u, \c\h\o\u\s)		--> .
+fautes_en_s(\g\e\n\o\u, \g\e\n\o\u\s)		--> .
+fautes_en_s(\h\i\b\o\u, \h\i\b\o\u\s)		--> .
+fautes_en_s(\j\o\u\j\o\u, \j\o\u\j\o\u\s)	--> .
+fautes_en_s(\p\o\u, \p\o\u\s)			--> .
+exceptions(\b\i\j\o\u, \b\i\j\o\u\x)		--> .
+exceptions(\c\a\i\l\l\o\u, \c\a\i\l\l\o\u\x)	--> .
+exceptions(\c\h\o\u, \c\h\o\u\x)		--> .
+exceptions(\g\e\n\o\u, \g\e\n\o\u\x)		--> .
+exceptions(\h\i\b\o\u, \h\i\b\o\u\x)		--> .
+exceptions(\j\o\u\j\o\u, \j\o\u\j\o\u\x)	--> .
+exceptions(\p\o\u, \p\o\u\x)			--> .
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Les noms termines au singulier par -ail ont un pluriel regulier en -ails.			%
+% Font exception : bail, corail, email, soupirail, travail, vantail, vitrail, qui ont le pluriel%
+% en -aux.											%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+fautes_en_s(\b\a\i\l, \b\a\i\l\s)			--> .
+fautes_en_s(\c\o\r\a\i\l, \c\o\r\a\i\l\s)		--> .
+fautes_en_s(\e\m\a\i\l, \e\m\a\i\l\s)			--> .
+fautes_en_s(\s\o\u\p\i\r\a\i\l, \s\o\u\p\i\r\a\i\l\s)	--> .
+fautes_en_s(\t\r\a\v\a\i\l, \t\r\a\v\a\i\l\s)		--> .
+fautes_en_s(\v\a\n\t\a\i\l, \v\a\n\t\a\i\l\s)		--> .
+fautes_en_s(\v\i\t\r\a\i\l, \v\i\t\r\a\i\l\s)		--> .
+exceptions(\b\a\i\l, \b\a\u\x)				--> .
+exceptions(\c\o\r\a\i\l, \c\o\r\a\u\x)			--> .
+exceptions(\e\m\a\i\l, \e\m\a\u\x)			--> .
+exceptions(\s\o\u\p\i\r\a\i\l, \s\o\u\p\i\r\a\u\x)	--> .
+exceptions(\t\r\a\v\a\i\l, \t\r\a\v\a\u\x)		--> .
+exceptions(\v\a\n\t\a\i\l, \v\a\n\t\a\u\x)		--> .
+exceptions(\v\i\t\r\a\i\l, \v\i\t\r\a\u\x)		--> .
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Les noms aieul, ciel et oeil ont des pluriels irreguliers; mais on dit bisaieuls, trisaieuls	%
+% et aieuls dans le sens de "grands-parents", ciels dans ciels de lit et oeils dans		%
+% oeils-de-boeuf, etc.										%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+exceptions(\a\i\e\u\l, \a\i\e\u\x)		--> .
+exceptions(\c\i\e\l, \c\i\e\u\x)		--> .
+exceptions(\o\e\i\l, \y\e\u\x)			--> .
+

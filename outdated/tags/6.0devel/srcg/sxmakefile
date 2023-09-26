@@ -1,0 +1,82 @@
+# To avoid problems with other shells:
+SHELL=/bin/sh
+
+SX=$(sx)
+LNorCP=ln -s
+#LNorCP=${SHELL} $(SX)/etc/bin/lien-relatif.sh
+SXLIB=$(SX)/lib
+SXINCL=$(SX)/incl
+ETC=$(SX)/etc
+ETCLIB=$(ETC)/lib
+
+SRCG=$(SX)/srcg
+SRC=$(SRCG)/src
+LIB=$(SRCG)/lib
+INCL=$(SRCG)/incl
+
+BIBS= $(ETCLIB)/libsxetc$(sxV).a $(SXLIB)/libsx$(sxV).a
+
+# SRCG_CFLAGS= -DEBUG
+SRCG_CFLAGS= -g # -DEBUG
+# SRCG_CFLAGS= -g -DEBUG -DSTATS
+COMPILER=cc -fno-common
+CC=cd $(LIB); umask 7; exec $(COMPILER) -I$(INCL) -I$(SXINCL) -I$(ETC)/incl $(SRCG_CFLAGS) $(CFLAGS) -c
+
+$(SRCG)/everything .PRECIOUS:	$(SX)/bin/srcg.out
+
+$(SX)/bin/srcg.out:	$(SRCG)/srcg.out
+	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
+
+NEEDS1=\
+	$(LIB)/srcg_main.o		\
+	$(LIB)/srcg_sact.o		\
+	$(LIB)/srcg_smp.o    		\
+	$(LIB)/srcg_t.o
+
+
+$(SRCG)/srcg.out:	$(NEEDS1)	$(BIBS)
+	@echo '	$(COMPILER) -o $@'; rm -f $@; ${SHELL} -c '$(COMPILER) -o $@ $(NEEDS1) $(SRCG_CFLAGS) $(CFLAGS) $(LDFLAGS) $(ETCLIB)/libsxetc$(sxV).a $(SXLIB)/libsx$(sxV).a || (rm $@;exit 1)'
+#	@echo '	$(COMPILER) -o $@'; rm -f $@; ${SHELL} -c '$(COMPILER) -o $@ $(NEEDS1) $(SRCG_CFLAGS) $(CFLAGS) $(LDFLAGS) $(SXLIB)/sxmem_mngr.d.o $(ETCLIB)/libsxetc$(sxV).a $(SXLIB)/libsx$(sxV).a || (rm $@;exit 1)'
+
+$(LIB)/srcg_main.o:	$(SXINCL)/sxunix.h	\
+			$(SXINCL)/sxversion.h	\
+			$(INCL)/srcg.h		\
+			$(INCL)/srcg_td.h	\
+			$(SRCG)/force-make 	\
+			$(SRC)/srcg_main.c
+	$(CC) $(SRC)/srcg_main.c
+
+
+
+$(LIB)/srcg_sact.o:	$(SXINCL)/sxunix.h	\
+			$(SXINCL)/varstr.h	\
+			$(INCL)/srcg.h		\
+			$(INCL)/srcg_td.h	\
+			$(SRCG)/force-make 	\
+			$(SRC)/srcg_sact.c
+	$(CC) $(SRC)/srcg_sact.c
+
+
+
+$(LIB)/srcg_smp.o:	$(SXINCL)/sxunix.h	\
+			$(SXINCL)/sxba.h	\
+			$(SXINCL)/varstr.h	\
+			$(SXINCL)/put_edit.h	\
+			$(SXINCL)/XH.h		\
+			$(SXINCL)/XxY.h		\
+			$(INCL)/srcg.h		\
+			$(INCL)/srcg_td.h	\
+			$(SRCG)/force-make 	\
+			$(SRC)/srcg_smp.c
+	$(CC) $(SRC)/srcg_smp.c
+#			-DEBUG_PRDCT=4 (code du prdct que l'on veut tracer)
+
+$(LIB)/srcg_t.o:	$(SXINCL)/sxunix.h 	\
+			$(SRCG)/force-make 	\
+			$(SRC)/srcg_t.c
+	$(CC) $(SRC)/srcg_t.c			\
+		-Dsxtables=srcg_tables		\
+		-DSCANACT=srcg_scan_act		\
+		-Dsempass=srcg_smp
+
+

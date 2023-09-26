@@ -1,0 +1,13 @@
+*********************************************************************
+*	 Copyright (c) 2000 by Institut National de Recherche	    *
+*		  en Informatique et en Automatique.		    *
+*		      Produit de l'équipe ATOLL.		    *
+*		      Version 0.1 du 21 mai 2000		    *
+*  Syntaxe d'entrée pour les mots d'un lexique à traiter par TRICO  *
+*********************************************************************
+
+<trico>		= <mots> 			; 1
+
+<mots>		= <mots>
+		  %MOT		 		; 2
+<mots>		= %MOT 				; 3

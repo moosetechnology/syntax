@@ -1,0 +1,15 @@
+*
+* Grammaire qui decrit des sources sous forme de unfolded dag (liste de transitions)
+*
+
+<UDAG_GRAMMAR>    = <TRANSITIONS> ;
+<UDAG_GRAMMAR>    = bodag <TRANSITIONS> eodag ;
+
+<TRANSITIONS>     = <TRANSITIONS> <TRANSITION> ;
+<TRANSITIONS>     = <TRANSITION> ;
+
+<FORM>            = %form ;
+<FORM>            = %state ;
+
+<TRANSITION>      = %state <FORM> %state ; 1
+ 

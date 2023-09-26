@@ -1,0 +1,12 @@
+#!/bin/sh
+# Wrapper around all the "real" executables.
+if [ "$ARCH" = "$HOST_ARCH" ]
+then
+    # native compilation
+    exec $0.out "$@"
+else
+    # cross compilation
+    # $HOST_ARCH = architecture of the current marchine
+    # $ARCH = target architecture for cross compilation
+    exec `echo $0.out | sed -e "s/bin.$ARCH/bin.$HOST_ARCH/"` "$@"
+fi 

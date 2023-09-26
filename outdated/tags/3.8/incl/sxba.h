@@ -1,0 +1,88 @@
+/* ********************************************************
+   *							  *
+   *							  *
+   * Copyright (c) 1987 by Institut National de Recherche *
+   *                    en Informatique et en Automatique *
+   *							  *
+   *							  *
+   ******************************************************** */
+
+
+
+
+/* ********************************************************
+   *							  *
+   *  Produit de l'equipe Langages et Traducteurs.  (phd) *
+   *							  *
+   ******************************************************** */
+
+
+
+
+
+/* Definitions communes aux modules "bitsarray" pour SYNTAX */
+
+
+/************************************************************************/
+/* Historique des modifications, en ordre chronologique inverse:	*/
+/************************************************************************/
+/* 23-09-96 15:56 (phd&pb):	Bug detecte sur l'alpha pour les 64 bits*/
+/*				les "constantes" doivenr etre typees	*/
+/************************************************************************/
+/* 27-07-92 10:30 (pb):		Macro "COMB" for sxba_clear 		*/
+/************************************************************************/
+/* 28-12-87 16:02 (phd):	Correction de la macro BASIZE		*/
+/************************************************************************/
+/* 23-12-87 11:37 (phd):	Creation a partir de "sxbitsarray.c"	*/
+/************************************************************************/
+
+#ifndef SXBA_IMPLEMENTATION
+extern 
+#endif
+SXBA _SXBA_ba;
+
+#ifndef SXBA_IMPLEMENTATION
+extern
+#endif
+SXBA_ELT	_SXBA_elt;
+
+#ifndef SXBITS_PER_LONG
+# define SXBITS_PER_LONG 32	/* Seems reasonable */
+#endif
+
+#if SXBITS_PER_LONG==(1<<6)
+# define SXSHIFT_AMOUNT 6
+#else
+#if SXBITS_PER_LONG==(1<<5)
+# define SXSHIFT_AMOUNT 5
+#else
+#if SXBITS_PER_LONG==(1<<4)
+# define SXSHIFT_AMOUNT 4
+#endif
+#endif
+#endif
+
+#ifdef SXSHIFT_AMOUNT
+# define MUL(n)	((n) << SXSHIFT_AMOUNT)
+# define DIV(n)	((n) >> SXSHIFT_AMOUNT)
+# define MOD(n)	((n) & (SXBITS_PER_LONG-1))
+#else
+# define MUL(n)	((n) * SXBITS_PER_LONG)
+# define DIV(n)	((n) / SXBITS_PER_LONG)
+# define MOD(n)	((n) % SXBITS_PER_LONG)
+#endif
+
+
+#define NBLONGS(nb_bits)	DIV((nb_bits)+(SXBITS_PER_LONG-1))
+
+#define BASIZE(bits_array)	((bits_array)[0])
+
+/* Assume i < SXBITS_PER_LONG and l < SXBITS_PER_LONG */
+/* Creates a "comb" of "l" teeth at index "i" */
+#define COMB(i,l)	((~((~(((SXBA_ELT)0)))<<(l)))<<(i))
+
+#define SXBA_0_bit(ba,bit)		((ba) [DIV (bit) + 1] &= ~(((SXBA_ELT)1) << MOD (bit)))
+#define SXBA_1_bit(ba,bit)		((ba) [DIV (bit) + 1] |= (((SXBA_ELT)1) << MOD (bit)))
+#define SXBA_bit_is_set(ba,bit)		(((ba) [DIV (bit) + 1] & (((SXBA_ELT)1) << MOD (bit))) != 0)
+#define SXBA_bit_is_reset_set(ba,bit)	(*(_SXBA_ba = (ba) + DIV (bit) + 1) & (_SXBA_elt = (((SXBA_ELT)1) << MOD (bit))) ? 0 : (*_SXBA_ba |= _SXBA_elt, 1))
+#define SXBA_bit_is_set_reset(ba,bit)	(*(_SXBA_ba = (ba) + DIV (bit) + 1) & (_SXBA_elt = (((SXBA_ELT)1) << MOD (bit))) ? (*_SXBA_ba &= ~_SXBA_elt, 1) : 0)

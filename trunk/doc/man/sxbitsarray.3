@@ -1,0 +1,403 @@
+.\" @(#)sxbitsarray.3	- SYNTAX [unix] - 7 Juin 1988
+.TH SXBITSARRAY 3 "SYNTAX\[rg]"
+.SH NAME
+sxba_calloc,
+sxba_resize,
+sxba_empty,
+sxba_fill,
+sxba_0_bit,
+sxba_1_bit,
+sxba_bit_is_set,
+sxba_cardinal,
+sxba_scan,
+sxba_1_lrscan,
+sxba_0_lrscan,
+sxba_1_rlscan,
+sxba_0_rlscan,
+sxba_copy,
+sxba_and,
+sxba_or,
+sxba_xor,
+sxba_minus,
+sxba_not,
+sxba_is_empty,
+sxba_is_full,
+sxba_first_difference,
+sxba_read,
+sxba_write,
+sxbm_calloc,
+sxbm_resize,
+sxbm_free
+\- bits array and bits matrix processing for SYNTAX.
+.SH SYNOPSIS
+.nf
+.ta \w'\s-2SXBA\s0  'u +\w'\s-2SXBA\s0  'u
+.B
+#include "sxunix.h"
+.PP
+.B
+\s-2SXBA\s0 sxba_calloc (bits_number)
+.B
+	int	bits_number\|;
+.PP
+.B
+\s-2SXBA\s0 sxba_resize (bits_array, new_bits_number)
+.B
+	\s-2SXBA\s0	bits_array\|;
+.B
+	int	new_bits_number\|;
+.PP
+.B
+\s-2SXBA\s0 sxba_empty (bits_array)
+.B
+	\s-2SXBA\s0	bits_array\|;
+.PP
+.B
+\s-2SXBA\s0 sxba_fill (bits_array)
+.B
+	\s-2SXBA\s0	bits_array\|;
+.PP
+.B
+\s-2SXBA\s0 sxba_0_bit (bits_array, bit)
+.B
+	\s-2SXBA\s0	bits_array\|;
+.B
+	int	bit\|;
+.PP
+.B
+\s-2SXBA\s0 sxba_1_bit (bits_array, bit)
+.B
+	\s-2SXBA\s0	bits_array\|;
+.B
+	int	bit\|;
+.PP
+.B
+\s-2SXBOOLEAN\s0 sxba_bit_is_set (bits_array, bit)
+.B
+	\s-2SXBA\s0	bits_array\|;
+.B
+	int	bit\|;
+.PP
+.B
+int sxba_cardinal (bits_array)
+.B
+	\s-2SXBA\s0	bits_array\|;
+.PP
+.B
+int sxba_scan (bits_array, from_bit)
+.B
+	\s-2SXBA\s0	bits_array\|;
+.B
+	int	from_bit\|;
+.PP
+.B
+int sxba_1_lrscan (bits_array, from_bit)
+.B
+	\s-2SXBA\s0	bits_array\|;
+.B
+	int	from_bit\|;
+.PP
+.B
+int sxba_0_lrscan (bits_array, from_bit)
+.B
+	\s-2SXBA\s0	bits_array\|;
+.B
+	int	from_bit\|;
+.PP
+.B
+int sxba_1_rlscan (bits_array, from_bit)
+.B
+	\s-2SXBA\s0	bits_array\|;
+.B
+	int	from_bit\|;
+.PP
+.B
+int sxba_0_rlscan (bits_array, from_bit)
+.B
+	\s-2SXBA\s0	bits_array\|;
+.B
+	int	from_bit\|;
+.PP
+.B
+\s-2SXBA\s0 sxba_copy (lhs_bits_array, rhs_bits_array)
+.B
+	\s-2SXBA\s0	lhs_bits_array, rhs_bits_array\|;
+.PP
+.B
+\s-2SXBA\s0 sxba_and (lhs_bits_array, rhs_bits_array)
+.B
+	\s-2SXBA\s0	lhs_bits_array, rhs_bits_array\|;
+.PP
+.B
+\s-2SXBA\s0 sxba_or (lhs_bits_array, rhs_bits_array)
+.B
+	\s-2SXBA\s0	lhs_bits_array, rhs_bits_array\|;
+.PP
+.B
+\s-2SXBA\s0 sxba_xor (lhs_bits_array, rhs_bits_array)
+.B
+	\s-2SXBA\s0	lhs_bits_array, rhs_bits_array\|;
+.PP
+.B
+\s-2SXBA\s0 sxba_minus (lhs_bits_array, rhs_bits_array)
+.B
+	\s-2SXBA\s0	lhs_bits_array, rhs_bits_array\|;
+.PP
+.B
+\s-2SXBA\s0 sxba_not (bits_array)
+.B
+	\s-2SXBA\s0	bits_array\|;
+.PP
+.B
+\s-2SXBOOLEAN\s0 sxba_is_empty (bits_array)
+.B
+	\s-2SXBA\s0	bits_array\|;
+.PP
+.B
+\s-2SXBOOLEAN\s0 sxba_is_full (bits_array)
+.B
+	\s-2SXBA\s0	bits_array\|;
+.PP
+.B
+int sxba_first_difference (bits_array_1, bits_array_2)
+.B
+	\s-2SXBA\s0	bits_array_1, bits_array_2\|;
+.PP
+.B
+\s-2SXBOOLEAN\s0 sxba_read (file, bits_array)
+.B
+	int	file\|;
+.B
+	\s-2SXBA\s0	bits_array\|;
+.PP
+.B
+\s-2SXBOOLEAN\s0 sxba_write (file, bits_array)
+
+.B
+	int	file\|;
+.B
+	\s-2SXBA\s0	bits_array\|;
+.PP
+.B
+\s-2SXBA\s0 *sxbm_calloc (lines_number, bits_number)
+.B
+	int	lines_number, bits_number\|;
+.PP
+.B
+\s-2SXBA\s0 *sxbm_resize (bits_matrix, old_lines_number, new_lines_number, new_bits_number)
+.B
+	\s-2SXBA\s0	*bits_matrix\|;
+.B
+	int	old_lines_number, new_lines_number, new_bits_number\|;
+.PP
+.B
+\s-2SXVOID\s0 sxbm_free (bits_matrix)
+.B
+	\s-2SXBA\s0	*bits_matrix\|;
+.fi
+.SH DESCRIPTION
+The
+.B bits array
+module allows to manipulate arrays of bits, which may be considered as
+an implementation of sets.
+As all arrays of the C language, bits arrays are indexed starting with
+zero.
+They are implemented as arrays of
+.IR \s-2SXBA_ELT\s0 s
+(which is a macro expanding to
+.IR "unsigned long int" )\|;
+the first element of each such array keeps the number of significant
+bits in the other elements, which hold the bits themselves.
+The
+.B SYNTAX
+error recovery modules (see for example
+.BR sxp_rcvr (3))
+is a good example of the use of bits arrays.
+.PP
+The
+.B bits matrix
+module allows to manipulate matrices (two dimensional arrays) of bits.
+These matrices are implemented as arrays of \fBbits array\fP.
+If \fIbm\fP is a \fBbits matrix\fP (allocated via \fIsxbm_calloc\fP),
+\fIbm\fP [\fIi\fP] is a \fBbits array\fP over which all \fIBA\fPs operations
+(except freeing and resizing) can be applied.
+.LP
+.I sxba_calloc
+allocates a memory zone suitable for holding
+.I bits_number
+bits, which are all initialized to zero.
+It returns a pointer to that zone.
+.PP
+.I sxba_resize
+reallocates the existing
+.IR bits_array ,
+so that it may afterwards hold
+.I new_bits_number
+bits.
+If the new number of bits is greater than the old one, the bits that
+become allocated are reset.
+The bits belonging to both the old and the new arrays are not changed.
+.PP
+.I sxba_empty
+resets all bits of
+.IR bits_array ,
+while
+.I sxba_fill
+sets them.
+.PP
+.I sxba_0_bit
+resets the bit numbered
+.I bit
+in
+.IR bits_array ,
+while
+.I sxba_1_bit
+sets it.
+.PP
+.I sxba_bit_is_set
+returns
+.SM
+.I SXTRUE
+if the bit numbered
+.I bit
+is set in
+.IR bits_array ,
+.SM
+.I SXFALSE
+otherwise.
+.PP
+.I sxba_cardinal
+returns the number of bits which are set in
+.IR bits_array .
+.PP
+.I sxba_scan
+returns the index in a left to right scan of the first non-null bit following
+.IR from_bit.
+If the remainder of the array is all zeroes or if \fIfrom_bit\fP is greater or equal
+than \fIbits_number-1\fP it returns \fI-1\fP.
+If
+.I from_bit
+is negative, the scan starts at the first bit.
+.PP
+.I sxba_1_lrscan
+is a macro expanding to \fIsxba_scan\fP.
+.PP
+.I sxba_0_lrscan
+returns the index in a left to right scan of the first null bit following
+.IR from_bit.
+If the remainder of the array is all ones or if \fIfrom_bit\fP is greater or equal
+than \fIbits_number-1\fP it returns \fI-1\fP.
+If
+.I from_bit
+is negative, the scan starts at the first bit.
+.PP
+.I sxba_1_rlscan
+returns the index in a right to left scan of the first non-null bit following
+.IR from_bit.
+If the head of the array is all zeroes or if \fIfrom_bit\fP is less or equal
+than \fIzero\fP it returns \fI-1\fP.
+If
+.I from_bit
+is greater or equal than \fIbits_number\fP, the scan starts at the last bit.
+.PP
+.I sxba_0_rlscan
+returns the index in a right to left scan of the first null bit following
+.IR from_bit.
+If the head of the array is all ones or if \fIfrom_bit\fP is less or equal
+than \fIzero\fP it returns \fI-1\fP.
+If
+.I from_bit
+is greater or equal than \fIbits_number\fP, the scan starts at the last bit.
+.PP
+.IR sxba_copy
+puts into its first argument a copy of its second argument.
+It returns its first argument.
+.PP
+\fIsxba_and\fP (\fIsxba_or\fP, \fIsxba_xor\fP, \fIsxba_minus\fP)
+puts into its first argument the result of the bitwise
+.SM
+\fIAND\fP (\fIOR\fP, \fIXOR\fP, \fIMINUS\fP)
+of its two arguments.
+It returns its (modified) first argument.
+.PP
+.I sxba_not
+inverts all significant bits of its argument and returns it, modified.
+.PP
+.IR sxba_is_empty " (" sxba_is_full )
+returns
+.SM
+.I SXFALSE
+if any bit is set (reset) in its argument,
+.SM
+.I SXTRUE
+otherwise.
+.PP
+.I sxba_first_difference
+returns the index of the first bit which is set in one of its
+arguments and reset in the other, or
+.I -1
+if its arguments hold the same bits.
+.PP
+.I sxba_write  " (" sxba_read)
+writes (reads) on file \fIfile\fP opened via \fIopen\fP
+(see
+.BR open (2))
+or
+\fIcreat\fP
+(see
+.BR creat (2))
+the
+\fBbits array\fP \fIbits_array\fP.
+Returns
+.SM
+.I SXTRUE
+on success,
+.SM
+.I SXFALSE
+otherwise.
+.PP
+.I sxbm_calloc
+allocates a \fBbits matrix\fP which is an array of \fIlines_number\fP
+lines (indexed from \fI0\fP to \fIlines_number-1\fP), each line is (a
+pointer to) a \fBbits array\fP holding \fIbits_number\fP bits, all
+initialized to zero.
+.PP
+.I sxbm_resize
+reallocates the existing
+.IR bits_matrix ,
+so that it may afterwards hold
+.I new_lines_number
+lines and
+.I new_bits_number
+bits.
+If \fInew_lines_number\fP is greater than \fIold_lines_number\fP, the
+corresponding \fBbits array\fPs that are allocated are initialized to zero.
+If the new number of bits is greater than the old one, the bits that
+become allocated are reset.
+The bits belonging to both the old and the new arrays are not changed.
+.PP
+.I sxbm_free
+allows to free the memory used to hold the \fBbits matrix\fP \fIbits_matrix\fP.
+.SH "SEE ALSO"
+sxunix(3)
+and the \fISYNTAX Reference Manual\fP.
+.SH "WARNINGS AND NOTE"
+The user is welcome to take advantage of the implementation, but
+should be aware that some of the functions described here will not
+work correctly if the last element of the underlying C array is not
+suitably padded with zeroes (but everything goes well if the user does
+not interfere).
+.PP
+Unless otherwise stated, no check is performed on the validity of the
+arguments passed to these functions.
+In particular, when a function expects two bits arrays as parameters,
+it is the user responsibility to pass two correct bits arrays of the
+same length.
+.PP
+Bits arrays allocated via
+.I sxba_calloc
+may be freed through
+.I sxfree
+(see
+.BR sxmem_mngr (3)).
+

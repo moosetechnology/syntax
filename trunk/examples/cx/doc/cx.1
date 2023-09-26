@@ -1,0 +1,59 @@
+.\" @(#)cx.1	- SYNTAX [unix] - 11 Avril 1989
+.TH CX 1 "SYNTAX\*R"
+.SH NAME
+cx \- cross referencer for c-like programs
+.SH SYNOPSIS
+.B cx
+[ \fB\-v\fP ] [ \fB\-nv\fP ]
+[ \fB\-ll\fP \fInnn\fP ]
+[ \fIfilenames\fP ]
+.SH DESCRIPTION
+.I cx
+writes on its standard output a line numbered source listing together with
+a (purely syntactical) cross reference table of its identifiers.
+.LP
+If no
+.I filenames
+argument is present, the standard input is read.
+.SH OPTIONS
+.LP
+Options may appear in any order as long as they appear
+.B before
+the
+.IR filenames .
+Only the
+.B last
+occurrence of a given option is taken into account.
+.br
+Default options are such that the command
+.br
+\fB     cx [filenames]\fP
+.br
+is equivalent to
+.br
+\fB     cx -nv -ll 124 [filenames]\fP
+.TP
+\fB\-v\fP, \fB\-verbose\fP
+Animate the user's screen by displaying release number and information about what is
+going on.
+.TP
+\fB\-nv\fP, \fB\-noverbose\fP
+Execute silently.
+(Default)
+.TP
+\fB\-ll\fP \fInnn\fP, \fB-line_length\fP \fInnn\fP
+The maximun length of a cross-reference line is
+.I nnn.
+The default value of
+.I nnn
+is 124.
+.SH DIAGNOSTICS
+When the source is syntactically erroneous, error messages are issued.
+.br
+Exit status is 0 if everything is alright, 1 if only warnings are issued, 2
+if error messages are issued, 3 for command line syntax errors.
+.SH SEE ALSO
+cxref(1).
+.SH BUGS
+C preprocessor lines are ignored.
+

@@ -1,0 +1,41 @@
+#! /bin/sh
+# Create a tar archive for transmitting SYNTAX between machines
+#
+# Copyright (c) 1986,1999 Philippe Deschamp
+#
+#    Permission is granted to anyone to make or distribute verbatim
+#    copies of this document as received, in any medium, provided
+#    that the copyright notice and this permission notice are
+#    preserved, thus giving the recipient permission to redistribute
+#    in turn.
+#
+#    Permission is granted to distribute modified versions of this
+#    document, or of portions of it, under the above conditions,
+#    provided also that they carry prominent notices stating who last
+#    changed them.
+
+case $# in
+0)	set X -; shift;;
+1)	set X `$sx/etc/bin/dirname -l $1` `basename $1`; shift
+	case $1 in
+	*/)	set X $1$2; shift;;
+	*)	set X $1/$2; shift;;
+	esac;;
+*)	echo "Usage: $0 [tarfile]" >&2
+	exit 1;;
+esac
+
+XFILE=/tmp/taro.X$$
+SFILE=/tmp/taro.sed$$
+cd "$sx"/../PARTAGE
+sed 's/d$/p/' filter.sed > $SFILE
+find . -type f -print |
+ sed -n -f $SFILE | sed -n -e p -e 's/^.\///p' |
+ sort -u > $XFILE
+tar cfX $1 $XFILE .
+rm $SFILE $XFILE
+
+# GNU Emacs idiosyncrasies:
+# Local Variables:
+# version-control: yes
+# End:

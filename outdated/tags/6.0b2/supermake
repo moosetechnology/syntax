@@ -1,0 +1,97 @@
+# To avoid problems with other shells:
+SHELL=/bin/sh
+COMPILER=cc
+RANLIB=ranlib
+AR=ar
+chrome: makefiles runthem
+nickel:
+	@rm -f $(sx)/*/*.[oa] $(sx)/*/*/*.[oa] $(sx)/*/*/*/*.[oa] \
+		$(sx)/bin/*.out \
+		$(sx)/src/Makefile $(sx)/etc/src/Makefile
+cpp:
+	echo '#include <stdio.h>'|gcc -Wp,-C,-dD,-dM -E -x c -
+
+makefiles:
+	@time ${SHELL} -c '	umask 7;				\
+	echo Computing Makefiles;					\
+	HERE=`pwd`; M4=$$HERE/m4; rm -f $$M4;				\
+	cd /tmp; echo -n > $$$$.c;					\
+	echo "$$$$.a:$$$$.a($$$$.o)" |					\
+	if $(MAKE) -n -s -f - "$$$$.a";					\
+	   then	echo "define(archive)dnl" > $$M4;			\
+	fi > /dev/null 2>&1;						\
+	rm $$$$.c; cd $$HERE;						\
+	for DIR in							\
+		$(sx)							\
+		$(sx)/*							\
+	;								\
+	do								\
+	if [ -r $$DIR/s.Makefile ];					\
+	   then	(echo $$DIR/src/Makefile : $$DIR/s.Makefile;		\
+		 echo "	m4 $$DIR/s.Makefile > $$DIR/src/Makefile") |	\
+		$(MAKE) -f -;						\
+	fi;								\
+	done;								\
+	rm -f $$M4							\
+	'
+runthem: makefiles
+	@time ${SHELL} -c '	umask 7; EXIT=0 KFLAG=;			\
+	for FILE in							\
+		$(sx)/src/Makefile					\
+		$(sx)/*/src/Makefile					\
+		$(sx)/sxmakefile					\
+		$(sx)/*/sxmakefile					\
+	;								\
+	do								\
+	if (: < "$$FILE") 2>/dev/null;					\
+	   then	echo; echo "$$FILE";					\
+		cd `dirname "$$FILE"`;					\
+		if time $(MAKE)	CFLAGS="$(CFLAGS)"			\
+				LDFLAGS="$(LDFLAGS)"			\
+				COMPILER="$(COMPILER)"			\
+				RANLIB="$(RANLIB)"			\
+				sxV="$(sxV)"				\
+			        sx="$(sx)"				\
+				-$${KFLAG}f "$$FILE";			\
+		   then :;						\
+		   else	case $$EXIT in 1)continue;;esac;		\
+			KFLAG=k;					\
+			echo Retrying with flag -$$KFLAG:;		\
+			time $(MAKE) CFLAGS="$(CFLAGS)"			\
+				     LDFLAGS="$(LDFLAGS)"		\
+				     COMPILER="$(COMPILER)"		\
+				     sxV="$(sxV)"			\
+				     sx="$(sx)"				\
+				     -$${KFLAG}f "$$FILE";		\
+			EXIT=1;						\
+		fi;							\
+	fi;								\
+	done;								\
+	exit $$EXIT							\
+	'	< /dev/null 2>&1
+
+libsx: makefiles
+	@echo "Compiling libsx -> "
+	${SHELL} -c ' cd $(sx)/src ;				\
+	$(MAKE) libsx						\
+			CFLAGS="$(CFLAGS)"			\
+			LDFLAGS="$(LDFLAGS)"			\
+			COMPILER="$(COMPILER)"			\
+			RANLIB="$(RANLIB)"			\
+			sxV="$(sxV)"				\
+			sx="$(sx)"  				\
+			-f $(sx)/src/Makefile '
+
+
+libsxdet: makefiles
+	@echo "Compiling libsx -> Deterministic"
+	${SHELL} -c ' cd $(sx)/src ;				\
+	$(MAKE) libsxdet	 				\
+			CFLAGS="$(CFLAGS)"			\
+			LDFLAGS="$(LDFLAGS)"			\
+			COMPILER="$(COMPILER)"			\
+			RANLIB="$(RANLIB)"			\
+			sxV="$(sxV)"				\
+			sx="$(sx)"  				\
+			-f $(sx)/src/Makefile '
+

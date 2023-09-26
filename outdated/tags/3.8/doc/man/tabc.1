@@ -1,0 +1,152 @@
+.\" @(#)tabc.1	- SYNTAX [unix] - 2 Septembre 1987
+.TH TABC 1 "SYNTAX\*R"
+.SH NAME
+tabc \- process syntactic grammars with semantics described by synthetized attributes written in C.
+.SH SYNOPSIS
+.B tabc
+[ \fB\-v\fP ] [ \fB\-nv\fP ]
+[ \fB\-sc\fP ] [ \fB\-nsc\fP ]
+[ \fB\-ls\fP ] [ \fB\-nls\fP ]
+.if n .ti +0.5i
+[ \fB\-so\fP ] [ \fB\-nso\fP ]
+[ \fB\-df\fP ] [ \fB\-ndf\fP ]
+.if n .ti +0.5i
+[ \fB\-rhs\fP \fInnn\fP ]
+[ \fB\-ln\fP \fIname\fP ] .\|.\|.
+[ \fIfilenames\fP ]
+.SH DESCRIPTION
+.I tabc
+processes the syntactic part of a language, described for the
+\fBSYNTAX\fP\*R
+system with semantics described by synthetized attributes written in C.
+.I tabc
+checks that the grammar is proper and translates the attributes specification
+into a semantic evaluator written in C.
+.LP
+Each file named
+.I filename
+contains the (syntactic and semantic) description of a given language.
+A
+.I filename
+may be of the form
+[\|\fIpath/\fP\|]\|\fIname\fP.\fBtabc\fP
+where
+.I name
+is the name of the described language.
+.LP
+If no
+.I filenames
+argument is present, the standard input is read.
+.LP
+The semantic evaluator is written on the standard output.
+.LP
+If no argument is given,
+.I tabc
+prints a short synopsis of its usage and exits with a non null status code.
+.SH OPTIONS
+.LP
+Options may appear in any order as long as they appear
+.B before
+the
+.IR filenames .
+Only the
+.B last
+occurrence of a given option is taken into account.
+.br
+Default options are such that the command
+.br
+\fB     tabc [filenames]\fP
+.br
+is equivalent to
+.br
+\fB     tabc -v -sc -ls -rhs 10 -nso -df [filenames]\fP
+.TP
+\fB\-v\fP, \fB\-verbose\fP
+Animate the user's screen by displaying cryptic information about what is
+going on.
+(Default)
+.TP
+\fB\-nv\fP, \fB\-noverbose\fP
+Execute silently.
+.TP
+\fB\-sc\fP, \fB\-source\fP
+Produce a file named
+\fIname\fP\fB.bn.l\fP,
+containing a line and production numbered source listing together with
+possible error messages.
+(Default)
+.TP
+\fB\-nsc\fP, \fB\-nosource\fP
+Suppress the source listing\|; implies
+.IR \-nolist .
+.TP
+\fB\-ls\fP, \fB\-list\fP
+Add to the listing file a
+.B cross reference
+table of the grammar symbols,
+the
+.B follow
+matrix of terminal symbols and a table which gives for each production the
+name of the abstract tree node and the names of its sons\|;
+implies
+.IR \-source .
+(Default)
+.TP
+\fB\-nls\fP, \fB\-nolist\fP
+Suppress the cross reference table, the follow matrix and the printing of the
+nodes hierarchy.
+.TP
+\fB\-rhs\fP \fInnn\fP, \fB-max_right_hand_side\fP \fInnn\fP
+Issue a warning message each time the length of the right hand side of a
+production exceeds
+.I nnn
+symbols. The default value of
+.I nnn
+is 10.
+.TP
+\fB\-ln\fP \fIname\fP, \fB\-language_name\fP \fIname\fP
+Force the
+.I name
+of the language to be processed.
+The
+.B \-ln
+option is mandatory if no
+.I filename
+is given.
+.TP
+\fB\-df\fP, \fB\-default\fP
+Produce in the source listing (if any) the attributes definition that
+.I tabc
+deduces by default.
+(Default)
+.TP
+\fB\-ndf\fP, \fB\-nodefault\fP
+Remain silent on the attributes definition deduced by default.
+.TP
+\fB\-nso\fP, \fB\-nosem_out\f
+Remain silent on the attribute grammar.
+(Default)
+.TP
+\fB\-so\fP, \fB\-sem_out\fP
+Produce in the source listing (if any) some information about the attribute
+grammar : what attributes apply on each non-terminal symbol, etc...
+.SH FILES
+.ta \w'\fIname\fP\fB.bn.l\fP  'u
+.br
+\fIname\fP\fB.bt\fP	internal grammar form (output)
+.br
+\fIname\fP\fB.bn.l\fP	listing (output)
+.SH "SEE ALSO"
+bnf(1), semact(1), paradis(1), semat(1) and the
+\fB"SYNTAX REFERENCE MANUAL"\fP.
+.SH DIAGNOSTICS
+When the grammar is not proper or when the specification of the abstract tree
+is incorrect, an error message is issued and error diagnostics are gathered in
+the listing (if any).
+.br
+Exit status is 0 if everything is alright, 1 if only warnings are issued, 2
+if error messages are issued, 3 for command line syntax errors.
+.\" Local Variables:
+.\" mode: nroff
+.\" version-control: yes
+.\" End:

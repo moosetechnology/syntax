@@ -1,0 +1,10 @@
+*
+* This is a LIG for the language {a^n b^n c^n | n >=0 }
+*
+
+<S>		= <S> "c"	 	;
+<S>		= <AB>		;
+*
+<AB>	= "a" <AB> "b"		;
+<AB>		= 			;
+

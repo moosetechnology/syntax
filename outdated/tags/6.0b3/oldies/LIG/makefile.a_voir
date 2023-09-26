@@ -1,0 +1,61 @@
+# To avoid problems with other shells:
+SHELL=/bin/sh
+
+SX=$(sx)
+SXLIB=$(SX)/lib
+SXINCL=$(SX)/incl
+ETC=$(SX)/etc
+ETCLIB=$(ETC)/lib
+ETCINCL=$(ETC)/incl
+
+LIG=$(SX)/LIG
+SRC=$(LIG)/src
+LIB=$(LIG)/lib
+INCL=$(LIG)/incl
+
+BIBS= $(ETCLIB)/libsxetc$(sxV).a $(SXLIB)/libsx$(sxV).a
+
+CFLAGS= -g -DEBUG_ALLOC -DEBUG
+
+CC=cd $(LIB); umask 7; exec cc -I$(INCL) -I$(SXINCL) -I$(ETC)/incl $(CFLAGS) -c
+
+$(LIG)/everything .PRECIOUS:	$(LIG)/lig2bnf.out
+
+
+NEEDS1=\
+	$(LIB)/lig_main.o		\
+	$(LIB)/lig_sact.o		\
+	$(LIB)/lig_smp.o    		\
+	$(LIB)/lig_t.o
+
+$(LIG)/lig2bnf.out:	$(NEEDS1)	$(BIBS)
+	@echo '	cc -o $@'; ${SHELL} -c 'cc -o $@ $(NEEDS1) $(CFLAGS) $(LDFLAGS) $(BIBS) || (rm $@;exit 1)'
+
+$(LIB)/lig_main.o:	$(SXINCL)/sxunix.h	\
+			$(INCL)/lig.h	 	\
+			$(LIG)/force-make 	\
+			$(SRC)/lig_main.c
+	$(CC) $(SRC)/lig_main.c
+
+$(LIB)/lig_sact.o:	$(SXINCL)/sxunix.h	\
+			$(INCL)/lig.h	 	\
+			$(LIG)/force-make 	\
+			$(SRC)/lig_sact.c
+	$(CC) $(SRC)/lig_sact.c
+
+$(LIB)/lig_smp.o:	$(SXINCL)/sxunix.h	\
+			$(ETCINCL)/XH.h		\
+			$(INCL)/lig.h	 	\
+			$(HOME)/syntax/5.0/sun4/incl/SXLIGparsact.h 	\
+			$(LIG)/force-make 	\
+			$(SRC)/lig_smp.c
+	$(CC) -I$(HOME)/syntax/5.0/sun4/incl $(SRC)/lig_smp.c
+
+$(LIB)/lig_t.o:		$(SXINCL)/sxunix.h 	\
+			$(LIG)/force-make 	\
+			$(SRC)/lig_t.c
+	$(CC) $(SRC)/lig_t.c			\
+		-Dsxtables=lig_tables		\
+		-DSCANACT=lig_scan_act		\
+		-Dsempass=lig_smp
+

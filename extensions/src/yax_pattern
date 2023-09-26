@@ -1,0 +1,85 @@
+/* ********************************************************
+   *							  *
+   *							  *
+   * Copyright (c) 1987 by Institut National de Recherche *
+   *                    en Informatique et en Automatique *
+   *							  *
+   *							  *
+   ******************************************************** */
+
+
+
+
+/* ********************************************************
+   *							  *
+   *  Produit de l'equipe Langages et Traducteurs.  (phd) *
+   *							  *
+   ******************************************************** */
+
+
+/* NE PAS CHANGER LES NUMEROS DE LIGNE */
+
+/* @(#) Modele pour le processeur YAX version 2.1 du 11 Decembre 1987 */
+/*    pour mystifier le compilateur et le metteur au point symbolique */
+
+
+#line 27 "yax_pattern"
+#include "sxunix.h"
+#ifndef SXSTACK_SIZE
+#define SXSTACK_SIZE 128
+#endif
+static int sx_stack_size=SXSTACK_SIZE;
+static SXBOOLEAN sxerrp;
+
+/* ICI l'entete utilisateur */
+
+#line 37 "yax_pattern"
+static YYSTYPE yyval, *yyv;
+#ifndef YAXOPEN
+#define YAXOPEN
+#endif
+#ifndef YAXCLOSE
+#define YAXCLOSE
+#endif
+#ifndef YAXERROR
+#define YAXERROR
+#endif
+#ifndef YAXINIT
+#define YAXINIT
+#endif
+#ifndef YAXFINAL
+#define YAXFINAL
+#endif
+
+/* A C T I O N */
+SXVOID
+_act(sxcode,sxnact)
+    int sxcode,sxnact;
+{
+    register YYSTYPE*yypv;
+    switch(sxcode){
+    case SXOPEN:yyv=(YYSTYPE*)sxalloc(sx_stack_size+2,sizeof(YYSTYPE));YAXOPEN;break;
+    case SXCLOSE:sxfree(yyv);YAXCLOSE;break;
+    case SXERROR:sxerrp=SXTRUE;YAXERROR;break;
+    case SXINIT:sxerrp=SXFALSE;YAXINIT;break;
+    case SXFINAL:YAXFINAL;break;
+    case SXACTION:if(sxerrp)return;
+	while(SXSTACKtop()>=sx_stack_size)
+	    yyv=(YYSTYPE*)sxrealloc(yyv,(sx_stack_size*=2)+2,sizeof(YYSTYPE));
+	yypv= &yyv[SXSTACKnewtop()];
+	yyval= *yypv--;
+	switch(sxnact){
+#line 73 "yax_pattern"
+	case RULE_NO:
+	    /* ICI une action utilisateur */
+#line 76 "yax_pattern"
+	    break;
+#line 78 "yax_pattern"
+	default:
+	    fputs("\nThe function \"_act\" is out of date and must be recompiled.\n", sxstderr);
+	    abort();
+	case 0:break;
+	}			/* switch (sxnact) */
+	yypv[1]=yyval;
+    }				/* switch (sxcode) */
+}				/* end _act */

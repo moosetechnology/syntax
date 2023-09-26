@@ -1,0 +1,21 @@
+
+{
+   <action_or_prdct_code_item_IS_NOT_UNINITIALIZED>
+   Memcheck:Param
+   write(buf)
+   obj:/lib/ld-*.so
+   fun:lecl_tbls_out
+}
+
+
+
+{
+   <action_or_prdct_code_item_IS_NOT_UNINITIALIZED_2ND_SUPPRESSION>
+   Memcheck:Param
+   write(buf)
+   fun:write
+   fun:lecl_write
+}
+
+
+

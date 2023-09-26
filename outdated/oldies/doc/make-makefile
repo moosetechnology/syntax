@@ -1,0 +1,122 @@
+#!/bin/sh
+# ``maker'' for SYNTAX
+#
+# Copyright (c) 1987 Philippe Deschamp
+#
+#    Permission is granted to anyone to make or distribute verbatim
+#    copies of this document as received, in any medium, provided
+#    that the copyright notice and this permission notice are
+#    preserved, thus giving the recipient permission to redistribute
+#    in turn.
+#
+#    Permission is granted to distribute modified versions of this
+#    document, or of portions of it, under the above conditions,
+#    provided also that they carry prominent notices stating who last
+#    changed them.
+
+# This shell script may be used to construct a makefile for
+# constructing SYNTAX tables for a language.
+# The name of the language must be the first parameter.
+
+# Recommended use: /bin/sh $0 language-name | make -f -
+
+# Last modified by PhD on Mon Mar 7 1988 to not use the "-n" option
+# of "echo", which seems to cause problems on some implementations
+# of UNIX System V.
+
+# Further modified by PhD on Thu Feb 8 1990 to bypass a bug found in
+# SunOS 4.0 version of "make", which stupidly assumes it knows how to
+# execute shell commands, while it does not know in actuality.
+
+case $# in 0)
+	echo "Usage: /bin/sh $0 language_name [ -st_to_c ]." >&2;
+	exit 1;;
+esac
+
+L=${1}
+shift
+FLAGS='${SXFLAGS}'
+ST_TO_C=
+MAKE_BUG_PREFIX="''"
+
+for OPTION do
+	case ${OPTION} in
+	-st_to_c)	ST_TO_C=Yes;;
+	*)		exec /bin/sh $0;;
+	esac
+done
+
+
+echo '# To avoid problems with other shells:'
+echo 'SHELL=/bin/sh'
+
+if [ -r ${L}.tabc ]
+   then SEM=tabc	SOURCE=tabc	TABLES=		OUT=${L}.c
+   elif [ -r ${L}.paradis ]
+   then SEM=paradis	SOURCE=paradis	TABLES=${L}.ppt	OUT=
+   elif [ -r ${L}.at ]
+   then	SEM=semat	SOURCE=at	TABLES=${L}.att	OUT=${L}_mix.c
+   elif [ -r ${L}.yax ]
+   then SEM=yax		SOURCE=yax	TABLES=		OUT=${L}_yax.c
+   elif [ -r ${L}.bnf ]
+   then SEM=semact	SOURCE=bnf	TABLES=		OUT=
+   else SEM=bnf		SOURCE=bnf	TABLES=		OUT=
+fi
+
+echo
+LINE=
+if [ -r ${L}.tdef ]
+   then	LINE="${LINE} ${L}_td.h"
+fi
+if [ -n "${ST_TO_C}" ]
+   then LINE="${LINE} ${L}_scnr.c"
+fi
+echo all SYNTAX-produced tables are .PRECIOUS: ${L}_t.c ${OUT} ${LINE}
+
+echo
+echo ${L}_t.c':	'${L}.bt ${L}.st ${L}.pt ${L}.rt ${TABLES}
+echo '	'${MAKE_BUG_PREFIX}'tables_c' ${FLAGS} ${L} '> $@'
+
+echo
+echo ${TABLES} ${OUT} ${L}.bt':	'${L}.${SOURCE}
+LINE=
+if [ -n "${OUT}" ]
+then LINE="${LINE} > ${OUT}"
+fi
+echo '	'${MAKE_BUG_PREFIX}''${SEM} ${FLAGS} ${L}.${SOURCE} ${LINE}
+
+echo
+echo ${L}.st':	'${L}.bt ${L}.lecl
+echo '	'${MAKE_BUG_PREFIX}'lecl' ${FLAGS} ${L}.lecl
+
+echo
+LINE="${L}.pt:	${L}.bt"
+if [ -r ${L}.prio ]
+   then	LINE="${LINE} ${L}.dt"
+fi
+echo ${LINE}
+echo '	'${MAKE_BUG_PREFIX}'csynt' ${FLAGS} ${L}
+
+echo
+echo ${L}.dt':	'${L}.bt ${L}.prio
+echo '	'${MAKE_BUG_PREFIX}'prio' ${FLAGS} ${L}.prio
+
+echo
+echo ${L}.rt':	'${L}.bt ${L}.st ${L}.recor
+echo '	'${MAKE_BUG_PREFIX}'recor' ${FLAGS} ${L}.recor
+
+echo
+echo ${L}_td.h':	'${L}.bt ${L}.tdef
+echo '	'${MAKE_BUG_PREFIX}'tdef' ${FLAGS} ${L}.tdef '> $@'
+
+echo
+echo ${L}_scnr.c':	'${L}.st
+echo '	'${MAKE_BUG_PREFIX}'st_to_c' ${L} '> $@'
+echo '	'${MAKE_BUG_PREFIX}'ppc -TYPE SXVOID $@'
+
+exit 0
+
+# GNU Emacs idiosyncrasies:
+# Local Variables:
+# version-control: yes
+# End:

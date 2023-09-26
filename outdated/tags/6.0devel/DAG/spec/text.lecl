@@ -1,0 +1,28 @@
+Classes
+        ANY             = #000..#377 ;
+        LETTER          = LETTER + "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ";
+	NOSPACE		= ANY - SP - HT - VT - NL ;
+	PLAINCHAR	= NOSPACE - "{}%\\" ;
+	STDCHAR		= ANY - "{}\\" ;
+
+Tokens
+-- Le 22/03/05 on conserve les nl pour "conserver" la mise en page du source !!
+        Comments        = {-( SP | HT | VT ) |
+			   "{" @Reset(0)
+			       {
+			         "{"&True @Incr(0) |
+				 "}"&Is_Set(0) @Decr(0) |
+				 STDCHAR |
+				 "\\"&True ANY
+			       }*
+			   "}"
+			  }+ 
+			  | -("\\" NL) ; 
+                        Priority Shift > Reduce;
+
+        %eof            = -( NL | ("%" {ANY} NL&TRUE) ) ;
+
+-- Le 18/09/07 on peut échapper un caractère non-blanc quelconque en le préfixant par un \
+        %word           = {-"\\" NOSPACE | PLAINCHAR}+ ;
+                        Priority Shift > Reduce;
+

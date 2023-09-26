@@ -1,0 +1,65 @@
+Titles
+	"",
+	"Warning:\t",
+	"Error:\t";
+
+Scanner
+	Local
+		1 2 3 4	      ; "The invalid character \"" $0 "\" is deleted.";
+		X 1 2 3 4     ; "The invalid character \"" $0
+		     "\" is replaced by \"" %0 "\".";
+		X 0 1 2 3     ; "The character \"" %0
+		     "\" is inserted before \"" $0 "\".";
+
+		Dont_Delete = {};
+		Dont_Insert = {};
+
+	Global
+		Detection     : "\"%s\" is deleted.";
+		-- parameter: character in error
+		Keyword	      : "This unknown keyword is erased.";
+		Eol	      : "End Of Line";
+		Eof	      : "End Of File";
+		-- The "character"
+		Halt	      : "Scanning stops on End Of File.";
+
+Parser
+	Local
+		0 X 1 2 3     ; "\"" %1 "\" is inserted before \"" $1 "\".";
+		0 X 2 3 4     ; "\"" $1 "\" is replaced by \"" %1 "\".";
+		0 2 3 4	      ; "\"" $1 "\" is deleted.";
+		0 X X 1 2 3 4 ; "\"" %1 " " %2 "\" is inserted before \"" $1
+		     "\".";
+		X 0 1 2 3     ; "\"" %0 "\" is inserted before \"" $0 " " $1
+		     "\".";
+		X 1 2 3 4     ; "\"" $0 "\" before \"" $1
+		     "\" is replaced by \"" %0 "\".";
+		1 2 3 4	      ; "\"" $0 "\" before \"" $1 "\" is deleted.";
+		X 2 3 4	      ; "\"" $0 " " $1 "\" is replaced by \"" %0 "\".";
+		X X 1 2 3     ; "\"" $0 "\" before \"" $1
+		     "\" is replaced by \"" %0 " " %1 "\".";
+
+		Dont_Delete = {};
+		Dont_Insert = {};
+
+	Forced_Insertion
+		"\"" %0 "\" is forced before \"" $1 "\"." ;
+
+	Global
+		Key_Terminals = {};
+		Validation_Length = 2;
+		Followers_Number <= 5
+			      : "\"%s\"^(, \"%s\"^) is expected";
+		-- parameters: array (1:Followers_Number) of valid followers at detection point
+		Detection     : "Global recovery.";
+		-- parameters: none
+		Restarting    : "Parsing resumes on \"%s\"";
+		-- parameters: array (1:Validation_Length) of valid followers at restarting point
+		Eof	      : "End Of File";
+		-- The "token"
+		Halt	      : "Parsing stops on End Of File.";
+		-- parameters: none
+
+Abstract
+	"%d warnings and %d errors are reported.";
+	-- parameters: array (1:Titles_No) of number of messages

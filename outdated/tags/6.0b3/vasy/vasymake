@@ -1,0 +1,356 @@
+include supermake
+
+DEST=/common/SyntaxV6
+
+ARCH=`$(sx)/vasy/arch`
+
+GCC_WARNINGS="-O -Wall -Wextra -Wswitch-default -Wuninitialized -Wdeclaration-after-statement -Wundef -Wshadow -Wbad-function-cast -Wcast-qual -Wredundant-decls -Wno-char-subscripts -Wcast-align -fno-common -Wstrict-prototypes"
+
+CURRENT_VERSION=6.0
+
+PREPARE_DIR=$(sx)/vasy/vasy-prepare-directories.sh
+
+FRAMEPATH_MACOS=/common/Gcc-macOS/Frameworks
+LIBPATH_MACOS=`echo $(CC_MACOS) | sed -e 's+/bin/+/+' | sed -e 's+$$+/lib+' `
+
+FRAMEPATH_MAC86=/common/Gcc-mac86/Frameworks
+LIBPATH_MAC86=`echo $(CC_MAC86) | sed -e 's+/bin/+/+' | sed -e 's+$$+/lib+' `
+
+# the next line removes the prefix '/space' from the $sx variable
+# because the full path to $HOME is not the same on every machine
+# at vasy
+sx_workaround=`echo $(sx)|sed 's+/space++'`
+
+# the target tmpclean erases all object files left in source directories
+# it is mandatory when cross-compiling
+
+tmpclean:
+	@( cd $(sx) ; \
+         echo "=> Vasy tmpclean current dir is `pwd`" ; \
+	 echo "=> Vasy: Found `/bin/ls */*/*.[oa] src/*.[oa]  | grep -v syntax-core | wc -l` temp files to delete" ; \
+	touch src/bogus.o ;\
+	/bin/ls */*/*.[oa] src/*.[oa] | grep -v syntax-core | xargs /bin/rm )
+
+
+vasy-win32: check
+	@echo "=> Compiling for arch Win32 "
+	$(MAKE) -f vasy/vasymake tmpclean
+	$(PREPARE_DIR) win32
+	ssh `Make-mach win32` "								\
+		source /common/com/path							;\
+		setenv sx $(sx_workaround)						;\
+		setenv sxV $(CURRENT_VERSION)						;\
+		cd $(sx_workaround)							;\
+		gmake -f supermake chrome 					\
+			COMPILER=$(CC_WIN32)-gcc AR=$(CC_WIN32)-ar RANLIB=$(CC_WIN32)-ranlib 	\
+			LDFLAGS=\"$(LDFLAGS)\"						\
+			CFLAGS=\"$(GCC_WARNINGS) $(CFLAGS)\"" 
+	$(PREPARE_DIR) restore
+
+
+vasy-sun5-suncc: check
+	@echo "=> Compiling for arch Sun5 (with sunCC) "
+	$(MAKE) -f vasy/vasymake tmpclean
+	$(PREPARE_DIR) sun5
+	ssh `Make-mach sun5` "								\
+		source /common/com/path 						;\
+		setenv sx $(sx)								;\
+		setenv sxV $(CURRENT_VERSION)						;\
+		cd $(sx)								;\
+		gmake -f supermake chrome						\
+			LDFLAGS=\"$(LDFLAGS)\"						\
+			COMPILER=\"$(COMPILER)\"					\
+			CFLAGS=\"$(CFLAGS)\" "
+	$(PREPARE_DIR) restore
+	
+vasy-sun5-gcc: check
+	@echo "=> Compiling for arch Sun5 (with gcc) "
+	$(MAKE) -f vasy/vasymake tmpclean
+	$(PREPARE_DIR) sun5.gcc
+	ssh `Make-mach sun5` "								\
+		source /common/com/path 						;\
+		setenv sx $(sx)								;\
+		setenv sxV $(CURRENT_VERSION)						;\
+		cd $(sx)								;\
+		gmake -f supermake chrome						\
+			LDFLAGS=\"$(LDFLAGS)\"						\
+			COMPILER=gcc							\
+			CFLAGS=\"$(GCC_WARNINGS) $(CFLAGS)\" "
+	$(PREPARE_DIR) restore
+
+vasy-sun5: vasy-sun5-suncc
+	
+vasy-iX86-gcc: check
+	@echo "=> Compiling for arch iX86 (with gcc) "
+	$(MAKE) -f vasy/vasymake tmpclean
+	$(PREPARE_DIR) iX86
+	ssh `Make-mach iX86` "								\
+		source /common/com/path							;\
+		setenv sx $(sx_workaround)						;\
+		setenv sxV $(CURRENT_VERSION)						;\
+		cd $(sx_workaround)							;\
+		make -f supermake chrome 						\
+			LDFLAGS=\"$(LDFLAGS)\"						\
+			COMPILER=\"$(COMPILER)\"					\
+			CFLAGS=\"$(GCC_WARNINGS) $(CFLAGS)\" "
+	$(PREPARE_DIR) restore
+
+vasy-iX86-icc: check
+	@echo "=> Compiling for arch iX86 (with icc) "
+	$(MAKE) -f vasy/vasymake tmpclean
+	$(PREPARE_DIR) iX86.icc
+	ssh `Make-mach iX86` "								\
+		source /common/com/path							;\
+		setenv sx $(sx_workaround)						;\
+		setenv sxV $(CURRENT_VERSION)						;\
+		cd $(sx_workaround)							;\
+		make -f supermake chrome 						\
+			LDFLAGS=\"$(LDFLAGS)\"						\
+			COMPILER=icc							\
+			CFLAGS=\"-Wbrief $(CFLAGS)\" "
+	$(PREPARE_DIR) restore
+
+vasy-iX86: vasy-iX86-gcc
+
+vasy-macOS: check
+	@echo "=> Compiling for arch MacOS "
+	$(MAKE) -f vasy/vasymake tmpclean
+	$(PREPARE_DIR) macOS
+	echo "FRAMEPATH_MACOS = $(FRAMEPATH_MACOS)"
+	echo "LIBPATH_MACOS = $(LIBPATH_MACOS)"
+	ssh	`Make-mach macOS` "								\
+		source /common/com/path								;\
+		setenv sx $(sx_workaround)							;\
+		setenv sxV $(CURRENT_VERSION)							;\
+		cd $(sx_workaround)								;\
+		make -f supermake chrome							\
+		AR=$(CC_MACOS)-ar RANLIB=$(CC_MACOS)-ranlib COMPILER=$(CC_MACOS)-gcc		\
+		LDFLAGS=\"$(LDFLAGS) 								\
+		-dylib_file /usr/lib/system/libmathCommon.A.dylib:$(LIBPATH_MACOS)/system/libmathCommon.A.dylib \
+		-dylib_file /usr/lib/libauto.dylib:$(LIBPATH_MACOS)/libauto.dylib		\
+		-dylib_file /usr/lib/libgcc_s.1.dylib:$(LIBPATH_MACOS)/libgcc_s.1.dylib		\
+		-dylib_file /usr/lib/libicucore.A.dylib:$(LIBPATH_MACOS)/libicucore.A.dylib	\
+		-dylib_file /usr/lib/libobjc.A.dylib:$(LIBPATH_MACOS)/libobjc.A.dylib		\
+		-dylib_file /usr/lib/libz.1.1.3.dylib:$(LIBPATH_MACOS)/libz.1.1.3.dylib		\
+		-dylib_file /usr/lib/libz.1.dylib:$(LIBPATH_MACOS)/libz.1.dylib			\
+                -framework CoreFoundation -lSystemStubs -F$(FRAMEPATH_MACOS)		\" 	\
+		CFLAGS=\"$(GCC_WARNINGS) $(CFLAGS)\" "
+	$(PREPARE_DIR) restore
+
+
+
+
+vasy-mac86: check
+	@echo "=> Compiling for arch Mac86 "
+	$(MAKE) -f vasy/vasymake tmpclean
+	$(PREPARE_DIR) mac86
+	@echo FRAMEPATH_MAC86 = $(FRAMEPATH_MAC86)
+	@echo LIBPATH_MAC86 = $(LIBPATH_MAC86)
+	ssh	`Make-mach mac86` "								\
+		source /common/com/path								;\
+		setenv sx $(sx_workaround)							;\
+		setenv sxV $(CURRENT_VERSION)							;\
+		cd $(sx_workaround)								;\
+		make -f supermake chrome							\
+		AR=$(CC_MAC86)-ar RANLIB=$(CC_MAC86)-ranlib COMPILER=$(CC_MAC86)-gcc		\
+		LDFLAGS=\"$(LDFLAGS)								\
+		-dylib_file /usr/lib/system/libmathCommon.A.dylib:$(LIBPATH_MAC86)/system/libmathCommon.A.dylib \
+		-dylib_file /usr/lib/libauto.dylib:$(LIBPATH_MAC86)/libauto.dylib		\
+		-dylib_file /usr/lib/libgcc_s.1.dylib:$(LIBPATH_MAC86)/libgcc_s.1.dylib		\
+		-dylib_file /usr/lib/libicucore.A.dylib:$(LIBPATH_MAC86)/libicucore.A.dylib	\
+		-dylib_file /usr/lib/libobjc.A.dylib:$(LIBPATH_MAC86)/libobjc.A.dylib		\
+		-dylib_file /usr/lib/libz.1.1.3.dylib:$(LIBPATH_MAC86)/libz.1.1.3.dylib		\
+		-dylib_file /usr/lib/libz.1.dylib:$(LIBPATH_MAC86)/libz.1.dylib			\
+	 	-lSystemStubs 								\"	\
+		CFLAGS=\"$(GCC_WARNINGS) $(CFLAGS)\" "
+	$(PREPARE_DIR) restore
+
+all32-gcc: vasy-sun5-gcc vasy-iX86 vasy-win32 vasy-macOS vasy-mac86
+all32:	vasy-sun5 vasy-iX86 vasy-win32 vasy-macOS vasy-mac86
+
+vasy-sun64-suncc: check
+	@echo "=> Compiling for arch Sun64 (with sunCC) "
+	$(MAKE) -f vasy/vasymake tmpclean
+	$(PREPARE_DIR) sun64
+	ssh	`Make-mach sun64` "							\
+		source /common/com/path 						;\
+		setenv sx $(sx)								;\
+		setenv sxV $(CURRENT_VERSION)						;\
+		cd $(sx)								;\
+		gmake -f supermake chrome						\
+			LDFLAGS=\"$(LDFLAGS)\"						\
+			COMPILER=\"$(COMPILER)\"					\
+			CFLAGS=\"-xarch=v9 $(CFLAGS)\" "
+	$(PREPARE_DIR) restore
+
+vasy-sun64-gcc: check
+	@echo "=> Compiling for arch Sun64 (with gcc) "
+	$(MAKE) -f vasy/vasymake tmpclean
+	$(PREPARE_DIR) sun64.gcc
+	ssh	`Make-mach sun64` "							\
+		source /common/com/path 						;\
+		setenv sx $(sx)								;\
+		setenv sxV $(CURRENT_VERSION)						;\
+		cd $(sx)								;\
+		gmake -f supermake chrome						\
+			LDFLAGS=\"$(LDFLAGS)\"						\
+			COMPILER=gcc							\
+			CFLAGS=\"-m64 $(GCC_WARNINGS) $(CFLAGS)\" "
+	$(PREPARE_DIR) restore
+
+vasy-sun64: vasy-sun64-suncc
+
+vasy-x64: check
+	@echo "=> Compiling for arch x86_64 "
+	$(MAKE) -f vasy/vasymake tmpclean
+	$(PREPARE_DIR) x64
+	ssh	`Make-mach x64` "							\
+		source /common/com/path 						;\
+		setenv sx $(sx)								;\
+		setenv sxV $(CURRENT_VERSION)						;\
+		cd $(sx)								;\
+		make -f supermake chrome						\
+			LDFLAGS=\"$(LDFLAGS)\"						\
+			COMPILER=$(CC_X64)-gcc						\
+			CFLAGS=\"$(GCC_WARNINGS) $(CFLAGS)\" "
+	$(PREPARE_DIR) restore
+
+
+vasy-ia64: check
+	@echo "=> Compiling for arch IA64 "
+	$(MAKE) -f vasy/vasymake tmpclean
+	$(PREPARE_DIR) ia64
+	ssh	`Make-mach ia64` "							\
+		source /common/com/path 						;\
+		setenv sx $(sx)								;\
+		setenv sxV $(CURRENT_VERSION)						;\
+		cd $(sx)								;\
+		make -f supermake chrome						\
+			LDFLAGS=\"$(LDFLAGS)\"						\
+			COMPILER=$(CC_IA64)-gcc						\
+			CFLAGS=\"$(GCC_WARNINGS) $(CFLAGS)\" "
+	$(PREPARE_DIR) restore
+
+all64: vasy-sun64 vasy-x64 vasy-ia64
+
+all64-gcc: vasy-sun64-gcc vasy-x64 vasy-ia64
+
+all-gcc: all32-gcc all64-gcc
+
+all-suncc: vasy-sun5-suncc vasy-sun64-suncc
+
+all-compiles: all32 all64 vasy-sun5-gcc vasy-sun64-gcc vasy-iX86-icc
+
+all-debug:
+	@echo "=> `date`"
+	@echo "=> Compiling all-compiles with -DBUG=1"
+	$(MAKE) -f vasy/vasymake all-compiles CFLAGS="-DBUG=1"
+	@echo "=> Compiling all-compiles with -DEBUG=1"
+	$(MAKE) -f vasy/vasymake all-compiles CFLAGS="-DEBUG=1"
+	@echo "=> Compiling all-compiles with -DEBUG_ALLOC=1"
+	$(MAKE) -f vasy/vasymake all-compiles CFLAGS="-DEBUG_ALLOC=1"
+	@echo "=> Compiling all-compiles with -DLOG=1"
+	$(MAKE) -f vasy/vasymake all-compiles CFLAGS="-DLOG=1"
+	@echo "=> Compiling all-compiles with -DLLOG=1"
+	$(MAKE) -f vasy/vasymake all-compiles CFLAGS="-DLLOG=1"
+	@echo "=> Compiling all-compiles with -DLLLOG=1"
+	$(MAKE) -f vasy/vasymake all-compiles CFLAGS="-DLLLOG=1"
+	@echo "=> Compiling all-compiles with -DMEASURES=1"
+	$(MAKE) -f vasy/vasymake all-compiles CFLAGS="-DMEASURES=1"
+	@echo "=> Compiling all-compiles with -Dis_dag=1"
+	$(MAKE) -f vasy/vasymake all-compiles CFLAGS="-Dis_dag=1"
+	@echo "=> Compiling all-compiles with -Dis_sdag=1"
+	$(MAKE) -f vasy/vasymake all-compiles CFLAGS="-Dis_sdag=1"
+	@echo "=> Compiling all-compiles with -DSTATS=1"
+	$(MAKE) -f vasy/vasymake all-compiles CFLAGS="-DSTATS=1"
+	@echo "=> Compiling all-compiles with -DEBUG_PRDCT=1"
+	$(MAKE) -f vasy/vasymake all-compiles CFLAGS="-DEBUG_PRDCT=1"
+	@echo "=> Compiling all-compiles with -Dis_large=1"
+	$(MAKE) -f vasy/vasymake all-compiles CFLAGS="-Dis_large=1"
+	@echo "=> `date`"
+
+
+bootstrap-x64: check
+	$(sx)/vasy/vasy-rsync-x64.sh
+	$(sx)/vasy/vasy-bootstrap.sh x64
+
+bootstrap-sun5: check
+	$(sx)/vasy/vasy-bootstrap.sh sun5
+
+bootstrap-sun5-gcc: check
+	$(sx)/vasy/vasy-bootstrap.sh sun5-gcc
+
+bootstrap-iX86: check
+	$(sx)/vasy/vasy-bootstrap.sh iX86
+
+bootstrap-iX86-icc: check
+	$(sx)/vasy/vasy-bootstrap.sh iX86-icc
+
+bootstrap-sun64: check
+	$(sx)/vasy/vasy-bootstrap.sh sun64
+
+bootstrap-sun64-gcc: check
+	$(sx)/vasy/vasy-bootstrap.sh sun64-gcc
+
+bootstrap: bootstrap-sun5 bootstrap-sun64 bootstrap-iX86 bootstrap-sun5-gcc bootstrap-sun64-gcc bootstrap-iX86-icc
+
+all: bootstrap vasy-win32 vasy-macOS vasy-mac86 vasy-ia64 bootstrap-x64 examples
+
+examples:
+	@echo "=> Compiling all examples"
+	$(MAKE) -f vasy/vasymake vasy-$(ARCH) Chimie  Lustre  Petit_Langage  cx  f77  idcounter  ppada  ppc
+
+Chimie:
+	$(PREPARE_DIR) $(ARCH)
+	( cd $(sx)/examples/Chimie ; $(MAKE) clean chimie )
+	$(PREPARE_DIR) restore
+
+Lustre:
+	$(PREPARE_DIR) $(ARCH)
+	( cd $(sx)/examples/Lustre ; $(MAKE) clean lustre )
+	$(PREPARE_DIR) restore
+
+Petit_Langage:
+	$(PREPARE_DIR) $(ARCH)
+	( cd $(sx)/examples/Petit_Langage ; $(MAKE) clean lolo )
+	$(PREPARE_DIR) restore
+
+cx:
+	$(PREPARE_DIR) $(ARCH)
+	( cd $(sx)/examples/cx ; $(MAKE) clean all )
+	$(PREPARE_DIR) restore
+
+f77:
+	$(PREPARE_DIR) $(ARCH)
+	( cd $(sx)/examples/f77 ; $(MAKE) clean all )
+	$(PREPARE_DIR) restore
+
+idcounter:
+	$(PREPARE_DIR) $(ARCH)
+	( cd $(sx)/examples/idcounter ; $(MAKE) clean lolo )
+	$(PREPARE_DIR) restore
+
+ppada:
+	$(PREPARE_DIR) $(ARCH)
+	( cd $(sx)/examples/ppada ; $(MAKE) clean all )
+	$(PREPARE_DIR) restore
+
+ppc:
+	$(PREPARE_DIR) $(ARCH)
+	( cd $(sx)/examples/ppc ; $(MAKE) clean all )
+	$(PREPARE_DIR) restore
+
+
+install:
+	( cd $(sx) ; \
+	mkdir -p $(DEST)/etc ; \
+	cp -ar etc/incl etc/src $(DEST)/etc ; \
+	cp -ar doc bin.* lib.* examples incl src vasy $(DEST)/ ; \
+	mkdir -p $(DEST)/lib $(DEST)/bin ; \
+	cd $(DEST)/lib ; \
+	ln -s ../lib.* . ; \
+	cd $(DEST)/bin ; \
+	ln -s ../bin.* .  )
+
+
+.PHONY: examples

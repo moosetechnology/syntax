@@ -1,0 +1,22 @@
+Classes
+	blank		= SP + HT + EOL;
+	other		= Any - (blank + letter + digit + quote + "'");
+
+Tokens
+	comments	= -{blank | "/" "*"&True {Any} "*" "/"&True}+;
+				Priority Shift > Reduce;
+
+	ident		= letter {["_"] (letter | digit)} @UPPER_CASE;
+				Priority Shift > Reduce;
+
+	number		= {digit}+;
+				Priority Shift > Reduce;
+
+	string		= quote {^quote | quote quote} quote;
+				Priority Shift > Reduce;
+
+	char		= "'" Any "'";
+
+	others		= {other}+ [@Mark "/" "*"&True @Release] ;		
+				Priority Shift > Reduce;
+

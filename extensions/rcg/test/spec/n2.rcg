@@ -1,0 +1,40 @@
+%
+%	L = {t^{n^2} | n >= 0 et t \in T}
+%	L = { w^{|w|} | w \in T^*}
+%
+% Complexite : si n^2 = l, O(l log l)
+% Si les boucles for sont parcourues ds l'ordre croissant (option -io) et si 
+% le predicat predefini &Cut() est utilise, Les chaines source (mot ou pas) sont analysees en temps lineaire
+% Exemple ci_dessous pour les chaines de longueur 250000 et 250001
+%
+
+% w = a^{500^2}
+% athos:test% ./n2.out test.an
+% test.an:
+%         Scanner (2580ms)
+
+% There are 125753 nt calls and 376754 clause calls for this execution.
+%         Recognizer (TRUE) (1060ms)
+%         Done (10ms)
+
+% w = a^{{500^2}+1}
+% athos:test% ./n2.out test.an
+% test.an:
+%         Scanner (2590ms)
+
+% There are 126252 nt calls and 378253 clause calls for this execution.
+%         Recognizer (FALSE) (1030ms)
+%         Done (0ms)
+
+S(\a\b\c)		--> &False() . % sert uniquement a definir l'ensemble T
+S(X Y)			--> XYgeqZ(X, X, X Y) &Cut(X) n2(X, X, X Y) .
+
+% Complexite de n2(X, X, Z) : \Sigma_{p=0}^{\sqrt{n}} p + \Sigma_{p=\sqrt{n}}^{n} n/p
+% 			      O(n) + O(n log n)
+n2(X,,)			--> .
+n2(X, Y1 Y2, Z1 Z2)	--> &StrLen (1, Y2) &StrEq(X, Z2) n2(X, Y1, Z1) .
+
+% Meme complexite que n2
+XYgeqZ(X,,)		--> .
+XYgeqZ(X1 X2, Y, Z)	--> !&StrLen(0, Y) &StrEqLen(X1, Z) .
+XYgeqZ(X, Y1 Y2, Z1 Z2)	--> !&StrLen(0, Y1) &StrLen (1, Y2) &StrEqLen(X, Z2) !&StrLen(0, Z1) XYgeqZ(X, Y1, Z1) .

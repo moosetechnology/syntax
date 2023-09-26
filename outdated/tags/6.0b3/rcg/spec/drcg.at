@@ -1,0 +1,93 @@
+<definite_range_concatenation_grammar>
+				= <clause_LIST>							;
+
+<clause_LIST>			= <clause_LIST> <clause>					; 
+<clause_LIST>			= <clause>							; "CLAUSE_S"
+
+<clause>			= <lhs_predicate> --> <rhs_predicates> .			; "CLAUSE"
+
+<lhs_predicate>			= %internal_predicate <argument_part>				; "PREDICATE"
+<lhs_predicate>			= %external_predicate <argument_part>				; "PREDICATE"
+
+<rhs_predicates>		=								; "PREDICATE_S"
+<rhs_predicates>		= <rhs_predicate_LIST>						;
+
+<rhs_predicate_LIST>		= <rhs_predicate_LIST> , <predicate_call>			;
+<rhs_predicate_LIST>		= <rhs_predicate_LIST> <predicate_call>				;
+<rhs_predicate_LIST>		= <predicate_call>						; "PREDICATE_S"
+
+<predicate_call>		= %internal_predicate <argument_part>				; "PREDICATE"
+<predicate_call>		= %external_predicate <argument_part>				; "PREDICATE"
+<predicate_call>		= <predef_predicate> <>						; "PREDICATE"
+<predicate_call>		= ! %internal_predicate <>					; "PREDICATE"
+<predicate_call>		= ! %external_predicate <>					; "PREDICATE"
+<predicate_call>		= ! <predef_predicate> <>					; "PREDICATE"
+<predicate_call>		= <prolog_goal>							;
+
+<predef_predicate>		= "streq"							; 
+<predef_predicate>		= "streqlen"							; 
+<predef_predicate>		= "strlen"							; 
+<predef_predicate>		= "first"							; 
+<predef_predicate>		= "last"							; 
+<predef_predicate>		= "false"							; 
+<predef_predicate>		= "cut"								; 
+
+********************************************************************************************************
+* Definite Clause Grammar part
+********************************************************************************************************
+
+<prolog_goal>			= { <prolog_LIST> }						;
+
+<prolog_LIST>			= <prolog_LIST> , <prolog>					;
+<prolog_LIST>			= <prolog>							; "PROLOG_S"
+
+<prolog>			= <compound_term>						;
+<prolog>			= %variable is <argument>					; "IS"
+<prolog>			= <rel_expr>							;
+
+<compound_term>			= %atom ( <argument_LIST> )					; "TERM"
+
+<rel_expr>			= <expr> "<" <expr>						; "LESS"
+<rel_expr>			= <expr> "=<" <expr>						; "LESS_EQUAL"
+<rel_expr>			= <expr> ">" <expr>						; "SUP"
+<rel_expr>			= <expr> ">=" <expr>						; "SUP_EQUAL"
+
+<argument_part>			=								;
+<argument_part>			= ( <argument_LIST> )						;
+
+<argument_LIST>			= <argument_LIST> , <argument>					;
+<argument_LIST>			= <argument>							; "ARGUMENT_S"
+
+<argument>			= <expr>							;
+<argument>			= <compound_term>						;
+<argument>			= <list>							;
+<argument>			= %atom								;
+
+<expr>				= <expr> + <term>						; "PLUS"
+<expr>				= <expr> - <term>						; "MINUS"
+<expr>				= <term>							;
+
+<term>				= <term> * <factor>						; "MULT"
+<term>				= <term> / <factor>						; "DIV"
+<term>				= <term> mod <factor>						; "MOD"
+<term>				= <factor>							;
+
+<factor>			= - <primary>							; "UNARY_MINUS"
+<factor>			= <primary>							;
+
+<primary>			= ( <expr> )							;
+<primary>			= <arith_constant>						;
+
+<arith_constant>		= %integer_number						;
+<arith_constant>		= %floating_point_number					;
+<arith_constant>		= %variable							;
+
+<list>				= [ ]								; "EMPTY_LIST"
+<list>				= [ <list_body> ]						;
+
+<list_body>			= <argument> , <list_body>					; "LIST_BODY"
+<list_body>			= <argument> <>							; "LIST_BODY"
+<list_body>			= <argument> | <list>						; "CATENATE"
+<list_body>			= <argument> | %variable					; "CATENATE"
+
+<>				=								;

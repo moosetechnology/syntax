@@ -1,0 +1,42 @@
+Classes
+
+	ANY		= #000..#377 ;
+
+
+Tokens
+
+	comments = -{SP | HT | EOL}+ |
+		    -("/" "*" {Any} "*" "/"&True) ;
+		Priority Shift > Reduce ;
+
+	%id	= LETTER {["_"] (LETTER | DIGIT)} ;
+		Priority Shift > Reduce ;
+
+	%int	= {DIGIT}+ ;
+		Priority Shift > Reduce ;
+	
+	add_op	= -"+-" ;
+
+	mul_op	= -"*/" ;
+		Priority Shift > Reduce ;
+
+	comp_op	= -( "=!" "=") ;
+
+	"!"	= -"!" ;
+		Priority Shift > Reduce ;
+
+	"="	= -"=" ;
+		Priority Shift > Reduce ;
+
+	"!int"	= NUL &False;
+
+	"!bool"	= NUL &False;
+
+	"!fint"	= NUL &False;
+
+	"!fbool"= NUL &False;
+
+	"!label"= NUL &False;
+
+	"!first_pass"
+		= NUL &False;

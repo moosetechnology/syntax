@@ -1,0 +1,27 @@
+%
+% L = {a^n b^m | 1 <= n <= m <= 2^n}
+%
+% C'est un langage qui n'est pas semilineaire
+% Voir Handbook of Formal languages, Vol.2, p. 114
+%
+% En revanche il verifie la "constant growth property"
+% Pour un n donne, les tailles des chaines ont n+n, n+n+1, ..., n+2^n
+% (semilinear => cst growth, l'inverse n'est pas vrai)
+%
+% Reconnaissance en temps lineaire
+%
+
+
+S(\a\b)			--> &False () .
+S(A a b B1 B2)		--> &StrEqLen(A, B1) A(A) B(B1 B2) ml2pn(A a, B1 B2) .
+
+A()			--> .
+A(a A)			--> A(A) .
+
+B()			--> .
+B(b B)			--> B(B) .
+
+% ml2pn(A, B), |A|>0 <=> |B| < 2^|A|
+ml2pn(A,)		--> .
+ml2pn(A a, B1 B2)	--> &StrEqLen(B1, B2) ml2pn(A, B1).
+ml2pn(A a, B1 B2 b)	--> &StrEqLen(B1, B2) ml2pn(A, B1).

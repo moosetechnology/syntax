@@ -1,0 +1,40 @@
+--*********************************************************************
+--*	   Copyright (c) 2000 by Institut National de Recherche	      *
+--*		    en Informatique et en Automatique.		      *
+--*			Produit de l'équipe ATOLL.		      *
+--*			Version 0.1 du 21 mai 2000		      *
+--*  Syntaxe d'entrée pour les mots d'un lexique à traiter par TRICO  *
+--*********************************************************************
+
+
+Classes
+	ANY		= #000..#377 ;
+	OCTAL		= "0".."7" ;
+	BLANC		= SP+HT ;
+	NUL_TO_ESCAPE	= @Put("\\") @Put ("0") @Put ("0") @Put ("0") -NUL&True ;
+	CCOMMENT	= "/" "*" {Any | NUL_TO_ESCAPE}* "*" "/"&True | FF ;
+	LCOMMENT	= (";" | "/" "/" | "-" "-") {^EOL | NUL_TO_ESCAPE}* EOL ;
+
+Tokens
+	Comments	=
+	   Union
+	      ERASE	: {EOL | -BLANC}+ @Erase ;
+	      KEEP	: {EOL | -BLANC}* (CCOMMENT | LCOMMENT) @Mark {BLANC | (EOL | CCOMMENT | LCOMMENT) @Mark}* @Erase ;
+	   End ;
+			   Unbounded Context All But Comments ;
+
+	%MOT		= QUOTE{^"\"\n\\" |
+				@Mark "\\" (EOL&True @Erase
+					    | "nbtvfr"&True
+					    | @Put ("\\") (@Put ("b") -BS&True
+							   | @Put ("t") -HT&True
+							   | @Put ("v") -VT&True
+							   | @Put ("f") -FF&True
+							   | @Put ("r") -CR&True
+							  )
+					    | NUL_TO_ESCAPE
+					    | OCTAL&True
+					    | ANY
+					  )
+				}+ QUOTE ;
+

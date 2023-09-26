@@ -1,0 +1,14 @@
+
+Ancienne documentation du script vasy-install.sh (supprime en 2023) :
+
+    si $SX contient les sources de SYNTAX que l'on veut compiler mais que 
+    l'on veut installer les binaires compiles dans un autre repertoire, 
+     par exemple /ailleurs, taper la commande
+
+        sh $SX/trunk/etc/bin/vasy-install.sh /ailleurs
+
+    Cette operation installera dans /ailleurs les dossiers suivants :
+
+     bin bnf csynt doc etc examples incl lecl lib paradis prio recor
+     semact semat src tabc tables tdef
+

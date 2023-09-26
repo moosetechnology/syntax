@@ -1,0 +1,14 @@
+%
+% Test de la recuperation d'erreur
+%
+% On decrit le langage "well balanced" de parentheses ou de crochets
+%
+% On en deduit (a la main pour l'instant) la drcg correspondante qui decrit la generation (voir grcvr.drcg)
+%
+
+S(\(\)\[\])	--> &False() . % sert uniquement a definir l'ensemble T
+
+S()		--> .
+S(\(X\)Y)	--> S(X) S(Y) .
+S(\[X\]Y)	--> S(X) S(Y) .
+

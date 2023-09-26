@@ -1,0 +1,18 @@
+********************************************************************
+*      Copyright (c) 1987 by Institut National de Recherche        *
+*               d'Informatique et d'Automatique.		   *
+*          Produit de l'equipe Langages et Traducteurs.    	   *
+*   	            Version 2.1 du 10 Decembre 1987		   *
+*         Syntaxe d'entree pour les declarations de YAX	   	   *
+********************************************************************
+<axiome>	= <decl_list> 				; 1
+********************************************************************
+*          Syntaxe des declarations d'attributs                    *
+********************************************************************
+<decl_list>	= <decl_list> <decl>			; 2
+<decl_list>	= <decl>				; 3
+<decl>		= <attr> "(" <nt_list> ")" ";"		; 4
+<attr>		= %ATTR					; 5
+<nt_list>	= %NT					; 6
+<nt_list>	= <nt_list> "," %NT			; 7
+*
