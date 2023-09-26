@@ -156,6 +156,15 @@ SXML_TYPE_LIST SXML_TL (
 
 /* ------------------------------------------------------------------------- */
 
+SXML_TYPE_LIST SXML_LT (
+		SXML_TYPE_LIST L1,
+		SXML_TYPE_TEXT T2)
+{
+	return SXML_LL (L1, SXML_T (T2));
+}
+
+/* ------------------------------------------------------------------------- */
+
 SXML_TYPE_LIST SXML_TT (
 		SXML_TYPE_TEXT T1,
 		SXML_TYPE_TEXT T2)
@@ -194,4 +203,27 @@ SXML_TYPE_LIST SXML_CONCAT (char *format, ...) {
 	va_end (args);
 
 	return L;
+}
+
+/* -------------------------------------------------------------------------
+ * Create a "quoted" SXML_TYPE_TEXT from a character string
+ * Note1: could use SXML_TTT("\"", T, "\"") but seems overkill
+ * Note2: argument T is copied, user is responsible for freeing it it necessary
+*/
+
+SXML_TYPE_TEXT SXML_QUOTE (SXML_TYPE_TEXT T)
+{
+	int TLen;
+	SXML_TYPE_TEXT quoted;
+
+	TLen = strlen (T);
+	quoted = malloc (sizeof (char) * (TLen + 3)); // +3 for "\"" and "\0"
+	if (quoted == NULL) {
+		fprintf (sxstderr, "out of memory in sxml.h\n");
+		sxexit (sxerr_max_severity ());
+		return NULL;
+	}
+
+	snprintf (quoted, TLen + 3, "\"%s\"", T);
+	return quoted;
 }

@@ -45,23 +45,31 @@ SXBOOLEAN pclose_needed;
 
 #define TODO(N) "{\"TODO-" #N "\":null}"
 
-#define LOCATION(N) SXML_CONCAT ("TTTTTTT", \
-		"\"file\":\"", \
-		sxcurrent_parsed_file_name (N), \
-		"\",\n\"line\":\"", \
+#define LOCATION(N) SXML_CONCAT ("TTTTTTTTTTT", \
+		SXML_QUOTE("file"), \
+		":", \
+		SXML_QUOTE(sxcurrent_parsed_file_name (N)), \
+		",\n", \
+		SXML_QUOTE("line"), \
+		":", \
 		SXML_UINT (sxcurrent_parsed_line (N)), \
-		"\",\n\"column\":\"", \
-		SXML_UINT (sxcurrent_parsed_column (N)), \
-		"\"")
+		",\n", \
+		SXML_QUOTE("column"), \
+		":", \
+		SXML_QUOTE( SXML_UINT (sxcurrent_parsed_column (N))) )
 
-#define ENDING_LOCATION(N,STRING) SXML_CONCAT ("TTTTTTT", \
-		"\"ending-file\":\"", \
-		sxcurrent_parsed_file_name (N), \
-		"\",\n\"ending-line\":\"", \
-		SXML_UINT (sxcurrent_parsed_line (N)), \
-		"\",\n\"ending-column\":\"", \
-		SXML_UINT (sxcurrent_parsed_column (N) + strlen (STRING) - 1), \
-		"\"")
+#define ENDING_LOCATION(N,STRING) SXML_CONCAT ("TTTTTTTTTTT", \
+		SXML_QUOTE("ending-file"), \
+		":", \
+		SXML_QUOTE( sxcurrent_parsed_file_name (N)), \
+		",\n", \
+		SXML_QUOTE("ending-line"), \
+		":", \
+		SXML_QUOTE( SXML_UINT (sxcurrent_parsed_line (N))), \
+		",\n", \
+		SXML_QUOTE("ending-column"), \
+		":", \
+		SXML_QUOTE( SXML_UINT (sxcurrent_parsed_column (N) + strlen (STRING) - 1)) )
 
 *------------------------------------------------------------------------------
 
@@ -119,8 +127,10 @@ $
 $LIST(<0:F77>)
 
 	{
-	$LIST(<0:F77>) = SXML_CONCAT ("TLT",
-		"\n\"program_units\":\n[\n",
+	$LIST(<0:F77>) = SXML_CONCAT ("TTTLT",
+		"\n",
+		SXML_QUOTE("program_units"),
+		":\n[\n",
 		$LIST(<1a:executable_program_list>),
 		"\n]");
 	ROOT = $LIST(<0:F77>);
@@ -165,8 +175,10 @@ $LIST(<0:F77>)
 
 $LIST(<1:executable_program>)
 
-	$LIST(<1:executable_program>) = SXML_CONCAT ("TLT",
-		"{\n\"main\":\n{\n",
+	$LIST(<1:executable_program>) = SXML_CONCAT ("TTTLT",
+		"{\n",
+		SXML_QUOTE("main"),
+		":\n{\n",
 		$LIST(<2:main_program>),
 		"\n}\n}");
 
@@ -177,8 +189,10 @@ $LIST(<1:executable_program>)
 
 $LIST(<1:executable_program>)
 
-	$LIST(<1:executable_program>) = SXML_CONCAT ("TTT",
-		"{\n\"function\":\n",
+	$LIST(<1:executable_program>) = SXML_CONCAT ("TTTTT",
+		"{\n",
+		SXML_QUOTE("function"),
+		":\n",
 		TODO (1),
 		"\n}");
 
@@ -189,8 +203,10 @@ $LIST(<1:executable_program>)
 
 $LIST(<1:executable_program>)
 
-	$LIST(<1:executable_program>) = SXML_CONCAT ("TTT",
-		"{\n\"subroutine\":\n",
+	$LIST(<1:executable_program>) = SXML_CONCAT ("TTTTT",
+		"{\n",
+		SXML_QUOTE("subroutine"),
+		":\n",
 		TODO (2),
 		"\n}");
 
@@ -201,8 +217,10 @@ $LIST(<1:executable_program>)
 
 $LIST(<1:executable_program>)
 
-	$LIST(<1:executable_program>) = SXML_CONCAT ("TTT",
-		"{\n\"blockdata\":\n",
+	$LIST(<1:executable_program>) = SXML_CONCAT ("TTTTT",
+		"{\n",
+		SXML_QUOTE("blockdata"),
+		":\n",
 		TODO (3),
 		"\n}");
 
@@ -249,8 +267,9 @@ $LIST(<2:main_program>)
 
 $LIST(<2:main_program>)
 
-	$LIST(<2:main_program>) = SXML_CONCAT ("TLL",
-		"\"name\":null,\n",
+	$LIST(<2:main_program>) = SXML_CONCAT ("TTLL",
+		SXML_QUOTE("name"),
+		":null,\n",
 		LOCATION (0),
 		$LIST(<2a:end_statement>));
 
@@ -275,8 +294,9 @@ $LIST(<2:main_program>)
 
 $LIST(<2:main_program>)
 
-	$LIST(<2:main_program>) = SXML_CONCAT ("TLL",
-		"\"name\":null,\n",
+	$LIST(<2:main_program>) = SXML_CONCAT ("TTLL",
+		SXML_QUOTE("name"),
+		":null,\n",
 		LOCATION (0),
 		$LIST(<2a:end_statement>));
 
@@ -555,10 +575,11 @@ $LIST(<2a:end_statement>)
 
 $LIST(<8:program_statement>)
 
-	$LIST(<8:program_statement>) = SXML_CONCAT ("TTTL",
-		"\"name\":\"",
-		$NAME(<99:symbolic_name>),
-		"\",\n",
+	$LIST(<8:program_statement>) = SXML_CONCAT ("TTTTL",
+		SXML_QUOTE("name"),
+		":",
+		SXML_QUOTE($NAME(<99:symbolic_name>)),
+		",\n",
 		LOCATION (0));
 
 *******************************************************************************
