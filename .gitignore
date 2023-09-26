@@ -35,6 +35,7 @@
 *.i*86
 *.x86_64
 *.hex
+bin.*/
 
 # Debug files
 *.dSYM/
@@ -42,6 +43,18 @@
 *.idb
 *.pdb
 *.log
+
+#Syntax generated files
+*.l
+*.bt
+*dt
+*.pt
+*.rt
+*.st
+*_s.c
+*_t.c
+*_td.h
+_.log
 
 # Kernel Module Compile Results
 *.mod*
