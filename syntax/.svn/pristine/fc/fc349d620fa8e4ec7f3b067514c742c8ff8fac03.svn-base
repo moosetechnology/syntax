@@ -1,0 +1,16 @@
+
+Hubert Garavel -- Mon Jul 24 17:53:52 CEST 2023
+
+This directory contains a variant of CSYNT for LC1 (Left-Corner) grammars.
+No documentation was found for this processor, but a few comments (in French)
+are present in the source code.
+
+Pierre Boullier -- Mon Aug 14 13:48:54 CEST 2023
+
+Constructeur d'automates de la classe Left-Corner utilisables avec un analyseur
+a` la Earley. Dans ce cas il doit etre appele' avec l'option -earley_left_corner
+ou -elc. Il utilise un look-ahead de un token de type SLR:
+      LA (A -> \alpha . \beta) = 1:First1(\beta) Follow1(A)
+Il peut etre appele' apres bnf ou xbnf.
+
+

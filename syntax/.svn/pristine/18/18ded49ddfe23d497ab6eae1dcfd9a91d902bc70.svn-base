@@ -1,0 +1,64 @@
+# To avoid problems with other shells:
+SHELL=/bin/sh
+
+SX=$(sx)
+LNorCP=ln -s
+#LNorCP=${SHELL} $(SX)/etc/bin/lien-relatif.sh
+SXI=$(SX)/incl
+SXL=$(SX)/lib
+
+SXETC=$(SX)/etc
+SEI=$(SXETC)/incl
+SEL=$(SXETC)/lib
+
+YSX=$(SX)/ysx
+SRC=$(YSX)/src
+INCL=$(YSX)/incl
+LIB=$(YSX)/lib
+
+BIBS= $(SEL)/libsxetc$(sxV).a $(SXL)/libsx$(sxV).a
+COMPILER=cc
+CC=cd $(LIB); umask 7; exec $(COMPILER) -I$(INCL) -I$(SXI) -I$(SEI) $(CFLAGS) -c
+
+$(YSX)/everything .PRECIOUS:	$(SX)/bin/ysx.out
+
+$(SX)/bin/ysx.out:	$(YSX)/ysx.out
+	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
+
+
+NEEDS=	$(LIB)/ysx_main.o	\
+	$(LIB)/ysx_smp.o	\
+	$(LIB)/ysx_t.o		\
+	$(LIB)/yaction_t.o
+
+$(YSX)/ysx.out:		$(NEEDS)	$(BIBS)
+	@echo '	$(COMPILER) -o $@'; rm -f $@; ${SHELL} -c '$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(BIBS) || (rm $@; exit 1)'
+
+$(LIB)/ysx_main.o:	$(SXI)/sxunix.h		\
+			$(INCL)/ysx_vars.h	\
+			$(SXI)/put_edit.h	\
+			$(SEI)/release.h	\
+			$(SRC)/ysx_main.c
+	$(CC) $(SRC)/ysx_main.c
+
+$(LIB)/ysx_smp.o:	$(SXI)/sxunix.h		\
+			$(INCL)/ysx_vars.h	\
+			$(SXI)/put_edit.h	\
+			$(SXI)/varstr.h		\
+			$(SRC)/ysx_smp.c
+	$(CC) $(SRC)/ysx_smp.c
+
+$(LIB)/ysx_t.o:		$(SXI)/sxunix.h		\
+			$(SRC)/ysx_t.c
+	$(CC) $(SRC)/ysx_t.c -Dsempass=ysx_smp -Dsxtables=ysx_tables
+
+$(LIB)/yaction_t.o:	$(SXI)/sxunix.h		\
+			$(SRC)/yaction_t.c
+	$(CC) $(SRC)/yaction_t.c -DSCANACT=yaction -DSEMACT=yaction -Dsxtables=yaction_tables -DSCANACT_AND_SEMACT_ARE_IDENTICAL
+# pour la documentation de cette macro SCANACT_AND_SEMACT_ARE_IDENTICAL,
+# consulter le fichier $sx/tables/src/out.c et les commentaires de la
+# fonction out_ext_int() , consultable aussi a cette adresse :
+# https://gforge.inria.fr/plugins/scmsvn/viewcvs.php/trunk/tables/src/out.c?root=syntax&view=markup
+
+lint:
+	lint -I$(INCL) -I$(SXI) -I$(SEI) src/*.c $(LINTFLAGS)

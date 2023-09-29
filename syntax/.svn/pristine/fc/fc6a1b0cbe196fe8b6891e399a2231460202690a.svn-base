@@ -1,0 +1,72 @@
+integer R_0_0;
+integer R_1_0;
+integer R_1_1;
+integer R_1_2;
+integer R_1_3;
+integer R_2_0;
+integer R_2_1;
+
+%% definition of the Ackermann function as an iterated unary function
+%% A_0 (N) = N + 1
+%% A_{M+1} (N) = A_M^{N+1} (1)
+
+proc ackermann_0 (val N, var R)
+begin
+	R := N + 1
+end;
+
+integer TEMP_1;  
+proc loop_1 (val I, var R)
+begin
+	if I eq 0 then
+		R := TEMP_1
+	else
+		call ackermann_0 (TEMP_1, R);
+		TEMP_1 := R;
+		call loop_1 (I - 1, R)
+	fi
+end;
+proc ackermann_1 (val N, var R)
+begin
+	call ackermann_0 (1, TEMP_1);
+	call loop_1 (N, R)
+end;
+
+integer TEMP_2;
+proc loop_2 (val I, var R)
+begin
+	if I eq 0 then
+		R := TEMP_2
+	else
+		call ackermann_1 (TEMP_2, R);
+		TEMP_2 := R;
+		call loop_2 (I - 1, R)
+	fi
+end;
+proc ackermann_2 (val N, var R)
+begin
+
+	call ackermann_1 (1, TEMP_2);
+	call loop_2 (N, R)
+end;
+
+%% A_0 (0) = 1
+call ackermann_0 (0, R_0_0);
+
+%% A_1 (0) = A_0^1 (1) = A_0 (1) = 2
+call ackermann_1 (0, R_1_0);
+
+%% A_1 (1) = A_0^2 (1) = A_0 (2) = 3 
+call ackermann_1 (1, R_1_1);
+
+%% A_1 (2) = A_0^3 (1) = A_0 (3) = 4
+call ackermann_1 (2, R_1_2);
+
+%% A_1 (3) = A_0^4 (1) = A_0 (4) = 5
+call ackermann_1 (3, R_1_3);
+
+%% A_2 (0) = A_1^1 (1) = A_1 (1) = 3
+call ackermann_2 (0, R_2_0);
+
+%% A_2 (1) = A_1^2 (1) = A_1 (3) = 5
+call ackermann_2 (1, R_2_1)

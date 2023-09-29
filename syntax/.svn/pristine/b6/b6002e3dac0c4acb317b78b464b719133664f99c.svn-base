@@ -1,0 +1,332 @@
+
+SX=c:\sx
+ETC=$(SX)/etc
+SRC=$(ETC)/src
+LIB=$(ETC)/lib
+BIB=$(ETC)/etc$(sxV).lib
+INCL=$(ETC)/incl
+
+CC=msc /Zi /AL
+
+$(LIB)/sxba_print.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/sxba_print.c
+	$(CC) $(SRC)/sxba_print,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/bnffree.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(INCL)/B_tables.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/bnffree.c
+	$(CC) $(SRC)/bnffree,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/bnfread.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(INCL)/B_tables.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/bnfread.c
+	$(CC) $(SRC)/bnfread,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/bnfwrite.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(INCL)/B_tables.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/bnfwrite.c
+	$(CC) $(SRC)/bnfwrite,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/leclfree.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(INCL)/S_tables.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/leclfree.c
+	$(CC) $(SRC)/leclfree,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/leclread.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(INCL)/S_tables.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/leclread.c
+	$(CC) $(SRC)/leclread,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/leclwrite.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(INCL)/S_tables.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/leclwrite.c
+	$(CC) $(SRC)/leclwrite,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/paradisfree.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(INCL)/PP_tables.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/paradisfree.c
+	$(CC) $(SRC)/paradisfree,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/paradisread.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(INCL)/PP_tables.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/paradisread.c
+	$(CC) $(SRC)/paradisread,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/paradiswrite.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(INCL)/PP_tables.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/paradiswrite.c
+	$(CC) $(SRC)/paradiswrite,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/parserfree.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(INCL)/P_tables.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/parserfree.c
+	$(CC) $(SRC)/parserfree,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/parserread.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(INCL)/P_tables.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/parserread.c
+	$(CC) $(SRC)/parserread,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/parserwrite.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(INCL)/P_tables.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/parserwrite.c
+	$(CC) $(SRC)/parserwrite,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/priofree.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(INCL)/D_tables.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/priofree.c
+	$(CC) $(SRC)/priofree,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/prioread.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(INCL)/D_tables.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/prioread.c
+	$(CC) $(SRC)/prioread,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/priowrite.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(INCL)/D_tables.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/priowrite.c
+	$(CC) $(SRC)/priowrite,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/recorfree.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(INCL)/R_tables.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/recorfree.c
+	$(CC) $(SRC)/recorfree,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/recorread.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(INCL)/R_tables.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/recorread.c
+	$(CC) $(SRC)/recorread,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/recorwrite.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(INCL)/R_tables.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/recorwrite.c
+	$(CC) $(SRC)/recorwrite,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/sematfree.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(INCL)/T_tables.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/sematfree.c
+	$(CC) $(SRC)/sematfree,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/sematread.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(INCL)/T_tables.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/sematread.c
+	$(CC) $(SRC)/sematread,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/sematwrite.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(INCL)/T_tables.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/sematwrite.c
+	$(CC) $(SRC)/sematwrite,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/putedit.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/putedit.c
+	$(CC) $(SRC)/putedit,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/puteditap.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/puteditap.c
+	$(CC) $(SRC)/puteditap,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/puteditapnb.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/puteditapnb.c
+	$(CC) $(SRC)/puteditapnb,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/puteditapnnl.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/puteditapnnl.c
+	$(CC) $(SRC)/puteditapnnl,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/puteditcut.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/puteditcut.c
+	$(CC) $(SRC)/puteditcut,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/puteditff.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/puteditff.c
+	$(CC) $(SRC)/puteditff,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/puteditfnb.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/puteditfnb.c
+	$(CC) $(SRC)/puteditfnb,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/puteditget.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/puteditget.c
+	$(CC) $(SRC)/puteditget,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/puteditinit.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/puteditinit.c
+	$(CC) $(SRC)/puteditinit,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/puteditnb.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/puteditnb.c
+	$(CC) $(SRC)/puteditnb,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/puteditnl.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/puteditnl.c
+	$(CC) $(SRC)/puteditnl,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/puteditnnl.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/puteditnnl.c
+	$(CC) $(SRC)/puteditnnl,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/puteditpos.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/puteditpos.c
+	$(CC) $(SRC)/puteditpos,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/varstralloc.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/varstralloc.c
+	$(CC) $(SRC)/varstralloc,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/varstrcat.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/varstrcat.c
+	$(CC) $(SRC)/varstrcat,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/varstrfree.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/varstrfree.c
+	$(CC) $(SRC)/varstrfree,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/varstrlen.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/varstrlen.c
+	$(CC) $(SRC)/varstrlen,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/varstrmaxlen.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/varstrmaxlen.c
+	$(CC) $(SRC)/varstrmaxlen,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/varstrraz.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/varstrraz.c
+	$(CC) $(SRC)/varstrraz,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/eq_sort.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/eq_sort.c
+	$(CC) $(SRC)/eq_sort,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)/fermer.obj:	\
+			$(SX)/incl/sxunix.h	\
+			$(ETC)/force_make 	\
+			$(SRC)/fermer.c
+	$(CC) $(SRC)/fermer,$@;
+	lib $(BIB)-+$@;
+

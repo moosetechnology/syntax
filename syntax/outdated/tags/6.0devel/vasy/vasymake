@@ -1,0 +1,456 @@
+include supermake
+
+DEST=/common/SyntaxV6
+
+ARCH=`$(sx)/vasy/arch`
+
+PREPARE_DIR=$(sx)/vasy/vasy-prepare-directories.sh
+
+EXTRA_CFLAGS="-O2 -Wuninitialized"
+
+# by default $ARFLAGS = "rv". For "ar" versions compiled with
+# --enable-deterministic-archives, on must add the "U" flag
+# to avoid hundreds of warnings. On some architecture, one must
+# pass the flags "rUv" and on other "rvU" (sic).
+
+# the next line removes the prefix '/space' from the $sx variable
+# because the full path to $HOME is not the same on every machine
+# at vasy
+sx_workaround=`echo $(sx)|sed 's+/space++'`
+
+# -----------------------------------------------------------------------------
+
+CC_WIN32=/usr/bin/i586-mingw32msvc
+
+CC_X64=/common/Gcc-x64/iX86/gcc-4.1.1-glibc-2.3.6/x86_64-unknown-linux-gnu/bin/x86_64-unknown-linux-gnu
+
+CC_MAC86=/common/Gcc-mac86/iX86/bin/i686-apple-darwin
+FRAMEPATH_MAC86=/common/Gcc-mac86/Frameworks
+LIBPATH_MAC86=/common/Gcc-mac86/iX86/i686-apple-darwin/lib
+# `echo $CC_MAC86 | sed -e 's+/bin/+/+' | sed -e 's+$$+/lib+'`
+
+CC_MAC64=/common/Clang-macOS/OSXCROSS/target/bin/x86_64-apple-darwin15
+# the next line is required for using Clang
+export PATH := "$(PATH):/common/Clang-macOS/OSXCROSS/target/bin" 
+FRAMEPATH_MAC64=/common/Clang-macOS/OSXCROSS/target/SDK/MacOSX10.11.sdk/System/Library/Frameworks
+LIBPATH_MAC64=/common/Clang-macOS/OSXCROSS/target/SDK/MacOSX10.11.sdk/usr/lib
+
+# -----------------------------------------------------------------------------
+
+default: all-compiles
+
+all-compiles: all32 all64 
+
+all32: vasy-sol86 vasy-iX86 vasy-win32
+
+all32-gcc: vasy-sol86-gcc vasy-iX86 vasy-win32
+
+all64: vasy-sol64 vasy-x64 vasy-mac64
+
+all64-gcc: vasy-sol64-gcc vasy-x64
+
+all-suncc: vasy-sol86-suncc vasy-sol64-suncc
+
+all-gcc: all32-gcc all64-gcc
+
+all-icc:  vasy-iX86-icc vasy-x64-icc
+
+all-clang: vasy-mac64
+
+# 
+# vasy-iX86-icc : probleme d'edition de liens : "ld: i386:x86-64 architecture of input 
+# file `/usr/lib/crt1.o' is incompatible with i386 output"
+# 
+# vasy-x64-icc : probleme : icc du SED n'accepte pas -m64
+
+# -----------------------------------------------------------------------------
+
+vasy-sol86-suncc: check
+	@echo "=> Compiling for arch Sol86 (with sunCC) "
+	$(MAKE) -f vasy/vasymake clean
+	$(PREPARE_DIR) sol86
+	ssh `Make-mach sol86` "						\
+		source /common/com/path	;				\
+		setenv sx $(sx)	;					\
+		setenv sxV $(sxV) ;					\
+		cd $(sx) ;						\
+		gmake -f supermake makefiles libsxdet libsx programs	\
+			LDFLAGS=\"$(LDFLAGS)\"				\
+			COMPILER=cc					\
+			CFLAGS=\"-D_FILE_OFFSET_BITS=64 $(CFLAGS)\""
+	$(PREPARE_DIR) restore
+	
+vasy-sol86-gcc: check
+	@echo "=> Compiling for arch Sol86 (with gcc) "
+	$(MAKE) -f vasy/vasymake clean
+	$(PREPARE_DIR) sol86.gcc
+	ssh `Make-mach sol86` "						\
+		source /common/com/path	;				\
+		setenv sx $(sx) ;					\
+		setenv sxV $(sxV) ;					\
+		cd $(sx) ;						\
+		gmake -f supermake makefiles libsxdet libsx programs	\
+			LDFLAGS=\"$(LDFLAGS)\"				\
+			COMPILER=gcc					\
+			CFLAGS=\"$(GCC_WARNINGS) $(EXTRA_CFLAGS) -D_FILE_OFFSET_BITS=64 $(CFLAGS)\" "
+	$(PREPARE_DIR) restore
+
+vasy-sol86: vasy-sol86-suncc
+	
+# -----------------------------------------------------------------------------
+
+vasy-sol64-suncc: check
+	@echo "=> Compiling for arch Sol64 (with sunCC) "
+	$(MAKE) -f vasy/vasymake clean
+	$(PREPARE_DIR) sol64
+	ssh	`Make-mach sol64` "					\
+		source /common/com/path	;				\
+		setenv sx $(sx)	;					\
+		setenv sxV $(sxV) ;					\
+		cd $(sx) ;						\
+		gmake -f supermake makefiles libsxdet libsx programs	\
+			LDFLAGS=\"$(LDFLAGS)\"				\
+			COMPILER=cc					\
+			CFLAGS=\"-m64 $(CFLAGS)\" "
+	$(PREPARE_DIR) restore
+
+vasy-sol64-gcc: check
+	@echo "=> Compiling for arch Sol64 (with gcc) "
+	$(MAKE) -f vasy/vasymake clean
+	$(PREPARE_DIR) sol64.gcc
+	ssh	`Make-mach sol64` "					\
+		source /common/com/path	;				\
+		setenv sx $(sx)	;					\
+		setenv sxV $(sxV) ;					\
+		cd $(sx) ;						\
+		gmake -f supermake makefiles libsxdet libsx programs	\
+			LDFLAGS=\"$(LDFLAGS)\"				\
+			COMPILER=gcc					\
+			CFLAGS=\"-m64 $(GCC_WARNINGS) $(EXTRA_CFLAGS) $(CFLAGS)\" "
+	$(PREPARE_DIR) restore
+
+vasy-sol64: vasy-sol64-suncc
+
+# -----------------------------------------------------------------------------
+
+vasy-iX86-gcc: check
+	@echo "=> Compiling for arch iX86 (with gcc) "
+	$(MAKE) -f vasy/vasymake clean
+	$(PREPARE_DIR) iX86
+	ssh `Make-mach iX86` "						\
+		source /common/com/path	;				\
+		setenv sx $(sx_workaround) ;				\
+		setenv sxV $(sxV) ;					\
+		cd $(sx_workaround) ;\
+		make -f supermake makefiles libsxdet libsx programs 			\
+			ARFLAGS=\"rUv\"							\
+			LDFLAGS=\"$(LDFLAGS)\"						\
+			COMPILER=gcc							\
+			CFLAGS=\"-m32 $(GCC_WARNINGS) $(EXTRA_CFLAGS) -D_FILE_OFFSET_BITS=64 $(CFLAGS)\" "
+	$(PREPARE_DIR) restore
+
+vasy-iX86-icc: check
+	@echo "=> Compiling for arch iX86 (with icc) "
+	$(MAKE) -f vasy/vasymake clean
+	$(PREPARE_DIR) iX86.icc
+	ssh `Make-mach iX86` "								\
+		source /common/com/path ;				\
+		setenv sx $(sx_workaround) ;				\
+		setenv sxV $(sxV) ;					\
+		cd $(sx_workaround) ;					\
+		make -f supermake makefiles libsxdet libsx programs 	\
+			LDFLAGS=\"$(LDFLAGS)\"				\
+			COMPILER=icc					\
+			CFLAGS=\"-m32 -Wbrief -D_FILE_OFFSET_BITS=64 $(CFLAGS)\" "
+	$(PREPARE_DIR) restore
+
+vasy-iX86: vasy-iX86-gcc
+
+# -----------------------------------------------------------------------------
+
+vasy-x64-gcc: check
+	@echo "=> Compiling for arch x64 (with gcc) "
+	$(MAKE) -f vasy/vasymake clean
+	$(PREPARE_DIR) x64
+	ssh	`Make-mach x64` "					\
+		source /common/com/path ;				\
+		setenv sx $(sx_workaround) ;				\
+		setenv sxV $(sxV) ;					\
+		cd $(sx_workaround) ;					\
+		make -f supermake makefiles libsxdet libsx programs	\
+			ARFLAGS=\"rvU\"					\
+			LDFLAGS=\"$(LDFLAGS)\"				\
+			COMPILER=\"gcc\"				\
+			CFLAGS=\"-m64 $(GCC_WARNINGS) $(EXTRA_CFLAGS) $(CFLAGS)\" "
+	$(PREPARE_DIR) restore
+
+# cross-gcc pour x64 est obsolete
+vasy-x64-cross-gcc: check
+	@echo "=> Compiling for arch x64 (with cross-gcc) "
+	$(MAKE) -f vasy/vasymake clean
+	$(PREPARE_DIR) x64
+	ssh	`Make-mach x64` "					\
+		source /common/com/path ;				\
+		setenv sx $(sx_workaround) ;				\
+		setenv sxV $(sxV) ;					\
+		cd $(sx_workaround) ;					\
+		make -f supermake makefiles libsxdet libsx programs	\
+			LDFLAGS=\"$(LDFLAGS)\"				\
+			COMPILER=\"$(CC_X64)-gcc\"			\
+			CFLAGS=\"$(GCC_WARNINGS) $(EXTRA_CFLAGS) $(CFLAGS)\" "
+	$(PREPARE_DIR) restore
+
+vasy-x64-icc: check
+	@echo "=> Compiling for arch x64 (with icc) "
+	$(MAKE) -f vasy/vasymake clean
+	$(PREPARE_DIR) x64.icc
+	ssh	`Make-mach x64` "					\
+		source /common/com/path ;				\
+		setenv sx $(sx_workaround) ;				\
+		setenv sxV $(sxV) ;					\
+		cd $(sx_workaround) ;					\
+		make -f supermake makefiles libsxdet libsx programs	\
+			LDFLAGS=\"$(LDFLAGS)\"				\
+			COMPILER=icc					\
+			CFLAGS=\"-m64 -Wbrief -D_FILE_OFFSET_BITS=64 $(CFLAGS)\" "
+	$(PREPARE_DIR) restore
+
+vasy-x64: vasy-x64-gcc
+
+# -----------------------------------------------------------------------------
+
+vasy-win32: check
+	@echo "=> Compiling for arch Win32 "
+	$(MAKE) -f vasy/vasymake clean
+	$(PREPARE_DIR) win32
+	ssh `Make-mach win32` "						\
+		source /common/com/path	;				\
+		setenv sx $(sx_workaround) ;				\
+		setenv sxV $(sxV) ;					\
+		cd $(sx_workaround) ;					\
+		make -f supermake makefiles libsxdet libsx programs 	\
+			COMPILER=\"$(CC_WIN32)-gcc\"			\
+			AR=\"$(CC_WIN32)-ar\"				\
+			RANLIB=\"$(CC_WIN32)-ranlib\"		 	\
+			ARFLAGS=\"rvU\"				 	\
+			LDFLAGS=\"$(LDFLAGS) -L$(CADP)/bin.win32 -lm\"	\
+			CFLAGS=\"$(GCC_WARNINGS) $(EXTRA_CFLAGS) -I$(CADP)/incl $(CFLAGS) -DVASY_LIB\"" 
+	$(PREPARE_DIR) restore
+
+# -----------------------------------------------------------------------------
+
+vasy-mac86: check
+	@echo "=> Compiling for arch Mac86 "
+	$(MAKE) -f vasy/vasymake clean
+	$(PREPARE_DIR) mac86
+
+	@echo FRAMEPATH_MAC86 = $(FRAMEPATH_MAC86)
+	@echo "LIBPATH_MAC86 = $(LIBPATH_MAC86)"
+
+	ssh	`Make-mach mac86` "					\
+		source /common/com/path	;				\
+		setenv sx $(sx_workaround) ;				\
+		setenv MACOSX_DEPLOYMENT_TARGET 10.4 ;			\
+		setenv sxV $(sxV) ;					\
+		cd $(sx_workaround) ;					\
+		make -f supermake makefiles libsxdet libsx programs	\
+			COMPILER=\"$(CC_MAC86)-gcc\"			\
+			AR=\"$(CC_MAC86)-ar\"				\
+			RANLIB=\"$(CC_MAC86)-ranlib\"			\
+			LDFLAGS=\"$(LDFLAGS)				\
+				-dylib_file /usr/lib/system/libmathCommon.A.dylib:$(LIBPATH_MAC86)/system/libmathCommon.A.dylib 			\
+				-dylib_file /usr/lib/libauto.dylib:$(LIBPATH_MAC86)/libauto.dylib							\
+				-dylib_file /usr/lib/libgcc_s.1.dylib:$(LIBPATH_MAC86)/libgcc_s.1.dylib							\
+				-dylib_file /usr/lib/libicucore.A.dylib:$(LIBPATH_MAC86)/libicucore.A.dylib						\
+				-dylib_file /usr/lib/libobjc.A.dylib:$(LIBPATH_MAC86)/libobjc.A.dylib							\
+				-dylib_file /usr/lib/libz.1.1.3.dylib:$(LIBPATH_MAC86)/libz.1.1.3.dylib							\
+				-dylib_file /usr/lib/libz.1.dylib:$(LIBPATH_MAC86)/libz.1.dylib								\
+	 			-lSystemStubs\" 			\
+		CFLAGS=\"$(GCC_WARNINGS) $(EXTRA_CFLAGS) $(CFLAGS)\" "
+	$(PREPARE_DIR) restore
+
+# -----------------------------------------------------------------------------
+
+vasy-mac64: check
+	@echo "=> Compiling for arch Mac64 "
+	$(MAKE) -f vasy/vasymake clean
+	$(PREPARE_DIR) mac64
+
+	@echo FRAMEPATH_MAC64 = $(FRAMEPATH_MAC64)
+	@echo "LIBPATH_MAC64 = $(LIBPATH_MAC64)"
+
+	ssh	`Make-mach mac64` "					\
+		source /common/com/path	;				\
+		setenv sx $(sx_workaround) ;				\
+		setenv MACOSX_DEPLOYMENT_TARGET 10.4 ;			\
+		setenv sxV $(sxV) ;					\
+		cd $(sx_workaround) ;					\
+		make -f supermake makefiles libsxdet libsx programs	\
+			COMPILER=\"$(CC_MAC64)-cc\"			\
+			AR=\"$(CC_MAC64)-ar\"				\
+			RANLIB=\"$(CC_MAC64)-ranlib\"			\
+			LDFLAGS=\"$(LDFLAGS) -dylib_file /usr/lib/system/libmathCommon.A.dylib:$(LIBPATH_MAC64)/system/libmathCommon.A.dylib\" 		\
+			CFLAGS=\"$(GCC_WARNINGS) $(EXTRA_CFLAGS) $(CFLAGS)\" "
+	$(PREPARE_DIR) restore
+
+# -----------------------------------------------------------------------------
+
+all-debug:
+	@echo "=> `date`"
+	@echo "=> Compiling all-compiles with -DBUG=1"
+	$(MAKE) -f vasy/vasymake all-compiles CFLAGS="-DBUG=1"
+	@echo "=> Compiling all-compiles with -DEBUG=1"
+	$(MAKE) -f vasy/vasymake all-compiles CFLAGS="-DEBUG=1"
+	@echo "=> Compiling all-compiles with -DEBUG_ALLOC=1"
+	$(MAKE) -f vasy/vasymake all-compiles CFLAGS="-DEBUG_ALLOC=1"
+	@echo "=> Compiling all-compiles with -DLOG=1"
+	$(MAKE) -f vasy/vasymake all-compiles CFLAGS="-DLOG=1"
+	@echo "=> Compiling all-compiles with -DLLOG=1"
+	$(MAKE) -f vasy/vasymake all-compiles CFLAGS="-DLLOG=1"
+	@echo "=> Compiling all-compiles with -DLLLOG=1"
+	$(MAKE) -f vasy/vasymake all-compiles CFLAGS="-DLLLOG=1"
+	@echo "=> Compiling all-compiles with -DMEASURES=1"
+	$(MAKE) -f vasy/vasymake all-compiles CFLAGS="-DMEASURES=1"
+	@echo "=> Compiling all-compiles with -Dis_dag=1"
+	$(MAKE) -f vasy/vasymake all-compiles CFLAGS="-Dis_dag=1"
+	@echo "=> Compiling all-compiles with -Dis_sdag=1"
+	$(MAKE) -f vasy/vasymake all-compiles CFLAGS="-Dis_sdag=1"
+	@echo "=> Compiling all-compiles with -DSTATS=1"
+	$(MAKE) -f vasy/vasymake all-compiles CFLAGS="-DSTATS=1"
+	@echo "=> Compiling all-compiles with -DEBUG_PRDCT=1"
+	$(MAKE) -f vasy/vasymake all-compiles CFLAGS="-DEBUG_PRDCT=1"
+	@echo "=> Compiling all-compiles with -Dis_large=1"
+	$(MAKE) -f vasy/vasymake all-compiles CFLAGS="-Dis_large=1"
+	@echo "=> `date`"
+
+# -----------------------------------------------------------------------------
+
+all: bootstrap \
+     bootstrap-x64 \
+     vasy-win32 \
+     examples
+
+bootstrap: bootstrap-sol86 bootstrap-sol86-gcc \
+           bootstrap-sol64 bootstrap-sol64-gcc \
+           bootstrap-iX86 
+
+# supprime provisoirement : bootstrap-iX86-icc
+
+# -----------------------------------------------------------------------------
+
+bootstrap-sol86: check
+	$(sx)/vasy/vasy-bootstrap.sh sol86
+
+bootstrap-sol86-gcc: check
+	$(sx)/vasy/vasy-bootstrap.sh sol86-gcc
+
+bootstrap-sol64: check
+	$(sx)/vasy/vasy-bootstrap.sh sol64
+
+bootstrap-sol64-gcc: check
+	$(sx)/vasy/vasy-bootstrap.sh sol64-gcc
+
+bootstrap-iX86: check
+	$(sx)/vasy/vasy-bootstrap.sh iX86
+
+bootstrap-iX86-icc: check
+	$(sx)/vasy/vasy-bootstrap.sh iX86-icc
+
+bootstrap-x64: check
+	$(sx)/vasy/vasy-rsync-x64.sh
+	$(sx)/vasy/vasy-bootstrap.sh x64
+
+# -----------------------------------------------------------------------------
+
+examples:
+	@echo "=> Compiling all examples"
+	$(MAKE) -f vasy/vasymake vasy-$(ARCH) Chimie  Lustre  Petit_Langage  f77 idcounter  ppada  ppc cx
+
+Chimie:
+	$(PREPARE_DIR) $(ARCH)
+	( cd $(sx)/examples/Chimie ; $(MAKE) clean chimie )
+	$(PREPARE_DIR) restore
+
+Lustre:
+	$(PREPARE_DIR) $(ARCH)
+	( cd $(sx)/examples/Lustre ; $(MAKE) clean lustre )
+	$(PREPARE_DIR) restore
+
+Petit_Langage:
+	$(PREPARE_DIR) $(ARCH)
+	( cd $(sx)/examples/Petit_Langage ; $(MAKE) clean lolo )
+	$(PREPARE_DIR) restore
+
+cx:
+	$(PREPARE_DIR) $(ARCH)
+	( cd $(sx)/examples/cx ; $(MAKE) -f sxmakefile clean all )
+	$(PREPARE_DIR) restore
+
+f77:
+	$(PREPARE_DIR) $(ARCH)
+	( cd $(sx)/examples/f77 ; $(MAKE) clean all )
+	$(PREPARE_DIR) restore
+
+idcounter:
+	$(PREPARE_DIR) $(ARCH)
+	( cd $(sx)/examples/idcounter ; $(MAKE) clean lolo )
+	$(PREPARE_DIR) restore
+
+ppada:
+	$(PREPARE_DIR) $(ARCH)
+	( cd $(sx)/examples/ppada ; $(MAKE) clean all )
+	$(PREPARE_DIR) restore
+
+ppc:
+	$(PREPARE_DIR) $(ARCH)
+	( cd $(sx)/examples/ppc ; $(MAKE) -f sxmakefile clean all )
+	$(PREPARE_DIR) restore
+
+# -----------------------------------------------------------------------------
+
+install:
+	$(sx)/vasy/vasy-install.sh $(DEST)
+
+# -----------------------------------------------------------------------------
+
+lint:
+	$(sx)/vasy/lint.sh
+
+# -----------------------------------------------------------------------------
+
+validation: all-compiles examples lint bootstrap
+
+# -----------------------------------------------------------------------------
+
+mallocdebug:
+	$(PREPARE_DIR) mac86
+	( \
+	MALLOC_DEBUG=1 ;\
+	export MALLOC_DEBUG ;\
+	make -f hypergenese nickel chrome )
+	cat /tmp/malloc_errors|grep -v "malloc: protecting edges" | grep -v "malloc: recording malloc stacks" | grep -v "enabling scribbling to detect mods to free blocks" | grep -v "checks heap after" | grep -v "will sleep for .* seconds on heap corruption" | grep -v "stack logs being written into" | grep -v "stack logs deleted from" | grep -v "malloc: MallocCheckHeap: PASSED check"
+	$(PREPARE_DIR) restore
+
+# -----------------------------------------------------------------------------
+
+valgrind:
+	$(PREPARE_DIR) $(ARCH)
+	( \
+	VALGRIND="valgrind --suppressions=$(sx)/etc/valgrind/valgrind.supp";\
+	export VALGRIND ;\
+	make -f hypergenese nickel chrome )
+	$(PREPARE_DIR) restore
+
+# -----------------------------------------------------------------------------
+
+.PHONY: install examples lint validation mallocdebug valgrind
+
+# -----------------------------------------------------------------------------
+
+natif:
+	@echo "=> Native compilation for $(ARCH)"
+	$(MAKE) -f vasy/vasymake vasy-$(ARCH)
+	$(PREPARE_DIR) $(ARCH)
+
+# -----------------------------------------------------------------------------
+

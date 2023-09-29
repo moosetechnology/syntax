@@ -1,0 +1,29 @@
+
+# To avoid problems with other shells:
+SHELL=/bin/sh
+
+LNorCP=ln -s
+
+SXAUX=$(SX)/bin.aux
+
+SXBIN=$(SX)/bin
+
+SXINCL=$(SX)/incl
+
+SXLIB=$(SX)/lib
+
+SXUTIL=$(SX)/util
+
+SXBIBS=$(SXLIB)/libsxutil.a $(SXLIB)/libsx.a
+
+GCC_WARNINGS=-Wall -Wextra -Wswitch-default -Wdeclaration-after-statement -Wundef -Wshadow -Wbad-function-cast -Wcast-qual -Wredundant-decls -Wno-char-subscripts -Wcast-align -fno-common -Wstrict-prototypes -Wformat -Wuninitialized -fstrict-aliasing
+
+COMPILER=gcc $(GCC_WARNINGS) $(EXTRA_CFLAGS)
+
+RANLIB=ranlib
+
+AR=ar
+
+ARFLAGS=rcv
+
+

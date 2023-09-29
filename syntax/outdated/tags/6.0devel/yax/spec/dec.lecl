@@ -1,0 +1,50 @@
+--************************************************************************
+--*       Copyright (c) 1987 by Institut National de Recherche		 *
+--*                  d'Informatique et d'Automatique.		 	 *
+--*	      Produit de l'equipe Langages et Traducteurs.     		 *
+--*   	    	    Version 2.1 du 10 Decembre 1987			 *
+--*	     Syntaxe d'entree pour les declarations de YAX		 *
+--************************************************************************
+
+Classes
+
+	ANY		= #000..#377 ;
+	BLANC		= SP + HT ;
+	SEPARATEUR	= BLANC + VT + FF ;
+
+
+Abbreviations
+
+	STOP		= -"<"&Is_First_Col @0 ;
+
+	&C		= ^&Is_First_Col &Is_Reset (0) ;
+	&NT		= ^&Is_First_Col &Is_Set (0) ;
+
+	BNF_COMMENT	= "*"&Is_First_Col {^EOL} ;
+
+	C_STRING	= "\""&Is_Reset (0) {^"\"\n\\" | "\\" ANY} ("\"" | STOP) ;
+	C_CHAR		= "\'"&Is_Reset (0) {^"\'\n\\" | "\\" ANY} ("\'" | STOP) ;
+	C_COMMENT	= "/"&Is_Reset (0) "*"&True {ANY} ("*" "/"&True | STOP) ;
+	C_OTHER		= (^"<*$\"'"&Is_Reset (0) | "<*$"&C) {^"<*$\"'/"&True} ;
+
+	C_CODE		= C_OTHER | C_STRING | C_CHAR | C_COMMENT ;
+
+
+Tokens
+
+	Comments	=
+	     Union
+		ATTR	: {-SEPARATEUR | [-BNF_COMMENT] EOL}+ ;
+			   Priority Shift>Reduce ;
+		CLAUSE	: {C_CODE | -BNF_COMMENT EOL}+ ;
+			   Context %ATTR, Eof ;
+	     End ;
+
+	Eof		= "<"&Is_First_Col @Release ;
+
+	%ATTR		= "$"&Is_First_Col @Set (0) -"<" LETTER {["_"] (LETTER | DIGIT)} ">" ;
+
+	";"		= -";"&Is_Set (0) @Reset (0) ;
+			   Priority Shift>Reduce ;
+
+	%NT		= "<"&NT {^EOL} ">"&True ;

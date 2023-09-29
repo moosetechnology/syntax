@@ -1,0 +1,36 @@
+# To avoid problems with other shells:
+SHELL=/bin/sh
+
+SX=$(sx)
+SRC=$(SX)/src
+LIB=$(SX)/lib
+INCL=$(SX)/incl
+CCD=cd $(SX); $(COMPILER) -I$(INCL) $(CFLAGS) -c
+CC=cd $(LIB); exec $(COMPILER) -I$(INCL) $(CFLAGS) -c
+
+FORCE=$(INCL)/sxunix.h $(SX)/force_make
+
+
+$(SX)/everything .PRECIOUS: \
+		$(LIB)/sxmem_mngr.d.o	\
+		$(LIB)/dbgaction.d.o	\
+		$(LIB)/sxmain.o		\
+		$(LIB)/sxscanner.d.o	\
+		$(LIB)/sxsrc_mngr.d.o
+
+
+$(LIB)/sxmem_mngr.d.o:	$(SRC)/sxmem_mngr.c	$(FORCE)
+	$(CCD) $(SRC)/sxmem_mngr.c;mv sxmem_mngr.o $@
+
+$(LIB)/dbgaction.d.o:	$(SRC)/dbgaction.c	$(FORCE)
+	$(CCD) $(SRC)/dbgaction.c;mv dbgaction.o $@
+
+$(LIB)/sxmain.o:	$(SRC)/sxmain.c		$(FORCE)
+	$(CC) $(SRC)/sxmain.c
+
+$(LIB)/sxscanner.d.o:	$(SRC)/sxscanner.c	$(FORCE)
+	$(CCD) $(SRC)/sxscanner.c;mv sxscanner.o $@
+
+$(LIB)/sxsrc_mngr.d.o:	$(SRC)/sxsrc_mngr.c	$(FORCE)
+	$(CCD) $(SRC)/sxsrc_mngr.c;mv sxsrc_mngr.o $@
+

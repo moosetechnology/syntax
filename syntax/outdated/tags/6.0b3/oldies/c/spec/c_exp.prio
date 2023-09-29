@@ -1,0 +1,28 @@
+%left ","
+%right "=" "*=" "/=" "%=" "+="-=" "<<=" ">>=" "&=" "^=" "|="
+%right "?" ":"
+%left "||"
+%left "&&"
+%left "|"
+%left "^"
+%left "&"
+%left "==" "!="
+%left "<" ">" "<=" ">="
+%left "<<" ">>"
+%left "+" "-"
+%left "*" "/" "%"
+%right cast
+%right "++" "--" unary "~" "!" "sizeof"
+%left post_incr "->" "." "(" "["
+
+<unary-expression>	= <unary-expression> "++" ; %prec post_incr
+<unary-expression>	= <unary-expression> "--" ; %prec post_incr
+
+<unary-expression>	= <unary-operator> <unary-expression> ; %prec unary
+<unary-expression>	= sizeof "(" %type-name ")" ; %prec "sizeof"
+
+<expression>		= "(" %type-name ")" <expression> ; %prec cast
+
+<expression>		= <unary-expression> <assignment-operator> <expression> ; %prec "="
+
+

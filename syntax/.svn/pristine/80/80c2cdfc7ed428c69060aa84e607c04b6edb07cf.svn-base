@@ -1,0 +1,13 @@
+%left "else"
+%left "->" "."
+%right "=>"
+%left "or" "xor"
+%left "and"
+%nonassoc "<" "<=" "=" ">=" ">" "<>"
+%nonassoc "not"
+%left "+" "-"
+%left "*" "/" "%" "div" "mod"
+%left "when"
+%nonassoc  "pre" "current"
+
+<Expression>	= "-" <Expression>	;	%prec "pre"

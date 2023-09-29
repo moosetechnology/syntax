@@ -1,0 +1,255 @@
+.\" @(#)sxml.3	- SYNTAX [unix] - 30 Avril 2023
+.TH SXML 3 "SYNTAX\[rg]"
+
+.SH NAME
+sxml
+\- library for generating XML, YAML, or JSON code from a SEMC specification
+
+.SH SYNOPSIS
+.nf
+.ta \w'\s-2SXVOID\s0  'u +\w'\s-2SHORT\s0  'u
+.B
+#include "sxml.h"
+.PP
+.B
+typedef char *SXML_TYPE_TEXT;
+
+typedef ... SXML_TYPE_LIST;
+
+void SXML_PRINT (FILE *OUTPUT, SXML_TYPE_LIST X);
+
+SXML_TYPE_LIST SXML_L (SXML_TYPE_LIST L1);
+
+SXML_TYPE_LIST SXML_LL (SXML_TYPE_LIST L1, L2);
+
+SXML_TYPE_LIST SXML_T (SXML_TYPE_TEXT T1);
+
+SXML_TYPE_LIST SXML_TLLT (SXML_TYPE_TEXT T1, SXML_TYPE_LIST L2,
+                          SXML_TYPE_LIST L3, SXML_TYPE_TEXT T4);
+
+etc.
+
+SXML_TYPE_LIST SXML_TTTLTLT (SXML_TYPE_TEXT T1, SXML_TYPE_TEXT T2,
+                             SXML_TYPE_TEXT T3, SXML_TYPE_LIST L4,
+                             SXML_TYPE_TEXT T5, SXML_TYPE_LIST L6,
+                             SXML_TYPE_TEXT T7)
+.fi
+
+.SH DESCRIPTION
+
+.B SYNTAX
+is a compiler-generation system that provides for lexical and syntactic
+analysis, but it also suppports more "semantic" aspects, by means of three
+different processors:
+.BR semact (1),
+.BR semat (1),
+and
+.BR semc (1).
+
+.P
+These three processors are functional (and used to build SYNTAX itself by
+bootstrapping), but the two former are intrinsically linked with the C 
+programming language, which is needed either to program semantic actions in
+.BR semact (1)
+or to traverse the abstract syntax tree constructed by
+.BR semat (1).
+Unfortunately, the C language is often too involved and error-prone for
+developing large compilers rapidly and efficiently.
+
+.P
+For this reason, modern uses of SYNTAX tend to reduce, as much as possible,
+the proportion of compiler code written in C, and use other higher-level
+programming languages instead. There are currently two main approaches:
+
+.IP -
+The first approach [GLM02] consists in using, to describe and traverse the
+abstract syntax tree, the LNT (formerly known as LOTOS NT) language. LNT
+is a first-order functional language that is directly translated to C using
+the TRAIAN compiler [TRA]. LNT is strongly typed, and supports constructor 
+types and pattern matching. It supports external functions written in C,
+which can, thus, perform side effects, such as modifying the abstract
+syntax tree and writing to a file. This approach has been intensively used
+by the VASY/CONVECS research teams of INRIA to build more than a dozen 
+compilers (up to 50,000 lines of code) using SYNTAX.
+
+.IP -
+The second approach consists in using SYNTAX, and especially the
+.BR semc (1)
+processor, to parse the input program and simultaneously print its abstract
+syntax tree to a file, in a tree-like format such as XML, YAML, or JSON. Once 
+parsing is finished, the XML, YAML, or JSON file can be read and processed by
+any program that is fully independent from SYNTAX. This approach fits the
+needs of developers that prefer using other languages than C, such as Java,
+Python, etc. 
+
+.P
+The 
+.BR sxml (1)
+library was designed to support this second approach, and allows to build
+and print the abstract syntax tree. The types and functions exported by this
+library are meant to be invoked in the semantic actions of a
+.BR semc (1)
+specification. Although the library is written in C, it can be used without
+deep knowledge of this language.
+
+.P
+The main goal of the
+.BR sxml (1)
+is to avoid the traditional multi-step approach, in which the abstract syntax
+tree is first specified (using type declarations), then built in memory (using 
+calls to node constructors), and finally traversed and printed to a file.
+Instead, the library favors a much more concise approach, in which the 
+abstract syntax tree is not specified, but dumped directly along each rule
+of the BNF grammar contained in the
+.BR semc (1)
+specification.
+
+.P
+Because SYNTAX is based on LR(1) or LALR(1) parsing, it is not possible to
+print the XML, YAML, or JSON code from left to right, by simple inserting 
+"printf" statements in the semantic actions of the
+.BR semc (1)
+specification. Indeed, each semantic action is executed \fIafter\fP the 
+corresponding syntax rule has been recognized. This does not allow to print
+XML terms from left to right, given that these terms are enclosed between
+<tag> and </tag> delimiters (only the closing delimiter </tag> can be printed
+when the rule is recognized).
+
+.P
+Therefore, the solution is to assemble the XML, YAML, or JSON code fragments
+in memory, and print them to a file once parsing is complete. The
+.BR sxml (1)
+provides the primitives for this. Its key data structure is a linked list
+of character strings (i.e., a "rope" data structure organized as a list
+rather than a binary tree). Each character string in the list may have a
+different length, as in the following list example:
+.nf
+
+   "<sum>" -> "<var>a</var>" -> "<var>b</var>" -> "</sum>" -> NULL
+
+.fi
+Each list denotes the character string obtained by concatenating all its 
+elements in sequence, e.g., for the above example:
+.nf
+
+   "<sum><var>a</var><var>b</var></sum>"
+.fi
+
+.P
+The
+.BR sxml (1)
+library therefore defines two types: \fBSXML_TYPE_TEXT\fP, which denotes
+a standard character string (i.e., "char *" in the C language), and
+\fBSXML_TYPE_LIST\fP, which denotes a pointer to a list.
+
+.P
+To use the library properly, each non-terminal symbol "<t>" of the
+.BR semc (1)
+specification should compute a synthesized attribute , noted "$LIST (<t>)", 
+which is of type \fBSXML_TYPE_LIST\fP and denotes the fragment of XML, YAML,
+or JSON code produced for the non-terminal symbol "<t>".
+
+.P
+Therefore, each syntax rule in the
+.BR semc (1)
+specification, whose left-hand side defines a non-terminal symbol "<t>"
+should properly assign the attribute "$LIST (<t>)". This is done by an
+assignment of the following form:
+.nf
+
+   $LIST(<t>) = SXML_... (...);
+
+.fi
+where SXML_... is one of the functions exported by the library: 
+\fBSXML_L\fP, \fBSXML_LL\fP, \fBSXML_T\fP, \fBSXML_TLT\fP, etc.
+In the names of these functions, each letter 'L' corresponds to a parameter 
+of type \fBSXML_TYPE_LIST\fP, and each letter 'T' corresponds to a parameter
+of type \fBSXML_TYPE_TEXT\fP.
+
+.P
+For instance, the following syntax rule:
+.nf
+
+   <expr> = %IDENTIFIER
+
+.fi
+may have a semantic action such as:
+.nf
+
+   $LIST (<expr>) = SXML_T ($pste (%IDENTIFIER));
+
+.fi
+or:
+.nf
+
+   $LIST (<expr>) = SXML_TTT ("<var>", $pste (%IDENTIFIER), "</var>");
+
+.fi
+
+Also, the following syntax rule:
+.nf
+
+   <expr> = <expr> "+" <expr>
+
+.fi
+may have a semantic action such as:
+.nf
+
+   $LIST (<expr>) = SXML_LL ($LIST (<expr>'), $LIST (<expr>''));
+
+.fi
+or:
+.nf
+
+   $LIST (<expr>) = SXML_TLLT ("<sum>", <$LIST (<expr>'), 
+                               $LIST (<expr>''), "</sum>");
+
+.fi
+
+.P
+The "close" section of the specification will usually invoke the function
+\fBSXML_PRINT\fP() to print to a file the list generated for the axiom
+of the grammar.
+
+.SH "SEE ALSO"
+semc(1) and the \fISYNTAX Reference Manual\fP.
+
+A complete example is given in directory "trunk/examples/lustre".
+
+[GLM02]
+Hubert Garavel, Frederic Lang, and Radu Mateescu.
+\fICompiler Construction using LOTOS NT\fP.
+Proceedings of the International Conference on Compiler Construction CC'2002 
+(Grenoble, France), April 2002.
+https://cadp.inria.fr/publications/Garavel-Lang-Mateescu-02.html
+
+[TRA]
+\fIThe TRAIAN compiler\fP.
+https://vasy.inria.fr/traian.
+
+.SH NOTES
+1. The list of functions SXML_L...() and SXML_T..() implemented in the
+.BR sxml (1)
+library is not exhaustive, and other functions can be added when needed for
+a particular language. Please send your extensions to Hubert.Garavel@inria.fr
+to get them added to the SYNTAX distribution.
+
+.P
+2. The various lists computed by the $LIST attributes must be concatenated
+again and again, in a bottom-up manner, until the input program has been 
+entirely parsed. To perform such concatenations efficiently (i.e., in
+constant time and space), the
+.BR sxml (1)
+library implements circular linked lists, each list being referred to as a
+pointer to its last element. Such implementations details are opaque,
+meaning that the user of the library does not need to be aware of them
+while using the primitives provided by the library.
+
+
+
+
+
+.SH BUGS
+Please report any problem to Hubert.Garavel@inria.fr.
+
+

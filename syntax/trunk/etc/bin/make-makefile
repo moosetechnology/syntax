@@ -1,0 +1,152 @@
+#!/bin/sh
+# ``maker'' for SYNTAX
+#
+# Copyright (c) 1987 Philippe Deschamp
+#
+#    Permission is granted to anyone to make or distribute verbatim
+#    copies of this document as received, in any medium, provided
+#    that the copyright notice and this permission notice are
+#    preserved, thus giving the recipient permission to redistribute
+#    in turn.
+#
+#    Permission is granted to distribute modified versions of this
+#    document, or of portions of it, under the above conditions,
+#    provided also that they carry prominent notices stating who last
+#    changed them.
+
+# This shell script may be used to construct a makefile for
+# constructing SYNTAX tables for a language.
+# The name of the language must be the first parameter.
+
+# Recommended use: /bin/sh $0 language-name | make -f -
+
+# Last modified by PhD on Mon Mar 7 1988 to not use the "-n" option
+# of "echo", which seems to cause problems on some implementations
+# of UNIX System V.
+
+# Further modified by PhD on Thu Feb 8 1990 to bypass a bug found in
+# SunOS 4.0 version of "make", which stupidly assumes it knows how to
+# execute shell commands, while it does not know in actuality.
+
+if [ $# = 0 ]
+then
+	echo "Usage: /bin/sh $0 language_name [ -dummy_csynt ]." >&2
+	exit 1
+fi
+
+COMMAND=`basename "$0"`
+
+L=${1}
+shift
+CSYNT=csynt
+MAKE_BUG_PREFIX=""
+
+for OPTION
+do
+	case ${OPTION} in
+		-dummy_csynt) CSYNT=dummy_csynt ;;
+		*)            exec /bin/sh $0 ;;
+	esac
+done
+
+if [ -r ${L}.semc ]
+then
+	SEM=semc
+	SOURCE=semc
+	TABLES=""
+	OUT=${L}.c
+elif [ -r ${L}.paradis ]
+then
+	SEM=paradis
+	SOURCE=paradis
+	TABLES=${L}.ppt
+	OUT=""
+elif [ -r ${L}.at ]
+then
+	SEM=semat
+	SOURCE=at
+	TABLES=${L}.att
+	OUT=${L}.c.skeleton
+elif [ -r ${L}.yax ]
+then
+	SEM=yax
+	SOURCE=yax
+	TABLES=""
+	OUT=${L}_yax.c
+elif [ -r ${L}.bnf ]
+then
+	SEM=semact
+	SOURCE=bnf
+	TABLES=""
+	OUT=""
+else
+	echo "$COMMAND: cannot find any SYNTAX file $L.{semc,paradis,at,yax,semact}" >&2
+	exit 1
+	# SEM=bnf
+	# SOURCE=bnf
+	# TABLES=""
+	# OUT=""
+fi
+
+echo 'include $(SX)/etc/make/gccoptions'
+
+echo ""
+LINE=""
+if [ -r ${L}.tdef ]
+then
+	LINE="${LINE} ${L}_td.h"
+fi
+echo "all: ${L}_t.c ${OUT} ${LINE}"
+
+echo ""
+echo "${L}_t.c: ${L}.bt ${L}.st ${L}.pt ${L}.rt ${TABLES}"
+echo "	${MAKE_BUG_PREFIX}tables_c ${L} > \$@"
+
+echo ""
+echo "${L}.bt ${TABLES} ${OUT}: ${L}.${SOURCE}"
+LINE=
+if [ -n "${OUT}" ]
+then
+	LINE="${LINE} > ${OUT}"
+fi
+echo "	${MAKE_BUG_PREFIX}${SEM} ${L}.${SOURCE} ${LINE}"
+
+echo ""
+echo "${L}.st: ${L}.bt ${L}.lecl"
+# Hubert Garavel (mars 2023) : on ajoute "|| [ $? = 1 ]" pour le cas ou 
+# LECL emette des avertissements, afin de transformer le code d'erreur 1
+# renvoye par LECL en un code d'erreur 0
+echo "	${MAKE_BUG_PREFIX}lecl ${L}.lecl || [ \$\$? = 1 ]"
+
+echo ""
+LINE="${L}.pt: ${L}.bt"
+if [ -r ${L}.prio ]
+then
+	LINE="${LINE} ${L}.dt"
+fi
+echo ${LINE}
+# Hubert Garavel (mars 2023) : on ajoute "|| [ $? = 1 ]" pour le cas ou la
+# grammaire ne soit pas LALR(1), afin de transformer le code d'erreur 1
+# renvoye par CSYNT (presence d'avertissements) en un code d'erreur 0
+echo "	${MAKE_BUG_PREFIX}${CSYNT} ${L} || [ \$\$? = 1 ]"
+
+if [ -r ${L}.prio ]
+then
+	echo ""
+	echo "${L}.dt: ${L}.bt ${L}.prio"
+	echo "	${MAKE_BUG_PREFIX}prio ${L}.prio"
+fi
+
+echo ""
+echo "${L}.rt: ${L}.bt ${L}.st ${L}.recor"
+echo "	${MAKE_BUG_PREFIX}recor ${L}.recor"
+
+if [ -r ${L}.tdef ]
+then
+	echo ""
+	echo "${L}_td.h: ${L}.bt ${L}.tdef"
+	echo "	${MAKE_BUG_PREFIX}tdef ${L}.tdef > \$@"
+fi
+
+exit 0
+

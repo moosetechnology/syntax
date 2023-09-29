@@ -1,0 +1,35 @@
+
+* at last count, there was one shift/reduce conflict,
+* involving recognizing functions in declarations
+
+
+%left ,
+%right =
+%right ? :
+%left ||
+%left "&&"
+%left |
+%left ^
+%left "&"
+%left %EQUOP
+%left %RELOP
+%left %SHIFTOP
+%left + -
+%left * %DIVOP
+%right %UNOP
+%right %INCOP sizeof
+%left [ ( %STROP
+%right { while else
+%nonassoc if
+<declarator>	= <nfdeclarator>  :  <con_e>	~~ ;	%prec ,
+<declarator>	= :  <con_e>			~~ ;	%prec ,
+<init_dcl_list>	= <init_declarator>			~~ ;	%prec ,
+<init_declarator>	= <nfdeclarator>  =  <e>	~~ ;	%prec ,
+<init_list>	= <e>				~~ ;	%prec ,
+<compoundstmt>	= { ~SKIP~ ~MARGIN+4~ <}>	~~ ; %prec ,
+<statement2>	= <ifprefix> ~MARGIN+4~ <statement>		~~ ; %prec ,
+<con_e>	= <e>	~~ ;	%prec ,
+<elist>	= <e>			~~ ;	%prec ,
+<term>	= <sizeof>  <term>		~~ ;	%prec sizeof
+<term>	= ( <cast_type> )  <term>	~~ ;	%prec %INCOP
+<term>	= <sizeof>  ( <cast_type> )	~~ ;	%prec sizeof

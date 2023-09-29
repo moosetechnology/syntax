@@ -1,0 +1,28 @@
+%
+% L = {w | |w| is a prime et w \in T^*}
+%
+% Temps d'analyse n log n (theorique et pratique)
+% La verif que a^45007 est premier prend 1s sur ma SS10
+% La verif que a^44377 n'est pas premier (199 * 223) prend 480ms
+%
+
+
+S(\a\b\c)		--> &False() . % sert uniquement a definir l'ensemble T
+S(X)			--> Prime(X) .
+
+Prime(X)		--> !NotPrime(X) .
+
+NotPrime(X)		--> times(X) . % Multiples of 2, 3 ... are not primes
+NotPrime(X Y)		--> Xgeq5(X) !times(X) XYleqZ(X, X, X Y) . % In fact Prime(X) instead of !times(X)
+
+times(X Y)		--> !&StrLen(1,X) &StrEqLen (X, Y) .
+times(X Y Z)		--> !&StrLen(1,X) &StrEqLen (X, Y) &StrEqLen (X, Z) .
+
+Xgeq5(X1 X2)		--> &StrLen (5, X1) .
+
+XYleqZ(X, , Z)		--> Mul(X, Z) .
+XYleqZ(X, Y1 Y2, Z1 Z2)	--> &StrLen(1, Y2) &StrEqLen(X, Z2) XYleqZ(X, Y1, Z1) .
+
+Mul(X,)			--> .
+Mul(X, Y1 Y2)		--> &StrEqLen (X, Y2) Mul(X, Y1) .
+

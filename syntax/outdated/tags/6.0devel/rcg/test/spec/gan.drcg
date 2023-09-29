@@ -1,0 +1,13 @@
+% Version generative de
+% L = {a^n b^n c^n | n >= 0}
+%
+% Cette drcg a ete ecrite manuellement a partir de an.rcg
+% Traduction automatique a faire
+%
+
+S(X Y Z)(Out)				--> &StrEqLen(X,Y) &StrEqLen(X,Z) A(X,Y,Z)(X,Y,Z) 
+					    {concat (Y,Z,T), concat(X,T,Out)}.
+
+A(,,)([],[],[])				--> .
+A(\aX,\bY,\cZ)([a|X],[b|Y],[c|Z])	--> A(X,Y,Z)(X,Y,Z) .
+

@@ -1,0 +1,9 @@
+<start> = <formule> ;
+<start> = <formule> %comma <start> ; "FORM_LIST"
+<formule> = <somme_de_termes> "=" <somme_de_termes> ; "FORM"
+<somme_de_termes> = <somme_de_termes> "+" <terme> ; "SOMME"
+<somme_de_termes> = <terme> ;
+<terme> = <facteur> %molecule ; "FACT_MOL"
+<terme> = %molecule ; "MOL"
+<facteur> = %integer ;
+

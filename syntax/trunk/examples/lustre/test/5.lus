@@ -1,0 +1,1877 @@
+------------------------------------------------------------------------
+-- MAA_specification (derived from the works of Lina Marsso)
+------------------------------------------------------------------------
+type Bit = enum {X0, X1};
+type Octet = struct {x1: Bit; x2: Bit; x3: Bit; x4: Bit;
+                     x5: Bit; x6: Bit; x7: Bit; x8: Bit};
+type Block = struct {o1: Octet; o2: Octet; o3: Octet; o4: Octet};
+type Key = struct {K: Block; J: Block};
+type OctetSum = struct {x: Bit; o: Octet};
+type Half = struct {o1: Octet; o2: Octet};
+type HalfSum = struct {x: Bit; h: Half};
+type BlockSum = struct {x: Bit; w: Block};
+type Pair = struct {w1: Block; w2: Block};
+------------------------------------------------------------------------
+-- Octets
+const x00 = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X0;
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X0};
+const x01 = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X0;
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X1};
+const x02 = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X0; 
+                   x5 = X0; x6 = X0; x7 = X1; x8 = X0};
+const x03 = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X0; 
+                   x5 = X0; x6 = X0; x7 = X1; x8 = X1};
+const x04 = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X0; 
+                   x5 = X0; x6 = X1; x7 = X0; x8 = X0};
+const x05 = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X0; 
+                   x5 = X0; x6 = X1; x7 = X0; x8 = X1};
+const x06 = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X0; 
+                   x5 = X0; x6 = X1; x7 = X1; x8 = X0};
+const x07 = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X0; 
+                   x5 = X0; x6 = X1; x7 = X1; x8 = X1};
+const x08 = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X0; 
+                   x5 = X1; x6 = X0; x7 = X0; x8 = X0};
+const x09 = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X0; 
+                   x5 = X1; x6 = X0; x7 = X0; x8 = X1};
+const x0A = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X0; 
+                   x5 = X1; x6 = X0; x7 = X1; x8 = X0};
+const x0B = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X0; 
+                   x5 = X1; x6 = X0; x7 = X1; x8 = X1};
+const x0C = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X0; 
+                   x5 = X1; x6 = X1; x7 = X0; x8 = X0};
+const x0D = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X0; 
+                   x5 = X1; x6 = X1; x7 = X0; x8 = X1};
+const x0E = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X0; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X0};
+const x0F = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X0; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X1};
+const x10 = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X0};
+const x11 = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X1};
+const x12 = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X1; x8 = X0};
+const x13 = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X1; x8 = X1};
+const x14 = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X0; x6 = X1; x7 = X0; x8 = X0};
+const x15 = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X0; x6 = X1; x7 = X0; x8 = X1};
+const x16 = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X0; x6 = X1; x7 = X1; x8 = X0};
+const x17 = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X0; x6 = X1; x7 = X1; x8 = X1};
+const x18 = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X1; x6 = X0; x7 = X0; x8 = X0};
+const x1A = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X1; x6 = X0; x7 = X1; x8 = X0};
+const x1B = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X1; x6 = X0; x7 = X1; x8 = X1};
+const x1C = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X0; x8 = X0};
+const x1D = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X0; x8 = X1};
+const x1E = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X0};
+const x1F = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X1};
+const x20 = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X0; 
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X0};
+const x21 = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X0; 
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X1};
+const x22 = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X0; 
+                   x5 = X0; x6 = X0; x7 = X1; x8 = X0};
+const x23 = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X0; 
+                   x5 = X0; x6 = X0; x7 = X1; x8 = X1};
+const x24 = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X0; 
+                   x5 = X0; x6 = X1; x7 = X0; x8 = X0};
+const x25 = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X0; 
+                   x5 = X0; x6 = X1; x7 = X0; x8 = X1};
+const x26 = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X0; 
+                   x5 = X0; x6 = X1; x7 = X1; x8 = X0};
+const x27 = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X0; 
+                   x5 = X0; x6 = X1; x7 = X1; x8 = X1};
+const x28 = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X0; 
+                   x5 = X1; x6 = X0; x7 = X0; x8 = X0};
+const x29 = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X0; 
+                   x5 = X1; x6 = X0; x7 = X0; x8 = X1};
+const x2A = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X0; 
+                   x5 = X1; x6 = X0; x7 = X1; x8 = X0};
+const x2B = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X0; 
+                   x5 = X1; x6 = X0; x7 = X1; x8 = X1};
+const x2D = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X0; 
+                   x5 = X1; x6 = X1; x7 = X0; x8 = X1};
+const x2E = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X0; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X0};
+const x2F = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X0; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X1};
+const x30 = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X0};
+const x31 = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X1};
+const x32 = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X1; x8 = X0};
+const x33 = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X1; x8 = X1};
+const x34 = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X1; 
+                   x5 = X0; x6 = X1; x7 = X0; x8 = X0};
+const x35 = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X1; 
+                   x5 = X0; x6 = X1; x7 = X0; x8 = X1};
+const x36 = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X1; 
+                   x5 = X0; x6 = X1; x7 = X1; x8 = X0};
+const x37 = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X1; 
+                   x5 = X0; x6 = X1; x7 = X1; x8 = X1};
+const x38 = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X0; x7 = X0; x8 = X0};
+const x39 = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X0; x7 = X0; x8 = X1};
+const x3A = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X0; x7 = X1; x8 = X0};
+const x3B = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X0; x7 = X1; x8 = X1};
+const x3C = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X0; x8 = X0};
+const x3D = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X0; x8 = X1};
+const x3E = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X0};
+const x3F = Octet {x1 = X0; x2 = X0; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X1};
+const x40 = Octet {x1 = X0; x2 = X1; x3 = X0; x4 = X0; 
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X0};
+const x41 = Octet {x1 = X0; x2 = X1; x3 = X0; x4 = X0; 
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X1};
+const x42 = Octet {x1 = X0; x2 = X1; x3 = X0; x4 = X0; 
+                   x5 = X0; x6 = X0; x7 = X1; x8 = X0};
+const x43 = Octet {x1 = X0; x2 = X1; x3 = X0; x4 = X0; 
+                   x5 = X0; x6 = X0; x7 = X1; x8 = X1};
+const x44 = Octet {x1 = X0; x2 = X1; x3 = X0; x4 = X0; 
+                   x5 = X0; x6 = X1; x7 = X0; x8 = X0};
+const x45 = Octet {x1 = X0; x2 = X1; x3 = X0; x4 = X0; 
+                   x5 = X0; x6 = X1; x7 = X0; x8 = X1};
+const x46 = Octet {x1 = X0; x2 = X1; x3 = X0; x4 = X0; 
+                   x5 = X0; x6 = X1; x7 = X1; x8 = X0};
+const x47 = Octet {x1 = X0; x2 = X1; x3 = X0; x4 = X0; 
+                   x5 = X0; x6 = X1; x7 = X1; x8 = X1};
+const x48 = Octet {x1 = X0; x2 = X1; x3 = X0; x4 = X0; 
+                   x5 = X1; x6 = X0; x7 = X0; x8 = X0};
+const x49 = Octet {x1 = X0; x2 = X1; x3 = X0; x4 = X0; 
+                   x5 = X1; x6 = X0; x7 = X0; x8 = X1};
+const x4A = Octet {x1 = X0; x2 = X1; x3 = X0; x4 = X0; 
+                   x5 = X1; x6 = X0; x7 = X1; x8 = X0};
+const x4B = Octet {x1 = X0; x2 = X1; x3 = X0; x4 = X0; 
+                   x5 = X1; x6 = X0; x7 = X1; x8 = X1};
+const x4C = Octet {x1 = X0; x2 = X1; x3 = X0; x4 = X0; 
+                   x5 = X1; x6 = X1; x7 = X0; x8 = X0};
+const x4D = Octet {x1 = X0; x2 = X1; x3 = X0; x4 = X0; 
+                   x5 = X1; x6 = X1; x7 = X0; x8 = X1};
+const x4E = Octet {x1 = X0; x2 = X1; x3 = X0; x4 = X0; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X0};
+const x4F = Octet {x1 = X0; x2 = X1; x3 = X0; x4 = X0; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X1};
+const x50 = Octet {x1 = X0; x2 = X1; x3 = X0; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X0};
+const x51 = Octet {x1 = X0; x2 = X1; x3 = X0; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X1};
+const x53 = Octet {x1 = X0; x2 = X1; x3 = X0; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X1; x8 = X1};
+const x54 = Octet {x1 = X0; x2 = X1; x3 = X0; x4 = X1; 
+                   x5 = X0; x6 = X1; x7 = X0; x8 = X0};
+const x55 = Octet {x1 = X0; x2 = X1; x3 = X0; x4 = X1; 
+                   x5 = X0; x6 = X1; x7 = X0; x8 = X1};
+const x58 = Octet {x1 = X0; x2 = X1; x3 = X0; x4 = X1; 
+                   x5 = X1; x6 = X0; x7 = X0; x8 = X0};
+const x5A = Octet {x1 = X0; x2 = X1; x3 = X0; x4 = X1; 
+                   x5 = X1; x6 = X0; x7 = X1; x8 = X0};
+const x5B = Octet {x1 = X0; x2 = X1; x3 = X0; x4 = X1; 
+                   x5 = X1; x6 = X0; x7 = X1; x8 = X1};
+const x5C = Octet {x1 = X0; x2 = X1; x3 = X0; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X0; x8 = X0};
+const x5D = Octet {x1 = X0; x2 = X1; x3 = X0; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X0; x8 = X1};
+const x5E = Octet {x1 = X0; x2 = X1; x3 = X0; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X0};
+const x5F = Octet {x1 = X0; x2 = X1; x3 = X0; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X1};
+const x60 = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X0; 
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X0};
+const x61 = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X0; 
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X1};
+const x62 = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X0; 
+                   x5 = X0; x6 = X0; x7 = X1; x8 = X0};
+const x63 = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X0; 
+                   x5 = X0; x6 = X0; x7 = X1; x8 = X1};
+const x64 = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X0; 
+                   x5 = X0; x6 = X1; x7 = X0; x8 = X0};
+const x65 = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X0; 
+                   x5 = X0; x6 = X1; x7 = X0; x8 = X1};
+const x66 = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X0; 
+                   x5 = X0; x6 = X1; x7 = X1; x8 = X0};
+const x67 = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X0; 
+                   x5 = X0; x6 = X1; x7 = X1; x8 = X1};
+const x69 = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X0; 
+                   x5 = X1; x6 = X0; x7 = X0; x8 = X1};
+const x6A = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X0; 
+                   x5 = X1; x6 = X0; x7 = X1; x8 = X0};
+const x6B = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X0; 
+                   x5 = X1; x6 = X0; x7 = X1; x8 = X1};
+const x6C = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X0; 
+                   x5 = X1; x6 = X1; x7 = X0; x8 = X0};
+const x6D = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X0; 
+                   x5 = X1; x6 = X1; x7 = X0; x8 = X1};
+const x6E = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X0; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X0};
+const x6F = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X0; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X1};
+const x70 = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X0};
+const x71 = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X1};
+const x72 = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X1; x8 = X0};
+const x73 = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X1; x8 = X1};
+const x74 = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X0; x6 = X1; x7 = X0; x8 = X0};
+const x75 = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X0; x6 = X1; x7 = X0; x8 = X1};
+const x76 = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X0; x6 = X1; x7 = X1; x8 = X0};
+const x77 = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X0; x6 = X1; x7 = X1; x8 = X1};
+const x78 = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X0; x7 = X0; x8 = X0};
+const x79 = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X0; x7 = X0; x8 = X1};
+const x7A = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X0; x7 = X1; x8 = X0};
+const x7B = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X0; x7 = X1; x8 = X1};
+const x7C = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X0; x8 = X0};
+const x7D = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X0; x8 = X1};
+const x7E = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X0};
+const x7F = Octet {x1 = X0; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X1};
+const x80 = Octet {x1 = X1; x2 = X0; x3 = X0; x4 = X0; 
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X0};
+const x81 = Octet {x1 = X1; x2 = X0; x3 = X0; x4 = X0; 
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X1};
+const x83 = Octet {x1 = X1; x2 = X0; x3 = X0; x4 = X0; 
+                   x5 = X0; x6 = X0; x7 = X1; x8 = X1};
+const x84 = Octet {x1 = X1; x2 = X0; x3 = X0; x4 = X0; 
+                   x5 = X0; x6 = X1; x7 = X0; x8 = X0};
+const x85 = Octet {x1 = X1; x2 = X0; x3 = X0; x4 = X0; 
+                   x5 = X0; x6 = X1; x7 = X0; x8 = X1};
+const x86 = Octet {x1 = X1; x2 = X0; x3 = X0; x4 = X0; 
+                   x5 = X0; x6 = X1; x7 = X1; x8 = X0};
+const x89 = Octet {x1 = X1; x2 = X0; x3 = X0; x4 = X0; 
+                   x5 = X1; x6 = X0; x7 = X0; x8 = X1};
+const x8C = Octet {x1 = X1; x2 = X0; x3 = X0; x4 = X0; 
+                   x5 = X1; x6 = X1; x7 = X0; x8 = X0};
+const x8D = Octet {x1 = X1; x2 = X0; x3 = X0; x4 = X0; 
+                   x5 = X1; x6 = X1; x7 = X0; x8 = X1};
+const x8E = Octet {x1 = X1; x2 = X0; x3 = X0; x4 = X0; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X0};
+const x8F = Octet {x1 = X1; x2 = X0; x3 = X0; x4 = X0; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X1};
+const x90 = Octet {x1 = X1; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X0};
+const x91 = Octet {x1 = X1; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X1};
+const x92 = Octet {x1 = X1; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X1; x8 = X0};
+const x93 = Octet {x1 = X1; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X1; x8 = X1};
+const x94 = Octet {x1 = X1; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X0; x6 = X1; x7 = X0; x8 = X0};
+const x95 = Octet {x1 = X1; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X0; x6 = X1; x7 = X0; x8 = X1};
+const x96 = Octet {x1 = X1; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X0; x6 = X1; x7 = X1; x8 = X0};
+const x97 = Octet {x1 = X1; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X0; x6 = X1; x7 = X1; x8 = X1};
+const x98 = Octet {x1 = X1; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X1; x6 = X0; x7 = X0; x8 = X0};
+const x99 = Octet {x1 = X1; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X1; x6 = X0; x7 = X0; x8 = X1};
+const x9A = Octet {x1 = X1; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X1; x6 = X0; x7 = X1; x8 = X0};
+const x9B = Octet {x1 = X1; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X1; x6 = X0; x7 = X1; x8 = X1};
+const x9C = Octet {x1 = X1; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X0; x8 = X0};
+const x9D = Octet {x1 = X1; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X0; x8 = X1};
+const x9E = Octet {x1 = X1; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X0};
+const x9F = Octet {x1 = X1; x2 = X0; x3 = X0; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X1};
+const xA1 = Octet {x1 = X1; x2 = X0; x3 = X1; x4 = X0; 
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X1};
+const xA0 = Octet {x1 = X1; x2 = X0; x3 = X1; x4 = X0; 
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X0};
+const xA3 = Octet {x1 = X1; x2 = X0; x3 = X1; x4 = X0; 
+                   x5 = X0; x6 = X0; x7 = X1; x8 = X1};
+const xA4 = Octet {x1 = X1; x2 = X0; x3 = X1; x4 = X0; 
+                   x5 = X0; x6 = X1; x7 = X0; x8 = X0};
+const xA5 = Octet {x1 = X1; x2 = X0; x3 = X1; x4 = X0; 
+                   x5 = X0; x6 = X1; x7 = X0; x8 = X1};
+const xA6 = Octet {x1 = X1; x2 = X0; x3 = X1; x4 = X0; 
+                   x5 = X0; x6 = X1; x7 = X1; x8 = X0};
+const xA7 = Octet {x1 = X1; x2 = X0; x3 = X1; x4 = X0; 
+                   x5 = X0; x6 = X1; x7 = X1; x8 = X1};
+const xA8 = Octet {x1 = X1; x2 = X0; x3 = X1; x4 = X0; 
+                   x5 = X1; x6 = X0; x7 = X0; x8 = X0};
+const xA9 = Octet {x1 = X1; x2 = X0; x3 = X1; x4 = X0; 
+                   x5 = X1; x6 = X0; x7 = X0; x8 = X1};
+const xAA = Octet {x1 = X1; x2 = X0; x3 = X1; x4 = X0; 
+                   x5 = X1; x6 = X0; x7 = X1; x8 = X0};
+const xAB = Octet {x1 = X1; x2 = X0; x3 = X1; x4 = X0; 
+                   x5 = X1; x6 = X0; x7 = X1; x8 = X1};
+const xAC = Octet {x1 = X1; x2 = X0; x3 = X1; x4 = X0; 
+                   x5 = X1; x6 = X1; x7 = X0; x8 = X0};
+const xAE = Octet {x1 = X1; x2 = X0; x3 = X1; x4 = X0; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X0};
+const xAF = Octet {x1 = X1; x2 = X0; x3 = X1; x4 = X0; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X1};
+const xB0 = Octet {x1 = X1; x2 = X0; x3 = X1; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X0};
+const xB1 = Octet {x1 = X1; x2 = X0; x3 = X1; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X1};
+const xB2 = Octet {x1 = X1; x2 = X0; x3 = X1; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X1; x8 = X0};
+const xB3 = Octet {x1 = X1; x2 = X0; x3 = X1; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X1; x8 = X1};
+const xB5 = Octet {x1 = X1; x2 = X0; x3 = X1; x4 = X1; 
+                   x5 = X0; x6 = X1; x7 = X0; x8 = X1};
+const xB6 = Octet {x1 = X1; x2 = X0; x3 = X1; x4 = X1; 
+                   x5 = X0; x6 = X1; x7 = X1; x8 = X0};
+const xB8 = Octet {x1 = X1; x2 = X0; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X0; x7 = X0; x8 = X0};
+const xB9 = Octet {x1 = X1; x2 = X0; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X0; x7 = X0; x8 = X1};
+const xBA = Octet {x1 = X1; x2 = X0; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X0; x7 = X1; x8 = X0};
+const xBB = Octet {x1 = X1; x2 = X0; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X0; x7 = X1; x8 = X1};
+const xBC = Octet {x1 = X1; x2 = X0; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X0; x8 = X0};
+const xBE = Octet {x1 = X1; x2 = X0; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X0};
+const xBF = Octet {x1 = X1; x2 = X0; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X1};
+const xC0 = Octet {x1 = X1; x2 = X1; x3 = X0; x4 = X0; 
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X0};
+const xC1 = Octet {x1 = X1; x2 = X1; x3 = X0; x4 = X0; 
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X1};
+const xC2 = Octet {x1 = X1; x2 = X1; x3 = X0; x4 = X0; 
+                   x5 = X0; x6 = X0; x7 = X1; x8 = X0};
+const xC4 = Octet {x1 = X1; x2 = X1; x3 = X0; x4 = X0; 
+                   x5 = X0; x6 = X1; x7 = X0; x8 = X0};
+const xC5 = Octet {x1 = X1; x2 = X1; x3 = X0; x4 = X0; 
+                   x5 = X0; x6 = X1; x7 = X0; x8 = X1};
+const xC6 = Octet {x1 = X1; x2 = X1; x3 = X0; x4 = X0; 
+                   x5 = X0; x6 = X1; x7 = X1; x8 = X0};
+const xC7 = Octet {x1 = X1; x2 = X1; x3 = X0; x4 = X0; 
+                   x5 = X0; x6 = X1; x7 = X1; x8 = X1};
+const xC8 = Octet {x1 = X1; x2 = X1; x3 = X0; x4 = X0; 
+                   x5 = X1; x6 = X0; x7 = X0; x8 = X0};
+const xC9 = Octet {x1 = X1; x2 = X1; x3 = X0; x4 = X0; 
+                   x5 = X1; x6 = X0; x7 = X0; x8 = X1};
+const xCA = Octet {x1 = X1; x2 = X1; x3 = X0; x4 = X0; 
+                   x5 = X1; x6 = X0; x7 = X1; x8 = X0};
+const xCB = Octet {x1 = X1; x2 = X1; x3 = X0; x4 = X0; 
+                   x5 = X1; x6 = X0; x7 = X1; x8 = X1};
+const xCC = Octet {x1 = X1; x2 = X1; x3 = X0; x4 = X0; 
+                   x5 = X1; x6 = X1; x7 = X0; x8 = X0};
+const xCD = Octet {x1 = X1; x2 = X1; x3 = X0; x4 = X0; 
+                   x5 = X1; x6 = X1; x7 = X0; x8 = X1};
+const xCE = Octet {x1 = X1; x2 = X1; x3 = X0; x4 = X0; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X0};
+const xD0 = Octet {x1 = X1; x2 = X1; x3 = X0; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X0};
+const xD1 = Octet {x1 = X1; x2 = X1; x3 = X0; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X1};
+const xD2 = Octet {x1 = X1; x2 = X1; x3 = X0; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X1; x8 = X0};
+const xD3 = Octet {x1 = X1; x2 = X1; x3 = X0; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X1; x8 = X1};
+const xD4 = Octet {x1 = X1; x2 = X1; x3 = X0; x4 = X1; 
+                   x5 = X0; x6 = X1; x7 = X0; x8 = X0};
+const xD5 = Octet {x1 = X1; x2 = X1; x3 = X0; x4 = X1; 
+                   x5 = X0; x6 = X1; x7 = X0; x8 = X1};
+const xD6 = Octet {x1 = X1; x2 = X1; x3 = X0; x4 = X1; 
+                   x5 = X0; x6 = X1; x7 = X1; x8 = X0};
+const xD7 = Octet {x1 = X1; x2 = X1; x3 = X0; x4 = X1; 
+                   x5 = X0; x6 = X1; x7 = X1; x8 = X1};
+const xD9 = Octet {x1 = X1; x2 = X1; x3 = X0; x4 = X1; 
+                   x5 = X1; x6 = X0; x7 = X0; x8 = X1};
+const xD8 = Octet {x1 = X1; x2 = X1; x3 = X0; x4 = X1; 
+                   x5 = X1; x6 = X0; x7 = X0; x8 = X0};
+const xDB = Octet {x1 = X1; x2 = X1; x3 = X0; x4 = X1; 
+                   x5 = X1; x6 = X0; x7 = X1; x8 = X1};
+const xDC = Octet {x1 = X1; x2 = X1; x3 = X0; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X0; x8 = X0};
+const xDD = Octet {x1 = X1; x2 = X1; x3 = X0; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X0; x8 = X1};
+const xDE = Octet {x1 = X1; x2 = X1; x3 = X0; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X0};
+const xDF = Octet {x1 = X1; x2 = X1; x3 = X0; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X1};
+const xE0 = Octet {x1 = X1; x2 = X1; x3 = X1; x4 = X0; 
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X0};
+const xE1 = Octet {x1 = X1; x2 = X1; x3 = X1; x4 = X0; 
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X1};
+const xE2 = Octet {x1 = X1; x2 = X1; x3 = X1; x4 = X0; 
+                   x5 = X0; x6 = X0; x7 = X1; x8 = X0};
+const xE3 = Octet {x1 = X1; x2 = X1; x3 = X1; x4 = X0; 
+                   x5 = X0; x6 = X0; x7 = X1; x8 = X1};
+const xE6 = Octet {x1 = X1; x2 = X1; x3 = X1; x4 = X0; 
+                   x5 = X0; x6 = X1; x7 = X1; x8 = X0};
+const xE8 = Octet {x1 = X1; x2 = X1; x3 = X1; x4 = X0; 
+                   x5 = X1; x6 = X0; x7 = X0; x8 = X0};
+const xE9 = Octet {x1 = X1; x2 = X1; x3 = X1; x4 = X0; 
+                   x5 = X1; x6 = X0; x7 = X0; x8 = X1};
+const xEA = Octet {x1 = X1; x2 = X1; x3 = X1; x4 = X0; 
+                   x5 = X1; x6 = X0; x7 = X1; x8 = X0};
+const xEB = Octet {x1 = X1; x2 = X1; x3 = X1; x4 = X0; 
+                   x5 = X1; x6 = X0; x7 = X1; x8 = X1};
+const xEC = Octet {x1 = X1; x2 = X1; x3 = X1; x4 = X0; 
+                   x5 = X1; x6 = X1; x7 = X0; x8 = X0};
+const xED = Octet {x1 = X1; x2 = X1; x3 = X1; x4 = X0; 
+                   x5 = X1; x6 = X1; x7 = X0; x8 = X1};
+const xEE = Octet {x1 = X1; x2 = X1; x3 = X1; x4 = X0; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X0};
+const xEF = Octet {x1 = X1; x2 = X1; x3 = X1; x4 = X0; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X1};
+const xF0 = Octet {x1 = X1; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X0};
+const xF1 = Octet {x1 = X1; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X0; x8 = X1};
+const xF2 = Octet {x1 = X1; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X1; x8 = X0};
+const xF3 = Octet {x1 = X1; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X0; x6 = X0; x7 = X1; x8 = X1};
+const xF4 = Octet {x1 = X1; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X0; x6 = X1; x7 = X0; x8 = X0};
+const xF5 = Octet {x1 = X1; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X0; x6 = X1; x7 = X0; x8 = X1};
+const xF6 = Octet {x1 = X1; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X0; x6 = X1; x7 = X1; x8 = X0};
+const xF7 = Octet {x1 = X1; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X0; x6 = X1; x7 = X1; x8 = X1};
+const xF8 = Octet {x1 = X1; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X0; x7 = X0; x8 = X0};
+const xF9 = Octet {x1 = X1; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X0; x7 = X0; x8 = X1};
+const xFA = Octet {x1 = X1; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X0; x7 = X1; x8 = X0};
+const xFB = Octet {x1 = X1; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X0; x7 = X1; x8 = X1};
+const xFC = Octet {x1 = X1; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X0; x8 = X0};
+const xFD = Octet {x1 = X1; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X0; x8 = X1};
+const xFE = Octet {x1 = X1; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X0};
+const xFF = Octet {x1 = X1; x2 = X1; x3 = X1; x4 = X1; 
+                   x5 = X1; x6 = X1; x7 = X1; x8 = X1};
+------------------------------------------------------------------------          
+-- Half Blocks
+------------------------------------------------------------------------
+const x0000 = Half {o1 = x00; o2 = x00};
+const x0001 = Half {o1 = x00; o2 = x01};
+------------------------------------------------------------------------
+-- Blocks
+------------------------------------------------------------------------
+const x00000000 = Block {o1 = x00; o2 = x00; o3 = x00; o4 = x00};
+const x00000001 = Block {o1 = x00; o2 = x00; o3 = x00; o4 = x01};
+const x00000002 = Block {o1 = x00; o2 = x00; o3 = x00; o4 = x02};
+const x00000003 = Block {o1 = x00; o2 = x00; o3 = x00; o4 = x03};
+const x00000004 = Block {o1 = x00; o2 = x00; o3 = x00; o4 = x04};
+const x00000005 = Block {o1 = x00; o2 = x00; o3 = x00; o4 = x05};
+const x00000006 = Block {o1 = x00; o2 = x00; o3 = x00; o4 = x06};
+const x00000007 = Block {o1 = x00; o2 = x00; o3 = x00; o4 = x07};
+const x00000008 = Block {o1 = x00; o2 = x00; o3 = x00; o4 = x08};
+const x00000009 = Block {o1 = x00; o2 = x00; o3 = x00; o4 = x09};
+const x0000000A = Block {o1 = x00; o2 = x00; o3 = x00; o4 = x0A};
+const x0000000B = Block {o1 = x00; o2 = x00; o3 = x00; o4 = x0B};
+const x0000000C = Block {o1 = x00; o2 = x00; o3 = x00; o4 = x0C};
+const x0000000D = Block {o1 = x00; o2 = x00; o3 = x00; o4 = x0D};
+const x0000000E = Block {o1 = x00; o2 = x00; o3 = x00; o4 = x0E};
+const x0000000F = Block {o1 = x00; o2 = x00; o3 = x00; o4 = x0F};
+const x00000010 = Block {o1 = x00; o2 = x00; o3 = x00; o4 = x10};
+const x00000012 = Block {o1 = x00; o2 = x00; o3 = x00; o4 = x12};
+const x00000014 = Block {o1 = x00; o2 = x00; o3 = x00; o4 = x14};
+const x00000016 = Block {o1 = x00; o2 = x00; o3 = x00; o4 = x16};
+const x00000018 = Block {o1 = x00; o2 = x00; o3 = x00; o4 = x18};
+const x0000001B = Block {o1 = x00; o2 = x00; o3 = x00; o4 = x1B};
+const x0000001D = Block {o1 = x00; o2 = x00; o3 = x00; o4 = x1D};
+const x0000001E = Block {o1 = x00; o2 = x00; o3 = x00; o4 = x1E};
+const x0000001F = Block {o1 = x00; o2 = x00; o3 = x00; o4 = x1F};
+const x00000031 = Block {o1 = x00; o2 = x00; o3 = x00; o4 = x31};
+const x00000036 = Block {o1 = x00; o2 = x00; o3 = x00; o4 = x36};
+const x00000060 = Block {o1 = x00; o2 = x00; o3 = x00; o4 = x60};
+const x00000080 = Block {o1 = x00; o2 = x00; o3 = x00; o4 = x80};
+const x000000A5 = Block {o1 = x00; o2 = x00; o3 = x00; o4 = xA5};
+const x000000B6 = Block {o1 = x00; o2 = x00; o3 = x00; o4 = xB6};
+const x000000C4 = Block {o1 = x00; o2 = x00; o3 = x00; o4 = xC4};
+const x000000D2 = Block {o1 = x00; o2 = x00; o3 = x00; o4 = xD2};
+const x00000100 = Block {o1 = x00; o2 = x00; o3 = x01; o4 = x00};
+const x00000129 = Block {o1 = x00; o2 = x00; o3 = x01; o4 = x29};
+const x0000018C = Block {o1 = x00; o2 = x00; o3 = x01; o4 = x8C};
+const x00004000 = Block {o1 = x00; o2 = x00; o3 = x40; o4 = x00};
+const x00010000 = Block {o1 = x00; o2 = x01; o3 = x00; o4 = x00};
+const x00020000 = Block {o1 = x00; o2 = x02; o3 = x00; o4 = x00};
+const x00030000 = Block {o1 = x00; o2 = x03; o3 = x00; o4 = x00};
+const x00040000 = Block {o1 = x00; o2 = x04; o3 = x00; o4 = x00};
+const x00060000 = Block {o1 = x00; o2 = x06; o3 = x00; o4 = x00};
+const x00804021 = Block {o1 = x00; o2 = x80; o3 = x40; o4 = x21};
+const x00FF00FF = Block {o1 = x00; o2 = xFF; o3 = x00; o4 = xFF};
+const x0103050B = Block {o1 = x01; o2 = x03; o3 = x05; o4 = x0B};
+const x01030703 = Block {o1 = x01; o2 = x03; o3 = x07; o4 = x03};
+const x01030705 = Block {o1 = x01; o2 = x03; o3 = x07; o4 = x05};
+const x0103070F = Block {o1 = x01; o2 = x03; o3 = x07; o4 = x0F};
+const x02040801 = Block {o1 = x02; o2 = x04; o3 = x08; o4 = x01};
+const x0297AF6F = Block {o1 = x02; o2 = x97; o3 = xAF; o4 = x6F};
+const x07050301 = Block {o1 = x07; o2 = x05; o3 = x03; o4 = x01};
+const x07C72EAA = Block {o1 = x07; o2 = xC7; o3 = x2E; o4 = xAA};
+const x0A202020 = Block {o1 = x0A; o2 = x20; o3 = x20; o4 = x20};
+const x0AD67E20 = Block {o1 = x0A; o2 = xD6; o3 = x7E; o4 = x20};
+const x10000000 = Block {o1 = x10; o2 = x00; o3 = x00; o4 = x00};
+const x11A9D254 = Block {o1 = x11; o2 = xA9; o3 = xD2; o4 = x54};
+const x11AC46B8 = Block {o1 = x11; o2 = xAC; o3 = x46; o4 = xB8};
+const x1277A6D4 = Block {o1 = x12; o2 = x77; o3 = xA6; o4 = xD4};
+const x13647149 = Block {o1 = x13; o2 = x64; o3 = x71; o4 = x49};
+const x160EE9B5 = Block {o1 = x16; o2 = x0E; o3 = xE9; o4 = xB5};
+const x17065DBB = Block {o1 = x17; o2 = x06; o3 = x5D; o4 = xBB};
+const x1D10D8D3 = Block {o1 = x1D; o2 = x10; o3 = xD8; o4 = xD3};
+const x1D3B7760 = Block {o1 = x1D; o2 = x3B; o3 = x77; o4 = x60};
+const x1D9C9655 = Block {o1 = x1D; o2 = x9C; o3 = x96; o4 = x55};
+const x1F3F7FFF = Block {o1 = x1F; o2 = x3F; o3 = x7F; o4 = xFF};
+const x21D869BA = Block {o1 = x21; o2 = xD8; o3 = x69; o4 = xBA};
+const x24B66FB5 = Block {o1 = x24; o2 = xB6; o3 = x6F; o4 = xB5};
+const x270EEDAF = Block {o1 = x27; o2 = x0E; o3 = xED; o4 = xAF};
+const x277B4B25 = Block {o1 = x27; o2 = x7B; o3 = x4B; o4 = x25};
+const x2829040B = Block {o1 = x28; o2 = x29; o3 = x04; o4 = x0B};
+const x288FC786 = Block {o1 = x28; o2 = x8F; o3 = xC7; o4 = x86};
+const x28EAD8B3 = Block {o1 = x28; o2 = xEA; o3 = xD8; o4 = xB3};
+const x29907CD8 = Block {o1 = x29; o2 = x90; o3 = x7C; o4 = xD8};
+const x29C1485F = Block {o1 = x29; o2 = xC1; o3 = x48; o4 = x5F};
+const x29EEE96B = Block {o1 = x29; o2 = xEE; o3 = xE9; o4 = x6B};
+const x2A6091AE = Block {o1 = x2A; o2 = x60; o3 = x91; o4 = xAE};
+const x2BF8499A = Block {o1 = x2B; o2 = xF8; o3 = x49; o4 = x9A};
+const x2E80AC30 = Block {o1 = x2E; o2 = x80; o3 = xAC; o4 = x30};
+const x2FD76FFB = Block {o1 = x2F; o2 = xD7; o3 = x6F; o4 = xFB};
+const x30261492 = Block {o1 = x30; o2 = x26; o3 = x14; o4 = x92};
+const x303FF4AA = Block {o1 = x30; o2 = x3F; o3 = xF4; o4 = xAA};
+const x33D5A466 = Block {o1 = x33; o2 = xD5; o3 = xA4; o4 = x66};
+const x344925FC = Block {o1 = x34; o2 = x49; o3 = x25; o4 = xFC};
+const x34ACF886 = Block {o1 = x34; o2 = xAC; o3 = xF8; o4 = x86};
+const x3CD54DEB = Block {o1 = x3C; o2 = xD5; o3 = x4D; o4 = xEB};
+const x3CF3A7D2 = Block {o1 = x3C; o2 = xF3; o3 = xA7; o4 = xD2};
+const x3DD81AC6 = Block {o1 = x3D; o2 = xD8; o3 = x1A; o4 = xC6};
+const x3F6F7248 = Block {o1 = x3F; o2 = x6F; o3 = x72; o4 = x48};
+const x48B204D6 = Block {o1 = x48; o2 = xB2; o3 = x04; o4 = xD6};
+const x4A645A01 = Block {o1 = x4A; o2 = x64; o3 = x5A; o4 = x01};
+const x4C49AAE0 = Block {o1 = x4C; o2 = x49; o3 = xAA; o4 = xE0};
+const x4CE933E1 = Block {o1 = x4C; o2 = xE9; o3 = x33; o4 = xE1};
+const x4D53901A = Block {o1 = x4D; o2 = x53; o3 = x90; o4 = x1A};
+const x4DA124A1 = Block {o1 = x4D; o2 = xA1; o3 = x24; o4 = xA1};
+const x4F998E01 = Block {o1 = x4F; o2 = x99; o3 = x8E; o4 = x01};
+const x50DEC930 = Block {o1 = x50; o2 = xDE; o3 = xC9; o4 = x30};
+const x51AF3C1D = Block {o1 = x51; o2 = xAF; o3 = x3C; o4 = x1D};
+const x51EDE9C7 = Block {o1 = x51; o2 = xED; o3 = xE9; o4 = xC7};
+const x550D91CE = Block {o1 = x55; o2 = x0D; o3 = x91; o4 = xCE};
+const x55555555 = Block {o1 = x55; o2 = x55; o3 = x55; o4 = x55};
+const x55DD063F = Block {o1 = x55; o2 = xDD; o3 = x06; o4 = x3F};
+const x5834A585 = Block {o1 = x58; o2 = x34; o3 = xA5; o4 = x85};
+const x5A35D667 = Block {o1 = x5A; o2 = x35; o3 = xD6; o4 = x67};
+const x5BC02502 = Block {o1 = x5B; o2 = xC0; o3 = x25; o4 = x02};
+const x5CCA3239 = Block {o1 = x5C; o2 = xCA; o3 = x32; o4 = x39};
+const x5EBA06C2 = Block {o1 = x5E; o2 = xBA; o3 = x06; o4 = xC2};
+const xF0239DD5 = Block {o1 = xF0; o2 = x23; o3 = x9D; o4 = xD5};
+const x5F38EEF1 = Block {o1 = x5F; o2 = x38; o3 = xEE; o4 = xF1};
+const x613F8E2A = Block {o1 = x61; o2 = x3F; o3 = x8E; o4 = x2A};
+const x63C70DBA = Block {o1 = x63; o2 = xC7; o3 = x0D; o4 = xBA};
+const x6AD6E8A4 = Block {o1 = x6A; o2 = xD6; o3 = xE8; o4 = xA4};
+const x6AEBACF8 = Block {o1 = x6A; o2 = xEB; o3 = xAC; o4 = xF8};
+const x6D67E884 = Block {o1 = x6D; o2 = x67; o3 = xE8; o4 = x84};
+const x7050EC5E = Block {o1 = x70; o2 = x50; o3 = xEC; o4 = x5E};
+const x717153D5 = Block {o1 = x71; o2 = x71; o3 = x53; o4 = xD5};
+const x7201F4DC = Block {o1 = x72; o2 = x01; o3 = xF4; o4 = xDC};
+const x7397C9AE = Block {o1 = x73; o2 = x97; o3 = xC9; o4 = xAE};
+const x74B39176 = Block {o1 = x74; o2 = xB3; o3 = x91; o4 = x76};
+const x7783C51D = Block {o1 = x77; o2 = x83; o3 = xC5; o4 = x1D};
+const x7792F9D4 = Block {o1 = x77; o2 = x92; o3 = xF9; o4 = xD4};
+const x7BC180AB = Block {o1 = x7B; o2 = xC1; o3 = x80; o4 = xAB};
+const x7DB2D9F4 = Block {o1 = x7D; o2 = xB2; o3 = xD9; o4 = xF4};
+const x7DFEFBFF = Block {o1 = x7D; o2 = xFE; o3 = xFB; o4 = xFF};
+const x7F76A3B0 = Block {o1 = x7F; o2 = x76; o3 = xA3; o4 = xB0};
+const x7F839576 = Block {o1 = x7F; o2 = x83; o3 = x95; o4 = x76};
+const x7FFFFFF0 = Block {o1 = x7F; o2 = xFF; o3 = xFF; o4 = xF0};
+const x7FFFFFF1 = Block {o1 = x7F; o2 = xFF; o3 = xFF; o4 = xF1};
+const x7FFFFFFC = Block {o1 = x7F; o2 = xFF; o3 = xFF; o4 = xFC};
+const x7FFFFFFD = Block {o1 = x7F; o2 = xFF; o3 = xFF; o4 = xFD};
+const x80000000 = Block {o1 = x80; o2 = x00; o3 = x00; o4 = x00};
+const x80000002 = Block {o1 = x80; o2 = x00; o3 = x00; o4 = x02};
+const x800000C2 = Block {o1 = x80; o2 = x00; o3 = x00; o4 = xC2};
+const x80018000 = Block {o1 = x80; o2 = x01; o3 = x80; o4 = x00};
+const x80018001 = Block {o1 = x80; o2 = x01; o3 = x80; o4 = x01};
+const x80397302 = Block {o1 = x80; o2 = x39; o3 = x73; o4 = x02};
+const x81D10CA3 = Block {o1 = x81; o2 = xD1; o3 = x0C; o4 = xA3};
+const x89D635D7 = Block {o1 = x89; o2 = xD6; o3 = x35; o4 = xD7};
+const x8CE37709 = Block {o1 = x8C; o2 = xE3; o3 = x77; o4 = x09};
+const x8DC8BBDE = Block {o1 = x8D; o2 = xC8; o3 = xBB; o4 = xDE};
+const x9115A558 = Block {o1 = x91; o2 = x15; o3 = xA5; o4 = x58};
+const x91896CFA = Block {o1 = x91; o2 = x89; o3 = x6C; o4 = xFA};
+const x9372CDC6 = Block {o1 = x93; o2 = x72; o3 = xCD; o4 = xC6};
+const x98D1CC75 = Block {o1 = x98; o2 = xD1; o3 = xCC; o4 = x75};
+const x9D15C437 = Block {o1 = x9D; o2 = x15; o3 = xC4; o4 = x37};
+const x9DB15CF6 = Block {o1 = x9D; o2 = xB1; o3 = x5C; o4 = xF6};
+const x9E2E7B36 = Block {o1 = x9E; o2 = x2E; o3 = x7B; o4 = x36};
+const xA018C83B = Block {o1 = xA0; o2 = x18; o3 = xC8; o4 = x3B};
+const xA0B87B77 = Block {o1 = xA0; o2 = xB8; o3 = x7B; o4 = x77};
+const xA44AAAC0 = Block {o1 = xA4; o2 = x4A; o3 = xAA; o4 = xC0};
+const xA511987A = Block {o1 = xA5; o2 = x11; o3 = x98; o4 = x7A};
+const xA70FC148 = Block {o1 = xA7; o2 = x0F; o3 = xC1; o4 = x48};
+const xA93BD410 = Block {o1 = xA9; o2 = x3B; o3 = xD4; o4 = x10};
+const xAAAAAAAA = Block {o1 = xAA; o2 = xAA; o3 = xAA; o4 = xAA};
+const xAB00FFCD = Block {o1 = xAB; o2 = x00; o3 = xFF; o4 = xCD};
+const xAB01FCCD = Block {o1 = xAB; o2 = x01; o3 = xFC; o4 = xCD};
+const xAB6EED4A = Block {o1 = xAB; o2 = x6E; o3 = xED; o4 = x4A};
+const xABEEED6B = Block {o1 = xAB; o2 = xEE; o3 = xED; o4 = x6B};
+const xACBC13DD = Block {o1 = xAC; o2 = xBC; o3 = x13; o4 = xDD};
+const xB1CC1CC5 = Block {o1 = xB1; o2 = xCC; o3 = x1C; o4 = xC5};
+const xB8142629 = Block {o1 = xB8; o2 = x14; o3 = x26; o4 = x29};
+const xB99A62DE = Block {o1 = xB9; o2 = x9A; o3 = x62; o4 = xDE};
+const xBA92DB12 = Block {o1 = xBA; o2 = x92; o3 = xDB; o4 = x12};
+const xBBA57835 = Block {o1 = xBB; o2 = xA5; o3 = x78; o4 = x35};
+const xBE9F0917 = Block {o1 = xBE; o2 = x9F; o3 = x09; o4 = x17};
+const xBF2D7D85 = Block {o1 = xBF; o2 = x2D; o3 = x7D; o4 = x85};
+const xBFEF7FDF = Block {o1 = xBF; o2 = xEF; o3 = x7F; o4 = xDF};
+const xC1ED90DD = Block {o1 = xC1; o2 = xED; o3 = x90; o4 = xDD};
+const xC21A1846 = Block {o1 = xC2; o2 = x1A; o3 = x18; o4 = x46};
+const xC4EB1AEB = Block {o1 = xC4; o2 = xEB; o3 = x1A; o4 = xEB};
+const xC6B1317E = Block {o1 = xC6; o2 = xB1; o3 = x31; o4 = x7E};
+const xCBC865BA = Block {o1 = xCB; o2 = xC8; o3 = x65; o4 = xBA};
+const xCD959B46 = Block {o1 = xCD; o2 = x95; o3 = x9B; o4 = x46};
+const xD0482465 = Block {o1 = xD0; o2 = x48; o3 = x24; o4 = x65};
+const xD636250D = Block {o1 = xD6; o2 = x36; o3 = x25; o4 = x0D};
+const xD7843FDC = Block {o1 = xD7; o2 = x84; o3 = x3F; o4 = xDC};
+const xD78634BC = Block {o1 = xD7; o2 = x86; o3 = x34; o4 = xBC};
+const xD8804CA5 = Block {o1 = xD8; o2 = x80; o3 = x4C; o4 = xA5};
+const xDB79FBDC = Block {o1 = xDB; o2 = x79; o3 = xFB; o4 = xDC};
+const xDB9102B0 = Block {o1 = xDB; o2 = x91; o3 = x02; o4 = xB0};
+const xE0C08000 = Block {o1 = xE0; o2 = xC0; o3 = x80; o4 = x00};
+const xE6A12F07 = Block {o1 = xE6; o2 = xA1; o3 = x2F; o4 = x07};
+const xEB35B97F = Block {o1 = xEB; o2 = x35; o3 = xB9; o4 = x7F};
+const xF14D6E28 = Block {o1 = xF1; o2 = x4D; o3 = x6E; o4 = x28};
+const xF2EF3501 = Block {o1 = xF2; o2 = xEF; o3 = x35; o4 = x01};
+const xF6A09667 = Block {o1 = xF6; o2 = xA0; o3 = x96; o4 = x67};
+const xFD297DA4 = Block {o1 = xFD; o2 = x29; o3 = x7D; o4 = xA4};
+const xFDC1A8BA = Block {o1 = xFD; o2 = xC1; o3 = xA8; o4 = xBA};
+const xFE4E5BDD = Block {o1 = xFE; o2 = x4E; o3 = x5B; o4 = xDD};
+const xFECCAA6E = Block {o1 = xFE; o2 = xCC; o3 = xAA; o4 = x6E};
+const xFEFC07F0 = Block {o1 = xFE; o2 = xFC; o3 = x07; o4 = xF0};
+const xFF2D7DA5 = Block {o1 = xFF; o2 = x2D; o3 = x7D; o4 = xA5};
+const xFFEF0001 = Block {o1 = xFF; o2 = xEF; o3 = x00; o4 = x01};
+const xFFFF00FF = Block {o1 = xFF; o2 = xFF; o3 = x00; o4 = xFF};
+const xFFFFFF2D = Block {o1 = xFF; o2 = xFF; o3 = xFF; o4 = x2D};
+const xFFFFFF3A = Block {o1 = xFF; o2 = xFF; o3 = xFF; o4 = x3A};
+const xFFFFFFF0 = Block {o1 = xFF; o2 = xFF; o3 = xFF; o4 = xF0};
+const xFFFFFFF1 = Block {o1 = xFF; o2 = xFF; o3 = xFF; o4 = xF1};
+const xFFFFFFF4 = Block {o1 = xFF; o2 = xFF; o3 = xFF; o4 = xF4};
+const xFFFFFFF5 = Block {o1 = xFF; o2 = xFF; o3 = xFF; o4 = xF5};
+const xFFFFFFF7 = Block {o1 = xFF; o2 = xFF; o3 = xFF; o4 = xF7};
+const xFFFFFFF9 = Block {o1 = xFF; o2 = xFF; o3 = xFF; o4 = xF9};
+const xFFFFFFFA = Block {o1 = xFF; o2 = xFF; o3 = xFF; o4 = xFA};
+const xFFFFFFFB = Block {o1 = xFF; o2 = xFF; o3 = xFF; o4 = xFB};
+const xFFFFFFFC = Block {o1 = xFF; o2 = xFF; o3 = xFF; o4 = xFC};
+const xFFFFFFFD = Block {o1 = xFF; o2 = xFF; o3 = xFF; o4 = xFD};
+const xFFFFFFFE = Block {o1 = xFF; o2 = xFF; o3 = xFF; o4 = xFE};
+const xFFFFFFFF = Block {o1 = xFF; o2 = xFF; o3 = xFF; o4 = xFF};
+------------------------------------------------------------------------
+-- Definitions for the type Bit
+------------------------------------------------------------------------
+function notBit (x1: Bit) returns (x: Bit);
+let
+  x = if x1 = X0 then X1 else X0;
+tel;
+------------------------------------------------------------------------
+function andBit (x1, x2: Bit) returns (x: Bit);
+let
+  x = if x2 = X0 then X0 else x1;
+tel;
+------------------------------------------------------------------------
+function orBit (x1, x2: Bit) returns (x: Bit);
+let
+  x = if x2 = X0 then x1 else X1;
+tel;
+------------------------------------------------------------------------
+function xorBit (x1, x2: Bit) returns (x: Bit);
+let
+  x = if x2 = X0 then x1 else notBit (x1);
+tel;
+------------------------------------------------------------------------
+-- Definition for the type Octet
+------------------------------------------------------------------------
+function eqOctet (o1, o2: Octet) returns (res: bool);
+let
+  res =  ((o1.x1 = o2.x1) and (o1.x2 = o2.x2) and (o1.x3 = o2.x3) and
+         (o1.x4 = o2.x4) and (o1.x5 = o2.x5) and (o1.x6 = o2.x6)
+         and (o1.x7 = o2.x7) and (o1.x8 = o2.x8));
+tel;
+------------------------------------------------------------------------
+function andOctet (o1, o2: Octet) returns (o: Octet);
+let
+  o = Octet {x1 = andBit (o1.x1, o2.x1); x2 = andBit (o1.x2, o2.x2);
+             x3 = andBit (o1.x3, o2.x3); x4 = andBit (o1.x4, o2.x4);
+             x5 = andBit (o1.x5, o2.x5); x6 = andBit (o1.x6, o2.x6);
+             x7 = andBit (o1.x7, o2.x7); x8 = andBit (o1.x8, o2.x8)};
+tel;
+------------------------------------------------------------------------
+function orOctet (o1, o2: Octet) returns (o: Octet);
+let
+  o = Octet {x1 = orBit (o1.x1, o2.x1); x2 = orBit (o1.x2, o2.x2);
+             x3 = orBit (o1.x3, o2.x3); x4 = orBit (o1.x4, o2.x4);
+             x5 = orBit (o1.x5, o2.x5); x6 = orBit (o1.x6, o2.x6);
+             x7 = orBit (o1.x7, o2.x7); x8 = orBit (o1.x8, o2.x8)};
+tel;
+------------------------------------------------------------------------
+function xorOctet (o1, o2: Octet) returns (o: Octet);
+let
+  o = Octet {x1 = xorBit (o1.x1, o2.x1); x2 = xorBit (o1.x2, o2.x2);
+             x3 = xorBit (o1.x3, o2.x3); x4 = xorBit (o1.x4, o2.x4);
+             x5 = xorBit (o1.x5, o2.x5); x6 = xorBit (o1.x6, o2.x6);
+             x7 = xorBit (o1.x7, o2.x7); x8 = xorBit (o1.x8, o2.x8)};
+tel;
+------------------------------------------------------------------------
+function leftOctet1 (o1: Octet) returns (o: Octet);
+let
+  o = Octet {x1 = o1.x2; x2 = o1.x3; x3 = o1.x4; x4 = o1.x5;
+             x5 = o1.x6; x6 = o1.x7; x7 = o1.x8; x8 = X0};
+tel;
+------------------------------------------------------------------------
+function leftOctet2 (o1: Octet) returns (o: Octet);
+let
+  o = Octet {x1 = o1.x3; x2 = o1.x4; x3 = o1.x5; x4 = o1.x6;
+             x5 = o1.x7; x6 = o1.x8; x7 = X0; x8 = X0};
+tel;
+------------------------------------------------------------------------
+function leftOctet3 (o1: Octet) returns (o: Octet);
+let
+  o = Octet {x1 = o1.x4; x2 = o1.x5; x3 = o1.x6; x4 = o1.x7;
+             x5 = o1.x8; x6 = X0; x7 = X0; x8 = X0};
+tel;
+------------------------------------------------------------------------
+function leftOctet4 (o1: Octet) returns (o: Octet);
+let
+  o = Octet {x1 = o1.x5; x2 = o1.x6; x3 = o1.x7; x4 = o1.x8;
+             x5 = X0; x6 = X0; x7 = X0; x8 = X0};
+tel;
+------------------------------------------------------------------------
+function leftOctet5 (o1: Octet) returns (o: Octet);
+let
+  o = Octet {x1 = o1.x6; x2 = o1.x7; x3 = o1.x8; x4 = X0;
+             x5 = X0; x6 = X0; x7 = X0; x8 = X0};
+tel;
+------------------------------------------------------------------------
+function leftOctet6 (o1: Octet) returns (o: Octet);
+let
+  o = Octet {x1 = o1.x7; x2 = o1.x8; x3 = X0; x4 = X0;
+             x5 = X0; x6 = X0; x7 = X0; x8 = X0};
+tel;
+------------------------------------------------------------------------
+function leftOctet7 (o1: Octet) returns (o: Octet);
+let
+  o = Octet {x1 = o1.x8; x2 = X0; x3 = X0; x4 = X0;
+             x5 = X0; x6 = X0; x7 = X0; x8 = X0};
+tel;
+------------------------------------------------------------------------
+function rightOctet1 (o1: Octet) returns (o: Octet);
+let
+  o = Octet {x1 = X0; x2 = o1.x1; x3 = o1.x2; x4 = o1.x3;
+             x5 = o1.x4; x6 = o1.x5; x7 = o1.x6; x8 = o1.x7};
+tel;
+------------------------------------------------------------------------
+function rightOctet2 (o1: Octet) returns (o: Octet);
+let
+  o = Octet {x1 = X0; x2 = X0; x3 = o1.x1; x4 = o1.x2;
+             x5 = o1.x3; x6 = o1.x4; x7 = o1.x5; x8 = o1.x6};
+tel;
+------------------------------------------------------------------------
+function rightOctet3 (o1: Octet) returns (o: Octet);
+let
+  o = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = o1.x1;
+             x5 = o1.x2; x6 = o1.x3; x7 = o1.x4; x8 = o1.x5};
+tel;
+------------------------------------------------------------------------
+function rightOctet4 (o1: Octet) returns (o: Octet);
+let
+  o = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X0;
+             x5 = o1.x1; x6 = o1.x2; x7 = o1.x3; x8 = o1.x4};
+tel;
+------------------------------------------------------------------------
+function rightOctet5 (o1: Octet) returns (o: Octet);
+let
+  o = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X0;
+             x5 = X0; x6 = o1.x1; x7 = o1.x2; x8 = o1.x3};
+tel;
+------------------------------------------------------------------------
+function rightOctet6 (o1: Octet) returns (o: Octet);
+let
+  o = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X0;
+             x5 = X0; x6 = X0; x7 = o1.x1; x8 = o1.x2};
+tel;
+------------------------------------------------------------------------
+function rightOctet7 (o1: Octet) returns (o: Octet);
+let
+  o = Octet {x1 = X0; x2 = X0; x3 = X0; x4 = X0;
+             x5 = X0; x6 = X0; x7 = X0; x8 = o1.x1};
+tel;
+------------------------------------------------------------------------
+-- Definitions for the type OctetSum
+------------------------------------------------------------------------
+function addBit (x1, x2, x3: Bit) returns (x: Bit);
+let
+  x = xorBit (xorBit (x1, x2), x3);
+tel;
+------------------------------------------------------------------------
+function carBit (x1, x2, x3: Bit) returns (x: Bit);
+let
+  x = orBit (andBit (andBit (x1, x2), notBit (x3)),
+             andBit (orBit (x1, x2), x3));
+tel;
+------------------------------------------------------------------------
+function addOctetSum (o1, o2: Octet; x: Bit) returns (os: OctetSum);
+var x1, x11, x2, x22, x3, x33, x4, x44, x5, x55: Bit;
+    x6, x66, x7, x77, x8, x88: Bit;
+let
+  x1 = carBit (o1.x8, o2.x8, x);
+  x11 = addBit (o1.x8, o2.x8, x);
+  x2 =  carBit (o1.x7, o2.x7, x1);
+  x22 = addBit (o1.x7, o2.x7, x1);
+  x3 =  carBit (o1.x6, o2.x6, x2);
+  x33 = addBit (o1.x6, o2.x6, x2);
+  x4 =  carBit (o1.x5, o2.x5, x3);
+  x44 = addBit (o1.x5, o2.x5, x3);
+  x5 =  carBit (o1.x4, o2.x4, x4);
+  x55 = addBit (o1.x4, o2.x4, x4);
+  x6 =  carBit (o1.x3, o2.x3, x5);
+  x66 = addBit (o1.x3, o2.x3, x5);
+  x7 =  carBit (o1.x2, o2.x2, x6);
+  x77 = addBit (o1.x2, o2.x2, x6);
+  x8 =  carBit (o1.x1, o2.x1, x7);
+  x88 = addBit (o1.x1, o2.x1, x7);
+  os = OctetSum {x = x8; o = Octet {x1 = x88; x2 = x77; x3 = x66;
+                                    x4 = x55; x5 = x44; x6 = x33;
+                                    x7 = x22; x8 = x11}};
+tel;
+------------------------------------------------------------------------
+function dropCarryOctetSum (os: OctetSum) returns (o: Octet);
+let
+  o = os.o;
+tel;
+------------------------------------------------------------------------
+function addOctet (o1, o2: Octet) returns (o: Octet);
+let
+  o = dropCarryOctetSum (addOctetSum (o1, o2, X0));
+tel;
+------------------------------------------------------------------------
+-- Definitions of the type Half
+------------------------------------------------------------------------
+function mulOctetA (h1: Half; o1, o2: Octet) returns (h: Half);
+var o3: Octet; os: OctetSum;
+let
+  o3 = addOctet (h1.o1, o1);
+  os = addOctetSum (h1.o2, o2, X0);
+  h = if os.x = X0 then 
+        Half {o1 = o3; o2 = os.o} 
+      else Half {o1 = addOctet (o3, x01); o2 = os.o};
+tel;
+------------------------------------------------------------------------
+function mulOctet (o1, o2: Octet) returns (h: Half);
+var h1, h2, h3, h4, h5, h6, h7: Half;
+let
+  h1 = if o1.x1 = X0 then x0000 
+       else  mulOctetA (x0000, rightOctet1 (o2), leftOctet7 (o2));
+  h2 = if o1.x2 = X0 then h1 
+       else  mulOctetA (h1, rightOctet2 (o2), leftOctet6 (o2));
+  h3 = if o1.x3 = X0 then h2 
+       else  mulOctetA (h2, rightOctet3 (o2), leftOctet5 (o2));
+  h4 = if o1.x4 = X0 then h3 
+       else  mulOctetA (h3, rightOctet4 (o2), leftOctet4 (o2));
+  h5 = if o1.x5 = X0 then h4 
+       else  mulOctetA (h4, rightOctet5 (o2), leftOctet3 (o2));
+  h6 = if o1.x6 = X0 then h5 
+       else  mulOctetA (h5, rightOctet6 (o2), leftOctet2 (o2));
+  h7 = if o1.x7 = X0 then h6 
+       else  mulOctetA (h6, rightOctet7 (o2), leftOctet1 (o2));
+  h = if o1.x8 = X0 then h7 
+       else  mulOctetA (h7, x00, o2);
+tel;
+------------------------------------------------------------------------
+-- Definitions of the type HalfSum
+------------------------------------------------------------------------
+function addHalfSum (h1, h2: Half) returns (hs: HalfSum);
+var os, os1: OctetSum;
+let
+  os = addOctetSum (h1.o2, h2.o2, X0);
+  os1 = addOctetSum (h1.o1, h2.o1, os.x);
+  hs = HalfSum {x = os1.x; h = Half {o1 = os1.o; o2 = os.o}};
+tel;
+------------------------------------------------------------------------
+function dropCarryHalfSum (hs: HalfSum) returns (h: Half);
+let
+  h = hs.h;
+tel;
+------------------------------------------------------------------------
+function addHalf (h1, h2: Half) returns (h: Half);
+let
+  h = dropCarryHalfSum (addHalfSum (h1, h2));
+tel;
+------------------------------------------------------------------------
+function addHalfOctet (o1: Octet; h1: Half) returns (h: Half);
+let
+  h = addHalf (Half {o1 = x00; o2 = o1},  h1);
+tel;
+------------------------------------------------------------------------
+function addHalfOctets (o1, o2: Octet) returns (h: Half);
+let
+  h = addHalf (Half {o1 = x00; o2 = o1}, Half {o1 = x00; o2 = o2});
+tel;
+------------------------------------------------------------------------
+-- Definitions of the type Block
+------------------------------------------------------------------------
+function eqBlock (w1, w2: Block) returns (res: bool);
+let
+  res =  ((w1.o1 = w2.o2) and (w1.o2 = w2.o2) and (w1.o3 = w2.o3) and
+         (w1.o4 = w2.o4));
+tel;
+------------------------------------------------------------------------
+function andBlock (w1, w2: Block) returns (w: Block);
+let
+  w = Block {o1 = andOctet (w1.o1, w2.o1); o2 = andOctet (w1.o2, w2.o2);
+             o3 = andOctet (w1.o3, w2.o3); o4 = andOctet (w1.o4, w2.o4)};
+tel;
+------------------------------------------------------------------------
+function orBlock (w1, w2: Block) returns (w: Block);
+let
+  w = Block {o1 = orOctet (w1.o1, w2.o1); o2 = orOctet (w1.o2, w2.o2);
+             o3 = orOctet (w1.o3, w2.o3); o4 = orOctet (w1.o4, w2.o4)};
+tel;
+------------------------------------------------------------------------
+function xorBlock (w1, w2: Block) returns (w: Block);
+let
+  w = Block {o1 = xorOctet (w1.o1, w2.o1); o2 = xorOctet (w1.o2, w2.o2);
+             o3 = xorOctet (w1.o3, w2.o3); o4 = xorOctet (w1.o4, w2.o4)};
+tel;
+------------------------------------------------------------------------
+function HalfU (w: Block) returns (o1o2: Half);
+let
+  o1o2 = Half {o1 = w.o1; o2 = w.o2};
+tel;
+------------------------------------------------------------------------
+function HalfL (w: Block) returns (o3o4: Half);
+let
+  o3o4 = Half {o1 = w.o3; o2 = w.o4};
+tel;
+------------------------------------------------------------------------
+function mulHalf (h1, h2: Half) returns (w: Block);
+var h3, h4, h5, h6, h7, h8, h9: Half;
+let
+  h3 = mulOctet (h1.o1, h2.o1); 
+  h4 = mulOctet (h1.o1, h2.o2);
+  h5 = mulOctet (h1.o2, h2.o1);
+  h6 = mulOctet (h1.o2, h2.o2);
+  h7 = addHalfOctet (h4.o2, addHalfOctets (h5.o2, h6.o1));
+  h8 = addHalfOctet (h7.o1, addHalfOctet (h3.o2, 
+                                          addHalfOctets (h4.o1, h5.o1)));
+  h9 = addHalfOctets (h8.o1, h3.o1);
+  w = Block {o1 = h9.o2; o2 = h8.o2; o3 = h7.o2; o4 = h6.o2};
+tel;
+------------------------------------------------------------------------
+-- Definitions of the type BlockSum
+------------------------------------------------------------------------
+function addBlockSum (w1, w2 : Block) returns (ws: BlockSum);
+var os, os1, os2, os3: OctetSum;
+let
+  os = addOctetSum (w1.o4, w2.o4, X0);
+  os1 = addOctetSum (w1.o3, w2.o3, os.x);
+  os2 = addOctetSum (w1.o2, w2.o2, os1.x);
+  os3 = addOctetSum (w1.o1, w2.o1, os2.x);
+  ws = BlockSum {x = os3.x; w = Block {o1 = os3.o; o2 = os2.o; 
+                                       o3 = os1.o; o4 = os.o}};
+  
+tel;
+------------------------------------------------------------------------
+function dropCarryBlockSum (ws: BlockSum) returns (w: Block);
+let
+  w = ws.w;
+tel;
+------------------------------------------------------------------------
+function addBlock (w1, w2 : Block) returns (w: Block);
+let
+  w = dropCarryBlockSum (addBlockSum (w1, w2));
+tel;
+------------------------------------------------------------------------
+function addBlockHalf (h1: Half; w1: Block) returns (w: Block);
+let
+  w = addBlock (Block {o1 = x00; o2 = x00; o3 = h1.o1; o4 = h1.o2}, w1);
+tel;
+------------------------------------------------------------------------
+function addBlockHalves (h1, h2: Half) returns (w: Block);
+let
+  w = addBlock (Block {o1 = x00; o2 = x00; o3 = h1.o1; o4 = h1.o2},
+                Block {o1 = x00; o2 = x00; o3 = h2.o1; o4 = h2.o2});
+tel;
+------------------------------------------------------------------------
+-- Definitions of the type Pair
+------------------------------------------------------------------------
+function mulBlock (w1, w2: Block) returns (ww: Pair);
+var w11, w12, w21, w22, w3, w4, w5: Block;
+let
+  w11 = mulHalf (HalfU (w1), HalfU (w2));
+  w12 = mulHalf (HalfU (w1), HalfL (w2));
+  w21 = mulHalf (HalfL (w1), HalfU (w2));
+  w22 = mulHalf (HalfL (w1), HalfL (w2));
+  w3 = addBlockHalf (HalfL (w12),
+                     addBlockHalves (HalfL (w21), HalfU (w22)));
+  w4 = addBlockHalf (HalfU (w3), addBlockHalf (HalfL (w11), 
+                             addBlockHalves (HalfU (w12), HalfU(w21))));
+  w5 = addBlockHalves (HalfU (w4), HalfU (w11));
+  ww = Pair {w1 = Block {o1 = w5.o3; o2 = w5.o4; 
+                         o3 = w4.o3; o4 = w4.o4};
+             w2 = Block {o1 = w3.o3; o2 = w3.o4; 
+                         o3 = w22.o3; o4 = w22.o4}};
+tel;
+------------------------------------------------------------------------
+-- Definitions of (1) of MAA-specific cryptographic function
+------------------------------------------------------------------------
+function CYC (w1: Block) returns (w: Block);
+let
+  w = Block {o1 = Octet {x1 = w1.o1.x2; x2 = w1.o1.x3; x3 = w1.o1.x4;
+                         x4 = w1.o1.x5; x5 = w1.o1.x6; x6 = w1.o1.x7;
+                         x7 = w1.o1.x8; x8 = w1.o2.x1};
+             o2 = Octet {x1 = w1.o2.x2; x2 = w1.o2.x3; x3 = w1.o2.x4;
+                         x4 = w1.o2.x5; x5 = w1.o2.x6; x6 = w1.o2.x7;
+                         x7 = w1.o2.x8; x8 = w1.o3.x1};
+             o3 = Octet {x1 = w1.o3.x2; x2 = w1.o3.x3; x3 = w1.o3.x4;
+                         x4 = w1.o3.x5; x5 = w1.o3.x6; x6 = w1.o3.x7;
+                         x7 = w1.o3.x8; x8 = w1.o4.x1}; 
+             o4 = Octet {x1 = w1.o4.x2; x2 = w1.o4.x3; x3 = w1.o4.x4;
+                         x4 = w1.o4.x5; x5 = w1.o4.x6; x6 = w1.o4.x7;
+                         x7 = w1.o4.x8; x8 = w1.o1.x1}};
+tel;
+------------------------------------------------------------------------
+function FIX1 (w1: Block) returns (w: Block);
+let
+  w = andBlock (orBlock (w1, x02040801), xBFEF7FDF);
+tel;
+------------------------------------------------------------------------
+function FIX2 (w1: Block) returns (w: Block);
+let
+  w = andBlock (orBlock (w1, x00804021), x7DFEFBFF);
+tel;
+------------------------------------------------------------------------
+function needAjust (o: Octet) returns (b: bool);
+let
+  b = ((o = x00) or (o =xFF));
+tel;
+------------------------------------------------------------------------
+function adjustCode (o: Octet) returns (x: Bit);
+let
+  x = if needAjust (o) = true then X1 else X0;
+tel;
+------------------------------------------------------------------------
+function adjust (o1, o2: Octet) returns (o: Octet);
+let
+  o = if needAjust (o1) = true then xorOctet (o1, o2) else o1;
+tel;
+------------------------------------------------------------------------
+function PAT(w1, w2: Block) returns (o: Octet);
+let
+  o = Octet {x1 = adjustCode (w1.o1); x2 = adjustCode (w1.o2);
+             x3 = adjustCode (w1.o3); x4 = adjustCode (w1.o4); 
+             x5 = adjustCode (w2.o1); x6 = adjustCode (w2.o2);
+             x7 = adjustCode (w2.o3); x8 = adjustCode (w2.o4)};
+tel;
+------------------------------------------------------------------------
+function BYT (w1, w2: Block) returns (w, wp: Block);
+var opat: Octet;
+let
+  opat = PAT (w1, w2);
+  w = Block {o1 = adjust (w1.o1, rightOctet7 (opat));
+             o2 = adjust (w1.o2, rightOctet6 (opat));
+             o3 = adjust (w1.o3, rightOctet5 (opat));
+             o4 = adjust (w1.o4, rightOctet4 (opat))};
+  wp = Block {o1 = adjust (w2.o1, rightOctet3 (opat));
+              o2 = adjust (w2.o2, rightOctet2 (opat));
+              o3 = adjust (w2.o3, rightOctet1 (opat));
+              o4 = adjust (w2.o4, opat)};
+tel;
+------------------------------------------------------------------------
+function ADDC (w1, w2: Block) returns (ww: Pair);
+var ws: BlockSum;
+let
+  ws = addBlockSum (w1, w2);
+  ww = if ws.x = X0 then 
+         Pair {w1 = x00000000; w2 = ws.w}
+       else Pair {w1 = x00000001; w2 = ws.w};
+tel;
+------------------------------------------------------------------------
+-- Definitions (2) of MAA-specific cryptographic functions
+------------------------------------------------------------------------
+function MUL1 (w1, w2 : Block) returns (w: Block);
+var w1w2, w3w4: Pair;
+let
+  w1w2 = mulBlock (w1, w2);
+  w3w4 = ADDC (w1w2.w1, w1w2.w2);
+  w = addBlock (w3w4.w2, w3w4.w1);
+tel;
+------------------------------------------------------------------------
+function MUL2 (w1, w2 : Block) returns (w: Block);
+var w1w2, w3w4, w5w6: Pair; w3: Block;
+let
+  w1w2 = mulBlock (w1, w2);
+  w3w4 = ADDC (w1w2.w1, w1w2.w1);
+  w3 = addBlock (w3w4.w2, addBlock (w3w4.w1, w3w4.w1));
+  w5w6 = ADDC (w3, w1w2.w2);
+  w = addBlock (w5w6.w2, addBlock (w5w6.w1, w5w6.w1));
+tel;
+------------------------------------------------------------------------
+
+function MUL2A (w1, w2 : Block) returns (w: Block);
+var w1w2, w3w4: Pair; w3: Block;
+let
+  w1w2 = mulBlock (w1, w2);
+  w3 = addBlock (w1w2.w1, w1w2.w1);
+  w3w4 = ADDC (w3, w1w2.w2);
+  w = addBlock (w3w4.w2, addBlock (w3w4.w1, w3w4.w1));
+tel;
+------------------------------------------------------------------------
+-- Definitions (3) of MAA-specific cryptographic functions
+------------------------------------------------------------------------
+function squareHalf (h: Half) returns (w: Block);
+let
+  w = mulHalf (h, h);
+tel;
+------------------------------------------------------------------------
+function Q (o: Octet) returns (w: Block);
+let
+  w = squareHalf (addHalf (Half {o1 = x00; o2 = o}, x0001));
+tel;
+------------------------------------------------------------------------
+function preludeJ (J1 : Block) returns (J12, J14, J16, J18: Block;
+                                        J22, J24, J26, J28: Block);
+let
+   J12 = MUL1 (J1, J1);
+   J14 = MUL1 (J12, J12);
+   J16 = MUL1 (J12, J14);
+   J18 = MUL1 (J12, J16);
+   J22 = MUL2 (J1, J1);
+   J24 = MUL2 (J22, J22);
+   J26 = MUL2 (J22, J24);
+   J28 = MUL2 (J22, J26);
+tel;
+------------------------------------------------------------------------
+function preludeK (K1: Block) returns (K12, K14, K15, K17, K19: Block;
+                                       K22, K24, K25, K27, K29: Block);
+let
+   K12 = MUL1 (K1, K1);
+   K14 = MUL1 (K12, K12);
+   K15 = MUL1 (K1, K14);
+   K17 = MUL1 (K12, K15);
+   K19 = MUL1 (K12, K17);
+   K22 = MUL2 (K1, K1);
+   K24 = MUL2 (K22, K22);
+   K25 = MUL2 (K1, K24);
+   K27 = MUL2 (K22, K25);
+   K29 = MUL2 (K22, K27);
+tel;
+------------------------------------------------------------------------
+function preludeHJ (J14, J16, J18, J24, J26, J28: Block)
+                   returns (H4, H6, H8: Block);
+let
+   H4 = xorBlock (J14, J24);
+   H6 = xorBlock (J16, J26);
+   H8 = xorBlock (J18, J28);
+tel;
+------------------------------------------------------------------------
+function preludeHK (K15, K17, K19, K25, K27, K29: Block; P : Octet)
+                    returns (H0, H5, H7, H9: Block);
+let
+   H0 = xorBlock (K15, K25);
+   H5 = MUL2 (H0, Q (P));
+   H7 = xorBlock (K17, K27);
+   H9 = xorBlock (K19, K29);
+tel;
+------------------------------------------------------------------------
+function prelude (J, K: Block) returns (X, Y, V, W, S, T: Block);
+var P: Octet; J1, J12, J14, J16, J18, J22, J24, J26, J28: Block;
+    K1, K12, K14, K15, K17, K22, K24, K25, K27, K19, K29: Block;
+    H4, H0, H5, H6, H7, H8, H9: Block;
+let
+  (J1, K1) = BYT (J, K);
+  P = PAT (J, K);
+  (J12, J14, J16, J18, J22, J24, J26, J28) = preludeJ (J1);
+  (K12, K14, K15, K17, K19, K22, K24, K25, K27, K29) = preludeK (K1);
+  (H4, H6, H8) = preludeHJ (J14, J16, J18, J24, J26, J28);
+  (H0, H5, H7, H9) = preludeHK (K15, K17, K19, K25, K27, K29, P);
+  (X, Y) = BYT (H4, H5);
+  (V, W) = BYT (H6, H7);
+  (S, T) = BYT (H8, H9);
+tel;
+------------------------------------------------------------------------
+function mainLoop (X, Y, V, W, B: Block) returns (Xp, Yp, Vp: Block);
+var E: Block;
+let
+  Vp = CYC (V);
+  E = xorBlock (Vp,W);
+  Xp = MUL1  (xorBlock (X, B), FIX1 (addBlock (xorBlock (Y, B), E)));
+  Yp = MUL2A (xorBlock (Y, B), FIX2 (addBlock (xorBlock (X, B), E)));
+tel;
+------------------------------------------------------------------------
+function mainLoop2 (X0, Y0, V0, W, Z, B: Block) returns (Xp, Yp, Vp: Block);
+var X, V, Y: Block;
+let
+  (X, Y, V) = mainLoop (X0, Y0, V0, W, Z);
+  (Xp, Yp, Vp) = mainLoop (X, Y, V, W, B);
+tel;
+------------------------------------------------------------------------
+function coda (X, Y, V, W, S, T: Block) returns (Z: Block);
+var X1, X2, Y1, Y2, V1, V2: Block;
+let
+  (X1, Y1, V1) = mainLoop (X, Y, V, W, S);
+  (X2, Y2, V2) = mainLoop (X1, Y1, V1, W, T);
+  Z = xorBlock (X2,Y2);
+tel;
+------------------------------------------------------------------------
+-- Test vectors for checking MAA computations
+------------------------------------------------------------------------
+function CHECK_Table_1_2 () returns (res: bool);
+var U, L, Up, Lp, Upp, Lpp: Block;
+    t_mul1, t_mul2, t_mul2A, t_byt, t_pat: bool;
+let
+  -- this function checks the official test vectors given 
+  -- in [ISO 8730:1990] on the one
+  -- hand, and [ISO 8731-2:1992] and [Davies-Clayden-88] on the other hand
+  -- test vectors for function MUL1 - cf. Table 1 of [ISO 8731-2:1992]
+  t_mul1 = ((MUL1 (x0000000F, x0000000E) = x000000D2) and
+            (MUL1 (xFFFFFFF0, x0000000E) = xFFFFFF2D) and
+            (MUL1 (xFFFFFFF0, xFFFFFFF1) = x000000D2));
+  -- test vectors for function MUL2 - cf. Table 1 of [ISO 8731-2:1992]
+  t_mul2 = ((MUL2 (x0000000F, x0000000E) = x000000D2) and
+            (MUL2 (xFFFFFFF0, x0000000E) = xFFFFFF3A) and
+            (MUL2 (xFFFFFFF0, xFFFFFFF1) = x000000B6));
+  -- test vectors for function MUL2A - cf. Table 1 of [ISO 8731-2:1992]
+  t_mul2A = ((MUL2A (x0000000F, x0000000E) = x000000D2) and
+             (MUL2A (xFFFFFFF0, x0000000E) = xFFFFFF3A) and
+             (MUL2A (x7FFFFFF0, xFFFFFFF1) = x800000C2) and
+             (MUL2A (xFFFFFFF0, x7FFFFFF1) = x000000C4));
+  -- test vectors for function BYT - cf. Table 2 of [ISO 8731-2:1992]
+  (U, L) = BYT (x00000000, x00000000);
+  (Up, Lp) = BYT (xFFFF00FF, xFFFFFFFF);
+  (Upp, Lpp) = BYT (xAB00FFCD, xFFEF0001);
+  t_byt = (U = x0103070F) and (L = x1F3F7FFF) and (Up = xFEFC07F0) and
+          (Lp = xE0C08000) and (Upp = xAB01FCCD) and (Lpp = xF2EF3501);
+
+  -- test vectors for function PAT - cf. Table 2 of [ISO 8731-2:1992]
+  t_pat = (PAT(x00000000, x00000000) = xFF) and 
+          (PAT(xFFFF00FF, xFFFFFFFF) = xFF) and
+          (PAT(xAB00FFCD, xFFEF0001) = x6A);
+  --
+  res = t_mul1 and t_mul2  and t_mul2A and t_byt and t_pat;
+tel;
+------------------------------------------------------------------------
+function CHECK_Table_3 () returns (res: bool);
+var U, Up, Upp, L, Lp, Lpp: Block;
+    J1, J12, J14, J16, J18, J22, J24, J26, J28: Block;
+    K1, K12, K14, K15, K17, K19, K22, K24, K25, K27, K29: Block;
+    H0, H4, H5, H6, H7, H8, H9: Block; P: Octet;
+    t_J1i, t_J2i, t_Hi, t_K1i, t_K2i, t_Hi2, t_PAT, t_byt: bool; 
+let
+  J1 = x00000100;
+  K1 = x00000080;
+  P  = x01;
+  (J12, J14, J16, J18, J22, J24, J26, J28) = preludeJ (J1);
+  (K12, K14, K15, K17, K19, K22, K24, K25, K27, K29) = preludeK (K1);
+  (H4, H6, H8) = preludeHJ (J14, J16, J18, J24, J26, J28);
+  (H0, H5, H7, H9) = preludeHK (K15, K17, K19, K25, K27, K29, P);
+  -- test vectors for J1i values - cf. Table 3 of [ISO 8731-2:1992]
+  t_J1i = (J12 = x00010000) and (J14 = x00000001) and
+          (J16 = x00010000) and (J18 = x00000001);
+  -- test vectors for J2i values - cf. Table 3 of [ISO 8731-2:1992]
+  t_J2i = (J22 = x00010000) and (J24 = x00000002) and
+          (J26 = x00020000) and (J28 = x00000004);
+  -- test vectors for Hi values - cf. Table 3 of [ISO 8731-2:1992]
+  t_Hi = (H4 = x00000003) and (H6 = x00030000) and (H8 = x00000005);
+  -- test vectors for K1i values - cf. Table 3 of [ISO 8731-2:1992]
+  t_K1i = (K12 = x00004000) and (K14 = x10000000) and 
+          (K15 = x00000008) and (K17 = x00020000) and
+          (K19 = x80000000);
+  -- test vectors for K2i values - cf. Table 3 of [ISO 8731-2:1992]
+  t_K2i = (K22 = x00004000) and (K24 = x10000000) and
+          (K25 = x00000010) and (K27 = x00040000) and
+          (K29 = x00000002);
+  -- test vectors for Hi values - cf. Table 3 of [ISO 8731-2:1992]
+  t_Hi2 = (H0 = x00000018) and (Q (P) = x00000004) and
+          (H5 = x00000060) and (H7 = x00060000) and
+          (H9 = x80000002);
+  -- test vectors for function PAT - cf. Table 3 of [ISO 8731-2:1992]
+  t_PAT = (PAT (H4, H5) = xEE) and (PAT (H6, H7) = xBB)
+          and (PAT (H8, H9) = xE6);
+  -- test vectors for function BYT - logically inferred from Table 3
+  (U, L) = BYT (H4, H5);
+  (Up, Lp) = BYT (H6, H7);
+  (Upp, Lpp) = BYT (H8, H9);
+  t_byt = (U = x01030703) and (L = x1D3B7760) and (Up = x0103050B)
+          and (Lp = x17065DBB) and (Upp = x01030705) and
+          (Lpp = x80397302);
+   --
+   res = t_J1i and t_J2i and t_Hi and t_K1i and t_K2i and t_K2i and 
+         t_Hi2 and t_PAT and t_byt;
+tel;
+------------------------------------------------------------------------
+-- Test vectors (2) for checking MAA computations
+------------------------------------------------------------------------
+function CHECK_Table_4_m1 () returns (res: bool);
+var A, B, C, D, E, F, Fp, Fpp, G, Gp, Gpp, M, V, Vp: Block;
+    W, X0, X, Xp, Y0, Y, Yp, Z: Block;
+let
+-- test vectors for function Main Loop - cf. Table 4 of [ISO 8731-2:1992]
+  -- first single-Block message
+  -- input values given in Table 4
+  A  = x00000004;   -- fake "A" constant
+  B  = x00000001;   -- fake "B" constant
+  C  = xFFFFFFF7;   -- fake "C" constant
+  D  = xFFFFFFFB;   -- fake "D" constant
+  V  = x00000003;
+  W  = x00000003;
+  X0 = x00000002;
+  Y0 = x00000003;
+  M  = x00000005;
+  -- loop iteration described page 10 of [ISO 8731-2:1992]
+  Vp = CYC (V);            
+  E = xorBlock (Vp, W);    
+  X = xorBlock (X0, M);    
+  Y = xorBlock (Y0, M); 
+  F = addBlock (E, Y); 
+  G = addBlock (E, X);   
+  Fp = orBlock (F, A);    
+  Gp = orBlock (G, B);   
+  Fpp = andBlock (Fp, C);  
+  Gpp = andBlock (Gp, D); 
+  Xp = MUL1 (X, Fpp);  
+  Yp = MUL2A (Y, Gpp); 
+  Z = xorBlock (Xp, Yp); 
+  --
+  res = (Vp = x00000006) and (E = x00000005) and
+        (X  = x00000007) and (Y = x00000006) and
+        (F  = x0000000B) and (G = x0000000C) and
+        (Fp = x0000000F) and (Gp = x0000000D) and
+        (Fpp = x00000007) and  (Gpp = x00000009) and
+        (Xp = x00000031) and (Yp = x00000036) and
+        (Z = x00000007);
+tel;
+------------------------------------------------------------------------
+function CHECK_Table_4_m2 () returns (res: bool);
+var A, B, C, D, E, F, Fp, Fpp, G, Gp, Gpp, M, V, Vp: Block;
+    W, X0, X, Xp, Y0, Y, Yp, Z: Block;
+let
+-- test vectors for function Main Loop - cf. Table 4 of [ISO 8731-2:1992]
+  -- second single-Block message
+  -- input values given in Table 4
+  A  = x00000001;   -- fake "A" constant
+  B  = x00000004;   -- fake "B" constant
+  C  = xFFFFFFF9;   -- fake "C" constant
+  D  = xFFFFFFFC;   -- fake "D" constant
+  V  = x00000003;
+  W  = x00000003;
+  X0 = xFFFFFFFD;
+  Y0 = xFFFFFFFC;
+  M  = x00000001;
+  -- loop iteration described page 10 of [ISO 8731-2:1992]
+  Vp = CYC (V);           
+  E = xorBlock (Vp, W);   
+  X = xorBlock (X0, M);  
+  Y = xorBlock (Y0, M);   
+  F = addBlock (E, Y);    
+  G = addBlock (E, X);  
+  Fp = orBlock (F, A);    
+  Gp = orBlock (G, B);     
+  Fpp = andBlock (Fp, C);
+  Gpp = andBlock (Gp, D); 
+  Xp = MUL1 (X, Fpp);  
+  Yp = MUL2A (Y, Gpp);  
+  Z = xorBlock (Xp, Yp);
+  --
+  res = (Vp = x00000006) and (E = x00000005) and (X = xFFFFFFFC)
+        and (Y = xFFFFFFFD) and (F = x00000002) and (G = x00000001)
+        and (Fp = x00000003) and (Gp = x00000005) and (Fpp = x00000001)
+        and (Gpp = x00000004) and (Xp = xFFFFFFFC) and (Yp = xFFFFFFFA)
+        and (Z = x00000006);
+tel;
+------------------------------------------------------------------------
+function CHECK_Table_4_m3 () returns (res: bool);
+var A, B, C, D, E, F, Fp, Fpp, G, Gp, Gpp, M, V, Vp: Block;
+    W, X0, X, Xp, Y0, Y, Yp, Z: Block;
+let
+-- test vectors for function Main Loop - cf. Table 4 of [ISO 8731-2:1992]
+  -- third single-Block message
+  -- input values given in Table 4
+  A  = x00000001;   -- fake "A" constant
+  B  = x00000002;   -- fake "B" constant
+  C  = xFFFFFFFE;   -- fake "C" constant
+  D  = x7FFFFFFD;   -- fake "D" constant
+  V  = x00000007;
+  W  = x00000007;
+  X0 = xFFFFFFFD;
+  Y0 = xFFFFFFFC;
+  M  = x00000008;
+  -- loop iteration described page 10 of [ISO 8731-2:1992]
+  Vp = CYC (V);          
+  E = xorBlock (Vp, W);   
+  X = xorBlock (X0, M);   
+  Y = xorBlock (Y0, M);  
+  F = addBlock (E, Y);    
+  G = addBlock (E, X);   
+  Fp = orBlock (F, A);    
+  Gp = orBlock (G, B);    
+  Fpp = andBlock (Fp, C); 
+  Gpp = andBlock (Gp, D);  
+  Xp = MUL1 (X, Fpp);      
+  Yp = MUL2A (Y, Gpp);   
+  Z = xorBlock (Xp, Yp);
+  --
+  res = (Vp = x0000000E) and (E = x00000009) and (X = xFFFFFFF5)
+        and (Y = xFFFFFFF4) and (F = xFFFFFFFD) and (G = xFFFFFFFE)
+        and (Fp = xFFFFFFFD) and (Gp = xFFFFFFFE) and (Fpp = xFFFFFFFC)
+        and (Gpp = x7FFFFFFC) and (Xp = x0000001E) and (Yp = x0000001E)
+        and (Z = x00000000);
+tel;
+------------------------------------------------------------------------
+function CHECK_3_messages_m1 () returns (res: bool);
+var A, B, C, D, E, F, Fp, Fpp, G, Gp, Gpp, M, V, Vp: Block;
+    W, X0, X, Xp, Y0, Y, Yp, Z: Block;
+let
+-- three-Block message: first Block
+  -- input values given in Table 4
+  A  = x00000002;   -- fake "A" constant
+  B  = x00000001;   -- fake "B" constant
+  C  = xFFFFFFFB;   -- fake "C" constant
+  D  = xFFFFFFFB;   -- fake "D" constant
+  V  = x00000001;
+  W  = x00000001;
+  X0 = x00000001;
+  Y0 = x00000002;
+  M  = x00000000;
+  -- loop iteration described page 10 of [ISO 8731-2:1992]
+  Vp = CYC (V);   
+  E = xorBlock (Vp, W);   
+  X = xorBlock (X0, M); 
+  Y = xorBlock (Y0, M);  
+  F = addBlock (E, Y);   
+  G = addBlock (E, X);   
+  Fp = orBlock (F, A);  
+  Gp = orBlock (G, B);   
+  Fpp = andBlock (Fp, C);
+  Gpp = andBlock (Gp, D); 
+  Xp = MUL1 (X, Fpp);    
+  Yp = MUL2A (Y, Gpp);    
+  Z = xorBlock (Xp, Yp);  
+  --
+  res = (Vp = x00000002) and (E = x00000003) and (X = x00000001)
+        and (Y = x00000002) and (F = x00000005) and (G = x00000004)
+        and (Fp = x00000007) and (Gp = x00000005) and (Fpp = x00000003)
+        and (Gpp = x00000001) and (Xp = x00000003) and (Yp = x00000002)
+        and (Z = x00000001);
+tel;
+------------------------------------------------------------------------
+function CHECK_3_messages_m2 () returns (res: bool);
+var A, B, C, D, E, F, Fp, Fpp, G, Gp, Gpp, M, V, Vp: Block;
+    W, X0, X, Xp, Y0, Y, Yp, Z: Block;
+let
+-- three-Block message: second Block
+  -- input values given in Table 4
+  A  = x00000002;   -- fake "A" constant
+  B  = x00000001;   -- fake "B" constant
+  C  = xFFFFFFFB;   -- fake "C" constant
+  D  = xFFFFFFFB;   -- fake "D" constant
+  V  = x00000002;
+  W  = x00000001;
+  X0 = x00000003;
+  Y0 = x00000002;
+  M  = x00000001;
+  -- loop iteration described page 10 of [ISO 8731-2:1992]
+  Vp = CYC (V);   
+  E = xorBlock (Vp, W);  
+  X = xorBlock (X0, M);   
+  Y = xorBlock (Y0, M);  
+  F = addBlock (E, Y);  
+  G = addBlock (E, X);   
+  Fp = orBlock (F, A);    
+  Gp = orBlock (G, B);   
+  Fpp = andBlock (Fp, C);  
+  Gpp = andBlock (Gp, D); 
+  Xp = MUL1 (X, Fpp);     
+  Yp = MUL2A (Y, Gpp);     
+  Z = xorBlock (Xp, Yp);  
+  --
+  res = (Vp = x00000004) and (E = x00000005) and (X = x00000002)
+        and (Y = x00000003) and (F = x00000008) and (G = x00000007)
+        and (Fp = x0000000A) and (Gp = x00000007) and (Fpp = x0000000A)
+        and (Gpp = x00000003) and (Xp = x00000014) and (Yp = x00000009)
+        and (Z = x0000001D);
+tel;
+------------------------------------------------------------------------
+function CHECK_3_messages_m3 () returns (res: bool);
+var A, B, C, D, E, F, Fp, Fpp, G, Gp, Gpp, M, V, Vp: Block;
+    W, X0, X, Xp, Y0, Y, Yp, Z: Block;
+let
+-- three-Block message: third Block
+  -- input values given in Table 4
+  A  = x00000002;   -- fake "A" constant
+  B  = x00000001;   -- fake "B" constant
+  C  = xFFFFFFFB;   -- fake "C" constant
+  D  = xFFFFFFFB;   -- fake "D" constant
+  V  = x00000004;
+  W  = x00000001;
+  X0 = x00000014;
+  Y0 = x00000009;
+  M  = x00000002;
+  -- loop iteration described page 10 of [ISO 8731-2:1992]
+  Vp = CYC (Vp);         
+  E = xorBlock (Vp, W);  
+  X = xorBlock (X0, M);   
+  Y = xorBlock (Y0, M);
+  F = addBlock (E, Y); 
+  G = addBlock (E, X);   
+  Fp = orBlock (F, A);    
+  Gp = orBlock (G, B);    
+  Fpp = andBlock (Fp, C); 
+  Gpp = andBlock (Gp, D); 
+  Xp = MUL1 (X, Fpp);    
+  Yp = MUL2A (Y, Gpp);   
+  Z = xorBlock (Xp, Yp);  
+  --
+  res = (Vp = x00000008) and (E = x00000009) and (X = x00000016)
+        and (Y = x0000000B) and (F = x00000014) and (G = x0000001F)
+        and (Fp = x00000016) and (Gp = x0000001F) and (Fpp = x00000012)
+        and (Gpp = x0000001B) and (Xp = x0000018C) and (Yp = x00000129)
+        and (Z = x000000A5);
+tel;
+------------------------------------------------------------------------
+function CHECK_Annex_E () returns (res: bool);
+var A, B, C, D, E, F, Fp, Fpp, G, Gp, Gpp, M, V0, V: Block;
+    W, X0, X, Xp, Y0, Y, Yp: Block;
+let
+-- test vectors of Annex E.3.3 of [ISO 8730:1990]
+  A  = x02040801;   -- true "A" constant
+  B  = x00804021;   -- true "B" constant
+  C  = xBFEF7FDF;   -- true "C" constant
+  D  = x7DFEFBFF;   -- true "D" constant
+  X0 = x21D869BA;
+  Y0 = x7792F9D4;
+  V0 = xC4EB1AEB;
+  W  = xF6A09667;
+  M  = x0A202020;
+  -- loop iteration on the first Block M
+  V = CYC (V0);     
+  E = xorBlock (V, W);    
+  X = xorBlock (X0, M);  
+  Y = xorBlock (Y0, M); 
+  F = addBlock (E, Y);  
+  G = addBlock (E, X); 
+  Fp = orBlock (F, A); 
+  Gp = orBlock (G, B);  
+  Fpp = andBlock (Fp, C);
+  Gpp = andBlock (Gp, D);  
+  Xp = MUL1 (X, Fpp);   
+  Yp = MUL2A (Y, Gpp); 
+  -- 
+  res = (V = x89D635D7) and (E = x7F76A3B0) and (X = x2BF8499A)
+        and (Y = x7DB2D9F4) and (F = xFD297DA4) and (G = xAB6EED4A)
+        and (Fp = xFF2D7DA5) and (Gp = xABEEED6B) and (Fpp = xBF2D7D85)
+        and (Gpp = x29EEE96B) and (Xp = x0AD67E20) and (Yp = x30261492);
+tel;
+------------------------------------------------------------------------
+-- Test vectors (3) for checking MAA computations
+------------------------------------------------------------------------
+function CHECK_Table_5_v1 () returns (res: bool);
+var J, K, X0, X, Xp, Xpp, Xppp, Y0, Y, Yp, Ypp, Yppp: Block;
+    V0, V, Vp, Vpp, Vppp, W, S, T, Z, M1, M2: Block;
+let
+-- test vectors for the whole algorithm - cf. Table 5 of [ISO 8731-2:1992]
+  -- first column of Table 5
+  J  = x00FF00FF;
+  K  = x00000000;
+  M1 = x55555555;
+  M2 = xAAAAAAAA;
+  (X0, Y0, V0, W, S, T) = prelude (J, K);
+  -- 1st MainLoop iteration
+  (X, Y, V) = mainLoop (X0, Y0, V0, W, M1);
+  -- 2nd MainLoop iteration
+  (Xp, Yp, Vp) = mainLoop (X, Y, V, W, M2);
+  -- Coda: MainLoop iteration with S
+  (Xpp, Ypp, Vpp) = mainLoop (Xp, Yp, Vp, W, S);
+  -- Coda: MainLoop iteration with T
+  (Xppp, Yppp, Vppp) = mainLoop (Xpp, Ypp, Vpp, W, T);
+  Z  = xorBlock (Xppp,Yppp);
+  --
+  res = (PAT (J, K) = xFF) and (X0 = x4A645A01) and (Y0 = x50DEC930) and
+        (V0 = x5CCA3239) and (W = xFECCAA6E) and (S = x51EDE9C7) and
+        (T = x24B66FB5) and (X = x48B204D6) and (Y = x5834A585) and
+        (Xp = x4F998E01) and (Yp = xBE9F0917) and (Ypp = xDB9102B0) and 
+        (Xpp = x344925FC) and (Xppp = x277B4B25) and (Yppp = xD636250D)
+        and (Z = xF14D6E28);
+tel;
+------------------------------------------------------------------------
+function CHECK_Table_5_v2 () returns (res: bool);
+var J, K, X0, X, Xp, Xpp, Xppp, Y0, Y, Yp, Ypp, Yppp: Block;
+    V0, V, Vp, Vpp, Vppp, W, S, T, Z, M1, M2: Block;
+let
+-- test vectors for the whole algorithm - cf. Table 5 of [ISO 8731-2:1992]
+  -- second column of Table 5
+  J  = x00FF00FF;
+  K  = x00000000;
+  M1 = xAAAAAAAA;
+  M2 = x55555555;
+  (X0, Y0, V0, W, S, T) = prelude (J, K);
+  -- 1st MainLoop iteration
+  (X, Y, V) = mainLoop (X0, Y0, V0, W, M1);
+  -- 2nd MainLoop iteration
+  (Xp, Yp, Vp) = mainLoop (X, Y, V, W, M2);
+  -- Coda: MainLoop iteration with S
+  (Xpp, Ypp, Vpp) = mainLoop (Xp, Yp, Vp, W, S);
+  -- Coda: MainLoop iteration with T
+  (Xppp, Yppp, Vppp) = mainLoop (Xpp, Ypp, Vpp, W, T);
+  Z  = xorBlock (Xppp,Yppp);
+  --
+  res = (PAT (J, K) = xFF) and (X0 = x4A645A01) and (Y0 = x50DEC930)
+        and (V0 = x5CCA3239) and  (W = xFECCAA6E) and (S = x51EDE9C7)
+        and (T = x24B66FB5) and (X = x6AEBACF8) and (Y = x9DB15CF6)
+        and (Xp = x270EEDAF) and (Yp = xB8142629) and (Xpp = x29907CD8)
+        and (Ypp = xBA92DB12) and (Xppp = x28EAD8B3) and 
+        (Yppp = x81D10CA3) and (Z = xA93BD410);
+tel;
+------------------------------------------------------------------------
+function CHECK_Table_5_v3 () returns (res: bool);
+var J, K, X0, X, Xp, Xpp, Xppp, Y0, Y, Yp, Ypp, Yppp: Block;
+    V0, V, Vp, Vpp, Vppp, W, S, T, Z, M1, M2: Block;
+let
+-- test vectors for the whole algorithm - cf. Table 5 of [ISO 8731-2:1992]
+  -- third column of Table 5
+  J  = x55555555;
+  K  = x5A35D667;
+  M1 = x00000000;
+  M2 = xFFFFFFFF;
+  (X0, Y0, V0, W, S, T) = prelude (J, K);
+  -- 1st MainLoop iteration
+  (X, Y, V) = mainLoop (X0, Y0, V0, W, M1);
+  -- 2nd MainLoop iteration
+  (Xp, Yp, Vp) = mainLoop (X, Y, V, W, M2);
+  -- Coda: MainLoop iteration with S
+  (Xpp, Ypp, Vpp) = mainLoop (Xp, Yp, Vp, W, S);
+  -- Coda: MainLoop iteration with T
+  (Xppp, Yppp, Vppp) = mainLoop (Xpp, Ypp, Vpp, W, T);
+  Z  = xorBlock (Xppp,Yppp);
+  --
+  res = (PAT (J, K) = x00) and (X0 = x34ACF886) and (Y0 = x7397C9AE) and
+        (V0 = x7201F4DC) and (W = x2829040B) and (S = x9E2E7B36) and 
+        (T = x13647149) and (X = x2FD76FFB) and (Y = x550D91CE) and
+        (Xp = xA70FC148) and (Yp = x1D10D8D3) and (Xpp = xB1CC1CC5)
+        and (Ypp = x29C1485F) and (Xppp = x288FC786) and 
+        (Yppp = x9115A558) and (Z = xB99A62DE);
+tel;
+------------------------------------------------------------------------
+function CHECK_Table_5_v4 () returns (res: bool);
+var J, K, X0, X, Xp, Xpp, Xppp, Y0, Y, Yp, Ypp, Yppp: Block;
+    V0, V, Vp, Vpp, Vppp, W, S, T, Z, M1, M2: Block;
+let
+-- test vectors for the whole algorithm - cf. Table 5 of [ISO 8731-2:1992]
+  -- fourth column of Table 5
+  J = x55555555;
+  K = x5A35D667;
+  M1 = xFFFFFFFF;
+  M2 = x00000000;
+  (X0, Y0, V0, W, S, T) = prelude (J, K);
+  -- 1st MainLoop iteration
+  (X, Y, V) = mainLoop (X0, Y0, V0, W, M1);
+  -- 2nd MainLoop iteration
+  (Xp, Yp, Vp) = mainLoop (X, Y, V, W, M2);
+  -- Coda: MainLoop iteration with S
+  (Xpp, Ypp, Vpp) = mainLoop (Xp, Yp, Vp, W, S);
+  (Xppp, Yppp, Vppp) = mainLoop (Xpp, Ypp, Vpp, W, T);
+  Z = xorBlock (Xppp,Yppp);
+  --
+  res = (PAT (J, K) = x00) and (X0 = x34ACF886) and (Y0 = x7397C9AE) and 
+        (V0 = x7201F4DC) and (W = x2829040B) and (S = x9E2E7B36) and 
+        (T = x13647149) and (X = x8DC8BBDE) and (Y = xFE4E5BDD) and
+        (Xp = xCBC865BA) and (Yp = x0297AF6F) and (Xpp = x3CF3A7D2) and
+        (Ypp = x160EE9B5) and (Xppp = xD0482465) and (Yppp = x7050EC5E) and
+        (Z = xA018C83B);
+tel;
+------------------------------------------------------------------------
+function CHECK_PRELUDE_Annex_E33 () returns (res: bool);
+var J, K, X, Y, V, W, S, T: Block;
+let
+-- test vectors of Annex E.3.3 of [ISO 8730:1990]
+  J  = xE6A12F07;
+  K  = x9D15C437;
+  (X, Y, V, W, S, T) = prelude (J, K);
+  --
+  res = (X = x21D869BA) and (Y = x7792F9D4) and (V = xC4EB1AEB) and
+        (W = xF6A09667) and (S = x6D67E884) and (T = xA511987A);
+tel;
+------------------------------------------------------------------------
+-- Test vectors (4) for checking MAA computations
+------------------------------------------------------------------------
+function CHECK_ALL_ALGO_20m () returns (res: bool);
+var B, J, K, X0, Y0, V0, W, S, T: Block; tp: bool;
+    X, X1, X2, X3, X4, X5, X6, X7, X8, X9, X10, X11: Block;
+    X12, X13, X14, X15, X16, X17, X18, X19, X20, X21: Block;
+    Y, Y1, Y2, Y3, Y4, Y5, Y6, Y7, Y8, Y9, Y10, Y11: Block;
+    Y12, Y13, Y14, Y15, Y16, Y17, Y18, Y19, Y20, Y21: Block;
+    V, V1, V2, V3, V4, V5, V6, V7, V8, V9, V10, V11: Block;
+    V12, V13, V14, V15, V16, V17, V18, V19, V20, V21: Block;
+let
+  -- test vectors for the whole algorithm
+  J = x80018001;
+  K = x80018000;
+  -- test mentioned in Table 6 of [ISO 8731-2:1992]
+  -- iterations on a message containg 20 null Blocks
+  (X0, Y0, V0, W, S, T) = prelude (J, K);
+  B = x00000000;
+  -- 1st MainLoop iteration
+  (X, Y, V) = mainLoop (X0, Y0, V0, W, B);
+  -- 2nd MainLoop iteration
+  (X1, Y1, V1) = mainLoop (X, Y, V, W, B);
+  -- 3rd MainLoop iteration
+  (X2, Y2, V2) = mainLoop (X1, Y1, V1, W, B);
+  -- 4th MainLoop iteration
+  (X3, Y3, V3) = mainLoop (X2, Y2, V2, W, B);
+  -- 5th MainLoop iteration
+  (X4, Y4, V4) = mainLoop (X3, Y3, V3, W, B);
+  -- 6th MainLoop iteration
+  (X5, Y5, V5) = mainLoop (X4, Y4, V4, W, B);
+  -- 7th MainLoop iteration
+  (X6, Y6, V6) = mainLoop (X5, Y5, V5, W, B);
+  -- 8th MainLoop iteration
+  (X7, Y7, V7) = mainLoop (X6, Y6, V6, W, B);
+  -- 9th MainLoop iteration
+  (X8, Y8, V8) = mainLoop (X7, Y7, V7, W, B);
+  -- 10th MainLoop iteration
+  (X9, Y9, V9) = mainLoop (X8, Y8, V8, W, B);
+  -- 11th MainLoop iteration
+  (X10, Y10, V10) = mainLoop (X9, Y9, V9, W, B);
+  -- 12th MainLoop iteration
+  (X11, Y11, V11) = mainLoop (X10, Y10, V10, W, B);
+  -- 13th MainLoop iteration
+  (X12, Y12, V12) = mainLoop (X11, Y11, V11, W, B);
+  -- 14th MainLoop iteration
+  (X13, Y13, V13) = mainLoop (X12, Y12, V12, W, B);
+  -- 15th MainLoop iteration
+  (X14, Y14, V14) = mainLoop (X13, Y13, V13, W, B);
+  -- 16th MainLoop iteration
+  (X15, Y15, V15) = mainLoop (X14, Y14, V14, W, B);
+  -- 17th MainLoop iteration
+  (X16, Y16, V16) = mainLoop (X15, Y15, V15, W, B);
+  -- 18th MainLoop iteration
+  (X17, Y17, V17) = mainLoop (X16, Y16, V16, W, B);
+  -- 19th MainLoop iteration
+  (X18, Y18, V18) = mainLoop (X17, Y17, V17, W, B);
+  -- 20th MainLoop iteration
+  (X19, Y19, V19) = mainLoop (X18, Y18, V18, W, B);
+  -- Coda: MainLoop iteration with S
+  (X20, Y20, V20) = mainLoop (X19, Y19, V19, W, S);
+  -- Coda: MainLoop iteration with T
+  (X21, Y21, V21) = mainLoop (X20, Y20, V20, W, T);
+  --
+  tp = (X = x303FF4AA) and (Y = x1277A6D4) and (X1 = x55DD063F) and
+       (Y1 = x4C49AAE0) and (X2 = x51AF3C1D) and (Y2 = x5BC02502) and
+       (X3 = xA44AAAC0) and (Y3 = x63C70DBA) and (X4 = x4D53901A) and
+       (Y4 = x2E80AC30) and (X5 = x5F38EEF1) and (Y5 = x2A6091AE) and
+       (X6 = xF0239DD5) and (Y6 = x3DD81AC6) and (X7 = xEB35B97F) and
+       (Y7 = x9372CDC6) and (X8 = x4DA124A1) and (Y8 = xC6B1317E) and
+       (X9 = x7F839576) and (Y9 = x74B39176) and (X10 = x11A9D254) and
+       (Y10 = xD78634BC) and (X11 = xD8804CA5) and (Y11 = xFDC1A8BA) and
+       (X12 = x3F6F7248) and (Y12 = x11AC46B8) and (X13 = xACBC13DD) and
+       (Y13 = x33D5A466) and (X14 = x4CE933E1) and (Y14 = xC21A1846) and
+       (X15 = xC1ED90DD) and (Y15 = xCD959B46) and (X16 = x3CD54DEB) and
+       (Y16 = x613F8E2A) and (X17 = xBBA57835) and (Y17 = x07C72EAA) and
+       (X18 = xD7843FDC) and (Y18 = x6AD6E8A4) and (X19 = x5EBA06C2) and
+       (Y19 = x91896CFA) and (X20 = x1D9C9655) and (Y20 = x98D1CC75) and
+       (X21 = x7BC180AB) and (Y21 = xA0B87B77);
+  res = tp and (coda (X19, Y19, V19, W, S, T) = xDB79FBDC);
+tel;
+------------------------------------------------------------------------
+function CHECK () returns (v: bool);
+let
+ v = CHECK_Table_1_2 () and CHECK_Table_3 () and 
+     CHECK_Table_4_m1 () and CHECK_Table_4_m2 () and 
+     CHECK_Table_4_m3 () and CHECK_Annex_E () and 
+     CHECK_Table_5_v1 () and CHECK_Table_5_v2 () and CHECK_Table_5_v3 () 
+     and CHECK_Table_5_v4 () and CHECK_ALL_ALGO_20m ();
+tel;
+------------------------------------------------------------------------
+-- MAA nodes
+------------------------------------------------------------------------
+function get_mess_key (id: int) returns (message: Block; JK: Key);
+let
+  message = if (id = 1 or id = 22) then x55555555
+            else if (id = 2 or id = 12) then xAAAAAAAA
+            else if (id = 3 or id = 42) then x00000000
+            else xFFFFFFFF;
+  JK = if (id = 1 or id = 12 or id = 2 or id = 22) then
+         Key {K = x00000000; J = x00FF00FF}
+       else Key {K = x5A35D667; J = x55555555};
+tel;
+-----------------------------------------------------------------------
+-- compute the MAC
+node MAC (id: int; init: bool) 
+         returns (X, Y, V, W, S, T, Z: Block; n: int);
+var X0, Y0, V0: Block; 
+    KJ: Key; Mn: Block;
+let
+  (Mn, KJ) = get_mess_key (id);
+  n = 1 -> if init then 1
+           else if pre n = 256 then 0 
+           else pre n + 1;
+  -- initialisations
+  (X0, Y0, V0, W, S, T) = prelude (KJ.J, KJ.K);
+  -- mainloops
+  (X, Y, V) = mainLoop (X0, Y0, V0, W, Mn) -> 
+            if init then 
+              mainLoop (X0, Y0, V0, W, Mn)
+            else if n = 0 then
+              -- mode of operations
+              mainLoop2 (X0, Y0, V0, W, pre Z, Mn)
+            else mainLoop (pre X, pre Y, pre V, W, Mn);
+  -- coda
+  Z = coda (X, Y, V, W, S, T);
+tel;
+------------------------------------------------------------------------
+node oracle (id: int; init: bool; X, Y, Z: Block; n: int) 
+             returns (res: bool);
+let
+  res = true -> 
+   ((id = 1 and init and X = x48B204D6 and Y = x5834A585) or
+    (id = 12 and not init and X = x4F998E01 and Y = xBE9F0917) or
+    (id = 12 and Z = xF14D6E28) or
+    (id = 2 and init and X = x6AEBACF8 and Y = x9DB15CF6) or
+    (id = 22 and not init and X = x270EEDAF and Y = xB8142629) or
+    (id = 22 and Z = xA93BD410) or
+    (id = 3 and init and X = x2FD76FFB and Y = x550D91CE) or
+    (id = 32 and not init and X = xA70FC148 and Y = x1D10D8D3) or  
+    (id = 32 and Z = xB99A62DE) or
+    (id = 4 and init and X = x8DC8BBDE and Y = xFE4E5BDD) or
+    (id = 42 and not init and X = xCBC865BA and Y = x0297AF6F) or 
+    (id = 42 and Z = xA018C83B) 
+    and CHECK () = true);
+tel;
+------------------------------------------------------------------------

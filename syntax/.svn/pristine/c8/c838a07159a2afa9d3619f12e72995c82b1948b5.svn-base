@@ -1,0 +1,879 @@
+/*************************************************************/
+/*                                                           */
+/*                                                           */
+/*  This program has been translated from pp_trees.pl1       */
+/*  on Tuesday the twenty-seventh of May, 1986, at 10:19:18, */
+/*  on the Multics system at INRIA,                          */
+/*  by the release 3.3g PL1_C translator of INRIA,           */
+/*         developped by the "Langages et Traducteurs" team, */
+/*         using the SYNTAX (*), FNC and Paradis systems.    */
+/*                                                           */
+/*                                                           */
+/*************************************************************/
+/* (*) SYNTAX is a trademark of INRIA.                       */
+/*************************************************************/
+
+
+
+
+
+
+/* ********************************************************
+   *                                                      *
+   *                                                      *
+   * Copyright (c) 1983 by Institut National de Recherche *
+   *                    en Informatique et en Automatique *
+   *                                                      *
+   *                                                      *
+   ******************************************************** */
+
+
+
+
+/* ********************************************************
+   *                                                      *
+   *     Produit de l'equipe Langages et Traducteurs.     *
+   *                                                      *
+   ******************************************************** */
+
+
+
+/*  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * */
+/*									*/
+/*									*/
+/* Mise en page et impression d'un arbre quelconque.			*/
+/* -------------------------------------------------			*/
+/*									*/
+/* L'arbre est imprime sous forme de lés, chaque lé ayant pour largeur	*/
+/* la valeur de la variable "page_width".  La distance minimale entre	*/
+/* deux noeuds contigus sur une meme ligne est donnee par la valeur de	*/
+/* "min_dist".  La distance minimale entre deux sous-arbres cousins est */
+/* donnee par la valeur de "min_dist_on_subtrees".  Les valeurs par	*/
+/* defaut de ces trois variables sont respectivement 132, 3 et min_dist.*/
+/*									*/
+/*  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * */
+
+
+
+
+/*
+  
+Version du Mardi 20 janvier 2004 (Philippe Deschamp):
+Adaptation à Linux 64 bits.
+
+Version du Mercredi 7 mai 2003 (Philippe Deschamp):
+Adaptation à SGI (64 bits).
+
+Version du Ven 22 Nov 1996 17:15:23 (PB)
+Adaptation a LINUX.
+
+Version du 2 Juin 1986 (Philippe Deschamp):
+Deallocations et utilisation d'un drapeau SIMPLE.
+  
+Version du 30 Mai 1986 (Philippe Deschamp):
+Allocations optimisees.
+  
+Version du 27 Mai 1986 (Philippe Deschamp):
+Traduction en C.
+  
+Version du 25 Octobre 1984 (Ph. Deschamp):
+implantation de l'option "abbrev-mode".
+  
+Version du 16 Octobre 1984 (Ph. Deschamp):
+correction d'une bogue sur la mise en place des barres horizontales, qui
+faisait que l'on pouvait les oublier dans certains cas;
+renommage de nombreuses variables pour les rendre plus courtes;
+suppression du parametre "position" de la procedure "place";
+positionnement effectif des sous-arbres le plus a gauche possible;
+optimisations diverses.
+  
+Version du 10 Novembre 1983 (Ph. Deschamp):
+modification du profil de pp_trees, suppressions des entries;
+ajout du parametre "switches", qui devrait permettre des extensions futures
+sans douleur;
+tentative de compatibilite avec du Pascal.
+  
+Version du 8 Fevrier 1983 (Ph. Deschamp):
+les positions sont comprises entre min_bin_35 et max_bin_35;
+ajout de l'attribut "unaligned" pour certains types de donnees;
+installation de l'entree "with_min_dist_on_subtrees".
+  
+Version originale de Ph. Deschamp.
+  
+*/
+
+
+#include        "sxcommon.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+char WHAT_SXPPTREE[] = "@(#)SYNTAX - $Id$" WHAT_DEBUG;
+
+#define USER_PTR	int*		/* Any pointer */
+
+#undef VOID
+#define VOID	void
+
+#undef BOOLEAN
+#define BOOLEAN	char
+#undef	TRUE
+#define TRUE	(BOOLEAN) 1
+#undef	FALSE
+#define FALSE	(BOOLEAN) 0
+
+struct positions {
+    long	left, middle, right;
+    long	l_son_middle, r_son_middle;
+};
+struct informations_on_user_node {
+    USER_PTR	user_node;
+    int		key_start;
+    int		key_length;
+    int		sons_number;
+};
+struct node {
+    struct node		*next, *l_son_node;
+    struct informations_on_user_node	info;
+    struct positions	pos;
+};
+struct line {
+    struct line		*next;
+    struct node		*first, *last;
+    long	h_bar_ovfl;
+};
+static int	max_level;
+/* nb of levels in the tree when in
+					   abbrev-mode */
+
+
+static int	page_length;
+/* nb of lines in the page when in
+					   abbrev-mode */
+
+
+static struct line	*lines = {NULL};
+static long	minpos, maxpos;
+static struct {
+	   long		min_dist;
+	   long		min_dist_on_subtrees;
+	   long		page_width;
+	   long		(*get_key_length) ();
+	   USER_PTR	(*get_left_son) ();
+	   USER_PTR	(*get_right_brother) ();
+	   long		(*get_sons_number) ();
+	   VOID		(*print_from_arrows) ();
+	   VOID		(*print_horizontal_bar) ();
+	   VOID		(*print_key) ();
+	   VOID		(*print_to_arrows) ();
+	   VOID		(*put_blanks) ();
+	   VOID		(*put_page) ();
+	   VOID		(*put_skip) ();
+	   BOOLEAN	abbrev_mode /* on if the tree may be abbreviated */ ;
+       }	args;
+
+
+
+static VOID	shift_subtree (node, s)
+    register struct node	*node;
+    register long	s;
+{
+    register struct node	*son;
+    register int	count;
+
+    node->pos.left += s, node->pos.middle += s, node->pos.right += s;
+    node->pos.l_son_middle += s, node->pos.r_son_middle += s;
+    son = node->l_son_node;
+
+    if (!args.abbrev_mode || son != NULL)
+	for (count = node->info.sons_number; count-- > 0; ) {
+	    shift_subtree (son, s);
+	    son = son->next;
+	}
+}
+
+
+
+static VOID	init_h_bar_ovfl ()
+{
+    register struct line	*line;
+
+    for (line = lines; line != NULL; line = line->next) {
+	line->h_bar_ovfl = 0;
+    }
+}
+
+
+
+static VOID	min_max_pos ()
+{
+    register struct line	*line;
+    register long	min, max;
+
+    line = lines;
+    min = line->first->pos.left, max = line->last->pos.right;
+    line->last = NULL;
+
+    while ((line = line->next) != NULL) {
+	register long	val;
+
+	if ((val = line->first->pos.left) < min)
+	    min = val;
+
+	if ((val = line->last->pos.right) > max)
+	    max = val;
+
+	line->last = NULL;
+    }
+
+    minpos = min, maxpos = max;
+}
+
+
+
+
+#include <setjmp.h>
+
+static jmp_buf	no_space;
+
+
+
+
+#ifdef	SIMPLE
+
+static char	*allocate (size)
+    int		size;
+{
+    register char	*result;
+
+    if ((result = (char*) malloc (size)) == NULL)
+	longjmp (no_space, TRUE);
+
+    return result;
+}
+
+
+
+
+#	define	node_dispose(node)	free (node)
+#	define	line_dispose(line)	free (line)
+
+static VOID	lines_destroy (first_line)
+    struct line		*first_line;
+{
+    register struct node	*node, *next_node;
+    register struct line	*line, *next_line;
+
+    for (line = first_line; line != NULL; line = next_line) {
+	next_line = line->next;
+
+	for (node = line->first; node != NULL; node = next_node) {
+	    next_node = node->next;
+	    node_dispose (node);
+	}
+
+	line_dispose (line);
+    }
+}
+
+
+
+
+#	define	deallocate_areas()	0
+
+#else
+
+#	define	NBLINES	10		/* number of lines allocated together */
+#	define	NBNODES	100		/* number of nodes allocated together */
+
+static struct line_area {
+	   struct line_area	*next;
+	   struct line	array [NBLINES];
+       }	*first_line_area;
+static struct node_area {
+	   struct node_area	*next;
+	   struct node	array [NBLINES];
+       }	*first_node_area;
+
+
+
+static char	*allocate (size)
+    unsigned long	size;
+{
+    static struct line_area	*line_area;
+    static struct line	*last_line;
+    static struct node_area	*node_area;
+    static struct node	*last_node;
+
+    switch (size) {
+    case sizeof (struct line):
+	if (first_line_area == NULL || last_line == line_area->array) {
+	    register struct line_area	*new;
+
+	    new = (struct line_area*) allocate (sizeof (struct line_area));
+	    new->next = NULL;
+
+	    if (first_line_area == NULL)
+		first_line_area = new;
+	    else
+		line_area->next = new;
+
+	    last_line = &((line_area = new)->array [NBLINES]);
+	}
+
+	return (char*) --last_line;
+
+    case sizeof (struct node):
+	if (first_node_area == NULL || last_node == node_area->array) {
+	    register struct node_area	*new;
+
+	    new = (struct node_area*) allocate (sizeof (struct node_area));
+	    new->next = NULL;
+
+	    if (first_node_area == NULL)
+		first_node_area = new;
+	    else
+		node_area->next = new;
+
+	    last_node = &((node_area = new)->array [NBLINES]);
+	}
+
+	return (char*) --last_node;
+
+    default:
+	{
+	    register char	*result;
+
+	    if ((result = (char*) malloc (size)) == NULL)
+		longjmp (no_space, TRUE);
+
+	    return result;
+	}
+    }
+}
+
+
+
+
+#	define	node_dispose(node)	
+#	define	line_dispose(line)	
+#	define	lines_destroy(line)	
+
+
+static VOID	deallocate_areas ()
+{
+    register struct line_area	*line_area;
+    register struct node_area	*node_area;
+
+    for (line_area = first_line_area; line_area != NULL; line_area = line_area->next)
+	free (line_area);
+
+    first_line_area = NULL;
+
+    for (node_area = first_node_area; node_area != NULL; node_area = node_area->next)
+	free (node_area);
+
+    first_node_area = NULL;
+}
+
+
+
+
+#endif	/* SIMPLE */
+
+
+
+static VOID	trim_nodes (node)
+    register struct node	*node;
+{
+    while (node != NULL) {
+	node->l_son_node = NULL;
+	node = node->next;
+    }
+}
+
+
+
+static VOID	trim_lines (line, level)
+    register struct line	*line;
+    register int	level;
+{
+    while (level < max_level && line != NULL) {
+	line = line->next;
+	level++;
+    }
+
+    if (line != NULL) {
+	trim_nodes (line->first);
+	lines_destroy (line->next);
+	line->next = NULL;
+    }
+}
+
+
+
+static VOID	place (user_ptr, line_ptr, level, is_left_son)
+    USER_PTR	user_ptr;
+    struct line		**line_ptr;
+    int		level;
+    BOOLEAN	is_left_son;
+{
+    register struct line	*line;
+    register struct node	*node;
+    register long	left_pos;
+    int		current_size, cursize, half_size;
+    BOOLEAN	first_node_on_this_line_p;
+
+    half_size = (cursize = (current_size = args.get_key_length (user_ptr)) - 1) >> 1;
+
+/* On cree un nouveau node vers user_ptr */
+
+    node = (struct node*) allocate (sizeof (struct node));
+    node->next = node->l_son_node = NULL;
+    node->info.user_node = user_ptr;
+    node->info.key_start = 1;
+    node->info.key_length = current_size;
+    node->info.sons_number = args.get_sons_number (user_ptr);
+    first_node_on_this_line_p = (*line_ptr) == NULL;
+
+    if (first_node_on_this_line_p) {
+	(*line_ptr) = line = (struct line*) allocate (sizeof (struct line));
+	line->next = NULL;
+	line->first = node;
+	line->h_bar_ovfl = 0;
+	left_pos = 0;
+    }
+    else {
+	line = *line_ptr;
+	line->last->next = node;
+	left_pos = line->last->pos.right + 1;
+
+	{
+	    register int	val = is_left_son ? args.min_dist_on_subtrees : args.min_dist;
+
+	    line->h_bar_ovfl += val;
+	    left_pos += val;
+	}
+    }
+
+    line->last = node;
+    line->h_bar_ovfl += current_size;
+
+    if (args.abbrev_mode && line->h_bar_ovfl > args.page_width)
+	max_level = level;
+
+
+/* On ajuste la position en fonction des positions des fils eventuels */
+
+    if (node->info.sons_number == 0 || (args.abbrev_mode && level >= max_level)) {
+	node->pos.left = left_pos;
+	node->pos.right = left_pos + cursize;
+	node->pos.middle = node->pos.l_son_middle = node->pos.r_son_middle = left_pos + half_size;
+    }
+    else {
+	BOOLEAN		left_son_first_on_his_line_p = line->next == NULL;
+
+	level++;
+
+	{
+	    register USER_PTR	son;
+	    register int	count;
+
+	    place (son = args.get_left_son (user_ptr), &(line->next), level, TRUE);
+	    node->l_son_node = line->next->last;
+
+	    for (count = node->info.sons_number; --count > 0; )
+		place (son = args.get_right_brother (son), &(line->next), level, FALSE);
+	}
+
+
+/* On le place au milieu de ses fils, en les recadrant si necessaire */
+
+	node->pos.l_son_middle = node->l_son_node->pos.middle;
+	node->pos.r_son_middle = line->next->last->pos.middle;
+	node->pos.middle = (node->pos.l_son_middle + node->pos.r_son_middle + 1) >> 1;
+	node->pos.left = node->pos.middle - half_size;
+	node->pos.right = node->pos.left + cursize;
+
+	if (!first_node_on_this_line_p) {
+	    register long	shift_q = left_pos - node->pos.left;
+
+	    if (shift_q != 0)
+		if (shift_q > 0 || left_son_first_on_his_line_p)
+		    shift_subtree (node, shift_q);
+	}
+    }
+}
+
+
+
+static VOID	replace (line, level, is_left_son, first_time_on_this_level)
+    struct line		*line;
+    int		level;
+    BOOLEAN	is_left_son;
+    BOOLEAN	first_time_on_this_level;
+{
+    struct node		*node;
+    long	left_pos;
+    int		sons_nb;
+    int		cursize, half_size;
+    BOOLEAN	first_node_on_this_line_p;
+
+    first_node_on_this_line_p = line->last == NULL;
+
+    if (first_node_on_this_line_p) {
+	node = line->first;
+	left_pos = 0;
+    }
+    else {
+	node = line->last->next;
+	left_pos = line->last->pos.right + 1 + (is_left_son ? args.min_dist_on_subtrees : args.min_dist);
+    }
+
+    line->last = node;
+
+/* On ajuste la position en fonction des positions des fils eventuels */
+
+    sons_nb = node->info.sons_number;
+
+    if (sons_nb == 0 || level == max_level) {
+	if (level == max_level)
+	    if ((first_time_on_this_level && sons_nb != 0) || (!first_time_on_this_level && sons_nb == 0)) {
+		node->info.key_length = args.get_key_length (node->info.user_node);
+		node->info.key_start = -1;
+	    }
+
+	half_size = (cursize = node->info.key_length - 1) >> 1;
+	node->pos.left = left_pos;
+	node->pos.right = left_pos + cursize;
+	node->pos.middle = node->pos.l_son_middle = node->pos.r_son_middle = left_pos + half_size;
+    }
+    else {
+	BOOLEAN		left_son_first_on_his_line_p = line->next->last == NULL;
+
+	level++;
+
+	{
+	    register int	count;
+
+	    replace (line->next, level, TRUE, first_time_on_this_level);
+
+	    for (count = sons_nb; --count > 0; )
+		replace (line->next, level, FALSE, first_time_on_this_level);
+	}
+
+
+/* On le place au milieu de ses fils, en les recadrant si necessaire */
+
+	node->pos.l_son_middle = node->l_son_node->pos.middle;
+	node->pos.r_son_middle = line->next->last->pos.middle;
+
+	{
+	    register long	val = ((node->pos.l_son_middle + node->pos.r_son_middle + 1) >> 1) - node->pos.middle;
+
+	    node->pos.left += val, node->pos.middle += val, node->pos.right += val;
+	}
+
+	if (!first_node_on_this_line_p) {
+	    register long	shift_q = left_pos - node->pos.left;
+
+	    if (shift_q != 0)
+		if (shift_q > 0 || left_son_first_on_his_line_p)
+		    shift_subtree (node, shift_q);
+	}
+    }
+}
+
+
+
+static VOID	abbreviate_tree ()
+{
+    register BOOLEAN	done;
+    /* is the tree abbreviated enough */
+    register BOOLEAN	first_time_on_this_level;
+
+    /* we recompute each level
+						   twice if necessary */
+
+    trim_lines (lines, 1);
+    /* as max_level may have been updated */
+    min_max_pos ();
+    args.put_page ();
+    /* from now on, get abbreviations */
+    first_time_on_this_level = TRUE;
+    done = max_level <= 1 || maxpos - minpos < args.page_width;
+
+    while (!done) {
+	replace (lines, 1, TRUE, first_time_on_this_level);
+	trim_lines (lines, 1);
+	min_max_pos ();
+
+	if (!(done = max_level <= 1 || maxpos - minpos < args.page_width)) {
+	    if ((first_time_on_this_level = !first_time_on_this_level))
+		max_level--;
+	}
+    }
+
+    maxpos = minpos + args.page_width - 1;
+}
+
+
+
+static long	start_pos, next_stripe, current_pos;
+static int	line_no;
+/* number of lines output when in
+					   abbrev-mode */
+
+
+static struct line	*line;
+static struct string {
+	   char		*text;
+	   int	length;
+       }	from_arrows, to_arrows, horizontal_bar;
+
+
+
+static VOID	catenate_copy (string, character, number)
+    struct string	*string;
+    register char	character;
+    register long	number;
+{
+    register char	*str;
+
+    str = &(string->text [string->length]);
+    string->length += number;
+
+    while (number-- > 0)
+	*str++ = character;
+}
+
+
+
+static VOID	rateau ()
+{
+    register long	pos;
+    /* from_arrows.length =
+					   to_arrows.length = pos - start_pos */
+    register struct node	*node;
+
+    horizontal_bar.length = to_arrows.length = from_arrows.length = 0;
+
+    if (line->h_bar_ovfl > 0) {
+	register long	length;
+
+	line->h_bar_ovfl -= length = line->h_bar_ovfl > args.page_width ? args.page_width : line->h_bar_ovfl;
+	catenate_copy (&horizontal_bar, '-', length);
+    }
+
+    pos = start_pos;
+
+    for (node = line->first; node != NULL && pos <= next_stripe; node = node->next) {
+      if (node->info.sons_number > 0)
+	if (node->pos.l_son_middle < next_stripe && node->pos.l_son_middle >= start_pos)
+	  /* pas encore traite */
+	  /* prepare_horizontal_bar:
+		(pas de goto sur ce label, ce qui provoque un warning du compilo icc d'intel) */
+	  {
+	    catenate_copy (&horizontal_bar, ' ', node->pos.l_son_middle - start_pos - horizontal_bar.length);
+
+	    if (node->pos.r_son_middle >= next_stripe) {
+	      catenate_copy (&horizontal_bar, '-', args.page_width - horizontal_bar.length);
+	      line->h_bar_ovfl = node->pos.r_son_middle - next_stripe + 1;
+	    }
+	    else if (node->info.sons_number > 1)
+	      catenate_copy (&horizontal_bar, '-', node->pos.r_son_middle - node->pos.l_son_middle + 1);
+	    else
+	      horizontal_bar.text [horizontal_bar.length++] = '|';
+	  }
+
+      if (node->pos.middle < next_stripe) {
+	if (node->pos.middle >= start_pos) {
+	  /* pas encore traite */
+	  /* prepare_arrows: 
+		(pas de goto sur ce label, ce qui provoque un warning du compilo icc d'intel) */
+	  {
+	    register long	spaces_nb = node->pos.middle - pos;
+
+	    catenate_copy (&from_arrows, ' ', spaces_nb);
+	    from_arrows.text [from_arrows.length++] = '|';
+	    catenate_copy (&to_arrows, ' ', spaces_nb);
+	    to_arrows.text [to_arrows.length++] = node->info.sons_number != 0 ? '|' : ' ';
+	  }
+
+	  pos = node->pos.middle + 1;
+	}
+      }
+      else if (node->info.sons_number > 0)
+	/* sinon, on traite les freres */
+	pos = node->pos.middle + 1;
+    }
+}
+
+
+
+static VOID	print_one_node (node)
+    register struct node	*node;
+
+/* Si la cle tient sur la ligne, on l'imprime; */
+/* sinon on en imprime ce qu'on peut et on     */
+/* garde le reste pour le prochain le.	       */
+
+{
+    register long	current_key_length, remaining_space;
+
+    if (node->pos.left > current_pos)
+	args.put_blanks (node->pos.left - current_pos);
+
+    current_pos = node->pos.right + 1;
+
+    if ((current_key_length = node->info.key_length) <= (remaining_space = next_stripe - node->pos.left)) {
+	args.print_key (node->info.user_node, node->info.key_start, current_key_length);
+	line->first = node->next;
+	node_dispose (node);
+    }
+    else {
+	args.print_key (node->info.user_node, node->info.key_start, remaining_space);
+	node->info.key_start += remaining_space;
+	node->info.key_length -= remaining_space;
+	node->pos.left = next_stripe;
+    }
+}
+
+
+
+static VOID	print_one_line ()
+{
+    register struct node	*node;
+
+    rateau ();
+
+    if (line != lines) {
+	from_arrows.text [from_arrows.length] = '\0';
+	args.print_from_arrows (from_arrows.text);
+	line_no++;
+    }
+    else if (!args.abbrev_mode)
+	args.print_from_arrows ("");
+
+    current_pos = start_pos;
+
+    while (current_pos < next_stripe && (node = line->first) != NULL) {
+	if (node->pos.left < next_stripe)
+	    print_one_node (node);
+	else
+	    current_pos = next_stripe;
+    }
+
+    args.put_skip ();
+    line_no++;
+
+    if (!args.abbrev_mode || line_no < page_length) {
+	to_arrows.text [to_arrows.length] = '\0';
+	args.print_to_arrows (to_arrows.text);
+	line_no++;
+    }
+
+    if (!args.abbrev_mode || line_no < page_length) {
+	horizontal_bar.text [horizontal_bar.length] = '\0';
+	args.print_horizontal_bar (horizontal_bar.text);
+	line_no++;
+    }
+}
+
+
+
+static VOID	tree_print ()
+{
+    line_no = 0;
+
+    for (start_pos = minpos; start_pos <= maxpos; start_pos = next_stripe) {
+	next_stripe = start_pos + args.page_width;
+
+	if (!args.abbrev_mode)
+	    args.put_page ();
+
+	for (line = lines; line != NULL; line = line->next) {
+	    print_one_line ();
+	}
+    }
+
+    if (!args.abbrev_mode)
+	args.put_page ();
+}
+
+
+
+static char	*strings = {NULL};
+
+
+
+VOID	sxpptree (tree, min_dist, min_dist_on_subtrees, page_width, get_key_length, get_left_son, get_right_brother,
+     get_sons_number, print_from_arrows, print_horizontal_bar, print_key, print_to_arrows, put_blanks, put_page, put_skip
+     , switches)
+    USER_PTR	tree;
+    long	min_dist;
+    long	min_dist_on_subtrees;
+    long	page_width;
+    long	(*get_key_length) ();
+    USER_PTR	(*get_left_son) ();
+    USER_PTR	(*get_right_brother) ();
+    long	(*get_sons_number) ();
+    VOID	(*print_from_arrows) ();
+    VOID	(*print_horizontal_bar) ();
+    VOID	(*print_key) ();
+    VOID	(*print_to_arrows) ();
+    VOID	(*put_blanks) ();
+    VOID	(*put_page) ();
+    VOID	(*put_skip) ();
+    long	switches;
+{
+    args.min_dist = min_dist < 1 ? 3 : min_dist;
+    args.min_dist_on_subtrees = min_dist_on_subtrees < args.min_dist ? args.min_dist : min_dist_on_subtrees;
+    args.page_width = page_width < min_dist_on_subtrees ? (min_dist_on_subtrees < 132 ? 132 : min_dist_on_subtrees) :
+	 page_width;
+    args.get_key_length = get_key_length;
+    args.get_left_son = get_left_son;
+    args.get_right_brother = get_right_brother;
+    args.get_sons_number = get_sons_number;
+    args.print_from_arrows = print_from_arrows;
+    args.print_horizontal_bar = print_horizontal_bar;
+    args.print_key = print_key;
+    args.print_to_arrows = print_to_arrows;
+    args.put_blanks = put_blanks;
+    args.put_page = put_page;
+    args.put_skip = put_skip;
+    args.abbrev_mode = (switches & (long)0x8000) != 0;
+
+    if (args.abbrev_mode) {
+	page_length = args.get_key_length (NULL);
+	max_level = (page_length + 2) / 4;
+    }
+
+    if (setjmp (no_space))
+	fprintf (stderr, "\npp_trees: no more space available\n");
+    else {
+	{
+	    register unsigned	strlength = args.page_width + 1;
+
+	    strings = (char*) allocate (3 * strlength * sizeof (char));
+	    to_arrows.text = (from_arrows.text = (horizontal_bar.text = strings) + strlength) + strlength;
+	}
+
+	place (tree, &lines, 1, TRUE);
+	init_h_bar_ovfl ();
+
+	if (args.abbrev_mode)
+	    abbreviate_tree ();
+	else
+	    min_max_pos ();
+
+	tree_print ();
+    }
+
+    lines_destroy (lines);
+    lines = NULL;
+
+    if (strings != NULL)
+	free (strings), strings = NULL;
+
+    deallocate_areas ();
+}

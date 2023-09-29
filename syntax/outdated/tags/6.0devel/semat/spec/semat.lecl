@@ -1,0 +1,10 @@
+Classes
+	ANY		= #000..#377 ;
+
+Tokens
+
+	Comments	= -{SP | HT | FF | VT | EOL {"*" {^EOL} EOL}}+ ;
+			   Context All But Comments ;
+	%STRING		= -QUOTE LETTER {["_"] (LETTER | DIGIT)} -QUOTE ;
+			-- must be an Ada or C identifier
+	Eof		= "<"&Is_First_Col @Release ;

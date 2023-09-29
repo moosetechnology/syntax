@@ -1,0 +1,120 @@
+.\" @(#)tdef.1	- SYNTAX [unix] - 18 Novembre 1988
+.TH TDEF 1 "SYNTAX\*R"
+.SH NAME
+tdef \- name the internal values of terminal symbols.
+.SH SYNOPSIS
+.B tdef
+[ \fB\-v\fP ] [ \fB\-nv\fP ]
+[ \fB\-sc\fP ] [ \fB\-nsc\fP ]
+[ \fB\-c\fP ] [ \fB\-pascal\fP ]
+.if n .ti +0.5i
+[ \fB\-ln\fP \fIname\fP ] .\|.\|.
+[ \fIfilenames\fP ]
+.SH DESCRIPTION
+.I tdef
+produces from its input an include file containing definition of constants to be used
+wherever pertinent in the user's \fIC\fP or \fIPASCAL\fP sources.
+.LP
+Each file named
+.I filename
+contains the input description for a given language.
+A
+.I filename
+may be of the form
+[\|\fIpath/\fP\|]\|\fIname\fP.\fBtdef\fP
+where
+.I name
+is the name of the described language.
+.LP
+Each input file contains a list of assignments:
+.br
+\fI     lhs\fP = \fIrhs\fP ; 
+.br
+where \fIlhs\fP is a \fIC\fP or \fIPASCAL\fP identifier and \fIrhs\fP
+is a terminal symbol of the \fIname\fP language.
+.LP
+If no
+.I filenames
+argument is present, the standard input is read.
+.LP
+The \fB#define\fP macros are written on the standard output.
+.LP
+If no argument is given,
+.I tdef
+prints a short synopsis of its usage and exits with a non null status code.
+.SH OPTIONS
+.LP
+Options may appear in any order as long as they appear
+.B before
+the
+.IR filenames .
+Only the
+.B last
+occurrence of a given option is taken into account.
+.br
+Default options are such that the command
+.br
+\fB     tdef [filenames]\fP
+.br
+is equivalent to
+.br
+\fB     tdef -v -sc [filenames]\fP
+.TP
+\fB\-v\fP, \fB\-verbose\fP
+Animate the user's screen by displaying cryptic information about what is
+going on.
+(Default)
+.TP
+\fB\-nv\fP, \fB\-noverbose\fP
+Execute silently.
+.TP
+\fB\-sc\fP, \fB\-source\fP
+Produce a file named
+\fIname\fP\fB.td.l\fP,
+containing a line numbered source listing together with
+possible error messages.
+(Default)
+.TP
+\fB\-nsc\fP, \fB\-nosource\fP
+Suppress the source listing\|.
+.TP
+\fB\-c\fP
+Indicate that the semantic pass program skeleton is written in \fIC\fP.
+This option is exclusive with the
+\fB\-pascal\fP
+option. (Default)
+.TP
+\fB\-pascal\fP
+Indicate that the semantic pass program skeleton is written in \fIpascal\fP.
+This option is exclusive with the
+\fB\-c\fP
+option.
+.TP
+\fB\-ln\fP \fIname\fP, \fB\-language_name\fP \fIname\fP
+Force the
+.I name
+of the language to process.
+The
+.B \-ln
+option is mandatory if no
+.I filename
+is given.
+.SH FILES
+.ta \w'\fIname\fP\fB.td.l\fP  'u
+\fIname\fP\fB.bt\fP	internal grammar form (input)
+.br
+\fIname\fP\fB.td.l\fP	source listing (output)
+.SH "SEE ALSO"
+bnf(1), semact(1), semat(1), paradis(1), tabc(1), pptdef(1) and
+the
+\fB"SYNTAX REFERENCE MANUAL"\fP.
+.SH DIAGNOSTICS
+When the specification is erroneous, error and warning messages are issued
+and diagnostics are gathered in the listing (if any).
+.br
+Exit status is 0 if everything is alright, 1 if only warnings are issued, 2
+if error messages are issued, 3 for command line syntax errors.
+.\" Local Variables:
+.\" mode: nroff
+.\" version-control: yes
+.\" End:

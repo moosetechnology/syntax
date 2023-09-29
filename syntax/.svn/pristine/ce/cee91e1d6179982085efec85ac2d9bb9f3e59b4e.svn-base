@@ -1,0 +1,423 @@
+*******************************************************************************
+*
+* Attributes
+*
+*******************************************************************************
+
+$SEMC_PROGRAM (<BNF_PROGRAM>) : C_TYPE_BLOCK;
+$SEMC_BLOCK (<BNF_BLOCK>) : C_TYPE_BLOCK;
+$SEMC_DECL_LIST (<BNF_DECL_LIST>) : C_TYPE_DECLS;
+$SEMC_DECL (<BNF_DECL>) : C_TYPE_DECL;
+$SEMC_DECL_INT (<BNF_DECL_INT>) : C_TYPE_DECL_UNION;
+$SEMC_DECL_ARRAY (<BNF_DECL_ARRAY>) : C_TYPE_DECL_UNION;
+$SEMC_DECL_PROC (<BNF_DECL_PROC>) : C_TYPE_DECL_UNION;
+$SEMC_DECL_id (<BNF_DECL_INT>, <BNF_DECL_ARRAY>, <BNF_DECL_PROC>) : C_TYPE_ID;
+$SEMC_STMT_LIST (<BNF_STMT_LIST>) : C_TYPE_STMTS;
+$SEMC_STMT (<BNF_STMT>) : C_TYPE_STMT;
+$SEMC_STMT_CALL (<BNF_STMT_CALL>) : C_TYPE_STMT_CALL;
+$SEMC_EXPR (<BNF_TERM>,<BNF_EXPR>) : C_TYPE_EXPR;
+$SEMC_OPERATOR (<BNF_OP>) : C_TYPE_OP;
+$SEMC_VARIABLE (<BNF_VAR>) : C_TYPE_VARIABLE;
+$SEMC_ID (<BNF_ID>) : C_TYPE_ID;
+$SEMC_INT (<BNF_INT>) : C_TYPE_NUMBER;
+
+* lines with a sole dollar separate sections
+
+*******************************************************************************
+*
+* Declarations
+*
+*******************************************************************************
+
+$ 
+decl =
+
+#include "simproc.c"
+
+*------------------------------------------------------------------------------
+
+C_TYPE_BLOCK ROOT_BLOCK; 
+			
+SXBOOLEAN *SYNTAX_ERROR;
+
+*------------------------------------------------------------------------------
+
+void CODE_GENERATION (void)
+{
+	C_DECOMPILE_PROGRAM (ROOT_BLOCK);
+}
+
+*------------------------------------------------------------------------------
+
+void TREE_DUMP (void)
+{
+	C_PRINT_BLOCK (stdout, ROOT_BLOCK); 
+	printf ("\n");
+}
+
+*------------------------------------------------------------------------------
+
+ADT_BOOL TREE_CHECKING (void)
+{
+	return (C_CHECK_PROGRAM (ROOT_BLOCK));
+}
+
+*------------------------------------------------------------------------------
+
+void TREE_DECORATION (void)
+{
+	C_COMPUTE_BLOCK (ROOT_BLOCK);
+}
+
+*******************************************************************************
+*
+* Opening actions
+*
+*******************************************************************************
+
+$
+open =
+
+SYNTAX_ERROR= &is_error;
+
+*******************************************************************************
+*
+* Closing actions
+*
+*******************************************************************************
+
+$
+close =
+
+*******************************************************************************
+*
+* Definition of grammar rules and synthesized attributes
+*
+*******************************************************************************
+
+$
+
+*******************************************************************************
+*
+* Program and blocks
+*
+*******************************************************************************
+
+<BNF_PROGRAM> = <BNF_BLOCK> ;
+
+$SEMC_PROGRAM (<BNF_PROGRAM>)
+	
+	$SEMC_PROGRAM (<BNF_PROGRAM>) = $SEMC_BLOCK (<BNF_BLOCK>);
+	ROOT_BLOCK = $SEMC_BLOCK (<BNF_BLOCK>);
+
+
+*==============================================================================
+
+<BNF_BLOCK> = <BNF_DECL_LIST> <BNF_STMT_LIST> ;
+
+$SEMC_BLOCK (<BNF_BLOCK>)
+
+	$SEMC_BLOCK (<BNF_BLOCK>) = C_BLOCK (
+		$SEMC_DECL_LIST (<BNF_DECL_LIST>),
+		$SEMC_STMT_LIST (<BNF_STMT_LIST>));
+
+*******************************************************************************
+*
+* Declarations
+*
+*******************************************************************************
+
+<BNF_DECL_LIST> = <BNF_DECL> <BNF_DECL_LIST> ;
+
+$SEMC_DECL_LIST (<BNF_DECL_LIST>)
+
+	$SEMC_DECL_LIST (<BNF_DECL_LIST>) = C_DECLS_CONS (
+		$SEMC_DECL (<BNF_DECL>),
+		$SEMC_DECL_LIST (<BNF_DECL_LIST>'));
+
+*------------------------------------------------------------------------------
+
+<BNF_DECL_LIST> = ;
+
+$SEMC_DECL_LIST (<BNF_DECL_LIST>)
+
+	$SEMC_DECL_LIST (<BNF_DECL_LIST>) = C_DECLS_NIL ();
+
+*==============================================================================
+
+<BNF_DECL> = <BNF_DECL_INT> ;
+
+$SEMC_DECL (<BNF_DECL>)
+
+	$SEMC_DECL (<BNF_DECL>) = C_DECL_CONS (
+		$SEMC_DECL_id (<BNF_DECL_INT>),
+		$SEMC_DECL_INT (<BNF_DECL_INT>));
+
+*------------------------------------------------------------------------------
+
+<BNF_DECL> = <BNF_DECL_ARRAY> ;
+
+$SEMC_DECL (<BNF_DECL>)
+
+	$SEMC_DECL (<BNF_DECL>) = C_DECL_CONS (
+		$SEMC_DECL_id (<BNF_DECL_ARRAY>),
+		$SEMC_DECL_ARRAY (<BNF_DECL_ARRAY>));
+
+*------------------------------------------------------------------------------
+
+<BNF_DECL> = <BNF_DECL_PROC> ;
+
+$SEMC_DECL (<BNF_DECL>)
+
+	$SEMC_DECL (<BNF_DECL>) = C_DECL_CONS (
+		$SEMC_DECL_id (<BNF_DECL_PROC>),
+		$SEMC_DECL_PROC (<BNF_DECL_PROC>));
+
+*==============================================================================
+
+<BNF_DECL_INT> = "integer" <BNF_ID> ";" ;
+
+$SEMC_DECL_INT (<BNF_DECL_INT>)
+$SEMC_DECL_id (<BNF_DECL_INT>)
+
+	$SEMC_DECL_INT (<BNF_DECL_INT>) = C_DECL_INT ();
+	$SEMC_DECL_id (<BNF_DECL_INT>) = $SEMC_ID (<BNF_ID>);
+
+*==============================================================================
+
+<BNF_DECL_ARRAY> = "array" <BNF_ID> "[" <BNF_INT> "]" ";" ;
+
+$SEMC_DECL_ARRAY (<BNF_DECL_ARRAY>)
+$SEMC_DECL_id (<BNF_DECL_ARRAY>)
+
+	$SEMC_DECL_ARRAY (<BNF_DECL_ARRAY>) =
+		C_DECL_ARRAY ($SEMC_INT (<BNF_INT>));
+	$SEMC_DECL_id (<BNF_DECL_ARRAY>) = $SEMC_ID (<BNF_ID>);
+
+*==============================================================================
+
+<BNF_DECL_PROC> =
+	"proc" <BNF_ID> "(" "val" <BNF_ID> "," "var" <BNF_ID> ")"
+	"begin" <BNF_BLOCK> "end" ";" ;
+
+$SEMC_DECL_PROC (<BNF_DECL_PROC>)
+$SEMC_DECL_id (<BNF_DECL_PROC>)
+
+{
+	$SEMC_DECL_PROC (<BNF_DECL_PROC>) = C_DECL_PROC ($SEMC_ID (<BNF_ID>'), $SEMC_ID (<BNF_ID>''), $SEMC_BLOCK (<BNF_BLOCK>));
+	$SEMC_DECL_id (<BNF_DECL_PROC>) = $SEMC_ID (<BNF_ID>);
+}
+
+*******************************************************************************
+*
+* Statements
+*
+*******************************************************************************
+
+<BNF_STMT_LIST> = <BNF_STMT> ";" <BNF_STMT_LIST> ;
+
+$SEMC_STMT_LIST (<BNF_STMT_LIST>)
+
+	$SEMC_STMT_LIST (<BNF_STMT_LIST>) = C_STMTS_CONS (
+		$SEMC_STMT (<BNF_STMT>),
+		$SEMC_STMT_LIST (<BNF_STMT_LIST>'));
+
+*------------------------------------------------------------------------------
+
+<BNF_STMT_LIST> = <BNF_STMT> ;
+
+$SEMC_STMT_LIST (<BNF_STMT_LIST>)
+
+	$SEMC_STMT_LIST (<BNF_STMT_LIST>) =
+		C_STMTS_TAIL ($SEMC_STMT (<BNF_STMT>));
+
+*==============================================================================
+
+<BNF_STMT> = <BNF_VAR> ":=" <BNF_EXPR> ;
+
+$SEMC_STMT (<BNF_STMT>)
+
+	$SEMC_STMT = C_ASSIGN (
+		$SEMC_VARIABLE (<BNF_VAR>),
+		$SEMC_EXPR (<BNF_EXPR>));
+
+*------------------------------------------------------------------------------
+
+<BNF_STMT> = <BNF_STMT_CALL> ;
+
+$SEMC_STMT (<BNF_STMT>)
+
+	$SEMC_STMT = C_CONS_CALL_STMT ($SEMC_STMT_CALL (<BNF_STMT_CALL>));
+
+*------------------------------------------------------------------------------
+
+<BNF_STMT> =
+	"if" <BNF_EXPR> "eq" <BNF_EXPR> "then" <BNF_STMT_LIST>
+	"else" <BNF_STMT_LIST> "fi" ;
+
+$SEMC_STMT (<BNF_STMT>)
+
+	$SEMC_STMT (<BNF_STMT>) = C_IF_THEN_ELSE (
+		$SEMC_EXPR (<BNF_EXPR>),
+		$SEMC_EXPR (<BNF_EXPR>'),
+		$SEMC_STMT_LIST (<BNF_STMT_LIST>),
+		$SEMC_STMT_LIST (<BNF_STMT_LIST>'));
+
+*==============================================================================
+
+<BNF_STMT_CALL> = "call" <BNF_ID> "(" <BNF_EXPR> "," <BNF_VAR> ")" ;
+
+$SEMC_STMT_CALL (<BNF_STMT_CALL>)
+
+	$SEMC_STMT_CALL (<BNF_STMT_CALL>) = C_STMT_CALL (
+		$SEMC_ID (<BNF_ID>),
+		$SEMC_EXPR (<BNF_EXPR>),
+		$SEMC_VARIABLE (<BNF_VAR>));
+
+*******************************************************************************
+*
+* Expressions and terms (left associativity)
+*
+*******************************************************************************
+
+<BNF_EXPR> = <BNF_EXPR> <BNF_OP> <BNF_TERM> ;
+	
+$SEMC_EXPR (<BNF_EXPR>)
+
+	$SEMC_EXPR (<BNF_EXPR>) = C_BIN_EXPR (
+		$SEMC_OPERATOR (<BNF_OP>),
+		$SEMC_EXPR (<BNF_EXPR>'),
+		$SEMC_EXPR (<BNF_TERM>));
+
+*------------------------------------------------------------------------------
+
+* "TERM" disappears in abstract syntax. 
+* it's something purely concrete, between EXPR and {var, int, etc.}
+
+<BNF_EXPR> = <BNF_TERM> ;
+
+$SEMC_EXPR (<BNF_EXPR>)
+
+	$SEMC_EXPR (<BNF_EXPR>) = $SEMC_EXPR (<BNF_TERM>);
+
+*==============================================================================
+
+<BNF_TERM> = <BNF_VAR> ;
+
+$SEMC_EXPR (<BNF_TERM>)
+
+	$SEMC_EXPR (<BNF_TERM>) = C_USED_VAR ($SEMC_VARIABLE (<BNF_VAR>));
+
+*------------------------------------------------------------------------------
+
+<BNF_TERM> = "(" <BNF_EXPR> ")" ;
+
+$SEMC_EXPR (<BNF_TERM>)
+
+	$SEMC_EXPR (<BNF_TERM>) = $SEMC_EXPR (<BNF_EXPR>);
+
+*------------------------------------------------------------------------------
+
+<BNF_TERM> = <BNF_INT> ;
+
+$SEMC_EXPR (<BNF_TERM>)
+
+	$SEMC_EXPR (<BNF_TERM>) = C_CONSTANT ($SEMC_INT (<BNF_INT>));
+
+*==============================================================================
+
+<BNF_OP> = "+" ;
+
+$SEMC_OPERATOR (<BNF_OP>)
+
+	$SEMC_OPERATOR (<BNF_OP>) = C_PLUS ();
+
+*------------------------------------------------------------------------------
+
+<BNF_OP> = "-" ;
+
+$SEMC_OPERATOR (<BNF_OP>)
+
+	$SEMC_OPERATOR (<BNF_OP>) = C_MINUS ();
+
+*------------------------------------------------------------------------------
+
+<BNF_OP> = "*" ;
+
+$SEMC_OPERATOR (<BNF_OP>)
+
+	$SEMC_OPERATOR (<BNF_OP>) = C_MUL ();
+ 
+*------------------------------------------------------------------------------
+
+<BNF_OP> = "/" ;
+
+$SEMC_OPERATOR (<BNF_OP>)
+
+	 $SEMC_OPERATOR (<BNF_OP>) = C_DIV ();
+ 
+*==============================================================================
+
+<BNF_VAR> = <BNF_ID> ;
+
+$SEMC_VARIABLE (<BNF_VAR>)
+
+	$SEMC_VARIABLE (<BNF_VAR>) = C_SIMPLE_VAR ($SEMC_ID (<BNF_ID>));
+
+*------------------------------------------------------------------------------
+
+<BNF_VAR> = <BNF_ID> "[" <BNF_EXPR> "]" ;
+
+$SEMC_VARIABLE (<BNF_VAR>)
+
+	$SEMC_VARIABLE (<BNF_VAR>) = C_INDEXED_VAR (
+		$SEMC_ID (<BNF_ID>),
+		$SEMC_EXPR (<BNF_EXPR>));
+
+*******************************************************************************
+*
+* Terminals
+*
+*******************************************************************************
+
+<BNF_ID> = %ID ;
+
+$SEMC_ID (<BNF_ID>)
+
+{
+	unsigned int STRING_TABLE_ENTRY;
+		
+	STRING_TABLE_ENTRY = $pste ("%ID");
+	$SEMC_ID (<BNF_ID>) = C_STRUCT_ID (
+		STRING_TABLE_ENTRY,
+		(sxstrlen (STRING_TABLE_ENTRY) != 0 ?
+			sxstrget (STRING_TABLE_ENTRY) : "SEMC-ERROR-TOKEN"),
+ 		/* sxstrlen (token)==0  <=>  error-token  */
+		/* field 'line' is unsigned long in SYNTAX sxu2.h */
+		/* vs LOTOS-NT 'nat' type is now unsigned int */
+		(unsigned int) SXSTACKtoken (SXSTACKtop ()).source_index.line);
+}
+
+*==============================================================================
+
+<BNF_INT> = %INT ;
+
+$SEMC_INT (<BNF_INT>)
+
+{
+	unsigned int STRING_TABLE_ENTRY;
+
+	STRING_TABLE_ENTRY = $pste ("%INT");
+	$SEMC_INT (<BNF_INT>) = C_STRUCT_NUMBER (
+		STRING_TABLE_ENTRY,
+		(sxstrlen (STRING_TABLE_ENTRY) != 0 ?
+			sxstrget (STRING_TABLE_ENTRY) : "SEMC-ERROR-TOKEN"),
+	 	/* sxstrlen (token)==0  <=>  error-token  */
+		(unsigned int) SXSTACKtoken (SXSTACKtop ()).source_index.line);
+}
+
+*******************************************************************************
+*
+* end of file
+*
+*******************************************************************************

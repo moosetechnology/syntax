@@ -1,0 +1,51 @@
+Titles
+	"",
+	"Error (ppc.args): ",
+	"Error (ppc.args): ";
+
+Scanner
+	Local
+		0 ; "" $0 "";
+		Dont_Delete = {};
+		Dont_Insert = {};
+
+	Global
+		Detection : -- parameter: character in error
+			  "\"%s\" is erased.";
+		KEYWORD	: "";
+		Eol	: "\\n";
+		Eof	: -- the "character"
+			  "EOF";
+		Halt	: "Lexical analysis stops.";
+
+Parser
+	Local
+		0 S 2	; "Speling eror: \""$1"\" should read \""%1"\".";
+		S 1	; "Speling eror: \""$0"\" should read \""%0"\".";
+		0 2 3 4	; "\""$1"\" is erased.";
+		1 2 3 4	; "\""$0"\" is erased.";
+
+		Dont_Delete = {};
+		Dont_Insert = {};
+
+	Forced_Insertion
+		"\""%0"\" is inserted before \""$1"\"." ;
+
+	Global
+		Key_Terminals = {};
+		Validation_Length = 1;
+		Followers_Number <= 2
+			: -- parameters: array (1:Followers_Number) of valid followers at detection point
+			  "\"%s\"^( (or \"%s\")^) expected.";
+		Detection : -- parameters: none
+			  "Command garbled...";
+		Restarting: -- parameters: array (1:Validation_Length) of valid followers at restarting point
+			  "... Restarting analysis from \"%s\".";
+		Eof	: -- the "token"
+			  "EOF";
+		Halt	: -- parameters: none
+			  "... Too much noise.";
+
+Abstract
+	-- parameters: array (1:Titles_No) of number of messages
+	"";

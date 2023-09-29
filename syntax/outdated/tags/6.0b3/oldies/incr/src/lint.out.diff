@@ -1,0 +1,198 @@
+1,52c1,69
+< sxindparser.(135): warning: possible pointer alignment problem
+< sxindparser.(130): warning: argument old_size unused in function sons_oflw
+< sxindparser.(369): warning: possible pointer alignment problem
+< sxindparser.(475): warning: possible pointer alignment problem
+< sxindparser.(485): warning: possible pointer alignment problem
+< sxindparser.(488): warning: possible pointer alignment problem
+< sxindparser.(422): warning: t_state unused in function add_active_parser
+< sxindparser.(423): warning: aprdct unused in function add_active_parser
+< sxindparser.(557): warning: possible pointer alignment problem
+< sxindparser.(719): warning: first_father unused in function do_limited_reductions
+< sxindparser.(982): warning: q unused in function shifter
+< sxindparser.(982): warning: son unused in function shifter
+< sxindparser.(1126): warning: aprdct unused in function sxparse_it
+< sxindparser.(1124): warning: y unused in function sxparse_it
+< sxindparser.(1265): warning: possible pointer alignment problem
+< sxindparser.(1271): warning: possible pointer alignment problem
+< sxindparser.(1272): warning: possible pointer alignment problem
+< sxindparser.(1277): warning: possible pointer alignment problem
+< sxindparser.(1279): warning: possible pointer alignment problem
+< sxindparser.(1281): warning: possible pointer alignment problem
+< sxindparser.(1287): warning: possible pointer alignment problem
+< sxindparser.(1289): warning: possible pointer alignment problem
+< sxindparser.(1290): warning: possible pointer alignment problem
+< sxindparser.(1303): warning: possible pointer alignment problem
+< sxindparser.(1312): warning: possible pointer alignment problem
+< sxindparser.(1395): warning: function sxindparser has return(e); and return;
+< XxY_alloc, arg. 7 used inconsistently	sxindparser.(1298)  ::  sxindparser.(1306)
+< XxY_alloc, arg. 7 used inconsistently	sxindparser.(1298)  ::  sxindparser.(1307)
+< XxY_alloc, arg. 7 used inconsistently	sxindparser.(1298)  ::  sxindparser.(1308)
+< sxtkn_mngr, arg. 2 used inconsistently	sxindparser.(1318)  ::  sxindparser.(1333)
+< free value declared inconsistently	llib-lc(275)  ::  sxindparser.(1381)
+< sxerrmngr defined( /proj2/syntax/4.0/sun4/incl/sxu2.h(539) ), but never used
+< sxpglobals defined( /proj2/syntax/4.0/sun4/incl/sxu2.h(597) ), but never used
+< sxppvariables defined( /proj2/syntax/4.0/sun4/incl/sxu2.h(679) ), but never used
+< sxatcvar defined( /proj2/syntax/4.0/sun4/incl/sxu2.h(809) ), but never used
+< sxtt_state defined( /proj2/syntax/4.0/sun4/incl/sxu2.h(821) ), but never used
+< sxnext_visit defined( /proj2/syntax/4.0/sun4/incl/sxu2.h(827) ), but never used
+< reduce_item_no defined( /proj2/syntax/5.0/sun4/incr/src/../incl/sxindparser.h(37) ), but never used
+< max_red_per_state defined( /proj2/syntax/5.0/sun4/incr/src/../incl/sxindparser.h(38) ), but never used
+< LR0_sets defined( /proj2/syntax/5.0/sun4/incr/src/../incl/sxindparser.h(41) ), but never used
+< Next_states_set defined( /proj2/syntax/5.0/sun4/incr/src/../incl/sxindparser.h(42) ), but never used
+< FIRST defined( /proj2/syntax/5.0/sun4/incr/src/../incl/sxindparser.h(43) ), but never used
+< statistics_file defined( /proj2/syntax/5.0/sun4/incr/src/../incl/sxindparser.h(45) ), but never used
+< Q0xQ0_hd defined( /proj2/syntax/5.0/sun4/incr/src/../incl/sxindparser.h(51) ), but never used
+< sxba_resize used( sxindparser.(132) ), but not defined
+< sxba_fill used( sxindparser.(146) ), but not defined
+< SS_sature used( sxindparser.(149) ), but not defined
+< X_is_set used( sxindparser.(205) ), but not defined
+< sxba_1_rlscan used( sxindparser.(218) ), but not defined
+< sxba_0_rlscan used( sxindparser.(224) ), but not defined
+< sxindparser.(231):new_symbol returns value which is always ignored
+< XxY_set used( sxindparser.(236) ), but not defined
+---
+> sxindparser.: warning: possible pointer alignment problem
+> sxindparser.: warning: argument old_size unused in function sons_oflw
+> sxindparser.: warning: possible pointer alignment problem
+> sxindparser.: warning: possible pointer alignment problem
+> sxindparser.: warning: possible pointer alignment problem
+> sxindparser.: warning: possible pointer alignment problem
+> sxindparser.: warning: t_state unused in function add_active_parser
+> sxindparser.: warning: aprdct unused in function add_active_parser
+> sxindparser.: warning: possible pointer alignment problem
+> sxindparser.: warning: first_father unused in function do_limited_reductions
+> sxindparser.: warning: son unused in function shifter
+> sxindparser.: warning: q unused in function shifter
+> sxindparser.: aworthy undefined
+> sxindparser.: warning: aworthy may be used before set
+> sxindparser.: warning: aworthy_red unused in function sxparse_it
+> sxindparser.: aworthy undefined
+> sxindparser.: warning: aworthy may be used before set
+> sxindparser.: warning: aworthy_red unused in function sxparse_it
+> sxindparser.: warning: y unused in function sxparse_it
+> sxindparser.: warning: aprdct unused in function sxparse_it
+> sxindparser.: warning: possible pointer alignment problem
+> sxindparser.: warning: possible pointer alignment problem
+> sxindparser.: occurence undefined
+> sxindparser.: warning: possible pointer alignment problem
+> sxindparser.: warning: possible pointer alignment problem
+> sxindparser.: warning: possible pointer alignment problem
+> sxindparser.: warning: possible pointer alignment problem
+> sxindparser.: warning: possible pointer alignment problem
+> sxindparser.: warning: possible pointer alignment problem
+> sxindparser.: warning: possible pointer alignment problem
+> sxindparser.: warning: possible pointer alignment problem
+> sxindparser.: warning: possible pointer alignment problem
+> sxindparser.: warning: possible pointer alignment problem
+> sxindparser.: warning: possible pointer alignment problem
+> sxindparser.: warning: possible pointer alignment problem
+> sxindparser.: warning: possible pointer alignment problem
+> sxindparser.: warning: possible pointer alignment problem
+> sxindparser.: warning: possible pointer alignment problem
+> sxindparser.: warning: function sxindparser has return(e); and return;
+> sxba_scan, arg. 1 used inconsistently	sxindparser.  ::  sxindparser.
+> sxba_scan, arg. 2 used inconsistently	sxindparser.  ::  sxindparser.
+> sxba_scan, arg. 1 used inconsistently	sxindparser.  ::  sxindparser.
+> sxba_scan, arg. 2 used inconsistently	sxindparser.  ::  sxindparser.
+> XxY_alloc, arg. 7 used inconsistently	sxindparser.  ::  sxindparser.
+> XxY_alloc, arg. 7 used inconsistently	sxindparser.  ::  sxindparser.
+> XxY_alloc, arg. 7 used inconsistently	sxindparser.  ::  sxindparser.
+> sxtkn_mngr, arg. 2 used inconsistently	sxindparser.  ::  sxindparser.
+> free value declared inconsistently	llib-lc  ::  sxindparser.
+> sxerrmngr defined( /proj2/syntax/4.0/sun4/incl/sxu2.h ), but never used
+> sxpglobals defined( /proj2/syntax/4.0/sun4/incl/sxu2.h ), but never used
+> sxppvariables defined( /proj2/syntax/4.0/sun4/incl/sxu2.h ), but never used
+> sxatcvar defined( /proj2/syntax/4.0/sun4/incl/sxu2.h ), but never used
+> sxtt_state defined( /proj2/syntax/4.0/sun4/incl/sxu2.h ), but never used
+> sxnext_visit defined( /proj2/syntax/4.0/sun4/incl/sxu2.h ), but never used
+> reduce_item_no defined( /proj2/syntax/5.0/sun4/incr/src/../incl/sxindparser.h ), but never used
+> max_red_per_state defined( /proj2/syntax/5.0/sun4/incr/src/../incl/sxindparser.h ), but never used
+> LR0_sets defined( /proj2/syntax/5.0/sun4/incr/src/../incl/sxindparser.h ), but never used
+> Next_states_set defined( /proj2/syntax/5.0/sun4/incr/src/../incl/sxindparser.h ), but never used
+> FIRST defined( /proj2/syntax/5.0/sun4/incr/src/../incl/sxindparser.h ), but never used
+> statistics_file defined( /proj2/syntax/5.0/sun4/incr/src/../incl/sxindparser.h ), but never used
+> Q0xQ0_hd defined( /proj2/syntax/5.0/sun4/incr/src/../incl/sxindparser.h ), but never used
+> sxba_resize used( sxindparser. ), but not defined
+> sxba_fill used( sxindparser. ), but not defined
+> SS_sature used( sxindparser. ), but not defined
+> X_is_set used( sxindparser. ), but not defined
+> sxba_1_rlscan used( sxindparser. ), but not defined
+> sxba_0_rlscan used( sxindparser. ), but not defined
+> sxindparser.:new_symbol returns value which is always ignored
+> XxY_set used( sxindparser. ), but not defined
+54,67c71,86
+< sxgetbit used( sxindparser.(315) ), but not defined
+< XH_oflw used( sxindparser.(316) ), but not defined
+< XH_set used( sxindparser.(318) ), but not defined
+< sxindparser.(408):add_active_parser returns value which is sometimes ignored
+< sxbm_resize used( sxindparser.(482) ), but not defined
+< XxY_is_set used( sxindparser.(512) ), but not defined
+< sxba_scan_reset used( sxindparser.(621) ), but not defined
+< sxba_minus used( sxindparser.(765) ), but not defined
+< sxba_scan used( sxindparser.(768) ), but not defined
+< sxindparser.(981):shifter returns value which is sometimes ignored
+< sxbm_calloc used( sxindparser.(1046) ), but not defined
+< fermer used( sxindparser.(1062) ), but not defined
+< sxba_cardinal used( sxindparser.(1067) ), but not defined
+< sxbm_free used( sxindparser.(1085) ), but not defined
+---
+> sxgetbit used( sxindparser. ), but not defined
+> XH_oflw used( sxindparser. ), but not defined
+> XH_set used( sxindparser. ), but not defined
+> sxindparser.:add_active_parser returns value which is sometimes ignored
+> alloc_worthy_red used( sxindparser. ), but not defined
+> sxbm_resize used( sxindparser. ), but not defined
+> XxY_is_set used( sxindparser. ), but not defined
+> discrimine used( sxindparser. ), but not defined
+> sxba_scan used( sxindparser. ), but not defined
+> sxba_scan_reset used( sxindparser. ), but not defined
+> sxba_minus used( sxindparser. ), but not defined
+> sxindparser.:shifter returns value which is sometimes ignored
+> sxbm_calloc used( sxindparser. ), but not defined
+> fermer used( sxindparser. ), but not defined
+> sxba_cardinal used( sxindparser. ), but not defined
+> sxbm_free used( sxindparser. ), but not defined
+70,86c89,108
+< sxba_copy used( sxindparser.(1180) ), but not defined
+< sxba_empty used( sxindparser.(1181) ), but not defined
+< sxput_error used( sxindparser.(1226) ), but not defined
+< sxindparser defined( sxindparser.(1240) ), but never used
+< sxcheck_magic_number used( sxindparser.(1251) ), but not defined
+< bnf_read used( sxindparser.(1255) ), but not defined
+< sxexit used( sxindparser.(1256) ), but not defined
+< LR0 used( sxindparser.(1259) ), but not defined
+< XH_lock used( sxindparser.(1260) ), but not defined
+< sxba_calloc used( sxindparser.(1267) ), but not defined
+< SS_alloc used( sxindparser.(1294) ), but not defined
+< XxY_alloc used( sxindparser.(1298) ), but not defined
+< XH_alloc used( sxindparser.(1310) ), but not defined
+< sxtkn_mngr used( sxindparser.(1318) ), but not defined
+< XxY_free used( sxindparser.(1371) ), but not defined
+< XH_free used( sxindparser.(1375) ), but not defined
+< bnf_free used( sxindparser.original(1384) ), but not defined
+---
+> sxba_copy used( sxindparser. ), but not defined
+> sxba_empty used( sxindparser. ), but not defined
+> ltd_do_pops used( sxindparser. ), but not defined
+> ltd_do_limited_reductions used( sxindparser. ), but not defined
+> ltd_shifter used( sxindparser. ), but not defined
+> sxput_error used( sxindparser. ), but not defined
+> sxindparser defined( sxindparser. ), but never used
+> sxcheck_magic_number used( sxindparser. ), but not defined
+> bnf_read used( sxindparser. ), but not defined
+> sxexit used( sxindparser. ), but not defined
+> LR0 used( sxindparser. ), but not defined
+> XH_lock used( sxindparser. ), but not defined
+> sxba_calloc used( sxindparser. ), but not defined
+> SS_alloc used( sxindparser. ), but not defined
+> XxY_alloc used( sxindparser. ), but not defined
+> XH_alloc used( sxindparser. ), but not defined
+> sxtkn_mngr used( sxindparser. ), but not defined
+> XxY_free used( sxindparser. ), but not defined
+> XH_free used( sxindparser. ), but not defined
+> bnf_free used( sxindparser. ), but not defined
+88c110
+< sxstderr used( sxindparser.original(1392) ), but not defined
+---
+> sxstderr used( sxindparser. ), but not defined

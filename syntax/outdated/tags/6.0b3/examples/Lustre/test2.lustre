@@ -1,0 +1,19 @@
+const (BIN_SZ:int) when true	.
+node
+
+	-- NodeHeader
+	BIN_SZ 
+	( 
+		(BIN_SZ_2:int) when true
+	)
+	returns ( (BIN_SZ_3:int) when true ) ;
+
+	-- LocalDecls
+	var ( BIN_SZ_4:int ) when true ;
+
+	-- Equations
+	let
+		assert ( BIN_SZ ) ;
+	tel
+
+.

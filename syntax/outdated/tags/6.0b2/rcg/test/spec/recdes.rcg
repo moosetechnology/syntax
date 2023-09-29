@@ -1,0 +1,5 @@
+% [quand] est-ce que c,a boucle ?
+
+S(X Y)	--> !&StrLen(0,X) !&StrLen(0,Y) S(X) B(Y) .
+S(a)	--> .
+B(b)	--> .

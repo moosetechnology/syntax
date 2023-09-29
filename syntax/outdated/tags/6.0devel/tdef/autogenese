@@ -1,0 +1,17 @@
+# This makefile is used to bootstrap tdef.
+include $(sx)/etc/gccoptions
+# To avoid problems with other shells:
+SHELL=/bin/sh
+
+SX=$(sx)
+
+
+TDEF=$(SX)/tdef
+TMP=$(TDEF)/tmp
+
+$(TDEF)/bootstrap:
+	${SHELL} $(sx)/etc/bin/liens-tmp.sh $(TMP); : $(MAKE)
+	cd $(TMP); ${SHELL} $(sx)/etc/bin/make-makefile tdef | CYGWIN="$$CYGWIN binmode" $(MAKE) -f -
+	cd $(TMP); ${SHELL} $(sx)/etc/bin/make-makefile pptdef | CYGWIN="$$CYGWIN binmode" $(MAKE) -f -
+	${SHELL} $(sx)/etc/bin/menage-tmp.sh $(TMP); : $(MAKE)
+	$(MAKE) COMPILER="$(COMPILER)" CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)"	sxV="$(sxV)" -f $(TDEF)/sxmakefile

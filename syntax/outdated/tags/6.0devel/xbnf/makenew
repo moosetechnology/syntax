@@ -1,0 +1,135 @@
+
+SX=c:\sx
+SXLIB=$(SX)\lib
+SXINCL=$(SX)\incl
+ETC=$(SX)\etc
+ETCLIB=$(ETC)\lib
+
+BNF=$(SX)\bnf
+SRC=$(BNF)\src
+LIB=$(BNF)\lib
+INCL=$(BNF)\incl
+
+BIBS= $(ETCLIB)\etc$(sxV).lib $(SXLIB)\sx$(sxV).lib
+
+CC=msc /I$(INCL) /Zi /AL
+
+NEEDS1=\
+	$(LIB)\folcon.obj		\
+	$(LIB)\bnf_lo.obj    		\
+	$(LIB)\bnf_main.obj		\
+	$(LIB)\protest.obj		\
+ 	$(LIB)\bnf_sact.obj		\
+	$(LIB)\bnf_smp.obj    		\
+	$(LIB)\symtab.obj		\
+	$(LIB)\bnf_t.obj
+
+$(LIB)\folcon.obj:	\
+			$(SXINCL)\sxunix.h	\
+			$(ETC)\incl\B_tables.h\
+			$(INCL)\bnf_vars.h 	\
+			$(BNF)\forcemak 	\
+			$(SRC)\folcon.c
+	$(CC) $(SRC)\folcon,$@;
+
+$(LIB)\bnf_lo.obj:	\
+			$(SXINCL)\sxunix.h	\
+			$(ETC)\incl\put_edit.h\
+			$(ETC)\incl\B_tables.h\
+			$(INCL)\bnf_vars.h 	\
+			$(BNF)\forcemak 	\
+			$(SRC)\bnf_lo.c
+	$(CC) $(SRC)\bnf_lo,$@;
+
+$(LIB)\bnf_main.obj:	\
+			$(SXINCL)\sxunix.h	\
+			$(ETC)\incl\B_tables.h\
+			$(INCL)\bnf_vars.h 	\
+			$(BNF)\forcemak 	\
+			$(SRC)\bnf_main.c
+	$(CC) $(SRC)\bnf_main,$@;
+
+$(LIB)\protest.obj:	\
+			$(SXINCL)\sxunix.h	\
+			$(ETC)\incl\B_tables.h\
+			$(INCL)\bnf_vars.h 	\
+			$(BNF)\forcemak 	\
+			$(SRC)\protest.c
+	$(CC) $(SRC)\protest,$@;
+
+$(LIB)\bnf_sact.obj:	\
+			$(SXINCL)\sxunix.h	\
+			$(BNF)\forcemak 	\
+			$(SRC)\bnf_sact.c
+	$(CC) $(SRC)\bnf_sact,$@;
+
+$(LIB)\bnf_smp.obj:	\
+			$(SXINCL)\sxunix.h	\
+			$(ETC)\incl\B_tables.h\
+			$(INCL)\bnf_vars.h 	\
+			$(BNF)\forcemak 	\
+			$(SRC)\bnf_smp.c
+	$(CC) $(SRC)\bnf_smp,$@;
+
+$(LIB)\symtab.obj:	\
+			$(SXINCL)\sxunix.h	\
+			$(ETC)\incl\B_tables.h\
+			$(ETC)\incl\varstr.h	\
+			$(INCL)\bnf_vars.h	\
+			$(BNF)\forcemak 	\
+			$(SRC)\symtab.c
+	$(CC) $(SRC)\symtab,$@;
+
+$(LIB)\bnf_t.obj:	\
+			$(SXINCL)\sxunix.h 	\
+			$(BNF)\forcemak 	\
+			$(SRC)\bnf_t.c
+	msc /Zi /AL $(SRC)\bnf_t /Dsxtables=bnf_tables /DSCANACT=bnf_scan_act /Dsempass=sxbnfsmp,$@;
+
+NEEDS2=\
+	$(LIB)\bnf_dump.obj		\
+	$(LIB)\print_bt.obj
+
+$(LIB)\bnf_dump.obj:	\
+			$(SXINCL)\sxunix.h	\
+			$(ETC)\incl\B_tables.h\
+			$(INCL)\bnf_vars.h 	\
+			$(BNF)\forcemak 	\
+			$(SRC)\bnf_dump.c
+	$(CC) $(SRC)\bnf_dump,$@;
+
+$(LIB)\print_bt.obj:	\
+			$(SXINCL)\sxunix.h	\
+			$(ETC)\incl\B_tables.h\
+			$(INCL)\bnf_vars.h 	\
+			$(BNF)\forcemak 	\
+			$(SRC)\print_bt.c	
+	$(CC) $(SRC)\print_bt,$@;
+
+$(BNF)\bnf.exe:		\
+			$(NEEDS1)	\
+			$(BIBS)
+	cd $(LIB)
+	link folcon\
+		+bnf_lo\
+		+bnf_main\
+		+protest\
+		+bnf_sact\
+		+bnf_smp\
+		+symtab\
+		+bnf_t\
+		,$@,,$(BIBS);
+	cd $(BNF)
+
+$(BNF)\print_bt.exe:	\
+			$(NEEDS2)	\
+			$(BIBS)
+	cd $(LIB)
+	link bnf_dump+print_bt,$@,,$(BIBS);
+	cd $(BNF)
+
+$(SX)\bin\bnf.exe:	\
+			$(BNF)\bnf.exe
+	del $@
+	copy $(BNF)\bnf.exe $@
+

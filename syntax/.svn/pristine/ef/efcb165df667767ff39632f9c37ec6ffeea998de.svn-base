@@ -1,0 +1,119 @@
+.\" @(#)sxatedit.3	- SYNTAX [unix] - 2 Septembre 1987
+.TH SXATEDIT 3 "SYNTAX\[rg]"
+.SH NAME
+sxatedit,
+sxateditinit
+\- pretty-printer for abstract trees constructed by
+SYNTAX.
+.SH SYNOPSIS
+\fB
+.nf
+#include "sxunix.h"
+
+SXVOID sxatedit (node)
+.ta \w'SXVOI'u +\w'SXNODE 'u
+	SXNODE	*node\|;
+
+SXVOID sxateditinit (file, md1, md2, pw)
+.ta \w'SXVOI'u +\w'FILE 'u
+	FILE	*file\|;
+	long	md1, md2, pw\|;
+.fi
+.SH DESCRIPTION
+.I sxatedit
+prints on some file the graphical representation of the abstract tree
+constructed by
+.B SYNTAX
+(see
+.BR semat (1)
+and
+.BR sxatc (3))
+whose root node is
+.IR node ,
+using the generic tree pretty-printer
+.BR sxpptree (3).
+.LP
+The output file and some other parameters must have been set beforehand by a
+call to
+.IR sxateditinit ,
+with parameters as follows\|:
+.TP
+.I file
+a pointer to the output file, which must have been opened for writing using
+.BR fopen (3)\|;
+.TP
+.I md1
+the minimum number of spaces between two sibling nodes (see the
+meaning of
+.I min_dist
+in the description of
+.BR sxpptree (3))\|;
+.TP
+.I md2
+the minimum number of spaces between two non-sibling nodes (see the
+meaning of
+.I min_dist_on_subtrees
+in the description of
+.BR sxpptree (3))\|;
+.TP
+.I pw
+the width of an output page (see the meaning of
+.I page_width
+in the
+description of
+.BR sxpptree (3)).
+.LP
+The type of the nodes constituting the tree, denoted by
+.I SXNODE
+above, must be
+compatible with the type of bare nodes manipulated by SYNTAX, declared as
+.B struct\ sxnode_header_s
+in
+.I sxunix.h
+(see
+.BR sxatc (3)).
+More precisely, it MUST contain a
+.B struct\ sxnode_header_s
+as first component.
+Note that this is the same general
+requirement as when you use the other tools provided by SYNTAX for
+manipulating those trees (see
+.BR sxsmp (3)
+and
+.BR sxat_mngr (3)).
+.LP
+The labels of the nodes appearing in the graphical representation are defined
+as follows\|: for a leaf node corresponding to some terminal token, it is the
+text of that token, otherwise it is the node name as defined in the language
+specification
+.IB language_name .at
+(see
+.BR semat (1)
+and the \fISYNTAX Reference Manual\fP).
+.SH "IMPORTANT NOTE"
+.I sxatedit
+must be called in an environment in which the global variable
+.I sxatcvar
+(see
+.BR sxatc (3)
+and
+.BR sxunix (3))
+contains the tables of the language
+to which the tree corresponds.
+This is because
+.I sxatedit
+uses these tables.
+Note that this is achieved automatically in most cases when you use the
+procedure
+.BR syntax (3).
+.SH "SEE ALSO"
+semat(1),
+sxpptree(3),
+sxatc(3),
+sxat_mngr(3),
+sxsmp(3)
+and the \fISYNTAX Reference Manual\fP.
+.SH BUGS
+Those of
+.BR sxpptree (3).
+

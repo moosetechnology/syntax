@@ -1,0 +1,16 @@
+# This makefile is used to bootstrap bnf.
+
+# To avoid problems with other shells:
+SHELL=/bin/sh
+
+SX=$(sx)
+
+BNF=$(SX)/bnf
+TMP=$(BNF)/tmp
+
+$(BNF)/bootstrap:
+	${SHELL} $(sx)/etc/bin/liens-tmp.sh $(TMP); : $(MAKE)
+	cd $(TMP); ${SHELL} $(sx)/etc/bin/make-makefile bnf | CYGWIN="$$CYGWIN binmode" $(MAKE) -f -
+	cd $(TMP); ${SHELL} $(sx)/etc/bin/make-makefile make_proper | CYGWIN="$$CYGWIN binmode" $(MAKE) -f -
+	${SHELL} $(sx)/etc/bin/menage-tmp.sh $(TMP); : $(MAKE)
+	$(MAKE) COMPILER="$(COMPILER)" CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)"	sxV="$(sxV)" -f $(BNF)/sxmakefile

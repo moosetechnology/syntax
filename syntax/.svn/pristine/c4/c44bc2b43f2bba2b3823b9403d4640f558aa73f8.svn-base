@@ -1,0 +1,11 @@
+#include "varstr.h"
+#include "sxunix.h"
+
+char WHAT_VARSTRRAZ[] = "@(#)SYNTAX - $Id$" WHAT_DEBUG;
+
+VARSTR	varstr_raz (VARSTR varstr_ptr)
+{
+    varstr_ptr->current = varstr_ptr->first;
+    *(varstr_ptr->first) = NUL;
+    return varstr_ptr;
+}

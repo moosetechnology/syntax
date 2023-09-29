@@ -1,0 +1,103 @@
+# To avoid problems with other shells:
+SHELL=/bin/sh
+
+SX=$(sx)
+LNorCP=ln -s
+#LNorCP=${SHELL} $(SX)/etc/bin/lien-relatif.sh
+SXLIB=$(SX)/lib
+SXINCL=$(SX)/incl
+ETC=$(SX)/etc
+ETCLIB=$(ETC)/lib
+RECOR=$(SX)/recor
+SRC=$(RECOR)/src
+LIB=$(RECOR)/lib
+INCL=$(RECOR)/incl
+
+BIBS= $(ETCLIB)/libsxetc$(sxV).a $(SXLIB)/libsx$(sxV).a
+COMPILER=cc
+CC=cd $(LIB); umask 7; exec $(COMPILER) -I$(INCL) -I$(SXINCL) -I$(SX)/etc/incl $(CFLAGS) -c
+
+
+$(RECOR)/ALL .PRECIOUS:	$(SX)/bin/recor.out	\
+			$(SX)/bin/pprecor.out	\
+			$(RECOR)/print_rt.out
+
+$(SX)/bin/recor.out:	$(RECOR)/recor.out
+	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
+
+$(SX)/bin/pprecor.out:	$(RECOR)/pprecor.out
+	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
+
+
+NEEDS=	$(LIB)/recor_t.o		\
+	$(LIB)/recor_main.o		\
+	$(LIB)/recor_sact.o		\
+	$(SX)/lecl/lib/leclread.o	\
+	$(SX)/lecl/lib/leclfree.o	\
+	$(LIB)/recor_smp.o
+
+
+PP=	$(LIB)/pprecor_t.o		\
+	$(LIB)/pprecor_main.o		\
+	$(LIB)/pprecor_sact.o
+
+
+PRINT=	$(LIB)/print_rt.o
+
+
+$(RECOR)/recor.out:	$(NEEDS)	$(BIBS)
+	@echo '	$(COMPILER) -o $@'; rm -f $@; ${SHELL} -c '$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(BIBS) || (rm $@;exit 1)'
+
+$(LIB)/recor_t.o: 	$(SXINCL)/sxunix.h		\
+			$(SRC)/recor_t.c
+	$(CC) $(SRC)/recor_t.c		\
+			-Dsxtables=recor_tables	\
+			-DSCANACT=recor_scan_act\
+			-Dsempass=recor_smp
+
+$(LIB)/recor_main.o:	$(SXINCL)/sxunix.h	\
+			$(ETC)/incl/release.h	\
+			$(SRC)/recor_main.c
+	$(CC) $(SRC)/recor_main.c
+
+$(LIB)/recor_sact.o: 	$(SXINCL)/sxunix.h		\
+			$(SRC)/recor_sact.c
+	$(CC) $(SRC)/recor_sact.c
+
+$(LIB)/recor_smp.o:	$(SXINCL)/sxunix.h		\
+			$(SXINCL)/put_edit.h	\
+			$(INCL)/recor_node.h		\
+			$(SX)/etc/incl/R_tables.h	\
+			$(SX)/etc/incl/B_tables.h	\
+			$(SX)/etc/incl/S_tables.h	\
+			$(SRC)/recor_smp.c
+	$(CC) $(SRC)/recor_smp.c
+
+$(RECOR)/pprecor.out:	$(PP)	$(BIBS)
+	@echo '	$(COMPILER) -o $@'; rm -f $@; ${SHELL} -c '$(COMPILER) -o $@ $(PP) $(CFLAGS) $(LDFLAGS) $(BIBS) || (rm $@;exit 1)'
+
+$(LIB)/pprecor_main.o:	$(SXINCL)/sxunix.h	\
+			$(SRC)/pprecor_main.c
+	$(CC) $(SRC)/pprecor_main.c
+
+
+$(LIB)/pprecor_t.o: 	$(SXINCL)/sxunix.h		\
+			$(SRC)/pprecor_t.c
+	$(CC) $(SRC)/pprecor_t.c		\
+			-Dsxtables=pp_recor_tables	\
+			-DSCANACT=pp_recor_scan_act
+
+$(LIB)/pprecor_sact.o:	$(SXINCL)/sxunix.h		\
+			$(SRC)/pprecor_sact.c
+	$(CC) $(SRC)/pprecor_sact.c
+
+$(RECOR)/print_rt.out:	$(PRINT)	$(BIBS)
+	@echo '	$(COMPILER) -o $@'; rm -f $@; ${SHELL} -c '$(COMPILER) -o $@ $(PRINT) $(CFLAGS) $(LDFLAGS) $(BIBS) || (rm $@;exit 1)'
+
+$(LIB)/print_rt.o:	$(SXINCL)/sxunix.h		\
+			$(SX)/etc/incl/R_tables.h	\
+			$(SRC)/print_rt.c
+	$(CC) $(SRC)/print_rt.c
+
+lint:
+	lint -I$(INCL) -I$(SXINCL) -I$(ETC)/incl src/*.c $(LINTFLAGS)

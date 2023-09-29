@@ -1,0 +1,772 @@
+%
+% Les 1-RCG sont des rcg dont les predicats ont un et un seul arg
+% Comme les RCG, les 1-RCG sont closes par intersection et complementation
+% et elles sont modulaires
+% Toute CFG peut se transformer en une simple 1-RCG
+% On sait que l'intersection de 2 CFG et que le complementaire d'une CFG n'est pas une CFG.
+% En fait c'est une 1-RCG
+% Analyse en temps polynomial (cubique si les/la CFG initiales sont en CNF)
+% Montrer que les 1-RCG sont mildly context sensitive
+% Forment la + petite classe MCS
+% Si n > 1 toute n_sRCG peut se transformer en une (n-1)-RCG equivalente ??!!
+% A(U, V) si source = X U Y V Z, est equivalent a A(U Y V, Y) (diminue pas le nombre)
+% => Les TAGs peuvent s'exprimer en 1-RCG => TAG <= 1-RCG
+
+axiome(\a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z\0\1\2\3\4\5\6\7\8\9\ )
+		--> &False () .
+axiome(X Y)	--> &StrLen(2, X) d1(X) g1(Y) .
+axiome(X Y)	--> &StrLen(2, X) d2(X) g2(Y) .
+axiome(X Y)	--> &StrLen(2, X) d3(X) g3(Y) .
+axiome(X Y)	--> &StrLen(2, X) d4(X) g4(Y) .
+axiome(X Y)	--> &StrLen(2, X) d5(X) g5(Y) .
+axiome(X Y)	--> &StrLen(2, X) d6(X) g6(Y) .
+axiome(X Y)	--> &StrLen(2, X) d7(X) g7(Y) .
+axiome(X Y)	--> &StrLen(2, X) d8(X) g8(Y) .
+axiome(X Y)	--> &StrLen(2, X) d9(X) g9(Y) .
+axiome(X Y)	--> &StrLen(3, X) d10(X) g10(Y) .
+axiome(X Y)	--> &StrLen(3, X) d11(X) g11(Y) .
+axiome(X Y)	--> &StrLen(3, X) d12(X) g12(Y) .
+axiome(X Y)	--> &StrLen(3, X) d13(X) g13(Y) .
+axiome(X Y)	--> &StrLen(3, X) d14(X) g14(Y) .
+axiome(X Y)	--> &StrLen(3, X) d15(X) g15(Y) .
+axiome(X Y)	--> &StrLen(3, X) d16(X) g16(Y) .
+axiome(X Y)	--> &StrLen(3, X) d17(X) g17(Y) .
+axiome(X Y)	--> &StrLen(3, X) d18(X) g18(Y) .
+axiome(X Y)	--> &StrLen(3, X) d19(X) g19(Y) .
+axiome(X Y)	--> &StrLen(3, X) d20(X) g20(Y) .
+axiome(X Y)	--> &StrLen(3, X) d21(X) g21(Y) .
+axiome(X)	--> !d(X) . @mess
+
+d(X Y)		--> &StrLen(2, X) d1(X) .
+d(X Y)		--> &StrLen(2, X) d2(X) .
+d(X Y)		--> &StrLen(2, X) d3(X) .
+d(X Y)		--> &StrLen(2, X) d4(X) .
+d(X Y)		--> &StrLen(2, X) d5(X) .
+d(X Y)		--> &StrLen(2, X) d6(X) .
+d(X Y)		--> &StrLen(2, X) d7(X) .
+d(X Y)		--> &StrLen(2, X) d8(X) .
+d(X Y)		--> &StrLen(2, X) d9(X) .
+d(X Y)		--> &StrLen(3, X) d10(X) .
+d(X Y)		--> &StrLen(3, X) d11(X) .
+d(X Y)		--> &StrLen(3, X) d12(X) .
+d(X Y)		--> &StrLen(3, X) d13(X) .
+d(X Y)		--> &StrLen(3, X) d14(X) .
+d(X Y)		--> &StrLen(3, X) d16(X) .
+d(X Y)		--> &StrLen(3, X) d17(X) .
+d(X Y)		--> &StrLen(3, X) d18(X) .
+d(X Y)		--> &StrLen(3, X) d19(X) .
+d(X Y)		--> &StrLen(3, X) d20(X) .
+d(X Y)		--> &StrLen(3, X) d21(X) .
+
+d1(\1\ )	--> .
+d2(\2\ )	--> .
+d3(\3\ )	--> .
+d4(\4\ )	--> .
+d5(\5\ )	--> .
+d6(\6\ )	--> .
+d7(\7\ )	--> .
+d8(\8\ )	--> .
+d9(\9\ )	--> .
+d10(\1\0\ )	--> .
+d11(\1\1\ )	--> .
+d12(\1\2\ )	--> .
+d13(\1\3\ )	--> .
+d14(\1\4\ )	--> .
+d15(\1\5\ )	--> .
+d16(\1\6\ )	--> .
+d17(\1\7\ )	--> .
+d18(\1\8\ )	--> .
+d19(\1\9\ )	--> .
+d20(\2\0\ )	--> .
+d21(\2\1\ )	--> .
+
+% Qq def communes en 1-RCG
+
+% lgth0()		--> .
+
+lgth1(a)		--> .		
+lgth1(b)		--> .		
+lgth1(c)		--> .		
+lgth1(d)		--> .		
+lgth1(e)		--> .		
+lgth1(f)		--> .		
+lgth1(g)		--> .		
+lgth1(h)		--> .		
+lgth1(i)		--> .		
+lgth1(j)		--> .		
+lgth1(k)		--> .		
+lgth1(l)		--> .		
+lgth1(m)		--> .		
+lgth1(n)		--> .		
+lgth1(o)		--> .		
+lgth1(p)		--> .		
+lgth1(q)		--> .		
+lgth1(r)		--> .		
+lgth1(s)		--> .		
+lgth1(t)		--> .		
+lgth1(u)		--> .		
+lgth1(v)		--> .		
+lgth1(w)		--> .		
+lgth1(x)		--> .		
+lgth1(y)		--> .		
+lgth1(z)		--> .
+lgth1(0)		--> .		
+lgth1(1)		--> .		
+lgth1(2)		--> .		
+lgth1(3)		--> .		
+lgth1(4)		--> .		
+lgth1(5)		--> .		
+lgth1(6)		--> .		
+lgth1(7)		--> .		
+lgth1(8)		--> .		
+lgth1(9)		--> .		
+lgth1(\ )		--> .
+
+
+
+%
+% L1= {a^n b^n c^n | n > 0} = {a^n b^n c^m | n, m > 0} \cap {a^m b^n c^n | n,m > 0}
+%
+% Analyse en temps lineaire
+%
+g1(X)		--> g1_1(X) g1_2(X) .
+
+g1_1(X c)	--> g1_11(X) .
+
+g1_11(X c)	--> g1_11(X) .
+g1_11(a X b)	--> ab1(X) .
+
+ab1()		--> .
+ab1(a X b)	--> ab1(X) .
+
+g1_2(a X)	--> g1_21(X) .
+
+g1_21(a X)	--> g1_21(X) .
+g1_21(b X c)	--> bc1(X) .
+
+bc1()		--> .
+bc1(b X c)	--> bc1(X) .
+
+%
+% Analyse de L1 en temps lineaire
+%
+g11(X)		--> !two_ab(X) !two_bc(X) g1_1(X) g1_2(X) .
+
+two_ab(X a b Y)	--> one_ab(X) .
+two_ab(X a b Y)	--> one_ab(Y) .
+
+one_ab(X a b Y)	--> .
+
+two_bc(X b c Y)	--> one_bc(X) .
+two_bc(X b c Y)	--> one_bc(Y) .
+
+one_bc(X b c Y)	--> .
+
+
+
+
+%
+% L2= {a^n b^m c^n d^m| n, m > 0} = {a^n b^m c^n d^p| n, m, p > 0} \cap {a^n b^m c^p d^m| n, m, p > 0}
+%
+% Analyse en temps lineaire
+%
+g2(X)		--> g2_1(X) g2_2(X) .
+
+g2_1(X d)	--> g2_11(X) .
+
+g2_11(X d)	--> g2_11(X) .
+g2_11(a X c)	--> abc2(X) .
+
+abc2(a X c)	--> abc2(X) .
+abc2(b X)	--> b2(X).
+
+b2(b X)		--> b2(X) .
+b2()		--> .
+
+g2_2(a X)	--> g2_21(X) .
+
+g2_21(a X)	--> g2_21(X) .
+g2_21(b X d)	--> bcd2(X) .
+
+bcd2(b X d)	--> bcd2(X) .
+bcd2(c X)	--> c2(X).
+
+c2(c X)		--> c2(X) .
+c2()		--> .
+
+%
+% Analyse de L2 en temps lineaire
+%
+g12(X)		--> !two_ab(X) !two_cd(X) g2_1(X) g2_2(X) .
+
+two_cd(X c d Y)	--> one_cd(X) .
+two_cd(X c d Y)	--> one_cd(Y) .
+
+one_cd(X c d Y)	--> .
+
+
+%
+% L3={w w | w \in {a,b}^*}
+% !L3 est CF
+% Si |w| est impair => w \in !L3
+% Si |w| est pair (w = x y et |x| == |y|) et si x = x1 t1 x2 , y = y1 t2 y2 avec
+% t1, t2 \in T et t1 != t2,  |x1| == |y1|, |x2| == |y2| <=> w \in !L3
+% x1 t1 x2 y1 t2 y2  \in !L3 <=> x1 t1 y1 x2 t2 y2  \in !L3
+% Or l'ensemble des x1 t1 y1 x2 t2 y2 est la concatenation de 2 CFL
+%
+% Analyse en l^2
+%
+g3(X)			--> !w1w2(X) .
+
+w1w2(X)			--> w1aw2(X) .
+w1w2(X)			--> w1bw2(X) .
+w1w2(X Y)		--> w1aw2(X) w1bw2(Y) . % on attend un a au milieu de X et un b au milieu de Y
+w1w2(X Y)		--> w1bw2(X) w1aw2(Y) . % on attend un b au milieu de X et un a au milieu de Y
+
+w1aw2(a)		--> .
+w1aw2(a X a)		--> w1aw2(X).
+w1aw2(a X b)		--> w1aw2(X).
+w1aw2(b X a)		--> w1aw2(X).
+w1aw2(b X b)		--> w1aw2(X).
+
+w1bw2(b)		--> .
+w1bw2(a X a)		--> w1bw2(X).
+w1bw2(a X b)		--> w1bw2(X).
+w1bw2(b X a)		--> w1bw2(X).
+w1bw2(b X b)		--> w1bw2(X).
+
+%
+% L3 analyse en temps lineaire par une RCG
+%
+g13(X Y)		--> &StrEq(X,Y) .
+
+
+%
+% L14={w w^+  | w \in {a,b}^*} en RCG
+% Temps d'analyse carre
+%
+g14()			--> .
+g14(X Y)		--> !&StrLen(0, X) !&StrLen(0, Y) w_star(X,Y) .
+
+w_star(X,)		--> .
+w_star(X,Y Z)		--> &StrEq(X,Y) w_star(X,Z) .
+
+%
+% L14={w w^+  | w \in {a,b}^*} en RCG
+% Temps d'analyse sub-carre (pire si n=p!)
+%
+g15()			--> .
+g15(X Y)		--> !&StrLen(0, X) !&StrLen(0, Y) mul(X,Y) w_star(X,Y) .
+
+mul(X,)			--> .
+mul(X,Y Z)		--> &StrEqLen(X,Z) mul(X,Y) .
+
+
+
+
+%
+% L4= {a^n b^n c^n d^n e^n| n > 0} = {a^n b^n c^m d^m e^p | n, m, p > 0} \cap {a^p b^n c^n d^m e^m | n, m, p > 0}
+%
+% Ce n'est pas un TAL et c'est l'intersection de 2 CFL
+%
+% Analyse en temps lineaire
+%
+g4(X)			--> g4_1(X) g4_2(X) .
+
+g4_1(X e)		--> g4_11(X) . % a^n b^n c^m d^m e^*
+
+g4_11(X e)		--> g4_11(X) . % a^n b^n c^m d^m e^*
+g4_11(X d)		--> g4_12(X) g4_13(X) . % a^n b^n c^+ d^* and a^+ b^+ c^m d^m-1
+
+g4_12(X d)		--> g4_12(X) . % a^n b^n c^+ d^*
+g4_12(X c)		--> g4_14(X) . % a^n b^n c^*
+
+g4_14(X c)		--> g4_14(X) . % a^n b^n c^*
+g4_14(a X b)		--> g4_ab(X) . % a^n b^n
+
+g4_ab()			--> . % a^n b^n
+g4_ab(a X b)		--> g4_ab(X) . % a^n b^n
+
+g4_13(a X)		--> g4_15(X) . % a^* b^+ c^m d^m-1
+
+g4_15(a X)		--> g4_15(X) . % a^* b^+ c^m d^m-1
+g4_15(b X)		--> g4_16(X) . % b^* c^m d^m-1
+
+g4_16(b X)		--> g4_16(X) . % b^* c^m d^m-1
+g4_16(c X)		--> g4_cd(X) . % c^m d^m
+
+g4_cd()			--> . % c^m d^m
+g4_cd(c X d)		--> g4_cd(X) . % c^m d^m
+
+g4_2(a X)		--> g4_21(X) . % a^* b^n c^n d^m e^m
+
+g4_21(a X)		--> g4_21(X) . % a^* b^n c^n d^m e^m
+g4_21(b X)		--> g4_22(X) g4_23(X) . % b^* c^+ d^m e^m and  b^n-1 c^n d^+ e^+
+
+g4_22(b X)		--> g4_22(X) .  % b^* c^+ d^m e^m
+g4_22(c X) 		--> g4_24(X) .  % c^* d^m e^m
+
+g4_24(c X)		--> g4_24(X) .  % c^* d^m e^m
+g4_24(d X e)		--> g4_de(X) .  % d^m e^m
+
+g4_de()			--> .  % d^m e^m
+g4_de(d X e)		--> g4_de(X) .  % d^m e^m
+
+g4_23(X e)		--> g4_25(X) . % b^n-1 c^n d^+ e^*
+
+g4_25(X e)		--> g4_25(X) . % b^n-1 c^n d^+ e^*
+g4_25(X d)		--> g4_26(X) . % b^n-1 c^n d^*
+
+g4_26(X d)		--> g4_26(X) . % b^n-1 c^n d^*
+g4_26(X c)		--> g4_bc(X) . % b^n c^n
+
+g4_bc()			--> . % b^n c^n
+g4_bc(b X c)		--> g4_bc(X) . % b^n c^n
+
+
+% g4_1(a X b c Y d e Z)	--> ab4(X) cd4(Y) e4(Z) .
+
+% ab4()			--> .
+% ab4(a X b)		--> ab4(X) .
+
+% cd4()			--> .
+% cd4(c X d)		--> cd4(X) .
+
+% e4()			--> .
+% e4(e X)			--> e4(X) .
+
+% g4_2(X a b Y c d Z e)	--> a4(X) bc4(Y) de4(Z) .
+
+% a4()			--> .
+% a4(a X)			--> a4(X) .
+
+% bc4()			--> .
+% bc4(b X c)		--> bc4(X) .
+
+% de4()			--> .
+% de4(d X e)		--> de4(X) .
+
+%
+% L5={ab^ka b^{k-1}...abbab | k >= 1}
+% Modelise (Groenink p170) cinq mille mille mille cinq mille mille cinq mille (5005005000)
+% Doit-il faire partie de la langue nat ?
+%
+% N'a pas la "constant growth property" mais peut etre decrit par une 1_RCG
+% (semilinear => cst growth) donc non semilinear
+% les 1_RCG ne sont pas MCS
+% C'est une intersection infinie de langages CF
+%
+g5(a b)			--> .
+g5(a X)			--> m5(X) .
+
+m5(b b a b)		--> .
+m5(X)			--> p5(X) s5(X) .
+
+p5(X a Y)		--> bbab5(X) e5(Y) .
+
+bbab5(b a)		--> .
+bbab5(b X b)		--> bbab5(X) . 
+
+% peut etre supprime si on admet du top-down erasing
+e5()			--> .
+e5(a X)			--> e5(X) .
+e5(b X)			--> e5(X) .
+
+s5(b X)			--> s5(X) . % On supprime les b de tete
+s5(a X)			--> m5(X) . % C'est reparti
+
+%
+% L5 avec une 1_RCG combinatorial
+%
+g6(a b)			--> .
+g6(a X)			--> m6(X) .
+
+m6(b b a b)		--> .
+m6(X a Y a Z)		--> bbab6(X a Y) m6(Y a Z) .
+
+bbab6(b a)		--> .
+bbab6(b X b)		--> bbab6(X) . 
+
+%
+% L5 avec une RCG 
+% passer avec l'option de construction -increase_order
+%
+g16(a b)		--> .
+g16(a X a Y)		--> !dots_a_dots(X) 
+			    &Cut(X) b1ab2(X, a Y) .
+
+b1ab2(b b, a b)		--> .
+b1ab2(X,a Y a Z)	--> &StrEqLen(X,a Y) 
+			    !dots_a_dots(Y)
+			    b1ab2(Y, a Z) .
+
+dots_a_dots(X a Y)	--> .
+
+%
+% Variante de L5 avec une RCG lineaire
+% \set{a b^{k_1}  a b^{k_2} \ldots{}  a b^{k_p} \mid k_1 > k_2 > \ldots{} > k_p > 0}
+%
+g19(a X)		--> g19_1(X,a X,X) .
+
+g19_1(W,T X,b Y)	--> &StrLen(1,T) g19_1(W,X,Y) .
+g19_1(W1 a Y,X,a Y)	--> !&StrLen(0,X) g19_1(Y,W1,Y) .
+g19_1(W,X,)		--> !&StrLen(0,X) .
+
+
+
+%
+% Generalisation de L1
+% L7={a1^n a2^n ... ak^n | ai \in {a, b, c}, n>1, k>1, aj!=aj+1}
+%
+g7(X)			--> anbn(X) .
+% FAUX si on n'a pas aj!=aj+1 : "a1 a2 a3 a4 a5" marche avec XY="a1 a2 a3 a4" et YZ="a2 a3 a4 a5"
+% g7(X Y Z)		--> anbn(X Y) g7(Y Z) .
+% Attention a un source du type "aaabbbbcccc" si on ne verifie pas que Y se termine et Z commence
+% par 2 symboles differents
+g7(X Y T1 T2 Z)		--> lgth1(T1) lgth1(T2) !equal1(T1 T2) idem(X) idem(Y T1) anbn(X Y T1) g7(Y T1 T2 Z) .
+
+anbn(T1 T2 T3 T4)	--> lgth1(T1) lgth1(T2) lgth1(T3) lgth1(T4) equal1(T1 T2) equal1(T3 T4) !equal1(T2 T3) .
+anbn(T1 T2 X T3 T4)	--> lgth1(T1) lgth1(T2) lgth1(T3) lgth1(T4) equal1(T1 T2) equal1(T3 T4) anbn(T2 X T3) .
+
+equal1(a a)		--> .
+equal1(b b)		--> .
+equal1(c c)		--> .
+
+% chaine |X|>=2 formee des memes terminaux
+idem(X)			--> equal1(X) .
+idem(T1 T2 X)		--> lgth1(T1) lgth1(T2) equal1(T1 T2) idem(T2 X) .
+
+
+%
+% Generalisation de L2
+% Soit C un ensemble fini de couples (a1,a'1), (a2, a'2), ..., (ak, a'k)
+% L8={a1^n1 a2^n2 ... al^nl a'1^n1 a'2^n2 ... a'l^nl | ni>0 et 1 <= l <= k}
+%
+
+g8(X)	--> XanYbnZ(X) XcnYdnZ(X) XenYfnZ(X) .
+
+
+% Pour chaque couple (a, b) on verifie que le source :
+% ne contient pas ce couple
+% ou est de la forme f1 + T* a^n T* b^n T* et de la forme
+% f2 = T^h a^+ T^h T^k b+ T^k
+%
+
+%(a, b)
+XanYbnZ(X)	--> !XaY(X) !XbY(X) . % ne contient ni a ni b
+XanYbnZ(X)	--> abf1(X) abf2(X) . % de la forme f1 ou f2
+
+XaY(a X)	--> .
+XaY(T1 X)	--> lgth1(T1) !a(T1) XaY(X) .
+
+XbY(b X)	--> .
+XbY(T1 X)	--> lgth1(T1) !b(T1) XbY(X) .
+
+a(a)		--> .
+
+b(b)		--> .
+
+abf1(T1 X)	--> lgth1(T1) !a(T1) !b(T1) abf1(X) .
+abf1(a X)	--> aYbZ(a X) .
+
+aYbZ(X T1)	--> lgth1(T1) !a(T1) !b(T1) aYbZ(X) .
+aYbZ(X b)	--> aYb(X b) .
+
+aYb(a X b)	--> aYb(X) .
+aYb()		--> .
+aYb(T1 X)	--> lgth1(T1) !a(T1) !XaY(X) !XbY(X) . % ne contient ni a ni b
+aYb(X T1)	--> lgth1(T1) !b(T1) !XaY(X) !XbY(X) . % ne contient ni a ni b
+
+
+abf2(X Y)	--> TaT(X) TbT(Y) .
+
+TaT(X)		--> an(X) .
+TaT(T1 X T2)	--> lgth1(T1) !a(T1) !b(T1) lgth1(T2) !a(T2) !b(T2) TaT(X) .
+
+an(a)		--> .
+an(a X)		--> an(X) .
+
+TbT(X)		--> bn(X) .
+TbT(T1 X T2)	--> lgth1(T1) !a(T1) !b(T1) lgth1(T2) !a(T2) !b(T2) TbT(X) .
+
+bn(b)		--> .
+bn(b X)		--> bn(X) .
+
+%(c, d)
+XcnYdnZ(X)	--> !XcY(X) !XdY(X) . % ne contient ni c ni d
+XcnYdnZ(X)	--> cdf1(X) cdf2(X) . % de lc forme f1 ou f2
+
+XcY(c X)	--> .
+XcY(T1 X)	--> lgth1(T1) !c(T1) XcY(X) .
+
+XdY(d X)	--> .
+XdY(T1 X)	--> lgth1(T1) !d(T1) XdY(X) .
+
+c(c)		--> .
+
+d(d)		--> .
+
+cdf1(T1 X)	--> lgth1(T1) !c(T1) !d(T1) cdf1(X) .
+cdf1(c X)	--> cYdZ(c X) .
+
+cYdZ(X T1)	--> lgth1(T1) !c(T1) !d(T1) cYdZ(X) .
+cYdZ(X d)	--> cYd(X d) .
+
+cYd(c X d)	--> cYd(X) .
+cYd()		--> .
+cYd(T1 X)	--> lgth1(T1) !c(T1) !XcY(X) !XdY(X) . % ne contient ni c ni d
+cYd(X T1)	--> lgth1(T1) !d(T1) !XcY(X) !XdY(X) . % ne contient ni c ni d
+
+
+cdf2(X Y)	--> TcT(X) TdT(Y) .
+
+TcT(X)		--> cn(X) .
+TcT(T1 X T2)	--> lgth1(T1) !c(T1) !d(T1) lgth1(T2) !c(T2) !d(T2) TcT(X) .
+
+cn(c)		--> .
+cn(c X)		--> cn(X) .
+
+TdT(X)		--> dn(X) .
+TdT(T1 X T2)	--> lgth1(T1) !c(T1) !d(T1) lgth1(T2) !c(T2) !d(T2) TdT(X) .
+
+dn(d)		--> .
+dn(d X)		--> dn(X) .
+
+%(e, f)
+XenYfnZ(X)	--> !XeY(X) !XfY(X) . % ne eontient ni e ni f
+XenYfnZ(X)	--> eff1(X) eff2(X) . % fe le forme f1 ou f2
+
+XeY(e X)	--> .
+XeY(T1 X)	--> lgth1(T1) !e(T1) XeY(X) .
+
+XfY(f X)	--> .
+XfY(T1 X)	--> lgth1(T1) !f(T1) XfY(X) .
+
+e(e)		--> .
+
+f(f)		--> .
+
+eff1(T1 X)	--> lgth1(T1) !e(T1) !f(T1) eff1(X) .
+eff1(e X)	--> eYfZ(e X) .
+
+eYfZ(X T1)	--> lgth1(T1) !e(T1) !f(T1) eYfZ(X) .
+eYfZ(X f)	--> eYf(X f) .
+
+eYf(e X f)	--> eYf(X) .
+eYf()		--> .
+eYf(T1 X)	--> lgth1(T1) !e(T1) !XeY(X) !XfY(X) . % ne eontient ni e ni f
+eYf(X T1)	--> lgth1(T1) !f(T1) !XeY(X) !XfY(X) . % ne eontient ni e ni f
+
+
+eff2(X Y)	--> TeT(X) TfT(Y) .
+
+TeT(X)		--> en(X) .
+TeT(T1 X T2)	--> lgth1(T1) !e(T1) !f(T1) lgth1(T2) !e(T2) !f(T2) TeT(X) .
+
+en(e)		--> .
+en(e X)		--> en(X) .
+
+TfT(X)		--> fn(X) .
+TfT(T1 X T2)	--> lgth1(T1) !e(T1) !f(T1) lgth1(T2) !e(T2) !f(T2) TfT(X) .
+
+fn(f)		--> .
+fn(f X)		--> fn(X) .
+
+%
+% L9={w{cw}^+ | w \in {a, b}^*}
+%
+g9(X)			--> w_cwk(X) . % w{cw}^+
+
+w_cwk(X)		--> wcw(X) . % wcw
+w_cwk(X)		--> wcw_c_dots(X) dots_cwk(X) . % wcwc...  and  w'cw{cw}^+
+
+wcw_c_dots(X c Y)	--> wcw(X) .
+
+wcw(X)			--> dots_c_dots(X) !w1tw2(X) .
+
+% dots_c_dots(X) : il y a un c au milieu de X et pas ailleurs
+dots_c_dots(c)		--> .
+dots_c_dots(a X a)	--> dots_c_dots(X) .
+dots_c_dots(a X b)	--> dots_c_dots(X) .
+dots_c_dots(b X a)	--> dots_c_dots(X) .
+dots_c_dots(b X b)	--> dots_c_dots(X) .
+
+% w1tw2(X t Y): Il existe un decoupage X t Y tel que le milieu de X et le milieu de Y sont differents
+w1tw2(X a Y)		--> lal(X) !lal(Y) .
+w1tw2(X a Y)		--> lbl(X) !lbl(Y) .
+w1tw2(X a Y)		--> lcl(X) !lcl(Y) .
+w1tw2(X b Y)		--> lal(X) !lal(Y) .
+w1tw2(X b Y)		--> lbl(X) !lbl(Y) .
+w1tw2(X b Y)		--> lcl(X) !lcl(Y) .
+w1tw2(X c Y)		--> lal(X) !lal(Y) .
+w1tw2(X c Y)		--> lbl(X) !lbl(Y) .
+w1tw2(X c Y)		--> lcl(X) !lcl(Y) .
+
+lal(a)			--> .
+lal(a X)		--> lalt(X) .
+lal(b X)		--> lalt(X) .
+lal(c X)		--> lalt(X) .
+
+lbl(b)			--> .
+lbl(a X)		--> lblt(X) .
+lbl(b X)		--> lblt(X) .
+lbl(c X)		--> lblt(X) .
+
+lcl(c)			--> .
+lcl(a X)		--> lclt(X) .
+lcl(b X)		--> lclt(X) .
+lcl(c X)		--> lclt(X) .
+
+lalt(X a)		--> lal(X) .
+lalt(X b)		--> lal(X) .
+lalt(X c)		--> lal(X) .
+
+lblt(X a)		--> lbl(X) .
+lblt(X b)		--> lbl(X) .
+lblt(X c)		--> lbl(X) .
+
+lclt(X a)		--> lcl(X) .
+lclt(X b)		--> lcl(X) .
+lclt(X c)		--> lcl(X) .
+
+dots_cwk(a X)		--> dots_cwk(X) . % w'cw{cw}^+
+dots_cwk(b X)		--> dots_cwk(X) . % w'cw{cw}^+
+dots_cwk(c X)		--> w_cwk(X) . % w{cw}^+
+
+% g9(X)		--> w_cwk(X) .
+
+
+% w_cwk(X)	--> wcw(X) .
+% w_cwk(X c Y c Z)--> wcw(X c Y) w_cwk(Y c Z) .
+
+% wcw(X)		--> XcY9(X) !diff(X) .
+
+% XcY9(X) : il y a un c au milieu de X et pas ailleurs
+% XcY9(c)		--> .
+% XcY9(T1 X T2)	--> lgth1(T1) lgth1(T2) !c(T1) !c(T2) XcY9(X) .
+
+% Il existe un decoupage X T Y tel que le milieu de X et le milieu de Y sont differents
+% diff(X T Y)	--> lgth1(T) XaX9(X) XbX9(Y) .
+% diff(X T Y)	--> lgth1(T) XbX9(X) XaX9(Y) .
+
+% XaX9(a)		--> .
+% XaX9(T1 X T2)	-->  lgth1(T1) lgth1(T2) XaX9(X) .
+
+% XbX9(b)		--> .
+% XbX9(T1 X T2)	-->  lgth1(T1) lgth1(T2) XbX9(X) .
+
+
+%
+% L9={w{cw}^+ | w \in {a, b}^*} en RCG lineaire
+% option -io
+%
+g17(X c Y)	--> &Cut(X) m17(X, Y) .
+
+m17(X, Y c Z)	--> &StrEq(X, Y) m17(X, Z) .
+m17(X, Y)	--> &StrEq(X, Y) .
+
+
+%
+% Passage (automatique) de (g6) combinatorial a g10 (non-combinatorial)
+% on a une 3-RCG meme temps d'analyse que la 1-RCG source
+%
+g10(a b)		--> .
+g10(a X)		--> m10(X) .
+
+m10(b b a b)		--> .
+% m10(X a Y a Z)		--> bbab10(X a Y) m10(Y a Z) .
+m10(X)			--> m10_1(X,X,X) .
+m10_1(X,Y1 Y2,Z1 Z2)	--> m10_2(X,Y1,Z2) bbab10(Y1) m10(Z2) .
+m10_2(X a Y a Z, X a Y, Y a Z)	--> .
+
+bbab10(b a)		--> .
+bbab10(b X b)		--> bbab10(X) . 
+
+
+
+%
+% {a^n b^m c^l d^n e^m f^l| l,m,n > 0} = {a^n b^+ c^+ d^n e^+ f^+} \cap
+%					 {a^+ b^m c^+ d^+ e^m f^+} \cap
+%					 {a^+ b^+ c^l d^+ e^+ f^l}
+%
+% Ce n'est pas un TAL et c'est l'intersection de 3 CFL
+%
+% Analyse en temps lineaire
+%
+g18(X)		--> g18_1(X) g18_2(X) g18_3(X) .
+
+g18_1(X f)	--> g18_11(X) . % {a^n b^+ c^+ d^n e^+ f^*}
+
+g18_11(X f)	--> g18_11(X) . % {a^n b^+ c^+ d^n e^+ f^*}
+g18_11(X e)	--> g18_12(X) . % {a^n b^+ c^+ d^n e^*}
+
+g18_12(X e)	--> g18_12(X) . % {a^n b^+ c^+ d^n e^*}
+g18_12(a X d)	--> g18_13(X) . % {a^n b^+ c^+ d^n}
+
+g18_13(a X d)	--> g18_13(X) . % {a^n b^+ c^+ d^n}
+g18_13(b X c)	--> g18_14(X) . % {b^* c^*}
+
+g18_14(b X)	--> g18_14(X) . % {b^* c^*}
+g18_14(c X)	--> g18_15(X) . % {c^*}
+g18_14()	--> . % {}
+
+g18_15(c X)	--> g18_15(X) . % {c^*}
+g18_15(X)	--> . % {}
+
+g18_2(X f)	--> g18_21(X) . % {a^+ b^m c^+ d^+ e^m f^*}
+
+g18_21(X f)	--> g18_21(X) . % {a^+ b^m c^+ d^+ e^m f^*}
+g18_21(X e)	--> g18_22(X) . % {a^+ b^m c^+ d^+ e^m-1}
+
+g18_22(a X)	--> g18_22(X) . % {a^* b^m c^+ d^+ e^m-1}
+g18_22(b X)	--> g18_23(X) . % {b^m c^+ d^+ e^m}
+
+g18_23(b X e)	--> g18_23(X) . % {b^m c^+ d^+ e^m}
+g18_23(c X d)	--> g18_24(X) . % {c^* d^*}
+
+g18_24(c X)	--> g18_24(X) . % {c^* d^*}
+g18_24(d X)	--> g18_25(X) . % {d^*}
+g18_24()	--> . % {}
+
+g18_25(d X)	--> g18_25(X) . % {d^*}
+g18_25()	--> . % {}
+
+g18_3(a X)	--> g18_31(X) . % {a^* b^+ c^l d^+ e^+ f^l}
+
+g18_31(a X)	--> g18_31(X) . % {a^* b^+ c^l d^+ e^+ f^l}
+g18_31(b X)	--> g18_32(X) . % {b^* c^l d^+ e^+ f^l}
+
+g18_32(b X)	--> g18_32(X) . % {b^* c^l d^+ e^+ f^l}
+g18_32(c X f)	--> g18_33(X) . % {c^l d^+ e^+ f^l}
+
+g18_33(c X f)	--> g18_33(X) . % {c^l d^+ e^+ f^l}
+g18_33(d X e)	--> g18_34(X) . % {d^* e^*}
+
+g18_34(d X)	--> g18_34(X) . % {d^* e^*}
+g18_34(e X)	--> g18_35(X) . % {e^*}
+g18_34()	--> . % {}
+
+g18_35(e X)	--> g18_35(X) . % {e^*}
+g18_35()	--> . % {}
+
+%
+% \set{x \mid |x|= p^2, p \geq 0}
+% en n log n
+%
+
+g20(X Y)		--> g20_1(X,X,X Y) .
+
+g20_1(X,T1 Y1,Z1 Z2)	--> &StrLen(1,T1) &StrEqLen(X,Z1) g20_1(X,Y1,Z2) .
+g20_1(X,,)		--> .
+
+%
+% \set{x \mid |x|= p^2, p \geq 0}
+% en \sqrt{n}
+%
+
+g21(T X)		--> &StrLen(1,T) g21_1(T,X) .
+g21()			--> .
+
+g21_1(X,Y T Z)		--> &StrLen(2,T) &StrEqLen(X,Y) g21_1(Y T,Z) .
+g21_1(X,)		--> .
+

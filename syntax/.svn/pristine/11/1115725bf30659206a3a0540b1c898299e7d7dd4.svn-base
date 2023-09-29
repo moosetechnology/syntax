@@ -1,0 +1,55 @@
+# To avoid problems with other shells:
+SHELL=/bin/sh
+include $(sx)/etc/gccoptions
+SX=$(sx)
+LNorCP=ln -s
+#LNorCP=${SHELL} $(SX)/etc/bin/lien-relatif.sh
+SXLIB=$(SX)/lib
+SXINCL=$(SX)/incl
+ETC=$(SX)/etc
+ETCLIB=$(ETC)/lib
+
+DICO=$(SX)/dico
+SRC=$(DICO)/src
+LIB=$(DICO)/lib
+
+BIBS= $(ETCLIB)/libsxetc$(sxV).a $(SXLIB)/libsx$(sxV).a
+
+# CC=cd $(LIB); umask 7; exec $(COMPILER) -I$(SXINCL) -I$(ETC)/incl $(CFLAGS)  -c
+CC=cd $(LIB); umask 7; exec $(COMPILER) -I$(SXINCL) -I$(ETC)/incl $(CFLAGS) -c
+
+$(DICO)/ALL .PRECIOUS:	$(SX)/bin/dico.out	
+
+$(SX)/bin/dico.out:	$(DICO)/dico.out
+	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
+
+NEEDED=\
+	$(LIB)/dico_main.o	\
+	$(LIB)/dico_t.o		\
+	$(LIB)/dico_act.o
+
+$(DICO)/dico.out:	$(NEEDED)	$(BIBS)
+	@echo '	$(COMPILER) -o $@'; rm -f $@; ${SHELL} -c '$(COMPILER) -o $@ $(NEEDED) $(CFLAGS) $(LDFLAGS) $(BIBS) || (rm $@;exit 1)'
+
+$(LIB)/dico_act.o:	$(SXINCL)/sxunix.h	\
+			$(SXINCL)/sxba.h	\
+			$(SXINCL)/sxdico.h	\
+			$(SRC)/dico_act.c	
+	$(CC) $(SRC)/dico_act.c			\
+		-Dsxtables=dico_tables
+
+$(LIB)/dico_main.o:	$(SXINCL)/sxunix.h	\
+			$(SXINCL)/sxdico.h	\
+			$(SRC)/dico_main.c
+	$(CC) $(SRC)/dico_main.c		\
+		-Dsxtables=dico_tables
+
+$(LIB)/dico_t.o:	$(SXINCL)/sxunix.h 	\
+			$(SRC)/dico_t.c
+	$(CC) $(SRC)/dico_t.c			\
+		-Dsxtables=dico_tables		\
+		-DSCANACT=dico_scan_act		\
+		-DSEMACT=dico_sem_act
+
+clean:
+	/bin/rm -f $(LIB)/*.o $(DICO)/dico.out

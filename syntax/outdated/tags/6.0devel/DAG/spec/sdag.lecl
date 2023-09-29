@@ -1,0 +1,39 @@
+Classes
+        ANY             = #000..#377 ;
+	DIACRITIC	= "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ°¥«©®µ»¹¾³£¶¦¼¬¿¯±¡";
+	LETTER          = LETTER + DIACRITIC + DIGIT ;
+	BLANK		= SP + HT + VT + NL ;
+	FORM_SUFFIX     = ANY - BLANK - "\"(){}/#'" ;
+	SEMLEX_CHAR    = ANY - BLANK - "|\\" ;
+
+Tokens
+	Comments	= -{BLANK
+			   | "/" "/"&True {ANY}* EOL&True -- C++
+			   | "/" "*" {ANY}* "*" "/"&True -- C
+		           }+
+			   | -("#"&Is_First_Col {ANY}* EOL&True) -- Shell
+			   | "{" @Reset(0)
+			       {
+			         "{"&True @Incr(0) |
+				 "}"&Is_Set(0) @Decr(0) |
+				 ^"}" |
+				 "\\"&True ANY
+			       }*
+			     "}"
+	                  ;
+			Priority Shift > Reduce;
+
+        %form           = -"'" {^NL | -"\\"&true ("\\" | "'")} -"'"&true
+			  | -QUOTE {^NL | -"\\"&true ("\\" | "\"")} -QUOTE&true
+			  | LETTER {FORM_SUFFIX}* ;
+			Priority Shift > Reduce;
+
+	%SEMLEX		= -"[" -"|" {SEMLEX_CHAR | -"\\"&TRUE ANY}* -"|" -"]"&TRUE ;
+
+	bodag           = -("#"&IS_FIRST_COL "#" { SP | HT }* "S" "D" "A" "G" { SP | HT }* "B" "E" "G" "I" "N"&True {ANY} NL&True) ;
+			Priority Reduce > Reduce;
+
+	eodag           = -("#"&IS_FIRST_COL "#" { SP | HT }* "S" "D" "A" "G" { SP | HT }* "E" "N" "D"&True {ANY} NL&True) ;
+			Priority Reduce > Reduce;
+
+--	end_of_source	= -"$" ;

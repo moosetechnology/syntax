@@ -1,0 +1,92 @@
+# To avoid problems with other shells:
+SHELL=/bin/sh
+
+SX=$(sx)
+LNorCP=ln -s
+#LNorCP=${SHELL} $(SX)/etc/bin/lien-relatif.sh
+SXLIB=$(SX)/lib
+SXINCL=$(SX)/incl
+ETC=$(SX)/etc
+ETCLIB=$(ETC)/lib
+
+CSYNT=$(SX)/csynt
+SRC=$(CSYNT)/src
+LIB=$(CSYNT)/lib
+INCL=$(CSYNT)/incl
+
+BIBS= $(ETCLIB)/libsxetc$(sxV).a $(SXLIB)/libsx$(sxV).a
+COMPILER=cc
+CC=cd $(LIB); umask 7; exec $(COMPILER) -I$(INCL) -I$(SXINCL) -I$(ETC)/incl $(CFLAGS) -c
+
+$(CSYNT)/ALL .PRECIOUS:	$(SX)/bin/csynt.out
+
+$(SX)/bin/csynt.out:	$(CSYNT)/csynt.out
+	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
+
+NEEDS=	$(LIB)/csynt.o			\
+	$(LIB)/LALR1.o			\
+	$(LIB)/path.o			\
+	$(LIB)/single.o			\
+	$(LIB)/algoV.o			\
+	$(LIB)/optim_lo.o		\
+	$(LIB)/xprdct_mngr.o		\
+	$(LIB)/OPTIM.o
+
+$(CSYNT)/csynt.out:	$(NEEDS)	$(BIBS)
+	@echo '	$(COMPILER) -o $@'; rm -f $@; ${SHELL} -c '$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(BIBS) || (rm $@;exit 1)'
+
+$(LIB)/csynt.o:		$(INCL)/csynt_optim.h		\
+			$(ETC)/incl/B_tables.h		\
+			$(ETC)/incl/bstr.h		\
+			$(SXINCL)/sxunix.h		\
+			$(ETC)/incl/release.h		\
+			$(SRC)/csynt.c
+	$(CC) $(SRC)/csynt.c
+
+$(LIB)/LALR1.o:		$(INCL)/csynt_optim.h		\
+			$(ETC)/incl/B_tables.h		\
+			$(ETC)/incl/D_tables.h		\
+			$(SXINCL)/varstr.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SRC)/LALR1.c
+	$(CC) $(SRC)/LALR1.c
+
+$(LIB)/path.o:		$(INCL)/csynt_optim.h		\
+			$(ETC)/incl/B_tables.h		\
+			$(SXINCL)/varstr.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SRC)/path.c
+	$(CC) $(SRC)/path.c
+
+$(LIB)/optim_lo.o:	$(INCL)/csynt_optim.h		\
+			$(ETC)/incl/B_tables.h		\
+			$(ETC)/incl/P_tables.h		\
+			$(ETC)/incl/bstr.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SRC)/optim_lo.c
+	$(CC) $(SRC)/optim_lo.c
+
+$(LIB)/xprdct_mngr.o:	$(SXINCL)/sxunix.h		\
+			$(SRC)/xprdct_mngr.c
+	$(CC) $(SRC)/xprdct_mngr.c
+
+$(LIB)/single.o:	$(INCL)/csynt_optim.h		\
+			$(ETC)/incl/B_tables.h		\
+			$(ETC)/incl/P_tables.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SRC)/single.c
+	$(CC) $(SRC)/single.c
+
+$(LIB)/algoV.o:		$(INCL)/csynt_optim.h		\
+			$(ETC)/incl/B_tables.h		\
+			$(ETC)/incl/P_tables.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SRC)/algoV.c
+	$(CC) $(SRC)/algoV.c
+
+$(LIB)/OPTIM.o:		$(INCL)/csynt_optim.h		\
+			$(ETC)/incl/B_tables.h		\
+			$(ETC)/incl/P_tables.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SRC)/OPTIM.c
+	$(CC) $(SRC)/OPTIM.c

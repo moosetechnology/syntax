@@ -1,0 +1,61 @@
+# To avoid problems with other shells:
+SHELL=/bin/sh
+
+SX=$(sx)
+SXLIB=$(SX)/lib
+SXINCL=$(SX)/incl
+ETC=$(SX)/etc
+ETCLIB=$(ETC)/lib
+ETCINCL=$(ETC)/incl
+
+TAG=$(SX)/TAG
+SRC=$(TAG)/src
+LIB=$(TAG)/lib
+INCL=$(TAG)/incl
+
+BIBS= $(ETCLIB)/libsxetc$(sxV).a $(SXLIB)/libsx$(sxV).a
+
+CC=cd $(LIB); umask 7; exec cc -I$(INCL) -I$(SXINCL) -I$(ETC)/incl $(CFLAGS) -c
+
+$(TAG)/everything .PRECIOUS:	$(TAG)/xtag2lig.out
+
+
+NEEDS1=\
+	$(LIB)/xtag_main.o		\
+	$(LIB)/xtag_sact.o		\
+	$(LIB)/xtag_smp.o    		\
+	$(LIB)/xtag_t.o
+
+$(TAG)/xtag2lig.out:	$(NEEDS1)	$(BIBS)
+	@echo '	cc -o $@'; ${SHELL} -c 'cc -o $@ $(NEEDS1) $(CFLAGS) $(LDFLAGS) $(BIBS) || (rm $@;exit 1)'
+
+$(LIB)/xtag_main.o:	$(SXINCL)/sxunix.h	\
+			$(INCL)/xtag.h	 	\
+			$(TAG)/force-make 	\
+			$(SRC)/xtag_main.c
+	$(CC) $(SRC)/xtag_main.c
+
+$(LIB)/xtag_sact.o:	$(SXINCL)/sxunix.h	\
+			$(INCL)/xtag.h	 	\
+			$(TAG)/force-make 	\
+			$(SRC)/xtag_sact.c
+	$(CC) $(SRC)/xtag_sact.c
+
+$(LIB)/xtag_smp.o:	$(SXINCL)/sxunix.h	\
+			$(ETCINCL)/XxY.h	\
+			$(ETCINCL)/SS.h		\
+			$(ETCINCL)/varstr.h	\
+			$(INCL)/xtag.h	 	\
+			$(TAG)/force-make 	\
+			$(SRC)/xtag_smp.c
+	$(CC) $(SRC)/xtag_smp.c
+
+$(LIB)/xtag_t.o:	$(SXINCL)/sxunix.h 	\
+			$(TAG)/force-make 	\
+			$(SRC)/xtag_t.c
+	$(CC) $(SRC)/xtag_t.c			\
+		-Dsxtables=xtag_tables		\
+		-DSCANACT=xtag_scan_act		\
+		-DSEMACT=sxvoid			\
+		-Dsempass=xtag_smp
+

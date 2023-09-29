@@ -1,0 +1,14 @@
+*
+* This is a LIG for the language {wcw | w in {a, b}* }
+*
+
+* No error recovery (by source text modification) since stack testing
+* is performed after source text reading (see wcw2.lig)
+
+<S>(..)		= a <S>(.. a )		;
+<S>(..)		= b <S>(.. b )		;
+<S>(..)		= <T>(..)		;
+*
+<T>( .. a )	= <T>(..) a		;
+<T>( .. b )	= <T>(..) b		;
+<T>()		= c			;

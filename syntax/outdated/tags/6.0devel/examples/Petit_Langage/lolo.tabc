@@ -1,0 +1,106 @@
+$cptr(  <lolo-axiom>,
+	<program>,
+	<list>,
+	<var-symbol>,
+	<type-symbol>,
+	<var-identifier-list>,
+	<type-identifier-list>,
+	<var-identifier>,
+	<type-identifier>,
+	<identifier>) : int;
+
+$idf(<identifier>) : char *;
+
+$
+decl=
+
+#ifndef _SEM_
+#include "sem.h"
+#endif
+
+$
+open=
+  INIT_SYNTACTIC_ANALYSIS ();
+$
+close=
+  END_SYNTACTIC_ANALYSIS ();
+$
+
+<lolo-axiom> = <program> ;
+$cptr(<lolo-axiom>)
+
+     $cptr(<lolo-axiom>) = $cptr(<program>);
+     printf("%d identificateurs dans ce programme\n", $cptr(<lolo-axiom>));
+
+<program> = <program> <list> ;
+$cptr(<program>)
+
+     $cptr(<program>) = $cptr(<list>) + $cptr(<program>');
+
+<program> = <list> ;
+$cptr(<program>)
+
+     $cptr(<program>) = $cptr(<list>);
+
+<list> = <var-symbol> <var-identifier-list> <semi-colon-symbol> ;
+$cptr(<list>)
+
+     $cptr(<list>) = $cptr(<var-symbol>) + $cptr(<var-identifier-list>);
+
+<list> = <type-symbol> <type-identifier-list> <semi-colon-symbol> ;
+$cptr(<list>)
+
+     $cptr(<list>) = $cptr(<type-symbol>) + $cptr(<type-identifier-list>);
+
+<type-identifier-list> = <type-identifier-list> <comma-symbol> <type-identifier> ;
+$cptr(<type-identifier-list>)
+
+     $cptr(<type-identifier-list>) = $cptr(<type-identifier>) + $cptr(<type-identifier-list>');
+
+<type-identifier-list> = <type-identifier> ;
+$cptr(<type-identifier-list>)
+
+     $cptr(<type-identifier-list>) = $cptr(<type-identifier>);
+
+<type-identifier> = <identifier>;
+$cptr(<type-identifier>)
+
+     $cptr(<type-identifier>) = $cptr(<identifier>);
+     PRINT_SPECIAL($idf(<identifier>));
+
+<var-identifier-list> = <var-identifier-list> <comma-symbol> <var-identifier> ;
+$cptr(<var-identifier-list>)
+
+     $cptr(<var-identifier-list>) = $cptr(<var-identifier>) + $cptr(<var-identifier-list>');
+
+<var-identifier-list> = <var-identifier> ;
+$cptr(<var-identifier-list>)
+
+     $cptr(<var-identifier-list>) = $cptr(<var-identifier>);
+
+<var-identifier> = <identifier>;
+$cptr(<var-identifier>)
+
+     $cptr(<var-identifier>) = $cptr(<identifier>);
+     PRINT_SPECIAL($idf(<identifier>));
+
+<identifier> = %IDENTIFIER ;
+$idf(<identifier>)
+$cptr(<identifier>)
+
+     $cptr(<identifier>) = 1;
+     VERIF_UNICITE($pste("%IDENTIFIER"),&($idf(<identifier>)));
+
+<var-symbol> = "VAR" ;
+$cptr(<var-symbol>)
+
+     $cptr(<var-symbol>) = 0;
+     INIT_VAR ();
+
+<type-symbol> = "TYPE" ;
+$cptr(<type-symbol>) 
+
+     $cptr(<type-symbol>) = 0;
+     INIT_TYPE ();
+<semi-colon-symbol> = ";" ;
+<comma-symbol> = "," ;

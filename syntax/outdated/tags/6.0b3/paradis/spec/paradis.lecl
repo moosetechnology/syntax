@@ -1,0 +1,84 @@
+Classes
+
+	ANY		= #000..#377 ;
+	PRINT		= ANY - #000..#040 - #177..#241 ;
+	T_HEADER	= PRINT - "<#;\"~&@" ;
+	NT_BODY		= PRINT + SP - ">" ;
+
+
+Tokens
+
+	Comments	= -{"*"&Is_First_Col {^EOL} EOL}+ |
+			  -{SP&Is_set (0) @Incr (2) | HT&Is_Set (0) @3 | EOL&Is_Set (0) @Set (2)}+ ;
+			   Priority Shift>Reduce ;
+
+	%BLANKS		= -{(SP | VT | FF) @Incr(2) | HT @3 | EOL @Incr (1) @Set (2)}+ ; @2 ;
+			   Context All But %BLANKS ;
+
+	LHS_NON_TERMINAL
+			= -("<"&Is_First_Col @Set (0) @Set (2) @Incr (2)
+				{NT_BODY @Incr (2)}
+			    ">" @Incr (2)
+			   ) ;
+
+	%NON_TERMINAL	=  -("<" @Incr (2)
+				{NT_BODY @Incr (2)}
+			     ">" @Incr (2)
+			    ) ; @2 ;
+
+	%TERMINAL	= -(
+			    ("#" @Incr (2) PRINT @Incr (2) | T_HEADER @Incr (2)) {PRINT @Incr (2)} |
+			     QUOTE @Incr (2)
+				{^"\"\n\\" |
+				 HT&True @3 |
+				 BS&True @Decr (2) |
+				 "\\" @Incr (2) (Any @Incr (2) |
+						EOL&True @Incr (1) @Set (2) |
+						HT&True @3 |
+						BS&True @Decr (2)
+					      	)
+				}
+			     QUOTE @Incr (2)
+			   ) ; @2 ;
+			   Priority Shift>Reduce ;
+			   Context Comments ;
+
+	%GENERIC_TERMINAL
+			= -("%" @Incr (2) LETTER @Incr (2) {["_" @Incr (2)] (LETTER @Incr (2) | DIGIT @Incr (2))}) ; @2 ;
+			   Priority Reduce>Reduce, Shift>Reduce ;
+			   Context Comments ;
+
+	%ACTION		= -("@" @Incr (2) {DIGIT @Incr (2)}) ; @2 ;
+			   Context Comments ;
+
+	%PREDICATE	= -("&" @Incr (2) {DIGIT @Incr (2)}) ; @2 ;
+			   Context Comments ;
+
+	%LHS		= -"="&Is_Set (0) @Reset (0) @Incr (2) ; @2 ;
+
+	";"		= -";" @1 ;
+
+	"~"		= union
+				head : -"~"&Is_Reset (0) @Set (0) @Incr (2) ;
+				tail : -"~"&Is_Set (0) @Reset (0) @Incr (2) ; @2 ;
+			  end ;
+
+	"("		= -"("&Is_Set (0) @Incr (2) ;
+
+	")"		= -")"&Is_Set (0) @Incr (2) ;
+
+	"+"		= -"+"&Is_Set (0) @Incr (2) ;
+
+	"-"		= -"-"&Is_Set (0) @Incr (2) ;
+
+	%NUMBER		= DIGIT&Is_Set (0) @Incr (2) {DIGIT @Incr (2)} ;
+
+	KEY_WORD	= LETTER&Is_Set (0) @Incr (2) {LETTER @Incr (2)} ;
+
+--  scan_act (INIT)  : erases the source text from beginning until the 
+--			   first "<" laying at column 1
+--  @1  : Skip the source text until the first "<" laying at column 1
+--  @2  : memorisation des counters [1:2] + Reset counters [1]
+--  @3  : mise a jour de counters [2] sur HT
+
+

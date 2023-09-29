@@ -1,0 +1,329 @@
+.\" @(#)sxsrc_mngr.3	- SYNTAX [unix] - 29 Decembre 1987
+.TH SXSRC_MNGR 3 "SYNTAX\[rg]"
+.SH NAME
+sxsrcmngr,
+sxsrc_mngr,
+sxnext_char,
+sxnextchar,
+sxlafirst_char,
+sxlanext_char,
+sxlaback,
+sxX,
+sxsrcpush
+\- source manager for SYNTAX.
+.SH SYNOPSIS
+.nf
+.ta \w'\s-2SXVOID\s0  'u +\w'\s-2SXSHORT\s0  'u
+.B
+#include "sxunix.h"
+.PP
+.B
+struct sxsrcmngr  sxsrcmngr\|;
+.PP
+.B
+\s-2SXVOID\s0 sxsrc_mngr (what, infile, file_name)
+.B
+	int	 what\|;
+.B
+	\s-2FILE\s0	*infile\|;
+.B
+	char	*file_name\|;
+.PP
+.B
+\s-2SXSHORT\s0 sxnext_char ()
+.PP
+.B
+\s-2SXSHORT\s0 sxlafirst_char ()
+.PP
+.B
+\s-2SXSHORT\s0 sxlanext_char ()
+.PP
+.B
+\s-2SXVOID\s0 sxlaback (backward_number)
+.B
+	int	backward_number\|;
+.PP
+.B
+\s-2SXVOID\s0 sxX (inserted)
+.B
+	\s-2SXSHORT\s0	inserted\|;
+.PP
+.B
+\s-2SXVOID\s0 sxsrcpush (previous_char, chars, coord)
+.B
+	\s-2SXSHORT\s0	 previous_char\|;
+.B
+	char	*chars\|;
+.B
+	struct sxsource_coord  coord\|;
+.fi
+.SH DESCRIPTION
+The
+.B source manager
+module is responsible for all accesses by other
+.B SYNTAX
+modules to the end user's source text.
+Opening and closing files are not considered as accesses and must be
+done elsewhere.
+This module provides a set of procedures and variables.
+The variables are contained in a
+.I sxsrcmngr
+structure, which contains at least the following, valid after
+initialisation via a call to
+.IR sxsrc_mngr \|:
+.TP
+.I infile
+the current input stream\|;
+.TP
+.I source_coord
+the coordinates of
+.I current_char
+(initially
+.I column
+0 of
+.I line
+0)\|;
+.TP
+.I previous_char
+the character that was returned before
+.I current_char
+(initially \fI\s-2EOF\s0\fP)\|;
+.TP
+.I current_char
+the last character returned by a call to
+.I sxnext_char
+(initially
+.IR \s-2SXNEWLINE\s0 ).
+.LP
+.I sxsrc_mngr
+is the first and last entry point of the module to be called for
+accessing a given source file.
+It has a variable number of arguments\|; when the first is
+.IR \s-2SXINIT\s0 ,
+two other arguments must be present\|: a pointer
+.I infile
+to the \s-2FILE\s0 to be accessed by other functions of the module
+(obtained e.g. via a call to
+.BR fopen (3S)),
+and a pointer
+.I file_name
+to the name of that file\|; when the first argument is
+.IR \s-2SXFINAL\s0 ,
+no more interaction will be done on the current input stream, so that
+internal structures may be freed.
+It is the user's responsibility to close the file.
+.PP
+.I sxnext_char
+returns the next character, usually by calling
+.I sxgetchar
+(see
+.BR sxunix (3))\|;
+.I sxnextchar
+is a rather complicated macro with the same semantics, defined for
+efficiency reasons.
+.ne 8
+.SH "FURTHER DESCRIPTION"
+The
+.I sxsrcmngr
+structure is declared in the include file
+.BR sxunix.h \|;
+that declaration is close to the following\|:
+
+.nf
+.ta \w'\fBstru'u +\w'\s-2SXSHORT\s0  'u +\w' previous_char, 'u +\w'/* coordinates of characters in \fIbuffer\fP\| 'u
+.ne 2
+\fBstruct\fP sxsrcmngr {
+	\s-2FILE\s0	*infile\|;	/* stream being accessed	*/
+.ne 2
+	\fBstruct\fP sxsource_coord  source_coord\|;
+			/* coordinates of \fIcurrent_char\fP	*/
+.ne 2
+	\s-2SXSHORT\s0	 previous_char,	/* preceding \fIcurrent_char\fP	*/
+		 current_char\|;	/* last character returned	*/
+.\"	\s-2SXBOOLEAN\s0	 has_buffer\|;	/* of internal interest only	*/
+	\s-2SXSHORT\s0	*buffer\|;	/* characters read in \fIlook-ahead\fP	*/
+.ne 2
+	\fBstruct\fP sxsource_coord *bufcoords\|;
+			/* coordinates of characters in \fIbuffer\fP	*/
+	\fBint\fP	 buflength\|;	/* usable size of \fIbuffer\fP	*/
+	\fBint\fP	 bufused\|;	/* index of last character read	*/
+.ne 3
+	\fBint\fP	 bufindex\|;	/* index of \fIcurrent_char\fP	*/
+	\fBint\fP	 labufindex\|;	/* index of \fIlooked-ahead\fP character	*/
+} sxsrcmngr\|;
+.fi
+.LP
+When there is some
+.I look-ahead
+(information about this may be extracted from the scanner, see
+.BR sxscanner (3)),
+.\"the variable
+.\".I has_buffer
+.\"is set to
+.\".I \s-2SXTRUE\s0
+.\"(but the converse is not true).
+.\"In that case,
+more variables may be safely accessed\|:
+.TP
+.I buffer
+pointer to an array of
+.IR \s-2SXSHORT\s0 s,
+which contains all characters read, from at least the current
+character (which may therefore be accessed either by
+.I current_char
+or by \fIbuffer\|[bufindex]\fP), to the last character examined in the
+course of a
+.I look-ahead
+(note that this last, accessed by \fIbuffer\|[bufused]\fP, may be
+beyond the current
+.I looked-ahead
+character, which is accessed by \fIbuffer\|[labufindex]\fP)\|;
+.TP
+.I bufcoords
+pointer to an array containing the coordinates of all characters kept
+in
+.I buffer
+(so that those coordinates are correctly restored whatever occurs)\|;
+this should be of little importance in most cases\|;
+.TP
+.I buflength
+size of
+.I buffer
+and of
+.IR bufcoords \|;
+this should be of no concern to the user\|;
+.TP
+.I bufused
+index in
+.I buffer
+of the last character placed there\|; this is the last character ever
+read on
+.IR infile \|;
+.TP
+.I bufindex
+index in
+.I buffer
+of
+.IR current_char \|;
+.TP
+.I labufindex
+index in
+.I buffer
+of latest character examined in
+.IR look-ahead .
+.PP
+.I sxnext_char
+and
+.I sxnextchar
+return the next character, whether by incrementing
+.I bufindex
+or by calling
+.I sxgetchar
+(see
+.BR sxunix (3))\|;
+the variables
+.IR source_coord ,
+.I previous_char
+and
+.I current_char
+are updated.
+.PP
+.I sxlafirst_char
+returns the first
+.B looked-ahead
+character (i.e. the one immediately following
+.IR current_char ),
+without modification to those variables.
+.PP
+.I sxlanext_char
+returns the next
+.B looked-ahead
+character (the one following that returned by a previous call to
+.I sxlafirst_char
+or
+.IR sxlanext_char ),
+without those modifications either.
+.PP
+.I sxlaback
+goes back
+.I backward_number
+characters of
+.IR look-ahead \|;
+there must not have been less than that number of calls to
+.I sxlanext_char
+since the previous call to
+.IR sxlafirst_char .
+.PP
+.I sxX
+should not be used except by a
+.B SYNTAX
+scanner, but is documented here for completeness purposes.
+It is used for error-recovery and inserts
+.I inserted
+before
+.IR current_char ,
+so that this same
+.I current_char
+will be the character returned by the next call to
+.IR sxnext_char \|.\|.\|.
+.PP
+.I sxsrcpush
+pushes the characters of
+.I chars
+ahead of
+.IR current_char ,
+preceded by
+.IR previous_char \|;
+the first character of
+.I chars
+becomes the
+.IR current_char ,
+with coordinates
+.IR coord .
+The follower of the last character pushed will be the character which
+was in
+.I current_char
+before the call, with its coordinates unchanged.
+.SH "SEE ALSO"
+sxunix(3),
+sxscanner(3)
+and the \fISYNTAX Reference Manual\fP.
+.SH NOTES
+The contents of the structure
+.I sxsrcmngr
+must be saved and restored by the user when switching between source
+files.
+.I sxsrc_mngr
+must be called with
+.I \s-2SXINIT\s0
+each time a new source file has been opened, with
+.I \s-2SXFINAL\s0
+each time an old source file will be closed.
+.PP
+.I sxnext_char
+will try to read past an \s-2EOF\s0 if required to (and will usually
+succeed when input is from a terminal).
+.PP
+It is possible to make believe a C string comes from a file, by
+suitable use of
+.IR sxsrcpush .
+.PP
+The
+.I coordinates
+managed by this module are not related to the builtin predicates of
+.BR sxscanner (3).
+.SH BUGS
+There is no simple way to start reading in the middle of a stream\|:
+the
+.I source_coord
+in particular cannot be correctly positioned except by horrendous
+means.
+.PP
+Since the second argument to
+.I sxsrcpush
+is a character pointer, inserting some funny characters may be
+invalidly done (on a machine with signed characters on eight bits, if
+\s-2EOF\s0 is defined as the integer value \-1, insertion of "\^\\\^377"
+will probably result in an insertion of \s-2EOF\s0).
+Furthermore, insertion of a null character cannot be done that way.
+

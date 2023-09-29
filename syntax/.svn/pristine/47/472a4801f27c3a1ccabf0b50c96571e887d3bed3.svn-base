@@ -1,0 +1,4 @@
+touch $1
+\rm $1
+lint -I$go/../incl -I$sx/etc/incl -I$sx/incl sxindparser.c > $1
+

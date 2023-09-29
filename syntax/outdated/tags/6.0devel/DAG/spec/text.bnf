@@ -1,0 +1,4 @@
+<text>		= <sentence> %eof ;
+
+<sentence>	= <sentence> %word ;
+<sentence>	= ;

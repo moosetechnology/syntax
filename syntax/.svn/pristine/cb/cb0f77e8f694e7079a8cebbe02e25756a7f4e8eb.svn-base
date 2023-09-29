@@ -1,0 +1,54 @@
+Classes
+        ANY             = #000..#377 ;
+        LETTER          = LETTER + "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ";
+	BLANK		= SP + HT + VT + NL ;
+	NOSPACE		= ANY - BLANK ;
+	PLAINCHAR	= NOSPACE - "{}%\\()?*+|" ;
+	STDCHAR		= ANY - "{}\\" ;
+	SEMLEX_CHAR    = ANY - BLANK - "|\\" ;
+--      OP		= HEAD - LETTER - DIGIT ;
+
+Tokens
+        Comments        = {-( SP | HT | VT ) |
+			   "{" @Reset(0)
+			       {
+			         "{"&True @Incr(0) |
+				 "}"&Is_Set(0) @Decr(0) |
+				 STDCHAR |
+				 "\\"&True ANY
+			       }*
+			   "}"
+			  }+ 
+			  | -("\\" NL) ; 
+                        Priority Shift > Reduce;
+
+        %eof            = -( NL | ("%" {ANY} NL&TRUE) ) ;
+
+	%SEMLEX		= "[" "|"&TRUE @ERASE {SEMLEX_CHAR | -"\\"&TRUE ANY}* -"|" -"]"&TRUE ;
+
+-- Le "\" est un caractère d'échappement pour "()?*+|"
+        %word           = {-"\\" NOSPACE | PLAINCHAR}+ ;
+                        Priority Shift > Reduce;
+
+-- Il est possible de changer la definition de %word, voici un exemple
+-- qui permet sur "2+5" de retourner 3 %word
+--        %word           = Union
+--			    id : LETTER {LETTER | DIGIT | "_$" }* ;
+--			    nb : {DIGIT}+ ;
+--			    op : (-"\\" SUFFIX | OP) ;
+--			  End ;
+--                        Priority Shift > Reduce;
+
+	"("		= -"(" ;
+
+	")"		= -")" ;
+
+	"|"		= -"|" ;
+
+	"*"		= -"*" ;
+
+	"+"		= -"+" ;
+
+	"?"		= -"?" ;
+
+

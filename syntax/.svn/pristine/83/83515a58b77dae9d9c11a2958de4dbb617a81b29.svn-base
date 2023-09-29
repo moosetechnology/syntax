@@ -1,0 +1,107 @@
+.\" @(#)sxat_mngr.3	- SYNTAX [unix] - 2 Septembre 1987
+.TH SXAT_MNGR 3 "SYNTAX\[rg]"
+.SH NAME
+sxsmp, sxbrother, sxson \- abstract tree traversor for SYNTAX.
+.SH SYNOPSIS
+\fB
+.nf
+#include "sxunix.h"
+
+SXVOID sxsmp (root, pass_inherited, pass_derived)
+.ta \w'SXVOI'u +\w'SXNODE 'u
+	SXNODE	*root;
+	SXVOID	 (*pass_inherited) (),
+		 (*pass_derived) ();
+
+SXNODE *sxbrother (node, n)
+	SXNODE	*node;
+	int	 n;
+
+SXNODE *sxson (node, n)
+	SXNODE	*node;
+	int	 n;
+
+.fi
+.SH DESCRIPTION
+.I sxsmp
+is the module which performs the depth-first traversal of the [sub-]tree rooted
+at \fIroot\fP.
+Each node is visited twice, first an inherited visit before its sub-tree
+traversal and second a synthesised (derived) visit to complete its sub-tree
+walk.
+At each inherited visit of a node the procedure \fIpass_inherited\fP is
+called while \fIpass_derived\fP is called at each derived visit.
+This tree traversal stops after the derived visit of \fIroot\fP.
+.LP
+.I sxbrother
+returns (a pointer to) the \fIn\fP_th son of the father of \fInode\fP or
+NULL if it does not exist.
+.LP
+.I sxson
+returns (a pointer to) the \fIn\fP_th son of \fInode\fP or
+NULL if it does not exist.
+.LP
+This module provides also a set of macros and variables which may be used
+during a semantic pass.
+These macros and variables are declared in the include file
+.B sxunix.h
+and the declarations are close to the following\|:
+.nf
+
+\fBstruct\fP sxtt_state {
+.ta \w'\fBstr\fP'u +\w'\fBuni\fP'u +\w'\fBSXNODEN\fP  'u +\w' visit_kind 'u +\w'/* pointer to the visited node 'u
+	\fBSXNODE\fP	*visited		/* pointer to the visited node		*/;
+	\fBSXBOOLEAN\fP	 visit_kind		/* INHERITED or DERIVED			*/;
+	\fBSXBOOLEAN\fP	 last_elem_or_left	/* last son or left brother pointer	*/;
+	} sxtt_state;
+
+
+#define VISIT_KIND	sxtt_state.visit_kind
+#define VISITED	sxtt_state.visited
+#define LEFT		LAST_ELEM
+#define LAST_ELEM	sxtt_state.last_elem_or_left
+
+.fi
+The variables in \fIsxtt_state\fP are easilly accessed via the above macros.
+During a tree traversal on a \fIVISIT_KIND\fP pass, the current node is
+pointed by \fIVISITED\fP.
+Its attributes can be found in the structure *\fIVISITED\fP (see 
+\fBsxatc\fP\|(3).
+If (and only if) the visit is inherited, \fILEFT\fP is (a
+pointer to) its left brother if any else NULL.
+If (and only if) the visit is derived \fILAST_ELEM\fP
+is (a pointer to) its rightmost son if any else NULL.
+.SH "FURTHER DESCRIPTION"
+.nf
+
+\fBstruct\fP sxnext_visit {
+.ta \w'\fBstr\fP'u +\w'\fBSXBOOLEAN\fP 'u +\w' visit_kind 'u +\w'/* next node to be visited 'u
+	\fBSXNODE\fP	*visited	/* next node to be visited	*/;
+	\fBSXBOOLEAN\fP	 visit_kind	/* in this way	*/,
+		 normal	/* if SXFALSE	*/;
+	} sxnext_visit;
+
+
+#define sxat_snv(kind, node_ptr)	\\
+		(sxnext_visit.normal = SXFALSE,	\\
+		 sxnext_visit.visit_kind = kind,	\\
+		 sxnext_visit.visited = node_ptr)
+
+.fi
+The depth-first tree traversal strategy may be altered in the following way:
+the macro \fIsxat_snv\fP (\fIs\fPpecify \fIn\fPext \fIv\fPisit) sets the
+variables of \fIsxnext_visit\fP in such a way that the next node to be visited
+will be \fInode_ptr\fP during a \fIkind\fP pass.
+From \fInode_ptr\fP the tree walk restarts in a depth-first manner until
+the next \fIsxat_snv\fP occurrence.
+The walk stops, as usual, after the derived visit of \fIroot\fP.
+.SH "SEE ALSO"
+sxunix(3),
+sxscanner(3),
+sxparser(3),
+sxatc(3),
+and the \fISYNTAX Reference Manual\fP.
+.\" Local Variables:
+.\" mode: nroff
+.\" version-control: yes
+.\" End:

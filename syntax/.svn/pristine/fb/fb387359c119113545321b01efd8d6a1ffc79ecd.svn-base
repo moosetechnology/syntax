@@ -1,0 +1,115 @@
+.\" @(#)pprecor.1	- SYNTAX [unix] - 2 Septembre 1987
+.TH PPRECOR 1 "SYNTAX\*R"
+.SH NAME
+pprecor \- pretty printer for 
+.I recor
+programs.
+.SH SYNOPSIS
+.B pprecor
+[ \fB\-v\fP ] [ \fB\-nv\fP ]
+[ \fB\-kwuc\fP ] [ \fB\-kwlc\fP ]
+[ \fB\-kwci\fP ]
+.if n .ti +0.8i
+[ \fB\-kwdk\fP ] [ \fB-nkwdk\fP ]
+[ \fB\-ll\fP \fInnn\fP ]
+[ \fB\-tabs\fP ]
+.if n .ti +0.8i
+[ \fB-notabs\fP ]
+[ \fB\-every\fP \fInnn\fP ] .\|.\|.
+[ \fIfilenames\fP ]
+.SH DESCRIPTION
+.I pprecor
+checks the syntax and pretty prints recor(1) descriptions.
+.LP
+If no
+.I filenames
+argument is present, the standard input is read and the pretty printed
+program is written on the standard output.
+.LP
+For each
+.I filename
+argument the corresponding pretty printed program is written on the same
+.I filename
+if no error occurs.
+.SH OPTIONS
+.LP
+Options may appear in any order as long as they appear
+.B before
+the
+.IR filenames .
+Only the
+.B last
+occurrence of a given option is taken into account.
+.br
+Default options are such that the command
+.br
+\fB     pprecor [filenames]\fP
+.br
+is equivalent to
+.br
+\fB     pprecor -v -kwci -ll 80 -tabs -every 8 [filenames]\fP
+.TP
+\fB\-v\fP, \fB\-verbose\fP
+Animate the user's screen by displaying cryptic information about what is
+going on.
+(Default)
+.TP
+\fB\-nv\fP, \fB\-noverbose\fP
+Execute silently.
+.TP
+\fB\-kwuc\fP, \fB\-keywords_in_upper_case\fP
+Pretty print recor keywords in upper case letters\|; excludes -kwlc and -kwci.
+.TP
+\fB\-kwlc\fP, \fB\-keywords_in_lower_case\fP
+Pretty print recor keywords in lower case letters\|; excludes -kwuc and -kwci.
+.TP
+\fB\-kwci\fP, \fB\-keywords_capitalised_initial\fP
+Pretty print recor keywords with each leading letter capitalised and the others
+written in lower case\|; excludes -kwuc and -kwlc.
+(Default)
+.TP
+\fB\-kwdk\fP, \fB\-keywords_in_dark\fP
+Attempt to make recor keywords look darker than rest of text
+when displayed on a printer, by overstriking each letter
+twice (using backspaces).
+.TP
+\fB\-nkwdk\fP, \fB\-nokeywords_in_dark\fP
+Do not pretty print recor keywords in bold letters.
+.TP
+\fB\-ll\fP \fInnn\fP, \fB-line_length\fP \fInnn\fP
+Force the maximum length of an output line to be
+.IR nnn.
+(Default
+.I nnn
+= 80).
+.TP
+\fB\-tabs\fP
+Replace sequences of spaces by tabulation characters wherever possible.
+(Default)
+.TP
+\fB\-notabs\fP
+Do not use tabulation characters.
+.TP
+\fB\-every\fP \fInnn\fP
+Force the number of columns between two tabulation positions to be
+.I nnn.
+(Default
+.I nnn
+= 8).
+.SH FILES
+pprecor*	scratch file (output)
+.SH "SEE ALSO"
+recor(1) and the
+\fB"SYNTAX REFERENCE MANUAL"\fP.
+.SH DIAGNOSTICS
+When the input program is (syntactically) incorrect error messages are issued
+and the output is done on a new file in the current directory.
+.br
+Exit status is 0 if everything is alright, 1 if only warnings are issued, 2
+if error messages are issued, 3 for command line syntax errors.
+.SH BUGS
+See sxppp(3).
+.\" Local Variables:
+.\" mode: nroff
+.\" version-control: yes
+.\" End:

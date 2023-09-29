@@ -1,0 +1,158 @@
+# To avoid problems with other shells:
+SHELL=/bin/sh
+include etc/gccoptions
+
+# default values
+RANLIB=ranlib
+AR=ar
+
+.PHONY:
+chrome: makefiles runthem
+
+# cette cible 'check' verifie que la variable $sx est bien positionnee 
+check:
+	@if [ ! -w "$(sx)/" ] ;\
+	then echo "Error : sx directory '$(sx)/' is not writeable" ; exit 1 ; \
+	fi ;
+
+nickel: check
+	@rm -f $(sx)/*/*.[oa] $(sx)/*/*/*.[oa] $(sx)/*/*/*/*.[oa] \
+		$(sx)/bin/*.out \
+		$(sx)/src/Makefile $(sx)/etc/src/Makefile
+
+cpp:
+	echo '#include <stdio.h>'|gcc -Wp,-C,-dD,-dM -E -x c -
+
+makefiles: check
+	@time ${SHELL} -c '	umask 7;				\
+	echo Computing Makefiles;					\
+	HERE=`pwd`; M4=$$HERE/m4; rm -f $$M4;				\
+	cd /tmp; echo -n > $$$$.c;					\
+	echo "$$$$.a:$$$$.a($$$$.o)" |					\
+	if $(MAKE) -n -s -f - "$$$$.a";					\
+	   then	echo "define(archive)dnl" > $$M4;			\
+	fi > /dev/null 2>&1;						\
+	rm $$$$.c; cd $$HERE;						\
+	for DIR in							\
+		$(sx)							\
+		$(sx)/*							\
+	;								\
+	do								\
+	if [ -r $$DIR/s.Makefile ];					\
+	   then	(echo $$DIR/src/Makefile : $$DIR/s.Makefile;		\
+		 echo "	m4 $$DIR/s.Makefile > $$DIR/src/Makefile") |	\
+		$(MAKE) -f -;						\
+	fi;								\
+	done;								\
+	rm -f $$M4							\
+	'
+runthem: makefiles
+	@time ${SHELL} -c '	umask 7; EXIT=0 KFLAG=;			\
+	for FILE in							\
+		$(sx)/src/Makefile					\
+		$(sx)/*/src/Makefile					\
+		$(sx)/sxmakefile					\
+		$(sx)/*/sxmakefile					\
+	;								\
+	do								\
+	if (: < "$$FILE") 2>/dev/null;					\
+	   then	echo; echo "$$FILE";					\
+		cd `dirname "$$FILE"`;					\
+		if time $(MAKE)	CFLAGS="$(CFLAGS)"			\
+				LDFLAGS="$(LDFLAGS)"			\
+				ARFLAGS="$(ARFLAGS)"			\
+				COMPILER="$(COMPILER)"			\
+				RANLIB="$(RANLIB)"			\
+				AR="$(AR)"				\
+				sxV="$(sxV)"				\
+			        sx="$(sx)"				\
+				-$${KFLAG}f "$$FILE";			\
+		   then :;						\
+		   else	case $$EXIT in 1)continue;;esac;		\
+			KFLAG=k;					\
+			echo Retrying with flag -$$KFLAG:;		\
+			time $(MAKE) CFLAGS="$(CFLAGS)"			\
+				     LDFLAGS="$(LDFLAGS)"		\
+				     ARFLAGS="$(ARFLAGS)"		\
+				     COMPILER="$(COMPILER)"		\
+				     RANLIB="$(RANLIB)"			\
+				     AR="$(AR)"				\
+				     sxV="$(sxV)"			\
+				     sx="$(sx)"				\
+				     -$${KFLAG}f "$$FILE";		\
+			EXIT=1;						\
+		fi;							\
+	fi;								\
+	done;								\
+	exit $$EXIT							\
+	'	< /dev/null 2>&1
+
+programs: makefiles
+	@echo "=> Compiling all Syntax programs"
+	${SHELL} -c '						\
+	for FILE in						\
+		$(sx)/*/src/Makefile				\
+		$(sx)/sxmakefile				\
+		$(sx)/*/sxmakefile				\
+	;							\
+	do							\
+	cd `dirname "$$FILE"`;					\
+	$(MAKE) -f "$$FILE"					\
+			CFLAGS="$(CFLAGS)"			\
+			LDFLAGS="$(LDFLAGS)"			\
+			ARFLAGS="$(ARFLAGS)"			\
+			COMPILER="$(COMPILER)"			\
+			RANLIB="$(RANLIB)"			\
+			AR="$(AR)"				\
+			sxV="$(sxV)"				\
+			sx="$(sx)"  				;\
+	done '
+		
+
+libsx: makefiles
+	@echo "=> Compiling libsx (Non Deterministic) "
+	${SHELL} -c ' cd $(sx)/src ;				\
+	$(MAKE) libsx						\
+			CFLAGS="$(CFLAGS)"			\
+			LDFLAGS="$(LDFLAGS)"			\
+			ARFLAGS="$(ARFLAGS)"			\
+			COMPILER="$(COMPILER)"			\
+			RANLIB="$(RANLIB)"			\
+			AR="$(AR)"				\
+			sxV="$(sxV)"				\
+			sx="$(sx)"  				\
+			-f $(sx)/src/Makefile '
+
+
+libsxdet: makefiles
+	@echo "=> Compiling libsx (Deterministic)"
+	${SHELL} -c ' cd $(sx)/src ;				\
+	$(MAKE) libsxdet	 				\
+			CFLAGS="$(CFLAGS)"			\
+			LDFLAGS="$(LDFLAGS)"			\
+			ARFLAGS="$(ARFLAGS)"			\
+			COMPILER="$(COMPILER)"			\
+			RANLIB="$(RANLIB)"			\
+			AR="$(AR)"				\
+			sxV="$(sxV)"				\
+			sx="$(sx)"  				\
+			-f $(sx)/src/Makefile '
+
+	
+
+
+
+
+clean: makefiles
+	for FILE in								\
+		$(sx)/src/Makefile $(sx)/etc/src/Makefile $(sx)/*/sxmakefile	\
+		$(sx)/examples/*/Makefile $(sx)/examples/*/sxmakefile $(sx)/examples/*/makefile \
+	;									\
+	do									\
+		cd `dirname "$$FILE"`;						\
+		$(MAKE) -f $$FILE clean	sxV="$(sxV)"				\
+			        sx="$(sx)"					\
+	        ;								\
+	done			
+
+

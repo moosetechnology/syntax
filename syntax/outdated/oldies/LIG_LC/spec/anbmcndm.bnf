@@ -1,0 +1,14 @@
+*
+* This is a LIG for the language {a^n b^m c^n d^m | n, m >= 0}
+* Modelise les dependances croisees
+*
+
+<S>		= <S> "d"	 	;
+<S>		= <T>		;
+*
+<T>		= "a" <T> "c"		;
+<T>		= <B>		;
+*
+<B>	= "b" <B>		;
+<B>		= 			;
+

@@ -1,0 +1,114 @@
+\contentsline {chapter}{\numberline {1}Introduction}{1}
+\contentsline {section}{\numberline {1.1}Les processeurs de base}{2}
+\contentsline {subsection}{\numberline {1.1.1}Introducteur syntaxique\,: {\unhbox \voidb@x \hbox {\sc Bnf}}}{2}
+\contentsline {subsection}{\numberline {1.1.2}Constructeur syntaxique\,: {\unhbox \voidb@x \hbox {\sc Csynt}} et {\unhbox \voidb@x \hbox {\sc Prio}}}{2}
+\contentsline {subsection}{\numberline {1.1.3}Constructeur lexical\,: {\unhbox \voidb@x \hbox {\sc Lecl}}}{2}
+\contentsline {subsection}{\numberline {1.1.4}Traitement des erreurs\,: {\unhbox \voidb@x \hbox {\sc Recor}}}{3}
+\contentsline {subsubsection}{\numberline {1.1.4.1}Correction locale}{4}
+\contentsline {subsubsection}{\numberline {1.1.4.2}Rattrapage global}{4}
+\contentsline {subsubsection}{\numberline {1.1.4.3}Spécification du traitement d'erreur}{5}
+\contentsline {subsection}{\numberline {1.1.5}Production des tables\,: {\unhbox \voidb@x \hbox {\sc Tables\_C}}}{5}
+\contentsline {section}{\numberline {1.2}Le Système d'Exécution}{5}
+\contentsline {section}{\numberline {1.3}Le Traitement Sémantique}{6}
+\contentsline {subsection}{\numberline {1.3.1}Actions}{6}
+\contentsline {subsection}{\numberline {1.3.2}Actions à la {\unhbox \voidb@x \hbox {\sc Yacc}}}{6}
+\contentsline {subsection}{\numberline {1.3.3}Attributs sémantiques purement synthétisés}{7}
+\contentsline {subsection}{\numberline {1.3.4}Arbres abstraits}{7}
+\contentsline {subsection}{\numberline {1.3.5}Paragraphage}{8}
+\contentsline {subsection}{\numberline {1.3.6}Utilitaires divers}{8}
+\contentsline {section}{\numberline {1.4}Mise en {\OE }uvre de {\unhbox \voidb@x \hbox {\sc Syntax}} sur {\unhbox \voidb@x \hbox {\sc Unix}}}{10}
+\contentsline {chapter}{\numberline {2}BNF -- Lecture des définitions syntaxiques}{11}
+\contentsline {section}{\numberline {2.1}Fonction}{11}
+\contentsline {section}{\numberline {2.2}Métalangage syntaxique}{11}
+\contentsline {subsection}{\numberline {2.2.1}Les éléments syntaxiques}{11}
+\contentsline {subsection}{\numberline {2.2.2}Les actions et prédicats}{14}
+\contentsline {subsubsection}{\numberline {2.2.2.1}Les actions}{14}
+\contentsline {subsubsection}{\numberline {2.2.2.2}Les prédicats}{14}
+\contentsline {section}{\numberline {2.3}Mise en {\oe }uvre}{17}
+\contentsline {section}{\numberline {2.4}Exemples de définitions syntaxiques}{17}
+\contentsline {chapter}{\numberline {3}CSYNT -- Construction de l'Analyseur Syntaxique}{19}
+\contentsline {section}{\numberline {3.1}Classe de grammaires acceptée}{19}
+\contentsline {section}{\numberline {3.2}Les conflits}{19}
+\contentsline {section}{\numberline {3.3}Leur résolution}{22}
+\contentsline {subsection}{\numberline {3.3.1}Le langage {\unhbox \voidb@x \hbox {\sc Prio}}}{23}
+\contentsline {section}{\numberline {3.4}Optimisation de l'automate}{25}
+\contentsline {section}{\numberline {3.5}Listage de l'automate engendré}{26}
+\contentsline {section}{\numberline {3.6}Mise en {\oe }uvre}{29}
+\contentsline {chapter}{\numberline {4}LECL -- Construction de l'Analyseur Lexical}{31}
+\contentsline {section}{\numberline {4.1}Métalangage lexical}{31}
+\contentsline {subsection}{\numberline {4.1.1}Les classes}{33}
+\contentsline {subsection}{\numberline {4.1.2}Les abréviations}{35}
+\contentsline {subsection}{\numberline {4.1.3}Les unités lexicales}{36}
+\contentsline {subsubsection}{\numberline {4.1.3.1}Les mots clés}{37}
+\contentsline {subsection}{\numberline {4.1.4}Les synonymes}{41}
+\contentsline {subsection}{\numberline {4.1.5}La spécification de représentation}{41}
+\contentsline {subsection}{\numberline {4.1.6}Les expressions régulières}{42}
+\contentsline {subsubsection}{\numberline {4.1.6.1}L'opérateur ``{\tt -}''}{42}
+\contentsline {subsubsection}{\numberline {4.1.6.2}L'opérateur ``{\tt {\tt \char '136}}''}{43}
+\contentsline {subsubsection}{\numberline {4.1.6.3}Les actions}{43}
+\contentsline {paragraph}{Actions prédéfinies.}{44}
+\contentsline {paragraph}{Actions de l'utilisateur.}{45}
+\contentsline {subsubsection}{\numberline {4.1.6.4}Les prédicats }{46}
+\contentsline {paragraph}{Les prédicats système}{47}
+\contentsline {paragraph}{Les prédicats utilisateur.}{48}
+\contentsline {paragraph}{Exemples}{49}
+\contentsline {subsubsection}{\numberline {4.1.6.5}Les {\em includes}}{50}
+\contentsline {subsection}{\numberline {4.1.7}Les conflits}{50}
+\contentsline {subsubsection}{\numberline {4.1.7.1}Les contextes}{51}
+\contentsline {subsubsection}{\numberline {4.1.7.2}Les unions}{53}
+\contentsline {subsubsection}{\numberline {4.1.7.3}Les priorités}{53}
+\contentsline {subsubsection}{\numberline {4.1.7.4}Principes de la résolution des conflits}{55}
+\contentsline {paragraph}{Exemple}{55}
+\contentsline {subsection}{\numberline {4.1.8}Exemples de définitions lexicales}{57}
+\contentsline {section}{\numberline {4.2}Mise en {\oe }uvre}{57}
+\contentsline {chapter}{\numberline {5}La sémantique dans SYNTAX}{59}
+\contentsline {section}{\numberline {5.1}SEMACT\nobreakspace {}: Actions sémantiques}{59}
+\contentsline {section}{\numberline {5.2}SEMAT\nobreakspace {}: Sémantique par arbre abstrait}{60}
+\contentsline {subsection}{\numberline {5.2.1}Spécification et construction de l'arbre abstrait}{60}
+\contentsline {subsection}{\numberline {5.2.2}Réalisation de l'analyseur sémantique}{62}
+\contentsline {subsubsection}{\numberline {5.2.2.1}Évaluation des attributs sémantiques}{62}
+\contentsline {subsubsection}{\numberline {5.2.2.2}Les outils}{63}
+\contentsline {subsubsection}{\numberline {5.2.2.3}Mise en {\oe }uvre}{64}
+\contentsline {chapter}{\numberline {6}RECOR -- Le traitement des erreurs}{67}
+\contentsline {section}{\numberline {6.1}Traitement des erreurs syntaxiques}{67}
+\contentsline {subsection}{\numberline {6.1.1}Correction locale}{67}
+\contentsline {subsection}{\numberline {6.1.2}Récupération globale}{69}
+\contentsline {section}{\numberline {6.2}Traitement des erreurs lexicales}{69}
+\contentsline {section}{\numberline {6.3}Le fichier {\tt standard.recor}}{70}
+\contentsline {chapter}{\numberline {7}TABLES\_C -- Production des tables d'analyse en langage\nobreakspace {}C}{73}
+\contentsline {chapter}{\numberline {8}Analyse d'un texte source}{75}
+\contentsline {section}{\numberline {8.1}Mise en {\oe }uvre}{75}
+\contentsline {chapter}{\numberline {A}Spécifications du langage BNF}{77}
+\contentsline {section}{\numberline {A.1}Définition syntaxique}{77}
+\contentsline {section}{\numberline {A.2}Définition lexicale}{78}
+\contentsline {section}{\numberline {A.3}Actions et prédicats lexicaux}{79}
+\contentsline {chapter}{\numberline {B}Spécifications du langage LECL}{85}
+\contentsline {section}{\numberline {B.1}Définition syntaxique}{85}
+\contentsline {section}{\numberline {B.2}Définition lexicale}{92}
+\contentsline {section}{\numberline {B.3}Actions lexicales}{94}
+\contentsline {section}{\numberline {B.4}Prédicats syntaxiques}{95}
+\contentsline {chapter}{\numberline {C}Exemples liés à la sémantique}{97}
+\contentsline {section}{\numberline {C.1}Le programme d'actions sémantiques}{97}
+\contentsline {section}{\numberline {C.2}Trame de passes sémantiques}{98}
+\contentsline {chapter}{\numberline {D}Le fichier {\tt standard.recor}}{103}
+\contentsline {chapter}{\numberline {E}Exemples de grammaires non-LALR(1)}{105}
+\contentsline {section}{\numberline {E.1}Une grammaire ambigüe}{105}
+\contentsline {subsection}{\numberline {E.1.1}Grammaire}{105}
+\contentsline {subsection}{\numberline {E.1.2}Listage des conflits}{105}
+\contentsline {subsubsection}{\numberline {E.1.2.1}option par défaut}{105}
+\contentsline {subsubsection}{\numberline {E.1.2.2}Option {\tt -path}}{106}
+\contentsline {section}{\numberline {E.2}Une grammaire non LR(1)}{107}
+\contentsline {subsection}{\numberline {E.2.1}Grammaire}{107}
+\contentsline {subsection}{\numberline {E.2.2}Listage des conflits avec l'option {\tt -path}}{107}
+\contentsline {section}{\numberline {E.3}Spécifications d'une grammaire LALR(2)}{108}
+\contentsline {subsection}{\numberline {E.3.1}Grammaire}{108}
+\contentsline {subsection}{\numberline {E.3.2}Actions}{110}
+\contentsline {section}{\numberline {E.4}Un langage non-déterministe}{110}
+\contentsline {subsection}{\numberline {E.4.1}Grammaire}{110}
+\contentsline {subsection}{\numberline {E.4.2}Actions}{111}
+\contentsline {chapter}{\numberline {F}Exemples de définitions lexicales}{113}
+\contentsline {section}{\numberline {F.1}Définition lexicale de PASCAL}{113}
+\contentsline {section}{\numberline {F.2}Définition lexicale d'un langage à commentaires imbriqués}{113}
+\contentsline {subsection}{\numberline {F.2.1}Expressions régulières}{114}
+\contentsline {subsection}{\numberline {F.2.2}Actions lexicales}{114}
+\contentsline {section}{\numberline {F.3}Actions lexicales réalisant une inclusion}{116}

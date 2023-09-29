@@ -1,0 +1,26 @@
+Classes
+        ANY             = #000..#377 ;
+	DIACRITIC	= "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ°¥«©®µ»¹¾³£¶¦¼¬¿¯±¡";
+	LETTER          = LETTER + DIACRITIC ;
+	QC		= "\"\\" + NL ;
+	BLANK		= SP + HT + VT + NL ;
+
+Abbreviations
+	QBODY		= ^QC | -"\\" ("\"\\" | -NL) ;
+	IDBODY		= LETTER | DIGIT | "_-':!"&True ;
+
+Tokens
+	Comments	= -{BLANK
+			   | "#"&True {ANY}* EOL&True -- Perl
+			   | "/" "/"&True {ANY}* EOL&True -- C++
+			   | "/" "*" {ANY}* "*" "/"&True -- C
+		           }+
+	                  ;
+			Priority Shift > Reduce;
+
+
+	%IDENT		= ( LETTER | ":_") {IDBODY}* ;
+			Priority Shift > Reduce;
+
+
+	%CHAINE		= -QUOTE {QBODY} -QUOTE ;

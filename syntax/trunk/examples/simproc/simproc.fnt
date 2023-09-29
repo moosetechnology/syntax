@@ -1,0 +1,52 @@
+/*---------------------------------------------------------------------------*/
+
+void C_EXT_PRINTFRETURN (ADT_NAT INDENT, ADT_STRING STRING)
+{
+     ADT_NAT i;
+     ADT_PRINT_STRING (stdout, "\n");
+     for (i = 0; i < INDENT; i++)
+	  ADT_PRINT_STRING (stdout, " ");
+     ADT_PRINT_STRING (stdout, STRING);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void C_EXT_PRINTF (ADT_STRING STRING)
+{
+     ADT_PRINT_STRING (stdout, STRING);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void C_EXT_PRINTFERROR (ADT_NAT LIGNE, ADT_STRING STRING1, ADT_STRING STRING2)
+{
+     if (LIGNE > 0) {
+	  ADT_PRINT_STRING (stderr, "Error line ");
+	  ADT_PRINT_NAT (stderr, LIGNE);
+     } else
+	  ADT_PRINT_STRING (stderr, "Error");
+
+     ADT_PRINT_STRING (stderr, " : ");
+     ADT_PRINT_STRING (stderr, STRING1);
+     ADT_PRINT_STRING (stderr, " ");
+     ADT_PRINT_STRING (stderr, STRING2);
+     ADT_PRINT_STRING (stderr, "\n");
+}
+
+/*---------------------------------------------------------------------------*/
+
+#define C_SIDEAFFECTDEREF(VDEST,VSRC) (*(VDEST)) = (*(VSRC)) ;
+
+/*---------------------------------------------------------------------------*/
+
+#define C_SIDEAFFECT(VDEST,VSRC) (VDEST) = (VSRC) ;
+
+/*---------------------------------------------------------------------------*/
+
+#define C_SIDEAFFECT_VAR C_SIDEAFFECTDEREF
+#define C_SIDEAFFECT_STMT C_SIDEAFFECTDEREF
+#define C_SIDEAFFECT_INT C_SIDEAFFECT
+#define C_SIDEAFFECT_S_TABLE C_SIDEAFFECT
+#define C_SIDEAFFECT_ID C_SIDEAFFECT
+
+/*---------------------------------------------------------------------------*/

@@ -1,0 +1,28 @@
+.\" @(#)cx.1	- SYNTAX [unix] - 2 Septembre 1987
+.TH CX 1 "SYNTAX\*R"
+.SH NAME
+cx \- cross referencer for c-like programs
+.SH SYNOPSIS
+.B cx
+[ \fIfilenames\fP ]
+.SH DESCRIPTION
+.I cx
+writes on its standard output a line numbered source listing together with
+a (purely syntactical) cross reference table of its identifiers.
+.LP
+If no
+.I filenames
+argument is present, the standard input is read.
+.SH DIAGNOSTICS
+When the source is syntactically erroneous, error messages are issued.
+.br
+Exit status is 0 if everything is alright, 1 if only warnings are issued, 2
+if error messages are issued, 3 for command line syntax errors.
+.SH SEE ALSO
+cxref(1).
+.SH BUGS
+C preprocessor lines are ignored.
+.\" Local Variables:
+.\" mode: nroff
+.\" version-control: yes
+.\" End:

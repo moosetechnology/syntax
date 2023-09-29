@@ -1,0 +1,14 @@
+* permet la construction d'un dictionnaire dont les mots sont les %string
+* et les identifiants les %integer
+* Ds le cas de <simple_list> l'ordre d'apparition 1, 2, ... sert d'identifiant
+* Le dico construit est compact et permet, en temps lineaire avec la longueur
+* du mot qui lui est fourni de retourner son identifiant ou 0
+
+<dico_input>	= <simple_list> 			; 6
+<dico_input>	= <double_list> 			; 5
+
+<simple_list>	= <simple_list> %string 		; 4
+<simple_list>	= %string 				; 3
+
+<double_list>	= <double_list> %string %integer 	; 2
+<double_list>	= %string %integer 			; 1

@@ -1,0 +1,332 @@
+
+SX=c:\sx
+ETC=$(SX)\etc
+SRC=$(ETC)\src
+LIB=$(ETC)\lib
+BIB=$(ETC)\etc$(sxV).lib
+INCL=$(ETC)\incl
+
+CC=msc /Zi /AL
+
+$(LIB)\ba_print.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\ba_print.c
+	$(CC) $(SRC)\ba_print,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\bnffree.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(INCL)\B_tables.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\bnffree.c
+	$(CC) $(SRC)\bnffree,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\bnfread.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(INCL)\B_tables.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\bnfread.c
+	$(CC) $(SRC)\bnfread,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\bnfwrite.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(INCL)\B_tables.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\bnfwrite.c
+	$(CC) $(SRC)\bnfwrite,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\leclfree.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(INCL)\S_tables.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\leclfree.c
+	$(CC) $(SRC)\leclfree,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\leclread.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(INCL)\S_tables.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\leclread.c
+	$(CC) $(SRC)\leclread,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\write.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(INCL)\S_tables.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\write.c
+	$(CC) $(SRC)\write,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\ednfree.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(INCL)\Q_tables.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\ednfree.c
+	$(CC) $(SRC)\ednfree,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\ednread.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(INCL)\Q_tables.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\ednread.c
+	$(CC) $(SRC)\ednread,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\ednwrite.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(INCL)\Q_tables.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\ednwrite.c
+	$(CC) $(SRC)\ednwrite,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\prsfree.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(INCL)\P_tables.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\prsfree.c
+	$(CC) $(SRC)\prsfree,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\prsread.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(INCL)\P_tables.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\prsread.c
+	$(CC) $(SRC)\prsread,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\prswrite.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(INCL)\P_tables.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\prswrite.c
+	$(CC) $(SRC)\prswrite,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\priofree.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(INCL)/D_tables.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\priofree.c
+	$(CC) $(SRC)\priofree,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\prioread.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(INCL)/D_tables.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\prioread.c
+	$(CC) $(SRC)\prioread,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\priwrite.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(INCL)/D_tables.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\priwrite.c
+	$(CC) $(SRC)\priwrite,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\recfree.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(INCL)\R_tables.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\recfree.c
+	$(CC) $(SRC)\recfree,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\recread.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(INCL)\R_tables.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\recread.c
+	$(CC) $(SRC)\recread,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\recwrite.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(INCL)\R_tables.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\recwrite.c
+	$(CC) $(SRC)\recwrite,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\atfree.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(INCL)\T_tables.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\atfree.c
+	$(CC) $(SRC)\atfree,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\atread.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(INCL)\T_tables.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\atread.c
+	$(CC) $(SRC)\atread,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\atwrite.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(INCL)\T_tables.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\atwrite.c
+	$(CC) $(SRC)\atwrite,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\putedit.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\putedit.c
+	$(CC) $(SRC)\putedit,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\pedap.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\pedap.c
+	$(CC) $(SRC)\pedap,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\pedapnb.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\pedapnb.c
+	$(CC) $(SRC)\pedapnb,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\pedapnnl.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\pedapnnl.c
+	$(CC) $(SRC)\pedapnnl,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\pedcut.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\pedcut.c
+	$(CC) $(SRC)\pedcut,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\pedff.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\pedff.c
+	$(CC) $(SRC)\pedff,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\pedfnb.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\pedfnb.c
+	$(CC) $(SRC)\pedfnb,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\pedget.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\pedget.c
+	$(CC) $(SRC)\pedget,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\pedinit.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\pedinit.c
+	$(CC) $(SRC)\pedinit,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\pednb.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\pednb.c
+	$(CC) $(SRC)\pednb,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\pednl.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\pednl.c
+	$(CC) $(SRC)\pednl,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\pednnl.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\pednnl.c
+	$(CC) $(SRC)\pednnl,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\pedpos.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\pedpos.c
+	$(CC) $(SRC)\pedpos,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\vsalloc.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\vsalloc.c
+	$(CC) $(SRC)\vsalloc,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\vscat.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\vscat.c
+	$(CC) $(SRC)\vscat,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\vsfree.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\vsfree.c
+	$(CC) $(SRC)\vsfree,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\vslen.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\vslen.c
+	$(CC) $(SRC)\vslen,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\vsmaxlen.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\vsmaxlen.c
+	$(CC) $(SRC)\vsmaxlen,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\vsraz.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\vsraz.c
+	$(CC) $(SRC)\vsraz,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\eq_sort.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\eq_sort.c
+	$(CC) $(SRC)\eq_sort,$@;
+	lib $(BIB)-+$@;
+
+$(LIB)\fermer.obj:	\
+			$(SX)\incl\sxunix.h	\
+			$(ETC)\forcemak 	\
+			$(SRC)\fermer.c
+	$(CC) $(SRC)\fermer,$@;
+	lib $(BIB)-+$@;
+

@@ -1,0 +1,222 @@
+/* ********************************************************************
+   *  This program has been generated from paradis.at                 *
+   *  by the SYNTAX (*) abstract tree constructor SEMAT               *
+   ********************************************************************
+   *  (*) SYNTAX is a trademark of INRIA.                             *
+   ******************************************************************** */
+
+
+
+/*   I N C L U D E S   */
+#define SXNODE struct paradis_node
+#include "sxunix.h"
+
+struct paradis_node {
+    SXNODE_HEADER_S SXVOID_NAME;
+
+/*
+your attribute declarations...
+*/
+};
+/*
+N O D E   N A M E S
+*/
+#define ERROR_n 1
+#define ACTION_n 2
+#define BACKWARD_n 3
+#define BLANKS_n 4
+#define COLUMN_n 5
+#define FORM_FEED_n 6
+#define FORWARD_n 7
+#define GENERIC_TERMINAL_n 8
+#define INHIBITION_n 9
+#define LHS_n 10
+#define MARGIN_n 11
+#define NEW_LINE_n 12
+#define NON_TERMINAL_n 13
+#define PP_SPEC_n 14
+#define PREDICATE_n 15
+#define RULE_S_n 16
+#define SPACE_n 17
+#define TABULATION_n 18
+#define TERMINAL_n 19
+#define VOCABULARY_S_n 20
+#define VOID_n 21
+/*
+E N D   N O D E   N A M E S
+*/
+
+
+static void paradis_pi (void) {
+
+/*
+I N H E R I T E D
+*/
+
+switch (SXVISITED->father->name) {
+
+case ERROR_n :
+break;
+
+case COLUMN_n :/* SXVISITED->name = {FORWARD_n, VOID_n} */
+break;
+
+case FORM_FEED_n :/* SXVISITED->name = {FORWARD_n, VOID_n} */
+break;
+
+case MARGIN_n :/* SXVISITED->name = {BACKWARD_n, FORWARD_n, VOID_n} */
+break;
+
+case NEW_LINE_n :/* SXVISITED->name = {FORWARD_n, VOID_n} */
+break;
+
+case PP_SPEC_n :/* SXVISITED->name = {COLUMN_n, FORM_FEED_n, INHIBITION_n, MARGIN_n, NEW_LINE_n, SPACE_n, TABULATION_n, VOID_n} */
+break;
+
+case RULE_S_n :/* SXVISITED->name = VOCABULARY_S_n */
+break;
+
+case SPACE_n :/* SXVISITED->name = {BACKWARD_n, FORWARD_n, VOID_n} */
+break;
+
+case TABULATION_n :/* SXVISITED->name = {FORWARD_n, VOID_n} */
+break;
+
+case VOCABULARY_S_n :/* SXVISITED->name = {ACTION_n, BLANKS_n, GENERIC_TERMINAL_n, LHS_n, NON_TERMINAL_n, PP_SPEC_n, PREDICATE_n, 
+TERMINAL_n} */
+break;
+
+
+
+/*
+Z Z Z Z
+*/
+
+default:
+break;
+}
+/* end paradis_pi */
+}
+
+static void paradis_pd (void) {
+
+/*
+D E R I V E D
+*/
+
+switch (SXVISITED->name) {
+
+case ERROR_n :
+break;
+
+case ACTION_n :
+break;
+
+case BACKWARD_n :
+break;
+
+case BLANKS_n :
+break;
+
+case COLUMN_n :
+break;
+
+case FORM_FEED_n :
+break;
+
+case FORWARD_n :
+break;
+
+case GENERIC_TERMINAL_n :
+break;
+
+case INHIBITION_n :
+break;
+
+case LHS_n :
+break;
+
+case MARGIN_n :
+break;
+
+case NEW_LINE_n :
+break;
+
+case NON_TERMINAL_n :
+break;
+
+case PP_SPEC_n :
+break;
+
+case PREDICATE_n :
+break;
+
+case RULE_S_n :
+break;
+
+case SPACE_n :
+break;
+
+case TABULATION_n :
+break;
+
+case TERMINAL_n :
+break;
+
+case VOCABULARY_S_n :
+break;
+
+case VOID_n :
+break;
+
+
+
+/*
+Z Z Z Z
+*/
+
+default:
+break;
+}
+/* end paradis_pd */
+}
+
+static void smpopen (struct sxtables *sxtables_ptr)
+{
+sxuse(sxtables_ptr);
+sxatcvar.atc_lv.node_size = sizeof (struct paradis_node);
+}
+
+static void smppass (void)
+{
+
+/*   I N I T I A L I S A T I O N S   */
+/* ........... */
+
+/*   A T T R I B U T E S    E V A L U A T I O N   */
+sxsmp (sxatcvar.atc_lv.abstract_tree_root, paradis_pi, paradis_pd);
+
+/*   F I N A L I S A T I O N S   */
+/* ........... */
+
+}
+
+int paradis_smp (SXINT what, struct sxtables *sxtables_ptr)
+{
+sxuse (sxtables_ptr);
+switch (what) {
+case SXOPEN:
+smpopen (sxtables_ptr);
+break;
+case SXSEMPASS: /* For [sub-]tree evaluation during parsing */
+break;
+case SXACTION:
+smppass ();
+break;
+case SXCLOSE:
+break;
+default:
+break;
+}
+return 1;
+}
