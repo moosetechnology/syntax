@@ -1,9 +1,0 @@
-% Cette "grammaire" est la clause qui imprime le resultat de count.rcg
-% C'est-a`-dire imprime en base p sur k chiffres la valeur de q^2
-
-% Cette grammaire doit donc produire un parser et non un reconnaisseur
-% alors que count.rcg peut produire un reconnaisseur
-
-% FIN
-&Count_Result(R3,R2,R1,R0,P)	-->  . @PrintQ2InBaseP
-
