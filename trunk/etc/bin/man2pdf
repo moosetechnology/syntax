@@ -1,8 +1,0 @@
-#! /bin/sh
-
-# Hubert Garavel (2023): converts a man page to a PDF file
-
-BASE=`dirname "$1"`/`basename "$1" .1`
-
-cat "$BASE".1 | groff -man -Tps - | ps2pdf - > "$BASE".pdf
-

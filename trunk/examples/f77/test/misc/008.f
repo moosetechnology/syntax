@@ -1,4 +1,0 @@
-      program myprog
-      stop
-      end
-
