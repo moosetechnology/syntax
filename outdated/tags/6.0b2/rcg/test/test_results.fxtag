@@ -1,0 +1,123 @@
+Grammaire fxtag.rcg
+
+|T|=69, |N|=12 et |P|=210
+
+FB.rcg => FB_rcgp.c en 0.76s taille 1.42Mo
+
+Option de compilation : -O2 -DEBUG2 -DSINGLE_PASS=1 -DCYCLIC=0 -DPARSER -DLEX=1 -DLEX2=1 -DDYNAM_LEX=1 -DFIRST_LAST=0 -DMEMO=1
+Compilation en 79s taille de fxtag.out (stripped) 0.36M0
+
+
+
+***************************************************************************
+Jean{+np}; aime{+tn1}; Marie{+np}
+        Parser (TRUE) (0ms)	This sentence is non ambiguous.
+        Last Pass (TRUE) (0ms)
+        Done (0ms)
+
+There are 13 nt calls and 13 clause calls for this execution.
+The memoization cells have been hit #1 and #0 for predicates and clauses.
+***************************************************************************
+Yves{+np}; montre{+montrer +npdn}; des{+d}; fleurs{+npdn}; à{+nppn +vppn à}; Sharon{+np}
+        Parser (TRUE) (0ms)	This sentence is non ambiguous.
+        Last Pass (TRUE) (0ms)
+        Done (0ms)
+
+There are 29 nt calls and 25 clause calls for this execution.
+The memoization cells have been hit #4 and #0 for predicates and clauses.
+***************************************************************************
+Kathy{+np}; regarde{+tn1}; un{+d un}; livre{+npdn}; avec{+nppn +vppn avec}; Stéphane{+np}
+        Parser (TRUE) (0ms)	There are 2 trees in this shared parse forest.
+        Last Pass (TRUE) (0ms)
+        Done (0ms)
+
+There are 100 nt calls and 58 clause calls for this execution.
+The memoization cells have been hit #40 and #0 for predicates and clauses.
+***************************************************************************
+un{+d un}; ami{+npdn}; américain{+a +na}; de{+nppn de}; Yves{+np}; qui{+np qui}; visite{+tn1}; la{+d la}; France{+npdn}; boit{+boire +t +tn1}; du{+d}; bon{+a +an +na}; vin{+npdn}
+        Parser (TRUE) (0ms)	There are 2 trees in this shared parse forest.
+        Last Pass (TRUE) (0ms)
+        Done (0ms)
+
+There are 3097 nt calls and 610 clause calls for this execution.
+The memoization cells have been hit #2556 and #0 for predicates and clauses.
+***************************************************************************
+la{+d la}; jolie{+a +an +na}; fille{+npdn}; pense{+ts1}; que{+np que}; Andrew{+np}; est{+etre +ta +tn1}; le{+d le}; grand{+a +an +na}; ami{+npdn}; de{+nppn de}; son{+d}; chien{+npdn}
+        Parser (TRUE) (0ms)	This sentence is non ambiguous.
+        Last Pass (TRUE) (0ms)
+        Done (0ms)
+
+There are 3211 nt calls and 762 clause calls for this execution.
+The memoization cells have been hit #2570 and #0 for predicates and clauses.
+***************************************************************************
+Marie{+np}; comprend{+t +ts1}; que{+np que}; Kathy{+np}; dort{+t}; bien{+vad}; chez{+vppn chez}; Andrew{+np}
+        Parser (TRUE) (0ms)	There are 2 trees in this shared parse forest.
+        Last Pass (TRUE) (0ms)
+        Done (0ms)
+
+There are 319 nt calls and 206 clause calls for this execution.
+The memoization cells have been hit #140 and #0 for predicates and clauses.
+***************************************************************************
+Anne{+np}; voit{+tn1 +ts1 +voir}; les{+d les}; fleurs{+npdn}; que{+np que}; Yves{+np}; cherche{+t +tn1}; sur{+nppn +vppn sur}; la{+d la}; table{+npdn}
+        Parser (TRUE) (0ms)	There are 4 trees in this shared parse forest.
+        Last Pass (TRUE) (0ms)
+        Done (0ms)
+
+There are 1324 nt calls and 384 clause calls for this execution.
+The memoization cells have been hit #1001 and #0 for predicates and clauses.
+***************************************************************************
+Jean{+np}; pense{+ts1}; que{+np que}; Béatrice{+np}; perd{+perdre +tn1}; les{+d les}; pédales{+npdn pédales}
+        Parser (TRUE) (0ms)	There are 2 trees in this shared parse forest.
+        Last Pass (TRUE) (0ms)
+        Done (0ms)
+
+There are 230 nt calls and 97 clause calls for this execution.
+The memoization cells have been hit #139 and #0 for predicates and clauses.
+***************************************************************************
+le{+d le}; petit{+an +na};  chat{+npdn}; de{+nppn de}; Sabine{+np}; court{+courir +t}; vite{+vpad}
+        Parser (TRUE) (0ms)	This sentence is non ambiguous.
+        Last Pass (TRUE) (0ms)
+        Done (0ms)
+
+There are 155 nt calls and 93 clause calls for this execution.
+The memoization cells have been hit #63 and #0 for predicates and clauses.
+***************************************************************************
+Andrew{+np}; court{+courir +t}; parfois{+advp +vad}; les{+d les}; filles{+npdn filles}
+        Parser (TRUE) (0ms)	This sentence is non ambiguous.
+        Last Pass (TRUE) (0ms)
+        Done (0ms)
+
+There are 46 nt calls and 34 clause calls for this execution.
+The memoization cells have been hit #11 and #0 for predicates and clauses.
+***************************************************************************
+la{+d la}; fille{+npdn}; de{+nppn de}; Marie{+np}; aime{+tn1}; bien{+vad}; les{+d les}; fleurs{+npdn}
+        Parser (TRUE) (0ms)	This sentence is non ambiguous.
+        Last Pass (TRUE) (0ms)
+        Done (0ms)
+
+There are 246 nt calls and 119 clause calls for this execution.
+The memoization cells have been hit #127 and #0 for predicates and clauses.
+***************************************************************************
+qui{+np qui}; est{+etre +ta +tn1}; Bonnie{+np}
+        Parser (TRUE) (0ms)	There are 2 trees in this shared parse forest.
+        Last Pass (TRUE) (0ms)
+        Done (0ms)
+
+There are 35 nt calls and 24 clause calls for this execution.
+The memoization cells have been hit #15 and #0 for predicates and clauses.
+***************************************************************************
+qui{+np qui}; dit{+ts1}; que{+np que}; Yves{+np}; a{+tn1 a}; un{+d un}; chien{+npdn}
+        Parser (TRUE) (0ms)	There are 2 trees in this shared parse forest.
+        Last Pass (TRUE) (0ms)
+        Done (0ms)
+
+There are 290 nt calls and 120 clause calls for this execution.
+The memoization cells have been hit #185 and #0 for predicates and clauses.
+***************************************************************************
+un{+d un}; enfant{+npdn}; intelligent{+a +na}; de{+nppn de}; Marie{+np}; comprend{+t +ts1}; lentement{+vad +vpad}; que{+np que}; sa{+d}; mère{+npdn}; est{+etre +ta +tn1}; bête{+a +na}
+        Parser (TRUE) (0ms)	This sentence is non ambiguous.
+        Last Pass (TRUE) (0ms)
+        Done (0ms)
+
+There are 2809 nt calls and 524 clause calls for this execution.
+The memoization cells have been hit #2345 and #0 for predicates and clauses.

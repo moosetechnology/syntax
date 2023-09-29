@@ -1,0 +1,17 @@
+# This makefile is used to bootstrap bnf.
+
+# To avoid problems with other shells:
+SHELL=/bin/sh
+COMPILER=cc
+
+SX=$(sx)
+
+MAKE_A_DICO=$(SX)/make_a_dico
+TMP=$(MAKE_A_DICO)/tmp
+
+$(MAKE_A_DICO)/bootstrap:
+	${SHELL} $(sx)/etc/bin/liens-tmp.sh $(TMP); : $(MAKE)
+	cd $(TMP); ${SHELL} $(sx)/etc/bin/make-makefile make_a_dico | CYGWIN="$$CYGWIN binmode" $(MAKE) -f -
+	cd $(TMP); ${SHELL} $(sx)/etc/bin/make-makefile amlgm_cmpd | CYGWIN="$$CYGWIN binmode" $(MAKE) -f -
+	${SHELL} $(sx)/etc/bin/menage-tmp.sh $(TMP); : $(MAKE)
+	$(MAKE) COMPILER="$(COMPILER)" CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)"	sxV="$(sxV)" -f $(MAKE_A_DICO)/sxmakefile

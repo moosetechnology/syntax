@@ -1,0 +1,25 @@
+: /bin/sh
+# Dummy stack presizing program.
+#
+# Copyright (c) 1985 Philippe Deschamp
+#
+#    Permission is granted to anyone to make or distribute verbatim
+#    copies of this document as received, in any medium, provided
+#    that the copyright notice and this permission notice are
+#    preserved, thus giving the recipient permission to redistribute
+#    in turn.
+#
+#    Permission is granted to distribute modified versions of this
+#    document, or of portions of it, under the above conditions,
+#    provided also that they carry prominent notices stating who last
+#    changed them.
+
+# Changed by PhD on Thu Mar 17 1988 to replace "-x" option of "test"
+# by "-f": some (dumb) shells do not have "-x", and after all, if a
+# file exists in a "binary" dir, it should be executable...
+
+if test -f /bin/s3
+   then exec /bin/s3 "$@"
+fi
+exit 0
+

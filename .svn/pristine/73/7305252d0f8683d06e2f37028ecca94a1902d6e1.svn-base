@@ -1,0 +1,228 @@
+.\" @(#)sxparser.3	- SYNTAX [unix] - 7 Novembre 1991
+.TH SXPARSER 3 "SYNTAX\[rg]"
+.SH NAME
+sxparser,
+sxget_token,
+sxprecovery,
+STACKtop,
+STACKnewtop,
+STACKreduce,
+STACKtoken,
+sxparstack,
+sxpglobals,
+sxplocals
+\- parser for SYNTAX.
+.SH SYNOPSIS
+\fB
+.nf
+#include "sxunix.h"
+
+struct sxtables  sxtables\|;
+
+SXVOID sxparser (what, sxtables)
+.ta \w'SXVOI'u +\w'struct sxtables 'u
+	int	what\|;
+	struct sxtables	*sxtables\|;
+
+SXVOID sxpsature (nbt)
+.ta \w'SXVOI'u +\w'int  'u
+	int	nbt\|;
+
+struct sxtoken *sxget_token (tok_no)
+.ta \w'SXVOI'u +\w'int  'u
+	int	tok_no\|;
+
+SXBOOLEAN sxprecovery (what)
+.ta \w'SXVOI'u +\w'int  'u
+	int	what\|;
+
+.fi
+.SH DESCRIPTION
+The
+.B parser
+is the module which performs the syntax analysis of source texts in the
+.B SYNTAX
+system. The
+.B parser
+calls the scanner (see \fBsxscanner\fP(3)) each time a new lexical token is needed.
+When the right hand side of a grammar rule is recognised the
+.B parser
+calls a "semantic" action.
+This action depends on the kind of semantics used.
+It may be a user action if the semantics is described "by actions" (see
+\fBsemact\fP(1)), an abstract tree construction if the semantics is described
+"by abstract tree" (see \fBsemat\fP(1) and \fBsxatc\fP(3)), a linear syntax tree for
+a pretty-printer (see \fBparadis\fP(1) and \fBsxatcpp\fP(3)) or the construction of
+a synthesised attributes evaluator (see \fBtabc\fP(1)).
+This module also provides a set of procedures, macros and variables available
+to the semantic actions, i. e. just before a reduction.
+For a user point of view the main tools are the followings:
+.TP
+.IR SXSTACKtoken\|(x_stack)
+is a macro which expands into the token which is at the index
+.I x_stack
+in
+.IR parse_stack.
+If \fIx_stack\fP refers to a non terminal symbol the \fIlahead\fP field
+of the token structure (\fBsxscanner\fP\|(3)) is 0.
+.TP
+.I SXSTACKtop\|()
+is a macro which designates, in the parse stack, the position of the
+rightmost symbol of the grammar rule, if any.
+.TP
+.I SXSTACKnewtop\|()
+is a macro which gives the index in the parse stack of the future left hand
+side non terminal.
+It designates the position of the leftmost symbol of the grammar rule,
+if any.
+.br
+The tokens of the right hand side of a production lay in the parse stack
+between SXSTACKnewtop\|() and SXSTACKtop\|() and hence may be accessed in two ways:
+from left to right by \fISXSTACKtoken\fP\|(\fISXSTACKnewtop\fP\|()), \fISXSTACKtoken\fP\|(\fISXSTACKnewtop\fP\|()+1), ... or from right
+to left by \fISXSTACKtoken\fP\|(\fISXSTACKtop\fP\|()), \fISXSTACKtoken\fP\|(\fISXSTACKtop\fP\|()-1), ...
+For an empty production SXSTACKtop\|() is strictly less than SXSTACKnewtop\|().
+The terminal symbols in look-ahead can be accessed by \fIsxget_token\fP\|().
+.TP
+.I SXSTACKreduce\|()
+is a macro which gives the number of the reduction.
+.SH "FURTHER DESCRIPTION"
+The parser variables are declared in the include file
+.B sxunix.h
+and the declarations are close to the following\|:
+.nf
+
+.ta \w'\fBstr\fP'u +\w'\fBstruct\fP sxtoken 'u +\w'token 'u +\w'/* lexical token 'u
+\fBstruct\fP sxparstack {
+	\fBstruct\fP sxtoken	token	/* lexical token	*/\|;
+	\fBSXSHORT\fP	state	/* LR state	*/\|;
+	}\|;
+
+.fi
+.I token
+contains a lexical token (see \fBsxscanner\fP(3)).
+.I state
+have no meaning for the user.
+.nf
+
+.ta \w'\fBstr\fP'u +\w'\fBstruct\fP sxparstack 'u +\w'*parse_stack 'u +\w'/* right hand side rule size 'u
+\fBstruct\fP sxpglobals {
+	\fBstruct\fP sxparstack	*parse_stack	/* parse stack	*/\|;
+	\fBSXSHORT\fP	 reduce	/* grammar rule number	*/\|;
+	\fBSXSHORT\fP	 xps	/* parse stack top	*/\|;
+	\fBSXSHORT\fP	 pspl	/* right hand side rule size	*/\|;
+	\fBSXSHORT\fP	 stack_bot	/* parse stack bottom	*/\|;
+	} sxpglobals;
+
+.fi
+.I parse_stack
+is a pointer to the parse stack.
+Warning, this value may have changed from the previous call.
+.I reduce
+contains the number of the grammar rule which has been recognised.
+.I xps
+is the current parse stack top\|; it refers to the rightmost symbol of the
+grammar rule.
+For an empty rule
+.I xps
+is meaningless.
+.I pspl
+is related to the size of the right hand side of production number
+.IR reduce,
+it must not be used directly (see SXSTACKnewtop).
+.I stack_bot
+is the bottom index of the parse stack for the current activation of the
+parser, it is automatically managed upon recursive call of the parser.
+.nf
+.ta \w'\fBstr\fP'u +\w'\fBstruct\fP sxtables 'u +\w'*toks_buf 'u +\w'/* look ahead token number for actions 'u
+\fBstruct\fP sxplocals {
+	\fBstruct\fP P_tables	 P_tables	/* parser tables	*/\|;
+	\fBstruct\fP sxtables	*sxtables	/* the whole tables	*/\|;
+	\fBSXSHORT\fP	 state	/* internal use	*/\|;
+	\fBstruct\fP sxtoken	*toks_buf	/* look ahead tokens buffer	*/\|;
+	\fBint\fP	 atok_no	/* look ahead token number for actions	*/,
+		 ptok_no	/* token number for predicates	*/,
+		 Mtok_no	/* last token number	*/,
+		 min	/* min toks_buf interval	*/,
+		 max	/* max toks_buf interval	*/\|;
+   } sxplocals\|;
+
+.fi
+.I P_tables
+and
+.I sxtables
+are respectively the current parser tables and (a pointer to) the current
+language tables.
+.I toks_buf
+is a buffer which contains the look-ahead tokens already scanned.
+These tokens can be accessed via the \fIsxget_token(n)\fP function
+which returns a pointer to the \fIn\fPth token.
+These numbers (contrary to pointers) are independants from the
+manipulations (reallocation, displacement..) of \fItoks_buf\fP.
+From the user's actions and predicates point of view the \fIcurrent\fP
+token is:
+.nf
+.ta \w'analyzer 'u +\w'NT_predicate 'u +\w'post-action token 'u
+analyzer	case	current token	accessed by
+
+parser	action	next token	sxget_token(sxplocals.atok_no)
+	T_predicate	associated token	sxget_token(sxplocals.ptok_no)
+	NT_predicate	next token	sxget_token(sxplocals.ptok_no)
+
+scanner	post-action	post-action token	sxsvar.sxlv.terminal_token
+
+.fi
+Let \fIn\fP be a given token number. If \fIn\fP < \fImin\fP it cannot
+be accessed anymore. If \fIn\fP >= \fImin\fP and \fIn\fP <= \fIMtok_no\fP
+it has already been scanned. In all cases where \fIn\fP >= \fImin\fP it 
+can be accessed by \fIsxget_token(n)\fP even if \fIn\fP > \fIMtok_no\fP;
+in such a case a sufficient number of calls to the \fIscanner\fP will
+be performed.
+If \fIc\fP is the number of the current token, the previous token is
+always accessible via \fIsxget_token(c-1)\fP.
+The following relations are always true:
+.nf
+	\fImin\fP < \fIatok_no\fP <= \fIptok_no\fP <= \fIMtok_no\fP <= \fImax\fP
+.fi
+.TP
+.I sxparser
+is the main entry of the module to be called
+for parsing a given source text.
+Its possible uses are:
+.br
+.IR sxparser \|( SXBEGIN , \|sxtables)
+allocates the global variables which are language and source text independent
+(contained in sxpglobals).
+.br
+.IR sxparser \|( SXOPEN , \|sxtables )
+opens the tables and allocates the local variables when a new language is going to be processed (contained in sxplocals).
+.br
+.IR sxparser \|( SXACTION , \|sxtables )
+analyses a (new) source text written in the language corresponding to
+\fIsxtables\fP.
+.br
+.IR sxparser \|( SXCLOSE , \|sxtables )
+terminates all parsing for a given language and frees the local variables.
+.br
+.IR sxparser \|( SXEND , \|sxtables )
+frees the global variables.
+.TP
+.I sxprecovery
+is the syntax level error processing module.
+It allows corrections and recoveries (see \fBrecor\fP\|(1) and the \fISYNTAX Reference Manual\fP).
+.SH "SEE ALSO"
+\fBbnf\fP(1),
+\fBrecor\fP(1),
+\fBsxunix\fP(3),
+\fBsxscanner\fP(3),
+\fBsxatc\fP(3),
+\fBsxatcpp\fP(3)
+and the \fISYNTAX Reference Manual\fP.
+.SH NOTES
+The contents of the structure
+.I sxplocals
+must be saved and restored by the user when switching
+between different parsers.
+.\" Local Variables:
+.\" mode: nroff
+.\" version-control: yes
+.\" End:

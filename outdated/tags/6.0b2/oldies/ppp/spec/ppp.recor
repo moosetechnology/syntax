@@ -1,0 +1,58 @@
+TTTiiitttllleeesss
+	"\2Erreur",
+	"\1Avertissement";
+
+SSScccaaannnnnneeerrr
+	LLLooocccaaalll
+		XXX 0 1 2 3 ; "	Un caract`ere """ %0 """ est ins'er'e avant """ $0 """.";
+		1 2 3 4	; "	Le caract`ere invalide """ $0 """ est supprim'e.";
+		XXX 1 2 3 4 ; "	Le caract`ere invalide """ $0 """ est remplac'e par """ %0 """.";
+
+		DDDooonnnttt___DDDeeellleeettteee = {};
+		DDDooonnnttt___IIInnnssseeerrrttt = {};
+
+	GGGlllooobbbaaalll
+		DDDeeettteeeccctttiiiooonnn : -- parameter: character in error
+			  "	\"%s\" est supprim'e.";
+		KEYWORD	: "	Ce mot-cl'e inconnu est ignor'e.";
+		EEEooolll	: "Fin de Ligne";
+		EEEooofff	: "Fin de Fichier";
+		HHHaaalllttt	: "	Arr^et de l'analyse lexicale.";
+
+PPPaaarrrssseeerrr
+	LLLooocccaaalll
+		0 SSS 2	; "	Faute d'orthographe: """ $1 """ est remplac'e par """ %1 """.";
+		SSS 1	; "	Faute d'orthographe: """ $0 """ est remplac'e par """ %0 """ devant """ $1 """.";
+		0 XXX 1 2 3 ; "	""" %1 """ est ins'er'e avant """ $1 """.";
+		0 XXX 2 3 4 ; "	""" $1 """ est remplac'e par """ %1 """.";
+		0 2 3 4	; "	""" $1 """ est supprim'e.";
+		0 XXX XXX 1 2 3 4
+			; "	""" %1 " " %2 """ est ins'er'e avant """ $1 """.";
+		XXX 0 1 2 3 ; "	""" %0 """ est ins'er'e avant """ $0 " " $1 """.";
+		XXX 1 2 3 4 ; "	""" $0 """ est remplac'e par """ %0 """ devant """ $1 """.";
+		1 2 3 4	; "	""" $0 """ est supprim'e devant """ $1 """.";
+		XXX 2 3 4	; "	""" $0 " " $1 """ est remplac'e par """ %0 """.";
+		XXX XXX 1 2 3 ; "	""" $0 """ est remplac'e par """ %0 " " %1 """ devant """ $1 """.";
+
+		DDDooonnnttt___DDDeeellleeettteee = {};
+		DDDooonnnttt___IIInnnssseeerrrttt = {};
+
+	FFFooorrrccceeeddd___IIInnnssseeerrrtttiiiooonnn
+		"	Seul """ %0 """ est possible ici; il est ins'er'e devant """ $1 """. " ;
+
+	GGGlllooobbbaaalll
+		KKKeeeyyy___TTTeeerrrmmmiiinnnaaalllsss = {";", "do", "else", "end", "then", "until"};
+		VVVaaallliiidddaaatttiiiooonnn___LLLeeennngggttthhh = 2;
+		FFFooollllllooowwweeerrrsss___NNNuuummmbbbeeerrr <= 9
+			: -- parameters: array (1:Followers_Number) of valid followers at detection point
+			  "	On attendait \"%s\"^( ou \"%s\"^).";
+		DDDeeettteeeccctttiiiooonnn : -- parameters: none
+			  "	Correction impossible...";
+		RRReeessstttaaarrrtttiiinnnggg: -- parameters: array (1:Validation_Length) of valid followers at restarting point
+		  "	... L'analyse syntactique reprend `a partir de \"%s\".";
+		HHHaaalllttt	: -- parameters: none
+			  "	... Arr^et de l'analyse syntactique.";
+
+AAAbbbssstttrrraaacccttt
+	-- parameters: array (1:Titles_No) of number of messages
+	"Messages 'emis: %d d'erreur et %d d'avertissement.";

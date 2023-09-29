@@ -1,0 +1,60 @@
+Classes
+
+	atom_body	= "+-\^<>=`~:.?@#&" ;
+
+Abbreviations
+
+	comment_body	= SP | HT | VT | FF | EOL |
+			  "%"&True {^EOL} EOL |
+			  "/" "*"&True {Any} "*" "/"&True
+			 ;
+
+Tokens
+
+	Comments	= {comment_body}+ @Erase ;
+			Priority Shift>Reduce ;
+			Context All But Comments ;
+
+	%integer_number	= ({DIGIT}+ | DIGIT [DIGIT] "'" {LETTER | DIGIT}) ;
+			Priority Shift>Reduce ;
+
+	%floating_point_number
+			= {DIGIT}+ "." {DIGIT}+ ["Ee" ["-"] {DIGIT}+] ;
+			Priority Shift>Reduce ;
+
+	%string		= QUOTE {^QUOTE | QUOTE QUOTE} QUOTE ;
+
+	"("		= -"(" @Incr(1) ;
+	")"		= -")" @Decr(1) ;
+
+	"["		= -"[" @Incr(0) ;
+	"]"		= -"]" @Decr(0) ;
+
+	";"		= -";"&Is_Reset(1) ;
+
+	"."		= "."&Is_Reset(1) @Reset(0) @Reset(2) -- prudence!
+			;
+
+	"{"		= -"{" @Set(2) ;
+	"}"		= -"}" @Reset(2) ;
+
+	","		= -"," ;
+
+	"|"		= -"|" ;
+
+	%atom		= LOWER {"_" | LETTER | DIGIT} |
+-- On interdit la sequence /*
+			  {atom_body | "*" | "/" atom_body}+ ["/"] |
+			  "/" |
+			  -"'" {^"'" | -"'" "'"} -"'" |
+			  "!" |
+			  ";"
+			;
+-- @1 confirme ou non le statut de
+-- "+", "-", "*", "/", "mod", "<", "=<", ">", ">=", "is" et "-->" comme mot_cle'
+			@1 ;
+			Priority Shift>Reduce ;
+
+	%variable	= (UPPER | "_") {"_" | LETTER | DIGIT} ;
+			Priority Shift>Reduce ;
+

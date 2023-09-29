@@ -1,0 +1,328 @@
+**************************************************************************************
+* 			wcw.lig							     *
+**************************************************************************************
+
+*
+* This is a LIG for the language {wcw | w in {a, b}* }
+*
+
+* No error recovery (by source text modification) since stack testing
+* is performed after source text reading (see wcw2.lig)
+
+<S>(..)		= a <S>(.. a )		;
+<S>(..)		= b <S>(.. b )		;
+<S>(..)		= <T>(..)		;
+*
+<T>( .. a )	= <T>(..) a		;
+<T>( .. b )	= <T>(..) b		;
+<T>()		= c			;
+
+**************************************************************************************
+* bnf ge'ne're'e 								     *
+**************************************************************************************
+<wcw-new-start-symbol> = <S> &10000 ;
+
+*
+* This is a LIG for the language {wcw | w in {a, b}* }
+*
+
+* No error recovery (by source text modification) since stack testing
+* is performed after source text reading (see wcw2.lig)
+
+<S> @10001		= "a" <S>&10002		;
+<S> @10001		= "b" <S>&10003		;
+<S> @10000		= <T>&10001		;
+*
+<T> @10002	= <T>&10001 "a"		;
+<T> @10003	= <T>&10001 "b"		;
+<T> @10004		= "c"			;
+**************************************************************************************
+* tables ge'ne're'es 								     *
+**************************************************************************************
+
+static int SXLIG_prdct_disp [] = {
+ 0, 1, 2, 5, 8,
+};
+
+static int SXLIG_prdct_code [] = {
+/* &10000 */ 0, /* () */
+/* &10001 */ 1, /* (..) */
+/* &10002 */ 3, 1, -1, /* ( .. "a" ) */
+/* &10003 */ 4, 1, -1, /* ( .. "b" ) */
+};
+
+static int SXLIG_action_disp [] = {
+ 0, 1, 4, 8, 12, 13,
+};
+
+static int SXLIG_action_code [] = {
+/* @10000 */ 0, /* Empty action */
+/* @10001 */ 1, 1, 1, /* stack (0) = pop (stack (1), 1) */
+/* @10002 */ 1, 0, 0, 3, /* stack (0) = push (stack (0), "a") */
+/* @10003 */ 1, 0, 0, 4, /* stack (0) = push (stack (0), "b") */
+/* @10004 */ 0, /* stack (0) = () */
+};
+
+**************************************************************************************
+* Quelques exe'cutions...		./wcw.out test.wcw			     *
+**************************************************************************************
+test.wcw:
+
+acb
+   ^
+test.wcw, line 1: column 4: Warning:    "b" before "End Of File" is replaced by "a".
+
+**************************************************************************************
+test.wcw:
+
+ac
+  ^
+test.wcw, line 1: column 3: Warning:    "a" is inserted before "End Of File".
+
+**************************************************************************************
+test.wcw:
+
+a
+ ^
+test.wcw, line 1: column 2: Warning:    "c a" is inserted before "End Of File".
+
+**************************************************************************************
+test.wcw:
+
+acab
+    ^
+test.wcw, line 1: column 5: Warning:    "b" before "End Of File" is replaced by "End Of File".
+
+**************************************************************************************
+* Ci-dessous, inadequation entre le back-bone context-free et le traitement des	     *
+* Actions/predicats. L'erreur est de'tecte'e en fin de texte (impossible de corriger)*
+* et de plus les suivants attendus sont inexacts (la base syntaxique de'crit le      *
+* le langage {wcw' | w et w' ds {a|b}*}						     *
+**************************************************************************************
+test.wcw:
+
+abacaaa
+       ^
+test.wcw, line 1: column 8: Error:      "a", "b" is expected
+
+abacaaa
+       ^
+test.wcw, line 1: column 8: Error:      Global recovery.
+
+abacaaa
+       ^
+test.wcw, line 1: column 8: Error:      Parsing stops on End Of File.
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+**************************************************************************************
+* 			wcw2.lig						     *
+**************************************************************************************
+
+*
+* This is a LIG for the language {wcw | w in {a, b}* }
+*
+
+* Error recovery enable since each test is performed while the
+* token is parsed (see wcw.lig)
+
+<S>(..)		= <S>(.. a ) a	 	;
+<S>(..)		= <S>(.. b ) b 		;
+<S>(..)		= <T>(..)		;
+*
+<T>( .. a )	= a <T>(..)		;
+<T>( .. b )	= b <T>(..)		;
+<T>()		= c			;
+
+**************************************************************************************
+* bnf ge'ne're'e 								     *
+**************************************************************************************
+<wcw2-new-start-symbol> = <S> &10000 ;
+
+*
+* This is a LIG for the language {wcw | w in {a, b}* }
+*
+
+* Error recovery enable since each test is performed while the
+* token is parsed (see wcw.lig)
+
+<S> @10001		= <S>&10002 "a"	 	;
+<S> @10001		= <S>&10003 "b" 		;
+<S> @10000		= <T>&10001		;
+*
+<T> @10002	= "a" <T>&10001		;
+<T> @10003	= "b" <T>&10001		;
+<T> @10004		= "c"			;
+
+**************************************************************************************
+* tables ge'ne're'es 								     *
+**************************************************************************************
+static int SXLIG_prdct_disp [] = {
+ 0, 1, 2, 5, 8,
+};
+
+static int SXLIG_prdct_code [] = {
+/* &10000 */ 0, /* () */
+/* &10001 */ 1, /* (..) */
+/* &10002 */ 3, 1, -1, /* ( .. "a" ) */
+/* &10003 */ 4, 1, -1, /* ( .. "b" ) */
+};
+
+static int SXLIG_action_disp [] = {
+ 0, 1, 4, 8, 12, 13,
+};
+
+static int SXLIG_action_code [] = {
+/* @10000 */ 0, /* Empty action */
+/* @10001 */ 1, 1, 0, /* stack (0) = pop (stack (0), 1) */
+/* @10002 */ 1, 0, 1, 3, /* stack (0) = push (stack (1), "a") */
+/* @10003 */ 1, 0, 1, 4, /* stack (0) = push (stack (1), "b") */
+/* @10004 */ 0, /* stack (0) = () */
+};
+
+**************************************************************************************
+* Quelques exe'cutions...		./wcw2.out test.wcw			     *
+**************************************************************************************
+test.wcw:
+
+acb
+  ^
+test.wcw, line 1: column 3: Warning:    "b" is replaced by "a".
+
+**************************************************************************************
+test.wcw:
+
+ac
+  ^
+test.wcw, line 1: column 3: Warning:    "a" is inserted before "End Of File".
+
+**************************************************************************************
+test.wcw:
+
+a
+ ^
+test.wcw, line 1: column 2: Warning:    "c a" is inserted before "End Of File".
+
+**************************************************************************************
+test.wcw:
+
+acab
+   ^
+test.wcw, line 1: column 4: Warning:    "b" is replaced by "End Of File".
+
+**************************************************************************************
+test.wcw:
+
+ababababaabbbababbbbaaababbabcababababaabbbababbbbabababbab
+                                                   ^
+test.wcw, line 1: column 52: Warning:   "b" is replaced by "a".
+**************************************************************************************
+Temps d'analyse d'une chaine de 1001 tokens :
+ababababaabbbababbbbaaababbabababababaabbbababbbbaababababaabbbababbbbaaababbabababababaabbbababbbbaababababaabbbababbbbaaababbabababababaabbbababbbbaababababaabbbababbbbaaababbabababababaabbbababbbbaababababaabbbababbbbaaababbabababababaabbbababbbbaababababaabbbababbbbaaababbabababababaabbbababbbbaababababaabbbababbbbaaababbabababababaabbbababbbbaababababaabbbababbbbaaababbabababababaabbbababbbbaababababaabbbababbbbaaababbabababababaabbbababbbbaababababaabbbababbbbaaababbabababababaabbbababbbbacababababaabbbababbbbaaababbabababababaabbbababbbbaababababaabbbababbbbaaababbabababababaabbbababbbbaababababaabbbababbbbaaababbabababababaabbbababbbbaababababaabbbababbbbaaababbabababababaabbbababbbbaababababaabbbababbbbaaababbabababababaabbbababbbbaababababaabbbababbbbaaababbabababababaabbbababbbbaababababaabbbababbbbaaababbabababababaabbbababbbbaababababaabbbababbbbaaababbabababababaabbbababbbbaababababaabbbababbbbaaababbabababababaabbbababbbbaababababaabbbababbbbaaababbabababababaabbbababbbba
+
+time ./wcw2.out test.wcw
+test.wcw:
+0.050u 0.040s 0:00.14 64.2% 0+168+168k(436) 0+5io 0pf+0w
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+**************************************************************************************
+* 			wcw3.lig						     *
+**************************************************************************************
+*
+* This is an xLIG for the language {wcw | w in {a, b, c}* }
+*
+
+* Error recovery enable since each test is performed while the
+* token is parsed (see wcw.lig)
+
+<S>(..)		= <S>(.. a ) a	 	;
+<S>(..)		= <S>(.. b ) b 		;
+<S>(..)		= <S>(.. c ) c 		;
+<S>(..)		= <T>(..)		;
+*
+<T>( .. a )	= a <T>(..)		;
+<T>( .. b )	= b <T>(..)		;
+<T>( .. c )	= c <T>(..)		;
+<T>()		= c &0			;
+* &0 checks wether the 'c' is in the middle
+
+**************************************************************************************
+* bnf ge'ne're'e 								     *
+**************************************************************************************
+<wcw3-new-start-symbol> = <S> &10000 ;
+
+*
+* This is an xLIG for the language {wcw | w in {a, b, c}* }
+*
+
+* Error recovery enable since each test is performed while the
+* token is parsed (see wcw.lig)
+
+<S> @10001		= <S>&10002 "a"	 	;
+<S> @10001		= <S>&10003 "b" 		;
+<S> @10001		= <S>&10004 "c" 		;
+<S> @10000		= <T>&10001		;
+*
+<T> @10002	= "a" <T>&10001		;
+<T> @10003	= "b" <T>&10001		;
+<T> @10004	= "c" <T>&10001		;
+<T> @10005		= "c" &0			;
+* &0 checks wether the 'c' is in the middle
+
+**************************************************************************************
+* tables ge'ne're'es 								     *
+**************************************************************************************
+
+static int SXLIG_prdct_disp [] = {
+ 0, 1, 2, 5, 8, 11,
+};
+
+static int SXLIG_prdct_code [] = {
+/* &10000 */ 0, /* () */
+/* &10001 */ 1, /* (..) */
+/* &10002 */ 3, 1, -1, /* ( .. "a" ) */
+/* &10003 */ 4, 1, -1, /* ( .. "b" ) */
+/* &10004 */ 5, 1, -1, /* ( .. "c" ) */
+};
+
+static int SXLIG_action_disp [] = {
+ 0, 1, 4, 8, 12, 16, 17,
+};
+
+static int SXLIG_action_code [] = {
+/* @10000 */ 0, /* Empty action */
+/* @10001 */ 1, 1, 0, /* stack (0) = pop (stack (0), 1) */
+/* @10002 */ 1, 0, 1, 3, /* stack (0) = push (stack (1), "a") */
+/* @10003 */ 1, 0, 1, 4, /* stack (0) = push (stack (1), "b") */
+/* @10004 */ 1, 0, 1, 5, /* stack (0) = push (stack (1), "c") */
+/* @10005 */ 0, /* stack (0) = () */
+};
+
+int PARSACT_2 ();
+
+static struct sxligparsact sxligparsact = {
+ SXLIG_prdct_disp,
+ SXLIG_prdct_code,
+ SXLIG_action_disp,
+ SXLIG_action_code,
+ PARSACT_2
+};
+
+**************************************************************************************
+* Quelques exe'cutions...		./wcw3.out test.wcw3			     *
+**************************************************************************************
+test.wcw3:
+
+acbbaccabbcabccbbabbcccbbaabbbcbcbaabbbcacbbaccabbcabccbbabbcccbbcabbbcbcbaabbb
+                                                                 ^
+test.wcw3, line 1: column 66: Warning:  "c" is replaced by "a".
+
+**************************************************************************************
+Temps d'analyse d'une chaine de 1001 tokens :
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+
+time ./wcw3.out test.wcw3
+test.wcw3:
+0.050u 0.050s 0:00.18 55.5% 0+174+174k(440) 0+5io 0pf+0w
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@

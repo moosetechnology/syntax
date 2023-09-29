@@ -1,0 +1,193 @@
+lr0_automaton_state_nb = 3
+
+Q0[0] = {
+        in           = 0
+        xla          = 1
+        bot          = 0
+        t_trans_nb   = 0
+        nt_trans_nb  = 0
+        red_trans_nb = 0
+}
+Q0[1] = {
+        in           = 0
+        xla          = 0
+        bot          = 1
+        t_trans_nb   = 1
+        nt_trans_nb  = 1
+        red_trans_nb = 0
+}
+Q0[2] = {
+        in           = 1
+        xla          = 0
+        bot          = 3
+        t_trans_nb   = 2
+        nt_trans_nb  = 1
+        red_trans_nb = 0
+}
+Q0[3] = {
+        in           = 1
+        xla          = 0
+        bot          = 6
+        t_trans_nb   = 1
+        nt_trans_nb  = 1
+        red_trans_nb = 1
+}
+
+Q0xV_to_Q0[1] = -7
+Q0xV_to_Q0[2] = 2
+Q0xV_to_Q0[3] = -7
+Q0xV_to_Q0[4] = -2
+Q0xV_to_Q0[5] = 3
+Q0xV_to_Q0[6] = -7
+Q0xV_to_Q0[7] = 3
+Q0xV_to_Q0[8] = -6
+
+
+parse_stack.graph[1] = {     ltd_parse_stack.graph[1] = {   
+        state     = 1	             state            = 1   
+        red_ref   = 0	             red_ref          = 0   
+        shift_ref = 0	             shift_ref        = 0   
+        son       = 0	             son              = 0   
+        level     = 0	             symbol           = 0   
+        symbol    = 0	             parse_time_built = '\0'
+}
+parse_stack.graph[2] = {     ltd_parse_stack.graph[2] = {   
+        state     = 1	             state            = 1   
+        red_ref   = 0	             red_ref          = 0   
+        shift_ref = 0	             shift_ref        = 0   
+        son       = 1	             son              = 1   
+        level     = 0	             symbol           = 1   
+        symbol    = 1	             parse_time_built = '^A'
+}
+parse_stack.graph[3] = {     ltd_parse_stack.graph[3] = {   
+        state     = 2	             state            = 2   
+        red_ref   = 0	             red_ref          = 0   
+        shift_ref = -7	             shift_ref        = -7  
+        son       = 2	             son              = 2   
+        level     = 3	             symbol           = 1   
+        symbol    = 1	             parse_time_built = '^A'
+}
+
+getG 1
+getG 2
+getG 3
+getG 4
+getL 1
+getL 2
+getL 3
+getL 4
+
+
+parse_stack.graph[1] = {            (xdbx)         red_ref          = 0 
+        state     = 1		            shift_ref        = 0        
+        red_ref   = 0		            son              = 0        
+        shift_ref = 0		            symbol           = 0        
+        son       = 0		            parse_time_built = '\0'     
+        level     = 0		    }                                   
+        symbol    = 0		    (xdbx)         red_ref          = 0 
+}				            shift_ref        = -7       
+(xdbx) parse_stack.graph[2] = {             son              = 1        
+        state     = 1		            symbol           = 1        
+        red_ref   = 0		            parse_time_built = '^A'     
+        shift_ref = -7		    }                                   
+        son       = 1		    (xdbx)         red_ref          = 0 
+        level     = 0		            shift_ref        = 0        
+        symbol    = 1		            son              = 0        
+}				            symbol           = 0        
+(xdbx)         red_ref   = 0	            parse_time_built = '\0'     
+        shift_ref = 1		    }                                   
+        son       = 1		    (xdbx)         red_ref          = 0 
+        level     = 16		            shift_ref        = 0        
+        symbol    = 0		            son              = 0        
+}				            symbol           = 0        
+(xdbx)         red_ref   = 0	            parse_time_built = '\0'     
+        shift_ref = 16		    }                                   
+        son       = 0		    (xdbx)         red_ref          = 0 
+        level     = 3		            shift_ref        = 0        
+        symbol    = 0		            son              = 0        
+}				            symbol           = 0        
+(xdbx)         red_ref   = 0	            parse_time_built = '\0'     
+        shift_ref = 0
+        son       = 0
+        level     = 0
+        symbol    = 0
+}
+***
+
+
+parse_stack.graph[1] = {            (xdbx)         red_ref          = 0  
+        state     = 1		            shift_ref        = 0         
+        red_ref   = 0		            son              = 0         
+        shift_ref = 0		            symbol           = 0         
+        son       = 0		            parse_time_built = '\0'      
+        level     = 0		    }                                    
+        symbol    = 0		    (xdbx)         red_ref          = 0  
+}				            shift_ref        = 0         
+(xdbx) parse_stack.graph[2] = {	            son              = 1         
+        state     = 1		            symbol           = 1         
+        red_ref   = 0		            parse_time_built = '^A'      
+        shift_ref = 0		    }                                    
+        son       = 1		    (xdbx)         red_ref          = 0  
+        level     = 0		            shift_ref        = -7        
+        symbol    = 1		            son              = 2         
+}				            symbol           = 1         
+(xdbx) parse_stack.graph[3] = {	            parse_time_built = '^A'      
+        state     = 2		    }                                    
+        red_ref   = 0		    (xdbx)         red_ref          = 0  
+        shift_ref = -7		            shift_ref        = 0         
+        son       = 2		            son              = 0         
+        level     = 3		            symbol           = 0         
+        symbol    = 1		            parse_time_built = '\0'      
+}				    }                                    
+(xdbx)         red_ref   = 0	    (xdbx)         red_ref          = 0  
+        shift_ref = 16		            shift_ref        = 0         
+        son       = 0		            son              = 0         
+        level     = 3		            symbol           = 0         
+        symbol    = 0		            parse_time_built = '\0'      
+}
+(xdbx)         red_ref   = 0
+        shift_ref = 0
+        son       = 0
+        level     = 0
+        symbol    = 0
+}
+
+***
+
+
+parse_stack.graph[1] = {            (xdbx)         red_ref          = 0  
+        state     = 1		            shift_ref        = 0         
+        red_ref   = 0		            son              = 0         
+        shift_ref = 0		            symbol           = 0         
+        son       = 0		            parse_time_built = '\0'      
+        level     = 0		    }                                    
+        symbol    = 0		    (xdbx)         red_ref          = 0  
+}				            shift_ref        = 0         
+(xdbx) parse_stack.graph[2] = {	            son              = 1         
+        state     = 1		            symbol           = 1         
+        red_ref   = 0		            parse_time_built = '^A'      
+        shift_ref = 0		    }                                    
+        son       = 1		    (xdbx)         red_ref          = 0  
+        level     = 0		            shift_ref        = 0         
+        symbol    = 1		            son              = 2         
+}				            symbol           = 1         
+(xdbx)         red_ref   = 0	            parse_time_built = '^A'      
+        shift_ref = 0		    }                                    
+        son       = 2		    (xdbx)         red_ref          = 1  
+        level     = 3		            shift_ref        = -7        
+        symbol    = 1		            son              = 3         
+}				            symbol           = 1         
+(xdbx)         red_ref   = 0	            parse_time_built = '^A'      
+        shift_ref = 0		    }                                    
+        son       = 3		    (xdbx)         red_ref          = 0  
+        level     = 5		            shift_ref        = -7        
+        symbol    = 1		            son              = 3         
+}				            symbol           = 1         
+(xdbx)         red_ref   = 0	            parse_time_built = '^A'      
+        shift_ref = 0
+        son       = 0
+        level     = 0
+        symbol    = 0
+}
+
+

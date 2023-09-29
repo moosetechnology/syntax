@@ -1,0 +1,316 @@
+@(#)NOUVEAUTES	- SYNTAX [unix] - 10 Fevrier 1993
+
+ Historique inverse des modifications visibles a l'utilisateur
+ _____________________________________________________________
+
+
+* Version 3.8
+
+** sxatc
+Ajout de la possibilite' d'appeler la passe se'mantique sur des
+sous-arbres de`s que leur construction est acheve'e (au cours de
+l'analyse syntaxique). Pour ce faire, sur l'entre'e OPEN de sa passe
+se'mantique l'utilisateur, (en plus du positionnement de
+sxatcvar.atc_lv.node_size), doit exe'cuter
+"sxatcvar.atc_lv.early_visit_set = sxba_calloc (node_nb + 1);" ou`
+node_nb est le nombre de noeuds differents qu'il a de'fini pour son
+langage. Il doit de plus positionner a` 1 (sxba_1_bit
+(sxatcvar.atc_lv.early_visit_set, n)) les bits n pour lesquels il
+de'sire une visite pre'mature'e du sous-arbre de racine de nom n.
+Chaque fois que sxatc a construit un arbre de nom n, il appelle le
+point d'entre'e SEMPASS de la passe se'mantique de l'utilisateur qui
+peut donc le traverser (sxsmp (sxatcvar.atc_lv.abstract_tree_root,
+pass_inherited, pass_derived) est utilisable,
+sxatcvar.atc_lv.abstract_tree_root est un pointeur vers le noeud n).
+(Apre`s visite), l'utilisateur peut de'truire un sous-arbre par
+sxatc_sub_tree_erase (node_ptr) et re'cupe'rer ainsi la place
+correspondante. Attention, ne pas mettre dans
+sxatcvar.atc_lv.early_visit_set des noms de noeud liste. Un champ
+supple'mentaire (int index) a e'te' ajoute' dans le "NODE_HEADER".
+Il faut donc RECOMPILER tous les programmes utilisant des noeuds de
+l'atc.
+
+** ppf77 : pretty-printer pour FORTRAN77. Verifie (si l'option -ansi
+est positionnee) et transforme vers le standard ANSI certaines
+deviances par rapport a la norme. Pour permettre la description de
+FORTRAN77 un certain nombre de possibilites ont ete ajoutees a SYNTAX.
+
+** sxtoken_mngr
+Ce nouveau module, anciennement inte'gre' dans sxparser est autonome.
+Deux variables sxplocals.mode.look_back et sxplocals.left_border
+permettent a l'utilisateur un certain contro^le sur l'accessibilite' aux
+tokens deja lus. Si la valeur de sxplocals.mode.look_back est
+positionne'e a` 0, tous les tokens du source sont accessibles (via
+SXGET_TOKEN (n)), si cette valeur est positive
+(sxplocals.mode.look_back est initialise'e a 1 par de'faut), seuls les
+tokens de'ja` lus et stocke's dans la parse_stack sont accessibles (via
+SXSTACKtoken(x_stack)). L'utilisateur peut [re]positionner a` tout moment
+sxplocals.left_border a` une valeur l, cette valeur l indique au
+sxtoken_mngr que les tokens de nume'ro infe'rieur a` l ne seront plus
+jamais acce'de's. Le positionnement de sxplocals.left_border par
+l'utilisateur ne semble avoir de sens que si sxplocals.mode.look_back
+est a` ze'ro (dans le cas contraire, le parser ge`re lui-me^me
+sxplocals.left_border).
+
+** sxscanner
+Ajout dans les tables sxsvar.lv d'une structure (struct sxscan_mode)
+qui "gouverne" le mode d'execution du scanner.
+
+Le scanner, en fin de reconnaissance, appelle explicitement, dans le
+cas general, sxput_token. Ca permet (par l'intermediaire de
+post-actions) de faire facilement correspondre a un appel unique du
+scanner la reconnaissance d'un nombre quelconque (eventuellement nul)
+de tokens. 
+
+** sxparser
+Ajout dans les tables sxplocals d'une structure (struct sxparse_mode)
+qui "gouverne" le mode d'execution du parser.
+
+Ajout de la fonction
+	BOOLEAN sxparse_in_la (ep_la, Ttok_no, Htok_no, mode_ptr)
+    		int			ep_la, Ttok_no, *Htok_no;
+    		struct sxparse_mode	*mode_ptr;
+
+Elle remplace dans le flot d'entree le "Ttok_no"ieme token par le
+token de code interne "ep_la" et verifie si le source ainsi modifie,
+analyse dans le mode specifie par "mode_ptr" est reconnu par le parser
+(valeur retournee TRUE). Htok_no est alors le numero du dernier token
+vu au cours de cette analyse.
+Par exemple si *mode_ptr est : 
+	{SXWITH_CORRECTION, 0, 0, TRUE, TRUE, FALSE, FALSE, FALSE},
+si la grammaire comporte la regle
+<axiome>	= head <prefixe> ;
+et si "ep_la" est le code interne du terminal "head", "sxparse_in_la"
+verifie si un prefixe du source, apres corrections eventuelles (mais
+sans rattrapage global), est une phrase de <prefixe>. La
+reconnaissance lexicale d'un terminal peut donc ainsi etre
+conditionnee par la reconnaissance syntaxique d'une chaine (de
+longueur) quelconque. 
+
+
+* Version 3.7
+
+** lecl
+
+Ajout de la clause "NOT KEYWORD ALL;" apres l'expression reguliere
+specifiant une unite lexicale. Meme signification que "NOT KEYWORD;".
+
+Ajout des clauses
+  "KEYWORD [ALL];"
+  "KEYWORD a, b, ... ;"
+  "KEYWORD ALL BUT a, b, ... ;"
+qui permettent de specifier la liste exacte des mots cles reconnus
+par l'unite' lexicale a laquelle la clause est associee.
+
+* Version 3.6
+
+** lecl
+
+Ajout de la clause "NOT KEYWORD;" apres l'expression reguliere
+specifiant une unite lexicale. "NOT" et "KEYWORD" sont des mots cles
+NON reserves. Cette clause indique a LECL que l'expression reguliere
+associee ne reconnait pas de mot cle.
+
+** csynt
+
+*** option -a
+Renommage de l'option -lalr1 en -a (-automaton) -- voir csynt(1)
+
+*** nouvelle option -lr1 
+En cas de conflit LALR(1) dans un certain etat, cette option indique a
+csynt de regarder si ce conflit persisterait en LR(1) et, si la
+re'ponse est negative, de dupliquer les chemins de l'automate
+concernes par ce conflit de facon a obtenir un (sous-)automate LR(1)
+non canonique exempt de conflit. Ca signifie que si la grammaire
+proposee est LALR(1) l'option -lr1 n'a aucun effet (sauf peut-etre en
+temps de construction et encore), si la grammaire n'est pas LALR(1)
+mais LR(1) un automate LR(1) non canonique et exempt de conflit est
+construit et si la grammaire n'est pas LR(1), les conflits sont
+detectes et les messages correspondants sont emis (voir les options
+-path et -a).  Csynt implante donc maintenant un constructeur LR(1)
+complet.  Les tables produites par csynt avec l'option -lr1 sont
+compatibles avec celles de la version 3.5.
+
+* Version 3.5
+
+** Bits strings
+
+Les "bits strings" (BITSTR) ont completement disparu des constructeurs
+et ont ete remplacees par l'utilisation des "bits arrays" dont les
+fonctionnalites ont ete accrues (possibilite de matrices de bits en
+particulier---voir sxbitsarray(3)).  En consequence les tables
+intermediaires (langage.?t) sont incompatibles avec celles des
+versions precedentes et doivent etre reconstruites.
+
+** csynt
+
+Le calcul des "Look-Ahead Sets" du LALR (1) a ete entierement renove
+et les gains en temps obtenus sont impressionnants: l'automate
+d'analyse optimise de PASCAL s'obtient en 1,0s sur un SUN3/260 tandis
+que celui d'ADA s'obtient en 5,3s (precedemment environ 2,5s et
+16,5s).  Si l'option "-path" est specifiee, en plus des messages
+usuels de non-conformite et de la sortie d'un chemin dans l'automate
+LR(0) conduisant de l'etat initial a l'etat conflictuel, certains cas
+d'ambiguite sont detectes (la propriete est indecidable dans le cas
+general) et deux derivations differentes conduisant a la meme forme
+sentencielle sont signalees.  De plus, cette option -path, indique
+egalement a Csynt de sortir, dans les cas ou une grammaire qui n'est
+pas LALR(1) n'est pas non plus LR(1), des messages de non-conformite
+en termes de la de'finition formelle du LR(1).  Cette derniere
+possibilite, outre l'interet pedagogique evident, peut permettre de
+mieux comprendre les raisons profondes d'un conflit et donc d'y
+remedier plus facilement.
+
+
+* Version 3.4
+
+** lecl
+
+Lecl ne genere plus de fonction de hash-code parfaite pour reconnaitre
+les mots cles mais une fonction de reconnaissance (check_keyword),
+codee en C et qui fait partie integrante des tables.  Les principaux
+avantages de cette approche sont :
+   - l'independance vis a vis de la machine (c'est du C)
+   - sa construction ne peut pas echouer
+   - elle est plus rapide
+L'inconvenient, pour les langages ou les mots cles sont nombreux, peut
+etre une (legere) augmentation de la taille.
+En consequence, suppression des options -hl et -sks de lecl et des
+modules sxscrmbl_1 ... sxscrmbl_14 et sxcheck_kw de la librairie.
+
+
+* Version 3.3
+
+** ppc
+
+Les caracteres NUL dans les constantes chaines et caracteres sont
+traites correctement.  Les memes caracteres NUL dans les commentaires
+sont (silencieusement) remplaces par la suite de deux caracteres '\0'.
+
+** bnf
+
+Les predicats s'appliquent egalement aux symboles non terminaux.  La
+presence de ... <A> &1 ... en partie droite signifie que la transition
+<A> &1 est validee ssi on a reconnu une phrase de <A> ET le predicat
+utilisateur &1 a repondu vrai.
+
+** L'option "-path" de csynt
+
+L'option "-path" de csynt permet, lorsqu'une non conformite est
+detectee dans un etat S, d'imprimer dans le listage un des chemins qui
+conduit de l'etat initial a l'etat S.  Cette information aide a
+comprendre pourquoi les items impliques dans le conflit sont atteints
+en parallele.
+
+
+* Version 3.2
+
+** Bits strings
+
+Les modules de gestion de chaines de bits (type BITSTR) ne font plus
+partie de la distribution de SYNTAX.  Une partie de leurs
+fonctionnalites est assuree par le module sxbitsarray(3).  Les
+utilisateurs qui se servaient des BITSTR sont autorises a continuer a
+utiliser les sources de ces modules pour leurs besoins propres; ces
+sources sont en effet independants du systeme d'execution de SYNTAX et
+donc continuent a fonctionner mais ne sont plus maintenus.
+
+
+* Version 3.1
+
+** bnf
+
+L'axiome de la grammaire peut etre utilise en partie droite de regles.
+
+** L'option "-tspe" de csynt
+
+L'option "-tspe" (Total Single Productions Elimination) de csynt
+permet de supprimer toutes les productions simples dans l'analyseur
+engendre.  Cette option, sur les langages testes, permet un gain en
+vitesse lors de l'analyse de l'ordre de 10%.  Par contre le temps et
+la place necessaires a l'optimisation peuvent etre augmentes de facon
+significative.  De plus la taille de l'automate produit peut etre
+multipliee par 3.  Cette option semble donc etre reservee aux
+applications ou le temps d'analyse est primordial.
+
+
+* Version 3.0 (incompatible avec les precedentes)
+
+** Compatibilite naissante avec VMS.
+
+*** Renommage de SXUNIX.H
+
+Les majuscules et minuscules etant equivalentes dans les noms de
+fichiers sur VMS, l'ancien "SXUNIX.H" a ete renomme "sxu2.h".
+
+** Nouvel Optimiseur Syntaxique.
+
+Jusqu'a la version 2.1 les tables de l'analyseur syntaxique (automate
+a pile), pour chaque etat, etaient codees par des listes lineaires
+partagees.  L'acces a une action syntaxique necessitait donc, en
+moyenne, le parcours de la moitie de la liste et la detection d'une
+erreur le parcours de la totalite d'une liste.  Dans la version 3.0,
+par linearisation de la matrice de transition, l'acces a une action
+s'effectue en un temps constant.  Sur certains langages testes, la
+vitesse de l'analyseur syntaxique a ete multipliee par 1.7 alors que
+la taille de l'automate a diminue de 30%.
+
+
+* Version 2.1
+
+** YAX est tout a fait convivial.
+
+Outre les "#line"s referencant le texte d'entree de l'utilisateur,
+"yax" produit maintenant des "#line"s se rapportant a un fichier
+modele, de nom "yax_pattern", livre dans le repertoire des sources de
+SYNTAX.  Ceci permet de mystifier le compilateur C et les metteurs au
+point symboliques intelligents, afin que l'utilisateur ait une chance
+de s'y retrouver dans le flot d'execution de son programme s'il trace
+la procedure d'actions engendree.
+
+** Paragrapheur de C plus souple.
+
+"ppc" a maintenant une option "-style nnn", permettant d'obtenir des
+formats de sortie differents.  Le style 1 est le style standard
+precedent; tout en la matiere etant affaire de gout personnel, les
+autres styles (2 et 3) sont a essayer...
+
+** Meilleur traitement des conditions d'erreur.
+
+L'utilisateur peut redefinir pour son application les deux nouvelles
+fonctions "sxexit" (arret obligatoire, en catastrophe si l'argument
+est non nul) et "sxgc" ("garbage collect or die").
+
+** Fichier ".dbxinit" standard.
+
+Livraison d'un fichier "doc/.dbxinit", permettant une mise au point
+plus facile de modules utilisant SYNTAX (via "dbx" sur SUN).
+
+
+* Version 2.0
+
+** Actions et predicats utilisateurs.
+
+Des actions et predicats utilisateurs au niveau de la BNF permettent
+la definition d'une grammaire non-deterministe ou meme dependant du
+contexte.
+
+** Nouveau module YAX.
+
+Mise au point du module "yax", acceptant de la "semantique" a la YACC
+sur de la syntaxe a la SYNTAX.
+
+** Nouveau module YSX.
+
+Nouveau module "ysx" facilitant la transformation d'un source YACC en
+un source YAX.
+
+** Fichier ".ppcrc" standard.
+
+Livraison d'un fichier "doc/.ppcrc", permettant l'analyse et le
+paragraphage de modules utilisant SYNTAX (via "ppc").
+
+Local variables:
+mode: outline
+version-control: yes
+End:

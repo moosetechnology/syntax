@@ -1,0 +1,27 @@
+: /bin/sh
+# Extract and remove all components of an archive.
+#
+# Copyright (c) 1988 Philippe Deschamp
+#
+#    Permission is granted to anyone to make or distribute verbatim
+#    copies of this document as received, in any medium, provided
+#    that the copyright notice and this permission notice are
+#    preserved, thus giving the recipient permission to redistribute
+#    in turn.
+#
+#    Permission is granted to distribute modified versions of this
+#    document, or of portions of it, under the above conditions,
+#    provided also that they carry prominent notices stating who last
+#    changed them.
+
+USAGE="Usage:	$0 archive
+or	$0 -doc"
+case $1 in -doc)echo "$USAGE
+Extract and remove all components of an archive. Uses ar(1)."
+	     exit;;
+esac
+case $# in 1) ;; *)echo "$USAGE">&2;exit 1;;esac
+
+ar x $1
+ar d $1 `ar t $1`
+

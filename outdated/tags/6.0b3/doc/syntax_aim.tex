@@ -1,0 +1,47 @@
+\documentclass[11pt]{article}
+\usepackage{fullpage}
+
+\begin{document}
+
+The SYNTAX system is a set of tools whose first aim is to ease the design and
+the implementation of the front-end part of translators --- mainly, but not
+exclusive, in the compilation field.  These tools allow on one side to generate
+analysers (scanner, parser and semantic) and, on the other side, to compile
+source texts with these analysers.
+
+Thus the goals of SYNTAX are identical with those of LEX and YACC.  But SYNTAX
+is more powerful, especially when error processing is considered.  It possess
+an automatic (though tunable) error repair and recovery mechanism.  Moreover,
+though semantics can be processed by several means of its own (action, abstract
+tree, \ldots{}) it can be coupled with more sophisticated ones as the FNC-2
+attribute grammar system.
+
+The main modules of SYNTAX are:
+
+\begin{itemize}
+\item {\sc Bnf}: takes as input a Context-Free Grammar (CFG) and produces an internal
+      form used by the other modules.  Predicates can be specified in order to
+      act upon the parsing process allowing to define non-deterministic or even
+      context-sensitive (unambiguous) languages.
+
+\item {\sc Csynt}: checks that the input CFG is LALR(1).  Conflicts can
+      be resolved either by the user via a {\sc Prio} specification or by the
+      system itself.
+
+\item {\sc Lecl}: is the SYNTAX scanner generator.  Its input is the lexical
+      specification level in regular expression form.  Predefined or user
+      predicates together with an unbounded number of characters of lookahead
+      can be used when needed.
+
+\item {\sc Recor}: takes as input the error processing specifications.  A
+      standard input is available.
+
+\item {\sc Tables-C}: collects the outputs of the previous modules and
+      generates a C program which must be linked with the SYNTAX library.
+
+\end{itemize}
+
+
+
+\end{document}
+

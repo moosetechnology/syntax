@@ -1,0 +1,27 @@
+%
+% L = {a^n | n is a prime}
+%
+% Temps d'analyse quadratique
+%
+
+
+Prime(X)	--> !NotPrime(X) .
+Prime("a")	--> . % sert uniquement a definir l'ensemble T = {a}
+
+% 0 n'est pas un nombre premier
+NotPrime()	--> .
+% Si un nombre |XY| est de la forme k|X|=|Y|, |X|>=2 et k>=1 alors il n'est pas premier
+% Inversement, si un nombre non premier |XY| est >= 4, alors il existe un k>=1 t.q. k|X|=|Y|
+NotPrime(X Y)	--> Geq2(X) Leq (X, Y) Mul(X, Y) .
+
+% Predicat qui verifie que son argument a une taille >= 2
+Geq2(X Y)	--> &StrLen (2, X) .
+
+% Predicat qui verifie que son 1er arg a une taille <= au second
+Leq (X, Y Z)	--> &StrEqLen (X, Y) .
+
+% 0 est un multiple de |X|
+Mul(X,)	--> .
+% Un nombre |YZ| est un multiple de |X|>0 ssi |X|==|Y| et |Z| est un multiple de |X|
+Mul(X, Y Z)	--> &StrEqLen (X, Y) Mul(X, Z) .
+

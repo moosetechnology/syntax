@@ -1,0 +1,27 @@
+.\" @(#)st_to_c.1	- SYNTAX [unix] - 2 Septembre 1987
+.TH ST_TO_C 1 "SYNTAX\[rg]"
+.SH NAME
+st_to_c \- generate a scanner in C.
+.SH SYNOPSIS
+.B st_to_c
+\fIlanguage\fP
+.SH DESCRIPTION
+.I st_to_c
+reads the file \fIlanguage\fP\fB.st\fP, built by a previous
+execution of \fBlecl\fP(1)
+and produces, on its standard output, the corresponding scanner, written in C,
+which can replace the standard interpreter (i.e. the \fBSYNTAX\fP scanner, see
+sxscanner(3)).
+.LP
+If no argument is given,
+.I st_to_c
+prints a short synopsis of its usage and exits with a non null status code.
+.SH FILES
+\fIlanguage\fP\fB.st\fP	scanner tables (input)
+.SH "SEE ALSO"
+lecl(1) and the
+\fB"SYNTAX REFERENCE MANUAL"\fP.
+.\" Local Variables:
+.\" mode: nroff
+.\" version-control: yes
+.\" End:

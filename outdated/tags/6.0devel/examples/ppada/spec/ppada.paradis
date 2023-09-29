@@ -1,0 +1,1456 @@
+**********************************************************
+*                                                        *
+*                                                        *
+* Copyright (c) 1983 by Institut National de Recherche   *
+*                    en Informatique et en Automatique.  *
+*                                                        *
+*                                                        *
+**********************************************************
+*
+*
+*
+*
+**********************************************************
+*                                                        *
+*      Produit de l'equipe Langages et Traducteurs.      *
+*                                                        *
+**********************************************************
+*
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*			   A X I O M E
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<AXIOME>			= <COMPILATION>	~COL (1)~		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*			      TOKENS
+*
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<NUMERIC_LITERAL>		= %NUM_LITERAL				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<CHARACTER_LITERAL>		= %CHAR_LITERAL				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<CHARACTER_STRING>		= %CHAR_STRING				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<IDENTIFIER>			= %IDENTIFIER				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<OP_STRING>			= %OP_STRING				~~ ;
+*<OP_STRING>			= #"and"				~~ ;
+*<OP_STRING>			= #"or"					~~ ;
+*<OP_STRING>			= #"xor"				~~ ;
+*<OP_STRING>			= #"mod"				~~ ;
+*<OP_STRING>			= #"rem"				~~ ;
+*<OP_STRING>			= #"abs"				~~ ;
+*<OP_STRING>			= #"not"				~~ ;
+*<OP_STRING>			= #"="					~~ ;
+*<OP_STRING>			= #"/="					~~ ;
+*<OP_STRING>			= #"<"					~~ ;
+*<OP_STRING>			= #"<="					~~ ;
+*<OP_STRING>			= #">"					~~ ;
+*<OP_STRING>			= #">="					~~ ;
+*<OP_STRING>			= #"+"					~~ ;
+*<OP_STRING>			= #"-"					~~ ;
+*<OP_STRING>			= #"&"					~~ ;
+*<OP_STRING>			= #"*"					~~ ;
+*<OP_STRING>			= #"/"					~~ ;
+*<OP_STRING>			= #"**"					~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ENUMERATION_LITERAL>		= <IDENTIFIER>				~~ ;
+<ENUMERATION_LITERAL>		= <CHARACTER_LITERAL>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<DESIGNATOR>			= <IDENTIFIER>				~~ ;
+<DESIGNATOR>			= <OP_STRING>				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+******************************************************************
+*								 *
+*			C H A P T E R   3			 *
+*								 *
+******************************************************************
+*
+*
+*
+*		        DECLARATIONS AND TYPES
+*
+*
+*
+*	3.1 DECLARATIONS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<DECLARATION>			= <OBJECT_DECLARATION>			~~ ;
+<DECLARATION>			= <NUMBER_DECLARATION>			~~ ;
+<DECLARATION>			= <TYPE_DECLARATION>			~~ ;
+<DECLARATION>			= <SUBTYPE_DECLARATION>			~~ ;
+<DECLARATION>			=					~~
+				  <SUBPROGRAM_DECLARATION>		~~ ;
+<DECLARATION>			=					~~
+				  <PACKAGE_DECLARATION>			~~ ;
+<DECLARATION>			=					~~
+				  <TASK_DECLARATION>			~~ ;
+<DECLARATION>			= <EXCEPTION_DECLARATION>		~~ ;
+<DECLARATION>			= <RENAMING_DECLARATION>		~~ ;
+<DECLARATION>			= <PRAGMA>				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	3.2 OBJECT DECLARATIONS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<OBJECT_DECLARATION>		= <IDENTIFIER> ~TAB~ :  constant  <SUBTYPE_INDICATION> <INITIALIZATION_OPTION>		~~ ;
+<OBJECT_DECLARATION>		= <2_IDENTIFIER_LIST> ~TAB~ :  constant  <SUBTYPE_INDICATION> <INITIALIZATION_OPTION>		~~ ;
+<OBJECT_DECLARATION>		= <IDENTIFIER> ~TAB~ :  constant  <ARRAY_TYPE_DEFINITION> <INITIALIZATION_OPTION>		~~ ;
+<OBJECT_DECLARATION>		= <2_IDENTIFIER_LIST> ~TAB~ :  constant  <ARRAY_TYPE_DEFINITION> <INITIALIZATION_OPTION>	~~ ;
+<OBJECT_DECLARATION>		= <VARIABLE_DECLARATION>								~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<VARIABLE_DECLARATION>		= <IDENTIFIER> ~TAB~ :  <SUBTYPE_INDICATION> <INITIALIZATION_OPTION>			~~ ;
+<VARIABLE_DECLARATION>		= <2_IDENTIFIER_LIST> ~TAB~ :  <SUBTYPE_INDICATION> <INITIALIZATION_OPTION>		~~ ;
+<VARIABLE_DECLARATION>		= <IDENTIFIER> ~TAB~ :  <ARRAY_TYPE_DEFINITION> <INITIALIZATION_OPTION>		~~ ;
+<VARIABLE_DECLARATION>		= <2_IDENTIFIER_LIST> ~TAB~ :  <ARRAY_TYPE_DEFINITION> <INITIALIZATION_OPTION>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<INITIALIZATION_OPTION>		=					~~ ;
+<INITIALIZATION_OPTION>		= ~TAB~ :=  <EXPRESSION>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<NUMBER_DECLARATION>		= <IDENTIFIER> ~TAB~ :  constant  :=  <EXPRESSION>		~~ ;
+<NUMBER_DECLARATION>		= <2_IDENTIFIER_LIST> ~TAB~ :  constant  :=  <EXPRESSION>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	3.3 TYPE AND SUBTYPE DECLARATIONS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<TYPE_DECLARATION>		= type  <IDENTIFIER>  <DISCRIMINANT_PART_OPTION_IS>  <TYPE_DEFINITION>	~~ ;
+<TYPE_DECLARATION>		= type  <IDENTIFIER>  <DISCRIMINANT_PART_OPTION_IS>
+				     <RECORD_TYPE_DEFINITION>						~~ ;
+<TYPE_DECLARATION>		= <INCOMPLETE_TYPE_DECLARATION>						~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<DISCRIMINANT_PART_OPTION_IS>	= is					~~ ;
+<DISCRIMINANT_PART_OPTION_IS>	= <DISCRIMINANT_PART>  is		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<SUBTYPE_INDICATION>		= <DOT_NAME>				~~ ;
+<SUBTYPE_INDICATION>		= <DOT_NAME>  <CONSTRAINT>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<DOT_NAME>			= <DESIGNATOR>				~~ ;
+<DOT_NAME>			= <DOT_NAME> . <DESIGNATOR>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<CONSTRAINT>			= <RANGE_CONSTRAINT>			~~ ;
+<CONSTRAINT>			= <ACCURACY_CONSTRAINT>			~~ ;
+<CONSTRAINT>			= <INDEX_CONSTRAINT>			~~ ;
+<CONSTRAINT>			= <DISCRIMINANT_CONSTRAINT>		~~ ;
+<CONSTRAINT>			= <INDEX_OR_DISCRIMINANT_CONSTRAINT>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<TYPE_DEFINITION>		= <ENUMERATION_TYPE_DEFINITION>		~~ ;
+<TYPE_DEFINITION>		= <INTEGER_TYPE_DEFINITION>		~~ ;
+<TYPE_DEFINITION>		= <REAL_TYPE_DEFINITION>		~~ ;
+<TYPE_DEFINITION>		= <UNCONSTRAINED_ARRAY_TYPE_DEFINITION>	~~ ;
+<TYPE_DEFINITION>		= <ARRAY_TYPE_DEFINITION>		~~ ;
+<TYPE_DEFINITION>		= <ACCESS_TYPE_DEFINITION>		~~ ;
+<TYPE_DEFINITION>		= <DERIVED_TYPE_DEFINITION>		~~ ;
+<TYPE_DEFINITION>		= <PRIVATE_TYPE_DEFINITION>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<SUBTYPE_DECLARATION>		= subtype  <IDENTIFIER>  is  <SUBTYPE_INDICATION>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	3.4 DERIVED TYPE DEFINITIONS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<DERIVED_TYPE_DEFINITION>	= new  <SUBTYPE_INDICATION>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<RANGE_CONSTRAINT_OPTION>	=					~~ ;
+<RANGE_CONSTRAINT_OPTION>	= <RANGE_CONSTRAINT>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<RANGE_CONSTRAINT>		= range  <RANGE>			~~ ;
+<RANGE_CONSTRAINT>		= range  <SIMPLE_ATTRIBUTE>		~~ ;
+<RANGE_CONSTRAINT>		= range  <AMBIG_EXPRESSION>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<RANGE>				= <SIMPLE_EXPRESSION> .. <SIMPLE_EXPRESSION>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	3.5.1 ENUMERATION TYPES
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ENUMERATION_TYPE_DEFINITION>	= ( <ENUMERATION_LITERAL_LIST> )	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ENUMERATION_LITERAL_LIST>	= <ENUMERATION_LITERAL>				~~ ;
+<ENUMERATION_LITERAL_LIST>	= <ENUMERATION_LITERAL_LIST> ,  <ENUMERATION_LITERAL>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	3.5.4 INTEGER TYPES
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<INTEGER_TYPE_DEFINITION>	= <RANGE_CONSTRAINT>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	3.5.6 REAL TYPES
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<REAL_TYPE_DEFINITION>		= <ACCURACY_CONSTRAINT>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ACCURACY_CONSTRAINT>		= digits  <SIMPLE_EXPRESSION> <RANGE_CONSTRAINT_OPTION>	~~ ;
+<ACCURACY_CONSTRAINT>		= delta  <SIMPLE_EXPRESSION> <RANGE_CONSTRAINT_OPTION>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	3.6 ARRAY TYPES
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<UNCONSTRAINED_ARRAY_TYPE_DEFINITION>
+				= array  ( <INDEX_LIST> )  of  <SUBTYPE_INDICATION>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ARRAY_TYPE_DEFINITION>		= array  <INDEX_CONSTRAINT>  of  <SUBTYPE_INDICATION>			~~ ;
+<ARRAY_TYPE_DEFINITION>		= array  <INDEX_OR_DISCRIMINANT_CONSTRAINT>  of  <SUBTYPE_INDICATION>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<INDEX_LIST>			= <INDEX>				~~ ;
+<INDEX_LIST>			= <INDEX_LIST> ,  <INDEX>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<INDEX>				= <NAME>  range  "<>"			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<DISCRETE_RANGE>		= <NAME>				~~ ;
+<DISCRETE_RANGE>		= <RANGE_DENOTATION>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<RANGE_DENOTATION>		= <NAME>  <RANGE_CONSTRAINT>		~~ ;
+<RANGE_DENOTATION>		= <RANGE>				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<INDEX_CONSTRAINT>		= ( <DISCRETE_RANGE_LIST> )		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<INDEX_OR_DISCRIMINANT_CONSTRAINT>
+				= ( <EXPRESSION_LIST> )			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<DISCRETE_RANGE_LIST>		= <RANGE_DENOTATION>				~~ ;
+<DISCRETE_RANGE_LIST>		= <EXPRESSION_LIST> ,  <RANGE_DENOTATION>	~~ ;
+<DISCRETE_RANGE_LIST>		= <DISCRETE_RANGE_LIST> ,  <DISCRETE_RANGE>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	3.7 RECORD TYPES
+*
+*
+*	DISCRIMINANT PART
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<DISCRIMINANT_PART>		= ( <DISCRIMINANT_DECLARATION_LIST> )	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<DISCRIMINANT_DECLARATION_LIST>	= <DISCRIMINANT_DECLARATION>		~~ ;
+<DISCRIMINANT_DECLARATION_LIST>	= <DISCRIMINANT_DECLARATION_LIST> ";"
+				  <DISCRIMINANT_DECLARATION> 		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<DISCRIMINANT_DECLARATION>	= <IDENTIFIER_LIST>  :  <SUBTYPE_INDICATION> <INITIALIZATION_OPTION>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<DISCRIMINANT_CONSTRAINT>	= ( <DISCRIMINANT_SPECIFICATION_LIST> )	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<DISCRIMINANT_SPECIFICATION_LIST>
+				= <DISCRIMINANT_SPECIFICATION>					~~ ;
+<DISCRIMINANT_SPECIFICATION_LIST>
+				= <EXPRESSION_LIST> ,  <DISCRIMINANT_SPECIFICATION>			~~ ;
+<DISCRIMINANT_SPECIFICATION_LIST>
+				= <DISCRIMINANT_SPECIFICATION_LIST> ,  <DISCRIMINANT_SPECIFICATION>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<DISCRIMINANT_SPECIFICATION>	= <DISCRIMINANT_NAME_LIST>  "=>"  <EXPRESSION>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<DISCRIMINANT_NAME_LIST>	= <NAME>				~~ ;
+<DISCRIMINANT_NAME_LIST>	= <DISCRIMINANT_NAME_LIST>  |  <NAME>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	DEFINITION PART
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<RECORD_TYPE_DEFINITION>	= record
+				     <PRAGMA_OPTION_LIST>
+				     <COMPONENTS_PART>
+				  end  record				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<COMPONENTS_PART>		= <COMP_DECLARATION_LIST>		~~ ;
+<COMPONENTS_PART>		= <COMP_DECLARATION_LIST>
+				  <VARIANT_PART>
+				  <PRAGMA_OPTION_LIST>			~~ ;
+<COMPONENTS_PART>		= <VARIANT_PART>
+				  <PRAGMA_OPTION_LIST>			~~ ;
+<COMPONENTS_PART>		= null ";"
+				  <PRAGMA_OPTION_LIST>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<COMP_DECLARATION_LIST>		= <COMP_DECLARATION>			~~ ;
+<COMP_DECLARATION_LIST>		= <COMP_DECLARATION_LIST>
+				  <COMP_DECLARATION>			~~ ;
+<COMP_DECLARATION_LIST>		= <COMP_DECLARATION_LIST>
+				  <PRAGMA> ";"				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<COMP_DECLARATION>		= <IDENTIFIER_LIST>  :  <SUBTYPE_INDICATION> <INITIALIZATION_OPTION> ";"	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<VARIANT_PART>			= case  <IDENTIFIER>  is
+				     <VARIANT_LIST>
+				  end  case ";"				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<VARIANT_LIST>			= <PRAGMA_OPTION_LIST>
+				  <VARIANT>				~~ ;
+<VARIANT_LIST>			= <VARIANT_LIST>
+				  <VARIANT>				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<VARIANT>			= when  <CHOICE_LIST>  "=>"
+				     <PRAGMA_OPTION_LIST>
+				     <COMPONENTS_PART>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<CHOICE_LIST>			= <CHOICE>				~~ ;
+<CHOICE_LIST>			= <CHOICE_LIST>  |  <CHOICE>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<CHOICE>			= <SIMPLE_EXPRESSION>			~~ ;
+<CHOICE>			= <RANGE_DENOTATION>			~~ ;
+* <NAME> IS COVERED BY <SIMPLE_EXPRESSION>
+*
+*
+<CHOICE>			= others				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	3.8 ACCESS TYPES
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ACCESS_TYPE_DEFINITION>	= access  <SUBTYPE_INDICATION>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<INCOMPLETE_TYPE_DECLARATION>	= type  <IDENTIFIER>  <DISCRIMINANT_PART>	~~ ;
+<INCOMPLETE_TYPE_DECLARATION>	= type  <IDENTIFIER>				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	 PRIVATE TYPE DEFINITIONS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<PRIVATE_TYPE_DEFINITION>	= private				~~ ;
+<PRIVATE_TYPE_DEFINITION>	= limited  private			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+******************************************************************
+*								 *
+*			C H A P T E R   4			 *
+*								 *
+******************************************************************
+*
+*
+*			      NAMES
+*
+*			    VARIABLES
+*
+*			 AND EXPRESSIONS
+*
+*
+*
+*	4.1 NAMES
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<IDENTIFIER_OPTION>		=					~~ ;
+<IDENTIFIER_OPTION>		=  <IDENTIFIER>				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<2_IDENTIFIER_LIST>		= <IDENTIFIER> ,			~~
+				  <IDENTIFIER>				~~ ;
+<2_IDENTIFIER_LIST>		= <2_IDENTIFIER_LIST> ,			~~
+				  <IDENTIFIER>				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<IDENTIFIER_LIST>		= <IDENTIFIER>				~~ ;
+<IDENTIFIER_LIST>		= <IDENTIFIER_LIST> ,  <IDENTIFIER>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<NAME_LIST>		= <NAME>					~~ ;
+<NAME_LIST>		= <NAME_LIST> ,  <NAME>				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<NAME0>				= <IDENTIFIER>				~~ ;
+<NAME0>				= <AMBIG_EXPRESSION>			~~ ;
+<NAME0>				= <SELECTED_COMPONENT>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<NAME>				= <SLICE>				~~ ;
+<NAME>				= <SIMPLE_ATTRIBUTE>			~~ ;
+<NAME>				= <OP_STRING>				~~ ;
+<NAME>				= <NAME0>				~~ ;
+<NAME>				= <FUNCTION_CALL>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<AMBIG_EXPRESSION>		= <NAME>  ( <EXPRESSION_LIST> )		~~ ;
+* MAY BE
+*	FN_CALL,
+*	INDEXED_COMPONENT,
+*	SLICE,
+*	TYPE_CONVERSION,
+*	FUNCTIONAL ATTRIBUTE
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<FUNCTION_CALL>			= <NAME>  ( <PARAMETER_ASSOCIATION_LIST> )	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<PARAMETER_ASSOCIATION_LIST>	= <PARAMETER_ASSOCIATION>				~~ ;
+<PARAMETER_ASSOCIATION_LIST>	= <EXPRESSION_LIST> ,  <PARAMETER_ASSOCIATION>		~~ ;
+<PARAMETER_ASSOCIATION_LIST>	= <PARAMETER_ASSOCIATION_LIST> ,  <PARAMETER_ASSOCIATION>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<PARAMETER_ASSOCIATION>		= <IDENTIFIER>  "=>"  <EXPRESSION>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<SLICE>				= <NAME>  ( <RANGE_DENOTATION> )	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<SELECTED_COMPONENT>		= <NAME> . <DESIGNATOR>			~~ ;
+<SELECTED_COMPONENT>		= <NAME> . all				~~ ;
+<SELECTED_COMPONENT>		= <NAME> . <CHARACTER_LITERAL>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<SIMPLE_ATTRIBUTE>		= <NAME> ' <IDENTIFIER>			~~ ;
+<SIMPLE_ATTRIBUTE>		= <NAME> ' delta			~~ ;
+<SIMPLE_ATTRIBUTE>		= <NAME> ' digits			~~ ;
+<SIMPLE_ATTRIBUTE>		= <NAME> ' range			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*         4.2   LITERALS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<LITERAL>			= <NUMERIC_LITERAL>			~~ ;
+<LITERAL>			= <CHARACTER_LITERAL>			~~ ;
+*<IDENTIFIER> AND <CHARACTER_STRING> ARE COVERED BY <PRIMARY>.
+<LITERAL>			= null					~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	4.3 AGGREGATES
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<AGGREGATE>			= ( <AGGREGATE_LIST> )			~~ ;
+<AGGREGATE>			= ( <EXPRESSION_LIST> ,  <EXPRESSION> )	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<AGGREGATE_LIST>		= <NAMED_COMPONENT>			~~ ;
+<AGGREGATE_LIST>		= <EXPRESSION_LIST> ,  <NAMED_COMPONENT>~~ ;
+<AGGREGATE_LIST>		= <AGGREGATE_LIST> ,  <NAMED_COMPONENT>	~~ ;
+* RESPECTE L'ORDRE; INTERDIT SINGLE_EXPRESSION.
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<NAMED_COMPONENT>		= <CHOICE_LIST>  "=>"  <EXPRESSION>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	4.4 EXPRESSIONS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<EXPRESSION_LIST>		= <EXPRESSION>				~~ ;
+<EXPRESSION_LIST>		= <EXPRESSION_LIST> ,  <EXPRESSION>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<EXPRESSION_OPTION>		=					~~ ;
+<EXPRESSION_OPTION>		=  <EXPRESSION>				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<EXPRESSION>			= <AND_EXPRESSION>			~~ ;
+<EXPRESSION>			= <OR_EXPRESSION>			~~ ;
+<EXPRESSION>			= <XOR_EXPRESSION>			~~ ;
+<EXPRESSION>			= <AND_THEN_EXPRESSION>			~~ ;
+<EXPRESSION>			= <OR_ELSE_EXPRESSION>			~~ ;
+<EXPRESSION>			= <RELATION>				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<AND_EXPRESSION>		= <RELATION>  and  <RELATION>		~~ ;
+<AND_EXPRESSION>		= <AND_EXPRESSION>  and  <RELATION>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<OR_EXPRESSION>			= <RELATION>  or  <RELATION>		~~ ;
+<OR_EXPRESSION>			= <OR_EXPRESSION>  or  <RELATION>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<XOR_EXPRESSION>		= <RELATION>  xor  <RELATION>		~~ ;
+<XOR_EXPRESSION>		= <XOR_EXPRESSION>  xor  <RELATION>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<AND_THEN_EXPRESSION>		= <RELATION>  and  then  <RELATION>		~~ ;
+<AND_THEN_EXPRESSION>		= <AND_THEN_EXPRESSION>  and  then  <RELATION>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<OR_ELSE_EXPRESSION>		= <RELATION>  or  else  <RELATION>		~~ ;
+<OR_ELSE_EXPRESSION>		= <OR_ELSE_EXPRESSION>  or  else  <RELATION>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<RELATION>			= <SIMPLE_EXPRESSION>				~~ ;
+<RELATION>			= <SIMPLE_EXPRESSION>  "="  <SIMPLE_EXPRESSION>	~~ ;
+<RELATION>			= <SIMPLE_EXPRESSION>  /=  <SIMPLE_EXPRESSION>	~~ ;
+<RELATION>			= <SIMPLE_EXPRESSION>  "<"  <SIMPLE_EXPRESSION>	~~ ;
+<RELATION>			= <SIMPLE_EXPRESSION>  "<="  <SIMPLE_EXPRESSION>	~~ ;
+<RELATION>			= <SIMPLE_EXPRESSION>  >  <SIMPLE_EXPRESSION>	~~ ;
+<RELATION>			= <SIMPLE_EXPRESSION>  >=  <SIMPLE_EXPRESSION>	~~ ;
+<RELATION>			= <SIMPLE_EXPRESSION>  in  <NAME>		~~ ;
+<RELATION>			= <SIMPLE_EXPRESSION>  not  in  <NAME>		~~ ;
+** RQ: LE CAS  IN T'RANGE(2) EST COUVERT PAR IN <NAME> CAR :
+**  <NAME>=><NAME0>=><AMBIG_EXP.>=><NAME>(<EXP>)  :=  
+*          ><SIMPLE_ATTR.>(<EXP>)  :=  
+*          >...**DD 15 FEV 82**
+*
+<RELATION>			= <SIMPLE_EXPRESSION>  in  <RANGE>		~~ ;
+<RELATION>			= <SIMPLE_EXPRESSION>  not  in  <RANGE>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<SIMPLE_EXPRESSION>		= <TERM>				~~ ;
+<SIMPLE_EXPRESSION>		= + <TERM>				~~ ;
+<SIMPLE_EXPRESSION>		= - <TERM>				~~ ;
+<SIMPLE_EXPRESSION>		= not  <TERM>				~~ ;
+<SIMPLE_EXPRESSION>		= abs  <TERM>				~~ ;
+<SIMPLE_EXPRESSION>		= <SIMPLE_EXPRESSION>  +  <TERM>	~~ ;
+<SIMPLE_EXPRESSION>		= <SIMPLE_EXPRESSION>  -  <TERM>	~~ ;
+<SIMPLE_EXPRESSION>		= <SIMPLE_EXPRESSION>  "&"  <TERM>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<TERM>				= <TERM>  *  <FACTOR>			~~ ;
+<TERM>				= <TERM>  /  <FACTOR>			~~ ;
+<TERM>				= <TERM>  mod  <FACTOR>			~~ ;
+<TERM>				= <TERM>  rem  <FACTOR>			~~ ;
+<TERM>				= <FACTOR>				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<FACTOR>			= <PRIMARY>				~~ ;
+<FACTOR>			= <PRIMARY>  **  <PRIMARY>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<PRIMARY>			= <LITERAL>				~~ ;
+<PRIMARY>			= <AGGREGATE>				~~ ;
+<PRIMARY>			= <NAME>				~~ ;
+<PRIMARY>			= <ALLOCATOR>				~~ ;
+<PRIMARY>			= <QUALIFIED_EXPRESSION>		~~ ;
+<PRIMARY>			= <CHARACTER_STRING>			~~ ;
+*<TYPE_CONVERSION> IS COVERED BY <NAME>
+<PRIMARY>			= ( <EXPRESSION> )			~~ ;
+*<PRIMARY> = <FUNCTION_CALL> IS COVERED BY <NAME>.
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	4.5 OPERATORS AND EXPRESSION EVALUATION
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*   EMPTY BECAUSE OF CHANGES FOR EACPC - HLIL. SEE 4.4 EXPRESSIONS
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	4.7 QUALIFIED EXPRESSIONS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<QUALIFIED_EXPRESSION>		= <NAME> ' ( <EXPRESSION> )		~~ ;
+<QUALIFIED_EXPRESSION>		= <NAME> ' <AGGREGATE>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*<TYPE_CONVERSION>		= <NAME>  ( <EXPRESSION> ) ;
+* IS COVERED BY <AMBIG_EXPRESSION>
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	4.8 ALLOCATORS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ALLOCATOR>			= new  <DOT_NAME>				~~ ;
+<ALLOCATOR>			= new  <DOT_NAME>  <INDEX_CONSTRAINT>		~~ ;
+<ALLOCATOR>			= new  <DOT_NAME>  <INDEX_OR_DISCRIMINANT_CONSTRAINT>	~~ ;
+<ALLOCATOR>			= new  <DOT_NAME>  <DISCRIMINANT_CONSTRAINT>	~~ ;
+<ALLOCATOR>			= new  <DOT_NAME> ' ( <SIMPLE_EXPRESSION> )	~~ ;
+<ALLOCATOR>			= new  <DOT_NAME> ' <AGGREGATE>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+******************************************************************
+*								 *
+*			C H A P T E R   5			 *
+*								 *
+******************************************************************
+*
+*
+*			STATEMENTS
+*
+*
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<STATEMENT_OPTION_LIST>		= ~INH~					~~ ;
+<STATEMENT_OPTION_LIST>		= <STATEMENT_LIST>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<STATEMENT_LIST>		= <A_STATEMENT_LIST>			~~ ;
+<STATEMENT_LIST>		= <B_STATEMENT_LIST>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<A_STATEMENT_LIST>		= <A_STATEMENT> ";"			~~ ;
+<A_STATEMENT_LIST>		= <A_STATEMENT_LIST>			~~
+				  <A_STATEMENT> ";"			~~ ;
+<A_STATEMENT_LIST>		= <B_STATEMENT_LIST>			~~
+									~~
+				  <A_STATEMENT> ";"			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<B_STATEMENT_LIST>		= <B_STATEMENT> ";"			~~ ;
+<B_STATEMENT_LIST>		= <B_STATEMENT_LIST>			~~
+									~~
+				  <B_STATEMENT> ";"			~~ ;
+<B_STATEMENT_LIST>		= <A_STATEMENT_LIST>			~~
+									~~
+				  <B_STATEMENT> ";"			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<A_STATEMENT>			=					~~
+~COL (1)~  <LABEL>	~MARGIN~  <A_STATEMENT>				~~ ;
+<B_STATEMENT>			=					~~
+~COL (1)~  <LABEL>	~MARGIN~  <B_STATEMENT>				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<LABEL>				= "<<" <IDENTIFIER> ">>"		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<A_STATEMENT>			= <PRAGMA>					~~ ;
+<A_STATEMENT>			= <ASSIGNMENT_STATEMENT>			~~ ;
+<A_STATEMENT>			= <AMBIG_ENTRY_SUBPROGRAM_CALL_STATEMENT>	~~ ;
+<A_STATEMENT>			= <DELAY_STATEMENT>				~~ ;
+<A_STATEMENT>			= <CODE_STATEMENT>				~~ ;
+<A_STATEMENT>			= null						~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<B_STATEMENT>			= <EXIT_STATEMENT>			~~ ;
+<B_STATEMENT>			= <RETURN_STATEMENT>			~~ ;
+<B_STATEMENT>			= <GOTO_STATEMENT>			~~ ;
+<B_STATEMENT>			= <RAISE_STATEMENT>			~~ ;
+<B_STATEMENT>			= <ABORT_STATEMENT>			~~ ;
+<B_STATEMENT>			= <IF_STATEMENT>			~~
+				  end  if				~~ ;
+<B_STATEMENT>			= <CASE_STATEMENT>			~~
+				  end  case				~~ ;
+<B_STATEMENT>			= <LOOP_STATEMENT>			~~ ;
+<B_STATEMENT>			= <ACCEPT_STATEMENT>			~~ ;
+<B_STATEMENT>			= select				~~
+				     <SELECT_STATEMENT>			~~
+				  end  select				~~ ;
+<B_STATEMENT>			= <BLOCK_STATEMENT>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	5.2 ASSIGNMENT STATEMENTS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ASSIGNMENT_STATEMENT>		= <NAME> ~TAB~ :=  <EXPRESSION>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	    SUBPROGRAM CALLS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<AMBIG_ENTRY_SUBPROGRAM_CALL_STATEMENT>
+				= <NAME0>					~~ ;
+<AMBIG_ENTRY_SUBPROGRAM_CALL_STATEMENT>
+				= <NAME>  ( <PARAMETER_ASSOCIATION_LIST> )	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	5.3 IF STATEMENTS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<IF_STATEMENT>			= <TRUE_PART_LIST>
+				  <ELSE_OPTION>				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<TRUE_PART_LIST>		= <IF_THEN_PART>			~~ ;
+<TRUE_PART_LIST>		= <TRUE_PART_LIST>
+				  <ELSIF_PART>				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<IF_THEN_PART>			= if  <CONDITION>  then
+				     <STATEMENT_LIST>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ELSIF_PART>			= elsif  <CONDITION>  then
+				     <STATEMENT_LIST>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ELSE_OPTION>			= ~INH~					~~ ;
+<ELSE_OPTION>			= else
+				     <STATEMENT_LIST>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<CONDITION>			= <EXPRESSION>				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	5.4 CASE STATEMENTS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<CASE_STATEMENT>		= case  <EXPRESSION>  is
+				     <ALTERNATIVE_LIST>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ALTERNATIVE_LIST>		= <PRAGMA_OPTION_LIST>
+				  <ALTERNATIVE>				~~ ;
+<ALTERNATIVE_LIST>		= <ALTERNATIVE_LIST>
+				  <ALTERNATIVE>				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ALTERNATIVE>			= when  <CHOICE_LIST>  "=>"
+				     <STATEMENT_LIST>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	5.5 LOOP STATEMENTS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<LOOP_STATEMENT>		= <NAMED_LOOP_STATEMENT>		~~ ;
+<LOOP_STATEMENT>		= <UNNAMED_LOOP_STATEMENT>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<NAMED_LOOP_STATEMENT>		= ~MARGIN - 3
+		~	       <IDENTIFIER> :
+				  <UNNAMED_LOOP_STATEMENT>  <IDENTIFIER>~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<UNNAMED_LOOP_STATEMENT>	= <BASIC_LOOP>				~~ ;
+<UNNAMED_LOOP_STATEMENT>	= <WHILE_LOOP>				~~ ;
+<UNNAMED_LOOP_STATEMENT>	= <FOR_LOOP>				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<BASIC_LOOP>			= loop
+				     <STATEMENT_LIST>
+				  end  loop				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<WHILE_LOOP>			= while  <CONDITION>  loop
+				     <STATEMENT_LIST>
+				  end  loop				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<FOR_LOOP>			= for  <ITERATION_SPECIFICATION>  loop
+				     <STATEMENT_LIST>
+				  end  loop				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ITERATION_SPECIFICATION>	= <IDENTIFIER>  in  <DISCRETE_RANGE>		~~ ;
+<ITERATION_SPECIFICATION>	= <IDENTIFIER>  in  reverse  <DISCRETE_RANGE>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	  5.6  BLOCK STATEMENTS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<BLOCK_STATEMENT>		= <NAMED_BLOCK_STATEMENT>		~~ ;
+<BLOCK_STATEMENT>		= <UNNAMED_BLOCK_STATEMENT>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<NAMED_BLOCK_STATEMENT>		= ~MARGIN - 3
+		~	       <IDENTIFIER> :
+				  <UNNAMED_BLOCK_STATEMENT>  <IDENTIFIER>~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<UNNAMED_BLOCK_STATEMENT>	= declare
+				     <DECLARATIVE_PART>
+
+				  begin
+				     <STATEMENT_LIST>
+				     <EXCEPTION_OPTION>
+				  end					~~ ;
+<UNNAMED_BLOCK_STATEMENT>	= begin
+				     <STATEMENT_LIST>
+				     <EXCEPTION_OPTION>
+				  end					~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<EXCEPTION_OPTION>		= ~INH~					~~ ;
+<EXCEPTION_OPTION>		= ~MARGIN - 3
+	~		       exception
+				  <EXCEPTION_HANDLER_LIST>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	5.7 EXIT STATEMENTS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<EXIT_STATEMENT>		= exit <DOT_NAME_OPTION> <WHEN_CONDITION_OPTION>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<DOT_NAME_OPTION>		=					~~ ;
+<DOT_NAME_OPTION>		=  <DOT_NAME>				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<WHEN_CONDITION_OPTION>		=					~~ ;
+<WHEN_CONDITION_OPTION>		=  when  <CONDITION>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	5.8 RETURN STATEMENTS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<RETURN_STATEMENT>		= return <EXPRESSION_OPTION>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	5.9 GOTO STATEMENTS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<GOTO_STATEMENT>		= goto  <DOT_NAME>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+******************************************************************
+*								 *
+*			C H A P T E R   6			 *
+*								 *
+******************************************************************
+*
+*
+*		        SUBPROGRAMS AND BLOCKS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<DECLARATIVE_PART>		= <DECLARATIVE_PART_OPTION_LIST>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<DECLARATIVE_PART_OPTION_LIST>	= ~INH~					~~ ;
+<DECLARATIVE_PART_OPTION_LIST>	= <DECLARATIVE_PART_OPTION_LIST>
+				  <DECLARATIVE_PART_ITEM> ";"		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<DECLARATIVE_PART_ITEM>		= <DECLARATIVE_ITEM>			~~ ;
+<DECLARATIVE_PART_ITEM>		=					~~
+									~~
+				  <BODY>				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<DECLARATIVE_ITEM>		= <DECLARATION>				~~ ;
+<DECLARATIVE_ITEM>		= <REPRESENTATION_SPECIFICATION>	~~ ;
+<DECLARATIVE_ITEM>		= <USE_CLAUSE>				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<BODY>				= <SUBPROGRAM_BODY>			~~ ;
+<BODY>				= <PACKAGE_BODY>			~~ ;
+<BODY>				= <TASK_BODY>				~~ ;
+<BODY>				= <BODY_STUB>				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	6.1 SUBPROGRAM DECLARATIONS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<SUBPROGRAM_DECLARATION>	= function   <DESIGNATOR> ~TAB~ <FUNCTION_HEADER>	~~ ;
+<SUBPROGRAM_DECLARATION>	= procedure  <IDENTIFIER> ~TAB~ <PROCEDURE_HEADER>	~~ ;
+<SUBPROGRAM_DECLARATION>	= <GENERIC_PART>				~~
+				  function   <IDENTIFIER> ~TAB~ <FUNCTION_HEADER>	~~ ;
+<SUBPROGRAM_DECLARATION>	= <GENERIC_PART>				~~
+				  procedure  <IDENTIFIER> ~TAB~ <PROCEDURE_HEADER>	~~ ;
+<SUBPROGRAM_DECLARATION>	= function   <DESIGNATOR>  is  <GENERIC_INSTANTIATION>~~ ;
+<SUBPROGRAM_DECLARATION>	= <PROC_IDENT_IS>  <GENERIC_INSTANTIATION>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<PROC_IDENT_IS>			= procedure  <IDENTIFIER>  is		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<FUNCTION_HEADER>		= <FORMAL_PART_OPTION> ~TAB~ return  <DOT_NAME>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<PROCEDURE_HEADER>		= <FORMAL_PART_OPTION>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<DESIGNATOR_OPTION>		=					~~ ;
+<DESIGNATOR_OPTION>		=  <DESIGNATOR>				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<FORMAL_PART_OPTION>		=					~~ ;
+<FORMAL_PART_OPTION>		=  <FORMAL_PART>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<FORMAL_PART>			= ( <PARAMETER_DECLARATION_LIST> )	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<PARAMETER_DECLARATION_LIST>	= <PARAMETER_DECLARATION>		~~ ;
+<PARAMETER_DECLARATION_LIST>	= <PARAMETER_DECLARATION_LIST> ";"	~~
+				  <PARAMETER_DECLARATION>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<PARAMETER_DECLARATION>		= <IN_PARAMETER_DECLARATION>		~~ ;
+<PARAMETER_DECLARATION>		= <IN_OUT_PARAMETER_DECLARATION>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<IN_OUT_PARAMETER_DECLARATION>	= <IDENTIFIER_LIST> ~TAB~ :  in  out ~TAB~ <DOT_NAME>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<PARAMETER_DECLARATION>		= <IDENTIFIER_LIST> ~TAB~ :  out ~TAB~ <DOT_NAME>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	6.3 SUBPROGRAM BODIES
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<SUBPROGRAM_BODY>		= function  <DESIGNATOR> <FUNCTION_HEADER>  is
+				  <BLOCK>				~~
+				  end <DESIGNATOR_OPTION>		~~ ;
+<SUBPROGRAM_BODY>		= <PROC_IDENT_IS>			~~
+				  <BLOCK>				~~
+				  end <IDENTIFIER_OPTION>		~~ ;
+<SUBPROGRAM_BODY>		= procedure  <IDENTIFIER>  <FORMAL_PART>  is
+				  <BLOCK>				~~
+				  end <IDENTIFIER_OPTION>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<BLOCK>				=
+				     <DECLARATIVE_PART>
+
+				  begin
+				     <STATEMENT_LIST>
+				     <EXCEPTION_OPTION>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+******************************************************************
+*								 *
+*			C H A P T E R   7			 *
+*								 *
+******************************************************************
+*
+*
+*
+*			     PACKAGES
+*
+*
+*
+*	7.1 PACKAGE STRUCTURE
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<PACKAGE_DECLARATION>		= <PACKAGE_SPECIFICATION>			~~ ;
+<PACKAGE_DECLARATION>		= package  <IDENTIFIER>  is  <GENERIC_INSTANTIATION>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<PACKAGE_SPECIFICATION>		= package  <IDENTIFIER>  is		~~
+									~~
+				     <DECLARATIVE_ITEM_OPTION_LIST>	~~
+									~~
+				  <PRIVATE_PART_OPTION>			~~
+									~~
+				  end <IDENTIFIER_OPTION>		~~ ;
+<PACKAGE_SPECIFICATION>		= <GENERIC_PART>			~~
+									~~
+				  package  <IDENTIFIER>  is		~~
+									~~
+				     <DECLARATIVE_ITEM_OPTION_LIST>	~~
+									~~
+				  <PRIVATE_PART_OPTION>			~~
+									~~
+				  end <IDENTIFIER_OPTION>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<PRIVATE_PART_OPTION>		= ~INH~					~~ ;
+<PRIVATE_PART_OPTION>		= private				~~
+				     <DECLARATIVE_ITEM_OPTION_LIST>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<DECLARATIVE_ITEM_OPTION_LIST>	= ~INH~					~~ ;
+<DECLARATIVE_ITEM_OPTION_LIST>	= <DECLARATIVE_ITEM_OPTION_LIST>	~~
+				  <DECLARATIVE_ITEM> ";"		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<PACKAGE_BODY>			= package  body  <IDENTIFIER>  is
+
+				     <PACKAGE_BLOCK>
+
+				  end <IDENTIFIER_OPTION>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<PACKAGE_BLOCK>			= <DECLARATIVE_PART>			~~ ;
+<PACKAGE_BLOCK>			= <DECLARATIVE_PART>
+
+			       begin
+				  <STATEMENT_LIST>
+				  <EXCEPTION_OPTION>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	7.4 PRIVATE TYPE DECLARATIONS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<PRIVATE_TYPE_DECLARATION>	= type  <IDENTIFIER>  <DISCRIMINANT_PART_OPTION_IS>  <PRIVATE_TYPE_DEFINITION>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+******************************************************************
+*								 *
+*			C H A P T E R   8			 *
+*								 *
+******************************************************************
+*
+*
+*			 VISIBILITY RULES
+*
+*
+*
+*
+*
+*	8.4 USE CLAUSES
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<USE_CLAUSE>			= use  <DOT_NAME_LIST>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<DOT_NAME_LIST>			= <DOT_NAME>				~~ ;
+<DOT_NAME_LIST>			= <DOT_NAME_LIST> ,  <DOT_NAME>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	8.5 RENAMING
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<RENAMING_DECLARATION>		= <IDENTIFIER>  :  exception  renames  <RENAME>			~~ ;
+<RENAMING_DECLARATION>		= <IDENTIFIER>  :  <DOT_NAME>  renames  <RENAME>			~~ ;
+<RENAMING_DECLARATION>		= function  <DESIGNATOR> <FUNCTION_HEADER>  renames  <RENAME>		~~ ;
+<RENAMING_DECLARATION>		= procedure  <IDENTIFIER> <PROCEDURE_HEADER>  renames  <RENAME>	~~ ;
+<RENAMING_DECLARATION>		= package  <IDENTIFIER>  renames  <RENAME>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<RENAME>			= <NAME>				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+******************************************************************
+*								 *
+*			C H A P T E R   9			 *
+*								 *
+******************************************************************
+*
+*
+*
+*		         PARALLEL PROCESSING
+*
+*
+*
+*	 PARALLEL PROCESSING STATEMENTS
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<SYNCHRONIZATION_STATEMENT>	= <ACCEPT_STATEMENT>			~~ ;
+<SYNCHRONIZATION_STATEMENT>	= <DELAY_STATEMENT>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<TERMINATE_STATEMENT>		= terminate				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	9.1 TASK DECLARATION AND TASK BODIES
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<TASK_DECLARATION>		= <TASK_SPECIFICATION>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<TASK_SPECIFICATION>		= task  type  <IDENTIFIER>		~~ ;
+<TASK_SPECIFICATION>		= task  type  <IDENTIFIER>  is
+				     <ENTRY_DECL_REP_SPEC_OPTION_LIST>
+				  end <IDENTIFIER_OPTION>		~~ ;
+<TASK_SPECIFICATION>		= task  <IDENTIFIER>			~~ ;
+<TASK_SPECIFICATION>		= task  <IDENTIFIER>  is
+				     <ENTRY_DECL_REP_SPEC_OPTION_LIST>
+				  end <IDENTIFIER_OPTION>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ENTRY_DECL_REP_SPEC_OPTION_LIST>
+				= <ENTRY_DECLARATION_OPTION_LIST>	~~ ;
+<ENTRY_DECL_REP_SPEC_OPTION_LIST>
+				= <ENTRY_DECL_REP_SPEC_OPTION_LIST>
+				  <REPRESENTATION_SPECIFICATION> ";"
+				  <PRAGMA_OPTION_LIST>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ENTRY_DECLARATION_OPTION_LIST>	= <PRAGMA_OPTION_LIST>			~~ ;
+<ENTRY_DECLARATION_OPTION_LIST>	= <ENTRY_DECLARATION_OPTION_LIST> 
+				  <ENTRY_DECLARATION> ";"
+				  <PRAGMA_OPTION_LIST>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<TASK_BODY>			= task  body  <IDENTIFIER>  is
+				  <BLOCK>
+				  end <IDENTIFIER_OPTION>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	9.5 ENTRY DECLARATIONS AND ACCEPT STATEMENTS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ENTRY_DECLARATION>		= entry  <IDENTIFIER>  ( <DISCRETE_RANGE> ) <FORMAL_PART_OPTION>	~~ ;
+<ENTRY_DECLARATION>		= entry  <IDENTIFIER> <FORMAL_PART_OPTION>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ACCEPT_STATEMENT>		= accept  <IDENTIFIER> <FORMAL_PART_OPTION>	~~ ;
+<ACCEPT_STATEMENT>		= accept  <IDENTIFIER> <FORMAL_PART_OPTION>  do
+				     <STATEMENT_LIST>
+				  end <IDENTIFIER_OPTION>			~~ ;
+<ACCEPT_STATEMENT>		= accept  <INDEXED_ENTRY_NAME> <FORMAL_PART_OPTION>	~~ ;
+<ACCEPT_STATEMENT>		= accept  <INDEXED_ENTRY_NAME> <FORMAL_PART_OPTION>  do
+				     <STATEMENT_LIST>
+				  end <IDENTIFIER_OPTION>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<INDEXED_ENTRY_NAME>		= <IDENTIFIER>  ( <EXPRESSION> )	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	9.6 DELAY STATEMENTS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<DELAY_STATEMENT>		= delay  <SIMPLE_EXPRESSION>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	9.7 SELECT STATEMENTS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<SELECT_STATEMENT>		= <SELECTIVE_WAIT>			~~ ;
+<SELECT_STATEMENT>		= <CONDITIONAL_ENTRY_CALL>		~~ ;
+<SELECT_STATEMENT>		= <TIMED_ENTRY_CALL>			~~ ;
+<SELECTIVE_WAIT>		= <SELECT_ALTERNATIVE_LIST>
+			       <ELSE_OPTION>				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<CONDITIONAL_ENTRY_CALL>	= <ENTRY_CALL> ";"
+				  <STATEMENT_OPTION_LIST>
+			       else
+				  <STATEMENT_LIST>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<TIMED_ENTRY_CALL>		= <ENTRY_CALL> ";"
+				  <STATEMENT_OPTION_LIST>
+			       or
+				  <DELAY_STATEMENT> ";"
+				  <STATEMENT_OPTION_LIST>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ENTRY_CALL>			= <AMBIG_ENTRY_SUBPROGRAM_CALL_STATEMENT>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<SELECT_ALTERNATIVE_LIST>	= <PRAGMA_OPTION_LIST>
+				  <SELECT_ALTERNATIVE>			~~ ;
+<SELECT_ALTERNATIVE_LIST>	= <SELECT_ALTERNATIVE_LIST>
+			       or
+				  <PRAGMA_OPTION_LIST>
+				  <SELECT_ALTERNATIVE>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<SELECT_ALTERNATIVE>		= <CONDITION_OPTION>
+				     <PRAGMA_OPTION_LIST>
+				     <SYNCHRONIZATION_STATEMENT> ";"
+				     <STATEMENT_OPTION_LIST>		~~ ;
+<SELECT_ALTERNATIVE>		= <SYNCHRONIZATION_STATEMENT> ";"
+				  <STATEMENT_OPTION_LIST>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<CONDITION_OPTION>		= when  <CONDITION>  "=>"		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<SELECT_ALTERNATIVE>		= <CONDITION_OPTION>
+				     <PRAGMA_OPTION_LIST>
+				     <TERMINATE_STATEMENT> ";"
+				     <PRAGMA_OPTION_LIST>		~~ ;
+<SELECT_ALTERNATIVE>		= <TERMINATE_STATEMENT> ";"
+				  <PRAGMA_OPTION_LIST>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	9.10 ABORT STATEMENTS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ABORT_STATEMENT>		= abort  <NAME_LIST>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+******************************************************************
+*								 *
+*		         C H A P T E R   1 0			 *
+*								 *
+******************************************************************
+*
+*
+*	         PROGRAM STRUCTURE AND COMPILATION ISSUES
+*
+*
+*
+*	10.1 COMPILATION UNITS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<COMPILATION>			= <COMPILATION_UNIT_LIST>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<COMPILATION_UNIT_LIST>		= <PRAGMA_OPTION_LIST>			~~ ;
+<COMPILATION_UNIT_LIST>		= <COMPILATION_UNIT_LIST>
+				  <COMPILATION_UNIT>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<COMPILATION_UNIT>		= <CONTEXT_SPECIF_OPTION>
+				  <UNIT> ";"
+				  <PRAGMA_OPTION_LIST>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<CONTEXT_SPECIF_OPTION>		= ~INH~					~~ ;
+<CONTEXT_SPECIF_OPTION>		= <WITH_USE_LIST>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<WITH_USE_LIST>			= <WITH_CLAUSE>				~~ ;
+<WITH_USE_LIST>			= <WITH_USE_LIST>  
+				  <WITH_CLAUSE>				~~ ;
+<WITH_USE_LIST>			= <WITH_USE_LIST>  
+				  <USE_CLAUSE> ";"			~~ ;
+<WITH_USE_LIST>			= <WITH_USE_LIST>  
+				  <PRAGMA> ";"				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<UNIT>				= <SUBPROGRAM_DECLARATION>		~~ ;
+<UNIT>				= <SUBPROGRAM_BODY>			~~ ;
+<UNIT>				= <PACKAGE_DECLARATION>			~~ ;
+<UNIT>				= <PACKAGE_BODY>			~~ ;
+<UNIT>				= <SUB_UNIT>				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<SUB_UNIT>			= separate  ( <NAME> ) 
+				  <SUBUNIT_BODY>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<PRAGMA_OPTION_LIST>		= ~INH~					~~ ;
+<PRAGMA_OPTION_LIST>		= <PRAGMA_OPTION_LIST>
+				  <PRAGMA> ";"				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<PRAGMA>			= pragma  <IDENTIFIER> <ARGUMENT_LIST_OPTION>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ARGUMENT_LIST_OPTION>		=					~~ ;
+<ARGUMENT_LIST_OPTION>		=  ( <ARGUMENT_LIST> )			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ARGUMENT_LIST>			= <ARGUMENT>				~~ ;
+<ARGUMENT_LIST>			= <ARGUMENT_LIST> ,  <ARGUMENT>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ARGUMENT>			= <IDENTIFIER>  "=>"  <EXPRESSION>	~~ ;
+<ARGUMENT>			= <EXPRESSION>				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<WITH_CLAUSE>			= with  <IDENTIFIER_LIST> ";"		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	10.2 SUBUNITS OF COMPILATION UNITS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<SUBUNIT_BODY>			= <SUBPROGRAM_BODY>			~~ ;
+<SUBUNIT_BODY>			= <PACKAGE_BODY>			~~ ;
+<SUBUNIT_BODY>			= <TASK_BODY>				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<BODY_STUB>			= function  <DESIGNATOR> <FUNCTION_HEADER>  <STUB>	~~ ;
+<BODY_STUB>			= <PROC_IDENT_IS>  separate			~~ ;
+<BODY_STUB>			= procedure  <IDENTIFIER>  <FORMAL_PART>  <STUB>	~~ ;
+<BODY_STUB>			= package  body  <IDENTIFIER>  <STUB>		~~ ;
+<BODY_STUB>			= task  body  <IDENTIFIER>  <STUB>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<STUB>				= is  separate				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+******************************************************************
+*								 *
+*		         C H A P T E R   1 1			 *
+*								 *
+******************************************************************
+*
+*
+*			    EXCEPTIONS
+*
+*
+*
+*	11.1 EXCEPTION DECLARATIONS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<EXCEPTION_DECLARATION>		= <IDENTIFIER>  :  exception		~~ ;
+<EXCEPTION_DECLARATION>		= <2_IDENTIFIER_LIST>  :  exception	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	11.2 EXCEPTION HANDLERS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<EXCEPTION_HANDLER_LIST>	= <PRAGMA_OPTION_LIST>
+				  <EXCEPTION_HANDLER>			~~ ;
+<EXCEPTION_HANDLER_LIST>	= <EXCEPTION_HANDLER_LIST>
+				  <EXCEPTION_HANDLER>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<EXCEPTION_HANDLER>		= when  <EXCEPTION_CHOICE_LIST>  "=>" 
+				     <STATEMENT_LIST>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<EXCEPTION_CHOICE_LIST>		= <EXCEPTION_CHOICE>				~~ ;
+<EXCEPTION_CHOICE_LIST>		= <EXCEPTION_CHOICE_LIST>  |  <EXCEPTION_CHOICE>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<EXCEPTION_CHOICE>		= <DOT_NAME>				~~ ;
+<EXCEPTION_CHOICE>		= others				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	11.3 RAISE STATEMENTS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<RAISE_STATEMENT>		= raise  <DOT_NAME>			~~ ;
+<RAISE_STATEMENT>		= raise					~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+******************************************************************
+*								 *
+*		         C H A P T E R   1 2			 *
+*								 *
+******************************************************************
+*
+*
+*		        GENERIC PROGRAM UNITS
+*
+*
+*
+*	12.1 GENERIC DECLARATIONS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<GENERIC_PART>			= generic
+				     <GENERIC_PARAMETER_LIST_OPTION>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<GENERIC_PARAMETER_LIST_OPTION>	= ~INH~					~~ ;
+<GENERIC_PARAMETER_LIST_OPTION>	= <GENERIC_PARAMETER_LIST_OPTION>
+				  <PRAGMA> ";"				~~ ;
+<GENERIC_PARAMETER_LIST_OPTION>	= <GENERIC_PARAMETER_LIST_OPTION> 
+				  <GENERIC_PARAMETER> ";"		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<GENERIC_PARAMETER>		= <IN_PARAMETER_DECLARATION>		~~ ;
+<GENERIC_PARAMETER>		= <IN_OUT_PARAMETER_DECLARATION>	~~ ;
+<GENERIC_PARAMETER>		= <GENERIC_TYPE_DECLARATION>		~~ ;
+<GENERIC_PARAMETER>		= with  function  <DESIGNATOR>  <FUNCTION_HEADER> <DEFAULT_SUBPROGRAM>	~~ ;
+<GENERIC_PARAMETER>		= with  procedure  <IDENTIFIER>  <PROCEDURE_HEADER> <DEFAULT_SUBPROGRAM>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<IN_PARAMETER_DECLARATION>	= <IDENTIFIER_LIST> ~TAB~ : ~TAB~ <DOT_NAME> <INITIALIZATION_OPTION>		~~ ;
+<IN_PARAMETER_DECLARATION>	= <IDENTIFIER_LIST> ~TAB~ :  in ~TAB~ <DOT_NAME> <INITIALIZATION_OPTION>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<DEFAULT_SUBPROGRAM>		=					~~ ;
+<DEFAULT_SUBPROGRAM>		=  is  <NAME>				~~ ;
+<DEFAULT_SUBPROGRAM>		=  is  "<>"				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*         12.2 GENERIC TYPE DECLARATIONS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<GENERIC_TYPE_DECLARATION>	= <PRIVATE_TYPE_DECLARATION>			~~ ;
+<GENERIC_TYPE_DECLARATION>	= type  <IDENTIFIER>  is  ( "<>" )		~~ ;
+<GENERIC_TYPE_DECLARATION>	= type  <IDENTIFIER>  is  range  "<>"		~~ ;
+<GENERIC_TYPE_DECLARATION>	= type  <IDENTIFIER>  is  delta  "<>"		~~ ;
+<GENERIC_TYPE_DECLARATION>	= type  <IDENTIFIER>  is  digits  "<>"		~~ ;
+<GENERIC_TYPE_DECLARATION>	= type  <IDENTIFIER>  is  <ARRAY_TYPE_DEFINITION>	~~ ;
+<GENERIC_TYPE_DECLARATION>	= type  <IDENTIFIER>  is  <UNCONSTRAINED_ARRAY_TYPE_DEFINITION>	~~ ;
+<GENERIC_TYPE_DECLARATION>	= type  <IDENTIFIER>  is  <ACCESS_TYPE_DEFINITION>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	12.3 GENERIC INSTANTIATION
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<GENERIC_INSTANTIATION>		= new  <DOT_NAME> <GENERIC_ASSOCIATION_OPTION_LIST>	~~ ;
+* THIS NODE IS NOT USED IN THE TREE. HIS TWO SONS ARE USED
+* TO BUILD UP THE FUNCTION_DECL_N - NODE,
+*     RESP. THE PROC_DECL_N - NODE.
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<GENERIC_ASSOCIATION_OPTION_LIST>
+				=					~~ ;
+<GENERIC_ASSOCIATION_OPTION_LIST>
+				=  ( <GENERIC_ASSOCIATION_LIST> )	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<GENERIC_ASSOCIATION_LIST>	= <GENERIC_ASSOCIATION>			~~ ;
+<GENERIC_ASSOCIATION_LIST>	= <GENERIC_ASSOCIATION_LIST> ,
+				  <GENERIC_ASSOCIATION>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<GENERIC_ASSOCIATION>		= <GENERIC_FORMAL_PARAM>  "=>"  <ACTUAL_GENERIC_PARAMETER>	~~ ;
+<GENERIC_ASSOCIATION>		= <ACTUAL_GENERIC_PARAMETER>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<GENERIC_FORMAL_PARAM>		= <DESIGNATOR>				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ACTUAL_GENERIC_PARAMETER>	= <EXPRESSION>				~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+******************************************************************
+*								 *
+*		         C H A P T E R   1 3			 *
+*								 *
+******************************************************************
+*
+*
+*		    REPRESENTATION SPECIFICATIONS
+*			      A N D
+*		  IMPLEMENTATION DEPENDENT FEATURES
+*
+*
+*
+*         13.1  REPRESENTATION SPECIFICATIONS
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<REPRESENTATION_SPECIFICATION>	= <ENUMERATION_TYPE_REPRESENTATION>	~~ ;
+<REPRESENTATION_SPECIFICATION>	= <LENGTH_SPECIFICATION>		~~ ;
+<REPRESENTATION_SPECIFICATION>	= <RECORD_TYPE_REPRESENTATION>		~~ ;
+<REPRESENTATION_SPECIFICATION>	= <ADDRESS_SPECIFICATION>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	13.2 LENGTH SPECIFICATIONS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<LENGTH_SPECIFICATION>		= for  <SIMPLE_ATTRIBUTE>  use  <SIMPLE_EXPRESSION>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	13.3 ENUMERATION TYPE REPRESENTATION
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ENUMERATION_TYPE_REPRESENTATION>
+				= for  <IDENTIFIER>  use  <AGGREGATE>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	13.4 RECORD TYPE REPRESENTATIONS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<RECORD_TYPE_REPRESENTATION>	= for  <IDENTIFIER>  use
+				     record
+				        <PRAGMA_OPTION_LIST>
+				        <ALIGNMENT_CLAUSE>
+				        <COMPONENT_NAME_LOCATION_LIST>
+				     end  record			~~ ;
+<RECORD_TYPE_REPRESENTATION>	= for  <IDENTIFIER>  use
+				     record
+				        <COMPONENT_NAME_LOCATION_LIST>
+				     end  record			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ALIGNMENT_CLAUSE>		= at  mod  <SIMPLE_EXPRESSION> ";"	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<COMPONENT_NAME_LOCATION_LIST>	= <PRAGMA_OPTION_LIST>			~~ ;
+<COMPONENT_NAME_LOCATION_LIST>	= <COMPONENT_NAME_LOCATION_LIST>
+				  <COMPONENT_NAME_LOCATION> ";" 
+				  <PRAGMA_OPTION_LIST>			~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<COMPONENT_NAME_LOCATION>	= <NAME>  at  <SIMPLE_EXPRESSION>  <RANGE_CONSTRAINT>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	13.5 ADDRESS SPECIFICATIONS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ADDRESS_SPECIFICATION>		= for  <IDENTIFIER>  use  at  <SIMPLE_EXPRESSION>	~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*
+*
+*	13.8 MACHINE CODE INSERTIONS
+*
+*
+*
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<CODE_STATEMENT>		= <QUALIFIED_EXPRESSION>		~~ ;
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -1,0 +1,28 @@
+Tokens
+	Comments	= -{SP | HT | NL | ";" ";" ";" {Any} EOL&True}+ ;
+			Context All But Comments;
+
+	feature		= - (
+				"("&Is_Reset (0)
+					{
+				  	^"()\""							|
+				  	QUOTE {Any | "\\"&True ("\\" | QUOTE)} QUOTE&True	|
+				  	"(" @Incr (1)						|
+				  	")"&Is_set (1) @Decr (1)
+					}
+			  	")" @Set (0)
+			    ) ;
+
+	"("		= -"("&Is_Set (0) @Incr (1);
+
+	")"		= -")" @1 ;
+-- @1 : @Decr (1); &Is_Reset (1) => @Reset (0)
+
+	%string		= -QUOTE {Any | -"\\"&True ("\\" | QUOTE)} -QUOTE&True;
+
+	keyword		= [":"] LETTER @Upper_to_lower {["-"] LETTER @Upper_to_lower} ["?"] ;
+			Priority Shift > Reduce;
+
+
+
+	

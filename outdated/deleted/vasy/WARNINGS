@@ -1,0 +1,850 @@
+INFORMATION [Romain Lacroix 10/12/2008 09:47]
+
+Pour obtenir cette liste de warnings, on peut utiliser la cible 'validation' du
+makefile vasymake, comme c'est expliqué dans $sx/vasy/PROCEDURES, au point 5.4 :
+"Cibles spéciales de vasymake".
+
+Cette cible validation va appeler les 4 cibles suivantes :
+
+ - cible all-compiles : effectue toutes les compilations possibles : 11
+   combinaisons de differents compilateurs/architectures
+
+ - cible examples : genere le code source des compilateurs dans le dossier
+   trunk/examples, puis compile ces programmes
+
+ - cible lint : appelle l'outil lint sur tout le code source de Syntax
+
+ - cible bootstrap : compile Syntax pour l'architecture native, puis lance les
+   outils Syntax pour regenerer le code source de Syntax (ces 2 operations sont
+   effectuées 2 fois chacune)
+
+(la redirection suivante est valable pour csh)
+
+make -f vasy/vasymake validation |&  tee log | grep -vEi "(clock skew|in the future)" | grep --color -Ewi "(=>|error|warning|\*\*\*|ld.*fatal)"
+
+================================================================================
+
+Liste des warnings gcc qui restent dans l'état non-corrigé :
+
+- dereferencing type-punned pointer will break strict-aliasing rules : 3 occurrences
+
+lecl/src/pplecl_t.c:1236: warning: dereferencing type-punned pointer will break strict-aliasing rules
+recor/src/pprecor_t.c:701: warning: dereferencing type-punned pointer will break strict-aliasing rules
+tdef/src/pptdef_t.c:317: warning: dereferencing type-punned pointer will break strict-aliasing rules
+
+
+================================================================================
+
+Comment construire la liste des warnings lint "intéressants" uniquement :
+
+make -f vasy/vasymake lint |& tee lint
+
+cat lint | grep -E "(.c:|-bit|signed)" 
+
+Ces 2 commandes construisent la liste des warnings lint qui vérifient les 2
+types de problèmes suivants :
+
+ - bitwidth (est-ce qu'on affecte des variables de taille X-bit dans d'autres
+   variables de taille Y-bit, avec X>Y ?)
+ - signedness (est-ce qu'on mélange des variables signed et des unsigned ?)
+
+================================================================================
+
+
+Liste des warnings lint intéressants pour la revision 1688 :
+SS_mngr.c:
+XH_mngr.c:
+XT_mngr.c:
+X_mngr.c:
+X_root_mngr.c:
+XxY_mngr.c:
+(557) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+XxYxZ_mngr.c:
+dbgaction.c:
+eq_sort.c:
+exact_nbest_semact.c:
+fermer.c:
+fsa_mngr.c:
+(3296) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(3297) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(3335) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(3517) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(3529) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(3534) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(3537) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(3544) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(3549) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(3563) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(3575) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(3582) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(3585) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(3595) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(3600) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(3978) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(3987) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(4033) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(4038) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(4068) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(4073) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(4091) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(4096) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(4118) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(4121) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(4127) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(4137) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(4169) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(4236) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(4237) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(4241) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: factorize_OR(arg 1)
+(4242) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(4247) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: factorize_OR(arg 1)
+(4248) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(4252) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(4262) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(4266) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(4276) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(4290) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(4291) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(4313) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(4317) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(4336) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(4340) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(4362) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(4368) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: factorize_OR(arg 1)
+(4370) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(4446) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(4450) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(4492) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(4498) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(4510) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(4513) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(4647) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(4802) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(6302) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(6306) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(6322) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(6461) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(6689) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(6811) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: sxba_0_lrscan(arg 2)
+(6812) warning: sign extension from 32-bit to 64-bit integer
+(6815) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(6816) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(6817) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(6820) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(6827) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(6828) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(7013) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(7053) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(7804) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(7806) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(7808) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(7859) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(7865) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(7888) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(7906) warning: cast from 8-bit unsigned integer to 8-bit signed integer
+(7927) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(7927) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(7927) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(7927) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(7927) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(7979) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(8000) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(8087) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(8097) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(8098) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(8357) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(8364) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(8367) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(8378) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(8379) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(8388) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(8391) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(8398) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(8400) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+make_proper_t.c:
+nbest_semact.c:
+output_semact.c:
+puteditcut.c:
+puteditfnb.c:
+puteditnl.c:
+puteditpos.c:
+read_a_re.c:
+(1393) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+read_a_sdag.c:
+(325) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+read_a_udag.c:
+(255) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+sort_by_tree.c:
+sxSL_mngr.c:
+(83) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(86) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+sxat_mngr.c:
+sxatc.c:
+(254) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(258) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(270) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(353) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(354) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+sxatcpp.c:
+sxatedit.c:
+(83) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(86) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+sxba_2op.c:
+sxba_bag_mngr.c:
+sxba_ops.c:
+sxba_ops2.c:
+sxba_ops3.c:
+sxba_ops4.c:
+sxba_print.c:
+sxba_read.c:
+sxba_write.c:
+sxbag_mngr.c:
+sxbatrap.c:
+sxbitsarray.c:
+sxbitsmatrix.c:
+(379) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+sxc_to_str.c:
+sxcheckmagic.c:
+sxcomment_mngr.c:
+(97) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+sxdico_get.c:
+(54) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(83) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(129) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(197) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+sxdico_process.c:
+(164) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(483) warning: sign extension from 32-bit to 64-bit integer
+(508) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(511) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(515) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: sxba_bit_is_set(arg 2)
+(528) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(532) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(680) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(726) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(754) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(754) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(754) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(754) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(754) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(754) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+sxdynam_parser.c:
+(1854) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1855) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1856) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1857) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1858) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1859) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1860) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1861) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1871) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1872) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1901) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1903) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1905) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1907) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1909) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1912) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1914) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1916) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1928) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1932) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+sxdynam_scanner.c:
+(878) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+sxearley_main.c:
+sxerr_mngr.c:
+(67) warning: sign extension from 32-bit to 64-bit integer
+(339) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+sxexit.c:
+sxfilecopy.c:
+sxgc.c:
+sxgetbit.c:
+sxgetprdct.c:
+sxincl_mngr.c:
+sxindex_mngr.c:
+(129) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(145) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+sxlist_mngr.c:
+(160) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(167) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(324) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(326) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(328) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(343) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(346) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(351) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(446) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(470) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+sxlistout.c:
+sxmain.c:
+sxmatrix2vector.c:
+sxmem_mngr.c:
+sxndp_rcvr.c:
+(165) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(165) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(388) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2043) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2779) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+sxndp_rcvr32.c:
+sxndparser.c:
+sxndparser32.c:
+sxnds_rcvr.c:
+sxnds_rcvr32.c:
+sxndscanner.c:
+(115) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+sxndscanner32.c:
+sxndtoken_mngr.c:
+sxndtreewalker.c:
+sxnext_prime.c:
+sxnumarg.c:
+sxopentty.c:
+sxp_rcvr.c:
+(697) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(697) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+sxp_rcvr32.c:
+sxp_srcvr.c:
+sxp_srcvr32.c:
+sxparser.c:
+(142) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+sxparser32.c:
+sxpart_mngr.c:
+sxperror.c:
+sxppp.c:
+(305) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(387) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(556) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+sxpptree.c:
+sxreg_exp_mngr.c:
+(187) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(381) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(382) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(435) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: sxba_1_bit(arg 2)
+(436) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: sxba_1_bit(arg 2)
+(442) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(452) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(463) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(469) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1345) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1513) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1637) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1693) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1929) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2038) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2154) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2359) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2366) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2370) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2379) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2384) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2389) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2409) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2421) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2428) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2436) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(2437) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(2448) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2457) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2465) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2579) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: re_out_tab_int(arg 5)
+(2583) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: re_out_tab_struct(arg 6)
+(2587) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: re_out_tab_struct(arg 6)
+(2589) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(2597) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: re_out_tab_struct(arg 6)
+sxs_rcvr.c:
+sxs_rcvr32.c:
+sxs_srcvr.c:
+sxs_srcvr32.c:
+sxscanner.c:
+sxscanner32.c:
+sxscrmbl.c:
+sxset_mngr.c:
+(86) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(86) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+sxsmp.c:
+sxspell_mngr.c:
+(547) warning: cast from 32-bit integer constant expression to 8-bit integer
+(571) warning: cast from 32-bit integer constant expression to 8-bit integer
+(636) warning: cast from 32-bit integer constant expression to 8-bit integer
+(657) warning: cast from 32-bit integer constant expression to 8-bit integer
+(663) warning: cast from 32-bit integer constant expression to 8-bit integer
+(680) warning: cast from 32-bit integer constant expression to 8-bit integer
+(700) warning: cast from 32-bit integer constant expression to 8-bit integer
+(701) warning: cast from 32-bit integer constant expression to 8-bit integer
+(714) warning: cast from 32-bit integer constant expression to 8-bit integer
+(715) warning: cast from 32-bit integer constant expression to 8-bit integer
+(779) warning: cast from 32-bit integer constant expression to 8-bit integer
+(882) warning: cast from 32-bit integer constant expression to 8-bit integer
+(1354) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1383) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1422) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1436) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1443) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(1444) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(1490) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1534) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1568) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(1594) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1634) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1711) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(1726) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(1753) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: store_word(arg 1)
+(1755) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(2011) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2027) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2031) warning: cast from 8-bit unsigned integer to 8-bit signed integer
+(2033) warning: cast from 8-bit unsigned integer to 8-bit signed integer
+(2043) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: store_word(arg 1)
+(2045) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(2050) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: FSA_walk_eps_trans(arg 3)
+(2052) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(2062) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(2129) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2149) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(2206) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2248) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2390) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2420) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2424) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2604) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2650) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2685) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2762) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2841) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(2946) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+sxspf_mngr.c:
+(1107) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1112) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(1117) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: spf_is_a_suffix(arg 2)
+(1117) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: spf_is_a_suffix(arg 4)
+(1119) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(1139) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: spf_is_a_suffix(arg 2)
+(1139) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: spf_is_a_suffix(arg 4)
+(1141) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(1539) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2392) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2464) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+sxsrc_mngr.c:
+(353) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+sxstr_mngr.c:
+(163) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+sxsubset_mngr.c:
+(73) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(147) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(214) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(217) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(221) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(294) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(333) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(340) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(341) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(364) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(366) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(391) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(449) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(470) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+sxsymbol_table_mngr.c:
+sxsyntax.c:
+sxtm_mngr.c:
+sxtmpfile.c:
+sxtoken_mngr.c:
+sxtrap.c:
+sxvars2.c:
+sxvoid.c:
+sxword_mngr.c:
+(141) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(147) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(189) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: <unnamed>(arg 1)
+(189) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: <unnamed>(arg 2)
+(262) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(372) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(445) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(471) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(495) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(531) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(593) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(622) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(624) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+tdef_t.c:
+varstralloc.c:
+varstrcat.c:
+varstrfree.c:
+varstrraz.c:
+(165) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(165) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(388) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2043) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2779) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(140) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: walk(arg 1)
+(163) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(179) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(257) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(267) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(322) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(444) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(447) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(459) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(513) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(115) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(161) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(540) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(658) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(690) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(740) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(697) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(697) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(142) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(144) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(225) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(192) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(197) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(235) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(263) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+bnf_dump.c:
+bnf_folcon.c:
+bnf_huge.c:
+(327) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: word_tree_add_a_string(arg 3)
+(365) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: word_tree_add_a_string(arg 3)
+(400) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+bnf_lo.c:
+(584) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(591) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(637) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(642) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+bnf_main.c:
+bnf_protest.c:
+bnf_sact.c:
+bnf_smp.c:
+bnf_symtab.c:
+(439) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(625) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(642) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+bnf_t.c:
+bnf_terminal.c:
+check_bnf.c:
+make_proper_t.c:
+print_bt.c:
+LALR1.c:
+OPTIM.c:
+algoV.c:
+csynt.c:
+optim_lo.c:
+(164) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(207) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(292) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+path.c:
+(574) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(581) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(894) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1182) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1192) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1202) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1244) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1257) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+single.c:
+(86) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+xprdct_mngr.c:
+LC1.c:
+(119) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(269) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1357) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2383) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2427) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(2513) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+lc_main.c:
+dico_act.c:
+(172) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(187) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(206) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(221) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+dico_main.c:
+dico_t.c:
+gen_check_kw.c:
+(399) warning: cast from 8-bit unsigned integer to 8-bit signed integer
+(476) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(499) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: varstr_alloc(arg 1)
+(510) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: cat_apnb(arg 1)
+(512) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: cat_apnb(arg 1)
+(514) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: cat_apnb(arg 1)
+(516) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: cat_apnb(arg 1)
+(518) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: cat_apnb(arg 1)
+(576) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: cat_apnb(arg 1)
+(632) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(653) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(662) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+get_a_part.c:
+get_col_nb.c:
+lecl_ag_free.c:
+lecl_bsc.c:
+lecl_cg.c:
+(568) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(728) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: get_la_length(arg 1)
+(780) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(802) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(849) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1429) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1491) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1492) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1494) warning: passing 32-bit integer arg, expecting 8-bit integer: gen_action_code(arg 2)
+(1494) warning: passing 32-bit integer arg, expecting 8-bit integer: gen_action_code(arg 3)
+(1515) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1516) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1548) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1549) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1603) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: get_la_length(arg 1)
+(1748) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1773) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+lecl_css.c:
+(226) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+lecl_diagnos.c:
+lecl_fsa.c:
+(2675) warning: passing 32-bit integer arg, expecting 8-bit integer: put_item_in_substate(arg 4)
+(2867) warning: passing 32-bit integer arg, expecting 8-bit integer: put_item_in_substate(arg 4)
+lecl_gn.c:
+lecl_lo.c:
+(204) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(205) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(689) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(700) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(798) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(826) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+lecl_main.c:
+lecl_pact.c:
+lecl_pcn.c:
+lecl_pd.c:
+lecl_pi.c:
+lecl_prs.c:
+lecl_sact.c:
+lecl_sature.c:
+lecl_smp.c:
+lecl_st.c:
+lecl_stc.c:
+(1064) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+lecl_t.c:
+lecl_tout.c:
+(96) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(116) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+lecl_tts.c:
+pplecl_main.c:
+pplecl_sact.c:
+pplecl_t.c:
+print_st.c:
+st_to_c.c:
+(258) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(422) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(423) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(450) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(908) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(915) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1020) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1021) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1074) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1075) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1183) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1184) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1200) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1201) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+lfg_lex_main.c:
+lfg_lex_scanact.c:
+lfg_lex_smp.c:
+(3857) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(4517) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: sxbm_calloc(arg 2)
+(5109) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: word_tree_add_a_string(arg 3)
+(5246) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: word_tree_add_a_string(arg 3)
+(5561) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+lfg_lex_t.c:
+lfg_main.c:
+lfg_smp.c:
+(1964) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: sxbm_resize(arg 4)
+(2062) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: sxbm_resize(arg 4)
+(3847) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(3853) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(3964) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: sxbm_calloc(arg 2)
+(3965) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: sxba_calloc(arg 1)
+lfg_t.c:
+amlgm_cmpd_main.c:
+amlgm_cmpd_smp.c:
+(211) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(516) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+amlgm_cmpd_t.c:
+make_a_dico.c:
+(1148) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1232) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1367) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: word_tree_add_a_string(arg 3)
+(1413) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1468) warning: passing 64-bit unsigned integer arg, expecting 64-bit signed integer: word_tree_add_a_string(arg 3)
+(1572) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+make_a_dico_t.c:
+paradis_main.c:
+paradis_smp.c:
+paradis_t.c:
+prio_action.c:
+prio_main.c:
+prio_sact.c:
+prio_t.c:
+drcg_main.c:
+drcg_smp.c:
+drcg_t.c:
+rcg_1rcg_2var.c:
+(343) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(440) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(449) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(1542) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(1904) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(1909) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(2282) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(2290) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(2291) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(2318) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(2325) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(2326) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(2377) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(2378) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(2472) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(2485) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(2486) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(3216) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(3216) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(3218) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(3218) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(3219) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(3227) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(3269) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(3270) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(3293) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(3313) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(3314) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(3775) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(3776) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(3788) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+(3792) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+rcg_gen_bnf.c:
+rcg_gen_parser.c:
+(548) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(9644) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(9680) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+rcg_main.c:
+rcg_sact.c:
+rcg_smp.c:
+(159) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(3469) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(4289) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+rcg_t.c:
+pprecor_main.c:
+pprecor_sact.c:
+pprecor_t.c:
+print_rt.c:
+recor_main.c:
+recor_sact.c:
+recor_smp.c:
+(194) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(239) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(379) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(427) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(451) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(551) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(628) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(671) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+recor_t.c:
+semact_main.c:
+semact_sact.c:
+semact_t.c:
+genat_c.c:
+(126) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(285) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+genat_pascal.c:
+(129) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+print_att.c:
+semat_main.c:
+semat_sact.c:
+(163) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(209) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(209) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(627) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+semat_t.c:
+dec.c:
+(154) warning: cast from 64-bit unsigned integer to 64-bit signed integer
+dec_t.c:
+def.c:
+def_sact.c:
+def_t.c:
+tabc.c:
+tabc_lo.c:
+tabc_main.c:
+tabc_put.c:
+init_tbl.c:
+out.c:
+out_DP_tbl.c:
+out_DS_tbl.c:
+out_PP_tbl.c:
+out_P_tbl.c:
+out_RCVR_tbl.c:
+out_S_tbl.c:
+(361) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(367) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+out_T_tbl.c:
+out_lig_tbl.c:
+tables_c.c:
+pptdef_main.c:
+pptdef_t.c:
+tdef_action.c:
+tdef_main.c:
+tdef_sact.c:
+tdef_t.c:
+print_bt.c:
+xbnf2lex_prdct.c:
+xbnf2lex_prdct_main.c:
+xbnf2lex_prdct_smp.c:
+xbnf_dump.c:
+xbnf_folcon.c:
+xbnf_lo.c:
+(570) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(577) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(623) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(628) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+xbnf_main.c:
+xbnf_protest.c:
+xbnf_sact.c:
+xbnf_smp.c:
+xbnf_symtab.c:
+(224) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(594) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(611) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+xbnf_t.c:
+ARC.c:
+(1621) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(1621) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+ARP.c:
+LALR1.c:
+(1277) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+LC0.c:
+LR0.c:
+OPTIM.c:
+RARP.c:
+XARC.c:
+algoV.c:
+ambig.c:
+csynt.c:
+earley.c:
+first.c:
+left_corner.c:
+messages_mngr.c:
+optim_lo.c:
+(165) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(208) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+(293) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+single.c:
+(87) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+super_FSA.c:
+xprdct_mngr.c:
+dec_act.c:
+dec_t.c:
+def_act.c:
+def_t.c:
+yax.c:
+yax_main.c:
+yax_put.c:
+yaction_t.c:
+ysx_main.c:
+ysx_smp.c:
+(701) warning: assignment of 64-bit unsigned integer to 64-bit signed integer
+ysx_t.c:

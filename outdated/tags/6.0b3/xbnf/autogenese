@@ -1,0 +1,15 @@
+# This makefile is used to bootstrap xbnf.
+
+# To avoid problems with other shells:
+SHELL=/bin/sh
+
+SX=$(sx)
+
+XBNF=$(SX)/xbnf
+TMP=$(XBNF)/tmp
+
+$(XBNF)/bootstrap:
+	${SHELL} $(sx)/etc/bin/liens-tmp.sh $(TMP); : $(MAKE)
+	cd $(TMP); ${SHELL} $(sx)/etc/bin/make-makefile xbnf | CYGWIN="$$CYGWIN binmode" $(MAKE) -f -
+	${SHELL} $(sx)/etc/bin/menage-tmp.sh $(TMP); : $(MAKE)
+	$(MAKE) COMPILER="$(COMPILER)" CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)"	sxV="$(sxV)" -f $(XBNF)/sxmakefile

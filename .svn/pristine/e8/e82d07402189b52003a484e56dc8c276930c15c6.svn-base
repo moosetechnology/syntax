@@ -1,0 +1,64 @@
+
+Titles
+	"",
+	"Warning (ppc.anal):\t",
+	"Error (ppc.anal):\t";
+
+Scanner
+	Local
+		X 0 1 2 3 ; "A character \""%0"\" is inserted before \""$0"\".";
+		1 2 3 4	; "The invalid character \""$0"\" is erased.";
+		X 1 2 3 4 ; "The invalid character \""$0"\" is replaced by \""%0"\".";
+
+		Dont_Delete = {};
+		Dont_Insert = {#000..#037, "*", "/", "_"};
+
+	Global
+		Detection : -- parameter: character in error
+			  "\"%s\" is erased.";
+		KEYWORD	: "";
+		Eol	: "\\n";
+		Eof	: -- the "character"
+			  "EOF";
+		Halt	: "Lexical analysis stops.";
+
+Parser
+	Local
+		0 S 2	; "Speling eror: \""$1"\" is replaced by \""%1"\".";
+		S 1	; "Speling eror: \""$0"\" is replaced by \""%0"\" before \""$1"\".";
+		X 1 2 3 4 ; "\""$0"\" is replaced by \""%0"\" before \""$1"\".";
+		0 X 1 2 3 ; "\""%1"\" is inserted before \""$1"\".";
+		0 X 2 3 4 ; "\""$1"\" is replaced by \""%1"\".";
+		0 2 3 4	; "\""$1"\" is erased.";
+		0 X X 1 2 3 4
+			; "\""%1" "%2"\" is inserted before \""$1"\".";
+		X 0 1 2 3 ; "\""%0"\" is inserted before \""$0" "$1"\".";
+		1 2 3 4	; "\""$0"\" is erased before \""$1"\".";
+		X 2 3 4	; "\""$0" "$1"\" is replaced by \""%0"\".";
+		X X 1 2 3 ; "\""$0"\" before \""$1"\" is replaced by \""%0" "%1"\".";
+
+		Dont_Delete = {"case", "default", "do", "else", "enum", "for", "if", "sizeof", "struct", "switch", "union", "while"};
+		Dont_Insert = {"auto", "case", "char", "do", "double", "else", "enum", "extern", "float", "for", "goto", "if", "int", "long", "register", "return", "short", "sizeof", "switch", "unsigned", "void", "while", "%CONST", "%DIVOP", "%EQUOP", "%INCOP", "%RELOP", "%SHIFTOP", "%STROP", "%UNOP", "-", "*", "&", "|", "^", "&&", "||", "?", "=", "{", "[", "*"};
+
+	Forced_Insertion
+		"\""%0"\" is inserted before \""$1"\"." ;
+
+	Global
+		Key_Terminals = {";", "{", "}", ",", "else"};
+		Validation_Length = 2;
+		Followers_Number <= 5
+			: -- parameters: array (1:Followers_Number) of valid followers at detection point
+			  "Only \"%s\"^( or \"%s\"^) is possible here.";
+		Detection : -- parameters: none
+			  "Cannot recover...";
+		Restarting: -- parameters: array (1:Validation_Length) of valid followers at restarting point
+			  "... Syntactic analysis restarts on \"%s\" \"%s\".";
+		Eof	: -- the "token"
+			  "EOF";
+		Halt	: -- parameters: none
+			  "... Analysis aborted.";
+
+Abstract
+	-- parameters: array (1:Titles_No) of number of messages
+	"";
+

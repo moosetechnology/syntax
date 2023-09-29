@@ -1,0 +1,55 @@
+-----------------------------------------------------------
+--							 --
+-- Copyright (c) 1985 by Institut National de Recherche	 --
+--		      en Informatique et en Automatique. --
+--							 --
+-----------------------------------------------------------
+
+
+
+
+-----------------------------------------------------------
+--     Produit de l'equipe Langages et Traducteurs.	 --
+--							 --
+--		 Auteur: Philippe Deschamp		 --
+-----------------------------------------------------------
+
+Classes
+
+	E		= "Ee" ;
+	ESPACE		= SP + HT ;
+	ANY_EOL		= ANY - EOL ;
+
+
+Abbreviations
+
+	NOMBRE		= {DIGIT}+ ;
+	LIGNE		= {ANY_EOL | "\\"&True (ANY_EOL | EOL)} ;
+	COMMENT		= "(" "*" {ANY} "*" ")"&True | "{" {ANY} "}"&True ;
+
+
+Tokens
+
+	Comments	= -{ESPACE | EOL}+ | -COMMENT ;
+			   Context All But Comments ;
+	Include		= -("#"&Is_First_Col {ESPACE} "i" "n" "c" "l" "u" "d"
+	     "e" {ESPACE}) (-"<"&True {ANY_EOL}+ -">"&True | -QUOTE&True {
+	     ANY_EOL}+ -QUOTE&True) -{ESPACE} -EOL @4 ;
+			   @3 ;
+	%ID		= (LETTER | "$") {LETTER | DIGIT} @2 ;
+			   Context All But %ID, %NATUREL, %REEL ;
+	%NATUREL	= NOMBRE ;
+			   Priority Reduce>Reduce ;
+			   Unbounded Context All But %ID ;
+	%PRE_PRO	= -("#"&Is_First_Col LIGNE EOL) ;
+	%REEL		= NOMBRE ["." NOMBRE] [E ["+" | "-"] NOMBRE] ;
+			   Context All But %ID ;
+	%STRING		= -"'" {ANY | -"'"&True "'"} -"'"&True ;
+	"<>"		= -("<" ">" | "#") ;
+	"["		= -("[" | "(" ".") @Erase ;
+	"]"		= -("]" | "." ")") ;
+	"^"		= -"^@" ;
+
+
+	For Word Use 32 Bits ;
+	For Byte Use 8 Bits ;

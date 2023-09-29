@@ -1,0 +1,82 @@
+Classes
+        ANY             = #000..#377 ;
+--      LETTER          = LETTER + "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ";
+	DIACRITIC	= "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ°¥«©®µ»¹¾³£¶¦¼¬¿¯±¡";
+	LETTER          = LETTER + DIACRITIC ;
+	SQC		= "'\\" + NL ;
+	QC		= "\"\\" + NL ;
+	BLANK		= SP + HT + VT + NL ;
+
+Abbreviations
+	FIRST_LETTER    = (LETTER&Is_First_Col | "_-"&Is_First_Col) ;
+	SQBODY		= ^SQC | -"\\" ("'\\" | -NL) ;
+	QBODY		= ^QC | -"\\" ("\"\\" | -NL) ;
+
+Tokens
+	Comments	= -{BLANK
+			   | "/" "/"&True {ANY}* EOL&True -- C++
+			   | "/" "*" {ANY}* "*" "/"&True -- C
+		           }+
+			   | 
+			  -- "Shell" comments must be in // with includes 
+			  -("#"&Is_First_Col {ANY}* EOL&True) -- Shell
+	                  ;
+			Priority Shift > Reduce;
+
+	Include		= -"#"&Is_First_Col -{SP | HT} -I -N -C -L -U -D -E&True -{SP | HT}+
+			   {^" \t\n"}+ -{SP | HT} -EOL @1 ; @2 ;
+
+	%IDENT		= (LETTER | "_-") {LETTER | DIGIT | "_'-/.:+?"&True}* ;
+			Priority Shift > Reduce;
+			KEYWORD pred;
+
+	%MACRO_NAME	= -"@" {LETTER | DIGIT | "_'-"}+ ;
+			Priority Shift > Reduce;
+
+	"|"             = "|" | -"/" @3 ; -- @3 => warning, "old style"
+
+	%ENTIER		= DIGIT {DIGIT} ;
+			Priority Shift > Reduce;
+
+	%CHAINE		= -"'" {SQBODY} -"'" ;
+
+--	%NODE_REF	= -"$" ( -"$" @Put("0") | {DIGIT}+) ;
+--			Priority Shift > Reduce;
+
+	%MOT_1COL	= -"'"&Is_First_Col {SQBODY} -"'"
+			| -QUOTE&Is_First_Col {QBODY} -QUOTE
+			| (FIRST_LETTER | "_-"&Is_First_Col) {LETTER | DIGIT | "_'-/|."}* ;
+			Priority Shift > Reduce;
+			KEYWORD ALL BUT pred;
+--			KEYWORD ALL BUT "-" ;
+
+--	%PRED_1COL	= -"'"&Is_First_Col "p" "r" "e" "d" -"'"&True
+--			| -QUOTE&Is_First_Col "p" "r" "e" "d" -QUOTE&True;
+--			NOT KEYWORD;
+
+	CONTRAINT	= -"=" -"c"&True (-BLANK&True | ANY @4 @Release @Erase) ; --	@4 => Error constraint assumed
+
+	OPTIONAL	= -"=" -"?"&True (-BLANK&True | ANY @4 @Release @Erase) ; --	@4 => Error OPTIONAL assumed
+
+	"-"		= "-" ;
+			Priority Reduce > Reduce;
+			
+	"!"		= -"!" ;
+	"\""		= -"\"" ;
+	"("		= -"(" ;
+	")"		= -")" ;
+	"+"		= -"+" ;
+	","		= -"," ;
+	"."		= -"." ;
+	";"		= -";" ;
+	"<"		= -"<" ;
+	"="		= -"=" ;
+	">"		= -">" ;
+	"["		= -"[" ;
+	"]"		= -"]" ;
+	"{"		= -"{" ;
+	"}"		= -"}" ;
+
+--	"("		= -"({" ;
+
+--	")"		= -")}" ;

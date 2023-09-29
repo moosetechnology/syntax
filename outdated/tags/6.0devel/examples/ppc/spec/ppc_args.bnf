@@ -1,0 +1,62 @@
+<ppargs>	= <-args>		;	1
+<ppargs>	= <-args> <paths>	;	2
+
+
+<paths>	= <paths> <path>	;
+<paths>	= <path>		;
+
+<path>	= %PATH		;
+<path>	= %IDENTIFIER	;
+<path>	= %NUMBER	;
+
+
+<-args>	= <-args> <-arg>	;
+<-args>	=			;
+
+<-arg>	= -verbose				;	3
+<-arg>	= -v					;	3
+<-arg>	= -noverbose				;	4
+<-arg>	= -nv					;	4
+
+<-arg>	= -output_file <path>			;	5
+<-arg>	= -of <path>				;	5
+<-arg>	= -nooutput_file			;	6
+<-arg>	= -nof					;	6
+
+<-arg>	= -TYPE %IDENTIFIER			;	7
+<-arg>	= -T %IDENTIFIER			;	7
+
+<-arg>	= -kwuc					;	8
+<-arg>	= -key_words_upper_cased		;	8
+
+<-arg>	= -kwlc					;	9
+<-arg>	= -key_words_lower_cased		;	9
+
+<-arg>	= -kwci					;	10
+<-arg>	= -key_words_capitalised_initial	;	10
+
+<-arg>	= -kwdk					;	11
+<-arg>	= -key_words_darkened			;	11
+<-arg>	= -nkwdk				;	12
+<-arg>	= -nokey_words_darkened			;	12
+
+<-arg>	= -ll %NUMBER				;	13
+<-arg>	= -line_length %NUMBER			;	13
+
+<-arg>	= -tabs					;	14
+<-arg>	= -notabs				;	15
+
+<-arg>	= -every %NUMBER			;	16
+
+<-arg>	= -mm %NUMBER				;	17
+<-arg>	= -max_margin %NUMBER			;	17
+
+<-arg>	= -sm					;	18
+<-arg>	= -shift_margin				;	18
+<-arg>	= -nsm					;	19
+<-arg>	= -no_shift_margin			;	19
+
+<-arg>	= -directory <path>			;	20
+<-arg>	= -d <path>				;	20
+
+<-arg>	= -style %NUMBER			;	21

@@ -1,0 +1,114 @@
+.\" @(#)prio.1	- SYNTAX [unix] - 2 Septembre 1987
+.TH PRIO 1 "SYNTAX\[rg]"
+.SH NAME
+prio \- process the disambiguating rules associated with a syntactic grammar.
+.SH SYNOPSIS
+.B prio
+[ \fB\-v\fP ] [ \fB\-verbose\fP ] [ \fB\-nv\fP ] [ \fB\-noverbose\fP ]
+[ \fB\-sc\fP ] [ \fB\-source\fP ] [ \fB\-nsc\fP ] [ \fB\-nosource\fP ]
+[ \fB\-ln\fP \fIname\fP ] [ \fB\-language_name\fP \fIname\fP ]
+[ \fB\-listing\fP ] [ \fB\-nolisting\fP ] .\|.\|.
+[ \fIfilenames\fP ]
+.SH DESCRIPTION
+.I prio
+processes the disambiguating rules associated with a syntactic grammar,
+written for the
+\fBSYNTAX\fP\*R
+system.
+.I prio
+records for each specified terminal symbol and for each specified grammar rule a
+precedence and an associativity which will be used later on by csynt(1)
+in order to help resolution of
+.BR LALR ( 1 )
+conflicts.
+.LP
+Each file named
+.I filename
+contains the description of the disambiguating rules.
+A
+.I filename
+may be of the form
+[\|\fIpath/\fP\|]\|\fIname\fP.\fBprio\fP
+where
+.I name
+is the name of the processed language.
+.LP
+If no
+.I filenames
+argument is present, the standard input is read.
+.LP
+If no argument is specified,
+.I prio
+prints a short synopsis of its usage and exits with a non null status code.
+.SH OPTIONS
+.LP
+Options may appear in any order as long as they appear
+.B before
+the
+.IR filenames .
+Only the
+.B last
+occurrence of a given option is taken into account.
+.br
+Default options are such that the command
+.br
+\fB     prio [filenames]\fP
+.br
+is equivalent to
+.br
+\fB     prio -v -sc [filenames]\fP
+.TP
+\fB\-v\fP, \fB\-verbose\fP
+Animate the user's screen by displaying cryptic information about what is
+going on.
+(Default)
+.TP
+\fB\-nv\fP, \fB\-noverbose\fP
+Execute silently.
+.TP
+\fB\-sc\fP, \fB\-source\fP
+Produce a file named
+\fIname\fP\fB.pr.l\fP,
+containing a line numbered source listing together with
+possible error messages.
+(Default)
+.TP
+\fB\-nsc\fP, \fB\-nosource\fP
+Suppress the source listing\|.
+.TP
+\fB\-ln\fP \fIname\fP, \fB\-language_name\fP \fIname\fP
+Force the
+.I name
+of the language to process.
+The
+.B \-ln
+option is mandatory if no
+.I filename
+is given.
+.TP
+\fB\-listing\fP
+Display (using a human-readable form) in file \fIname\fP\fB.pr.l\fP the
+contents of the binary tables generated in file \fIname\fP\fB.dt\fP.
+This option is helpful for debugging and has only an effect if 
+option \fB\-source\fP is set.
+.TP
+\fB\-nolisting\fP
+Do not display in file \fIname\fP\fB.pr.l\fP the contents of the tables.
+(Default)
+.SH FILES
+.ta \w'\fIname\fP\fB.bn.l\fP  'u
+\fIname\fP\fB.bt\fP	internal grammar form (input)
+.br
+\fIname\fP\fB.dt\fP	internal disambiguating tables (output)
+.br
+\fIname\fP\fB.pr.l\fP	source listing (output)
+.SH "SEE ALSO"
+bnf(1), semact (1), semat(1), paradis(1), semc(1), csynt(1) and the
+\fB"SYNTAX REFERENCE MANUAL"\fP.
+.SH DIAGNOSTICS
+When the specification is incorrect an error message is issued and error
+diagnostics are gathered in the listing (if any).
+.br
+Exit status is 0 if everything is alright, 1 if only warnings are issued, 2
+if error messages are issued, 3 for command line syntax errors.
+

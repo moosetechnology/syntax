@@ -1,0 +1,33 @@
+--************************************************************************
+--*       Copyright (c) 1987 by Institut National de Recherche		 *
+--*                  d'Informatique et d'Automatique.		 	 *
+--*	      Produit de l'equipe Langages et Traducteurs.     		 *
+--*   	            Version 1.0 du 2 Septembre 1987			 *
+--*	     Syntaxe d'entree pour les actions en YSX		   	 *
+--************************************************************************
+
+Classes
+
+	ANY		= #000..#377 ;
+
+
+Abbreviations
+
+	TYPE		= "<" LETTER { ["_"] (LETTER | DIGIT) } ">" ;
+
+	ATTRIBUTE	= "$" [TYPE] "$"
+			| "$" @1 {DIGIT&True}+ @2
+			| "$" TYPE @1 ["-"] {DIGIT&True}+ @3
+			;
+
+	C_STRING	= "\"" {^"\"\n\\" | "\\" ANY} "\"" ;
+	C_CHAR		= "\'" {^"\'\n\\" | "\\" ANY} "\'" ;
+	C_COMMENT	= "/" "*"&True {ANY} "*" "/"&True ;
+
+	C_CODE		= ^"\"'/$" | C_STRING | C_CHAR | "/" | C_COMMENT ;
+
+
+Tokens
+
+	Comments	= {C_CODE | ATTRIBUTE}+ @1 ;
+			  Context Eof ;

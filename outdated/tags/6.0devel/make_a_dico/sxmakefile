@@ -1,0 +1,74 @@
+# To avoid problems with other shells:
+SHELL=/bin/sh
+include $(sx)/etc/gccoptions
+SX=$(sx)
+LNorCP=ln -s
+#LNorCP=${SHELL} $(SX)/etc/bin/lien-relatif.sh
+SXLIB=$(SX)/lib
+SXINCL=$(SX)/incl
+ETC=$(SX)/etc
+ETCLIB=$(ETC)/lib
+
+MAKE_A_DICO=$(SX)/make_a_dico
+SRC=$(MAKE_A_DICO)/src
+LIB=$(MAKE_A_DICO)/lib
+INCL=$(MAKE_A_DICO)/incl
+
+BIBS= $(ETCLIB)/libsxetc$(sxV).a $(SXLIB)/libsx$(sxV).a
+CC=cd $(LIB); umask 7; exec $(COMPILER) -I$(INCL) -I$(SXINCL) -I$(ETC)/incl $(CFLAGS) -c
+
+$(MAKE_A_DICO)/ALL .PRECIOUS:	$(SX)/bin/make_a_dico.out	\
+				$(SX)/bin/amlgm_cmpd.out
+
+$(SX)/bin/make_a_dico.out:	$(MAKE_A_DICO)/make_a_dico.out
+	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
+
+$(SX)/bin/amlgm_cmpd.out:	$(MAKE_A_DICO)/amlgm_cmpd.out
+	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
+
+NEEDS=	$(LIB)/make_a_dico.o	\
+	$(LIB)/make_a_dico_t.o
+
+$(MAKE_A_DICO)/make_a_dico.out:	$(NEEDS)	$(BIBS)
+	@echo '	$(COMPILER) -o $@ $(BIBS)'; rm -f $@; ${SHELL} -c '$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(BIBS) || (rm $@;exit 1)'
+
+$(LIB)/make_a_dico.o:	$(SXINCL)/sxunix.h		\
+			$(SXINCL)/XxY.h			\
+			$(SXINCL)/sxword.h		\
+			$(SXINCL)/fsa.h			\
+			$(SRC)/make_a_dico.c
+	$(CC) $(SRC)/make_a_dico.c
+
+$(LIB)/make_a_dico_t.o:	$(SXINCL)/sxunix.h 	\
+			$(SRC)/make_a_dico_t.c
+	$(CC) $(SRC)/make_a_dico_t.c		\
+		-DSCANACT=make_a_dico_scanact	\
+		-DSEMACT=make_a_dico_action
+
+NEEDS2=	$(LIB)/amlgm_cmpd_main.o	\
+	$(LIB)/amlgm_cmpd_smp.o		\
+	$(LIB)/amlgm_cmpd_t.o
+
+$(MAKE_A_DICO)/amlgm_cmpd.out:	$(NEEDS2)	$(BIBS)
+	@echo '	$(COMPILER) -o $@ $(BIBS)'; rm -f $@; ${SHELL} -c '$(COMPILER) -o $@ $(NEEDS2) $(CFLAGS) $(LDFLAGS) $(BIBS) || (rm $@;exit 1)'
+
+$(LIB)/amlgm_cmpd_smp.o:$(SXINCL)/sxunix.h	\
+			$(SXINCL)/XH.h		\
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/fsa.h		\
+			$(SXINCL)/varstr.h	\
+			$(SRC)/amlgm_cmpd_smp.c
+	$(CC) $(SRC)/amlgm_cmpd_smp.c
+
+$(LIB)/amlgm_cmpd_t.o:	$(SXINCL)/sxunix.h 	\
+			$(SRC)/amlgm_cmpd_t.c
+	$(CC) $(SRC)/amlgm_cmpd_t.c		\
+		-Dsempass=amlgm_cmpd_smp
+
+$(LIB)/amlgm_cmpd_main.o:	$(SXINCL)/sxunix.h	\
+			$(SXINCL)/fsa.h			\
+			$(SRC)/amlgm_cmpd_main.c
+	$(CC) $(SRC)/amlgm_cmpd_main.c
+
+clean:
+	/bin/rm -f $(LIB)/*.o $(MAKE_A_DICO)/make_a_dico.out $(MAKE_A_DICO)/amlgm_cmpd.out

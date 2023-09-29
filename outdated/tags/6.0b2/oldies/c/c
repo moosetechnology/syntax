@@ -1,0 +1,16 @@
+#! /bin/sh
+ARGS=""
+for ARG do
+        case "$ARG" in
+        +*|-*)  ARGS="$ARGS $ARG";shift;continue;;
+        *)      break;;
+        esac
+done
+case $# in
+0)      /usr/lib/cpp | ./c.out -;;
+*)      for FILE do
+                echo "$FILE"
+                /usr/lib/cpp $ARGS $FILE | ./c.out -
+        done;;
+esac
+

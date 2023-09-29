@@ -1,0 +1,883 @@
+******************************************************************************
+*                                S Y N T A X
+*-----------------------------------------------------------------------------
+*   Copyright (C) 1972-2023 INRIA (Institut National de Recherche en
+*   Informatique et Automatique)
+*-----------------------------------------------------------------------------
+*   URL: http://sourcesup.renater.fr/projects/syntax
+*-----------------------------------------------------------------------------
+*   The source code of SYNTAX is distributed with two different licenses,
+*   depending on the files:
+*   - The recursive content of src/ and incl/ and the non-recursive content
+*     of SYNTAX's root directory are distributed under the CeCILL-C license
+*   - The recursive content of all other repertories is distributed under
+*     the CeCILL license
+*   All code produced by SYNTAX must be considered as being under the
+*   CeCILL-C license. Information about the CeCILL and CeCILL-C licenses
+*   can be found at, e.g., http://www.cecill.info
+*****************************************************************************
+
+$LIST (<start>, <EcFile>, <DeclList>, <Decl>, <Type>, <Enumeration>,
+	<VarDeclList>, <VarDecl>, <TypeDef>, <Header>, <LocalDecls>,
+	<Equations>, <EquationList>, <Equation>, <LeftPart>, <LeftIdentifier>,
+	<LeftIdentifierList>, <AssertExpression>, <ExpressionList>,
+	<Expression>, <RightIdentifier>, <Constant>, <Parameter>,
+	<ParameterList>) : SXML_TYPE_LIST ;
+
+$
+decl =
+
+#include "sxml.h"
+SXML_TYPE_LIST ROOT;
+
+$
+open =
+
+$
+close =
+	SXML_PRINT (sxstdout, ROOT);
+
+$
+
+*******************************************************************************
+
+<start> = <EcFile> ;
+
+$LIST (<start>)
+	{
+	$LIST (<start>) = SXML_TLT (
+			"<?xml version='1.0'?><ecfile>",
+			$LIST (<EcFile>),
+	 		"</ecfile>");
+	ROOT = $LIST (<start>);
+	}
+
+*******************************************************************************
+
+<EcFile> = <DeclList> ;
+
+$LIST (<EcFile>)
+
+	$LIST (<EcFile>) = SXML_L ($LIST (<DeclList>));
+
+*******************************************************************************
+
+<DeclList> = ;
+
+$LIST (<DeclList>)
+
+	$LIST(<DeclList>) = SXML_T ("");
+
+*------------------------------------------------------------------------------
+
+<DeclList> = <DeclList> <Decl> ;
+
+$LIST (<DeclList>)
+
+	$LIST (<DeclList>) = SXML_LL (
+		$LIST (<DeclList>'),
+		$LIST (<Decl>));
+
+*******************************************************************************
+
+<Decl> = "type" %Ident "=" <TypeDef> ";" ;
+
+$LIST (<Decl>)
+
+	$LIST (<Decl>) = SXML_TTTLT (
+		"<type><name>",
+		$ptext ("%Ident"),
+		"</name>",	
+		$LIST (<TypeDef>),
+		"</type>");
+
+*------------------------------------------------------------------------------
+
+<Decl> = "const" %Ident "=" <Constant> ";" ;
+
+$LIST (<Decl>)
+
+	$LIST (<Decl>) = SXML_TTTLT (
+		"<const><name>",
+		$ptext ("%Ident"),
+		"</name>",	
+		$LIST (<Constant>),
+		"</const>");
+
+*------------------------------------------------------------------------------
+
+<Decl> = "function" <Header> <LocalDecls> <Equations> ";" ;
+
+$LIST (<Decl>)
+
+	$LIST (<Decl>) = SXML_TLLLT (
+		"<function>",
+		$LIST (<Header>),
+		$LIST (<LocalDecls>),
+		$LIST (<Equations>),
+		"</function>");
+
+*------------------------------------------------------------------------------
+
+<Decl> = "node" <Header> <LocalDecls> <Equations> ";" ;
+
+$LIST (<Decl>)
+
+	$LIST (<Decl>) = SXML_TLLLT (
+		"<node>",
+		$LIST (<Header>),
+		$LIST (<LocalDecls>),
+		$LIST (<Equations>),
+		"</node>");
+
+*******************************************************************************
+
+<TypeDef> = "enum" "{" <Enumeration> "}" ;
+
+$LIST (<TypeDef>)
+
+	$LIST (<TypeDef>) = SXML_TLT (
+		"<enum>",	
+		$LIST (<Enumeration>),
+		"</enum>");
+
+*------------------------------------------------------------------------------
+
+<TypeDef> = "struct" "{" <VarDeclList> "}" ;
+
+$LIST (<TypeDef>)
+
+	$LIST (<TypeDef>) = SXML_TLT (
+		"<struct>",	
+		$LIST (<VarDeclList>),
+		"</struct>");
+
+*******************************************************************************
+
+<Enumeration> = %Ident ;
+
+$LIST (<Enumeration>)
+
+	$LIST (<Enumeration>) = SXML_TTT (
+		"<name>",
+		$ptext ("%Ident"),
+		"</name>");
+
+*------------------------------------------------------------------------------
+
+<Enumeration> = <Enumeration> "," %Ident ;
+
+$LIST (<Enumeration>)
+
+	$LIST (<Enumeration>) = SXML_LTTT (
+		$LIST (<Enumeration>'),
+		"<name>",
+		$ptext ("%Ident"),
+		"</name>");
+
+*******************************************************************************
+
+<Header> = %Ident "(" ")" "returns" "(" <VarDeclList> ")" ";" ;
+
+$LIST (<Header>)
+
+	$LIST (<Header>) = SXML_TTTLT (
+		"<name>",
+		$ptext ("%Ident"),
+		"</name><ins></ins><outs>",
+		$LIST (<VarDeclList>),
+		"</outs>");
+
+*------------------------------------------------------------------------------
+
+<Header> = %Ident "(" <VarDeclList> ")" "returns" "(" <VarDeclList> ")" ";" ;
+
+$LIST (<Header>)
+
+	$LIST (<Header>) = SXML_TTTLTLT (
+		"<name>",
+		$ptext ("%Ident"),
+		"</name><ins>",
+		$LIST (<VarDeclList>),
+		"</ins><outs>",
+		$LIST (<VarDeclList>'),
+		"</outs>");
+
+*******************************************************************************
+
+<VarDeclList> = <VarDecl> ;
+
+$LIST (<VarDeclList>)
+
+	$LIST (<VarDeclList>) = SXML_L ($LIST (<VarDecl>));
+
+*------------------------------------------------------------------------------
+
+<VarDeclList> = <VarDeclList> ";" <VarDecl> ;
+
+$LIST (<VarDeclList>)
+
+	$LIST (<VarDeclList>) = SXML_LL (
+		$LIST (<VarDeclList>'),
+		$LIST (<VarDecl>));
+
+*******************************************************************************
+
+<VarDecl> = %Ident ":" <Type> ;
+
+$LIST (<VarDecl>)
+
+	$LIST (<VarDecl>) = SXML_TTTLT (
+		"<name>",
+		$ptext ("%Ident"),
+		"</name><type>",
+		$LIST (<Type>),
+		"</type>");
+
+*------------------------------------------------------------------------------
+
+<VarDecl> = %Ident "," <VarDecl> ;
+
+$LIST (<VarDecl>)
+
+	$LIST (<VarDecl>) = SXML_TTTL (
+		"<name>",
+		$ptext ("%Ident"),
+		"</name>",
+		$LIST (<VarDecl>'));
+
+*******************************************************************************
+
+<Type> = "bool" ;
+
+$LIST (<Type>)
+
+	$LIST (<Type>) = SXML_T ("bool");
+
+*------------------------------------------------------------------------------
+
+<Type> = "int" ;
+
+$LIST (<Type>)
+
+	$LIST (<Type>) = SXML_T ("int");
+
+*------------------------------------------------------------------------------
+
+<Type> = "real" ;
+
+$LIST (<Type>)
+
+	$LIST (<Type>) = SXML_T ("real");
+
+*------------------------------------------------------------------------------
+
+<Type> = %Ident ;
+
+$LIST (<Type>)
+
+	$LIST (<Type>) = SXML_T ($ptext ("%Ident"));
+
+*******************************************************************************
+
+<LocalDecls> = ;
+
+$LIST (<LocalDecls>)
+
+	$LIST (<LocalDecls>) = SXML_T ("<var></var>");
+
+*------------------------------------------------------------------------------
+
+<LocalDecls> = "var" <VarDeclList> ";" ; 
+
+$LIST (<LocalDecls>)
+
+	$LIST (<LocalDecls>) = SXML_TLT (
+		"<var>",
+		$LIST (<VarDeclList>),
+		"</var>");
+
+*******************************************************************************
+
+<Equations> = "let" <EquationList> "tel" ;
+
+$LIST (<Equations>)
+
+	$LIST (<Equations>) = SXML_TLT (
+		"<defs>",
+		$LIST (<EquationList>),			
+		"</defs>");
+
+*******************************************************************************
+
+<EquationList> = <Equation> ;
+
+$LIST (<EquationList>)
+
+	$LIST (<EquationList>) = SXML_L ($LIST (<Equation>));
+
+*------------------------------------------------------------------------------
+
+<EquationList> = <EquationList> <Equation> ;
+
+$LIST (<EquationList>)
+
+	$LIST (<EquationList>) = SXML_LL (
+		$LIST (<EquationList>'),
+		$LIST (<Equation>));
+
+*******************************************************************************
+
+<Equation> = <LeftPart> "=" <Expression> ";" ;
+
+$LIST (<Equation>)
+
+	$LIST (<Equation>) = SXML_TLLT (
+		"<equation>",
+		$LIST (<LeftPart>),
+		$LIST (<Expression>),
+		"</equation>");
+
+*------------------------------------------------------------------------------
+
+<Equation> = "assert" <AssertExpression> ";" ;
+
+$LIST (<Equation>)
+
+	$LIST (<Equation>) = SXML_L ($LIST (<AssertExpression>));
+
+*******************************************************************************
+
+<LeftPart> = <LeftIdentifier> ;
+
+$LIST (<LeftPart>)
+
+	$LIST (<LeftPart>) = SXML_TLT (
+		"<single>",
+		$LIST (<LeftIdentifier>),	
+		"</single>");
+
+*------------------------------------------------------------------------------
+
+<LeftPart> = "(" <LeftIdentifierList> ")" ;
+
+$LIST (<LeftPart>)
+
+	$LIST (<LeftPart>) = SXML_TLT (
+		"<multiple>",
+		$LIST (<LeftIdentifierList>),	
+		"</multiple>");
+
+*******************************************************************************
+
+<LeftIdentifier> = %Ident ;
+
+$LIST (<LeftIdentifier>)
+
+	$LIST (<LeftIdentifier>) = SXML_TTT (
+		"<name>",
+		$ptext ("%Ident"),
+		"</name>");
+
+*******************************************************************************
+
+<LeftIdentifierList> = <LeftIdentifier> ;
+
+$LIST (<LeftIdentifierList>)
+
+	$LIST (<LeftIdentifierList>) = SXML_L ($LIST (<LeftIdentifier>));
+
+*------------------------------------------------------------------------------
+
+<LeftIdentifierList> = <LeftIdentifierList> "," <LeftIdentifier> ;
+
+$LIST (<LeftIdentifierList>)
+
+	$LIST (<LeftIdentifierList>) = SXML_LL (
+		$LIST (<LeftIdentifierList>'),
+		$LIST (<LeftIdentifier>));
+
+*******************************************************************************
+
+<AssertExpression> = <Expression> ;
+
+$LIST (<AssertExpression>)
+
+	$LIST (<AssertExpression>) = SXML_TLT (
+		"<assert>",
+		$LIST (<Expression>),
+		"</assert>");
+
+*------------------------------------------------------------------------------
+
+<AssertExpression> = "#" "(" <ExpressionList> ")" ;
+
+$LIST (<AssertExpression>)
+
+	$LIST (<AssertExpression>) = SXML_TLT (
+		"<exclusive>",
+		$LIST (<ExpressionList>),
+		"</exclusive>");
+
+*******************************************************************************
+
+<ExpressionList> = <Expression> ;
+
+$LIST (<ExpressionList>)
+
+	$LIST (<ExpressionList>) = SXML_L ($LIST (<Expression>));
+
+*------------------------------------------------------------------------------
+
+<ExpressionList> = <ExpressionList> "," <Expression> ;
+
+$LIST (<ExpressionList>)
+
+	$LIST (<ExpressionList>) = SXML_LL (
+		$LIST (<ExpressionList>'),
+		$LIST (<Expression>));
+
+*******************************************************************************
+
+<Expression> = <RightIdentifier> ;
+
+$LIST (<Expression>)
+
+	$LIST (<Expression>) = SXML_TLT (
+		"<exp kind=\"id\">",
+		$LIST (<RightIdentifier>),
+		"</exp>");
+
+*------------------------------------------------------------------------------
+
+<Expression> = <Constant> ;
+
+$LIST (<Expression>)
+
+	$LIST (<Expression>) = SXML_L ($LIST (<Constant>));
+
+*------------------------------------------------------------------------------
+
+<Expression> = "(" <ExpressionList> ")" ;
+
+$LIST (<Expression>)
+
+	$LIST (<Expression>) = SXML_TLT (
+		"<exp kind=\"tuple\">",
+		$LIST (<ExpressionList>),
+		"</exp>");
+
+*------------------------------------------------------------------------------
+
+<Expression> = %Ident "(" ")" ;
+
+$LIST (<Expression>)
+
+	$LIST (<Expression>) = SXML_TTT (
+		"<exp kind=\"call\"><name>",
+		$ptext ("%Ident"),
+		"</name></exp>");
+
+*------------------------------------------------------------------------------
+
+<Expression> = %Ident "(" <ExpressionList> ")" ;
+
+$LIST (<Expression>)
+
+	$LIST (<Expression>) = SXML_TTTLT (
+		"<exp kind=\"call\"><name>",
+		$ptext ("%Ident"),
+		"</name>",
+		$LIST (<ExpressionList>),
+		"</exp>");
+
+*------------------------------------------------------------------------------
+
+<Expression> = <Expression> "." %Ident ;
+
+$LIST (<Expression>)
+
+	$LIST (<Expression>) = SXML_TTTLT (
+		"<exp kind=\"field\"><name>",
+		$ptext ("%Ident"),
+		"</name>",
+		$LIST (<Expression>'),
+		"</exp>");
+
+*------------------------------------------------------------------------------
+
+<Expression> = "not" <Expression> ;
+
+$LIST (<Expression>)
+
+	$LIST (<Expression>) = SXML_TLT (
+		"<exp kind=\"not\">",
+		$LIST (<Expression>'),
+		"</exp>");
+
+*------------------------------------------------------------------------------
+
+<Expression> = "-" <Expression> ;
+
+$LIST (<Expression>)
+
+	$LIST (<Expression>) = SXML_TLT (
+		"<exp kind=\"uminus\">",
+		$LIST (<Expression>'),
+		"</exp>");
+
+*------------------------------------------------------------------------------
+
+<Expression> = "pre" <Expression> ;
+
+$LIST (<Expression>)
+
+	$LIST (<Expression>) = SXML_TLT (
+		"<exp kind=\"pre\">",
+		$LIST (<Expression>'),
+		"</exp>");
+
+*------------------------------------------------------------------------------
+
+<Expression> = "current" <Expression> ;
+
+$LIST (<Expression>)
+
+	$LIST (<Expression>) = SXML_TLT (
+		"<exp kind=\"current\">",
+		$LIST (<Expression>'),
+		"</exp>");
+
+*------------------------------------------------------------------------------
+
+<Expression> = <Expression> "or" <Expression> ;
+
+$LIST (<Expression>)
+
+	$LIST (<Expression>) = SXML_TLLT (
+		"<exp kind=\"or\">",
+		$LIST (<Expression>'),
+		$LIST (<Expression>''),
+		"</exp>");
+
+*------------------------------------------------------------------------------
+
+<Expression> = <Expression> "and" <Expression> ;
+
+$LIST (<Expression>)
+
+	$LIST (<Expression>) = SXML_TLLT (
+		"<exp kind=\"and\">",
+		$LIST (<Expression>'),
+		$LIST (<Expression>''),
+		"</exp>");
+
+*------------------------------------------------------------------------------
+
+<Expression> = <Expression> "xor" <Expression> ;
+
+$LIST (<Expression>)
+
+	$LIST (<Expression>)= SXML_TLLT (
+		"<exp kind=\"xor\">",
+		$LIST (<Expression>'),
+		$LIST (<Expression>''),
+		"</exp>");
+
+*------------------------------------------------------------------------------
+
+<Expression> = <Expression> "=>" <Expression> ;
+
+$LIST (<Expression>)
+
+	$LIST (<Expression>) = SXML_TLLT (
+		"<exp kind=\"implies\">",
+		$LIST (<Expression>'),
+		$LIST (<Expression>''),
+		"</exp>");
+
+*------------------------------------------------------------------------------
+
+<Expression> = <Expression> "+" <Expression> ;
+
+$LIST (<Expression>)
+
+	$LIST (<Expression>) = SXML_TLLT (
+		"<exp kind=\"plus\">",
+		$LIST (<Expression>'),
+		$LIST (<Expression>''),
+		"</exp>");
+
+*------------------------------------------------------------------------------
+
+<Expression> = <Expression> "-" <Expression> ;
+
+$LIST (<Expression>)
+
+	$LIST (<Expression>) = SXML_TLLT (
+		"<exp kind=\"minus\">",
+		$LIST (<Expression>'),
+		$LIST (<Expression>''),
+		"</exp>");
+
+*------------------------------------------------------------------------------
+
+<Expression> = <Expression> "*" <Expression> ;
+
+$LIST (<Expression>)
+
+	$LIST (<Expression>) = SXML_TLLT (
+		"<exp kind=\"mult\">",
+		$LIST (<Expression>'),
+		$LIST (<Expression>''),
+		"</exp>");
+
+*------------------------------------------------------------------------------
+
+<Expression> = <Expression> "/" <Expression> ;
+
+$LIST (<Expression>)
+
+	$LIST (<Expression>) = SXML_TLLT (
+		"<exp kind=\"slash\">",
+		$LIST (<Expression>'),
+		$LIST (<Expression>''),
+		"</exp>");
+
+*------------------------------------------------------------------------------
+
+<Expression> = <Expression> "%" <Expression> ;
+
+$LIST (<Expression>)
+
+	$LIST (<Expression>) = SXML_TLLT (
+		"<exp kind=\"percent\">",
+		$LIST (<Expression>'),
+		$LIST (<Expression>''),
+		"</exp>");
+
+*------------------------------------------------------------------------------
+
+<Expression> = <Expression> "div" <Expression> ;
+
+$LIST (<Expression>)
+
+	$LIST (<Expression>) = SXML_TLLT (
+		"<exp kind=\"div\">",
+		$LIST (<Expression>'),
+		$LIST (<Expression>''),
+		"</exp>");
+
+*------------------------------------------------------------------------------
+
+<Expression> = <Expression> "mod" <Expression> ;
+
+$LIST (<Expression>)
+
+	$LIST (<Expression>) = SXML_TLLT (
+		"<exp kind=\"mod\">",
+		$LIST (<Expression>'),
+		$LIST (<Expression>''),
+		"</exp>");
+
+*------------------------------------------------------------------------------
+
+<Expression> = <Expression> "=" <Expression> ;
+
+$LIST (<Expression>)
+
+	$LIST (<Expression>) = SXML_TLLT (
+		"<exp kind=\"eq\">",
+		$LIST (<Expression>'),
+		$LIST (<Expression>''),
+		"</exp>");
+
+*------------------------------------------------------------------------------
+
+<Expression> = <Expression> "<>" <Expression> ;
+
+$LIST (<Expression>)
+
+	$LIST (<Expression>) = SXML_TLLT (
+		"<exp kind=\"ne\">",
+		$LIST (<Expression>'),
+		$LIST (<Expression>''),
+		"</exp>");
+
+*------------------------------------------------------------------------------
+
+<Expression> = <Expression> "<" <Expression> ; 
+
+$LIST (<Expression>)
+
+	$LIST (<Expression>) = SXML_TLLT (
+		"<exp kind=\"lt\">",
+		$LIST (<Expression>'),
+		$LIST (<Expression>''),
+		"</exp>");
+
+*------------------------------------------------------------------------------
+
+<Expression> = <Expression> "<=" <Expression> ;
+
+$LIST (<Expression>)
+
+	$LIST (<Expression>) = SXML_TLLT (
+		"<exp kind=\"le\">",
+		$LIST (<Expression>'),
+		$LIST (<Expression>''),
+		"</exp>");
+
+*------------------------------------------------------------------------------
+
+<Expression> = <Expression> ">=" <Expression> ;
+
+$LIST (<Expression>)
+
+	$LIST (<Expression>) = SXML_TLLT (
+		"<exp kind=\"ge\">",
+		$LIST (<Expression>'),
+		$LIST (<Expression>''),
+		"</exp>");
+
+*------------------------------------------------------------------------------
+
+<Expression> = <Expression> ">" <Expression> ;
+
+$LIST (<Expression>)
+
+	$LIST (<Expression>) = SXML_TLLT (
+		"<exp kind=\"gt\">",
+		$LIST (<Expression>'),
+		$LIST (<Expression>''),
+		"</exp>");
+
+*------------------------------------------------------------------------------
+
+<Expression> = <Expression> "->" <Expression> ;
+
+$LIST (<Expression>)
+
+	$LIST (<Expression>) = SXML_TLLT (
+		"<exp kind=\"fby\">",
+		$LIST (<Expression>'),
+		$LIST (<Expression>''),
+		"</exp>");
+
+*------------------------------------------------------------------------------
+
+<Expression> = <Expression> "when" <Expression> ;
+
+$LIST (<Expression>)
+
+	$LIST (<Expression>) = SXML_TLLT (
+		"<exp kind=\"when\">",
+		$LIST (<Expression>'),
+		$LIST (<Expression>''),
+		"</exp>");
+
+*------------------------------------------------------------------------------
+
+<Expression> = "if" <Expression> "then" <Expression> "else" <Expression> ;
+
+$LIST (<Expression>)
+
+	$LIST (<Expression>) = SXML_TLLLT (
+		"<exp kind=\"if\">",
+		$LIST (<Expression>'),
+		$LIST (<Expression>''),
+		$LIST (<Expression>'''),
+		"</exp>");
+
+*******************************************************************************
+
+<RightIdentifier> = %Ident ;
+
+$LIST (<RightIdentifier>)
+
+	$LIST (<RightIdentifier>) = SXML_T ($ptext ("%Ident"));
+
+*******************************************************************************
+
+<Constant> = "true" ;
+
+$LIST (<Constant>)
+
+	$LIST (<Constant>) = SXML_T ("<exp kind=\"bool\">true</exp>");
+
+*------------------------------------------------------------------------------
+
+<Constant> = "false" ;
+
+$LIST (<Constant>)
+
+	$LIST (<Constant>) = SXML_T ("<exp kind=\"bool\">false</exp>");
+
+*------------------------------------------------------------------------------
+
+<Constant> = %Integer ;
+
+$LIST (<Constant>)
+
+	$LIST (<Constant>) = SXML_TTT (
+		"<exp kind=\"int\">",
+		$ptext ("%Integer"),
+		"</exp>");
+
+*------------------------------------------------------------------------------
+
+<Constant> = %Real ;
+
+$LIST (<Constant>)
+
+	$LIST (<Constant>) = SXML_TTT (
+		"<exp kind=\"real\">",
+		$ptext ("%Real"),
+		"</exp>");
+
+*------------------------------------------------------------------------------
+
+<Constant> = %Ident "{" <ParameterList> "}" ;
+
+$LIST (<Constant>)
+
+	$LIST (<Constant>) = SXML_TTTLT (
+		"<exp kind=\"struct\"><name>",
+		$ptext ("%Ident"),
+		"</name>",
+		$LIST (<ParameterList>),
+		"</exp>");
+
+*******************************************************************************
+
+<ParameterList> = <Parameter> ;
+
+$LIST (<ParameterList>)
+
+	$LIST (<ParameterList>) = SXML_L ($LIST (<Parameter>));
+
+*------------------------------------------------------------------------------
+
+<ParameterList> = <ParameterList> ";" <Parameter> ;
+
+$LIST (<ParameterList>)
+
+	$LIST (<ParameterList>) = SXML_LL (
+		$LIST (<ParameterList>'),
+		$LIST (<Parameter>));
+
+*******************************************************************************
+
+<Parameter> = %Ident "=" <Expression> ;
+
+$LIST (<Parameter>)
+
+	$LIST (<Parameter>) = SXML_TTTLT (
+		"<parameter><name>",
+		$ptext ("%Ident"),
+		"</name>",
+		$LIST (<Expression>),
+		"</parameter>");
+
+*******************************************************************************
+

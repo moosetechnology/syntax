@@ -1,0 +1,289 @@
+/* ********************************************************
+   *							  *
+   *							  *
+   * Copyright (c) 1987 by Institut National de Recherche *
+   *                    en Informatique et en Automatique *
+   *							  *
+   *							  *
+   ******************************************************** */
+
+
+
+
+/* ********************************************************
+   *							  *
+   *  Produit de l'equipe Langages et Traducteurs.  (phd) *
+   *							  *
+   ******************************************************** */
+
+
+
+
+
+/* Manipulation de tableaux de bits pour SYNTAX */
+
+
+/************************************************************************/
+/* Historique des modifications, en ordre chronologique inverse:	*/
+/************************************************************************/
+/* 23-09-96 15:56 (phd&pb):	Bug detecte sur l'alpha pour les 64 bits*/
+/*				les "constantes" doivent etre typees	*/
+/************************************************************************/
+/* 30-05-90 14:12 (pb):		Bug dans "sxba_scan":			*/
+/*				(FIRSTBIT - 1) [] deplait au compilo hp */
+/************************************************************************/
+/* 29-03-90 15:45 (phd&pb):	Remplacement de (-1) par (~0)		*/
+/************************************************************************/
+/* 30-05-88 13:52 (pb):		Bug dans "sxba_scan"			*/
+/************************************************************************/
+/* 28-12-87 17:18 (phd):	Documentation				*/
+/************************************************************************/
+/* 23-12-87 11:33 (phd):	Separation de "sxba.h"			*/
+/************************************************************************/
+/* 22-12-87 11:07 (phd):	Utilisation de SXBA_ELT			*/
+/************************************************************************/
+/* 21-12-87 14:58 (phd):	Suppression de la limitation a des	*/
+/*				puissances de 2 pour SXBITS_PER_LONG	*/
+/************************************************************************/
+/* 21-12-87 11:02 (phd):	Extension				*/
+/************************************************************************/
+/* 18-12-87 14:49 (phd):	Creation				*/
+/************************************************************************/
+
+#ifndef lint
+char	what_sxbitsarray [] = "@(#)sxbitsarray.c\t- SYNTAX [unix] - Lun 23 Sep 1996 15:56:30";
+#endif
+
+
+#include "sxunix.h"
+#include "sxba.h"
+
+
+SXBA	sxba_calloc (bits_number)
+    int		bits_number;
+/*
+ * "sxba_calloc" allocates a memory zone suitable for holding
+ * "bits_number" bits, which are all initialized to zero.  It returns
+ * a pointer to that zone.
+ */
+{
+    register SXBA	bits_array;
+
+    bits_array = (SXBA) sxcalloc (NBLONGS (bits_number) + 1, sizeof (SXBA_ELT));
+    BASIZE (bits_array) = bits_number;
+    return bits_array;
+}
+
+
+
+SXBA	sxba_resize (bits_array, new_bits_number)
+    SXBA	bits_array;
+    int		new_bits_number;
+/*
+ * "sxba_resize" reallocates the existing "bits_array", so that it may
+ * afterwards hold "new_bits_number" bits.  If the new number of bits
+ * is greater than the old one, the bits that become allocated are
+ * reset.  The bits belonging to both the old and the new arrays are
+ * not changed.
+ */
+{
+    register int	old_bits_number = BASIZE (bits_array);
+    register int	old_slices_number = NBLONGS (old_bits_number);
+    register int	new_slices_number = NBLONGS (new_bits_number);
+
+    BASIZE (bits_array) = new_bits_number;
+
+    if (new_slices_number != old_slices_number) {
+	bits_array = (SXBA) sxrealloc (bits_array, new_slices_number + 1, sizeof (SXBA_ELT));
+
+	if (new_slices_number > old_slices_number) {
+	    do {
+		bits_array [++old_slices_number] = ((SXBA_ELT)0);
+	    } while (old_slices_number < new_slices_number);
+
+	    return bits_array;
+	}
+    }
+    else if (old_bits_number <= new_bits_number) {
+	return bits_array;
+    }
+
+
+/* Must pad last slice with zeroes */
+
+    if (MOD (new_bits_number) != 0) {
+	bits_array [new_slices_number] &= ~((~((SXBA_ELT)0)) << MOD (new_bits_number));
+    }
+
+    return bits_array;
+}
+
+
+
+SXBA	sxba_empty (bits_array)
+    register SXBA	bits_array;
+/*
+ * sxba_empty resets all bits of "bits_array".
+ */
+{
+    register SXBA	bits_ptr = bits_array + NBLONGS (BASIZE (bits_array));
+
+    while (bits_ptr > bits_array) {
+	*bits_ptr-- = ((SXBA_ELT)0);
+    }
+
+    return bits_array;
+}
+
+
+
+SXBA	sxba_fill (bits_array)
+    register SXBA	bits_array;
+/*
+ * sxba_fill sets all bits of "bits_array".
+ */
+{
+    register SXBA	bits_ptr;
+    register int	size = BASIZE (bits_array);
+
+    bits_ptr = bits_array + NBLONGS (size);
+
+    if ((size = MOD (size)) != 0) {
+	*bits_ptr-- = ~((~((SXBA_ELT)0)) << size);
+    }
+
+    while (bits_ptr > bits_array) {
+	*bits_ptr-- = ~((~((SXBA_ELT)0)) << 1 << (SXBITS_PER_LONG - 1));
+    }
+
+    return bits_array;
+}
+
+
+
+SXBA	sxba_0_bit (bits_array, bit)
+    SXBA	bits_array;
+    int		bit;
+/*
+ * "sxba_0_bit" resets the bit numbered "bit" in "bits_array".
+ */
+{
+    bits_array [DIV (bit) + 1] &= ~(((SXBA_ELT)1) << MOD (bit));
+    return bits_array;
+}
+
+
+
+SXBA	sxba_1_bit (bits_array, bit)
+    SXBA	bits_array;
+    int		bit;
+/*
+ * "sxba_1_bit" sets the bit numbered "bit" in "bits_array".
+ */
+{
+    bits_array [DIV (bit) + 1] |= (((SXBA_ELT)1) << MOD (bit));
+    return bits_array;
+}
+
+
+
+BOOLEAN		sxba_bit_is_set (bits_array, bit)
+    SXBA	bits_array;
+    int		bit;
+/*
+ * "sxba_bit_is_set" returns "TRUE" if the bit numbered "bit" is set
+ * in "bits_array", "FALSE" otherwise.
+ */
+{
+    return (bits_array [DIV (bit) + 1] & (((SXBA_ELT)1) << MOD (bit))) != 0;
+}
+
+
+
+int	sxba_cardinal (bits_array)
+    register SXBA	bits_array;
+/*
+ * "sxba_cardinal" returns the number of bits which are set in
+ * "bits_array".
+ */
+{
+    register SXBA_ELT	elt;
+    register int	result = 0;
+    register SXBA	bits_ptr = bits_array + NBLONGS (BASIZE (bits_array));
+
+    while (bits_ptr > bits_array) {
+	if ((elt = *bits_ptr--) != 0) {
+	    do {
+		static int	NBBITS [256] = {0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4, 1, 2, 2, 3, 2, 3, 3, 4, 2
+		     , 3, 3, 4, 3, 4, 4, 5, 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4,
+		     4, 5, 4, 5, 5, 6, 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5
+		     , 4, 5, 5, 6, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5,
+		     6, 6, 7, 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5
+		     , 6, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+		     2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7, 3, 4
+		     , 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7, 4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8};
+
+		if ((elt & 0xFFFF) == 0) {
+		    elt >>= 16;
+		}
+
+		result += NBBITS [elt & 0xFF];
+	    } while ((elt >>= 8) != 0);
+	}
+    }
+
+    return result;
+}
+
+
+
+int	sxba_scan (bits_array, from_bit)
+    SXBA	bits_array;
+    int		from_bit;
+/*
+ * "sxba_scan" returns the index of the first non-null bit following
+ * "from_bit", or -1 if the remainder of the array is all zeroes.  If
+ * "from_bit" is negative, the scan starts at the first bit.
+ */
+{
+    register int	bit = from_bit < 0 ? 0 : (from_bit + 1);
+    register SXBA	bits_ptr;
+    register SXBA_ELT	elt;
+    static int	FIRSTBIT [] = {0, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0};
+
+    if (bit >= BASIZE (bits_array))
+	return -1;
+
+    bits_ptr = bits_array + NBLONGS (bit + 1);
+
+    if ((elt = *bits_ptr & ((~((SXBA_ELT)0)) << MOD (bit))) == 0) {
+	register SXBA	last_bits_ptr = bits_array + NBLONGS (BASIZE (bits_array));
+
+	do {
+	    if (bits_ptr == last_bits_ptr) {
+		return -1;
+	    }
+	} while (*++bits_ptr == 0);
+
+	elt = *bits_ptr;
+    }
+
+    bit = MUL (bits_ptr - bits_array - 1);
+
+    while ((elt & 0xFFFF) == 0) {
+	elt >>= 16;
+	bit += 16;
+    }
+
+    if ((elt & 0xFF) == 0) {
+	elt >>= 8;
+	bit += 8;
+    }
+
+    if ((elt & 0xF) == 0) {
+	elt >>= 4;
+	bit += 4;
+    }
+
+    return bit + FIRSTBIT [elt & 0xF];
+}

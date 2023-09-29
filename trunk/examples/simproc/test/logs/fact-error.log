@@ -1,0 +1,12 @@
+simproc: syntax analysis of test/fact-error.sim
+
+	    proc factorial (val I ; var F )
+				  ^
+[test/fact-error:3] Warning:	";" is replaced by ",".
+
+	    end;
+	    ^
+[test/fact-error:11] Warning:	"fi" is inserted before "end".
+simproc: semantic check of test/fact-error.sim
+Error line 7 : F is not a procedure
+simproc: semantic error

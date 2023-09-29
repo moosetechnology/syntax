@@ -1,0 +1,16 @@
+<wcw-new-start-symbol> = <S> &10000 ;
+
+*
+* This is a LIG for the language {wcw | w in {a, b}* }
+*
+
+* No error recovery (by source text modification) since stack testing
+* is performed after source text reading (see wcw2.lig)
+
+<S> @10001		= "a" <S>&10002		;
+<S> @10001		= "b" <S>&10003		;
+<S> @10000		= <T>&10001		;
+*
+<T> @10002	= <T>&10001 "a"		;
+<T> @10003	= <T>&10001 "b"		;
+<T> @10004		= "c"			;

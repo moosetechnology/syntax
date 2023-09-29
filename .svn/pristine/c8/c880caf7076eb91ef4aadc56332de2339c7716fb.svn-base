@@ -1,0 +1,95 @@
+# To avoid problems with other shells:
+SHELL=/bin/sh
+
+SX=$(sx)
+LNorCP=ln -s
+#LNorCP=${SHELL} $(SX)/etc/bin/lien-relatif.sh
+SXLIB=$(SX)/lib
+SXINCL=$(SX)/incl
+ETC=$(SX)/etc
+ETCLIB=$(ETC)/lib
+ETCINCL=$(ETC)/incl
+
+LFG=$(SX)/lfg
+SRC=$(LFG)/src
+LIB=$(LFG)/lib
+INCL=$(LFG)/incl
+
+BIBS= $(ETCLIB)/libsxetc$(sxV).a $(SXLIB)/libsx$(sxV).a
+COMPILER=cc
+CC=cd $(LFG); umask 7; exec $(COMPILER) -I$(SXINCL) -I$(ETCINCL) -I$(INCL) -DSXVERSION=\"$(sxV)\" $(CFLAGS) -g -c
+
+
+$(LFG)/everything .PRECIOUS:	$(SX)/bin/lfg.out		\
+				$(SX)/bin/lfg_lex.out
+
+$(SX)/bin/lfg.out:	$(LFG)/lfg.out
+	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
+
+$(SX)/bin/lfg_lex.out:	$(LFG)/lfg_lex.out
+	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
+
+
+#####################################################################################################################
+NEEDS=\
+	$(LIB)/lfg_main.o		\
+	$(LIB)/lfg_lex_scanact.o	\
+	$(LIB)/lfg_smp.o		\
+	$(LIB)/lfg_t.o
+
+$(LFG)/lfg.out:	$(NEEDS)	$(BIBS)
+	@echo '	$(COMPILER) -o $@'; rm -f $@; ${SHELL} -c '$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(BIBS) || (rm $@;exit 1)'
+
+$(LIB)/lfg_smp.o:	$(SXINCL)/sxunix.h 	\
+			$(SRC)/lfg_smp.c
+	$(CC) $(SRC)/lfg_smp.c -o $(LIB)/lfg_smp.o
+#		-DEBUG
+
+$(LIB)/lfg_main.o:	$(SXINCL)/sxunix.h 	\
+			$(ETCINCL)/release.h 	\
+			$(SRC)/lfg_main.c
+	$(CC) $(SRC)/lfg_main.c -o $(LIB)/lfg_main.o
+
+$(LIB)/lfg_t.o:		$(SXINCL)/sxunix.h 	\
+			$(SRC)/lfg_t.c
+	$(CC) $(SRC)/lfg_t.c -o $(LIB)/lfg_t.o	\
+		-Dsxtables=lfg_tables	\
+		-Dsempass=lfg_smp	\
+		-DSCANACT=lfg_lex_scanact
+
+#####################################################################################################################
+
+NEEDS1=\
+	$(LIB)/lfg_lex_main.o		\
+	$(LIB)/lfg_lex_scanact.o	\
+	$(LIB)/lfg_lex_smp.o		\
+	$(LIB)/lfg_lex_t.o
+
+#	$(LIB)/sxdico_process.d.o	\
+
+$(LFG)/lfg_lex.out:	$(NEEDS1)	$(BIBS)
+	@echo '	$(COMPILER) -o $@'; rm -f $@; ${SHELL} -c '$(COMPILER) -o $@ $(NEEDS1) $(CFLAGS) $(LDFLAGS) $(BIBS) || (rm $@;exit 1)'
+
+$(LIB)/lfg_lex_main.o:	$(SXINCL)/sxunix.h 	\
+			$(ETCINCL)/release.h 	\
+			$(SRC)/lfg_lex_main.c
+	$(CC) $(SRC)/lfg_lex_main.c -o $(LIB)/lfg_lex_main.o
+
+$(LIB)/lfg_lex_scanact.o:		$(SXINCL)/sxunix.h 	\
+			$(SRC)/lfg_lex_scanact.c
+	$(CC) $(SRC)/lfg_lex_scanact.c -o $(LIB)/lfg_lex_scanact.o
+
+$(LIB)/lfg_lex_smp.o:	$(SXINCL)/sxunix.h 	\
+			$(SRC)/lfg_lex_smp.c
+	$(CC) $(SRC)/lfg_lex_smp.c -o $(LIB)/lfg_lex_smp.o
+#		-DEBUG
+
+$(LIB)/lfg_lex_t.o:	$(SXINCL)/sxunix.h 	\
+			$(SRC)/lfg_lex_t.c
+	$(CC) $(SRC)/lfg_lex_t.c -o $(LIB)/lfg_lex_t.o	\
+		-Dsxtables=lfg_lex_tables	\
+		-Dsempass=lfg_lex_smp		\
+		-DSCANACT=lfg_lex_scanact
+
+lint:
+	lint -I$(SXINCL) -I$(ETCINCL) -I$(INCL) src/*.c $(LINTFLAGS)

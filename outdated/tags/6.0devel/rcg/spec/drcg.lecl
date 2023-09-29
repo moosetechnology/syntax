@@ -1,0 +1,91 @@
+Classes
+
+	Any		= #000..#377 ;
+-- Lettres majuscules accentuées
+	FUPPER		= UPPER + "ÀÂÉÈÊËÎÏÔÙÛÜÇ" ;
+-- Lettres minuscules accentuées
+	FLOWER		= LOWER + "àâéèêëîïôùûüç" ;
+-- Lettres accentuées
+	FLETTER		= FUPPER + FLOWER ;
+	FLETTER		= FUPPER + FLOWER ;
+
+Abbreviations
+
+	comment_body	= "%"&True {^EOL} EOL |
+			  "/" "*"&True {Any} "*" "/"&True ;
+
+	string		= -QUOTE&True {^QUOTE | -"\\"&True Any}+ -QUOTE ;
+
+	arguments	= -( "("&Is_Reset(0)
+				{ comment_body |
+				  string |
+				  "\\"&True Any |
+				  Any
+				}
+			   ")"&True @Set(0) ) ; -- on attend definite
+
+	predicate	= (-"<"&Is_Reset(1) LETTER {"_" | LETTER | DIGIT} -">" |
+			   LETTER&Is_Reset(1) -- Pas ds definite
+			  {"_"&True | LETTER&True | DIGIT&True}) @Reset(0) ; -- on attend arguments
+	
+
+Tokens
+
+	Comments	= -{SP | HT | VT | FF | EOL | comment_body | arguments}+ ;
+			Priority Shift>Reduce ;
+			Context All But Comments ;
+
+	%internal_predicate
+			= predicate ;
+-- Les prédicats prédéfinis ne sont pas reconnus par cette expression régulière
+-- «mod», «is» ne sont pas reconnus par là
+-- Un prédicat interne peut s'appeler streq, il est sensible à la casse
+			Not Keyword All ;
+
+-- Les prédicats externes sont précédés par "&"
+-- Les prédicats prédéfinis sont des prédicats externes
+	%external_predicate
+			= -"&"&Is_Reset(1) predicate ;
+-- Les prédicats prédéfinis sont reconnus par cette expression régulière
+			Keyword "streq", "streqlen", "strlen", "first", "last", "false", "cut" ;
+			@1 ;
+-- @1 : les prédicats prédéfinis sont insensibles à la casse.
+--      Les autres, internes ou externes y sont sensibles
+
+
+	"("		= -"("&Is_Set(0) @Incr(1) ; -- Les "(" ds definite
+	")"		= -")"&Is_Set(0) @Decr(1) ; -- Les ")" ds definite
+	"-->"		= -("-"&Is_Reset(1) "-" ">" | "="&Is_Reset(1)) @Reset(1) ; -- prudence
+	"."		= -".;" @Reset(1) ; -- prudence
+	"!"		= -"-!" ;
+
+	"{"		= -"{" @Set(0) @Set(1) ; -- on entre ds «definite-part»
+	"}"		= -"}" @Reset(0) @Reset(1) ; -- prudence
+
+	"<"		= -"<"&Is_Set(1) ;
+	"=<"		= -"="&Is_Set(1) -"<" ;
+	">"		= -">"&Is_Set(1) ;
+	">="		= -">"&Is_Set(1) -"=" ;
+
+	"+"		= -"+"&Is_Set(1) ;
+	"-"		= -"-"&Is_Set(1) ;
+	"*"		= -"*"&Is_Set(1) ;
+	"/"		= -"/"&Is_Set(1) ;
+
+	%variable	= (FUPPER&Is_Set(1) | "_"&Is_Set(1)) {"_"&True | FLETTER&True | DIGIT&True} ;
+			-- Priority Shift>Reduce ;
+
+	%atom		= FLOWER&Is_Set(1) {"_"&True | FLETTER&True | DIGIT&True} |
+			  -"\\"&True Any |
+			  string;
+			-- Priority Shift>Reduce ;
+			Keyword "mod", "is";
+
+	%integer_number	= ({DIGIT}+ | DIGIT [DIGIT] "'" {LETTER | DIGIT}) ;
+			Priority Shift>Reduce ;
+
+	%floating_point_number
+			= {DIGIT}+ "." {DIGIT}+ ["Ee" ["-"] {DIGIT}+] ;
+			Priority Shift>Reduce ;
+
+

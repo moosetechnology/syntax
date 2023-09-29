@@ -1,0 +1,92 @@
+.\" @(#)pptdef.1	- SYNTAX [unix] - 19 Juin 1990
+.TH PPTDEF 1 "SYNTAX\[rg]"
+.SH NAME
+pptdef \- pretty printer for 
+.I tdef
+programs.
+.SH SYNOPSIS
+.B pptdef
+[ \fB\-v\fP ] [ \fB\-nv\fP ]
+[ \fB\-ll\fP \fInnn\fP ]
+[ \fB\-tabs\fP ] [ \fB-notabs\fP ]
+.if n .ti +0.7i
+[ \fB\-every\fP \fInnn\fP ] .\|.\|.
+[ \fIfilenames\fP ]
+.SH DESCRIPTION
+.I pptdef
+checks the syntax and pretty prints tdef(1) descriptions.
+.LP
+If no
+.I filenames
+argument is present, the standard input is read and the pretty printed
+program is written on the standard output.
+.LP
+For each
+.I filename
+argument the corresponding pretty printed program is written on the same
+.IR filename.
+.SH OPTIONS
+.LP
+Options may appear in any order as long as they appear
+.B before
+the
+.IR filenames .
+
+Only the
+.B last
+occurrence of a given option is taken into account.
+.br
+Default options are such that the command
+.br
+\fB     pptdef [filenames]\fP
+.br
+is equivalent to
+.br
+\fB     pptdef -v -ll 80 -tabs -every 8 [filenames]\fP
+.TP
+\fB\-v\fP, \fB\-verbose\fP
+Animate the user's screen by displaying cryptic information about what is
+going on.
+(Default)
+.TP
+\fB\-nv\fP, \fB\-noverbose\fP
+Execute silently.
+.TP
+\fB\-ll\fP \fInnn\fP, \fB-line_length\fP \fInnn\fP
+Force the maximum length of an output line to be
+.IR nnn.
+(Default
+.I nnn
+= 80).
+.TP
+\fB\-tabs\fP
+Replace sequences of spaces by tabulation characters wherever possible
+outside strings,comments and error messages.
+(Default)
+.TP
+\fB\-notabs\fP
+Do not use tabulation characters.
+.TP
+\fB\-every\fP \fInnn\fP
+Force the number of columns between two tabulation positions to be
+.IR nnn.
+(Default
+.I nnn
+= 8).
+.SH "SEE ALSO"
+tdef(1) and the
+\fB"SYNTAX REFERENCE MANUAL"\fP.
+.SH FILES
+/tmp/pptdef*	temporary output file
+.SH DIAGNOSTICS
+When the input program is (syntactically) incorrect error messages are issued
+and the output is done on a new file in the current directory.
+.br
+Exit status is 0 if everything is alright, 1 if only warnings are issued, 2
+if error messages are issued, 3 for command line syntax errors.
+.SH BUGS
+See sxppp(3).
+.\" Local Variables:
+.\" mode: nroff
+.\" version-control: yes
+.\" End:

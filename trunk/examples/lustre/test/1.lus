@@ -1,0 +1,37 @@
+const C1 = 12345 ;
+
+const C2 = 3.14;
+
+const C3 = true;
+
+type T1 = enum {A, B, C};
+
+type T2 = struct {I:int; J:bool};
+
+function F (X:int; Y:bool) returns (M:int; P:real) ;
+let
+   M = if X = 0 then 1 else 2;
+   P = if Y then 0.1 else 0.01;
+tel;
+
+node N1 (X:int) returns (Y:int);
+-- LocalDecls
+var Z:int;
+-- Equations
+let
+    assert (X <> 0);
+    Z = 678 mod X;
+    Y = Z + 1;
+tel;
+
+node N2 (X1:int) returns (X2, X3:int) ;
+var X4:bool ;
+    X5, X6:int ;
+let
+   (X2, X3) = (0 -> pre X1 + 1, if X4 then X1 else X5 + X6);
+   X4 = X1 -> true;
+   (X5, X6) = (0, 1);
+   assert (C3 and (X5 = X6) or not X4);
+   assert #(X1, X4) ;
+tel;
+

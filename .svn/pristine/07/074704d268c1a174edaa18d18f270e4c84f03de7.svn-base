@@ -1,0 +1,5 @@
+Classes
+	ANY             = #000..#377 ;
+Tokens
+	%word           = {ANY}+ ;
+                       Priority Shift > Reduce;

@@ -1,0 +1,7 @@
+S(\a\b)		--> &False() . % sert uniquement a definir l'ensemble T
+S(X Y)		--> A(X,Y) .
+
+A(X,Y)		--> B(Y,X) .
+
+B(Y,X)		--> !A(X,Y) .
+B(,)		--> .

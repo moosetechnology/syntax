@@ -1,0 +1,161 @@
+#! /bin/sh
+
+# Hubert Garavel - August 2023
+
+COMMAND=`basename "$0"`
+
+SPLIT_OPTION=0
+VALGRIND_OPTION=0
+VALGRIND="valgrind --quiet --track-origins=yes"
+
+while true
+do
+	case "$1" in
+		-split )
+			# do not concatenate continuation lines
+			SPLIT_OPTION=1
+			shift
+			;;
+		-valgrind )
+			# only run valgrind
+			VALGRIND_OPTION=1
+			shift
+			;;
+		-* )
+			echo "$COMMAND: unknown option $1"
+			exit 1
+			;;
+		* )
+			break
+	esac
+done
+
+#------------------------------------------------------------------------------
+
+if [ $SPLIT_OPTION = 0 ]
+then
+	SCRIPT=`mktemp`
+	cat > $SCRIPT << \EOF
+# display comment lines
+/^C/ { printf "\n%s", $0 ; next }
+
+# non-continuation line with a zero in column 6: remove the zero
+/^[ 0-9][ 0-9][ 0-9][ 0-9][ 0-9]0/ { printf "\n      %s", substr ($0, 7) ; next }
+
+# continuation line without '0' nor ' ' in column 6
+/^[ ][ ][ ][ ][ ][^0 ]/ { printf " %s", substr ($0, 7) ; next }
+
+# non-continuation line without a zero in column 6
+{ printf "\n%s", $0 }
+
+END {
+	printf "\n"
+}
+EOF
+fi
+
+#------------------------------------------------------------------------------
+
+FILTER() {
+	# remove columns 72-80 of all lines not starting with a "C"
+	awk '/^C/ { print ; next } { print substr ($0, 1, 72) }' |
+	# remove empty lines
+	grep -v '^[ ]*$' |
+	# concatenate continuation lines
+	if [ $SPLIT_OPTION = 0 ]
+	then
+		awk -f $SCRIPT -
+	else
+		cat
+	fi
+}
+
+#------------------------------------------------------------------------------
+
+echo "*** testing f77"
+
+for FILE in `ls test/misc/*.f test/nist/*.FOR`
+do
+	echo ""
+	echo "f77" "$FILE" | sed -e 's+test/++'
+
+	if [ $VALGRIND_OPTION = 1 ]
+	then
+		echo ""
+		$VALGRIND bin/f77.out $FILE
+		continue
+	fi
+
+	bin/f77.out $FILE
+	STATUS=$?
+	if [ $STATUS != 0 ]
+	then
+		echo "  exit status is $STATUS"
+	fi
+done 
+
+#------------------------------------------------------------------------------
+
+echo ""
+echo "*** testing ppf77"
+
+TMP1=`mktemp`
+TMP2=`mktemp`
+
+for FILE in `ls test/misc/*.f test/nist/*.FOR`
+do
+	echo ""
+	echo "ppf77" "$FILE" | sed -e 's+test/++'
+	cp $FILE $TMP1
+
+	if [ $VALGRIND_OPTION = 1 ]
+	then
+		echo ""
+		$VALGRIND bin/ppf77.out $TMP1
+		continue
+	fi
+
+	bin/ppf77.out < $TMP1 > $TMP2
+
+	bin/ppf77.out $TMP1
+	# ici $TMP1 a ete modifie par ppf77.out
+	STATUS=$?
+	if [ $STATUS != 0 ]
+	then
+		echo "  exit status is $STATUS"
+	fi
+
+	cmp -s $TMP1 $TMP2
+	if [ $? != 0 ]
+	then
+		echo "   pff77.out < file and pff77.out file give different results"
+	fi
+
+	# here, files $TMP1 and $TMP2 are identical
+
+	cat $TMP1 | FILTER > $TMP2
+	# here, $TMP2 is the pretty-printed output file (filtered by FILTER)
+
+	cat $FILE | FILTER > $TMP1
+	# here, $TMP1 is the input FORTRAN file (filtered by FILTER)
+
+	# to compare $TMP1 and $TMP2, one must understand the changes made
+	# by ppf77.out :
+	# - it preserves the comments
+	# - it removes fully empty lines
+	# - it removes the contents of columns 72-80 of each non-comment line
+	#   (if columns 1-71 are empty, the line is removed)
+	# - it turns identifiers from upper to lower case (e.g., ZVS -> zvs)
+	#   but preserves the case of keywords
+	# - it inserts a few spaces, e.g., WRITE(NUVI,41) -> WRITE (nuvi, 41)
+
+	diff -iw $TMP1 $TMP2 | more
+done 
+
+#------------------------------------------------------------------------------
+
+rm -f $SCRIPT $TMP1 $TMP2
+
+exit 0
+
+ 

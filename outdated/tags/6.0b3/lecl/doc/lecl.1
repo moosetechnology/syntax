@@ -1,0 +1,198 @@
+.\" @(#)lecl.1	- SYNTAX [unix] - 2 Septembre 1987
+.TH LECL 1 "SYNTAX\*R"
+.SH NAME
+lecl \- process lexical specifications.
+.SH SYNOPSIS
+.B lecl
+[ \fB\-v\fP ] [ \fB\-nv\fP ]
+[ \fB\-ot\fP ] [ \fB\-not\fP ]
+[ \fB\-sc\fP ] [ \fB\-nsc\fP ]
+.if n .ti +0.5i
+[ \fB\-tb\fP ] [ \fB\-ntb\fP ]
+[ \fB\-ob\fP ] [ \fB\-nob\fP ]
+[ \fB\-ls\fP ]
+[ \fB\-nls\fP ]
+.if n .ti +0.5i
+[ \fB\-hl\fP \fInnn\fP ]
+[ \fB\-sks\fP \fInnn\fP ]
+[ \fB\-ln\fP \fIname\fP ] .\|.\|.
+.if n .ti +0.5i
+[ \fIfilenames\fP ]
+.SH DESCRIPTION
+.I lecl
+translates the lexical specification part of a language, described for the
+\fBSYNTAX\fP\*R
+system, into a file mainly coding a deterministic finite state
+automaton which will be used by other
+.B SYNTAX
+modules.
+.LP
+Each file named
+.I filename
+contains the lexical description of a given language.
+A
+.I filename
+may be of the form
+.IR name . 
+.B lecl
+where
+.I name
+is the name of the described language.
+.LP
+If no
+.I filenames
+argument is present, the standard input is read.
+.LP
+If no argument is given,
+.I lecl
+prints a short synopsis of its usage and exits with a non null status code.
+.SH OPTIONS
+.LP
+Options may appear in any order as long as they appear
+.B before
+the
+.IR filenames .
+Only the
+.B last
+occurrence of a given option is taken into account.
+.br
+Default options are such that the command
+.br
+\fB     lecl [filenames]\fP
+.br
+is equivalent to
+.br
+\fB     lecl -v -ot -sc -ob -hl |{keywords}| -sks 037777\fP
+.br
+\fB          [filenames]\fP
+.TP
+\fB\-v\fP, \fB\-verbose\fP
+Animate the user's screen by displaying cryptic information about what is
+going on.
+(Default)
+.TP
+\fB\-nv\fP, \fB\-noverbose\fP
+Execute silently.
+.TP
+\fB\-ot\fP
+Optimise the automaton in the sense that, whenever possible, a lexical token
+is recognised without looking at the next input character.
+(Default)
+.TP
+\fB\-not\fP
+Use at least one character of look ahead for each lexical token recognition.
+.TP
+\fB\-sc\fP, \fB\-source\fP
+Produce a file named
+\fIname\fP\fB.lc.l\fP,
+containing a line numbered source listing together with
+possible error messages.
+(Default)
+.TP
+\fB\-nsc\fP, \fB\-nosource\fP
+Suppress the source listing\|; implies
+.IR \-nolist,
+.IR \-notable and
+.IR \-noobject .
+.TP
+\fB\-tb\fP, \fB\-table\fP
+Add to the listing file the
+.B symbol
+.B table
+(this is mainly a debugging option)\|; implies
+.IR \-source .
+.TP
+\fB\-ntb\fP, \fB\-notable\fP
+Suppress the
+.B symbol table
+listing.
+(Default)
+.TP
+\fB\-ob\fP, \fB\-object\fP
+Add to the listing file the
+.B generated code
+and the \fBperfect hashing function\fP\|; implies
+.IR \-source .
+(Default)
+.TP
+\fB\-nob\fP, \fB\-noobject\fP
+Suppress the
+.B generated code
+and the
+.B perfect hashing function
+listing\|.
+.TP
+\fB\-ls\fP, \fB\-list\fP
+Add to the listing file the
+\fBsymbol table\fP, the \fBfinite state automaton\fP, the \fBgenerated code\fP
+and the \fBperfect hashing function\fP\|;
+implies
+.IR \-source .
+.TP
+\fB\-nls\fP, \fB\-nolist\fP
+Suppress the \fBsymbol table\fP, the \fBfinite state automaton\fP, the
+.B generated code
+and the \fBperfect hashing function\fP\|;
+(Default)
+.TP
+\fB\-hl\fP \fInnn\fP, \fB-hash_length\fP \fInnn\fP
+Build, when relevent, a perfect hashing function whose buckets number is close to
+.IR nnn .
+The default value of
+.I nnn
+is the number of keywords in
+.IR name .
+.TP
+\fB\-sks\fP \fInnn\fP, \fB-scramble_kind_set\fP \fInnn\fP
+Try the strategies specified by
+.I nnn
+to compute a primary hash_code function (called scramble) from character
+string to integer.
+14 strategies are currently implemented and are tried one
+after the other until one succeeds.
+The strategy number
+.I n
+is tried iff no strategy less than 
+.I n
+succeeds and the bit number 
+.I n
+of
+.I nnn
+is set.
+Bits are counted from right to left starting at 1.
+The default value of
+.I nnn
+is 037777.
+.TP
+\fB\-ln\fP \fIname\fP, \fB\-language_name\fP \fIname\fP
+Force the
+.I name
+of the language to process.
+The
+.B \-ln
+option is mandatory if no
+.I filename
+is given.
+.SH FILES
+.ta \w'\fIname\fP\fB.bn.l\fP  'u
+\fIname\fP\fB.bt\fP	internal grammar form (input)
+.br
+\fIname\fP\fB.st\fP	scanner tables (output)
+.br
+\fIname\fP\fB.lc.l\fP	listing (output)
+.br
+\fB/tmp/sx*\fP	scratch files
+.SH "SEE ALSO"
+bnf(1), semact(1), semat(1), paradis(1), tabc(1), st_to_c(1), pplecl(1) and
+the
+\fB"SYNTAX REFERENCE MANUAL"\fP.
+.SH DIAGNOSTICS
+When the specification is erroneous, error and warning messages are issued
+and diagnostics are gathered in the listing (if any).
+.br
+Exit status is 0 if everything is alright, 1 if only warnings are issued, 2
+if error messages are issued, 3 for command line syntax errors.
+.\" Local Variables:
+.\" mode: nroff
+.\" version-control: yes
+.\" End:

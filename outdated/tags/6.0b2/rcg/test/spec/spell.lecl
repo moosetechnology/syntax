@@ -1,0 +1,6 @@
+tokens
+comments = {SP|NL}+;
+	context all but comments;
+%unknown_command = "$" {letter} ;
+
+"#false" = NUL&False ;

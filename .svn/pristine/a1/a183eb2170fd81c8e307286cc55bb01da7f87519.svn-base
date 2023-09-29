@@ -1,0 +1,193 @@
+#! /bin/sh
+
+# CADP (CONSTRUCTION AND ANALYSIS OF DISTRIBUTED PROCESSES)
+# http://cadp.inria.fr
+
+# arch version 1.48 -- date 2022/11/03 16:41:56 -- Hubert Garavel
+
+PATH="/bin:$PATH" ; export PATH
+
+# checking the correctness of $CADP_BITS
+
+case "$CADP_BITS" in
+	"" | 32 | 64 ) 
+		# all these values are acceptable
+		;;
+	* )
+		echo "Variable \`\`\$CADP_BITS'' should be set to 32 or 64"
+		exit 1 ;;
+esac
+
+# determining the architecture (machine type and operating system)
+
+UNAME_MACHINE=`uname -m`
+UNAME_SYSTEM=`uname -s`
+UNAME_RELEASE=`uname -r`
+
+case $UNAME_MACHINE-$UNAME_SYSTEM-$UNAME_RELEASE in
+	sun3-SunOS-4.* )
+		echo "sun3" ;;
+	sun4*-SunOS-4.* )
+		echo "sun4" ;;
+	sun4*-SunOS-5.* )
+		case "$CADP_BITS" in
+			32 )
+				echo "sun5" ;;
+			"" | 64 )
+				echo "sun64" ;;
+		esac
+		;;
+	i86pc-SunOS-5.* )
+		case "$CADP_BITS" in
+			32 )
+				echo "sol86" ;;
+			"" | 64 )
+				echo "sol64" ;;
+		esac
+		;;
+	i[3456]86-Linux-* )
+		# Processeur Intel ou AMD 32 bits / Linux
+		echo "iX86"
+		;;
+	x86_64-Linux-* )
+		# Processeur Intel EM64T ou AMD64 / Linux
+		case "$CADP_BITS" in
+			32 )
+				if [ "$1" = "-detailed" ]
+				then
+					echo "iX86-64"
+				else
+					# tests pour determiner si l'on peut
+					# executer des binaires 32 bits
+					if [ ! -f "/usr/lib32/libc.so" -a ! -f "/usr/lib32/libc.so.6" ]
+					then
+						# pas de support 32 bits
+						echo "x64"
+					elif [ -d "/usr/include/x86_64-linux-gnu" -a ! -f "/usr/include/gnu/stubs-32.h" ]
+					then
+						# pas de support GCC 32 bits
+						echo "x64"
+					else
+						# support 32 bits plausible
+						echo "iX86"
+					fi
+				fi
+				;;
+			"" | 64 )
+				if [ "$1" = "-detailed" ]
+				then
+					if [ -d "/run/WSL" ]
+					then
+						echo "x64-wsl"
+					else
+						echo "x64"
+					fi
+				else
+					echo "x64"
+				fi
+				;;
+		esac
+		;;
+	ia64-Linux-* )
+		# Processeur Intel Itanium 64 bits / Linux
+		case "$CADP_BITS" in
+			32 )
+				echo "iX86" ;;
+			"" | 64 )
+				echo "ia64" ;;
+		esac
+		;;
+	RISC-ULTRIX-* ) 
+		echo "dec5000" ;;
+	i[3456]86-CYGWIN*-* )
+	  	# Solution Cygwin (32 bits) de Cygnus
+		if [ "$1" = "-detailed" ]
+		then
+			echo "win32-cygnus"
+		else
+			echo "win32"
+		fi
+		;;
+	x86_64-CYGWIN*-* )
+	  	# Solution Cygwin (64 bits) de Cygnus
+		if [ "$1" = "-detailed" ]
+		then
+			echo "win64-cygnus"
+		else
+			case "$CADP_BITS" in
+				"" | 32 )
+					# par defaut, le cas 64 bits est, pour
+					# l'instant, assimile au cas 32 bits
+					echo "win32" ;;
+				64 )
+					# non-documente, experimental
+					echo "win64" ;;
+			esac
+
+		fi
+		;;
+	i[3456]86-MINGW32*-* )
+		# Solution MSYS de Mingw
+		if [ "$1" = "-detailed" ]
+		then
+			echo "win32-msys"
+		else
+			echo "win32"
+		fi
+		;;
+	[3456]86-Windows*-* )
+	  	# Solution KSH de MKS Toolkit
+		if [ "$1" = "-detailed" ]
+		then
+			echo "win32-mks"
+		else
+			echo "win32"
+		fi
+		;;
+	Power?Macintosh-Darwin-[56789].* )
+		# macOS PowerPC (a partir de 10.1.5)
+		echo "macOS"
+		;;
+	i[3456]86-Darwin-[789].* | i[3456]86-Darwin-1* )
+		# macOS Intel (a partir de 10.3) avec noyau 32 bits
+		# (note: meme si le noyau est en 32 bits, on pourrait
+		# executer des binaires 64 bits si le processeur est 64 bits)
+		echo "mac86"
+		;;
+	 x86_64-Darwin-[123]*.*)
+		# macOS Intel (a partir de 10.6) avec noyau 64 bits
+		case "$CADP_BITS" in
+			32 )
+				case $UNAME_RELEASE in
+					1[0-8].* )
+						# Darwin 10.* a 18.* (c'est-
+						# a-dire macOS 10.6 a 10.14) :
+						# les binaires 32 bits sont
+						# acceptes
+						echo "mac86" ;;
+					* )
+						# Darwin 19.* (c'est-a-dire
+						# macOS 10.15) ou plus recent :
+						# plus de binaires 32 bits
+						echo "mac64" ;;
+				esac
+				;;
+			"" | 64 )
+				echo "mac64" ;;
+		esac
+		;;
+	arm64-Darwin-[23]*.*)
+		# macOS ARM (a partir de Darwin 20 "Big Sur") avec noyau 64 bits
+		if [ "$1" = "-detailed" ]
+		then
+			echo "mac64-arm"
+		else
+			echo "mac64"
+		fi
+		;;
+	* )
+		echo "UNKNOWN ARCHITECTURE"
+		exit 1 ;;
+esac
+exit 0
+

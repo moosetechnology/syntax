@@ -1,0 +1,111 @@
+# To avoid problems with other shells:
+SHELL=/bin/sh
+
+ND=$(sx)
+NDSRC=$(ND)/src
+NDLIB=$(ND)/lib
+NDINCL=$(ND)/incl
+
+NDETC=$(ND)/etc
+NDETCLIB=$(NDETC)/lib
+NDETCINCL=$(NDETC)/incl
+
+C=$(ND)/c
+SRC=$(C)/src
+LIB=$(C)/lib
+INCL=$(C)/incl
+
+BIBS= $(ETCLIB)/libsxetc$(sxV).a $(SXLIB)/libsx$(sxV).a
+
+CC=cd $(LIB); umask 7; exec cc -I$(NDINCL) -I$(NDETCINCL) -I$(INCL) $(CFLAGS) -c
+
+$(C)/ALL .PRECIOUS:	$(C)/c.out	\
+			$(C)/dc.out	\
+			$(C)/ndc.out
+
+C_NEEDS=$(LIB)/sxmain.o			\
+	$(LIB)/c_desambig.o		\
+	$(LIB)/c_t.o
+
+DC_NEEDS=$(LIB)/sxmain.o		\
+	 $(LIB)/dc_parsact.o		\
+	 $(LIB)/dc_smp.o		\
+	 $(LIB)/dc_t.o
+
+NDC_NEEDS=$(LIB)/sxmain.o		\
+	 $(LIB)/ndc_parsact.o		\
+	 $(LIB)/ndc_t.o
+
+$(C)/c.out:	$(C_NEEDS)	$(BIBS)
+	@echo '	cc -o $@'; ${SHELL} -c 'cc -o $@ $(C_NEEDS) $(CFLAGS) $(LDFLAGS) $(BIBS) || (rm $@;exit 1)'
+
+$(LIB)/sxmain.o:	$(NDINCL)/sxu2.h		\
+			$(SRC)/sxmain.c
+	$(CC) $(SRC)/sxmain.c
+
+
+$(LIB)/c_t.o:		$(NDINCL)/sxu2.h 	\
+			$(NDINCL)/sxba.h 	\
+			$(SRC)/c_t.c
+	$(CC) $(SRC)/c_t.c			\
+		-DESAMBIG=c_desambig		\
+		-DPARSACT=sxvoid		\
+		-DSEMACT=sxvoid
+
+
+$(LIB)/c_desambig.o:	$(NDINCL)/sxu2.h		\
+			$(ND)/incl/sxba.h		\
+			$(ND)/incl/XxY.h		\
+			$(ND)/incl/XH.h			\
+			$(ND)/incl/SS.h			\
+			$(ND)/incl/sxnd.h		\
+			$(ND)/etc/incl/sxsymbol_table.h	\
+			$(SRC)/c_desambig.c
+	$(CC) $(SRC)/c_desambig.c
+
+$(C)/dc.out:	$(DC_NEEDS)	$(BIBS)
+	@echo '	cc -o $@'; ${SHELL} -c 'cc -o $@ $(DC_NEEDS) $(CFLAGS) $(LDFLAGS) $(BIBS) || (rm $@;exit 1)'
+
+$(LIB)/dc_t.o:		$(NDINCL)/sxu2.h 	\
+			$(NDINCL)/sxba.h 	\
+			$(SRC)/dc_t.c
+	$(CC) $(SRC)/dc_t.c			\
+		-DPARSACT=dc_parsact		\
+		-Dsempass=dc_smp
+
+$(LIB)/dc_parsact.o:	$(NDINCL)/sxu2.h		\
+			$(ND)/incl/sxba.h		\
+			$(ND)/incl/XxY.h		\
+			$(ND)/etc/incl/sxsymbol_table.h	\
+			$(SRC)/dc_parsact.c
+	$(CC) $(SRC)/dc_parsact.c
+
+
+$(LIB)/dc_smp.o:	$(NDINCL)/sxu2.h		\
+			$(ND)/incl/sxba.h		\
+			$(ND)/incl/XxY.h		\
+			$(INCL)/dc_tdef.h		\
+			$(ND)/etc/incl/sxsymbol_table.h	\
+			$(SRC)/dc_smp.c
+	$(CC) $(SRC)/dc_smp.c
+
+$(C)/ndc.out:	$(NDC_NEEDS)	$(BIBS)
+	@echo '	cc -o $@'; ${SHELL} -c 'cc -o $@ $(NDC_NEEDS) $(CFLAGS) $(LDFLAGS) $(BIBS) || (rm $@;exit 1)'
+
+$(LIB)/ndc_t.o:		$(NDINCL)/sxu2.h 	\
+			$(NDINCL)/sxba.h 	\
+			$(SRC)/ndc_t.c
+	$(CC) $(SRC)/ndc_t.c			\
+		-Dsxndprecovery=sxndpallcorrections    \
+		-DESAMBIG=sxvoid		\
+		-DPARSACT=ndc_parsact		\
+		-Dsempass=sxvoid
+
+$(LIB)/ndc_parsact.o:	$(NDINCL)/sxu2.h		\
+			$(ND)/incl/sxba.h		\
+			$(ND)/incl/XxY.h		\
+			$(ND)/etc/incl/sxsymbol_table.h	\
+			$(ND)/incl/sxnd.h		\
+			$(SRC)/ndc_parsact.c
+	$(CC) $(SRC)/ndc_parsact.c
+

@@ -1,0 +1,238 @@
+Auteur : Romain Lacroix
+Date   : 19/02/2008
+Ajouts par Hubert Garavel et Remi Herilier - Thu Mar 12 11:17:25 CET 2009
+
+--------------------------------------------------------------------------------
+0) Procedure pour recuperer les sources de Syntax afin de les compiler
+--------------------------------------------------------------------------------
+
+1) Pour récuperer le code source, il existe 2 méthodes : 
+     - télécharger une version officielle
+     - ou bien télécharger le code source avec subversion.
+
+1.1) Pour télécharger une version officielle : 
+     Ceci n'est valable que si la version officielle est à jour
+     (le 10/04/2009, la dernière version était 6.0b5 datant du  20/08/2008,
+     donc pas utilisable directement si on veut bénéficier des dernières
+     améliorations)
+
+     ouvrir la page web http://gforge.inria.fr/frs/?group_id=419
+     Puis, téléchargez la dernière version 
+     Il faut ensuite décompresser et positionner le shell dans le dossier ainsi créé.
+
+1.2.1) Pour télécharger le code source avec subersion :
+
+     éxecuter les commandes suivantes :
+
+     cd <repertoire temporaire d'ou l'on compilera les sources de Syntax>
+     # en cas de compilation croisee, ce repertoire devra etre accessible 
+     # depuis des des machines distantes
+     # exemple : mkdir ~/tmp/Syntax ; cd  ~/tmp/Syntax
+
+     # puis 
+     #   ssh-agent tcsh
+     #   ssh-add
+
+     svn checkout svn+ssh://scm.gforge.inria.fr/svn/syntax
+     # ceci ne marche qui si l'on a deposé sa clé publique SSH sur la Gforge de l'INRIA
+
+     Puis, il faut se positionner dans le sous-dossier "syntax/trunk".
+     #	cd syntax/trunk
+
+--------------------------------------------------------------------------------
+I) Procédure pour compiler une version mono-architecture en utilisant autotools
+(cette procedure n'est pas celle qui interesse principalement VASY)
+--------------------------------------------------------------------------------
+
+1.2.2) Si on a téléchargé le code source avec subversion et qu'on veut utiliser les autotools,
+     alors il faut éxécuter cette suite de commandes :
+	aclocal
+	autoconf
+	automake -af
+	
+2) ./configure --prefix=`pwd`
+
+3) make && make install
+
+4) Si on veut utiliser make-makefile, ou un autre programme de Vasy qui attend
+   une structure particulière, il faut créer des liens manuellement (dans le
+   répertoire de Syntax) :
+     ln -s bin bin.`arch`
+     ln -s lib lib.`arch`
+
+Note: cette approche ne fonctionne pas pour win32, car elle ne transmet pas
+les options -I$CADP/incl -DVASY_LIB et -L$CADP/bin.win32 -lm ; voir la section
+suivante qui prend ceci en compte.
+
+-------------------------------------------------------------
+II) Procédure pour compiler une version multi-architectures : 
+    avec les makefiles supermake et vasymake
+    (cette procedure est celle qui interesse VASY)
+-------------------------------------------------------------
+
+2 ) préparation sur une machine Solaris qui peut lancer des commandes 
+    a distance et qui possede des commandes specifiques a Vasy :
+
+  - commande gmake : commande Gnu-make sur Solaris : /usr/sfw/bin/gmake
+    si elle n'existe pas, on peut ajouter un repertoire fictif dans le
+    path contenant un lien 
+	 ln -s `which make` gmake
+    Une autre solution est de traquer les gmake en dur dans les fichiers
+    du present repertoire et de les remplacer par $MAKE ou $(MAKE)
+
+  Puis :
+
+  - passer en tcsh
+    et lancer un ssh-agent tcsh, suivi de ssh-add
+    (pouvoir faire ssh vers la machine courante est indispensable)
+    (pouvoir faire ssh vers une machine iX86 est aussi indispensable, sinon
+    la valeur de SVNVERSION dans incl/sxversion.h sera laissee en blanc)
+
+  - positionner les variables
+
+    setenv CADP /common/Cadp-latest
+
+    setenv sxV 6.0
+
+    setenv sx <repertoire contenant les sources>/syntax/trunk
+    # exemple :  setenv sx ~/tmp/Syntax/syntax/trunk
+    # exemple :  setenv sx /common/SyntaxV6
+
+3 ) compilation multi-architectures
+
+    cd $sx
+    gmake -f vasy/vasymake all-compiles |& tee _log
+
+    Estimation du temps necessaire : 20 minutes (en 2015)
+
+    Controle de la sortie (en tcsh)
+    cat _log | egrep -vi "clock skew|in the future" | egrep -i "=>|\<error\>|\<warning\>|\*\*\*|ld.*fatal"
+
+    Les résultats de la compilation sont rangés dans $sx/bin.* et $sx/lib.*
+
+4a ) installation : si $sx vaut /common/SyntaxV6
+     c'est-a-dire si on a compilé dans le repertoire où l'on veut installer
+     les binaires de Syntax
+
+     taper simplement 
+	find $sx/incl $sx/bin.* $sx/lib.* ! -type l -exec chmod a+rX \{\} \;
+
+4b ) installation : si $sx ne vaut pas /common/SyntaxV6
+
+    gmake -f vasy/vasymake install
+
+    Cette opération installera les dossiers suivants :
+	  etc/src
+	  etc/incl
+	  doc
+	  bin*
+	  lib*
+	  examples
+	  incl
+	  src
+	  vasy
+	  lecl
+	  csynt
+	  tabc
+	  recor
+	  tables
+	  prio
+	  paradis
+	  
+    dans la destination par défaut : /common/SyntaxV6. On peut choisir une autre
+    destination avec la variable DEST ainsi :
+
+    gmake -f vasy/vasymake install DEST=/ailleurs
+
+
+5) détail des cibles pour la compilation croisée :
+
+Le code de Syntax a été mis à jour pour supporter toutes les architectures 
+citées ci-dessous. Pour compiler une seule de ces architectures, on peut 
+utiliser la commande suivante :
+	make -f vasy/vasymake vasy-$ARCH
+
+Cette commande crée les dossiers $sx/bin.$ARCH et $sx/lib.$ARCH, qui seront 
+peuplés avec les résultats de la compilation. Les dossiers $sx/bin et $sx/lib 
+ne contiendront PAS les fichiers produits par la compilation, mais des liens 
+conformes aux attentes du script Make-makefile.
+
+Pour lancer l'autogenèse de l'architecture 'ARCH', on utilise la commande 
+suivante :
+         make -f vasy/vasymake bootstrap-$ARCH
+
+    5.1) Cibles pour la compilation normale (avec le compilateur le mieux adapté à l'architecture) :
+
+  # OBSOLETE vasy-sun5 (Sparc 32-bit, Solaris 10, compileur suncc)
+  # OBSOLETE vasy-sun64 (Sparc 64-bit, Solaris 10, compileur suncc)
+  - vasy-sol86 (Intel 32-bit, Solaris 10, compileur suncc)
+  - vasy-sol64 (Intel 64-bit, Solaris 10, compileur suncc)
+  - vasy-iX86 (ix86, linux, compileur gcc)
+  - vasy-x64 (x86_64, linux, compilateur gcc)
+  # OBSOLETE vasy-ia64 (Itanium 64, linux, compilateur gcc)
+  - vasy-win32 (ix86, windows)
+  # OBSOLETE vasy-macOS (PPC, macOS 10.4)
+  - vasy-mac86 (ix86, macOS 10.4)
+  - vasy-mac64 (x86_64, macOS 10.11, compilateur clang)
+
+    5.2) Cibles pour l'autogenèse normale
+
+  # OBSOLETE bootstrap-sun5 (Sparc 32-bit, Solaris 10, compileur suncc)
+  # OBSOLETE bootstrap-sun64 (Sparc 64-bit, Solaris 10, compileur suncc)
+  - bootstrap-sol86 (Intel 32-bit, Solaris 10, compileur suncc)
+  - bootstrap-sol64 (Intel 64-bit, Solaris 10, compileur suncc)
+  - bootstrap-iX86 (ix86, linux, compileur gcc)
+  - bootstrap-x64  (x86_64, linux, compilateur gcc)
+
+    5.3) Cibles pour la compilation et l'autogenèse avec des compilateurs alternatifs :
+
+  # OBSOLETE vasy-sun5-gcc (Sparc 32-bit, Solaris 10, compilateur gcc)
+  # OBSOLETE vasy-sun64-gcc (Sparc 64-bit, Solaris 10, compilateur gcc)
+  - vasy-sol86-gcc (Intel 32-bit, Solaris 10, compilateur gcc)
+  - vasy-sol64-gcc (Intel 64-bit, Solaris 10, compilateur gcc)
+  - vasy-iX86-icc (ix86, linux, compilateur intelcc)
+
+  # OBSOLETE bootstrap-sun5-gcc (Sparc 32-bit, Solaris 10, compilateur gcc)
+  # OBSOLETE bootstrap-sun64-gcc (Sparc 64-bit, Solaris 10, compilateur gcc)
+  - bootstrap-sol86-gcc (Intel 32-bit, Solaris 10, compilateur gcc)
+  - bootstrap-sol64-gcc (Intel 64-bit, Solaris 10, compilateur gcc)
+  - bootstrap-iX86-icc (ix86, linux, compilateur intelcc)
+
+    5.4) Cibles spéciales, pour faire plusieurs compilations ou autogenèses à la suite :
+
+  - all32 : compilation pour les architectures 32-bits supportées par Vasy 
+  - all64 : compilation pour les architectures 64-bits supportées par Vasy
+  - all-compiles: toutes les compilations possibles
+  - all-debug: appelle la cible all-compiles en activant successivement
+               les flags de preprocessing (attention: opération longue)
+  - bootstrap: toutes les autogenèses possibles
+  - all: toutes les autogenèses, puis toutes les compilations pour les
+         architectures qui n'ont pas d'autogenèse
+  - validation : effectue toutes les vérifications connues sur le code :
+	- compilation normale pour toutes les architectures : cible 'all-compiles'
+	- compilation des exemples pour l'architecture courante : cible 'examples'
+	- analyseur statique de code lint : cible 'lint'
+	- bootstrap pour les architectures le supportant : cible 'bootstrap'
+	- compilation en activant les différents flags de debug : cible 'all-debug'
+        
+    Estimation du temps necessaire a cette cible : 9 heures (lorsqu'il y avait 13
+    architectures)
+
+---------------------
+III) Notes diverses :
+---------------------
+
+- L'étape bootstrap ne fonctionne pas pour l'architecture "win32" (c'est à dire
+windows avec cygwin). 
+
+- Le fichier de tables $sx/incl/reg_exp_t.h est généré lors du bootstrap du
+  constructeur lecl. C'est une copie de ce fichier :
+    $sx/lecl/src/lecl_t.c
+
+- La variable sxV qu'il faut positionner pour compiler avec les makefiles classiques
+  sans autotools, doit avoir la même valeur que la variable PACKAGE_VERSION des
+  autotools. On peut obtenir cette valeur automatiquement avec la commande suivante:
+
+	<csh>  setenv sxV `grep AC_INIT configure.ac | cut -d, -f2 | cut -d' ' -f2`
+	<bash> export sxV=`grep AC_INIT configure.ac | cut -d, -f2 | cut -d' ' -f2`
+

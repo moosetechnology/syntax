@@ -1,0 +1,45 @@
+: /bin/sh
+# Reorganize archive for faster access by ld(1).
+#
+# Copyright (c) 1988 Philippe Deschamp
+#
+#    Permission is granted to anyone to make or distribute verbatim
+#    copies of this document as received, in any medium, provided
+#    that the copyright notice and this permission notice are
+#    preserved, thus giving the recipient permission to redistribute
+#    in turn.
+#
+#    Permission is granted to distribute modified versions of this
+#    document, or of portions of it, under the above conditions,
+#    provided also that they carry prominent notices stating who last
+#    changed them.
+
+# To be used on UNIX System V where ranlib does not exist.
+
+# Changed by PhD on Thu Mar 17 1988 to replace "-x" option of "test"
+# by "-f": some (dumb) shells do not have "-x", and after all, if a
+# file exists in a "binary" dir, it should be executable...
+#
+# Changed by PhD on Mon Apr  2 1990 to extract files from the archive
+# before calling "lorder": some (very dumb) "nm"(1) do not know how
+# they should work on an archive...
+
+USAGE="Usage:	$0 archive
+or	$0 -doc"
+case $1 in -doc)echo "$USAGE
+Reorganizes an archive of object files, for a faster
+access by ld(1). Uses ar(1) to reconstruct the archive."
+	     exit;;
+esac
+case $# in 1) ;; *)echo "$USAGE">&2;exit 1;;esac
+
+ar q $1 `lorder \`ar t $1 | sed '/\.o$/!d' ; arxd $1\` | tsort`
+rm `ar t $1`
+
+for dir in /bin /usr/bin /usr/ucb
+do
+	if test -f $dir/ranlib
+	   then	exec $dir/ranlib $1
+	fi
+done
+

@@ -1,0 +1,11 @@
+Classes
+        ANY             = #000..#377 ;
+        LETTER          = LETTER + "ÀÂàâÉÈÊËéèêëÎÏîïÔôÛÜÙûüù";
+
+
+Tokens
+	Comments	= -{SP | HT | VT | NL | ".,?!"}+;
+			Priority Shift > Reduce;
+
+	MOT		= {LETTER}+ ;
+			Priority Shift > Reduce;

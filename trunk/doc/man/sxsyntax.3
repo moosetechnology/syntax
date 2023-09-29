@@ -1,0 +1,315 @@
+.\" @(#)sxsyntax.3	- SYNTAX [unix] - September 27, 2018
+.TH SXSYNTAX 3 "SYNTAX\[rg]"
+.SH NAME
+sxsyntax
+\- SYNTAX.
+.SH SYNOPSIS
+.nf
+.ta \w'\s-2SXVOID\s0  'u +\w'\s-2SXVOID\s0  'u
+.B
+#include "sxunix.h"
+.PP
+.B
+\s-2SXVOID\s0 sxsyntax (what, tables, ...)
+.B
+	int	 what\|;
+.B
+	struct sxstables	 *tables\|;
+.fi
+.SH DESCRIPTION
+
+.LP
+.I sxsyntax
+(often abbreviated as
+.IR syntax )
+is the entry point function for invoking a syntactic/lexical analyzer
+built using 
+.B SYNTAX.
+
+.LP
+This function can be used in two different modes:
+.IP -
+The normal mode, which covers 90% of the standard needs for building a 
+compiler using
+.B SYNTAX
+and parsing one or many files specified, e.g., on the command line.
+The normal mode provides a high-level interface above the various modules
+provided by \fBSYNTAX\fP, such as \fBsxerr_mngr\fP, \fBsxincl_mngr\fP,
+\fBsxsrc_mngr\fP, \fBsxstr_mngr\fP, etc.
+
+.IP -
+The special mode, which is reserved to particular cases, such as 
+parsing a file whose contents are written in different languages
+described by two or more syntactic grammars; for analyzing a file
+whose contents are described by a single grammar, the normal mode
+is sufficient and should be preferred. The special mode provides 
+a low-level interface, which allows a fine-grained control of the
+various \fBSYNTAX\fP modules, but requires many additional function
+calls to manage these modules explicitly.
+
+.LP
+The value of the first argument \fIwhat\fP (7 possible values) determines
+the effect of the \fIsxsyntax\fP function.
+
+.LP
+The second argument \fItables\fP always corresponds to the tables generated
+by other modules of \fBSYNTAX\fP and representing the language to be analyzed.
+
+.SS NORMAL MODE
+
+In normal mode, the \fIsxsyntax\fP function must be invoked five times,
+with the following arguments in the following order:
+
+.IP -
+.I sxsyntax (SXINIT, tables, use_include_manager),
+where
+.I use_include_manager
+has type
+.IR SXBOOLEAN ,
+initialises an analyzer for the language described by
+.IR tables .
+This call successively invokes
+\fIsxopentty()\fP,
+\fIsxstr_mngr (SXBEGIN)\fP,
+\fI(*(tables->analyzers.parser)) (SXBEGIN, tables)\fP,
+\fIsyntax (SXOPEN, tables)\fP,
+and, if \fIuse_include_manager\fP is equal to \fISXTRUE\fP,
+it also invokes
+\fIsxincl_mngr (SXOPEN)\fP.
+
+.IP -
+.I sxsyntax (SXBEGIN, tables, file, pathname)
+where 
+.I file
+has type
+.I FILE*
+and
+.I pathname
+has type
+.IR char* ,
+prepares the analysis of the file named \fIpathname\fP.
+.I file
+is a pointer to the file
+.IR pathname ,
+which should be opened before calling \fIsxsyntax (SXBEGIN, ...)\fP.
+This call successively invokes
+\fIsxsrc_mngr (SXINIT, file, pathname)\fP,
+\fIsxerr_mngr (SXBEGIN)\fP,
+and, if \fIuse_include_manager\fP was equal to \fISXTRUE\fP in the prior call
+to \fIsxsyntax (SXINIT, ...)\fP, it also invokes
+\fIsxincl_mngr (SXINIT)\fP.
+
+.IP -
+.I sxsyntax (SXACTION, tables)
+triggers the analysis of \fIfile\fP, whose value was provided in the prior
+call to \fIsxsyntax (SXBEGIN, ...)\fP.
+
+.IP -
+.I sxsyntax (SXEND, tables)
+terminates the analysis of \fIfile\fP, whose value was provided in the prior
+call to \fIsxsyntax (SXBEGIN, ...)\fP.
+This call successively invokes
+\fIsxsrc_mngr (SXFINAL)\fP,
+\fIsxerr_mngr (SXEND)\fP,
+and, if \fIuse_include_manager\fP was equal to \fISXTRUE\fP in the prior call
+to \fIsxsyntax (SXINIT, ...)\fP, it also invokes
+\fIsxincl_mngr (SXFINAL)\fP.
+
+.IP -
+.I sxsyntax (SXFINAL, tables, delete_str_mngr)
+where
+.I delete_str_manager
+has type
+.IR SXBOOLEAN ,
+terminates all the \fBSYNTAX\fP modules of the analyzer, except perhaps 
+the \fBstr_mngr\fP (keeping the string table may be useful if data structures
+referring to entries in this table are still in use). This call successively
+invokes
+\fIsyntax (SXCLOSE, tables)\fP,
+\fI(*(tables->analyzers.parser)) (SXEND, tables)\fP,
+and, if \fIuse_include_manager\fP was equal to \fISXTRUE\fP in the prior call
+to \fIsxsyntax (SXINIT, ...)\fP, it also invokes
+\fIsxincl_mngr (SXINIT)\fP. Finally, if \fIdelete_str_manager\fP is
+equal to \fISXTRUE\fP, the call also invokes
+\fIsxstr_mngr (SXEND)\fP.
+
+.SS SPECIAL MODE
+
+In special mode, the \fIsxsyntax\fP function must be invoked three times
+with the following arguments:
+
+.IP -
+.I sxsyntax (SXOPEN, tables)
+
+.IP -
+.I sxsyntax (SXACTION, tables)
+
+.IP -
+.I sxsyntax (SXCLOSE, tables)
+
+.LP
+Using the special mode, many additional function calls are required.
+
+.LP
+The following examples show how the standard mode can be used. See also
+the examples in the "examples" directory of the \fBSYNTAX\fP distribution
+and in the \fBSYNTAX\fP processors (themselves written using \fBSYNTAX\fP
+and bootstrapped), some of which illustrate the special mode (search for
+"syntax (SXOPEN" and "syntax (SXCLOSE"). For instance, the \fBsemc\fP 
+processor uses the special mode to analyze files mixing BNF grammars 
+and C code. Also, the C and Ada pretty-printers \fIexamples/ppc\fP and
+\fIexamples/ppada\fP illustrate the use of two different grammars, one
+for parsing command-line options, and another one for parsing the
+program text.
+
+.SH EXAMPLE 1
+
+The following code illustrates the simple case of an analyzer that reads
+a program in a file named "pathname", written in a language defined by
+one single grammar, without using the include manager:
+.nf
+    FILE *file;
+    file = fopen ("pathname", "r");
+    if (file == NULL) /* error */ 
+    sxsyntax (SXINIT, &sxtables, SXFALSE);
+    sxsyntax (SXBEGIN, &sxtables, file, "pathname");
+    sxsyntax (SXACTION, &sxtables);
+    sxsyntax (SXEND, &sxtables);
+    sxsyntax (SXFINAL, &sxtables, SXTRUE);
+    (void) fclose (file);
+.fi
+
+.SH EXAMPLE 2
+
+The following code illustrates the case of an analyzer that reads from 
+the standard input a program written in a language defined by one single
+grammar, without using the include manager. The strings encountered during
+the analysis and stored in the string manager table are kept available 
+after the analysis (e.g., because they might be referenced by the abstract
+syntax tree constructed during the analysis) until the string manager
+table is destroyed explicitly:
+.nf
+    sxsyntax (SXINIT, &sxtables, SXFALSE);
+    sxsyntax (SXBEGIN, &sxtables, stdin, "");
+    sxsyntax (SXACTION, &sxtables);
+    sxsyntax (SXEND, &sxtables);
+    sxsyntax (SXFINAL, &sxtables, SXFALSE);
+    ... /* here, the strings are still available */
+    sxstr_mngr (SXEND);
+    ... /* here, the strings are no longer available */
+.fi
+
+.SH EXAMPLE 3
+
+The following code illustrates the case of an analyzer that successively
+parses a list of files specified on the command line. Before analyzing
+each next file, the string table must be explicitly purged. Notice that
+this example is a simplification of \fIsrc/sxmain.c\fP.
+
+.nf
+    int i;
+    FILE *file;
+    sxsyntax (SXINIT, &sxtables, SXFALSE);
+    for (i = 1; i < argc; i++) {
+        file = sxfopen (argv[i], "r");
+        if (file == NULL) {
+            fprintf (sxstderr, "%s: cannot read \\"%s\\"\\n",
+                     argv[0], argv[i]);
+        } else {
+            sxsyntax (SXBEGIN, &sxtables, file, argv[i]);
+            sxsyntax (SXACTION, &sxtables);
+            sxsyntax (SXEND, &sxtables);
+            /* purge the string table */
+            sxstr_mngr (SXCLEAR);
+            (void) fclose (file);
+        }
+    }
+    sxsyntax (SXFINAL, &sxtables, SXTRUE);
+.fi
+
+.SH EXAMPLE 4
+
+The following code shows additional calls to control the format of
+error messages, to store the pathnames of the included files in a separate
+table, and to use the source manager in absolute mode.
+
+.nf
+    FILE *file;
+    file = fopen ("pathname", "r");
+    if (file == NULL) /* error */ 
+    /* the include manager will be used */
+    sxsyntax (SXINIT, &sxtables, SXTRUE);
+    sxsyntax (SXBEGIN, &sxtables, file, "pathname");
+    /* creation of a table to store pathnames of included files */
+    sxstr_mngr (SXOPEN, &INCLUDE_TABLE);
+    sxincl_mngr (SXSEPARATE, &INCLUDE_TABLE, "pathname");
+    /* selection of a custom (Gcc-like) error format */
+    sxerr_mngr (SXFORMAT, SXERR_FORMAT_CUSTOM, "%s:%lu: ");
+    /* use of the source manager in absolute mode */
+    sxsrc_mngr (SXABSOLUTE, "apparent pathname", firstline);
+    sxsyntax (SXACTION, &sxtables);
+    sxsyntax (SXEND, &sxtables);
+    sxsyntax (SXFINAL, &sxtables, SXFALSE);
+    ...
+    /* deletion of the two string tables */
+    sxstr_mngr (SXEND);
+    sxstr_mngr (SXCLOSE, &INCLUDE_TABLE);
+    (void) fclose (file);
+.fi
+
+.SH EXAMPLE 5
+
+The following code shows how to redirect the messages written by \fBSYNTAX\fP
+on the standard output and standard error. For instance, the messages 
+written on the standard output will be redirected to a file \fIpathname\fP,
+while the messages written on the standard error will be redirected to the
+standard output. These instructions should be placed before invoking
+\fIsxopentty()\fP, or before invoking \fIsyntax (SXINIT, ...)\fP, which itself
+invokes \fIsxopentty()\fP.
+
+.nf
+    FILE *file;
+    file = fopen ("pathname", "r");
+    if (file == NULL) /* error */ 
+    sxstdout = file;
+    sxstderr = stdout;
+    sxsyntax (SXINIT, ...); /* invokes sxopentty() */
+.fi
+
+.SH DEFINITION OF THE "scanner_act" FUNCTION
+
+The skeleton of the function \fIscanner_act\fP defining the effect of the scanner actions is as follows:
+.nf
+    void scanner_act (ENTRY, ACTION_NUMBER)
+    int ENTRY;
+    int ACTION_NUMBER;
+    {
+        switch (ENTRY) {
+        case SXOPEN:
+        case SXCLOSE:
+        case SXINIT:
+        case SXFINAL:
+            return;
+        case SXACTION:
+            switch (ACTION_NUMBER) {
+            case 1:
+                 ...
+                 break;
+            case 2:
+                 ...
+                 break;
+            default:
+                 /* error message */
+                 return;
+            }
+        default:
+            /* error message */
+            return;
+        }
+    }
+.fi
+
+.SH "SEE ALSO"
+sxunix(3)
+and the \fISYNTAX Reference Manual\fP.
+

@@ -1,0 +1,28 @@
+.\" @(#)sxlistout.3	- SYNTAX [unix] - 2 Septembre 1987
+.TH SXLISTOUT 3 "SYNTAX\*R"
+.SH NAME
+sxlisting_output \- output source listing.
+.SH SYNOPSIS
+\fB
+.nf
+
+VOID sxlisting_output (listing)
+.ta \w'VOI'u +\w'FILE 'u
+	FILE	*listing;
+
+.fi
+.SH DESCRIPTION
+\fIsxlisting_output\fP write on file \fIlisting\fP a numbered line listing
+of the source text in which the error messages (if any) are interleaved.
+All the informations concerning the source text are taken in the sxsrcmngr
+structure (see \fBsxsrc_mngr\fP\|(3)) and the informations concerning the
+errors are taken in sxerrmngr (see \fBsxerr_mngr\fP\|(3)).
+.SH "SEE ALSO"
+sxunix(3),
+sxsrc_mngr(3),
+sxerr_mngr(3)
+and the \fISYNTAX Reference Manual\fP.
+.\" Local Variables:
+.\" mode: nroff
+.\" version-control: yes
+.\" End:

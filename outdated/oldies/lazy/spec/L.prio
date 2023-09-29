@@ -1,0 +1,6 @@
+%left add_op |
+%left mul_op "&"
+%right !
+%nonassoc comp_op
+
+<INT_EXPR>		= add_op <INT_EXPR> ; %prec !

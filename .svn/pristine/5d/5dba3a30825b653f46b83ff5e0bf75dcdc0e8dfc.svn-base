@@ -1,0 +1,45 @@
+axiome(\A\C\G\U\.)		--> &False() . % Adenine, Cytosine, Guanine, Uracil
+axiome(X)			--> RNA(X) . 						@share
+
+% Watson-Crick base pairing external by &wc
+
+RNA(X1 X2)			--> &StrLen(7, X1) CLOVER(X1 X2) .			@copy
+RNA(SS)				--> .							@single_strand
+
+CLOVER(SS X1 X2)		--> !&StrLen(0, SS) &StrLen(7, X2) SS_CLOVER(X1 X2) .	@left_ss
+CLOVER(X1 X2 Y)			--> &StrLen(7, X1) STEM(X1 X2) RNA(Y) .			@stem_rna
+
+SS_CLOVER(X1 X2 Y)		--> &StrLen(7, X1) STEM(X1 X2) RNA(Y) .			@ss_stem_rna
+
+% On force les stem a avoir au moins 2 paires de bases!!
+STEM(T1 X1 X2 T2)		--> &StrLen(1, T1) &StrLen(1, T2) &StrLen(7, X1) 
+				    &wc(T1, T2) STEM(X1 X2) .				@stem
+STEM(X1 X2)			--> &StrLen(7, X1) STEM2(X1 X2) .			@copy_stem
+
+STEM2(T1 X T2)			--> &StrLen(1, T1) &StrLen(1, T2)
+				    &wc(T1, T2) STEM1(X) .				@stem
+
+STEM1(T1 X T2)			--> &StrLen(1, T1) &StrLen(1, T2)
+				    &wc(T1, T2) STEM_BODY(X) .				@init_stem
+
+STEM_BODY(SS X1 X2)		--> !&StrLen(0, SS) &StrLen(7, X2) STEM(X1 X2) .	@left_bulge
+STEM_BODY(X1 X2 SS)		--> !&StrLen(0, SS) &StrLen(7, X2) STEM(X1 X2) .	@right_bulge
+STEM_BODY(X1 X2)		--> &StrLen(9, X1) LOOP(X1 X2) .			@copy
+STEM_BODY(X1 X2)		--> &StrLen(14, X2) STEM_CLOVER(X1 X2) .		@copy
+STEM_BODY(SS)			--> .							@hairpin
+
+LOOP(X1 X2 SS)			--> &StrLen(9, X1) BALANCED_LOOP(X1 X2) .		@right_loop
+LOOP(SS X1 X2)			--> !&StrLen(0, SS) &StrLen(9, X2)
+				    BALANCED_LOOP(X1 X2) .				@left_loop
+
+BALANCED_LOOP(SS1 X1 X2 SS2)	--> !&StrLen(0, SS1) &StrEqLen (SS1, SS2) &StrLen(7, X1)
+				    STEM(X1 X2) .					@balanced_loop
+
+STEM_CLOVER(X1 X2 Y1 Y2)	--> &StrLen(7, X1) &StrLen(7, Y2)
+				    STEM(X1 X2) CLOVER(Y1 Y2) .				@stem_clover
+STEM_CLOVER(SS X1 X2)		--> !&StrLen(0, SS) &StrLen(14, X2)
+				    SS_STEM_CLOVER(X1 X2) .				@left_ss
+
+SS_STEM_CLOVER(X1 X2 Y1 Y2)	--> &StrLen(7, X1) &StrLen(7, Y2)
+				    STEM(X1 X2) CLOVER(Y1 Y2) .				@ss_stem_clover
+

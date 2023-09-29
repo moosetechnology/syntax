@@ -1,0 +1,296 @@
+% Manuel TABC (en LaTeX) ecrit par Pascal Bouchon, alors 3eme anee ENSIMAG
+% il porte sur la V3.0 de TABC. Je ne sais pas comment il a decouvert ca ...
+%\documentstyle[draft,twoside]{syntaxman}  % `draft' for the time being
+\documentstyle[draft,twoside]{report}  % `draft' for the time being
+\newcommand\SYNTAX{\mbox{\sc Syntax}}
+\newcommand\BNF{\mbox{\sc Bnf}}
+\newcommand\TABC{\mbox{\sc Tabc}}
+\hyphenation{
+cha-pi-tre cons-truc-tion cor-res-pon-dan-te impri-mables la-quel-le
+lexi-co-gra-phi-ques per-met-tent prin-ci-pa-le-ment sui-vant
+syn-ta-xi-que}
+
+\title{
+		{\huge T}ABC   \\[10pt]
+		PRE'SENTATION SUCCINCTE\footnote{Ces quelques pages ont
+e'te' e'crites par Pascal Bouchon, e'le`ve de troisie`me anne'e a` l'ENSIMAG.}
+}
+
+\author{
+		Bernard Lorho			\\
+		INRIA--Rocquencourt		\\
+		BP 105				\\
+		78153 Le Chesnay Cedex		\\
+		France
+}
+
+\begin{document}
+
+
+\maketitle
+\begin{titlepage}
+\null\vfil
+\end{titlepage}
+
+\chapter{Pre'sentation}
+   La se'mantique effectue'e par attributs synthe'tise's est toujours
+   de'crite dans un fichier {\tt nom\_du\_langage.tabc}.
+   Dans ce fichier, le programmeur doit de'crire les re`gles de
+   grammaire selon la convention du module \BNF.
+   Apre`s chaque re`gle de grammaire, le programmeur a la possibilite'
+   de de'crire des actions synthe'tise'es programme'es en langage C.
+   Ces actions sont exe'cute'es pendant l'analyse syntaxique a`
+   chaque re'duction.
+   
+\section{Actions synthe'tise'es}
+
+   Les actions synthe'tise'es suivant une re`gle de grammaire sont toujours 
+   exe'cute'es lorsque la partie droite de la re`gle a e'te' reconnue 
+   au moment de la re'duction de cette re`gle.
+
+%\begin{example}
+    Soit la grammaire suivante :
+\begin{verbatim}
+    <axiome> = <liste> ;
+
+    <liste>  = <liste> , <identificateur> ;
+
+    <liste>  = <identificateur> ;
+
+    <identificateur> = "ok" ;
+               printf("lu");
+\end{verbatim}
+    Apre`s la reconnaissance du mot "{\tt ok}", au moment de re'duire la
+    re`gle
+\begin{quote}
+    \mbox{\tt <identificateur> = "ok"}
+\end{quote}
+
+    \TABC{} exe'cutera la 
+    se'quence C correspondant a` l'action associe'e a` cette re`gle
+    c'est-a`-dire {\tt printf("lu{}")}. 
+%\end{example}
+
+\section{Attributs synthe'tise's}
+
+   \TABC{} permet la gestion entie`rement transparente pour le 
+   programmeur d'attributs synthe'tise's.
+
+   Ces attributs sont soumis a` des conditions d'utilisation
+   afin de permettre a` \TABC{} de ve'rifier la cohe'rence de
+   leurs emplois.
+
+   Ces attributs sont des identificateurs de variables declare's
+   en langage C. Tous les identificateurs  d'attribut doivent
+   e^tre pre'ce'de's du caracte`re ``{\tt \$}''.
+
+   Chaque non-terminal de la grammaire qui utilise un attribut
+   doit e^tre pre'alablement de'clare' dans la zone de de'claration
+   des attributs.
+
+   Apre`s chaque re`gle de grammaire, il faut toujours de'clarer
+   les attributs uti\-li\-se's par le non-terminal qui constitue
+   la partie gauche de la re`gle de grammaire.
+
+\section{De'claration des attributs synthe'tise's}
+
+   La de'claration des attributs se de'compose en deux parties
+\begin{enumerate}
+\item
+   Avant l'utilisation des attributs, le programmeur doit
+   les de'clarer globalement en explicitant les non-terminaux qui les
+   utilisent ainsi que le type C de l'attribut.
+
+   Cette de'claration doit toujours pre'ce'der les re`gles de la grammaire.
+
+   La grammaire syntaxique des de'clarations d'attibuts est :
+\begin{verbatim}
+   <declaration-globale> = <declaration-attributs> "$"
+\end{verbatim}
+
+%\begin{remark}
+Le signe ``{\tt \$}'' qui termine la de'claration doit
+   force'ment se trouver sur la premie`re colonne d'une
+   nouvelle ligne.
+%\end{remark}
+
+\begin{verbatim}
+<declaration-attributs> = <declaration-attribut>
+
+<declaration-attributs> = <declaration-attribut>
+                          <declaration-attributs>
+
+<declaration-attribut> = "$" <identificateur-C>   
+                         "(" <non-terminal-lotos> 
+                         {"," <non-terminal-lotos>} ")"
+                         ":" <type-C> ";"
+\end{verbatim}
+
+%\begin{remark}
+Le signe ``{\tt \$}'' doit toujours se trouver sur la
+   premie`re colonne d'une nouvelle ligne. {\tt <identificateur-C>} et
+   {\tt <type-C>} correspondent a` des identificateurs de variable et de type
+   respectant la syntaxe du langage C. 
+%\end{remark}
+
+%\begin{example}
+   On de'clare globalement l'attribut compteur comme un entier. Cet attribut est
+   associe' au non-terminal {\tt <identificateur>}.
+\begin{verbatim}
+   $compteur(<identificateur>):int;
+\end{verbatim}
+%\end{example}
+
+
+\item
+   Apre`s chaque re`gle de la grammaire syntaxique, le programmeur
+   doit de'clarer localement  les attributs utilise's par le non-terminal
+   qui forme la partie gauche de la re`gle. 
+
+   La grammaire syntaxique de cette de'claration locale est~:
+\begin{verbatim}
+<declaration-locale> = <declaration-attribut-ligne> 
+                       {<declaration-attribut-ligne>}
+
+<declaration-attribut-ligne> = <declaration-attribut> 
+                               {"," <declaration-attribut>} 
+				  
+<declaration-attribut> = "$" <identificateur-C>   
+                         "(" <non-terminal-lotos> ")"
+\end{verbatim}
+
+%\begin{remark}
+{\tt <non-terminal-lotos>} doit toujours e^tre le non-terminal
+   de la partie gauche de la re`gle de la grammaire.
+
+   De plus, a` chaque ligne de de'claration locale d'attributs 
+   le signe ``{\tt \$}'' du premier attribut doit e^tre sur la premie`re
+   colonne.
+%\end{remark}
+
+
+%\begin{example}
+   Soit la re`gle~: 
+\begin{verbatim}
+   <identificateur> = <suite-de-lettre> ;
+                      $compteur(<identificateur>)
+\end{verbatim}
+   Cette re`gle de'clare localement l'attribut compteur associe' au non-
+   terminal {\tt <identificateur>}.
+%\end{example}
+\end{enumerate}
+
+\section{Description des actions synthe'tise'es}
+
+   Les actions synthe'tise'es sont toujours de'crites apre`s
+   chaque re`gle de grammaire a` la suite de la
+   de'claration locale d'attributs.
+
+   La description des actions ne doit jamais commencer
+   sur la premie`re colonne de chaque ligne.
+
+   Pour utiliser un attribut dans la description d'une action
+   synthe'tise'e, il suffit de taper~:
+\begin{verbatim}
+       "$"<identificasteur-C> "("<non-terminal>")"
+\end{verbatim}
+   ou` {\tt <non-terminal>} de'signe un non-terminal de la re`gle de
+   la grammaire pour laquelle on e'crit l'action.
+   L'attribut conside're' est alors celui associe' a` ce non-terminal.
+
+   Si il existe plusieurs non-terminaux identiques dans la
+   re`gle de la grammaire, la distinction des attributs
+   s'effectue en ajoutant un ou plusieurs caracte`res {\tt '} apre`s 
+   le {\tt <non-terminal>} et la parenthe`se ``{\tt )}''.
+
+   soit la re`gle~:
+\begin{verbatim}
+   <liste> = <liste> <idf> <liste> ;
+\end{verbatim}
+    et l'attribut associe exp.
+    {\tt \$exp(<liste>)} de'signe l'attribut associe' au non-terminal
+   composant la partie gauche de la re`gle.
+
+
+   {\tt \$exp(<liste>')} de'signe l'attribut associe' au non-terminal
+   {\tt <liste>} pre'\-ce'\-dant le non-terminal {\tt <idf>}.
+
+
+   {\tt \$exp(<liste>'')} de'signe l'attribut associe' au non-terminal
+   {\tt <liste>} suivant le non-terminal {\tt <idf>}.
+
+
+%\begin{example}
+     Soit une grammaire de'finissant des listes compose'es 
+     par les mots {\tt idf} se'pare's par une virgule.
+     On de'sire compter le nombre d'e'le'ments composant cette liste.
+
+     Pour cela, on utilise un attribut entier servant de compteur
+     qui repre'sente le nombre d'e'le'ments de chaque liste.
+
+     Le fichier {\it mots.tabc} correspondant s'e'crit alors~:
+\begin{verbatim}
+     *declaration locale des attributs
+     $compteur(<axiom>, <liste>):int;
+     *une declaration se termine toujours par le signe $
+     $
+
+     *Description des regles de la grammaire et des actions
+     *associees
+
+     <axiome> = <liste> ;
+     *declaration locale
+     $compteur(<axiome>)
+     *action associe a cette regle
+	 $compteur(<axiome>) = $compteur(<liste>);
+	 printf("nombre d'elements dans la liste %d",$compteur(<axiome>);
+
+     <liste> = <identificateur> ;
+     *declaration locale
+     $compteur(<liste>)
+     *action associe a cette regle
+	$compteur(<liste>) = 1;
+
+     <liste> = <liste> , <identificateur> ;
+     *declaration locale
+     $compteur(<liste>)
+     *action associe a cette regle
+	$compteur(<liste>) = 1 + $compteur(<liste>');
+
+     <identificateur> = "idf" ;
+\end{verbatim}
+%\end{example}
+
+\section{Comple'ments sur l'analyse syntaxique}
+
+   Le programmeur, apre`s la de'claration globale des attributs
+   peut de'clarer des variables C, inclure des fichiers de suffixe {\it .h},
+   appeler des actions (toujours de'crites en langage C)
+   qui sont effectue'es au de'but de l'analyse syntaxique, ou a` la fin 
+   de l'analyse.
+
+   Ces de'clarations doivent s'effectuer de la manie`re suivante~:
+\begin{verbatim}
+   decl=
+   * zone de declaration
+   * inserer ici la declaration de variable ou les inclusions de 
+   * fichiers
+   $
+   open=
+   * actions a effectuer a l'initialisation de l'analyse
+   * syntaxique
+   $
+   close=
+   * actions a effectuer a la fin de l'analyse syntaxique
+   $
+\end{verbatim}
+   Il est a` noter que si \SYNTAX{} n'arrive pas a` rattraper une erreur
+   de syntaxe, il continue l'analyse syntaxique, mais n'exe'cute
+   plus les actions lors de la re'duction des re`gles.
+
+
+\end{document}
+%
+% Local Variables:
+% version-control: yes
+% End:

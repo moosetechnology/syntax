@@ -1,0 +1,30 @@
+% RCG extraite manuellement a partir de FB.rcg
+% Elle ne traite que
+% Jean aime parfois vraiment beaucoup Marie
+% Jean {np}; aime {aimer}; parfois {parfois}; vraiment {vraiment}; beaucoup {beaucoup}; Marie {np}
+% Grammaire de test pour les Off_Line TAGs
+
+
+Axiome(X)	--> S1(X) .
+% Au hasard
+% Axiome(X Y)	--> S2(X, Y) .
+
+% On "ancre" les arbres auxiliaires
+% NP2(,) --> .
+VP2(,) --> .
+% S2(,) --> .
+
+
+NP1("np" ) --> .
+
+S1(SNP0 LVP LV "aimer" RV SNP1 RNP1 RVP ) --> NP1(SNP0) VP2(LVP,RVP) V2(LV,RV) NP1(SNP1) .
+
+V2(,)-->.
+V2(LV, RV "bien" ) --> V2(LV,RV) .
+V2(LV, RV "beaucoup" ) --> V2(LV,RV) .
+V2(LV, RV "vraiment" ) --> V2(LV,RV) .
+V2(LV, RV "tard" ) --> V2(LV,RV) .
+V2(LV, RV "parfois" ) --> V2(LV,RV) .
+V2(LV, RV "mal" ) --> V2(LV,RV) .
+V2(LV, RV "lentement" ) --> V2(LV,RV) .
+

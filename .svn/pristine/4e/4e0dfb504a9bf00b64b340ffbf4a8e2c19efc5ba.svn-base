@@ -1,0 +1,587 @@
+/******************************************************************************
+ *                                S Y N T A X
+ *-----------------------------------------------------------------------------
+ *   Copyright (C) 1972-2018 INRIA (Institut National de Recherche en
+ *   Informatique et Automatique)
+ *-----------------------------------------------------------------------------
+ *   URL: http://syntax.gforge.inria.fr
+ *-----------------------------------------------------------------------------
+ *   The source code of SYNTAX is distributed with two different licenses,
+ *   depending on the files:
+ *   - The recursive content of src/ and incl/ and the non-recursive content
+ *     of SYNTAX's root directory are distributed under the CeCILL-C license
+ *   - The recursive content of all other repertories is distributed under
+ *     the CeCILL license
+ *   All code produced by SYNTAX must be considered as being under the
+ *   CeCILL-C license. Information about the CeCILL and CeCILL-C licenses
+ *   can be found at, e.g., http://www.cecill.fr
+ *****************************************************************************/
+
+
+
+
+
+
+
+
+
+
+
+static char	ME [] = "tables_c";
+
+#define SX_DFN_EXT_VAR_TABLES
+
+#include "sxversion.h"
+#include "sxunix.h"
+#include "tables.h"
+#include "sem_by.h"
+#include "out.h"
+#include "sxba.h"
+char WHAT_TABLESC[] = "@(#)SYNTAX - $Id$" WHAT_DEBUG;
+
+SXBOOLEAN		is_lig;
+
+static SXBOOLEAN is_dynamic_parser,
+               is_dynamic_scanner;
+
+/* extern long	time (); */
+extern SXBOOLEAN	lecl_read (struct lecl_tables_s *lecl_tables_ptr, char *langname);
+extern SXVOID	lecl_free (struct lecl_tables_s *lecl_tables_ptr);
+extern SXBOOLEAN	parser_read (struct parser_ag_item *parser_ag_ptr, char *langname);
+extern SXVOID	parser_free (struct parser_ag_item *parser_ag_ptr);
+extern SXBOOLEAN	recor_read (struct R_tables_s *R_tables, char *langname);
+extern SXVOID	recor_free (struct R_tables_s *R_tables);
+extern SXBOOLEAN	paradis_read (struct PP_ag_item *PP_ag, char *langname);
+/* extern SXVOID	paradis_free () already declared in etc/incl/PP_tables.h (struct PP_ag_item *paradis_ag_ptr) ; */ 
+extern SXBOOLEAN	semat_read (struct T_ag_item *T_ag, char *langname);
+extern SXVOID	semat_free (struct T_ag_item *T_ag);
+extern SXBOOLEAN	init_tables (char *name);
+extern SXINT   	max_P_tables (void);
+extern SXINT    max_S_tables (void);
+extern SXVOID     sxdp_free (void);
+extern SXBOOLEAN	out_lig_tables (char *);
+extern SXVOID     out_T_tables (void);
+extern SXVOID     out_PP_tables (void);
+extern SXVOID     out_P_tables (void);
+extern SXBOOLEAN  out_S_tables (void);
+extern SXBOOLEAN  ds_read (char *ds_read_language_name);
+extern SXBOOLEAN  dp_read (char *dp_read_language_name);
+extern SXVOID     sxre_free (void);
+
+
+
+#define out_header(nom)		out_name_date (nom, "Beginning")
+#define out_trailer(nom)	out_name_date (nom, "End")
+
+
+static SXVOID	out_name_date (char *nom, char *lib)
+{
+    long	lt;
+
+    lt = time (0);
+    /* the 25th character is a "\n" */
+    printf ("/* %s of sxtables for %s [%.*s] */\n", lib, nom, 24, ctime (&lt));
+}
+
+static SXVOID   out_licence (void)
+{
+
+  printf ("/******************************************************************************\n *                                S Y N T A X\n *-----------------------------------------------------------------------------\n *   Copyright (C) 1972-2018 INRIA (Institut National de Recherche en\n *   Informatique et Automatique)\n *-----------------------------------------------------------------------------\n *   URL: http://syntax.gforge.inria.fr\n *-----------------------------------------------------------------------------\n *   The source code of SYNTAX is distributed with two different licenses,\n *   depending on the files:\n *   - The recursive content of src/ and incl/ and the non-recursive content\n *     of SYNTAX's root directory are distributed under the CeCILL-C license\n *   - The recursive content of all other repertories is distributed under\n *     the CeCILL license\n *   All code produced by SYNTAX must be considered as being under the\n *   CeCILL-C license. Information about the CeCILL and CeCILL-C licenses\n *   can be found at, e.g., http://www.cecill.fr\n *****************************************************************************/\n\n\n");
+
+}
+
+static void
+out_SXP_MAX (SXINT max)
+{
+    printf ("#define SXP_MAX %ld\n", (long)max);
+}
+
+static void
+out_SXS_MAX (void)
+{
+    puts ("#define SXS_MAX (SHRT_MAX+1)\n");
+}
+
+
+
+
+
+#define out_sxunix()	puts ("#include \"sxunix.h\"\n#include \"sxba.h\"")
+
+
+static SXVOID	out_sxtables (void)
+{
+    out_ext_int_newstyle (SC.S_is_non_deterministic ? "sxndscanner(SXINT what_to_do, struct sxtables *arg)" : "sxscanner(SXINT what_to_do, struct sxtables *arg)");
+    out_ext_int_newstyle (PC.nd_degree >= 0 ? "sxndparser (SXINT what_to_do, struct sxtables *arg)" : "sxparser(SXINT what_to_do, struct sxtables *arg)");
+
+    if (PC.nd_degree >= 0) {
+      puts ("#ifdef ESAMBIG");
+      out_ext_int_newstyle ("ESAMBIG(SXINT what)");
+      puts ("#endif /* ESAMBIG */");
+    }
+
+    switch (PC.sem_kind) {
+    case sem_by_abstract_tree:
+	out_ext_int_newstyle ("sxatc(SXINT what, ...)");
+	break;
+
+    case sem_by_paradis:
+	out_ext_int_newstyle ("sxatcpp(SXINT what, ...)");
+	break;
+
+    default:
+      puts ("#ifdef SEMACT");
+      out_ext_int_newstyle ("SEMACT(SXINT what, struct sxtables *arg)");
+      puts ("#endif /* SEMACT */");
+    }
+
+    puts ("\nstruct sxtables sxtables={");
+    printf ("%lu, /* magic */\n", SXMAGIC_NUMBER);
+    /* for the next line, the macro 'SXPARSER_T' denotes the type for the function sxparser() */
+    printf ("{sx%sscanner,(SXPARSER_T) sx%sparser}, ", SC.S_is_non_deterministic ? "nd" : "", PC.nd_degree >= 0 ? "nd" : "");
+    printf ("{%ld, %ld, %ld, ", (long)SC.S_last_char_code < 255 ? SC.S_last_char_code : 255, (long)SC.S_termax, (long)SC.S_constructor_kind);
+    printf ("%ld, %ld, ", (long)RC.S_nbcart, (long)RC.S_nmax);
+    printf ("%ld, %ld, %ld, ", (long)SC.S_last_simple_class_no, (long)SC.S_counters_size, (long)SC.S_last_state_no);
+    printf ("%d, %d, %d, ", SC.S_is_user_action_or_prdct, SC.S_are_comments_erased, SC.S_is_non_deterministic);
+    puts ("\nS_is_a_keyword,S_is_a_generic_terminal,S_transition_matrix,");
+    puts (SC.S_xprod != 0 ? "SXS_action_or_prdct_code," : P0);
+    puts ("S_adrp,");
+    puts (is_syno ? "S_syno," : P0);
+    puts (RC.S_nbcart == 0 ? P0 : "SXS_local_mess,");
+    puts ("S_char_to_simple_class+128,");
+    puts (RC.S_nbcart == 0 ? P0 : "S_no_delete,");
+    puts (RC.S_nbcart == 0 ? P0 : "S_no_insert,");
+    puts ("S_global_mess,");
+    puts (RC.S_nbcart == 0 ? P0 : "S_lregle,");
+    if (SC.S_is_user_action_or_prdct) {
+      puts ("#ifdef SCANACT");
+      puts ("(SXSCANACT_T) SCANACT,");
+      puts ("#else /* SCANACT */");
+      printf ("(SXSCANACT_T) ");
+      puts (P0);
+      puts ("#endif /* SCANACT */");
+    }
+    else {
+      printf ("(SXSCANACT_T) ");
+      puts (P0);
+    }
+    /* for the next line, the macro 'SXRECOVERY_T' denotes the type for the function recovery() */
+    printf ("(SXRECOVERY_T) sx%ss%srecovery,\n", SC.S_is_non_deterministic ? "nd" : "", RC.S_nbcart == 0 ? "s" : "");
+    if (SC.S_check_kw_lgth == 0) {
+      printf ("(SXCHECKKEYWORD_T) ");
+      puts (P0);
+    } else {
+      puts ("check_keyword,");
+    }
+    puts ("},");
+    printf ("{%ld, %ld, %ld, %ld, ", (long)-PC.mMrednt, (long)-PC.mMred, (long)-PC.mMprdct, (long)PC.Mfe);
+    printf ("%ld, %ld, %ld, %ld, ", (long)PC.M0ref, (long)PC.Mref, (long)PC.deltavec + 1, (long)PC.deltavec + PC.Mvec);
+    printf ("%ld, %ld, %ld, %ld, ", (long)PC.tmax, (long)PC.ntmax, (long)PC.nbpro, (long)PC.xnbpro);
+    printf ("%ld, %ld, %ld, ", (long)PC.init_state, (long)PC.final_state, (long)PC.Mprdct_list);
+    printf ("%ld, %ld, %ld, %ld, %ld, ", (long)RC.P_nbcart, (long)RC.P_nmax, (long)RC.P_maxlregle, (long)RC.P_validation_length, (long)RC.P_followers_number);
+    printf ("%ld, %ld, %ld,\n", (long)RC.P_sizeofpts, (long)RC.P_max_prio_X, (long)RC.P_min_prio_0);
+    puts (PR == NULL ? P0 : "reductions,");
+    puts (PT == NULL ? P0 : "t_bases,");
+    puts (PNT == NULL ? P0 : "nt_bases,");
+
+    if (PV != NULL)
+	printf ("#ifdef __INTEL_COMPILER\n#pragma warning(push ; disable:170)\n#endif\nvector-%ld,\n#ifdef __INTEL_COMPILER\n#pragma warning(pop)\n#endif \n", (long)PC.deltavec + 1);
+    else
+	puts (P0);
+
+
+
+    puts ((R.PER_tset == NULL || sxba_scan (R.PER_tset, 0) <= 0) ? P0 : "SXPBM_trans,");
+
+
+    if (PPR != NULL)
+	printf ("#ifdef __INTEL_COMPILER\n#pragma warning(push ; disable:170)\n#endif\nprdcts-%ld,\n#ifdef __INTEL_COMPILER\n#pragma warning(pop)\n#endif \n", (long)-PC.mMred + 1);
+    else
+	puts (P0);
+
+    if (PGA != NULL)
+	printf ("#ifdef __INTEL_COMPILER\n#pragma warning(push ; disable:170)\n#endif\ngerme_to_gr_act-%ld,\n#ifdef __INTEL_COMPILER\n#pragma warning(pop)\n#endif \n", (long)PC.mgerme + 1);
+    else
+	puts (P0);
+
+    puts ((PC.Mprdct_list <= 0) ? P0 : "prdct_list-1,");
+    puts (RC.P_nbcart == 0 ? P0 : "P_lregle,");
+    puts (RC.P_nbcart == 0 ? P0 : "P_right_ctxt_head,");
+    puts ("SXP_local_mess,");
+    puts (RC.P_nbcart == 0 ? P0 : "P_no_delete,");
+    puts (RC.P_nbcart == 0 ? P0 : "P_no_insert,");
+    printf ("P_global_mess,PER_tset,sx%sscan_it,", SC.S_is_non_deterministic ? "nd" : "");
+    /* for the next line, the macro 'SXRECOVERY_T' denotes the type for the function recovery() */
+    printf ("(SXRECOVERY_T) sx%sp%srecovery,\n", PC.nd_degree >= 0 ? "nd" : "", RC.P_nbcart == 0 ? "s" : "");
+
+    /* for the next line, the macro 'SXPARSER_T' denotes the type for the function PARSACT() */
+    if (PPR != NULL || PC.xnbpro > PC.nbpro /* P_is_user_action_or_predicate */) {
+      puts ("#ifdef PARSACT");
+      puts ("(SXPARSER_T) PARSACT,");
+      puts ("#else /* PARSACT */");
+      printf ("(SXPARSER_T) ");
+      puts (P0);
+      puts ("#endif /* PARSACT */");
+    }
+    else {
+      printf ("(SXPARSER_T) ");
+      puts (P0);    
+    }
+
+    if (PC.nd_degree >= 0) {
+      puts ("#ifdef ESAMBIG");
+      puts ("ESAMBIG,");
+      puts ("#else /* ESAMBIG */");
+      printf ("(SXDESAMBIG_T) ");
+      puts (P0);
+      puts ("#endif /* ESAMBIG */");
+    }
+    else {
+      printf ("(SXDESAMBIG_T) ");
+      puts (P0);    
+    }
+
+    switch (PC.sem_kind) {
+    case sem_by_abstract_tree:
+      puts ("(SXSEMACT_T) sxatc");
+      break;
+      
+    case sem_by_paradis:
+      puts ("(SXSEMACT_T) sxatcpp");
+      break;
+      
+    default:
+      puts ("#ifdef SEMACT");
+      puts ("(SXSEMACT_T) SEMACT");
+      puts ("#else /* SEMACT */");
+      printf ("(SXSEMACT_T) ");
+      puts (P0);
+      puts ("#endif /* SEMACT */");
+      break;
+    }
+    puts ("},");
+
+    puts ("err_titles,");
+    puts (RC.E_labstract == 0 ? P0 : "abstract,");
+
+    {
+	char	*sem;
+
+	switch (PC.sem_kind) {
+	case sem_by_abstract_tree:
+	    sem = "&SXT_tables,";
+	    break;
+
+	case sem_by_paradis:
+	    sem = "PP_tables,";
+	    break;
+
+	default:
+	    sem = P0;
+	}
+
+	printf ("(sxsem_tables*)%s\n", sem);
+    }
+
+    puts (is_lig ? "&sxligparsact," : P0);
+
+    out_end_struct ();
+}
+
+
+
+static SXBOOLEAN	sem_read (char *name)
+{
+    switch (PC.sem_kind) {
+    case no_sem:
+    case sem_by_action:
+	return SXTRUE;
+
+    case sem_by_abstract_tree:
+	return semat_read (&T, name);
+
+    case sem_by_paradis:
+	return paradis_read (&PP, name);
+
+    default:
+	return SXFALSE;
+    }
+}
+
+
+
+static SXVOID	out_sem_tables (void)
+{
+    switch (PC.sem_kind) {
+    case no_sem:
+    case sem_by_action:
+	break;
+
+    case sem_by_abstract_tree:
+	out_T_tables ();
+	break;
+
+    case sem_by_paradis:
+	out_PP_tables ();
+	break;
+
+    default:
+	break;
+    }
+}
+
+
+
+static SXVOID	sem_free (void)
+{
+    switch (PC.sem_kind) {
+    case no_sem:
+    case sem_by_action:
+	break;
+
+    case sem_by_abstract_tree:
+	semat_free (&T);
+	break;
+
+    case sem_by_paradis:
+	paradis_free (&PP);
+	break;
+
+    default:
+	break;
+    }
+}
+
+
+
+enum ERROR_IN {SCANNER, RECOR, PARSER, SEMANTICS, OTHER, DP, DS};
+
+
+
+static int	gripe (enum ERROR_IN num)
+{
+    static char		*name [] = {"scanner", "recor", "parser", "semantic", "dynamic_parser",
+					"dynamic_scanner"};
+
+    switch (num) {
+    case DP:
+
+    default:
+	sxre_free ();
+
+    case DS:
+	sem_free ();
+
+    case SEMANTICS:
+	parser_free (&P);
+
+    case PARSER:
+	recor_free (&R);
+
+    case RECOR:
+	lecl_free (&S);
+
+    case SCANNER:
+    case OTHER:
+	break;
+    }
+
+    if (num != OTHER) {
+	fprintf (sxstderr, "%s: cannot access %s tables.\n", ME, name [(SXINT) num]);
+    }
+
+    return (SXSEVERITIES - 1);
+}
+
+
+
+/*---------------*/
+/*    options    */
+/*---------------*/
+
+static char	Usage [] = "\
+Usage:\t%s [options] language_name\n\
+options=\t-v, -verbose, -nv, -noverbose,\n\
+\t\t-dp, -dynamic_parser\n\
+\t\t-ds, -dynamic_scanner\n";
+
+#define OPTION(opt)	(1 << (opt - 1))
+#define noOPTION(opt)	(~OPTION (opt))
+
+#define OPT_NB ((sizeof(option_tbl)/sizeof(*option_tbl))-1)
+
+#define UNKNOWN_ARG 		0
+#define VERBOSE 		1
+#define DYNAMIC_PARSER		2
+#define DYNAMIC_SCANNER		3
+#define LAST_OPTION		DYNAMIC_SCANNER
+#define LANGUAGE_NAME 		LAST_OPTION+1
+
+
+static char	*option_tbl [] = {"", "v", "verbose", "nv", "noverbose",
+				      "dp", "dynamic_parser",
+				      "ds", "dynamic_scanner",};
+static SXINT	option_kind [] = {UNKNOWN_ARG, VERBOSE, VERBOSE, -VERBOSE, -VERBOSE,
+				      DYNAMIC_PARSER, DYNAMIC_PARSER,
+				      DYNAMIC_SCANNER, DYNAMIC_SCANNER,};
+
+
+
+static SXINT	option_get_kind (char *arg)
+{
+    char	**opt;
+
+    if (*arg++ != '-')
+	return LANGUAGE_NAME;
+
+    for (opt = &(option_tbl [OPT_NB]); opt > option_tbl; opt--) {
+	if (strcmp (*opt, arg) == 0 /* egalite */ )
+	    break;
+    }
+
+    return option_kind [opt - option_tbl];
+}
+
+
+
+/************************************************************************/
+/* main function */
+/************************************************************************/
+int main (int argc, char *argv[])
+{
+  int		argnum;
+  char          *name;
+
+  sxinitialise(name); /* pour faire taire gcc -Wuninitialized */
+  /* valeurs par defaut */
+
+  sxopentty ();
+
+  is_dynamic_parser = SXFALSE;
+  is_dynamic_scanner = SXFALSE;
+  is_lig = SXFALSE;
+
+  /* Decodage des options */
+
+  for (argnum = 1; argnum < argc; argnum++) {
+    switch (option_get_kind (name = argv [argnum])) {
+    case VERBOSE:
+      sxverbosep = SXTRUE;
+      break;
+
+    case -VERBOSE:
+      sxverbosep = SXFALSE;
+      break;
+
+    case DYNAMIC_PARSER:
+      is_dynamic_parser = SXTRUE;
+      break;
+
+    case -DYNAMIC_PARSER:
+      is_dynamic_parser = SXFALSE;
+      break;
+
+    case DYNAMIC_SCANNER:
+      is_dynamic_scanner = SXTRUE;
+      break;
+
+    case -DYNAMIC_SCANNER:
+      is_dynamic_scanner = SXFALSE;
+      break;
+
+    case LANGUAGE_NAME:
+      /* nom du langage */
+      goto run;
+
+    case UNKNOWN_ARG:
+      fprintf (sxstderr, "%s: unknown option \"%s\" (ignored).\n", ME, name);
+      break;
+    default:
+#if EBUG
+      sxtrap(ME,"unknown switch case #1");
+#endif
+      break;
+    }
+  }
+
+  fprintf (sxstderr, Usage, ME);
+  SXEXIT (SXSEVERITIES);
+
+ run:
+  language_name = name;
+
+  if (sxverbosep) {
+    fprintf (sxtty, "%s\n", release_mess);
+  }
+
+  if (!lecl_read (&S, language_name))
+    SXEXIT (gripe (SCANNER));
+
+  if (!recor_read (&R, language_name))
+    SXEXIT (gripe (RECOR));
+
+  if (!parser_read (&P, language_name))
+    SXEXIT (gripe (PARSER));
+
+  if (!sem_read (language_name))
+    SXEXIT (gripe (SEMANTICS));
+
+  if (!init_tables (language_name))
+    SXEXIT (gripe (OTHER));
+
+  out_licence ();
+  out_header (language_name);
+  out_SXP_MAX (max_P_tables ());
+
+  if (max_S_tables () >= 0x3ff)
+    out_SXS_MAX ();
+
+  out_sxunix ();
+
+  /* Cas des LIGs traitees avec le constructeur EARLEY/LC ! */
+  /* Dans le cas GLR, is_lig sera repositionne par out_P_tables() */
+  /* C,a semble tres etrange, de toutes les facons, ds la version 6, y-a pas de lig!!
+     is_lig = PC.nd_degree == 1;
+  */
+
+  out_P_tables ();
+
+  if (!out_S_tables ()) {
+    SXEXIT (gripe (OTHER));
+  }
+
+  out_sem_tables ();
+
+  if (is_lig)
+    {
+      if (!out_lig_tables (language_name))
+	SXEXIT (SXSEVERITIES - 1);
+    }
+
+  out_sxtables ();
+
+  if (SC.S_check_kw_lgth != 0)
+    puts (SK);
+
+  if (is_dynamic_scanner && !ds_read (language_name))
+    SXEXIT (gripe (DS));
+
+  if (is_dynamic_parser && !dp_read (language_name))
+    SXEXIT (gripe (DP));
+
+  out_trailer (language_name);
+
+  if (is_dynamic_scanner)
+    sxre_free ();
+
+  if (is_dynamic_parser)
+    sxdp_free ();
+
+  sem_free ();
+  parser_free (&P);
+  recor_free (&R);
+  lecl_free (&S);
+  SXEXIT (0);			/* fin normale */
+
+  return EXIT_SUCCESS; /* Jamais atteint !! pour les compilo susceptibles ... */
+}

@@ -1,0 +1,13 @@
+<tdef>		= <def_s>
+							~~ ;
+
+<def_s>		= <def_s>
+		  <def>					~~ ;
+<def_s>		= <def>					~~ ;
+
+<def>		= %T_NAME ~TAB~ =  <terminal> ~TAB~ ";"	~~ ; 1
+<def>		= %T_NAME ~TAB~ =  %NON_TERMINAL ~TAB~ ";"	~~ ; 2
+
+<terminal>	= %T_NAME				~~ ;
+<terminal>	= %T_SYMB				~~ ;
+<terminal>	= =					~~ ;

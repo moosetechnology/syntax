@@ -1,0 +1,358 @@
+.\" @(#)sxstr_mngr.3	- SYNTAX [unix] - 29 Decembre 1987
+.TH SXSTR_MNGR 3 "SYNTAX\[rg]"
+.SH NAME
+sxstrmngr_t,
+sxstrmngr,
+sxstr_mngr,
+sxstr_retrievelen,
+sxstr_retrieve,
+sxstr_savelen,
+sxstr_save,
+sxstr_get,
+sxstr_length,
+sxstr_size,
+sxstr_dump,
+sxstr_save_keywords,
+sxstr2retrieve,
+sxstr2save,
+sxstrretrieve,
+sxstrsave,
+sxstrget,
+sxstrlen,
+SXSTRtop
+\- string manager for SYNTAX.
+.SH SYNOPSIS
+.nf
+.ta \w'\s-2VOID\s0  'u +\w'\s-2VOID\s0  'u
+.B
+#include "sxunix.h"
+.PP
+.B
+typedef struct sxstrmngr sxstrmngr_t\|;
+.PP
+.B
+\s-2SXVOID\s0 sxstr_mngr (what, strtable)
+.B
+	int	 what\|;
+.B
+	sxstrmngr_t	 *strtable\|;
+.PP
+General primitives operating on any string table passed as 1st argument
+.PP
+.B
+unsigned int sxstr_save (strtable, string)
+.B
+	sxstrmngr_t	 *strtable\|;
+.B
+	char	*string\|;
+.PP
+.B
+unsigned int sxstr_savelen (strtable, string, strlength)
+.B
+	sxstrmngr_t	 *strtable\|;
+.B
+	char	*string\|;
+.B
+	unsigned long  strlength\|;
+.PP
+.B
+unsigned int sxstr_retrieve (strtable, string)
+.B
+	sxstrmngr_t	 *table\|;
+.B
+	char	*string\|;
+.PP
+.B
+unsigned int sxstr_retrievelen (strtable, string, strlength)
+.B
+	sxstrmngr_t	 *table\|;
+.B
+	char	*string\|;
+.B
+	unsigned long  strlength\|;
+.PP
+.B
+char *sxstr_get (strtable, string_table_entry)
+.B
+	sxstrmngr_t	 *strtable\|;
+.B
+	unsigned int  string_table_entry\|;
+.PP
+.B
+unsigned long sxstr_length (strtable, string_table_entry)
+.B
+	sxstrmngr_t	 *strtable\|;
+.B
+	unsigned int  string_table_entry\|;
+.PP
+.B
+unsigned int sxstr_size (strtable)
+.B
+	sxstrmngr_t	 *strtable\|;
+.PP
+.B
+SXVOID sxstr_dump (f, strtable)
+.B
+	FILE	 *f\|;
+.B
+	sxstrmngr_t	 *strtable\|;
+.PP
+.B
+SXVOID sxstr_save_keywords (strtable, lang)
+.B
+	sxstrmngr_t	*strtable\|;
+.B
+	char	*lang\|;
+.PP
+Traditional primitives that operate only on the global variable sxstrmngr
+.PP
+.B
+sxstrmngr_t sxstrmngr\|;
+.PP
+.B
+char *sxstrget (string_table_entry)
+.B
+	unsigned int  string_table_entry\|;
+.PP
+.B
+unsigned long sxstrlen (string_table_entry)
+.B
+	unsigned int  string_table_entry\|;
+.PP
+.B
+unsigned int sxstrsave (string)
+.B
+	char	*string\|;
+.PP
+.B
+unsigned int sxstr2save (string, strlen)
+.B
+	char	*string\|;
+.B
+	unsigned long  strlen\|;
+.PP
+.B
+unsigned int sxstrretrieve (string)
+.B
+	char	*string\|;
+.PP
+.B
+unsigned int sxstr2retrieve (string, strlen)
+.B
+	char	*string\|;
+.B
+	unsigned long  strlen\|;
+.PP
+.B
+unsigned int SXSTRtop ()
+.fi
+.SH DESCRIPTION
+The
+.B string manager
+module allows to store strings once and subsequently refer to them
+with a unique positive integral number (``string table entry'').  This
+module provides two sets of primitives (procedures and
+macro-definitions): the first set operates on any string table passed
+as first argument, whereas the second set operates only on the default
+string table, stored in the global variable
+.I sxstrmngr
+(of type
+.IR \s-2sxstrmngr_t\s0 ,
+the details of which are of no interest to the naive user).
+The
+.B SYNTAX
+scanner (see
+.BR sxscanner (3))
+is a good example of the use of the second set of primitives.
+.LP
+.I sxstr_mngr
+is the first and last entry point of the module to be called for using
+a string table.
+It may be called with four possible arguments\|:
+.IP -
+.IR \s-2SXBEGIN\s0
+states that the default string table
+.I sxstrmngr
+should become initialized. If this table was already initialized
+and used, the call
+.I sxstr_mngr\ (\s-2SXBEGIN\s0)
+reinitializes the table, the internal structures of which are
+cleared, without the need to call
+.I sxstr_mngr\ (\s-2SXEND\s0)
+beforehand; in such case, it is possible and recommended to call
+.I sxstr_mngr\ (\s-2SXCLEAR\s0)
+rather than
+.I sxstr_mngr\ (\s-2SXBEGIN\s0)
+so as to better document the expected effect.
+.IP -
+.IR \s-2SXEND\s0
+states that the strings saved in the default table
+.I sxstrmngr
+will be no more accessed, so that internal structures may be freed.
+.IP -
+.I \s-2SXOPEN\s0
+.IR strtable
+states that the string table
+.I *strtable
+should become initialized. If this table was already initialized and
+used, the call
+.I sxstr_mngr\ (\s-2SXOPEN\s0, strtable)
+reinitializes
+.IR *strtable,
+without the need to call
+.I sxstr_mngr\ (\s-2SXCLOSE\s0, strtable)
+beforehand.
+.IP -
+.I \s-2SXCLOSE\s0
+.IR strtable
+statea that the strings saved in the table
+.I *strtable
+will be no more accessed, so that internal structures may be freed.
+.PP
+.I sxstr_get
+returns (a pointer to) the null-terminated string associated with
+.IR string_table_entry
+in the table
+.IR strtable .
+.I sxstr_length
+returns the number of characters in that string, not including the
+terminating null character.
+.I sxstr_get
+and
+.I sxstr_length
+are (side-effect free) macros.
+.PP
+.I sxstr_save
+saves the string
+.I string
+in the string table
+.I strtable
+and returns the associated unique number.
+Further calls with a string comparing equal with
+.I string
+will return the same number.
+.PP
+.I sxstr_savelen
+is similar\|; the difference is that the number of characters in
+.I string
+is given (as
+.IR strlength),
+and does not have to be computed.
+This allows to save strings that contain null characters and may be
+not null-terminated.
+.PP
+.I sxstr_retrieve
+is only different from
+.I sxstr_save
+in that it does not store the string
+.I string
+in the string table if it is not there, and returns instead the
+constant
+.I \s-2SXERROR_STE\s0
+(see \s-2NOTES\s0 below).
+.PP
+.I sxstr_retrievelen
+is similar\|; the difference is that the number of characters in
+.I string
+is given (as
+.IR strlength),
+and does not have to be computed.
+.PP
+.I sxstr_size
+is a side-effect-free macro that returns the current number of elements
+(including the two special entries
+.I \s-2SXERROR_STE\s0
+and
+.IR \s-2SXERROR_STE\s0 )
+stored in the string table
+.IR strtable .
+.PP
+.I sxstr_dump
+prints the contents of the string table
+.I strtable
+to file
+.IR f ,
+which has to be opened before calling
+.IR sxstr_dump .
+.PP
+.I sxstr_save_keywords
+adds all the reserved keywords of the language
+.I lang
+to
+.IR strtable.
+Currently, only the C programming language is supported (i.e.,
+.I lang
+= "C").
+.PP
+The primitives of the second set of primitives differ from those of
+the first set only by the fact that they operate on the default string
+table, i.e., the global variable
+.IR sxstrmngr :
+.IP -
+.I sxsxtrget (...)
+is similar to
+.I sxstr_get (&sxstrmngr, ...)
+.IP -
+.I sxsxtrlen (...)
+is similar to
+.I sxstr_length (&sxstrmngr, ...)
+.IP -
+.I sxsxtrsave (...)
+is similar to
+.I sxstr_save (&sxstrmngr, ...)
+.IP -
+.I sxsxtr2save (...)
+is similar to
+.I sxstr_savelen (&sxstrmngr, ...)
+.IP -
+.I sxsxtrretrieve (...)
+is similar to
+.I sxstr_retrieve (&sxstrmngr, ...)
+.IP -
+.I sxsxtr2retrieve (...)
+is similar to
+.I sxstr_retrievelen (&sxstrmngr, ...) 
+.IP -
+.I SXSTRtop()
+is similar to
+.I sxstr_size (&sxstrmngr)
+.SH "SEE ALSO"
+sxunix(3)
+and the \fISYNTAX Reference Manual\fP.
+.SH NOTES
+Two special constants are defined in the header file \fI"sxunix.h"\fP.
+.I \s-2SXERROR_STE\s0
+is the string table entry associated with any generic token inserted
+by the parser during error recovery.
+.I \s-2SXEMPTY_STE\s0
+is predefined as the string table entry associated with the empty
+string.
+
+.SH BUG
+Because
+.I sxstrget
+and
+.I sxstrlen
+are implemented as macros, they should not be used directly with the
+result of a call to
+.I sxstrsave
+or
+.IR sxstr2save ,
+as that call may change the value of variables used in the macros,
+which might on some systems produce invalid results.
+Thus the user is urged not to write things as\|:
+.nr 53 \w'\fBste \fP'
+.if \n(53<\w'\fBptr \fP' .nr 53 \w'\fBptr \fP'
+.ta \w'    'u +\n(53u
+.br
+\fB	ptr	= sxstrget (sxstrsave (string))\|;\fP
+.br
+and to use an intermediate variable instead, as in\|:
+.nf
+\fB	ste	= sxstrsave (string)\|;\fP
+\fB	ptr	= sxstrget (ste)\|;\fP
+.fi
+.\" Local Variables:
+.\" mode: nroff
+.\" version-control: yes
+.\" End:

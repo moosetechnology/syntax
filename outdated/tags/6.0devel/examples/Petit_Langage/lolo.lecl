@@ -1,0 +1,43 @@
+Classes
+
+     STAR = "*" ;
+
+     OPEN_BRACKET = "(" ;
+
+     CLOSE_BRACKET = ")" ;
+
+     C_LETTER = "_" + LETTER;
+
+     C_CHAR = DIGIT + C_LETTER;
+
+     CHARACTER = LETTER ;
+
+     SPACE = SP + NL + FF + HT + LF + CR ;
+
+     CHARASPACE = C_CHAR + SPACE ;
+
+     OTHERS = ANY - (CHARACTER + SPACE) ;
+
+Abbreviations
+
+     SEPARATOR = {- SPACE}+ ;
+
+     PRINTED = -("P"|"p") -("R"|"r") -("I"|"i") -("N"|"n") -("T"|"t") -("E"|"e") -("D"|"d") -("B"|"b") -("Y"|"y") ;
+
+     PRINT = -("P"|"p") -("R"|"r") -("I"|"i") -("N"|"n") -("T"|"t") -("B"|"b") -("Y"|"y") ;
+
+     C_NAME = (LETTER | "_") {LETTER | "_" | DIGIT} ;
+
+     COMMENT1 = -"(" -"*" - ^"!" {-ANY} -"*" -")" &true ;
+
+     SPECIAL_COMMENT = -"(" - "*" -"!" SEPARATOR ([ PRINTED SEPARATOR C_NAME SEPARATOR ] @PUT("/") | [PRINT SEPARATOR C_NAME SEPARATOR ] @PUT("/") ) -"*" -")" &true;
+
+Tokens
+
+     Comments = {(SEPARATOR | COMMENT1 | SPECIAL_COMMENT @1)}+;
+	  Priority Shift > reduce ;
+
+     %IDENTIFIER = CHARACTER [ {CHARACTER} ] @Upper_case @2 ;
+	  Priority shift > reduce ;
+
+     EOF = "$";

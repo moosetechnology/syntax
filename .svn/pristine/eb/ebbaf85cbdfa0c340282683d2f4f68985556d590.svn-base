@@ -1,0 +1,497 @@
+
+NOTES POUR LA MIGRATION VERS SYNTAX V6 DE COMPILATEURS ECRITS EN SYNTAX V3.8
+============================================================================
+
+		Hubert Garavel
+		avec contributions de
+		Romain Lacroix, Frederic Lang, Radu Mateescu
+
+		Thu Jun  5 18:40:24 CEST 2008
+
+-----------------------------------------------------------------
+
+1) Appliquer les premiers changements pour Syntax V6 decrits ci-dessous:
+
+En Syntax V3.8, les quatre variables suivantes :
+    extern FILE *sxstdout, *sxstderr, *sxtty;
+    extern SXBOOLEAN sxverbosep;
+doivent être déclarées dans un de vos modules (genéralement celui qui contient
+la fonction `main'). En Syntax V6, ces variables sont désormais implantées
+dans la libsx.a elle-même.
+
+Un autre point à surveiller est de ne pas perdre la valeur initiale de ces
+variables si elles étaient initialisées lors de la déclaration.
+
+Vous devez donc modifier vos sources de la manière suivante
+
+Avant: si vous aviez, par exemple, ces declarations
+
+    FILE *sxstdout = NULL;
+    FILE *sxstderr = NULL;
+    FILE *sxtty;
+    BOOLEAN sxverbosep = {FALSE};  -- BOOLEAN ou SXBOOLEAN, FALSE ou SXFALSE
+
+Après :
+
+    #ifndef SX_GLOBAL_VAR
+    /* declarations indispensables pour Syntax V3.8 et interdites pour Syntax V6 */
+    FILE *sxstdout;
+    FILE *sxstderr;
+    FILE *sxtty;
+    SXBOOLEAN sxverbosep;
+    #endif
+
+puis dans le main () inserer juste après l'accolade ouvrante :
+
+    main () {
+    ... declarations de variables ...
+    sxstdout = NULL;
+    sxstderr = NULL;
+    sxverbosep = SXFALSE;        --- noter qu'il faut ecrire SXFALSE et qu'ne faut plus d'accolades !!!
+    ...
+    -- suite du main
+
+-----------------------------------------------------------------
+
+2) Appliquer les changements pour Syntax V6 decrits ci-dessous
+
+En Syntax V6, la fonction sxvoid() est desormais fournie dans la libsx.a et
+ne doit plus etre definie dans les programmes utilisant Syntax.
+
+Il faut donc remplacer dans votre code :
+
+    VOID sxvoid ()
+    {
+    }
+
+par:
+
+    #include "sxunix.h"
+
+    #ifndef SX_GLOBAL_VAR
+    /* declaration indispensable pour Syntax V3.8 et interdite pour Syntax V6 */
+
+    SXVOID sxvoid ()
+    {
+    }
+
+    #endif
+
+-----------------------------------------------------------------
+
+3) rechercher BOOLEAN
+
+grep '\<BOOLEAN\>' *.{c,h,i,f,t,tabc}
+
+analysis.c:BOOLEAN sxverbosep;
+analysis.c:extern BOOLEAN *SYNTAX_ERROR;
+lotos.tabc:BOOLEAN *SYNTAX_ERROR;
+lnt2lotos.c:extern SXBOOLEAN *SYNTAX_ERROR;
+lnt2lotos.c:extern SXBOOLEAN SEMANTICS_ERROR;
+
+
+remplacer BOOLEAN par SXBOOLEAN
+(y compris pour sxverbosep - contrairement a mon mail precedent
+qui disait BOOLEAN)
+
+recompiler, ca doit marcher
+
+-----------------------------------------------------------------
+
+4) rechercher FALSE
+
+grep '\<FALSE\>' *.{c,h,i,f,t,tabc}
+analysis.c:     sxverbosep = FALSE;
+lotosnt.f:SXBOOLEAN SEMANTICS_ERROR = FALSE;
+
+remplacer FALSE par SXFALSE avec discernement
+(uniquement lorsque c'est le FALSE de syntax, pas un FALSE defini
+par le compilateur lui-meme)
+
+recompiler, ca doit marcher
+
+-----------------------------------------------------------------
+
+5) rechercher TRUE
+
+grep '\<TRUE\>' *.{c,h,i,f,t,tabc}
+analysis.c:   lnt2lotos.c:      if (*SYNTAX_ERROR == TRUE) {
+lnt2lotos.c:     if (*SYNTAX_ERROR == TRUE) {
+lnt2lotos.c:     if (SEMANTICS_ERROR == TRUE) {
+lotosnt.f:     SEMANTICS_ERROR = TRUE;
+
+remplacer TRUE par SXTRUE avec discernement
+(uniquement lorsque c'est le FALSE de syntax, pas un FALSE defini
+par le compilateur lui-meme)
+
+recompiler, ca doit marcher
+
+-----------------------------------------------------------------
+
+6) modifications preliminaires : sxincl_mngr
+
+grep sxincl_mngr *
+build_tree.c:     sxincl_mngr (OPEN);
+build_tree.c:     sxincl_mngr (CLOSE);
+build_tree.c:     sxincl_mngr (INIT);
+build_tree.c:     sxincl_mngr (FINAL);
+
+remplacer
+
+     case OPEN:
+          sxincl_mngr (OPEN);
+          return;
+     par
+     case SXOPEN:
+          sxincl_mngr (SXOPEN);
+          return;
+
+idem pour CLOSE, INIT, FINAL, et ACTION
+
+cas particulier 1 : remplacer
+    #define INIT SXINIT
+         case INIT:
+              sxincl_mngr (INIT);
+    #undef INIT
+par
+     case SXINIT:
+          sxincl_mngr (SXINIT);
+8
+cas particulier 2 : remplacer
+    #define ACTION SXACTION
+         case ACTION:
+    #undef ACTION
+par
+        case SXACTION:
+
+recompiler, ca doit marcher nickel
+
+-----------------------------------------------------------------
+
+7) idem pour sxstr_mngr
+
+grep sxstr_mngr *
+analysis.c:     sxstr_mngr (BEGIN);
+analysis.c:     sxstr_mngr (END);
+type_mapping.c:     sxstr_mngr (BEGIN);
+type_mapping.c:     sxstr_mngr (END);
+
+remplacer BEGIN par SXBEGIN
+et END par SXEND
+
+recompiler ca doit marcher nickel
+
+-----------------------------------------------------------------
+
+8) idem pour sxerr_mngr
+
+grep sxerr_mngr *  | grep -v Makefile
+
+analysis.c:     sxerr_mngr (BEGIN);
+analysis.c:     sxerr_mngr (END);
+
+remplacer BEGIN par SXBEGIN
+et END par SXEND
+
+recompiler ca doit marcher nickel
+
+-----------------------------------------------------------------
+
+9) idem pour sxsrc_mngr
+
+grep sxsrc_mngr *
+
+analysis.c:     sxsrc_mngr (INIT, FILE_LOTOS, "");
+analysis.c:     sxsrc_mngr (FINAL);
+
+remplacer INIT par SXINIT et FINAL par SXFINAL
+
+en particulier,
+#define INIT SXINIT
+     sxsrc_mngr (INIT, FILE_LOTOS, "");
+#undef INIT
+devient
+     sxsrc_mngr (SXINIT, FILE_LOTOS, "");
+
+recompiler ca doit marcher nickel
+
+-----------------------------------------------------------------
+
+10) idem pour syntax()
+
+grep '\<syntax\>' * | grep -v Makefile | grep -v SCCS
+
+% analysis.c:#include "syntax.h"
+% analysis.c:                     "%s: syntax analysis of ``%s''\n"),
+analysis.c:     syntax (OPEN, &sxtables);
+% analysis.c:      * non; cette modification est decrite dans `Make-syntax'
+analysis.c:     syntax (ACTION, &sxtables);
+analysis.c:     syntax (CLOSE, &sxtables);
+% build_tree.c:#include "syntax.h"
+
+- remplacer
+     syntax (OPEN, &sxtables);
+par
+     syntax (SXOPEN, &sxtables);
+
+- remplacer
+    #define ACTION SXACTION
+         syntax (ACTION, &sxtables);
+    #undef ACTION
+par
+     syntax (SXACTION, &sxtables);
+
+- remplacer
+    syntax (CLOSE, &sxtables);
+par
+    syntax (SXCLOSE, &sxtables);
+
+
+recompiler ca doit marcher nickel
+
+-----------------------------------------------------------------
+
+11) idem pour scanact()
+
+Il faudrait également chercher les
+    occurrences des valeurs suivantes :
+
+      VOID
+      OPEN
+      CLOSE
+      INIT
+      FINAL
+      ACTION
+      UPPER_CASE
+      LOWER_CASE
+      CAPITALISED_INITIAL
+
+    et les préfixer par "SX".
+
+    En effet, ces valeurs énumérées (qui semblent être définies
+    par un type "enum" du C ou par des #define) peuvent apparaître
+    également dans la fonction scanner_act() appelée par Syntax
+    lorsqu'il doit faire des actions attachées aux identifications
+    de tokens.
+
+    Donc les occurrences de ces constantes ne sont pas forcément
+    limitées aux appels de sxincl_mngr(), etc.). 
+
+-----------------------------------------------------------------
+
+12) rechercher analyzers
+
+ grep analyzers *
+analysis.c:     (*(sxtables.analyzers.parser)) (BEGIN);
+analysis.c:     (*(sxtables.analyzers.parser)) (END);
+
+remplacer BEGIN par SXBEGIN
+et END par SXEND
+
+recompiler ca doit marcher nickel
+
+-----------------------------------------------------------------
+
+13) remplacer STACKtoken ()  par SXSTACKtoken ()
+
+grep STACKtoken *
+
+    essentiellement dans le .tabc
+
+-----------------------------------------------------------------
+
+14) remplacer STACKtop () par SXSTACKtop()
+
+grep STACKtop *
+
+    essentiellement dans le .tabc
+
+-----------------------------------------------------------------
+
+15) remplacer 
+	lv par sxlv
+    et
+	lv_s par sxlv_s
+
+-----------------------------------------------------------------
+
+16a) remplacer ERROR_STE par SXERROR_STE s'il en existe
+
+grep ERROR_STE *
+
+-----------------------------------------------------------------
+
+16b) remplacer EMPTY_STE par SXEMPTY_STE s'il en existe
+
+grep EMPTY_STE *
+
+-----------------------------------------------------------------
+
+17) s'attaquer aux #undef residuels
+
+grep #undef *
+
+cas A) les #undef AVANT de #inclure sxunix.h
+------
+
+syntax.h:#undef new
+syntax.h:#undef old
+    -- specifique a Caesar?
+    -- laisser ceci car Syntax 3.8 et 6 utilisent des `new'
+    -- dans leurs includes (au lieu de sxnew) et il ne faut
+    -- pas les perturber
+
+cas B) les #undef APRES avoir #inclus sxunix.h : dans le .tabc
+--------------------------------------------------------------
+
+lotos.tabc:#undef INIT
+lotos.tabc:#undef ACTION
+
+remplacer
+    #undef INIT
+    #undef ACTION
+par
+#ifndef SX_GLOBAL_VAR
+/* on est en Syntax V3.8 : il faut annuler les macros INIT et ACTION definies
+ * dans <sxunix.h> qui font conflit avec l'arbre abstrait de Caesar ; avec
+ * Syntax V6, ce probleme a ete corrige
+ */
+#undef INIT
+#undef ACTION
+#endif
+
+plus bas dans le .tabc
+remplacer les deux definitions
+   #define INIT SXINIT
+a) repasser vos tests
+   #define ACTION SXACTION
+par
+#ifndef SX_GLOBAL_VAR
+/* on est en Syntax V3.8 : il faut redefinir les macros annulees car, meme
+ * si le code de Caesar ne les utilise plus, le code C genere par Syntax V3.8
+ * les utilise encore
+ */
+#define INIT SXINIT
+#define ACTION SXACTION
+#endif
+
+cas C) les #undef APRES avoir #inclus sxunix.h : dans les .h et .c
+-------------------------------------------------------------------
+
+syntax.h:#undef INIT
+syntax.h:#undef ACTION
+
+remplacer
+a) repasser vos tests
+
+    #include "sxunix.h"
+    #undef INIT
+    #undef ACTION
+par
+    #include "sxunix.h"
+    #ifndef SX_GLOBAL_VAR
+    /* on est en Syntax V3.8 : il faut annuler les macros INIT et ACTION definies
+     * dans <sxunix.h> qui font conflit avec l'arbre abstrait de Caesar ; avec
+     * Syntax V6, ce probleme a ete corrige
+     */
+    #undef INIT
+    #undef ACTION
+    #endif
+
+-----------------------------------------------------------------
+
+18) TRES IMPORTANT et pas optionnel du tout
+
+remplacer l'appel
+
+     sxerr_mngr (SXBEGIN);
+
+par le bout de code suivant :
+
+     sxerr_mngr (SXBEGIN);
+#ifdef SX_GLOBAL_VAR
+     /*
+      * en Syntax V6, l'appel ci-dessous est indispensable pour avoir les
+      * messages d'erreur compacts dans le style VASY ; en Syntax V3.8, il
+      * est interdit car SXERR_FORMAT_LIGHTWEIGHT n'est pas defini (c'est
+      * Make-syntax qui se charge de patcher le fichier source "sxerr_mngr.c"
+      * pour avoir les messages d'erreur compacts)
+      */
+     sxerr_mngr (SXFORMAT, SXERR_FORMAT_LIGHTWEIGHT);
+#endif
+
+ca doit recompiler ok
+
+-----------------------------------------------------------------
+
+19) Il faut aussi modifier vos fichier .recor pour remplacer %d par %ld
+
+-----------------------------------------------------------------
+
+20) Repasser vos jeux de tests avec votre compilateur ainsi modifié
+et toujours compilé en Syntax V3.8
+
+Rien ne doit changer
+
+-----------------------------------------------------------------
+
+21) ENFIN : passage en version V6
+
+a) Editer le Userfile et remplacer
+    SXDIR=/common/Syntax
+par
+    SXDIR=/common/SyntaxV6
+
+b) Regenerer les Makefiles
+    Make-makefile
+
+c) faire ./make purge
+    (indispensable !!!!)
+
+d) faire ./make
+
+e) repasser vos jeux de tests
+
+-----------------------------------------------------------------
+
+INFORMATION [Romain Lacroix 03/12/2008 14:37]
+
+Voici la liste des combinaisons
+( architectures matérielle / architectures logicielles / compilateurs )
+pour lesquelles nous avons validé la procédure compilation :
+
+- sparc32 / sunOS 10 / sunCC 11
+- sparc64 / sunOS 10 / sunCC 11
+- sparc32 / sunOS 10 / gcc 3.4.6
+- sparc64 / sunOS 10 / gcc 3.4.6
+- x86 / linux / gcc 4.1.2
+- x86 / linux / intelCC 10.1
+- x86 / linux / sunCC 12
+- x86 / win32 / gcc cross 3.4.5
+- powerpc / macOS X / gcc cross 4.1.2
+- x86 / macOS X / gcc cross 4.0.2
+- x86_64 / linux / gcc cross 4.1.1
+- x86_64 / linux / gcc natif 4.2.3
+- x86_64 / linux / sunCC 12
+- x86_64 / linux / intelCC 10.1
+- itanium64 / linux / gcc cross 3.4.5
+- itanium64 / linux / intelCC cross 10.1
+
+Nous avons aussi validé la procédure (compilation / bootstrap / compilation /bootstrap ) quand nous avions accès au runtime, pour les architectures suivantes :
+
+- sparc32 / sunOS 10 / sunCC 11
+- sparc64 / sunOS 10 / sunCC 11
+- sparc32 / sunOS 10 / gcc 3.4.6
+- sparc64 / sunOS 10 / gcc 3.4.6
+- x86 / linux / gcc 4.1.2
+- x86 / linux / intelCC 10.1
+- x86 / linux / sunCC 12
+- x86_64 / linux / gcc cross 4.1.1
+- x86_64 / linux / gcc natif 4.2.3
+- x86_64 / linux / sunCC 12
+- x86_64 / linux / intelCC 10.1
+
+Les systèmes linux sont "Debian Etch" pour le 32 bit et "Ubuntu Hardy" pour le 64 bit.
+
+===
+

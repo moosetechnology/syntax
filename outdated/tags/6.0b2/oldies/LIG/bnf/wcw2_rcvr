@@ -1,0 +1,39 @@
+[11:56]@athos% ./wcw2.out test.wcw
+test.wcw:
+
+abcabbbbabb
+     ^
+test.wcw, line 1: column 6: Error:      "End Of File" is expected
+
+abcabbbbabb
+     ^
+test.wcw, line 1: column 6: Error:      Global recovery.
+
+abcabbbbabb
+           ^
+test.wcw, line 1: column 12: Error:     Parsing stops on End Of File.
+
+
+[11:56]@athos% ./wcw2.out test.wcw
+test.wcw:
+
+abababcab
+         ^
+test.wcw, line 1: column 10: Warning:   "a" is forced before "End Of File".
+
+abababcab
+         ^
+test.wcw, line 1: column 10: Warning:   "b" is forced before "End Of File".
+
+abababcab
+         ^
+test.wcw, line 1: column 10: Warning:   "a b" is inserted before "End Of File".
+
+
+[11:57]@athos% ./wcw2.out test.wcw
+test.wcw:
+
+abaaababbbababaabababbbbabacabaaababbbababbabababbbbaba
+                                          ^
+test.wcw, line 1: column 43: Warning:   "b" is replaced by "a".
+

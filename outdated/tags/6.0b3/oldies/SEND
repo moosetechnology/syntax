@@ -1,0 +1,103 @@
+#! /bin/sh
+# Prepare to distribute SYNTAX(TM)
+#
+# Copyright (c) 1986 Philippe Deschamp
+#
+#    Permission is granted to anyone to make or distribute verbatim
+#    copies of this document as received, in any medium, provided
+#    that the copyright notice and this permission notice are
+#    preserved, thus giving the recipient permission to redistribute
+#    in turn.
+#
+#    Permission is granted to distribute modified versions of this
+#    document, or of portions of it, under the above conditions,
+#    provided also that they carry prominent notices stating who last
+#    changed them.
+
+USAGE="Usage:	$0
+or	$0 -doc"
+
+case $1 in
+	-doc)echo "$USAGE
+Writes the distributable part of the C version of SYNTAX (*)
+on a cartridge (ensure first that MAKE has been executed).
+
+The default source location may be changed by setting the
+shell variable SXDMA to the desired directory.
+The current version number must be given by setting the
+shell variable VERSION to the desired string.
+
+Only the superuser may use $0.
+----------
+ (*) SYNTAX is a registered trademark of INRIA."
+	     exit;;
+esac
+
+case $# in 0);; *) echo "$USAGE">&2;exit 1;;esac
+
+if test -z "$SXDMA"
+   then SXDMA=/usr/local/sxdma
+fi
+if test -z "$VERSION"
+   then echo 'You must set the shell variable "VERSION" to something'>&2
+	echo 'matching "digits.digits[letter]" (e.g. "3.2e").'>&2
+	exit 1
+fi
+VERSION=sxV${VERSION}
+
+case $USER in
+root)	NOTROOT='';;
+*)	echo Only the superuser should use $0!>&2
+	if query $0 'Are you sure you wish to continue?'
+	   then (echo;echo 'You may encounter problems...')>&2
+		NOTROOT=T
+	   else exit 1
+	fi;;
+esac
+
+if test -c /dev/RST0
+   then # minos
+	echo 'Disabling hourly dumps...'
+	/etc/hourlydump off
+	if /bin/sh $0
+	   then	echo 'Starting a shell for your convenience...'
+		echo 'You may now verify that the cartridge is correct.'
+		echo 'Type "exit" when you have finished.'
+		PROMPT="$PROMPT (`basename $0`) " /bin/sh
+	fi
+	echo 'Re-enabling hourly dumps...'
+	hourlydump on
+	exit
+fi
+
+cd $SXDMA
+echo "$0: Copying Release ${VERSION} of SYNTAX"
+
+if test -c /dev/rst0
+   then # minos
+	echo "	from \``pwd`'	to \`/dev/rst0'."
+   else # syntax
+	echo "	from \``pwd`'	to \`/mnt'."
+	echo
+	echo Current mount table is:
+	/etc/mount
+fi
+
+set -e
+if query $0 "Answer yes if conditions are favourable"
+   then :
+   else exit 1
+fi
+
+if test -c /dev/rst0
+   then # minos
+	tar cfov /dev/rst0 [A-Z]* $VERSION
+   else # syntax
+	umask 7
+	(ls -d [A-Z]*; find $VERSION -print) | cpio -pvdma /mnt
+fi
+
+# GNU Emacs idiosyncrasies:
+# Local Variables:
+# version-control: yes
+# End:

@@ -1,0 +1,16 @@
+# This makefile is used to bootstrap lecl.
+
+# To avoid problems with other shells:
+SHELL=/bin/sh
+
+SX=$(sx)
+
+LECL=$(SX)/lecl
+TMP=$(LECL)/tmp
+
+$(LECL)/bootstrap:
+	${SHELL} $(sx)/etc/bin/liens-tmp.sh $(TMP); : $(MAKE)
+	cd $(TMP); ${SHELL} $(sx)/doc/make-makefile lecl | CYGWIN="$$CYGWIN binmode" $(MAKE) -f -
+	cd $(TMP); ${SHELL} $(sx)/doc/make-makefile pplecl | CYGWIN="$$CYGWIN binmode" $(MAKE) -f -
+	${SHELL} $(sx)/etc/bin/menage-tmp.sh $(TMP); : $(MAKE)
+	$(MAKE) CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)"	sxV="$(sxV)" -f $(LECL)/sxmakefile

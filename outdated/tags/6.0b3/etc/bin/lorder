@@ -1,0 +1,52 @@
+: /bin/sh
+#
+#	@(#)lorder.sh 1.1 86/07/08 SMI; from UCB
+#
+# Semi-portable version of ``lorder''.
+# Changed by Philippe Deschamp of INRIA.
+
+# Changed by PhD on Thu Mar 17 1988 to replace "-x" option of "test"
+# by "-f": some (dumb) shells do not have "-x", and after all, if a
+# file exists in a "binary" dir, it should be executable...
+
+for dir in /bin /usr/bin
+do
+	if test -f $dir/lorder
+	   then exec $dir/lorder "$@"
+	fi
+done
+
+trap "rm -f $$sym?ef; exit" 0 1 2 13 15
+case $# in
+0)	echo usage: lorder file ...
+	exit ;;
+1)	case $1 in
+	*.o)	set $1 $1
+	esac
+esac
+nm -g $* | sed '
+	/^$/d
+	/:$/{
+		/\.o:/!d
+		s/://
+		h
+		s/.*/& &/
+		p
+		d
+	}
+	/[TD] /{
+		s/.* //
+		G
+		s/\n/ /
+		w '$$symdef'
+		d
+	}
+	s/.* //
+	G
+	s/\n/ /
+	w '$$symref'
+	d
+'
+sort $$symdef -o $$symdef
+sort $$symref -o $$symref
+join $$symref $$symdef | sed 's/[^ ]* *//'

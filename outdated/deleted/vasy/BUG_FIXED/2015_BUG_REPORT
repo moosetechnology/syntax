@@ -1,0 +1,167 @@
+25/06/2015 09:06
+
+Bonjour Pierre,
+Bonjour Hubert,
+
+Dans un de mes outils (SVL), j'ai un bug (Seg. fault) apparemment dû
+à une écriture hors des bornes de la pile associée à un attribut
+de la grammaire dans le code généré par tabc.
+
+L'archive jointe contient un tout petit exemple qui illustre l'écriture
+hors des bornes. Elle contient entre autres les fichiers suivants :
+
+    - svl.tabc : une grammaire récursive à droited'un tout petit
+      langaged'expressions avec parenthésage, opérateur infixeet
+      identificateurs
+
+    - svl.c : le code généré par tabc à partir de svl.tabc puis
+      instrumenté à la main à coups de printf()
+
+    - main.c : le programme principal
+
+    - compil : les commandes de compilation du code généré (sans
+      appel à tabc pour ne pas écraser le code instrumenté)
+
+    - svl-14.svl : un fichier exemple qui montre le bug
+
+Lorsque l'on exécute le programme généré (nommé bug), onobserve
+une écriture hors des bornes dès les premières lignes de latrace
+d'exécution :
+
+<<
+% ./bug svl-14.svl
+allocation du tableau SVL_SYNTAX_BEHAVIOUR de taille 12 (0 ... 11)
+reallocation du tableau SVL_SYNTAX_BEHAVIOUR de nouvelle taille 22 (0 ... 21)
+ecriture dans SVL_SYNTAX_BEHAVIOUR[22]
+                                    ^ écriture hors des bornes 0 ... 21
+reallocation du tableau SVL_SYNTAX_BEHAVIOUR de nouvelle taille 42 (0 ... 41)
+...
+>>
+
+Je ne sais pas bien comment on doit corriger ce bug :
+
+- Le plus simple serait de donner au tableau lors de l'allocation
+ou de la réallocation la taille sx_stack_size+3 au lieu de
+sx_stack_size+2, mais je ne sais pas si ce serait suffisant dans
+le cas général (est-ce que cette constante dépend de la grammaire ?).
+
+- Une autre idée serait de réallouer le tableau en fonction de
+la valeur de SXSTACKnewtop() et non de SXSTACKtop(). Pour cela
+il faudrait déplacer la réallocation du tableau entre le bloc
+    switch (numact) {...}
+et l'affectation
+    SVL_SYNTAX_BEHAVIOUR[SXSTACKnewtop()]=SVL_SYNTAX_BEHAVIOUR[0]
+[en gros, à l'endroit où j'ai inséré l'instruction
+    printf ("ecriture dans SVL_SYNTAX_BEHAVIOUR[%u]\n", i);]
+
+Encore une fois, je ne connais pas assez Syntax pour savoir
+si cela serait correct dans le cas général.
+
+A noter : Je suppose que ce bug pourrait faire planter d'autres
+compilateurs, car la grammaire décrit des expressions assez
+standard. Souvent cependant, le débordement est sans effet et
+c'est sans doute la raison pour laquelle il n'a pas été décelé
+plus tôt.
+
+Bien cordialement,
+Frédéric LANG
+
+------------------------------------------------------------------------------
+
+25/06/2015 15:28
+
+Petit complément à mon message précédent :
+
+En poursuivant mes investigations, je me suis rendu compte que le débordement
+peut généralement être beaucoup plus important que ce que j'indiquais, comme
+le montre la trace suivante :
+
+sommet(sol86)% ./bug ../../svl-63.svl | more
+allocation du tableau SVL_SYNTAX_BEHAVIOUR de taille 12 (0 ... 11)
+reallocation du tableau SVL_SYNTAX_BEHAVIOUR de nouvelle taille 22 (0 ... 21)
+ecriture dans SVL_SYNTAX_BEHAVIOUR[71]
+...
+
+La piste 1 que j'évoquais -- allouer la pile avec une taille sx_stack_size+n où
+n est fixe -- ne peut donc pas fonctionner.
+
+Par contre, la piste 2 -- réallocation en fonction de la valeur de SXSTACKnewtop()
+au lieu de SXSTACKtop() -- est sans doute à considérer.
+
+Bien cordialement,
+Frédéric
+
+------------------------------------------------------------------------------
+
+26/06/2015 10:42
+
+Bonjour,
+
+Pour en finir (peut-être ?) avec ce bug, je vous soumets une correction de tabc.
+Je suggère de modifier le fichier tabc/src/tabc_put.c comme suit (fichier
+corrigé joint) :
+
+154,155c154,157
+< if(SXSTACKtop()>=sx_stack_size){\n\
+< sx_stack_size*=2;\n\
+---
+> if(SXSTACKnewtop()>=sx_stack_size){\n\
+> while (SXSTACKnewtop()>=sx_stack_size){\n\
+> sx_stack_size*=2;\n\
+> }\n\
+
+La nouvelle taille de la pile dépend non plus de SXSTACKtop() mais de
+SXSTACKnewtop(), et elle est calculée de manière itérative, car doubler
+la taille peut être insuffisant (comme le démontre l'exemple de mon
+dernier mail).
+
+J'espère que cette correction est suffisamment générale.
+
+Bien cordialement,
+Frédéric 
+
+------------------------------------------------------------------------------
+
+26/06/2015 17:19
+
+Voilà ma proposition :
+
+À mettre dans sxparser.c vers la ligne 54 (devant sxP_access)
+
+SXINT sxP_get_parse_stack_size (SXVOID) {return lgt1;}
+
+Dans sxu2.h vers la ligne 1255 (dans la rubrique PARSER (see sxparser(3)))
+
+extern SXINT sxP_get_parse_stack_size (SXVOID) /* permet de récupérer la taille actuelle de la parse_stack */
+
+Dans tabc/src/tabc_put.c
+
+remplacer
+fputs("\nstatic SXINT sx_stack_size=10;\n", sxstdout);
+par
+fputs("\nstatic SXINT sx_stack_size;\n", sxstdout);
+
+et
+		     "%s=(%s*)sxalloc(sx_stack_size+2,sizeof(%s));\n",
+par
+		     "%s=(%s*)sxalloc((sx_stack_size=sxP_get_parse_stack_size())+2,sizeof(%s));\n",
+
+
+et
+if(SXSTACKtop()>=sx_stack_size){\n\
+sx_stack_size*=2;\n\
+		     "%s=(%s*)sxrealloc(%s,sx_stack_size+2,sizeof(%s));\
+par
+if(sxP_get_parse_stack_size ()>sx_stack_size){\n\
+		     "%s=(%s*)sxrealloc(%s,(sx_stack_size=sxP_get_parse_stack_size())+2,sizeof(%s));\
+
+
+Je pense que ça devrait marcher.  L'ancienne version est effectivement fausse, SXSTACKtop() pouvant être bien plus grand que sx_stack_size (en particulier sur les grammaires récursives droites où la taille de la pile d'analyse peut être de l'ordre de la taille du source).
+
+Bon courage pour les modifs, donne-moi des nouvelles.
+
+Pierre
+
+------------------------------------------------------------------------------
+
+

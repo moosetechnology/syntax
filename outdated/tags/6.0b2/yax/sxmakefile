@@ -1,0 +1,100 @@
+# To avoid problems with other shells:
+SHELL=/bin/sh
+
+SX=$(sx)
+LNorCP=ln -s
+#LNorCP=${SHELL} $(SX)/etc/bin/lien-relatif.sh
+SXI=$(SX)/incl
+SXL=$(SX)/lib
+
+SXETC=$(SX)/etc
+SEI=$(SXETC)/incl
+SEL=$(SXETC)/lib
+
+BNF=$(SX)/bnf
+BNI=$(BNF)/incl
+BNL=$(BNF)/lib
+
+YAX=$(SX)/yax
+SRC=$(YAX)/src
+INCL=$(YAX)/incl
+LIB=$(YAX)/lib
+
+BIBS= $(SEL)/libsxetc$(sxV).a $(SXL)/libsx$(sxV).a
+COMPILER=cc
+CC=cd $(LIB); umask 7; exec $(COMPILER) -I$(INCL) -I$(SXI) -I$(SEI) -I$(BNI) $(CFLAGS) -c
+
+$(YAX)/everything .PRECIOUS:	$(SX)/bin/yax.out
+
+$(SX)/bin/yax.out:	$(YAX)/yax.out
+	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
+
+
+NEEDS=	$(LIB)/yax_put.o	\
+	$(LIB)/yax.o		\
+	$(LIB)/yax_main.o	\
+	$(LIB)/dec_act.o	\
+	$(LIB)/dec_t.o		\
+	$(LIB)/def_act.o	\
+	$(LIB)/def_t.o		\
+	$(BNL)/bnf_folcon.o	\
+	$(BNL)/bnf_lo.o		\
+	$(BNL)/bnf_protest.o	\
+	$(BNL)/bnf_sact.o	\
+	$(BNL)/bnf_smp.o	\
+	$(BNL)/bnf_symtab.o	\
+	$(BNL)/bnf_t.o
+
+$(YAX)/yax.out:		$(NEEDS)	$(BIBS)
+	@echo '	$(COMPILER) -o $@'; rm -f $@; ${SHELL} -c '$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(BIBS) || (rm $@; exit 1)'
+
+$(LIB)/yax_main.o:	$(SXI)/sxunix.h		\
+	 		$(SEI)/B_tables.h	\
+			$(INCL)/yax_vars.h	\
+			$(BNI)/bnf_vars.h	\
+			$(SRC)/yax_main.c
+	$(CC) $(SRC)/yax_main.c
+
+$(LIB)/yax.o: 		$(SXI)/sxunix.h		\
+	 		$(SEI)/B_tables.h	\
+	 		$(SXI)/put_edit.h	\
+			$(INCL)/yax_vars.h	\
+			$(BNI)/bnf_vars.h	\
+			$(SRC)/yax.c
+	$(CC) $(SRC)/yax.c
+
+$(LIB)/yax_put.o:	$(SXI)/sxunix.h		\
+	 		$(SEI)/B_tables.h	\
+			$(INCL)/yax_vars.h	\
+			$(BNI)/bnf_vars.h	\
+			$(SRC)/yax_put.c
+	$(CC) $(SRC)/yax_put.c
+
+$(LIB)/dec_act.o:	$(SXI)/sxunix.h		\
+	 		$(SEI)/B_tables.h	\
+			$(INCL)/yax_vars.h	\
+			$(BNI)/bnf_vars.h	\
+			$(SRC)/dec_act.c
+	$(CC) $(SRC)/dec_act.c
+
+$(LIB)/def_act.o:	$(SXI)/sxunix.h		\
+			$(SEI)/B_tables.h	\
+			$(INCL)/yax_vars.h	\
+			$(BNI)/bnf_vars.h	\
+			$(SRC)/def_act.c
+	$(CC) $(SRC)/def_act.c
+
+$(LIB)/dec_t.o:		$(SXI)/sxunix.h		\
+			$(SRC)/dec_t.c
+	$(CC) $(SRC)/dec_t.c	-Dsxtables=dec_tables \
+		-DSCANACT=dec_act	\
+		-DSEMACT=dec_act	\
+		-DSCANACT_AND_SEMACT_ARE_IDENTICAL
+
+
+$(LIB)/def_t.o:		$(SXI)/sxunix.h		\
+			$(SRC)/def_t.c
+	$(CC) $(SRC)/def_t.c	-Dsxtables=def_tables \
+		-DSCANACT=def_act	\
+		-DSEMACT=def_act	\
+		-DSCANACT_AND_SEMACT_ARE_IDENTICAL

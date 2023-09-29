@@ -1,0 +1,14 @@
+*
+* This is a LIG for the language {wcw | w in {a, b}* }
+*
+
+* Error recovery enable since each test is performed while the
+* token is parsed (see wcw.lig)
+
+<S>(..)		= <S>(.. a ) a	 	;
+<S>(..)		= <S>(.. b ) b 		;
+<S>(..)		= <T>(..)		;
+*
+<T>( .. a )	= a <T>(..)		;
+<T>( .. b )	= b <T>(..)		;
+<T>()		= c			;

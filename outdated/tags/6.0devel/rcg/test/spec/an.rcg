@@ -1,0 +1,9 @@
+%
+% L = {a^n b^n c^n | n >= 0}
+% Temps d'analyse lineaire
+%
+
+S(X Y Z)	--> &StrEqLen(X,Y) &StrEqLen(X,Z) A(X,Y,Z) .
+A(,,)		--> .
+A(X\a,Y\b,Z\c)	--> A(X,Y,Z) .
+
