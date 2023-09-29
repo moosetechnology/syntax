@@ -1,1 +1,0 @@
-../../trunk/bnf/check_bnf.c

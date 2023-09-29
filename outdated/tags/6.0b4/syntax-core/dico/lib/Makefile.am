@@ -1,1 +1,0 @@
-../../../dico/lib/Makefile.am

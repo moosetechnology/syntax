@@ -1,1 +1,0 @@
-../../../doc/man/Makefile.am
