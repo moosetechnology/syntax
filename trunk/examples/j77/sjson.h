@@ -6,7 +6,22 @@
 
 SXML_TYPE_LIST JSON_ARRAY (SXML_TYPE_LIST L)
 {
-  return SXML_TLT( "\n[\n", L, "\n]");
+  if (L == NULL) {
+    return SXML_T( "[ ]\n");
+  }
+  else {
+    return SXML_TLT( "[\n", L, "]\n");
+  }
+}
+
+/* -------------------------------------------------------------------------
+ * outputs a JSON map:
+ *   "{" LIST "}"
+ */
+
+SXML_TYPE_LIST JSON_MAP (SXML_TYPE_LIST L)
+{
+  return SXML_TLT( "{\n", L, "}\n");
 }
 
 /* -------------------------------------------------------------------------
@@ -27,4 +42,14 @@ SXML_TYPE_LIST JSON_KT (SXML_TYPE_TEXT K, SXML_TYPE_TEXT V)
 SXML_TYPE_LIST JSON_KTV (SXML_TYPE_TEXT K, SXML_TYPE_TEXT V)
 {
   return SXML_TTTTT( "\"", K, "\":\"", V, "\",\n");
+}
+
+/* -------------------------------------------------------------------------
+ * outputs a JSON key/value pair where value is a list:
+ *   quoted(K) ":" value
+ */
+
+SXML_TYPE_LIST JSON_KL (SXML_TYPE_TEXT K, SXML_TYPE_LIST V)
+{
+  return SXML_TTTL( "\"", K, "\":\n", V);
 }

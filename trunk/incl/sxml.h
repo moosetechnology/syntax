@@ -101,7 +101,6 @@ void SXML_PRINT (FILE *OUTPUT, SXML_TYPE_LIST LIST)
 	for (L = SXML_HEAD (LIST); L != NULL; L = SXML_SUCC (L, LIST)) {
 		fprintf (OUTPUT, "%s", L->TEXT);
 	}
-	fprintf (OUTPUT, "\n");
 }
 
 /* ------------------------------------------------------------------------- */

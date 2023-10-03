@@ -44,7 +44,7 @@ extern SXBOOLEAN is_json; /* declared in "f77_main.c" */
 extern FILE *json_pipe; /* declared in "f77_analyse.c" */
 SXBOOLEAN pclose_needed;
 
-#define TODO(N) "{\"TODO-" #N "\":null}"
+#define TODO(N) SXML_T("{\"TODO-" #N "\":null}\n")
 
 #define LOCATION(N) SXML_LLL ( \
 		JSON_KTV ("file", sxcurrent_parsed_file_name (N)), \
@@ -95,7 +95,7 @@ $
 close =
 	{
 		/* ending the table of comments */
-		fprintf (json_pipe, "\n},");
+		fprintf (json_pipe, "\n},\n");
 		SXML_PRINT (json_pipe, ROOT);
 		fprintf (json_pipe, "}\n");
 		if (pclose_needed) {
@@ -112,10 +112,8 @@ $
 $LIST(<0:F77>)
 
 	{
-	$LIST(<0:F77>) = SXML_TTTL (
-		"\n",
-		SXML_Q("program_units"),
-		":",
+	$LIST(<0:F77>) = JSON_KL (
+	        "program_units",
 		JSON_ARRAY( $LIST(<1a:executable_program_list>) ));
 	ROOT = $LIST(<0:F77>);
 	}
@@ -160,12 +158,8 @@ $LIST(<0:F77>)
 $LIST(<1:executable_program>)
 
 	{
-	$LIST(<1:executable_program>) = SXML_TTTLT (
-		"{\n",
-		SXML_Q("main"),
-		":\n{\n",
-		$LIST(<2:main_program>),
-		"}\n}");
+	$LIST(<1:executable_program>) = JSON_MAP (
+		JSON_KL ("main", JSON_MAP ($LIST(<2:main_program>))));
 	}
 	
 *------------------------------------------------------------------------------
@@ -176,12 +170,8 @@ $LIST(<1:executable_program>)
 $LIST(<1:executable_program>)
 
 	{
-	$LIST(<1:executable_program>) = SXML_TTTTT (
-		"{\n",
-		SXML_Q("function"),
-		":\n",
-		TODO (1),
-		"\n}");
+	$LIST(<1:executable_program>) = JSON_MAP (
+		JSON_KL ("function", TODO (1)));
 	}
 
 *------------------------------------------------------------------------------
@@ -192,12 +182,8 @@ $LIST(<1:executable_program>)
 $LIST(<1:executable_program>)
 
 	{
-	$LIST(<1:executable_program>) = SXML_TTTTT (
-		"{\n",
-		SXML_Q("subroutine"),
-		":\n",
-		TODO (2),
-		"\n}");
+	$LIST(<1:executable_program>) = JSON_MAP (
+		JSON_KL ("subroutine", TODO (2)));
 	}
 
 *------------------------------------------------------------------------------
@@ -208,12 +194,8 @@ $LIST(<1:executable_program>)
 $LIST(<1:executable_program>)
 
 	{
-	$LIST(<1:executable_program>) = SXML_TTTTT (
-		"{\n",
-		SXML_Q("blockdata"),
-		":\n",
-		TODO (3),
-		"\n}");
+	$LIST(<1:executable_program>) = JSON_MAP (
+		JSON_KL ("blockdata", TODO (3)));
 	}
 
 
