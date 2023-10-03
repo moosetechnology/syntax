@@ -147,20 +147,20 @@ SXML_TYPE_LIST SXML_LL (SXML_TYPE_LIST L1, SXML_TYPE_LIST L2)
 
 /* ------------------------------------------------------------------------- */
 
-SXML_TYPE_LIST SXML_TL (
-		SXML_TYPE_TEXT T1,
-		SXML_TYPE_LIST L2)
-{
-	return SXML_LL (SXML_T (T1), L2);
-}
-
-/* ------------------------------------------------------------------------- */
-
 SXML_TYPE_LIST SXML_LT (
 		SXML_TYPE_LIST L1,
 		SXML_TYPE_TEXT T2)
 {
 	return SXML_LL (L1, SXML_T (T2));
+}
+
+/* ------------------------------------------------------------------------- */
+
+SXML_TYPE_LIST SXML_TL (
+		SXML_TYPE_TEXT T1,
+		SXML_TYPE_LIST L2)
+{
+	return SXML_LL (SXML_T (T1), L2);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -227,3 +227,292 @@ SXML_TYPE_TEXT SXML_QUOTE (SXML_TYPE_TEXT T)
 	snprintf (quoted, TLen + 3, "\"%s\"", T);
 	return quoted;
 }
+
+/* ------------------------------------------------------------------------- */
+
+SXML_TYPE_LIST SXML_LLL (
+		SXML_TYPE_LIST L1,
+		SXML_TYPE_LIST L2,
+		SXML_TYPE_LIST L3)
+{
+	return SXML_CONCAT ("LLL", L1, L2, L3);
+}
+
+/* ------------------------------------------------------------------------- */
+
+SXML_TYPE_LIST SXML_LTL (
+		SXML_TYPE_LIST L1,
+		SXML_TYPE_TEXT T2,
+		SXML_TYPE_LIST L3)
+{
+	return SXML_CONCAT ("LTL", L1, T2, L3);
+}
+
+/* ------------------------------------------------------------------------- */
+
+SXML_TYPE_LIST SXML_TLL (
+		SXML_TYPE_TEXT T1,
+		SXML_TYPE_LIST L2,
+		SXML_TYPE_LIST L3)
+{
+	return SXML_CONCAT ("TLL", T1, L2, L3);
+}
+
+/* ------------------------------------------------------------------------- */
+
+SXML_TYPE_LIST SXML_TLT (
+		SXML_TYPE_TEXT T1,
+		SXML_TYPE_LIST L2,
+		SXML_TYPE_TEXT T3)
+{
+        return SXML_CONCAT ("TLT", T1, L2, T3);
+}
+
+/* ------------------------------------------------------------------------- */
+
+SXML_TYPE_LIST SXML_TTL (
+		SXML_TYPE_TEXT T1,
+		SXML_TYPE_TEXT T2,
+		SXML_TYPE_LIST L3)
+{
+	return SXML_CONCAT ("TTL", T1, T2, L3);
+}
+
+/* ------------------------------------------------------------------------- */
+
+SXML_TYPE_LIST SXML_TTT (
+		SXML_TYPE_TEXT T1,
+		SXML_TYPE_TEXT T2,
+	 	SXML_TYPE_TEXT T3)
+{
+	return SXML_CONCAT ("TTT", T1, T2, T3);
+}
+
+/* ------------------------------------------------------------------------- */
+
+SXML_TYPE_LIST SXML_LLLL (
+		SXML_TYPE_LIST L1,
+		SXML_TYPE_LIST L2,
+		SXML_TYPE_LIST L3,
+		SXML_TYPE_LIST L4)
+{
+	return SXML_CONCAT ("LLLL", L1, L2, L3, L4);
+}
+
+/* ------------------------------------------------------------------------- */
+
+SXML_TYPE_LIST SXML_LTTT (
+		SXML_TYPE_LIST L1,
+		SXML_TYPE_TEXT T2,
+		SXML_TYPE_TEXT T3,
+		SXML_TYPE_TEXT T4)
+{
+        return SXML_CONCAT ("LTTT", L1, T2, T3, T4);
+}
+
+/* ------------------------------------------------------------------------- */
+
+SXML_TYPE_LIST SXML_LLTT (
+		SXML_TYPE_LIST L1,
+		SXML_TYPE_LIST L2,
+		SXML_TYPE_TEXT T3,
+		SXML_TYPE_TEXT T4)
+{
+        return SXML_CONCAT ("LLTT", L1, L2, T3, T4);
+}
+
+/* ------------------------------------------------------------------------- */
+
+SXML_TYPE_LIST SXML_TLLT (
+		SXML_TYPE_TEXT T1,
+		SXML_TYPE_LIST L2,
+		SXML_TYPE_LIST L3,
+		SXML_TYPE_TEXT T4)
+{
+        return SXML_CONCAT ("TLLT", T1, L2, L3, T4);
+}
+
+/* ------------------------------------------------------------------------- */
+
+SXML_TYPE_LIST SXML_TTLL (
+		SXML_TYPE_TEXT T1,
+		SXML_TYPE_TEXT T2,
+		SXML_TYPE_LIST L3, 
+		SXML_TYPE_LIST L4)
+{
+        return SXML_CONCAT ("TTLL", T1, T2, L3, L4);
+}
+
+/* ------------------------------------------------------------------------- */
+
+SXML_TYPE_LIST SXML_TTTL (
+		SXML_TYPE_TEXT T1,
+		SXML_TYPE_TEXT T2,
+		SXML_TYPE_TEXT T3, 
+		SXML_TYPE_LIST L4)
+{
+        return SXML_CONCAT ("TTTL", T1, T2, T3, L4);
+}
+
+/* ------------------------------------------------------------------------- */
+
+SXML_TYPE_LIST SXML_TTTT (
+		SXML_TYPE_TEXT T1,
+		SXML_TYPE_TEXT T2,
+	 	SXML_TYPE_TEXT T3,
+		SXML_TYPE_TEXT T4)
+{
+	return SXML_CONCAT ("TTTT", T1, T2, T3, T4);
+}
+
+/* ------------------------------------------------------------------------- */
+
+SXML_TYPE_LIST SXML_LLLLL (
+		SXML_TYPE_LIST L1,
+		SXML_TYPE_LIST L2,
+		SXML_TYPE_LIST L3,
+		SXML_TYPE_LIST L4,
+		SXML_TYPE_LIST L5)
+{
+       return SXML_CONCAT ("LLLLL", L1, L2, L3, L4, L5);
+}
+
+/* ------------------------------------------------------------------------- */
+
+SXML_TYPE_LIST SXML_TLLLT (
+		SXML_TYPE_TEXT T1,
+		SXML_TYPE_LIST L2,
+		SXML_TYPE_LIST L3,
+		SXML_TYPE_LIST L4,
+		SXML_TYPE_TEXT T5)
+{
+        return SXML_CONCAT ("TLLLT", T1, L2, L3, L4, T5);
+}
+
+/* ------------------------------------------------------------------------- */
+
+SXML_TYPE_LIST SXML_TTTLT (
+		SXML_TYPE_TEXT T1,
+		SXML_TYPE_TEXT T2,
+		SXML_TYPE_TEXT T3, 
+		SXML_TYPE_LIST L4,
+		SXML_TYPE_TEXT T5)
+{
+       return SXML_CONCAT("TTTLT", T1, T2, T3,  L4, T5);
+}
+
+/* ------------------------------------------------------------------------- */
+
+SXML_TYPE_LIST SXML_TTTTL (
+		SXML_TYPE_TEXT T1,
+		SXML_TYPE_TEXT T2,
+		SXML_TYPE_TEXT T3,
+		SXML_TYPE_TEXT T4,
+		SXML_TYPE_LIST L5)
+{
+	return SXML_CONCAT ("TTTTL", T1, T2, T3,  T4, L5);
+}
+
+/* ------------------------------------------------------------------------- */
+
+SXML_TYPE_LIST SXML_TTTTT (
+		SXML_TYPE_TEXT T1,
+		SXML_TYPE_TEXT T2,
+		SXML_TYPE_TEXT T3,
+		SXML_TYPE_TEXT T4,
+		SXML_TYPE_TEXT T5)
+{
+	return SXML_CONCAT ("TTTTT", T1, T2, T3,  T4, T5);
+}
+
+/* ------------------------------------------------------------------------- */
+
+SXML_TYPE_LIST SXML_TTTTTT (
+		SXML_TYPE_TEXT T1,
+		SXML_TYPE_TEXT T2,
+		SXML_TYPE_TEXT T3, 
+		SXML_TYPE_TEXT T4,
+		SXML_TYPE_TEXT T5,
+		SXML_TYPE_TEXT T6)
+{
+	return SXML_CONCAT ("TTTTTT", T1, T2, T3,  T4, T5, T6);
+}
+
+/* ------------------------------------------------------------------------- */
+
+SXML_TYPE_LIST SXML_TTTLTLT (
+		SXML_TYPE_TEXT T1,
+		SXML_TYPE_TEXT T2,
+		SXML_TYPE_TEXT T3, 
+		SXML_TYPE_LIST L4,
+		SXML_TYPE_TEXT T5,
+		SXML_TYPE_LIST L6,
+		SXML_TYPE_TEXT T7)
+{
+        return SXML_CONCAT ("TTTLTLT", T1, T2, T3,  L4, T5, L6, T7);
+}
+
+/* ------------------------------------------------------------------------- */
+
+SXML_TYPE_LIST SXML_TTTTTTT (
+		SXML_TYPE_TEXT T1,
+		SXML_TYPE_TEXT T2,
+		SXML_TYPE_TEXT T3, 
+		SXML_TYPE_TEXT T4,
+		SXML_TYPE_TEXT T5,
+		SXML_TYPE_TEXT T6,
+		SXML_TYPE_TEXT T7)
+{
+	return SXML_CONCAT ("TTTTTTT", T1, T2, T3,  T4, T5, T6, T7);
+}
+
+/* ------------------------------------------------------------------------- */
+
+SXML_TYPE_LIST SXML_TTTTTTTT (
+		SXML_TYPE_TEXT T1,
+		SXML_TYPE_TEXT T2,
+		SXML_TYPE_TEXT T3, 
+		SXML_TYPE_TEXT T4,
+		SXML_TYPE_TEXT T5,
+		SXML_TYPE_TEXT T6,
+		SXML_TYPE_TEXT T7,
+		SXML_TYPE_TEXT T8)
+{
+        return SXML_CONCAT ("TTTTTTTT", T1, T2, T3,  T4, T5, T6, T7, T8);
+}
+
+/* ------------------------------------------------------------------------- */
+
+SXML_TYPE_LIST SXML_TTTTTTTTT (
+		SXML_TYPE_TEXT T1,
+		SXML_TYPE_TEXT T2,
+		SXML_TYPE_TEXT T3, 
+		SXML_TYPE_TEXT T4,
+		SXML_TYPE_TEXT T5,
+		SXML_TYPE_TEXT T6,
+		SXML_TYPE_TEXT T7,
+		SXML_TYPE_TEXT T8,
+		SXML_TYPE_TEXT T9)
+{
+        return SXML_CONCAT ("TTTTTTTTT", T1, T2, T3,  T4, T5, T6, T7, T8, T9);
+}
+
+/* ------------------------------------------------------------------------- */
+
+SXML_TYPE_LIST SXML_TTTTTTTTTTT (
+		SXML_TYPE_TEXT T1,
+		SXML_TYPE_TEXT T2,
+		SXML_TYPE_TEXT T3, 
+		SXML_TYPE_TEXT T4,
+		SXML_TYPE_TEXT T5,
+		SXML_TYPE_TEXT T6,
+		SXML_TYPE_TEXT T7,
+		SXML_TYPE_TEXT T8,
+		SXML_TYPE_TEXT T9,
+		SXML_TYPE_TEXT T10,
+		SXML_TYPE_TEXT T11)
+{
+  return SXML_CONCAT ("TTTTTTTTTTT", T1, T2, T3,  T4, T5, T6, T7, T8, T9, T10, T11);
+}
+
+/* ------------------------------------------------------------------------- */
