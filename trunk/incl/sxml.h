@@ -130,6 +130,30 @@ SXML_TYPE_LIST SXML_T (SXML_TYPE_TEXT T)
 	return L;
 }
 
+/* -------------------------------------------------------------------------
+ * Create a "quoted" SXML_TYPE_TEXT from a character string
+ * similar to SXML_Q with the added quotes
+ * NOTE: creates a copy of the parameter string.
+ *   The user is reponsible for freeing the parameter string where applicable
+ */
+
+SXML_TYPE_TEXT SXML_Q (SXML_TYPE_TEXT T)
+{
+	int TLen;
+	SXML_TYPE_TEXT quoted;
+
+	TLen = strlen (T);
+	quoted = malloc (sizeof (char) * (TLen + 3)); // +3 for "\"" and "\0"
+	if (quoted == NULL) {
+		fprintf (sxstderr, "out of memory in sxml.h\n");
+		sxexit (sxerr_max_severity ());
+		return NULL;
+	}
+
+	snprintf (quoted, TLen + 3, "\"%s\"", T);
+	return quoted;
+}
+
 /* ------------------------------------------------------------------------- */
 
 SXML_TYPE_LIST SXML_LL (SXML_TYPE_LIST L1, SXML_TYPE_LIST L2)
@@ -173,7 +197,7 @@ SXML_TYPE_LIST SXML_TT (
 }
 
 /* -------------------------------------------------------------------------
- * Concatenate JSON_TYPE_TEXTs and JSON_TYPE_LISTs according to parameter 'format'
+ * Concatenate SXML_TYPE_TEXT/QUOTE/LIST according to parameter 'format'
 */
 
 SXML_TYPE_LIST SXML_CONCAT (char *format, ...) {
@@ -185,47 +209,30 @@ SXML_TYPE_LIST SXML_CONCAT (char *format, ...) {
 	nb_args = strlen(format);
 	va_start (args, format);
 
-	if (*format == 'T') {
-		L = SXML_T( va_arg(args, SXML_TYPE_TEXT));
+	if (*format == 'Q') {
+	  L = SXML_T( SXML_Q (va_arg (args, SXML_TYPE_TEXT)));
+	}
+	else if (*format == 'T') {
+	  L = SXML_T( va_arg( args, SXML_TYPE_TEXT));
 	}
 	else {
-		L = SXML_L( va_arg(args, SXML_TYPE_LIST));
+	  L = SXML_L( va_arg( args, SXML_TYPE_LIST));
 	}
 
 	for (i=1, format++; i<nb_args; i++, format++) {
-		if (*format == 'T') {
-			L = SXML_LL (L, SXML_T( va_arg(args, SXML_TYPE_TEXT)));
-		}
-		else {
-			L = SXML_LL (L, SXML_L( va_arg(args, SXML_TYPE_LIST)));
-		}
+	  if (*format == 'Q') {
+		L = SXML_LT (L, SXML_Q( va_arg(args, SXML_TYPE_TEXT)));
+	  }
+	  else if (*format == 'T') {
+		L = SXML_LL (L, SXML_T( va_arg(args, SXML_TYPE_TEXT)));
+	  }
+	  else {
+		L = SXML_LL (L, SXML_L( va_arg(args, SXML_TYPE_LIST)));
+	  }
 	}
 	va_end (args);
 
 	return L;
-}
-
-/* -------------------------------------------------------------------------
- * Create a "quoted" SXML_TYPE_TEXT from a character string
- * Note1: could use SXML_TTT("\"", T, "\"") but seems overkill
- * Note2: argument T is copied, user is responsible for freeing it it necessary
-*/
-
-SXML_TYPE_TEXT SXML_QUOTE (SXML_TYPE_TEXT T)
-{
-	int TLen;
-	SXML_TYPE_TEXT quoted;
-
-	TLen = strlen (T);
-	quoted = malloc (sizeof (char) * (TLen + 3)); // +3 for "\"" and "\0"
-	if (quoted == NULL) {
-		fprintf (sxstderr, "out of memory in sxml.h\n");
-		sxexit (sxerr_max_severity ());
-		return NULL;
-	}
-
-	snprintf (quoted, TLen + 3, "\"%s\"", T);
-	return quoted;
 }
 
 /* ------------------------------------------------------------------------- */

@@ -47,30 +47,30 @@ SXBOOLEAN pclose_needed;
 #define TODO(N) "{\"TODO-" #N "\":null}"
 
 #define LOCATION(N) SXML_TTTTTTTTTTT ( \
-		SXML_QUOTE("file"), \
+		SXML_Q("file"), \
 		":", \
-		SXML_QUOTE(sxcurrent_parsed_file_name (N)), \
+		SXML_Q(sxcurrent_parsed_file_name (N)), \
 		",\n", \
-		SXML_QUOTE("line"), \
+		SXML_Q("line"), \
 		":", \
 		SXML_UINT (sxcurrent_parsed_line (N)), \
 		",\n", \
-		SXML_QUOTE("column"), \
+		SXML_Q("column"), \
 		":", \
-		SXML_QUOTE( SXML_UINT (sxcurrent_parsed_column (N))) )
+		SXML_Q( SXML_UINT (sxcurrent_parsed_column (N))) )
 
 #define ENDING_LOCATION(N,STRING) SXML_TTTTTTTTTTT ( \
-		SXML_QUOTE("ending-file"), \
+		SXML_Q("ending-file"), \
 		":", \
-		SXML_QUOTE( sxcurrent_parsed_file_name (N)), \
+		SXML_Q( sxcurrent_parsed_file_name (N)), \
 		",\n", \
-		SXML_QUOTE("ending-line"), \
+		SXML_Q("ending-line"), \
 		":", \
-		SXML_QUOTE( SXML_UINT (sxcurrent_parsed_line (N))), \
+		SXML_Q( SXML_UINT (sxcurrent_parsed_line (N))), \
 		",\n", \
-		SXML_QUOTE("ending-column"), \
+		SXML_Q("ending-column"), \
 		":", \
-		SXML_QUOTE( SXML_UINT (sxcurrent_parsed_column (N) + strlen (STRING) - 1)) )
+		SXML_Q( SXML_UINT (sxcurrent_parsed_column (N) + strlen (STRING) - 1)) )
 
 *------------------------------------------------------------------------------
 
@@ -130,7 +130,7 @@ $LIST(<0:F77>)
 	{
 	$LIST(<0:F77>) = SXML_TTTL (
 		"\n",
-		SXML_QUOTE("program_units"),
+		SXML_Q("program_units"),
 		":",
 		JSON_ARRAY( $LIST(<1a:executable_program_list>) ));
 	ROOT = $LIST(<0:F77>);
@@ -178,7 +178,7 @@ $LIST(<1:executable_program>)
 	{
 	$LIST(<1:executable_program>) = SXML_TTTLT (
 		"{\n",
-		SXML_QUOTE("main"),
+		SXML_Q("main"),
 		":\n{\n",
 		$LIST(<2:main_program>),
 		"\n}\n}");
@@ -194,7 +194,7 @@ $LIST(<1:executable_program>)
 	{
 	$LIST(<1:executable_program>) = SXML_TTTTT (
 		"{\n",
-		SXML_QUOTE("function"),
+		SXML_Q("function"),
 		":\n",
 		TODO (1),
 		"\n}");
@@ -210,7 +210,7 @@ $LIST(<1:executable_program>)
 	{
 	$LIST(<1:executable_program>) = SXML_TTTTT (
 		"{\n",
-		SXML_QUOTE("subroutine"),
+		SXML_Q("subroutine"),
 		":\n",
 		TODO (2),
 		"\n}");
@@ -226,7 +226,7 @@ $LIST(<1:executable_program>)
 	{
 	$LIST(<1:executable_program>) = SXML_TTTTT (
 		"{\n",
-		SXML_QUOTE("blockdata"),
+		SXML_Q("blockdata"),
 		":\n",
 		TODO (3),
 		"\n}");
@@ -286,7 +286,7 @@ $LIST(<2:main_program>)
 
 	{
 	$LIST(<2:main_program>) = SXML_TTLL (
-		SXML_QUOTE("name"),
+		SXML_Q("name"),
 		":null,\n",
 		LOCATION (0),
 		$LIST(<2a:end_statement>));
@@ -319,7 +319,7 @@ $LIST(<2:main_program>)
 
 	{
 	$LIST(<2:main_program>) = SXML_TTLL (
-		SXML_QUOTE("name"),
+		SXML_Q("name"),
 		":null,\n",
 		LOCATION (0),
 		$LIST(<2a:end_statement>));
@@ -609,9 +609,9 @@ $LIST(<8:program_statement>)
 
 	{
 	$LIST(<8:program_statement>) = SXML_TTTTL (
-		SXML_QUOTE("name"),
+		SXML_Q("name"),
 		":",
-		SXML_QUOTE($NAME(<99:symbolic_name>)),
+		SXML_Q($NAME(<99:symbolic_name>)),
 		",\n",
 		LOCATION (0));
 	}
