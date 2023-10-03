@@ -1761,87 +1761,91 @@ $LIST(<8:program_statement>)
 *------------------------------------------------------------------------------
 
 <52b:inquire_info_elem>
-		= ERR  =  <110b:label_ref> ;
-
-*------------------------------------------------------------------------------
-
-<52b:inquire_info_elem>
 		= FILE  =  <82a:character_or_non_typed_expression> ;
 
 *------------------------------------------------------------------------------
 
 <52b:inquire_info_elem>
-		= IOSTAT  =  <88a:variable_or_array_element_name> ;
+		= ERR  =  <110b:label_ref> ;
 
 *------------------------------------------------------------------------------
 
 <52b:inquire_info_elem>
-		= EXIST  =  <88a:variable_or_array_element_name> ;
+		= <52c:inquire_info_key>  =  <88a:variable_or_array_element_name> ;
+
+*******************************************************************************
+
+<52c:inquire_info_key>
+		= IOSTAT ;
 
 *------------------------------------------------------------------------------
 
-<52b:inquire_info_elem>
-		= OPENED  =  <88a:variable_or_array_element_name> ;
+<52c:inquire_info_key>
+		= EXIST ;
 
 *------------------------------------------------------------------------------
 
-<52b:inquire_info_elem>
-		= NUMBER  =  <88a:variable_or_array_element_name> ;
+<52c:inquire_info_key>
+		= OPENED ;
 
 *------------------------------------------------------------------------------
 
-<52b:inquire_info_elem>
-		= NAMED  =  <88a:variable_or_array_element_name> ;
+<52c:inquire_info_key>
+		= NUMBER ;
 
 *------------------------------------------------------------------------------
 
-<52b:inquire_info_elem>
-		= NAME  =  <88a:variable_or_array_element_name> ;
+<52c:inquire_info_key>
+		= NAMED ;
 
 *------------------------------------------------------------------------------
 
-<52b:inquire_info_elem>
-		= ACCESS  =  <88a:variable_or_array_element_name> ;
+<52c:inquire_info_key>
+		= NAME ;
 
 *------------------------------------------------------------------------------
 
-<52b:inquire_info_elem>
-		= SEQUENTIAL  =  <88a:variable_or_array_element_name> ;
+<52c:inquire_info_key>
+		= ACCESS ;
 
 *------------------------------------------------------------------------------
 
-<52b:inquire_info_elem>
-		= DIRECT  =  <88a:variable_or_array_element_name> ;
+<52c:inquire_info_key>
+		= SEQUENTIAL ;
 
 *------------------------------------------------------------------------------
 
-<52b:inquire_info_elem>
-		= FORM  =  <88a:variable_or_array_element_name> ;
+<52c:inquire_info_key>
+		= DIRECT ;
+*------------------------------------------------------------------------------
+
+<52c:inquire_info_key>
+		= FORM ;
 
 *------------------------------------------------------------------------------
 
-<52b:inquire_info_elem>
-		= FORMATTED  =  <88a:variable_or_array_element_name> ;
+<52c:inquire_info_key>
+		= FORMATTED ;
 
 *------------------------------------------------------------------------------
 
-<52b:inquire_info_elem>
-		= UNFORMATTED  =  <88a:variable_or_array_element_name> ;
+<52c:inquire_info_key>
+		= UNFORMATTED ;
 
 *------------------------------------------------------------------------------
 
-<52b:inquire_info_elem>
-		= RECL  =  <88a:variable_or_array_element_name> ;
+<52c:inquire_info_key>
+		= RECL ;
 
 *------------------------------------------------------------------------------
 
-<52b:inquire_info_elem>
-		= NEXTREC  =  <88a:variable_or_array_element_name> ;
+<52c:inquire_info_key>
+		= NEXTREC ;
 
 *------------------------------------------------------------------------------
 
-<52b:inquire_info_elem>
-		= BLANK  =  <88a:variable_or_array_element_name> ;
+<52c:inquire_info_key>
+		= BLANK ;
 
 *******************************************************************************
 
