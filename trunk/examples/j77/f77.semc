@@ -251,9 +251,8 @@ $LIST(<2:main_program>)
 $LIST(<2:main_program>)
 
 	{
-	$LIST(<2:main_program>) = SXML_TTLL (
-		SXML_Q("name"),
-		":null,\n",
+	$LIST(<2:main_program>) = SXML_LLL (
+		JSON_KTV ("name", "null"),
 		LOCATION (0),
 		$LIST(<2a:end_statement>));
 	}
@@ -284,9 +283,8 @@ $LIST(<2:main_program>)
 $LIST(<2:main_program>)
 
 	{
-	$LIST(<2:main_program>) = SXML_TTLL (
-		SXML_Q("name"),
-		":null,\n",
+	$LIST(<2:main_program>) = SXML_LLL (
+		JSON_KTV ("name", "null"),
 		LOCATION (0),
 		$LIST(<2a:end_statement>));
 	}
