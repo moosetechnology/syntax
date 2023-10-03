@@ -46,31 +46,15 @@ SXBOOLEAN pclose_needed;
 
 #define TODO(N) "{\"TODO-" #N "\":null}"
 
-#define LOCATION(N) SXML_TTTTTTTTTTT ( \
-		SXML_Q("file"), \
-		":", \
-		SXML_Q(sxcurrent_parsed_file_name (N)), \
-		",\n", \
-		SXML_Q("line"), \
-		":", \
-		SXML_UINT (sxcurrent_parsed_line (N)), \
-		",\n", \
-		SXML_Q("column"), \
-		":", \
-		SXML_Q( SXML_UINT (sxcurrent_parsed_column (N))) )
+#define LOCATION(N) SXML_LLL ( \
+		JSON_KTV ("file", sxcurrent_parsed_file_name (N)), \
+		JSON_KTV ("line", SXML_UINT (sxcurrent_parsed_line (N))), \
+		JSON_KT ("column", SXML_UINT (sxcurrent_parsed_column (N))) )
 
-#define ENDING_LOCATION(N,STRING) SXML_TTTTTTTTTTT ( \
-		SXML_Q("ending-file"), \
-		":", \
-		SXML_Q( sxcurrent_parsed_file_name (N)), \
-		",\n", \
-		SXML_Q("ending-line"), \
-		":", \
-		SXML_Q( SXML_UINT (sxcurrent_parsed_line (N))), \
-		",\n", \
-		SXML_Q("ending-column"), \
-		":", \
-		SXML_Q( SXML_UINT (sxcurrent_parsed_column (N) + strlen (STRING) - 1)) )
+#define ENDING_LOCATION(N,STRING) SXML_LLL ( \
+		JSON_KTV ("ending-file", sxcurrent_parsed_file_name (N)), \
+		JSON_KTV ("ending-line", SXML_UINT (sxcurrent_parsed_line (N))), \
+		JSON_KT ("ending-column", SXML_UINT (sxcurrent_parsed_column (N) + strlen (STRING) - 1)) )
 
 *------------------------------------------------------------------------------
 
@@ -181,7 +165,7 @@ $LIST(<1:executable_program>)
 		SXML_Q("main"),
 		":\n{\n",
 		$LIST(<2:main_program>),
-		"\n}\n}");
+		"}\n}");
 	}
 	
 *------------------------------------------------------------------------------
@@ -337,9 +321,7 @@ $LIST(<2:main_program>)
 $LIST(<2a:end_statement>)
 
 	{
-	$LIST(<2a:end_statement>) = SXML_TL (
-		",\n",
-		ENDING_LOCATION (0, "END"));
+	$LIST(<2a:end_statement>) = SXML_L (ENDING_LOCATION (0, "END"));
 	}
 
 
@@ -351,9 +333,7 @@ $LIST(<2a:end_statement>)
 $LIST(<2a:end_statement>)
 
 	{
-	$LIST(<2a:end_statement>) = SXML_TL (
-		",\n",
-		ENDING_LOCATION (0, "END"));
+	$LIST(<2a:end_statement>) = SXML_L (ENDING_LOCATION (0, "END"));
 	}
 
 
