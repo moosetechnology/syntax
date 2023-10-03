@@ -1,0 +1,51 @@
+{
+   "comments":
+   {
+      "3":"C***********************************************************************00010807\nC*****  FORTRAN 77                                                      00020807\nC*****   FM807               YDMIN1 - (168)                             00030807\nC*****                                                                  00040807\nC***********************************************************************00050807\nC*****  GENERAL PURPOSE                                         ANS REF 00060807\nC*****    TEST OF INTRINSIC FUNCTION --                          15.3   00070807\nC*****    DMIN1 -- CHOOSING SMALLEST VALUE                     (TABLE 5)00080807\nC*****                                                                  00090807\nCBB** ********************** BBCCOMNT **********************************00100807\nC****                                                                   00110807\nC****            1978 FORTRAN COMPILER VALIDATION SYSTEM                00120807\nC****                          VERSION 2.1                              00130807\nC****                                                                   00140807\nC****                                                                   00150807\nC****           SUGGESTIONS AND COMMENTS SHOULD BE FORWARDED TO         00160807\nC****          NATIONAL INSTITUTE OF STANDARDS AND TECHNOLOGY           00170807\nC****               SOFTWARE STANDARDS VALIDATION GROUP                 00180807\nC****                      BUILDING 225  RM A266                        00190807\nC****                     GAITHERSBURG, MD  20899                       00200807\nC****                                                                   00210807\nC****                                                                   00220807\nC****                                                                   00230807\nCBE** ********************** BBCCOMNT **********************************00240807\nC*****    S P E C I F I C A T I O N S  SEGMENT 168                      00250807\n",
+      "29":"CBB** ********************** BBCINITA **********************************00270807\nC**** SPECIFICATION STATEMENTS                                          00280807\nC****                                                                   00290807\n",
+      "34":"CBE** ********************** BBCINITA **********************************00320807\nCBB** ********************** BBCINITB **********************************00330807\nC**** INITIALIZE SECTION                                                00340807\n",
+      "44":"C**** THE FOLLOWING 9 COMMENT LINES (CZ01, CZ02, ...) CAN BE REPLACED   00420807\nC**** FOR IDENTIFYING THE TEST ENVIRONMENT                              00430807\nC****                                                                   00440807\nCZ01  ZVERS  = 'VERSION OF THE COMPILER VALIDATION SYSTEM'              00450807\nCZ02  ZVERSD = 'CREATION DATE/TIME OF THE COMPILER VALIDATION SYSTEM'   00460807\nCZ03  ZPROG  = 'PROGRAM NAME'                                           00470807\nCZ04  ZDATE  = 'DATE OF TEST'                                           00480807\nCZ05  ZCOMPL = 'COMPILER IDENTIFICATION'                                00490807\nCZ06  ZPROJ  = 'PROJECT NUMBER/IDENTIFICATION'                          00500807\nCZ07  ZNAME  = 'NAME OF USER'                                           00510807\nCZ08  ZTAPE  = 'TAPE OWNER/ID'                                          00520807\nCZ09  ZTAPED = 'DATE TAPE COPIED'                                       00530807\nC                                                                       00540807\n",
+      "64":"C                                                                       00620807\nC     I01 CONTAINS THE LOGICAL UNIT NUMBER FOR THE CARD READER.         00630807\n",
+      "67":"C     I02 CONTAINS THE LOGICAL UNIT NUMBER FOR THE PRINTER.             00650807\n",
+      "69":"C                                                                       00670807\nCX010   REPLACED BY FEXEC X-010 CONTROL CARD (CARD-READER UNIT NUMBER). 00680807\nC     THE CX010 CARD IS FOR OVERRIDING THE PROGRAM DEFAULT I01 = 5      00690807\nCX011   REPLACED BY FEXEC X-011 CONTROL CARD.  CX011 IS FOR SYSTEMS     00700807\nC     REQUIRING ADDITIONAL STATEMENTS FOR FILES ASSOCIATED WITH CX010.  00710807\nC                                                                       00720807\nCX020   REPLACED BY FEXEC X-020 CONTROL CARD (PRINTER UNIT NUMBER).     00730807\nC     THE CX020 CARD IS FOR OVERRIDING THE PROGRAM DEFAULT I02= 6       00740807\nCX021   REPLACED BY FEXEC X-021 CONTROL CARD.  CX021 IS FOR SYSTEMS     00750807\nC     REQUIRING ADDITIONAL STATEMENTS FOR FILES ASSOCIATED WITH CX020.  00760807\nC                                                                       00770807\nCBE** ********************** BBCINITB **********************************00780807\n",
+      "84":"CBB** ********************** BBCHED0A **********************************00820807\nC****                                                                   00830807\nC**** WRITE REPORT TITLE                                                00840807\nC****                                                                   00850807\n",
+      "94":"CBE** ********************** BBCHED0A **********************************00920807\nC*****                                                                  00930807\nC*****                                                                  00940807\n",
+      "101":"CBB** ********************** BBCHED0B **********************************00990807\nC**** WRITE DETAIL REPORT HEADERS                                       01000807\nC****                                                                   01010807\n",
+      "109":"CBE** ********************** BBCHED0B **********************************01070807\nC*****                                                                  01080807\nCT001*  TEST 1                                        BOTH VALUES EQUAL 01090807\n",
+      "125":"CT002*  TEST 2                        FIRST VALUE NON-ZERO, SECOND ZERO 01230807\n",
+      "139":"CT003*  TEST 3                                        BOTH VALUES EQUAL 01370807\n",
+      "153":"CT004*  TEST 4                                         VALUES NOT EQUAL 01510807\n",
+      "167":"CT005*  TEST 5                        FIRST VALUE NEGATIVE, SECOND ZERO 01650807\n",
+      "181":"CT006*  TEST 6                         BOTH VALUES EQUAL, BOTH NEGATIVE 01790807\n",
+      "195":"CT007*  TEST 7                          VALUES NOT EQUAL, BOTH NEGATIVE 01930807\n",
+      "209":"CT008*  TEST 8      1ST VALUE NON-ZERO, 2ND ZERO PRECEDED BY MINUS SIGN 02070807\n",
+      "223":"CT009*  TEST 9             ARITHMETIC EXPRESSIONS PRESENTED TO FUNCTION 02210807\n",
+      "237":"CT010*  TEST 10                                             3 ARGUMENTS 02350807\n",
+      "252":"CT011*  TEST 11                                             4 ARGUMENTS 02500807\n",
+      "254":"C*****                             ARGUMENTS OF HIGH AND LOW MAGNITUDES 02520807\n",
+      "268":"CT012*  TEST 12                                             5 ARGUMENTS 02660807\n",
+      "282":"C*****                                                                  02800807\nCBB** ********************** BBCSUM0  **********************************02810807\nC**** WRITE OUT TEST SUMMARY                                            02820807\nC****                                                                   02830807\n",
+      "295":"CBE** ********************** BBCSUM0  **********************************02930807\nCBB** ********************** BBCFOOT0 **********************************02940807\nC**** WRITE OUT REPORT FOOTINGS                                         02950807\nC****                                                                   02960807\n",
+      "302":"CBE** ********************** BBCFOOT0 **********************************03000807\nCBB** ********************** BBCFMT0A **********************************03010807\nC**** FORMATS FOR TEST DETAIL LINES                                     03020807\nC****                                                                   03030807\n",
+      "323":"CBE** ********************** BBCFMT0A **********************************03210807\nCBB** ********************** BBCFMAT1 **********************************03220807\nC**** FORMATS FOR TEST DETAIL LINES - FULL LANGUAGE                     03230807\nC****                                                                   03240807\n",
+      "338":"CBE** ********************** BBCFMAT1 **********************************03360807\nCBB** ********************** BBCFMT0B **********************************03370807\nC**** FORMAT STATEMENTS FOR PAGE HEADERS                                03380807\nC****                                                                   03390807\n",
+      "354":"C****                                                                   03520807\nC**** FORMAT STATEMENTS FOR REPORT FOOTINGS                             03530807\nC****                                                                   03540807\n",
+      "361":"C****                                                                   03590807\nC**** FORMAT STATEMENTS FOR RUN SUMMARY                                 03600807\nC****                                                                   03610807\n",
+      "369":"CBE** ********************** BBCFMT0B **********************************03670807\nC*****    END OF TEST SEGMENT 168                                       03680807\n"
+   },
+   "program_units":
+   [
+      {
+         "main":
+         {
+            "name":"FM807",
+            "file":"test/nist/FM807.FOR",
+            "line":"1",
+            "column":"7"
+            "ending-file":"test/nist/FM807.FOR",
+            "ending-line":"372",
+            "ending-column":"11"
+         }
+      }
+   ]
+}

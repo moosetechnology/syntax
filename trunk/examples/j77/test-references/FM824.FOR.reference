@@ -1,0 +1,53 @@
+{
+   "comments":
+   {
+      "3":"C***********************************************************************00010824\nC*****  FORTRAN 77                                                      00020824\nC*****   FM824                                                          00030824\nC*****                       YDATAN - (196)                             00040824\nC*****                                                                  00050824\nC***********************************************************************00060824\nC*****  GENERAL PURPOSE                                         ANS REF 00070824\nC*****    TEST INTRINSIC FUNCTION DATAN, DATAN2                  15.3   00080824\nC*****    INTRINSIC FUNCTION DSQRT ASSUMED WORKING              TABLE 5 00090824\nC*****                                                                  00100824\nCBB** ********************** BBCCOMNT **********************************00110824\nC****                                                                   00120824\nC****            1978 FORTRAN COMPILER VALIDATION SYSTEM                00130824\nC****                          VERSION 2.1                              00140824\nC****                                                                   00150824\nC****                                                                   00160824\nC****           SUGGESTIONS AND COMMENTS SHOULD BE FORWARDED TO         00170824\nC****          NATIONAL INSTITUTE OF STANDARDS AND TECHNOLOGY           00180824\nC****               SOFTWARE STANDARDS VALIDATION GROUP                 00190824\nC****                      BUILDING 225  RM A266                        00200824\nC****                     GAITHERSBURG, MD  20899                       00210824\nC****                                                                   00220824\nC****                                                                   00230824\nC****                                                                   00240824\nCBE** ********************** BBCCOMNT **********************************00250824\nC*****                                                                  00260824\nC*****    S P E C I F I C A T I O N S SEGMENT 196                       00270824\n",
+      "31":"C*****                                                                  00290824\nCBB** ********************** BBCINITA **********************************00300824\nC**** SPECIFICATION STATEMENTS                                          00310824\nC****                                                                   00320824\n",
+      "37":"CBE** ********************** BBCINITA **********************************00350824\nCBB** ********************** BBCINITB **********************************00360824\nC**** INITIALIZE SECTION                                                00370824\n",
+      "47":"C**** THE FOLLOWING 9 COMMENT LINES (CZ01, CZ02, ...) CAN BE REPLACED   00450824\nC**** FOR IDENTIFYING THE TEST ENVIRONMENT                              00460824\nC****                                                                   00470824\nCZ01  ZVERS  = 'VERSION OF THE COMPILER VALIDATION SYSTEM'              00480824\nCZ02  ZVERSD = 'CREATION DATE/TIME OF THE COMPILER VALIDATION SYSTEM'   00490824\nCZ03  ZPROG  = 'PROGRAM NAME'                                           00500824\nCZ04  ZDATE  = 'DATE OF TEST'                                           00510824\nCZ05  ZCOMPL = 'COMPILER IDENTIFICATION'                                00520824\nCZ06  ZPROJ  = 'PROJECT NUMBER/IDENTIFICATION'                          00530824\nCZ07  ZNAME  = 'NAME OF USER'                                           00540824\nCZ08  ZTAPE  = 'TAPE OWNER/ID'                                          00550824\nCZ09  ZTAPED = 'DATE TAPE COPIED'                                       00560824\nC                                                                       00570824\n",
+      "67":"C                                                                       00650824\nC     I01 CONTAINS THE LOGICAL UNIT NUMBER FOR THE CARD READER.         00660824\n",
+      "70":"C     I02 CONTAINS THE LOGICAL UNIT NUMBER FOR THE PRINTER.             00680824\n",
+      "72":"C                                                                       00700824\nCX010   REPLACED BY FEXEC X-010 CONTROL CARD (CARD-READER UNIT NUMBER). 00710824\nC     THE CX010 CARD IS FOR OVERRIDING THE PROGRAM DEFAULT I01 = 5      00720824\nCX011   REPLACED BY FEXEC X-011 CONTROL CARD.  CX011 IS FOR SYSTEMS     00730824\nC     REQUIRING ADDITIONAL STATEMENTS FOR FILES ASSOCIATED WITH CX010.  00740824\nC                                                                       00750824\nCX020   REPLACED BY FEXEC X-020 CONTROL CARD (PRINTER UNIT NUMBER).     00760824\nC     THE CX020 CARD IS FOR OVERRIDING THE PROGRAM DEFAULT I02= 6       00770824\nCX021   REPLACED BY FEXEC X-021 CONTROL CARD.  CX021 IS FOR SYSTEMS     00780824\nC     REQUIRING ADDITIONAL STATEMENTS FOR FILES ASSOCIATED WITH CX020.  00790824\nC                                                                       00800824\nCBE** ********************** BBCINITB **********************************00810824\n",
+      "87":"CBB** ********************** BBCHED0A **********************************00850824\nC****                                                                   00860824\nC**** WRITE REPORT TITLE                                                00870824\nC****                                                                   00880824\n",
+      "97":"CBE** ********************** BBCHED0A **********************************00950824\nC*****                                                                  00960824\nC*****    HEADER FOR SEGMENT 196                                        00970824\n",
+      "104":"CBB** ********************** BBCHED0B **********************************01020824\nC**** WRITE DETAIL REPORT HEADERS                                       01030824\nC****                                                                   01040824\n",
+      "112":"CBE** ********************** BBCHED0B **********************************01100824\nC*****                                                                  01110824\n",
+      "116":"C*****                                                                  01140824\nCT001*  TEST 1                LARGE ARGUMENT VALUES TO TEST SINGULARITY 01150824\n",
+      "130":"CT002*  TEST 2                LARGE ARGUMENT VALUES TO TEST SINGULARITY 01280824\n",
+      "142":"CT003*  TEST 3                         AN EXPRESSION PRESENTED TO DATAN 01400824\n",
+      "154":"CT004*  TEST 4               THE FUNCTION DSQRT EVALUATED AND PRESENTED 01520824\nC*****                       AS AN ARGUMENT                             01530824\n",
+      "168":"CT005*  TEST 5                             AN ARGUMENT OF LOW MAGNITUDE 01660824\n",
+      "180":"CT006*  TEST 6                            AN ARGUMENT OF HIGH MAGNITUDE 01780824\n",
+      "192":"C*****                                                                  01900824\n",
+      "195":"CT007*  TEST 7                  TEST (0,POSITIVE) TO TEST DISCONTINUITY 01930824\n",
+      "209":"CT008*  TEST 8                  TEST (0,NEGATIVE) TO TEST DISCONTINUITY 02070824\n",
+      "223":"CT009*  TEST 9                        AN EXPRESSION PRESENTED TO DATAN2 02210824\n",
+      "237":"CT010*  TEST 10                    ARGUMENTS WHERE (X,Y) X IS NEAR ZERO 02350824\n",
+      "251":"CT011*  TEST 11                     WHERE ARGUMENT (X,Y) Y IS NEAR ZERO 02490824\n",
+      "263":"CT012*  TEST 12                     WHERE ARGUMENT (X,Y) Y IS NEAR ZERO 02610824\n",
+      "277":"CT013*  TEST 13                          COMPARISON OF DATAN AND DATAN2 02750824\n",
+      "290":"C*****                                                                  02880824\nCBB** ********************** BBCSUM0  **********************************02890824\nC**** WRITE OUT TEST SUMMARY                                            02900824\nC****                                                                   02910824\n",
+      "303":"CBE** ********************** BBCSUM0  **********************************03010824\nCBB** ********************** BBCFOOT0 **********************************03020824\nC**** WRITE OUT REPORT FOOTINGS                                         03030824\nC****                                                                   03040824\n",
+      "310":"CBE** ********************** BBCFOOT0 **********************************03080824\nCBB** ********************** BBCFMT0A **********************************03090824\nC**** FORMATS FOR TEST DETAIL LINES                                     03100824\nC****                                                                   03110824\n",
+      "331":"CBE** ********************** BBCFMT0A **********************************03290824\nCBB** ********************** BBCFMAT1 **********************************03300824\nC**** FORMATS FOR TEST DETAIL LINES - FULL LANGUAGE                     03310824\nC****                                                                   03320824\n",
+      "346":"CBE** ********************** BBCFMAT1 **********************************03440824\nCBB** ********************** BBCFMT0B **********************************03450824\nC**** FORMAT STATEMENTS FOR PAGE HEADERS                                03460824\nC****                                                                   03470824\n",
+      "362":"C****                                                                   03600824\nC**** FORMAT STATEMENTS FOR REPORT FOOTINGS                             03610824\nC****                                                                   03620824\n",
+      "369":"C****                                                                   03670824\nC**** FORMAT STATEMENTS FOR RUN SUMMARY                                 03680824\nC****                                                                   03690824\n",
+      "377":"CBE** ********************** BBCFMT0B **********************************03750824\nC*****                                                                  03760824\nC*****    END OF TEST SEGMENT 196                                       03770824\n"
+   },
+   "program_units":
+   [
+      {
+         "main":
+         {
+            "name":"FM824",
+            "file":"test/nist/FM824.FOR",
+            "line":"1",
+            "column":"7"
+            "ending-file":"test/nist/FM824.FOR",
+            "ending-line":"381",
+            "ending-column":"9"
+         }
+      }
+   ]
+}

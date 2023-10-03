@@ -1,0 +1,58 @@
+{
+   "comments":
+   {
+      "3":"C***********************************************************************00010805\nC*****  FORTRAN 77                                                      00020805\nC*****   FM805               YDDIM - (164)                              00030805\nC*****                                                                  00040805\nC***********************************************************************00050805\nC*****  GENERAL PURPOSE                                         ANS REF 00060805\nC*****    TEST INTRINSIC FUNCTION DDIM AND PROD--POSITIVE        15.3   00070805\nC*****    DIFFERENCE AND DOUBLE PRECISION PRODUCT, RESP.       (TABLE 5)00080805\nC*****                                                                  00090805\nCBB** ********************** BBCCOMNT **********************************00100805\nC****                                                                   00110805\nC****            1978 FORTRAN COMPILER VALIDATION SYSTEM                00120805\nC****                          VERSION 2.1                              00130805\nC****                                                                   00140805\nC****                                                                   00150805\nC****           SUGGESTIONS AND COMMENTS SHOULD BE FORWARDED TO         00160805\nC****          NATIONAL INSTITUTE OF STANDARDS AND TECHNOLOGY           00170805\nC****               SOFTWARE STANDARDS VALIDATION GROUP                 00180805\nC****                      BUILDING 225  RM A266                        00190805\nC****                     GAITHERSBURG, MD  20899                       00200805\nC****                                                                   00210805\nC****                                                                   00220805\nC****                                                                   00230805\nCBE** ********************** BBCCOMNT **********************************00240805\nC*****                                                                  00250805\nC*****     S P E C I F I C A T I O N S  SEGMENT 164                     00260805\n",
+      "30":"C*****                                                                  00280805\nCBB** ********************** BBCINITA **********************************00290805\nC**** SPECIFICATION STATEMENTS                                          00300805\nC****                                                                   00310805\n",
+      "36":"CBE** ********************** BBCINITA **********************************00340805\nCBB** ********************** BBCINITB **********************************00350805\nC**** INITIALIZE SECTION                                                00360805\n",
+      "46":"C**** THE FOLLOWING 9 COMMENT LINES (CZ01, CZ02, ...) CAN BE REPLACED   00440805\nC**** FOR IDENTIFYING THE TEST ENVIRONMENT                              00450805\nC****                                                                   00460805\nCZ01  ZVERS  = 'VERSION OF THE COMPILER VALIDATION SYSTEM'              00470805\nCZ02  ZVERSD = 'CREATION DATE/TIME OF THE COMPILER VALIDATION SYSTEM'   00480805\nCZ03  ZPROG  = 'PROGRAM NAME'                                           00490805\nCZ04  ZDATE  = 'DATE OF TEST'                                           00500805\nCZ05  ZCOMPL = 'COMPILER IDENTIFICATION'                                00510805\nCZ06  ZPROJ  = 'PROJECT NUMBER/IDENTIFICATION'                          00520805\nCZ07  ZNAME  = 'NAME OF USER'                                           00530805\nCZ08  ZTAPE  = 'TAPE OWNER/ID'                                          00540805\nCZ09  ZTAPED = 'DATE TAPE COPIED'                                       00550805\nC                                                                       00560805\n",
+      "66":"C                                                                       00640805\nC     I01 CONTAINS THE LOGICAL UNIT NUMBER FOR THE CARD READER.         00650805\n",
+      "69":"C     I02 CONTAINS THE LOGICAL UNIT NUMBER FOR THE PRINTER.             00670805\n",
+      "71":"C                                                                       00690805\nCX010   REPLACED BY FEXEC X-010 CONTROL CARD (CARD-READER UNIT NUMBER). 00700805\nC     THE CX010 CARD IS FOR OVERRIDING THE PROGRAM DEFAULT I01 = 5      00710805\nCX011   REPLACED BY FEXEC X-011 CONTROL CARD.  CX011 IS FOR SYSTEMS     00720805\nC     REQUIRING ADDITIONAL STATEMENTS FOR FILES ASSOCIATED WITH CX010.  00730805\nC                                                                       00740805\nCX020   REPLACED BY FEXEC X-020 CONTROL CARD (PRINTER UNIT NUMBER).     00750805\nC     THE CX020 CARD IS FOR OVERRIDING THE PROGRAM DEFAULT I02= 6       00760805\nCX021   REPLACED BY FEXEC X-021 CONTROL CARD.  CX021 IS FOR SYSTEMS     00770805\nC     REQUIRING ADDITIONAL STATEMENTS FOR FILES ASSOCIATED WITH CX020.  00780805\nC                                                                       00790805\nCBE** ********************** BBCINITB **********************************00800805\n",
+      "86":"CBB** ********************** BBCHED0A **********************************00840805\nC****                                                                   00850805\nC**** WRITE REPORT TITLE                                                00860805\nC****                                                                   00870805\n",
+      "96":"CBE** ********************** BBCHED0A **********************************00940805\nC*****                                                                  00950805\nC*****    HEADER FOR SEGMENT 164                                        00960805\n",
+      "104":"CBB** ********************** BBCHED0B **********************************01020805\nC**** WRITE DETAIL REPORT HEADERS                                       01030805\nC****                                                                   01040805\n",
+      "112":"CBE** ********************** BBCHED0B **********************************01100805\nC*****                                                                  01110805\nC*****    TEST OF DDIM                                                  01120805\nC*****                                                                  01130805\n",
+      "118":"CT001*  TEST 1                                        BOTH VALUES EQUAL 01160805\n",
+      "132":"CT002*  TEST 2                       BOTH VALUES EQUAL, INTEGRAL VALUES 01300805\n",
+      "146":"CT003*  TEST 3                             FIRST VALUE LESS THAN SECOND 01440805\n",
+      "160":"CT004*  TEST 4                          FIRST VALUE GREATER THAN SECOND 01580805\n",
+      "174":"CT005*  TEST 5                         BOTH VALUES EQUAL, BOTH NEGATIVE 01720805\n",
+      "188":"CT006*  TEST 6           FIRST VALUE GREATER THAN SECOND, BOTH NEGATIVE 01860805\n",
+      "202":"CT007*  TEST 7                    FIRST VALUE POSITIVE, SECOND NEGATIVE 02000805\n",
+      "216":"CT008*  TEST 8                  ARITHMETIC EXPRESSION PRESENTED TO DDIM 02140805\n",
+      "230":"C*****                                                                  02280805\nC*****    TEST OF DPROD                                                 02290805\nC*****                                                                  02300805\n",
+      "236":"CT009*  TEST 9                     PAIR OF VALUES, ONE OF WHICH IS ZERO 02340805\n",
+      "252":"CT010*  TEST 10                     PAIR OF VALUES, ONE OF WHICH IS ONE 02500805\n",
+      "268":"CT011*  TEST 11                                 PAIR OF NON-ZERO VALUES 02660805\n",
+      "284":"CT012*  TEST 12                            ONE POSITIVE, ONE NEGATIVE   02820805\n",
+      "300":"CT013*  TEST 13                          ONE VALUE ONE(1), ONE NEGATIVE 02980805\n",
+      "316":"CT014*  TEST 14                                 PAIR OF NEGATIVE VALUES 03140805\n",
+      "332":"CT015*  TEST 15                  ONE POSITIVE VALUE, ONE NEGATIVE VALUE 03300805\n",
+      "348":"CT016*  TEST 16                ARITHMETIC EXPRESSION PRESENTED TO DPROD 03460805\n",
+      "364":"CT017*  TEST 17                       DPROD FORMS THE ARGUMENTS TO DDIM 03620805\n",
+      "378":"CT018*  TEST 18                  ARGUMENTS WITH HIGH AND LOW MAGNITUDES 03760805\n",
+      "394":"C*****                                                                  03920805\nCBB** ********************** BBCSUM0  **********************************03930805\nC**** WRITE OUT TEST SUMMARY                                            03940805\nC****                                                                   03950805\n",
+      "407":"CBE** ********************** BBCSUM0  **********************************04050805\nCBB** ********************** BBCFOOT0 **********************************04060805\nC**** WRITE OUT REPORT FOOTINGS                                         04070805\nC****                                                                   04080805\n",
+      "414":"CBE** ********************** BBCFOOT0 **********************************04120805\nCBB** ********************** BBCFMT0A **********************************04130805\nC**** FORMATS FOR TEST DETAIL LINES                                     04140805\nC****                                                                   04150805\n",
+      "435":"CBE** ********************** BBCFMT0A **********************************04330805\nCBB** ********************** BBCFMAT1 **********************************04340805\nC**** FORMATS FOR TEST DETAIL LINES - FULL LANGUAGE                     04350805\nC****                                                                   04360805\n",
+      "450":"CBE** ********************** BBCFMAT1 **********************************04480805\nCBB** ********************** BBCFMT0B **********************************04490805\nC**** FORMAT STATEMENTS FOR PAGE HEADERS                                04500805\nC****                                                                   04510805\n",
+      "466":"C****                                                                   04640805\nC**** FORMAT STATEMENTS FOR REPORT FOOTINGS                             04650805\nC****                                                                   04660805\n",
+      "473":"C****                                                                   04710805\nC**** FORMAT STATEMENTS FOR RUN SUMMARY                                 04720805\nC****                                                                   04730805\n",
+      "481":"CBE** ********************** BBCFMT0B **********************************04790805\nC*****                                                                  04800805\nC*****    END OF TEST SEGMENT 164                                       04810805\n"
+   },
+   "program_units":
+   [
+      {
+         "main":
+         {
+            "name":"FM805",
+            "file":"test/nist/FM805.FOR",
+            "line":"1",
+            "column":"7"
+            "ending-file":"test/nist/FM805.FOR",
+            "ending-line":"485",
+            "ending-column":"11"
+         }
+      }
+   ]
+}

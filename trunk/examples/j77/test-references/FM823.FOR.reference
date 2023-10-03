@@ -1,0 +1,52 @@
+{
+   "comments":
+   {
+      "3":"C***********************************************************************00010823\nC*****  FORTRAN 77                                                      00020823\nC*****   FM823                                                          00030823\nC*****                       YDASIN - (194)                             00040823\nC*****                                                                  00050823\nC***********************************************************************00060823\nC*****  GENERAL PURPOSE                                         ANS REF 00070823\nC*****    TEST INTRINSIC FUNCTION DASIN, DACOS                   15.3   00080823\nC*****                                                          TABLE 5 00090823\nC*****                                                                  00100823\nCBB** ********************** BBCCOMNT **********************************00110823\nC****                                                                   00120823\nC****            1978 FORTRAN COMPILER VALIDATION SYSTEM                00130823\nC****                          VERSION 2.1                              00140823\nC****                                                                   00150823\nC****                                                                   00160823\nC****           SUGGESTIONS AND COMMENTS SHOULD BE FORWARDED TO         00170823\nC****          NATIONAL INSTITUTE OF STANDARDS AND TECHNOLOGY           00180823\nC****               SOFTWARE STANDARDS VALIDATION GROUP                 00190823\nC****                      BUILDING 225  RM A266                        00200823\nC****                     GAITHERSBURG, MD  20899                       00210823\nC****                                                                   00220823\nC****                                                                   00230823\nC****                                                                   00240823\nCBE** ********************** BBCCOMNT **********************************00250823\nC*****                                                                  00260823\nC*****    S P E C I F I C A T I O N S SEGMENT 194                       00270823\n",
+      "31":"C*****                                                                  00290823\nCBB** ********************** BBCINITA **********************************00300823\nC**** SPECIFICATION STATEMENTS                                          00310823\nC****                                                                   00320823\n",
+      "37":"CBE** ********************** BBCINITA **********************************00350823\nCBB** ********************** BBCINITB **********************************00360823\nC**** INITIALIZE SECTION                                                00370823\n",
+      "47":"C**** THE FOLLOWING 9 COMMENT LINES (CZ01, CZ02, ...) CAN BE REPLACED   00450823\nC**** FOR IDENTIFYING THE TEST ENVIRONMENT                              00460823\nC****                                                                   00470823\nCZ01  ZVERS  = 'VERSION OF THE COMPILER VALIDATION SYSTEM'              00480823\nCZ02  ZVERSD = 'CREATION DATE/TIME OF THE COMPILER VALIDATION SYSTEM'   00490823\nCZ03  ZPROG  = 'PROGRAM NAME'                                           00500823\nCZ04  ZDATE  = 'DATE OF TEST'                                           00510823\nCZ05  ZCOMPL = 'COMPILER IDENTIFICATION'                                00520823\nCZ06  ZPROJ  = 'PROJECT NUMBER/IDENTIFICATION'                          00530823\nCZ07  ZNAME  = 'NAME OF USER'                                           00540823\nCZ08  ZTAPE  = 'TAPE OWNER/ID'                                          00550823\nCZ09  ZTAPED = 'DATE TAPE COPIED'                                       00560823\nC                                                                       00570823\n",
+      "67":"C                                                                       00650823\nC     I01 CONTAINS THE LOGICAL UNIT NUMBER FOR THE CARD READER.         00660823\n",
+      "70":"C     I02 CONTAINS THE LOGICAL UNIT NUMBER FOR THE PRINTER.             00680823\n",
+      "72":"C                                                                       00700823\nCX010   REPLACED BY FEXEC X-010 CONTROL CARD (CARD-READER UNIT NUMBER). 00710823\nC     THE CX010 CARD IS FOR OVERRIDING THE PROGRAM DEFAULT I01 = 5      00720823\nCX011   REPLACED BY FEXEC X-011 CONTROL CARD.  CX011 IS FOR SYSTEMS     00730823\nC     REQUIRING ADDITIONAL STATEMENTS FOR FILES ASSOCIATED WITH CX010.  00740823\nC                                                                       00750823\nCX020   REPLACED BY FEXEC X-020 CONTROL CARD (PRINTER UNIT NUMBER).     00760823\nC     THE CX020 CARD IS FOR OVERRIDING THE PROGRAM DEFAULT I02= 6       00770823\nCX021   REPLACED BY FEXEC X-021 CONTROL CARD.  CX021 IS FOR SYSTEMS     00780823\nC     REQUIRING ADDITIONAL STATEMENTS FOR FILES ASSOCIATED WITH CX020.  00790823\nC                                                                       00800823\nCBE** ********************** BBCINITB **********************************00810823\n",
+      "87":"CBB** ********************** BBCHED0A **********************************00850823\nC****                                                                   00860823\nC**** WRITE REPORT TITLE                                                00870823\nC****                                                                   00880823\n",
+      "97":"CBE** ********************** BBCHED0A **********************************00950823\nC*****                                                                  00960823\nC*****    HEADER FOR SEGMENT 194                                        00970823\n",
+      "104":"CBB** ********************** BBCHED0B **********************************01020823\nC**** WRITE DETAIL REPORT HEADERS                                       01030823\nC****                                                                   01040823\n",
+      "112":"CBE** ********************** BBCHED0B **********************************01100823\nC*****                                                                  01110823\n",
+      "116":"C*****                                                                  01140823\nCT001*  TEST 1                  -1.0D0 FOR PRINCIPAL VALUE AT ENDPOINTS 01150823\n",
+      "130":"CT002*  TEST 2                  +1.0D0 FOR PRINCIPAL VALUE AT ENDPOINTS 01280823\n",
+      "142":"CT003*  TEST 3                                  THE VALUE -DSQRT(0.5D0) 01400823\n",
+      "155":"CT004*  TEST 4                                          THE VALUE 0.5D0 01530823\n",
+      "167":"CT005*  TEST 5                             AN ARGUMENT OF LOW MAGNITUDE 01650823\n",
+      "179":"C*****                                                                  01770823\n",
+      "182":"C*****                                                                  01800823\nCT006*  TEST 6                  -1.0D0 FOR PRINCIPAL VALUE AT ENDPOINTS 01810823\n",
+      "196":"CT007*  TEST 7              +1.0D0 TO TEST PRINCIPAL VALUE AT ENDPOINTS 01940823\n",
+      "208":"CT008*  TEST 8                                  THE VALUE -DSQRT(0.5D0) 02060823\n",
+      "221":"CT009*  TEST 9                                          THE VALUE 0.5D0 02190823\n",
+      "233":"CT010*  TEST 10                            AN ARGUMENT OF LOW MAGNITUDE 02310823\n",
+      "245":"CT011*  TEST 11    COMPARISON OF DASIN AND DACOS FOR RIGHT RELATIONSHIP 02430823\n",
+      "259":"CT012*  TEST 12      COMPARISON OF DASIN AND DACOS TO TEST RELATIONSHIP 02570823\n",
+      "271":"C*****                                                                  02690823\nCBB** ********************** BBCSUM0  **********************************02700823\nC**** WRITE OUT TEST SUMMARY                                            02710823\nC****                                                                   02720823\n",
+      "284":"CBE** ********************** BBCSUM0  **********************************02820823\nCBB** ********************** BBCFOOT0 **********************************02830823\nC**** WRITE OUT REPORT FOOTINGS                                         02840823\nC****                                                                   02850823\n",
+      "291":"CBE** ********************** BBCFOOT0 **********************************02890823\nCBB** ********************** BBCFMT0A **********************************02900823\nC**** FORMATS FOR TEST DETAIL LINES                                     02910823\nC****                                                                   02920823\n",
+      "312":"CBE** ********************** BBCFMT0A **********************************03100823\nCBB** ********************** BBCFMAT1 **********************************03110823\nC**** FORMATS FOR TEST DETAIL LINES - FULL LANGUAGE                     03120823\nC****                                                                   03130823\n",
+      "327":"CBE** ********************** BBCFMAT1 **********************************03250823\nCBB** ********************** BBCFMT0B **********************************03260823\nC**** FORMAT STATEMENTS FOR PAGE HEADERS                                03270823\nC****                                                                   03280823\n",
+      "343":"C****                                                                   03410823\nC**** FORMAT STATEMENTS FOR REPORT FOOTINGS                             03420823\nC****                                                                   03430823\n",
+      "350":"C****                                                                   03480823\nC**** FORMAT STATEMENTS FOR RUN SUMMARY                                 03490823\nC****                                                                   03500823\n",
+      "358":"CBE** ********************** BBCFMT0B **********************************03560823\nC*****                                                                  03570823\nC*****    END OF TEST SEGMENT 194                                       03580823\n"
+   },
+   "program_units":
+   [
+      {
+         "main":
+         {
+            "name":"FM823",
+            "file":"test/nist/FM823.FOR",
+            "line":"1",
+            "column":"7"
+            "ending-file":"test/nist/FM823.FOR",
+            "ending-line":"362",
+            "ending-column":"9"
+         }
+      }
+   ]
+}

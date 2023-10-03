@@ -1,0 +1,67 @@
+{
+   "comments":
+   {
+      "3":"C***********************************************************************00010906\nC*****  FORTRAN 77                                                      00020906\nC*****   FM906                                                          00030906\nC*****                       LSTDI2 - (372)                             00040906\nC*****                                                                  00050906\nC***********************************************************************00060906\nC*****  GENERAL PURPOSE                                         ANS REF 00070906\nC*****    TEST LIST DIRECTED INPUT                              13.6    00080906\nC*****    DOUBLE PRECISION, COMPLEX DATA TYPES INCLUDED         12.4    00090906\nC*****                                                                  00100906\nCBB** ********************** BBCCOMNT **********************************00110906\nC****                                                                   00120906\nC****            1978 FORTRAN COMPILER VALIDATION SYSTEM                00130906\nC****                          VERSION 2.1                              00140906\nC****                                                                   00150906\nC****                                                                   00160906\nC****           SUGGESTIONS AND COMMENTS SHOULD BE FORWARDED TO         00170906\nC****          NATIONAL INSTITUTE OF STANDARDS AND TECHNOLOGY           00180906\nC****               SOFTWARE STANDARDS VALIDATION GROUP                 00190906\nC****                      BUILDING 225  RM A266                        00200906\nC****                     GAITHERSBURG, MD  20899                       00210906\nC****                                                                   00220906\nC****                                                                   00230906\nC****                                                                   00240906\nCBE** ********************** BBCCOMNT **********************************00250906\nC*****                                                                  00260906\nC  INPUT DATA TO THIS SEGMENT CONSISTS OF 12 CARD IMAGES IN COL. 1-44   00270906\nCOL.      1-----------------------------------------44                  00280906\nCARD 1    2.5D0                                                         00290906\nCARD 2    1.5  2.5D0  3.5E0                                             00300906\nCARD 3    (3.0,4.0)                                                     00310906\nCARD 4    (1.0,0.0)  (0.0,0.0)  (0.0,3.0)                               00320906\nCARD 5    2, 2.5D0, 2.5D0, T, (3.0,4.0), 'TEST'                         00330906\nCARD 6    ( 2.5 , 3.5 )                                                 00340906\nCARD 7    (1.0        ,                                                 00350906\nCARD 8       2.0)                                                       00360906\nCARD 9    , (2.0, 3.0),,6.0D0, 2*,                                      00370906\nCARD 10   1.0D0  (2.0, 2.0)  3.0D0  (4.0, 4.0)  5.0D0                   00380906\nCARD 11   6.0D0  (7.0, 7.0) / 8.0D0  (9.0, 9.0) 10.0D0                  00390906\nCARD 12   2.0D0 4.0D0 / 6.0D0 8.0D0 10.0D0                              00400906\nC*****                                                                  00410906\nC*****  S P E C I F I C A T I O N S  SEGMENT 372                        00420906\n",
+      "52":"C*****                                                                  00500906\nCBB** ********************** BBCINITA **********************************00510906\nC**** SPECIFICATION STATEMENTS                                          00520906\nC****                                                                   00530906\n",
+      "58":"CBE** ********************** BBCINITA **********************************00560906\nCBB** ********************** BBCINITB **********************************00570906\nC**** INITIALIZE SECTION                                                00580906\n",
+      "68":"C**** THE FOLLOWING 9 COMMENT LINES (CZ01, CZ02, ...) CAN BE REPLACED   00660906\nC**** FOR IDENTIFYING THE TEST ENVIRONMENT                              00670906\nC****                                                                   00680906\nCZ01  ZVERS  = 'VERSION OF THE COMPILER VALIDATION SYSTEM'              00690906\nCZ02  ZVERSD = 'CREATION DATE/TIME OF THE COMPILER VALIDATION SYSTEM'   00700906\nCZ03  ZPROG  = 'PROGRAM NAME'                                           00710906\nCZ04  ZDATE  = 'DATE OF TEST'                                           00720906\nCZ05  ZCOMPL = 'COMPILER IDENTIFICATION'                                00730906\nCZ06  ZPROJ  = 'PROJECT NUMBER/IDENTIFICATION'                          00740906\nCZ07  ZNAME  = 'NAME OF USER'                                           00750906\nCZ08  ZTAPE  = 'TAPE OWNER/ID'                                          00760906\nCZ09  ZTAPED = 'DATE TAPE COPIED'                                       00770906\nC                                                                       00780906\n",
+      "88":"C                                                                       00860906\nC     I01 CONTAINS THE LOGICAL UNIT NUMBER FOR THE CARD READER.         00870906\n",
+      "91":"C     I02 CONTAINS THE LOGICAL UNIT NUMBER FOR THE PRINTER.             00890906\n",
+      "93":"C                                                                       00910906\nCX010   REPLACED BY FEXEC X-010 CONTROL CARD (CARD-READER UNIT NUMBER). 00920906\nC     THE CX010 CARD IS FOR OVERRIDING THE PROGRAM DEFAULT I01 = 5      00930906\nCX011   REPLACED BY FEXEC X-011 CONTROL CARD.  CX011 IS FOR SYSTEMS     00940906\nC     REQUIRING ADDITIONAL STATEMENTS FOR FILES ASSOCIATED WITH CX010.  00950906\nC                                                                       00960906\nCX020   REPLACED BY FEXEC X-020 CONTROL CARD (PRINTER UNIT NUMBER).     00970906\nC     THE CX020 CARD IS FOR OVERRIDING THE PROGRAM DEFAULT I02= 6       00980906\nCX021   REPLACED BY FEXEC X-021 CONTROL CARD.  CX021 IS FOR SYSTEMS     00990906\nC     REQUIRING ADDITIONAL STATEMENTS FOR FILES ASSOCIATED WITH CX020.  01000906\nC                                                                       01010906\nCBE** ********************** BBCINITB **********************************01020906\n",
+      "109":"CBB** ********************** BBCHED0A **********************************01070906\nC****                                                                   01080906\nC**** WRITE REPORT TITLE                                                01090906\nC****                                                                   01100906\n",
+      "119":"CBE** ********************** BBCHED0A **********************************01170906\nC*****                                                                  01180906\nC*****    HEADING FOR SEGMENT 372                                       01190906\n",
+      "127":"CBB** ********************** BBCHED0B **********************************01250906\nC**** WRITE DETAIL REPORT HEADERS                                       01260906\nC****                                                                   01270906\n",
+      "135":"CBE** ********************** BBCHED0B **********************************01330906\nCT001*  TEST 1 - CARD 1    DOUBLE PRECISION                             01340906\n",
+      "148":"C*****  TESTS 2 THRU 4 - CARD 2    SEVERAL DOUBLE PRECISION             01460906\nCT002*  TEST 2                                                          01470906\n",
+      "161":"CT003*  TEST 3                                                          01590906\n",
+      "172":"CT004*  TEST 4                                                          01700906\n",
+      "183":"CT005*  TEST 5 - CARD 3    COMPLEX                                      01810906\n",
+      "197":"C*****  TESTS 6 THRU 8 - CARD 4    SEVERAL COMPLEX                      01950906\nCT006*  TEST 6                                                          01960906\n",
+      "212":"CT007*  TEST 7                                                          02100906\n",
+      "225":"CT008*  TEST 8                                                          02230906\n",
+      "238":"C*****  TESTS 9 THRU 14 - CARD 5    MIXED LIST                          02360906\nCT009*  TEST 9                                                          02370906\n",
+      "250":"CT010*  TEST 10                                                         02480906\n",
+      "261":"CT011*  TEST 11                                                         02590906\n",
+      "272":"CT012*  TEST 12                                                         02700906\n",
+      "287":"C*****  ADVANCE TO TOP-OF-PAGE AND WRITE HEADERS                        02850906\n",
+      "291":"CT013*  TEST 13                                                         02890906\n",
+      "304":"CT014*  TEST 14                                                         03020906\n",
+      "316":"CT015*  TEST 15 - CARD 6    COMPLEX CONSTANT W/EMBEDDED BLANKS          03140906\n",
+      "330":"CT016*  TEST 16 - CARDS 7-8   COMPLEX WITH EMBEDDED END-OF-RECORD       03280906\n",
+      "344":"C*****  TESTS 17 THRU 22 - CARD 9    NULL VALUES                        03420906\nCT017*  TEST 17                                                         03430906\n",
+      "361":"CT018*  TEST 18                                                         03590906\n",
+      "374":"CT019*  TEST 19                                                         03720906\n",
+      "387":"CT020*  TEST 20                                                         03850906\n",
+      "398":"CT021*  TEST 21                                                         03960906\n",
+      "411":"CT022*  TEST 22                                                         04090906\n",
+      "422":"C*****  TESTS 23 THRU 27 - CARDS 10-11    SLASH TERMINATOR              04200906\nCT023*  TEST 23                                                         04210906\n",
+      "436":"CT024*  TEST 24                                                         04340906\n",
+      "449":"CT025*  TEST 25                                                         04470906\n",
+      "460":"CT026*  TEST 26                                                         04580906\n",
+      "473":"CT027*  TEST 27                                                         04710906\n",
+      "484":"CT028*  TEST 28                                                         04820906\n",
+      "497":"CBB** ********************** BBCSUM0  **********************************04950906\nC**** WRITE OUT TEST SUMMARY                                            04960906\nC****                                                                   04970906\n",
+      "509":"CBE** ********************** BBCSUM0  **********************************05070906\nCBB** ********************** BBCFOOT0 **********************************05080906\nC**** WRITE OUT REPORT FOOTINGS                                         05090906\nC****                                                                   05100906\n",
+      "516":"CBE** ********************** BBCFOOT0 **********************************05140906\nCBB** ********************** BBCFMT0A **********************************05150906\nC**** FORMATS FOR TEST DETAIL LINES                                     05160906\nC****                                                                   05170906\n",
+      "537":"CBE** ********************** BBCFMT0A **********************************05350906\nCBB** ********************** BBCFMAT1 **********************************05360906\nC**** FORMATS FOR TEST DETAIL LINES - FULL LANGUAGE                     05370906\nC****                                                                   05380906\n",
+      "552":"CBE** ********************** BBCFMAT1 **********************************05500906\nCBB** ********************** BBCFMT0B **********************************05510906\nC**** FORMAT STATEMENTS FOR PAGE HEADERS                                05520906\nC****                                                                   05530906\n",
+      "568":"C****                                                                   05660906\nC**** FORMAT STATEMENTS FOR REPORT FOOTINGS                             05670906\nC****                                                                   05680906\n",
+      "575":"C****                                                                   05730906\nC**** FORMAT STATEMENTS FOR RUN SUMMARY                                 05740906\nC****                                                                   05750906\n",
+      "583":"CBE** ********************** BBCFMT0B **********************************05810906\nC*****                                                                  05820906\nC*****    END OF TEST SEGMENT 372                                       05830906\n"
+   },
+   "program_units":
+   [
+      {
+         "main":
+         {
+            "name":"FM906",
+            "file":"test/nist/FM906.FOR",
+            "line":"1",
+            "column":"7"
+            "ending-file":"test/nist/FM906.FOR",
+            "ending-line":"587",
+            "ending-column":"11"
+         }
+      }
+   ]
+}

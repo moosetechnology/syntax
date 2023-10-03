@@ -1,0 +1,52 @@
+{
+   "comments":
+   {
+      "3":"C***********************************************************************00010353\nC*****  FORTRAN 77                                                      00020353\nC*****   FM353               XINT - (150)                               00030353\nC*****                                                                  00040353\nC***********************************************************************00050353\nC*****  GENERAL PURPOSE                                       SUBSET REF00060353\nC*****    TEST INTRINSIC FUNCTION - IFIX - (CONVERSION FROM      15.3   00070353\nC*****    REAL TO INTEGER)                                     (TABLE 5)00080353\nC*****    TEST INTRINSIC FUNCTION - INT - (TRUNCATION -- SIGN           00090353\nC*****    OF A * LARGEST INTEGER LE ABS(A) )                            00100353\nC*****                                                                  00110353\nC*****                                                                  00120353\nCBB** ********************** BBCCOMNT **********************************00130353\nC****                                                                   00140353\nC****            1978 FORTRAN COMPILER VALIDATION SYSTEM                00150353\nC****                          VERSION 2.1                              00160353\nC****                                                                   00170353\nC****                                                                   00180353\nC****           SUGGESTIONS AND COMMENTS SHOULD BE FORWARDED TO         00190353\nC****          NATIONAL INSTITUTE OF STANDARDS AND TECHNOLOGY           00200353\nC****               SOFTWARE STANDARDS VALIDATION GROUP                 00210353\nC****                      BUILDING 225  RM A266                        00220353\nC****                     GAITHERSBURG, MD  20899                       00230353\nC****                                                                   00240353\nC****                                                                   00250353\nC****                                                                   00260353\nCBE** ********************** BBCCOMNT **********************************00270353\nCBB** ********************** BBCINITA **********************************00280353\nC**** SPECIFICATION STATEMENTS                                          00290353\nC****                                                                   00300353\n",
+      "35":"CBE** ********************** BBCINITA **********************************00330353\nCBB** ********************** BBCINITB **********************************00340353\nC**** INITIALIZE SECTION                                                00350353\n",
+      "45":"C**** THE FOLLOWING 9 COMMENT LINES (CZ01, CZ02, ...) CAN BE REPLACED   00430353\nC**** FOR IDENTIFYING THE TEST ENVIRONMENT                              00440353\nC****                                                                   00450353\nCZ01  ZVERS  = 'VERSION OF THE COMPILER VALIDATION SYSTEM'              00460353\nCZ02  ZVERSD = 'CREATION DATE/TIME OF THE COMPILER VALIDATION SYSTEM'   00470353\nCZ03  ZPROG  = 'PROGRAM NAME'                                           00480353\nCZ04  ZDATE  = 'DATE OF TEST'                                           00490353\nCZ05  ZCOMPL = 'COMPILER IDENTIFICATION'                                00500353\nCZ06  ZPROJ  = 'PROJECT NUMBER/IDENTIFICATION'                          00510353\nCZ07  ZNAME  = 'NAME OF USER'                                           00520353\nCZ08  ZTAPE  = 'TAPE OWNER/ID'                                          00530353\nCZ09  ZTAPED = 'DATE TAPE COPIED'                                       00540353\nC                                                                       00550353\n",
+      "65":"C                                                                       00630353\nC     I01 CONTAINS THE LOGICAL UNIT NUMBER FOR THE CARD READER.         00640353\n",
+      "68":"C     I02 CONTAINS THE LOGICAL UNIT NUMBER FOR THE PRINTER.             00660353\n",
+      "70":"C                                                                       00680353\nCX010   REPLACED BY FEXEC X-010 CONTROL CARD (CARD-READER UNIT NUMBER). 00690353\nC     THE CX010 CARD IS FOR OVERRIDING THE PROGRAM DEFAULT I01 = 5      00700353\nCX011   REPLACED BY FEXEC X-011 CONTROL CARD.  CX011 IS FOR SYSTEMS     00710353\nC     REQUIRING ADDITIONAL STATEMENTS FOR FILES ASSOCIATED WITH CX010.  00720353\nC                                                                       00730353\nCX020   REPLACED BY FEXEC X-020 CONTROL CARD (PRINTER UNIT NUMBER).     00740353\nC     THE CX020 CARD IS FOR OVERRIDING THE PROGRAM DEFAULT I02= 6       00750353\nCX021   REPLACED BY FEXEC X-021 CONTROL CARD.  CX021 IS FOR SYSTEMS     00760353\nC     REQUIRING ADDITIONAL STATEMENTS FOR FILES ASSOCIATED WITH CX020.  00770353\nC                                                                       00780353\nCBE** ********************** BBCINITB **********************************00790353\n",
+      "85":"CBB** ********************** BBCHED0A **********************************00830353\nC****                                                                   00840353\nC**** WRITE REPORT TITLE                                                00850353\nC****                                                                   00860353\n",
+      "95":"CBE** ********************** BBCHED0A **********************************00930353\nC*****                                                                  00940353\nC*****    HEADER FOR SEGMENT 150                                        00950353\n",
+      "102":"C*****                                                                  01000353\nCBB** ********************** BBCHED0B **********************************01010353\nC**** WRITE DETAIL REPORT HEADERS                                       01020353\nC****                                                                   01030353\n",
+      "111":"CBE** ********************** BBCHED0B **********************************01090353\n",
+      "120":"C*****                                                                  01180353\nCT001*    TEST   1                                       THE VALUE ZERO 01190353\n",
+      "129":"CT002*    TEST   2                                     A VALUE IN (0,1) 01270353\n",
+      "137":"CT003*    TEST   3                                        THE VALUE ONE 01350353\n",
+      "145":"CT004*    TEST   4                  AN INTEGRAL VALUE OTHER THAN 0 OR 1 01430353\n",
+      "153":"CT005*    TEST   5                                   A VALUE IN (X,X+1) 01510353\n",
+      "161":"CT006*    TEST   6             A NEGATIVE VALUE WITH MAGNITUDE IN (0,1) 01590353\n",
+      "169":"CT007*    TEST   7                                         THE VALUE -1 01670353\n",
+      "177":"CT008*    TEST   8                            A NEGATIVE INTEGRAL VALUE 01750353\n",
+      "185":"CT009*    TEST   9           A NEGATIVE VALUE WITH MAGNITUDE IN (X,X+1) 01830353\n",
+      "193":"CT010*    TEST  10                      ZERO PREFIXED WITH A MINUS SIGN 01910353\n",
+      "201":"CT011*    TEST 011           IFIX, INT USED IN AN ARITHMETIC EXPRESSION 01990353\n",
+      "210":"CT012*    TEST  12      AN ARITHMETIC EXPRESSION PRESENTED TO IFIX, INT 02080353\n",
+      "219":"CT013*    TEST  13        COMPARE AUTOMATIC TYPE CONVERSION TO EXPLICIT 02170353\n",
+      "229":"CT014*    TEST  14                            ARGUMENT OF LOW MAGNITUDE 02270353\n",
+      "237":"C*****                                                                  02350353\nC*****                                                                  02360353\n",
+      "240":"CBB** ********************** BBCSUM0  **********************************02380353\nC**** WRITE OUT TEST SUMMARY                                            02390353\nC****                                                                   02400353\n",
+      "252":"CBE** ********************** BBCSUM0  **********************************02500353\nCBB** ********************** BBCFOOT0 **********************************02510353\nC**** WRITE OUT REPORT FOOTINGS                                         02520353\nC****                                                                   02530353\n",
+      "259":"CBE** ********************** BBCFOOT0 **********************************02570353\nCBB** ********************** BBCFMT0A **********************************02580353\nC**** FORMATS FOR TEST DETAIL LINES                                     02590353\nC****                                                                   02600353\n",
+      "280":"CBE** ********************** BBCFMT0A **********************************02780353\nCBB** ********************** BBCFMT0B **********************************02790353\nC**** FORMAT STATEMENTS FOR PAGE HEADERS                                02800353\nC****                                                                   02810353\n",
+      "296":"C****                                                                   02940353\nC**** FORMAT STATEMENTS FOR REPORT FOOTINGS                             02950353\nC****                                                                   02960353\n",
+      "303":"C****                                                                   03010353\nC**** FORMAT STATEMENTS FOR RUN SUMMARY                                 03020353\nC****                                                                   03030353\n",
+      "311":"CBE** ********************** BBCFMT0B **********************************03090353\nC*****                                                                  03100353\nC*****    END OF TEST SEGMENT 150                                       03110353\n"
+   },
+   "program_units":
+   [
+      {
+         "main":
+         {
+            "name":"FM353",
+            "file":"test/nist/FM353.FOR",
+            "line":"1",
+            "column":"7"
+            "ending-file":"test/nist/FM353.FOR",
+            "ending-line":"315",
+            "ending-column":"11"
+         }
+      }
+   ]
+}

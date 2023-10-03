@@ -1,0 +1,50 @@
+{
+   "comments":
+   {
+      "3":"C***********************************************************************00010406\nC*****  FORTRAN 77                                                      00020406\nC*****   FM406                                                          00030406\nC*****                       INTER2 - (391)                             00040406\nC*****                                                                  00050406\nC***********************************************************************00060406\nC*****  TESTING OF INTERNAL FILES -                           SUBSET REF00070406\nC*****          USING WRITE                                     12.2.5  00080406\nC*****                                                                  00090406\nCBB** ********************** BBCCOMNT **********************************00100406\nC****                                                                   00110406\nC****            1978 FORTRAN COMPILER VALIDATION SYSTEM                00120406\nC****                          VERSION 2.1                              00130406\nC****                                                                   00140406\nC****                                                                   00150406\nC****           SUGGESTIONS AND COMMENTS SHOULD BE FORWARDED TO         00160406\nC****          NATIONAL INSTITUTE OF STANDARDS AND TECHNOLOGY           00170406\nC****               SOFTWARE STANDARDS VALIDATION GROUP                 00180406\nC****                      BUILDING 225  RM A266                        00190406\nC****                     GAITHERSBURG, MD  20899                       00200406\nC****                                                                   00210406\nC****                                                                   00220406\nC****                                                                   00230406\nCBE** ********************** BBCCOMNT **********************************00240406\nC*****                                                                  00250406\nC*****  S P E C I F I C A T I O N S  SEGMENT 391                        00260406\nC*****                                                                  00270406\n",
+      "33":"C*****                                                                  00310406\nCBB** ********************** BBCINITA **********************************00320406\nC**** SPECIFICATION STATEMENTS                                          00330406\nC****                                                                   00340406\n",
+      "39":"CBE** ********************** BBCINITA **********************************00370406\nCBB** ********************** BBCINITB **********************************00380406\nC**** INITIALIZE SECTION                                                00390406\n",
+      "49":"C**** THE FOLLOWING 9 COMMENT LINES (CZ01, CZ02, ...) CAN BE REPLACED   00470406\nC**** FOR IDENTIFYING THE TEST ENVIRONMENT                              00480406\nC****                                                                   00490406\nCZ01  ZVERS  = 'VERSION OF THE COMPILER VALIDATION SYSTEM'              00500406\nCZ02  ZVERSD = 'CREATION DATE/TIME OF THE COMPILER VALIDATION SYSTEM'   00510406\nCZ03  ZPROG  = 'PROGRAM NAME'                                           00520406\nCZ04  ZDATE  = 'DATE OF TEST'                                           00530406\nCZ05  ZCOMPL = 'COMPILER IDENTIFICATION'                                00540406\nCZ06  ZPROJ  = 'PROJECT NUMBER/IDENTIFICATION'                          00550406\nCZ07  ZNAME  = 'NAME OF USER'                                           00560406\nCZ08  ZTAPE  = 'TAPE OWNER/ID'                                          00570406\nCZ09  ZTAPED = 'DATE TAPE COPIED'                                       00580406\nC                                                                       00590406\n",
+      "69":"C                                                                       00670406\nC     I01 CONTAINS THE LOGICAL UNIT NUMBER FOR THE CARD READER.         00680406\n",
+      "72":"C     I02 CONTAINS THE LOGICAL UNIT NUMBER FOR THE PRINTER.             00700406\n",
+      "74":"C                                                                       00720406\nCX010   REPLACED BY FEXEC X-010 CONTROL CARD (CARD-READER UNIT NUMBER). 00730406\nC     THE CX010 CARD IS FOR OVERRIDING THE PROGRAM DEFAULT I01 = 5      00740406\nCX011   REPLACED BY FEXEC X-011 CONTROL CARD.  CX011 IS FOR SYSTEMS     00750406\nC     REQUIRING ADDITIONAL STATEMENTS FOR FILES ASSOCIATED WITH CX010.  00760406\nC                                                                       00770406\nCX020   REPLACED BY FEXEC X-020 CONTROL CARD (PRINTER UNIT NUMBER).     00780406\nC     THE CX020 CARD IS FOR OVERRIDING THE PROGRAM DEFAULT I02= 6       00790406\nCX021   REPLACED BY FEXEC X-021 CONTROL CARD.  CX021 IS FOR SYSTEMS     00800406\nC     REQUIRING ADDITIONAL STATEMENTS FOR FILES ASSOCIATED WITH CX020.  00810406\nC                                                                       00820406\nCBE** ********************** BBCINITB **********************************00830406\n",
+      "89":"CBB** ********************** BBCHED0A **********************************00870406\nC****                                                                   00880406\nC**** WRITE REPORT TITLE                                                00890406\nC****                                                                   00900406\n",
+      "99":"CBE** ********************** BBCHED0A **********************************00970406\nC*****                                                                  00980406\nC*****                                                                  00990406\nC*****    HEADER FOR SEGMENT 391                                        01000406\nC*****                                                                  01010406\n",
+      "107":"CBB** ********************** BBCHED0B **********************************01050406\nC**** WRITE DETAIL REPORT HEADERS                                       01060406\nC****                                                                   01070406\n",
+      "115":"CBE** ********************** BBCHED0B **********************************01130406\n",
+      "124":"CT001*  TEST 1                              CHARACTER VARIABLE, INTEGER 01220406\n",
+      "150":"CT002*  TEST 2                                          REAL, FW.D      01480406\n",
+      "166":"CT003*  TEST 3                                   CHECK FOR MISSING SIGN 01640406\n",
+      "194":"CT004*  TEST 4                              CONVERSION ERROR            01920406\n",
+      "210":"CT005*  TEST 5                                          REAL, EW.D      02080406\n",
+      "236":"CT006*  TEST 6                                          REAL, EW.DEN    02340406\n",
+      "261":"CT007*  TEST 7                                          LOGICAL         02590406\n",
+      "277":"CT008*  TEST 8                                          CHARACTER, AW   02750406\n",
+      "293":"CT009*  TEST 9                                          BLANK RECORD    02910406\n",
+      "308":"CT010*  TEST 10                                         MIXED TYPES     03060406\n",
+      "339":"CT011*  TEST 11                                 MIXED TYPES, WITH       03370406\nC*****                                  CHARACTER AND HOLLERITH STRINGS 03380406\n",
+      "371":"CT012*  TEST 12                           MIXED TYPES, WITH EXPRESSION  03690406\n",
+      "405":"C*****                                                                  04030406\nCBB** ********************** BBCSUM0  **********************************04040406\nC**** WRITE OUT TEST SUMMARY                                            04050406\nC****                                                                   04060406\n",
+      "418":"CBE** ********************** BBCSUM0  **********************************04160406\nCBB** ********************** BBCFOOT0 **********************************04170406\nC**** WRITE OUT REPORT FOOTINGS                                         04180406\nC****                                                                   04190406\n",
+      "425":"CBE** ********************** BBCFOOT0 **********************************04230406\nCBB** ********************** BBCFMT0A **********************************04240406\nC**** FORMATS FOR TEST DETAIL LINES                                     04250406\nC****                                                                   04260406\n",
+      "446":"CBE** ********************** BBCFMT0A **********************************04440406\nCBB** ********************** BBCFMT0B **********************************04450406\nC**** FORMAT STATEMENTS FOR PAGE HEADERS                                04460406\nC****                                                                   04470406\n",
+      "462":"C****                                                                   04600406\nC**** FORMAT STATEMENTS FOR REPORT FOOTINGS                             04610406\nC****                                                                   04620406\n",
+      "469":"C****                                                                   04670406\nC**** FORMAT STATEMENTS FOR RUN SUMMARY                                 04680406\nC****                                                                   04690406\n",
+      "477":"CBE** ********************** BBCFMT0B **********************************04750406\nC*****                                                                  04760406\nC*****    END OF TEST SEGMENT 391                                       04770406\n"
+   },
+   "program_units":
+   [
+      {
+         "main":
+         {
+            "name":"FM406",
+            "file":"test/nist/FM406.FOR",
+            "line":"1",
+            "column":"7"
+            "ending-file":"test/nist/FM406.FOR",
+            "ending-line":"481",
+            "ending-column":"9"
+         }
+      }
+   ]
+}

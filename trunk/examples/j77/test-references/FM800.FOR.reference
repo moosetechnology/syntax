@@ -1,0 +1,50 @@
+{
+   "comments":
+   {
+      "3":"C***********************************************************************00010800\nC*****  FORTRAN 77                                                      00020800\nC*****   FM800               YIDINT - (151)                             00030800\nC*****                                                                  00040800\nC***********************************************************************00050800\nC*****  GENERAL PURPOSE                                         ANS REF 00060800\nC*****    TEST INTRINSIC FUNCTION  IDINT --                      15.3   00070800\nC*****    TRUNCATION (SIGN OF A * LARGEST INTEGER LE ABS(A) )  (TABLE 5)00080800\nC*****                                                                  00090800\nCBB** ********************** BBCCOMNT **********************************00100800\nC****                                                                   00110800\nC****            1978 FORTRAN COMPILER VALIDATION SYSTEM                00120800\nC****                          VERSION 2.1                              00130800\nC****                                                                   00140800\nC****                                                                   00150800\nC****           SUGGESTIONS AND COMMENTS SHOULD BE FORWARDED TO         00160800\nC****          NATIONAL INSTITUTE OF STANDARDS AND TECHNOLOGY           00170800\nC****               SOFTWARE STANDARDS VALIDATION GROUP                 00180800\nC****                      BUILDING 225  RM A266                        00190800\nC****                     GAITHERSBURG, MD  20899                       00200800\nC****                                                                   00210800\nC****                                                                   00220800\nC****                                                                   00230800\nCBE** ********************** BBCCOMNT **********************************00240800\nC*****  S P E C I F I C A T I O N S  SEGMENT 151                        00250800\nC*****                                                                  00260800\n",
+      "30":"C*****                                                                  00280800\nCBB** ********************** BBCINITA **********************************00290800\nC**** SPECIFICATION STATEMENTS                                          00300800\nC****                                                                   00310800\n",
+      "36":"CBE** ********************** BBCINITA **********************************00340800\nCBB** ********************** BBCINITB **********************************00350800\nC**** INITIALIZE SECTION                                                00360800\n",
+      "46":"C**** THE FOLLOWING 9 COMMENT LINES (CZ01, CZ02, ...) CAN BE REPLACED   00440800\nC**** FOR IDENTIFYING THE TEST ENVIRONMENT                              00450800\nC****                                                                   00460800\nCZ01  ZVERS  = 'VERSION OF THE COMPILER VALIDATION SYSTEM'              00470800\nCZ02  ZVERSD = 'CREATION DATE/TIME OF THE COMPILER VALIDATION SYSTEM'   00480800\nCZ03  ZPROG  = 'PROGRAM NAME'                                           00490800\nCZ04  ZDATE  = 'DATE OF TEST'                                           00500800\nCZ05  ZCOMPL = 'COMPILER IDENTIFICATION'                                00510800\nCZ06  ZPROJ  = 'PROJECT NUMBER/IDENTIFICATION'                          00520800\nCZ07  ZNAME  = 'NAME OF USER'                                           00530800\nCZ08  ZTAPE  = 'TAPE OWNER/ID'                                          00540800\nCZ09  ZTAPED = 'DATE TAPE COPIED'                                       00550800\nC                                                                       00560800\n",
+      "66":"C                                                                       00640800\nC     I01 CONTAINS THE LOGICAL UNIT NUMBER FOR THE CARD READER.         00650800\n",
+      "69":"C     I02 CONTAINS THE LOGICAL UNIT NUMBER FOR THE PRINTER.             00670800\n",
+      "71":"C                                                                       00690800\nCX010   REPLACED BY FEXEC X-010 CONTROL CARD (CARD-READER UNIT NUMBER). 00700800\nC     THE CX010 CARD IS FOR OVERRIDING THE PROGRAM DEFAULT I01 = 5      00710800\nCX011   REPLACED BY FEXEC X-011 CONTROL CARD.  CX011 IS FOR SYSTEMS     00720800\nC     REQUIRING ADDITIONAL STATEMENTS FOR FILES ASSOCIATED WITH CX010.  00730800\nC                                                                       00740800\nCX020   REPLACED BY FEXEC X-020 CONTROL CARD (PRINTER UNIT NUMBER).     00750800\nC     THE CX020 CARD IS FOR OVERRIDING THE PROGRAM DEFAULT I02= 6       00760800\nCX021   REPLACED BY FEXEC X-021 CONTROL CARD.  CX021 IS FOR SYSTEMS     00770800\nC     REQUIRING ADDITIONAL STATEMENTS FOR FILES ASSOCIATED WITH CX020.  00780800\nC                                                                       00790800\nCBE** ********************** BBCINITB **********************************00800800\n",
+      "86":"CBB** ********************** BBCHED0A **********************************00840800\nC****                                                                   00850800\nC**** WRITE REPORT TITLE                                                00860800\nC****                                                                   00870800\n",
+      "96":"CBE** ********************** BBCHED0A **********************************00940800\nC*****                                                                  00950800\nC*****    HEADER FOR SEGMENT 151 WRITTEN                                00960800\n",
+      "102":"CBB** ********************** BBCHED0B **********************************01000800\nC**** WRITE DETAIL REPORT HEADERS                                       01010800\nC****                                                                   01020800\n",
+      "110":"CBE** ********************** BBCHED0B **********************************01080800\nC*****                                                                  01090800\nCT001*  TEST 1                                           THE VALUE ZERO 01100800\n",
+      "124":"CT002*  TEST 2                                         A VALUE IN (0,1) 01220800\n",
+      "136":"CT003*  TEST 3                                            THE VALUE ONE 01340800\n",
+      "148":"CT004*  TEST 4                         A INTEGRAL VALUE OTHER THAN O, 1 01460800\n",
+      "160":"CT005*  TEST 5                                       A VALUE IN (X,X+1) 01580800\n",
+      "172":"CT006*  TEST 6                 A NEGATIVE VALUE WITH MAGNITUDE IN (0,1) 01700800\n",
+      "184":"CT007*  TEST 7                                             THE VALUE -1 01820800\n",
+      "196":"CT008*  TEST 8                                A NEGATIVE INTEGRAL VALUE 01940800\n",
+      "208":"CT009*    TEST 9             A NEGATIVE VALUE WITH MAGNITUDE IN (X,X+1) 02060800\n",
+      "220":"CT010*  TEST 10                         ZERO PREFIXED WITH A MINUS SIGN 02180800\n",
+      "232":"CT011*  TEST 11             AN ARITHMETIC EXPRESSION PRESENTED TO IDINT 02300800\n",
+      "245":"CT012*  TEST 12           COMPARE AUTOMATIC TYPE CONVERSION TO EXPLICIT 02430800\n",
+      "258":"CBB** ********************** BBCSUM0  **********************************02560800\nC**** WRITE OUT TEST SUMMARY                                            02570800\nC****                                                                   02580800\n",
+      "270":"CBE** ********************** BBCSUM0  **********************************02680800\nCBB** ********************** BBCFOOT0 **********************************02690800\nC**** WRITE OUT REPORT FOOTINGS                                         02700800\nC****                                                                   02710800\n",
+      "277":"CBE** ********************** BBCFOOT0 **********************************02750800\nCBB** ********************** BBCFMT0A **********************************02760800\nC**** FORMATS FOR TEST DETAIL LINES                                     02770800\nC****                                                                   02780800\n",
+      "298":"CBE** ********************** BBCFMT0A **********************************02960800\nCBB** ********************** BBCFMAT1 **********************************02970800\nC**** FORMATS FOR TEST DETAIL LINES - FULL LANGUAGE                     02980800\nC****                                                                   02990800\n",
+      "313":"CBE** ********************** BBCFMAT1 **********************************03110800\nCBB** ********************** BBCFMT0B **********************************03120800\nC**** FORMAT STATEMENTS FOR PAGE HEADERS                                03130800\nC****                                                                   03140800\n",
+      "329":"C****                                                                   03270800\nC**** FORMAT STATEMENTS FOR REPORT FOOTINGS                             03280800\nC****                                                                   03290800\n",
+      "336":"C****                                                                   03340800\nC**** FORMAT STATEMENTS FOR RUN SUMMARY                                 03350800\nC****                                                                   03360800\n",
+      "344":"CBE** ********************** BBCFMT0B **********************************03420800\nC*****                                                                  03430800\nC*****    END OF TEST SEGMENT 151                                       03440800\n"
+   },
+   "program_units":
+   [
+      {
+         "main":
+         {
+            "name":"FM800",
+            "file":"test/nist/FM800.FOR",
+            "line":"1",
+            "column":"7"
+            "ending-file":"test/nist/FM800.FOR",
+            "ending-line":"348",
+            "ending-column":"11"
+         }
+      }
+   ]
+}

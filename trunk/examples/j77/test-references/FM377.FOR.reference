@@ -1,0 +1,54 @@
+{
+   "comments":
+   {
+      "3":"C***********************************************************************00010377\nC*****  FORTRAN 77                                                      00020377\nC*****   FM377                                                          00030377\nC*****                       XSINH - (197)                              00040377\nC*****                                                                  00050377\nC***********************************************************************00060377\nC*****  GENERAL PURPOSE                                      SUBSET REF 00070377\nC*****    TEST INTRINSIC FUNCTION SINH, COSH                   15.3     00080377\nC*****                                                        TABLE 5   00090377\nC*****                                                                  00100377\nCBB** ********************** BBCCOMNT **********************************00110377\nC****                                                                   00120377\nC****            1978 FORTRAN COMPILER VALIDATION SYSTEM                00130377\nC****                          VERSION 2.1                              00140377\nC****                                                                   00150377\nC****                                                                   00160377\nC****           SUGGESTIONS AND COMMENTS SHOULD BE FORWARDED TO         00170377\nC****          NATIONAL INSTITUTE OF STANDARDS AND TECHNOLOGY           00180377\nC****               SOFTWARE STANDARDS VALIDATION GROUP                 00190377\nC****                      BUILDING 225  RM A266                        00200377\nC****                     GAITHERSBURG, MD  20899                       00210377\nC****                                                                   00220377\nC****                                                                   00230377\nC****                                                                   00240377\nCBE** ********************** BBCCOMNT **********************************00250377\nCBB** ********************** BBCINITA **********************************00260377\nC**** SPECIFICATION STATEMENTS                                          00270377\nC****                                                                   00280377\n",
+      "33":"CBE** ********************** BBCINITA **********************************00310377\nCBB** ********************** BBCINITB **********************************00320377\nC**** INITIALIZE SECTION                                                00330377\n",
+      "43":"C**** THE FOLLOWING 9 COMMENT LINES (CZ01, CZ02, ...) CAN BE REPLACED   00410377\nC**** FOR IDENTIFYING THE TEST ENVIRONMENT                              00420377\nC****                                                                   00430377\nCZ01  ZVERS  = 'VERSION OF THE COMPILER VALIDATION SYSTEM'              00440377\nCZ02  ZVERSD = 'CREATION DATE/TIME OF THE COMPILER VALIDATION SYSTEM'   00450377\nCZ03  ZPROG  = 'PROGRAM NAME'                                           00460377\nCZ04  ZDATE  = 'DATE OF TEST'                                           00470377\nCZ05  ZCOMPL = 'COMPILER IDENTIFICATION'                                00480377\nCZ06  ZPROJ  = 'PROJECT NUMBER/IDENTIFICATION'                          00490377\nCZ07  ZNAME  = 'NAME OF USER'                                           00500377\nCZ08  ZTAPE  = 'TAPE OWNER/ID'                                          00510377\nCZ09  ZTAPED = 'DATE TAPE COPIED'                                       00520377\nC                                                                       00530377\n",
+      "63":"C                                                                       00610377\nC     I01 CONTAINS THE LOGICAL UNIT NUMBER FOR THE CARD READER.         00620377\n",
+      "66":"C     I02 CONTAINS THE LOGICAL UNIT NUMBER FOR THE PRINTER.             00640377\n",
+      "68":"C                                                                       00660377\nCX010   REPLACED BY FEXEC X-010 CONTROL CARD (CARD-READER UNIT NUMBER). 00670377\nC     THE CX010 CARD IS FOR OVERRIDING THE PROGRAM DEFAULT I01 = 5      00680377\nCX011   REPLACED BY FEXEC X-011 CONTROL CARD.  CX011 IS FOR SYSTEMS     00690377\nC     REQUIRING ADDITIONAL STATEMENTS FOR FILES ASSOCIATED WITH CX010.  00700377\nC                                                                       00710377\nCX020   REPLACED BY FEXEC X-020 CONTROL CARD (PRINTER UNIT NUMBER).     00720377\nC     THE CX020 CARD IS FOR OVERRIDING THE PROGRAM DEFAULT I02= 6       00730377\nCX021   REPLACED BY FEXEC X-021 CONTROL CARD.  CX021 IS FOR SYSTEMS     00740377\nC     REQUIRING ADDITIONAL STATEMENTS FOR FILES ASSOCIATED WITH CX020.  00750377\nC                                                                       00760377\nCBE** ********************** BBCINITB **********************************00770377\n",
+      "83":"CBB** ********************** BBCHED0A **********************************00810377\nC****                                                                   00820377\nC**** WRITE REPORT TITLE                                                00830377\nC****                                                                   00840377\n",
+      "93":"CBE** ********************** BBCHED0A **********************************00910377\nC*****                                                                  00920377\nC*****    HEADER FOR SEGMENT 197                                        00930377\n",
+      "100":"CBB** ********************** BBCHED0B **********************************00980377\nC**** WRITE DETAIL REPORT HEADERS                                       00990377\nC****                                                                   01000377\n",
+      "108":"CBE** ********************** BBCHED0B **********************************01060377\nC*****                                                                  01070377\n",
+      "112":"C*****                                                                  01100377\nCT001*  TEST 1                                       TEST AT ZERO (0.0) 01110377\n",
+      "126":"CT002*  TEST 2                              TEST ARGUMENTS CLOSE TO 1.0 01240377\n",
+      "138":"CT003*  TEST 3                                              TEST AT 1.0 01360377\n",
+      "151":"CT004*  TEST 4                              TEST ARGUMENTS CLOSE TO 1.0 01490377\n",
+      "163":"CT005*  TEST 5                                              TEST AT 2.0 01610377\n",
+      "176":"CT006*  TEST 6                                      A NEGATIVE ARGUMENT 01740377\n",
+      "188":"CT007*  TEST 7                            AN ARGUMENT OF LOW MAGNITUDE  01860377\n",
+      "200":"C*****                                                                  01980377\n",
+      "204":"C*****                                                                  02020377\n",
+      "207":"C*****                                                                  02050377\nCT008*  TEST 8                                               ZERO (0.0) 02060377\n",
+      "221":"CT009*  TEST 9                                      VALUES CLOSE TO 1.0 02190377\n",
+      "233":"CT010*  TEST 10                                             TEST AT 1.0 02310377\n",
+      "246":"CT011*  TEST 11                             TEST ARGUMENTS CLOSE TO 1.0 02440377\n",
+      "258":"CT012*  TEST 12                                             TEST AT 2.0 02560377\n",
+      "271":"CT013*  TEST 13                                     A NEGATIVE ARGUMENT 02690377\n",
+      "283":"CT014*  TEST 14                            AN ARGUMENT OF LOW MAGNITUDE 02810377\n",
+      "295":"CT015*  TEST 15                   POSITIVE VALUES SUPPLIED AS ARGUMENTS 02930377\nC*****                               TO BOTH FUNCTIONS IN AN EXPRESSION 02940377\n",
+      "308":"C*****                                                                  03060377\nCBB** ********************** BBCSUM0  **********************************03070377\nC**** WRITE OUT TEST SUMMARY                                            03080377\nC****                                                                   03090377\n",
+      "321":"CBE** ********************** BBCSUM0  **********************************03190377\nCBB** ********************** BBCFOOT0 **********************************03200377\nC**** WRITE OUT REPORT FOOTINGS                                         03210377\nC****                                                                   03220377\n",
+      "328":"CBE** ********************** BBCFOOT0 **********************************03260377\nCBB** ********************** BBCFMT0A **********************************03270377\nC**** FORMATS FOR TEST DETAIL LINES                                     03280377\nC****                                                                   03290377\n",
+      "349":"CBE** ********************** BBCFMT0A **********************************03470377\nCBB** ********************** BBCFMT0B **********************************03480377\nC**** FORMAT STATEMENTS FOR PAGE HEADERS                                03490377\nC****                                                                   03500377\n",
+      "365":"C****                                                                   03630377\nC**** FORMAT STATEMENTS FOR REPORT FOOTINGS                             03640377\nC****                                                                   03650377\n",
+      "372":"C****                                                                   03700377\nC**** FORMAT STATEMENTS FOR RUN SUMMARY                                 03710377\nC****                                                                   03720377\n",
+      "380":"CBE** ********************** BBCFMT0B **********************************03780377\nC*****                                                                  03790377\nC*****    END OF TEST SEGMENT 197                                       03800377\n"
+   },
+   "program_units":
+   [
+      {
+         "main":
+         {
+            "name":"FM377",
+            "file":"test/nist/FM377.FOR",
+            "line":"1",
+            "column":"7"
+            "ending-file":"test/nist/FM377.FOR",
+            "ending-line":"384",
+            "ending-column":"9"
+         }
+      }
+   ]
+}

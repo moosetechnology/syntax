@@ -1,0 +1,60 @@
+{
+   "comments":
+   {
+      "3":"C***********************************************************************00010357\nC*****  FORTRAN 77                                                      00020357\nC*****   FM357               XAMOD - (159)                              00030357\nC*****                                                                  00040357\nC***********************************************************************00050357\nC*****  GENERAL PURPOSE                                         ANS REF 00060357\nC*****    TEST INTRINSIC FUNCTIONS AMOD AND MOD - REMAINDERING,  15.3   00070357\nC*****    WHICH IS DEFINED AS A1-(A1/A2)A2 WHERE (X) IS AN     (TABLE 5)00080357\nC*****    INTEGER WHOSE MAGNITUDE IS LE ABS(X) AND WHOSE SIGN           00090357\nC*****    IS THE SAME AS X.                                             00100357\nC*****                                                                  00110357\nCBB** ********************** BBCCOMNT **********************************00120357\nC****                                                                   00130357\nC****            1978 FORTRAN COMPILER VALIDATION SYSTEM                00140357\nC****                          VERSION 2.1                              00150357\nC****                                                                   00160357\nC****                                                                   00170357\nC****           SUGGESTIONS AND COMMENTS SHOULD BE FORWARDED TO         00180357\nC****          NATIONAL INSTITUTE OF STANDARDS AND TECHNOLOGY           00190357\nC****               SOFTWARE STANDARDS VALIDATION GROUP                 00200357\nC****                      BUILDING 225  RM A266                        00210357\nC****                     GAITHERSBURG, MD  20899                       00220357\nC****                                                                   00230357\nC****                                                                   00240357\nC****                                                                   00250357\nCBE** ********************** BBCCOMNT **********************************00260357\nCBB** ********************** BBCINITA **********************************00270357\nC**** SPECIFICATION STATEMENTS                                          00280357\nC****                                                                   00290357\n",
+      "34":"CBE** ********************** BBCINITA **********************************00320357\nCBB** ********************** BBCINITB **********************************00330357\nC**** INITIALIZE SECTION                                                00340357\n",
+      "44":"C**** THE FOLLOWING 9 COMMENT LINES (CZ01, CZ02, ...) CAN BE REPLACED   00420357\nC**** FOR IDENTIFYING THE TEST ENVIRONMENT                              00430357\nC****                                                                   00440357\nCZ01  ZVERS  = 'VERSION OF THE COMPILER VALIDATION SYSTEM'              00450357\nCZ02  ZVERSD = 'CREATION DATE/TIME OF THE COMPILER VALIDATION SYSTEM'   00460357\nCZ03  ZPROG  = 'PROGRAM NAME'                                           00470357\nCZ04  ZDATE  = 'DATE OF TEST'                                           00480357\nCZ05  ZCOMPL = 'COMPILER IDENTIFICATION'                                00490357\nCZ06  ZPROJ  = 'PROJECT NUMBER/IDENTIFICATION'                          00500357\nCZ07  ZNAME  = 'NAME OF USER'                                           00510357\nCZ08  ZTAPE  = 'TAPE OWNER/ID'                                          00520357\nCZ09  ZTAPED = 'DATE TAPE COPIED'                                       00530357\nC                                                                       00540357\n",
+      "64":"C                                                                       00620357\nC     I01 CONTAINS THE LOGICAL UNIT NUMBER FOR THE CARD READER.         00630357\n",
+      "67":"C     I02 CONTAINS THE LOGICAL UNIT NUMBER FOR THE PRINTER.             00650357\n",
+      "69":"C                                                                       00670357\nCX010   REPLACED BY FEXEC X-010 CONTROL CARD (CARD-READER UNIT NUMBER). 00680357\nC     THE CX010 CARD IS FOR OVERRIDING THE PROGRAM DEFAULT I01 = 5      00690357\nCX011   REPLACED BY FEXEC X-011 CONTROL CARD.  CX011 IS FOR SYSTEMS     00700357\nC     REQUIRING ADDITIONAL STATEMENTS FOR FILES ASSOCIATED WITH CX010.  00710357\nC                                                                       00720357\nCX020   REPLACED BY FEXEC X-020 CONTROL CARD (PRINTER UNIT NUMBER).     00730357\nC     THE CX020 CARD IS FOR OVERRIDING THE PROGRAM DEFAULT I02= 6       00740357\nCX021   REPLACED BY FEXEC X-021 CONTROL CARD.  CX021 IS FOR SYSTEMS     00750357\nC     REQUIRING ADDITIONAL STATEMENTS FOR FILES ASSOCIATED WITH CX020.  00760357\nC                                                                       00770357\nCBE** ********************** BBCINITB **********************************00780357\n",
+      "84":"CBB** ********************** BBCHED0A **********************************00820357\nC****                                                                   00830357\nC**** WRITE REPORT TITLE                                                00840357\nC****                                                                   00850357\n",
+      "94":"CBE** ********************** BBCHED0A **********************************00920357\nC*****                                                                  00930357\nC*****    HEADER FOR SEGMENT 159 WRITTEN                                00940357\n",
+      "100":"CBB** ********************** BBCHED0B **********************************00980357\nC**** WRITE DETAIL REPORT HEADERS                                       00990357\nC****                                                                   01000357\n",
+      "108":"CBE** ********************** BBCHED0B **********************************01060357\nC*****                                                                  01070357\nC*****    TEST OF AMOD                                                  01080357\nC*****                                                                  01090357\n",
+      "114":"C*****                                                                  01120357\nCT001*  TEST 1                      FIRST VALUE ZERO, SECOND NON-ZERO   01130357\n",
+      "129":"CT002*  TEST 2                                      BOTH VALUES EQUAL   01270357\n",
+      "143":"CT003*  TEST 3         FIRST MAGNITUDE LARGER, NOT MULTIPLE OF SECOND   01410357\n",
+      "157":"CT004*  TEST 4             FIRST MAGNITUDE LARGER, MULTIPLE OF SECOND   01550357\n",
+      "171":"CT005*  TEST 5         FIRST MAGNITUDE LARGER, NOT MULTIPLE OF SECOND   01690357\n",
+      "185":"CT006*  TEST 6                      FIRST VALUE ZERO, SECOND NEGATIVE   01830357\n",
+      "199":"CT007*  TEST 7                       BOTH VALUES EQUAL, BOTH NEGATIVE   01970357\n",
+      "213":"CT008*  TEST 8        FIRST VALUE NEGATIVE, SECOND POSITIVE, MULTIPLE   02110357\n",
+      "227":"CT009*  TEST 9         FIRST MAGNITUDE LARGER, NOT MULTIPLE OF SECOND   02250357\n",
+      "241":"CT010*  TEST 10       PAIR OF ARITHMETIC EXPRESSIONS USED AS ARGUMENT   02390357\n",
+      "256":"CT011*  TEST 11                TEST LOW AND HIGH MAGNITUDE ARGUMENTS    02540357\n",
+      "270":"C*****                                                                  02680357\nC*****    TEST OF MOD                                                   02690357\nC*****                                                                  02700357\n",
+      "275":"C*****                                                                  02730357\nCT012*  TEST 12                     FIRST VALUE ZERO, SECOND NON-ZERO   02740357\n",
+      "289":"CT013*  TEST 13                                     BOTH VALUES EQUAL   02870357\n",
+      "302":"CT014*  TEST 14        FIRST MAGNITUDE LARGER, NOT MULTIPLE OF SECOND   03000357\n",
+      "315":"CT015*  TEST 15            FIRST MAGNITUDE LARGER, MULTIPLE OF SECOND   03130357\n",
+      "328":"CT016*  TEST 16        FIRST MAGNITUDE LARGER, NOT MULTIPLE OF SECOND   03260357\n",
+      "341":"CT017*  TEST 17                     FIRST VALUE ZERO, SECOND NEGATIVE   03390357\n",
+      "354":"CT018*  TEST 18                      BOTH VALUES EQUAL, BOTH NEGATIVE   03520357\n",
+      "367":"CT019*  TEST 19       FIRST MAGNITUDE LARGER, MULTIPLE, BOTH NEGATIVE   03650357\n",
+      "380":"CT020*  TEST 20      FIRST NUMBER NEGATIVE, SECOND POSITIVE, MULTIPLE   03780357\n",
+      "393":"CT021*  TEST 21               FIRST VALUE ZERO PRECEDED BY MINUS SIGN   03910357\n",
+      "406":"CT022*  TEST 22       PAIR OF ARITHMETIC EXPRESSIONS USED AS ARGUMENT   04040357\n",
+      "420":"C*****                                                                  04180357\nCBB** ********************** BBCSUM0  **********************************04190357\nC**** WRITE OUT TEST SUMMARY                                            04200357\nC****                                                                   04210357\n",
+      "433":"CBE** ********************** BBCSUM0  **********************************04310357\nCBB** ********************** BBCFOOT0 **********************************04320357\nC**** WRITE OUT REPORT FOOTINGS                                         04330357\nC****                                                                   04340357\n",
+      "440":"CBE** ********************** BBCFOOT0 **********************************04380357\nCBB** ********************** BBCFMT0A **********************************04390357\nC**** FORMATS FOR TEST DETAIL LINES                                     04400357\nC****                                                                   04410357\n",
+      "461":"CBE** ********************** BBCFMT0A **********************************04590357\nCBB** ********************** BBCFMT0B **********************************04600357\nC**** FORMAT STATEMENTS FOR PAGE HEADERS                                04610357\nC****                                                                   04620357\n",
+      "477":"C****                                                                   04750357\nC**** FORMAT STATEMENTS FOR REPORT FOOTINGS                             04760357\nC****                                                                   04770357\n",
+      "484":"C****                                                                   04820357\nC**** FORMAT STATEMENTS FOR RUN SUMMARY                                 04830357\nC****                                                                   04840357\n",
+      "492":"CBE** ********************** BBCFMT0B **********************************04900357\nC*****                                                                  04910357\nC*****    END OF TEST SEGMENT 159                                       04920357\n"
+   },
+   "program_units":
+   [
+      {
+         "main":
+         {
+            "name":"FM357",
+            "file":"test/nist/FM357.FOR",
+            "line":"1",
+            "column":"7"
+            "ending-file":"test/nist/FM357.FOR",
+            "ending-line":"496",
+            "ending-column":"9"
+         }
+      }
+   ]
+}

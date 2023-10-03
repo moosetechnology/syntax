@@ -1,0 +1,57 @@
+{
+   "comments":
+   {
+      "3":"C***********************************************************************00010814\nC*****  FORTRAN 77                                                      00020814\nC*****   FM814                                                          00030814\nC*****                       YDEXP - (179)                              00040814\nC*****                                                                  00050814\nC***********************************************************************00060814\nC*****  GENERAL PURPOSE                                         ANS REF 00070814\nC*****    TEST INTRINSIC FUNCTION DEXP                           15.3   00080814\nC*****                                                          TABLE 5 00090814\nC*****                                                                  00100814\nCBB** ********************** BBCCOMNT **********************************00110814\nC****                                                                   00120814\nC****            1978 FORTRAN COMPILER VALIDATION SYSTEM                00130814\nC****                          VERSION 2.1                              00140814\nC****                                                                   00150814\nC****                                                                   00160814\nC****           SUGGESTIONS AND COMMENTS SHOULD BE FORWARDED TO         00170814\nC****          NATIONAL INSTITUTE OF STANDARDS AND TECHNOLOGY           00180814\nC****               SOFTWARE STANDARDS VALIDATION GROUP                 00190814\nC****                      BUILDING 225  RM A266                        00200814\nC****                     GAITHERSBURG, MD  20899                       00210814\nC****                                                                   00220814\nC****                                                                   00230814\nC****                                                                   00240814\nCBE** ********************** BBCCOMNT **********************************00250814\nC*****                                                                  00260814\nC*****  S P E C I F I C A T I O N S  SEGMENT 179                        00270814\n",
+      "31":"C*****                                                                  00290814\nCBB** ********************** BBCINITA **********************************00300814\nC**** SPECIFICATION STATEMENTS                                          00310814\nC****                                                                   00320814\n",
+      "37":"CBE** ********************** BBCINITA **********************************00350814\nCBB** ********************** BBCINITB **********************************00360814\nC**** INITIALIZE SECTION                                                00370814\n",
+      "47":"C**** THE FOLLOWING 9 COMMENT LINES (CZ01, CZ02, ...) CAN BE REPLACED   00450814\nC**** FOR IDENTIFYING THE TEST ENVIRONMENT                              00460814\nC****                                                                   00470814\nCZ01  ZVERS  = 'VERSION OF THE COMPILER VALIDATION SYSTEM'              00480814\nCZ02  ZVERSD = 'CREATION DATE/TIME OF THE COMPILER VALIDATION SYSTEM'   00490814\nCZ03  ZPROG  = 'PROGRAM NAME'                                           00500814\nCZ04  ZDATE  = 'DATE OF TEST'                                           00510814\nCZ05  ZCOMPL = 'COMPILER IDENTIFICATION'                                00520814\nCZ06  ZPROJ  = 'PROJECT NUMBER/IDENTIFICATION'                          00530814\nCZ07  ZNAME  = 'NAME OF USER'                                           00540814\nCZ08  ZTAPE  = 'TAPE OWNER/ID'                                          00550814\nCZ09  ZTAPED = 'DATE TAPE COPIED'                                       00560814\nC                                                                       00570814\n",
+      "67":"C                                                                       00650814\nC     I01 CONTAINS THE LOGICAL UNIT NUMBER FOR THE CARD READER.         00660814\n",
+      "70":"C     I02 CONTAINS THE LOGICAL UNIT NUMBER FOR THE PRINTER.             00680814\n",
+      "72":"C                                                                       00700814\nCX010   REPLACED BY FEXEC X-010 CONTROL CARD (CARD-READER UNIT NUMBER). 00710814\nC     THE CX010 CARD IS FOR OVERRIDING THE PROGRAM DEFAULT I01 = 5      00720814\nCX011   REPLACED BY FEXEC X-011 CONTROL CARD.  CX011 IS FOR SYSTEMS     00730814\nC     REQUIRING ADDITIONAL STATEMENTS FOR FILES ASSOCIATED WITH CX010.  00740814\nC                                                                       00750814\nCX020   REPLACED BY FEXEC X-020 CONTROL CARD (PRINTER UNIT NUMBER).     00760814\nC     THE CX020 CARD IS FOR OVERRIDING THE PROGRAM DEFAULT I02= 6       00770814\nCX021   REPLACED BY FEXEC X-021 CONTROL CARD.  CX021 IS FOR SYSTEMS     00780814\nC     REQUIRING ADDITIONAL STATEMENTS FOR FILES ASSOCIATED WITH CX020.  00790814\nC                                                                       00800814\nCBE** ********************** BBCINITB **********************************00810814\n",
+      "87":"CBB** ********************** BBCHED0A **********************************00850814\nC****                                                                   00860814\nC**** WRITE REPORT TITLE                                                00870814\nC****                                                                   00880814\n",
+      "97":"CBE** ********************** BBCHED0A **********************************00950814\nC*****                                                                  00960814\nC*****    HEADER FOR SEGMENT 179                                        00970814\n",
+      "104":"CBB** ********************** BBCHED0B **********************************01020814\nC**** WRITE DETAIL REPORT HEADERS                                       01030814\nC****                                                                   01040814\n",
+      "112":"CBE** ********************** BBCHED0B **********************************01100814\nC*****                                                                  01110814\nCT001*  TEST 1                                 ZERO, SINCE EXP(0) = 1   01120814\n",
+      "127":"CT002*  TEST 2                                  ONE, SINCE EXP(1) = E   01250814\n",
+      "139":"CT003*  TEST 3                                                          01370814\n",
+      "151":"CT004*  TEST 4                                                          01490814\n",
+      "163":"CT005*  TEST 5                                                          01610814\n",
+      "175":"CT006*  TEST 6                                                          01730814\n",
+      "188":"CT007*  TEST 7                                                          01860814\n",
+      "201":"CT008*  TEST 8                                                          01990814\n",
+      "214":"CT009*  TEST 9                                                          02120814\n",
+      "226":"CT010*  TEST 10                                                         02240814\n",
+      "239":"CT011*  TEST 11                                   VALUES CLOSE TO 1.0   02370814\n",
+      "251":"CT012*  TEST 12                                                         02490814\n",
+      "264":"CT013*  TEST 13                                                         02620814\n",
+      "276":"CT014*  TEST 14                                                         02740814\n",
+      "289":"CT015*  TEST 15                                   VALUES CLOSE TO 1/E   02870814\n",
+      "302":"CT016*  TEST 16                                                         03000814\n",
+      "315":"CT017*  TEST 17                                                         03130814\n",
+      "328":"CT018*  TEST 18                                                         03260814\n",
+      "341":"CT019*  TEST 19                                                         03390814\n",
+      "354":"C*****                                                                  03520814\nCBB** ********************** BBCSUM0  **********************************03530814\nC**** WRITE OUT TEST SUMMARY                                            03540814\nC****                                                                   03550814\n",
+      "367":"CBE** ********************** BBCSUM0  **********************************03650814\nCBB** ********************** BBCFOOT0 **********************************03660814\nC**** WRITE OUT REPORT FOOTINGS                                         03670814\nC****                                                                   03680814\n",
+      "374":"CBE** ********************** BBCFOOT0 **********************************03720814\nCBB** ********************** BBCFMT0A **********************************03730814\nC**** FORMATS FOR TEST DETAIL LINES                                     03740814\nC****                                                                   03750814\n",
+      "395":"CBE** ********************** BBCFMT0A **********************************03930814\nCBB** ********************** BBCFMAT1 **********************************03940814\nC**** FORMATS FOR TEST DETAIL LINES - FULL LANGUAGE                     03950814\nC****                                                                   03960814\n",
+      "410":"CBE** ********************** BBCFMAT1 **********************************04080814\nCBB** ********************** BBCFMT0B **********************************04090814\nC**** FORMAT STATEMENTS FOR PAGE HEADERS                                04100814\nC****                                                                   04110814\n",
+      "426":"C****                                                                   04240814\nC**** FORMAT STATEMENTS FOR REPORT FOOTINGS                             04250814\nC****                                                                   04260814\n",
+      "433":"C****                                                                   04310814\nC**** FORMAT STATEMENTS FOR RUN SUMMARY                                 04320814\nC****                                                                   04330814\n",
+      "441":"CBE** ********************** BBCFMT0B **********************************04390814\nC*****                                                                  04400814\nC*****    END OF TEST SEGMENT 179                                       04410814\n"
+   },
+   "program_units":
+   [
+      {
+         "main":
+         {
+            "name":"FM814",
+            "file":"test/nist/FM814.FOR",
+            "line":"1",
+            "column":"7"
+            "ending-file":"test/nist/FM814.FOR",
+            "ending-line":"445",
+            "ending-column":"9"
+         }
+      }
+   ]
+}
