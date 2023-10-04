@@ -10,7 +10,7 @@ SXML_TYPE_LIST JSON_ARRAY (SXML_TYPE_LIST L)
     return SXML_T( "[ ]\n");
   }
   else {
-    return SXML_TLT( "[\n", L, "]\n");
+    return SXML_TLT( "[", L, "]");
   }
 }
 
@@ -22,10 +22,10 @@ SXML_TYPE_LIST JSON_ARRAY (SXML_TYPE_LIST L)
 SXML_TYPE_LIST JSON_MAP (SXML_TYPE_LIST L)
 {
   if (L == NULL) {
-    return SXML_T( "{ }\n");
+    return SXML_T( "{ }");
   }
   else {
-    return SXML_TLT( "{\n", L, "}\n");
+    return SXML_TLT( "{", L, "}");
   }
 }
 
@@ -36,7 +36,7 @@ SXML_TYPE_LIST JSON_MAP (SXML_TYPE_LIST L)
 
 SXML_TYPE_LIST JSON_KT (SXML_TYPE_TEXT K, SXML_TYPE_TEXT V)
 {
-  return SXML_TTTTT( "\"", K, "\":\"", V, "\"\n");
+  return SXML_TTTTT( "\"", K, "\":\"", V, "\"");
 }
 
 /* -------------------------------------------------------------------------
@@ -46,7 +46,7 @@ SXML_TYPE_LIST JSON_KT (SXML_TYPE_TEXT K, SXML_TYPE_TEXT V)
 
 SXML_TYPE_LIST JSON_KTV (SXML_TYPE_TEXT K, SXML_TYPE_TEXT V)
 {
-  return SXML_TTTTT( "\"", K, "\" : \"", V, "\",\n");
+  return SXML_TTTTT( "\"", K, "\" : \"", V, "\",");
 }
 
 /* -------------------------------------------------------------------------
