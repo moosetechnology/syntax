@@ -26,7 +26,7 @@
 
 * The following declarations define the synthesized attributes
 
-$LIST(<0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <8:program_statement>) 
+$LIST(<0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <3:function_subprogram>, <4:subroutine_subprogram>, <8:program_statement>, <10:function_statement>, <10d:function_header>, <12:subroutine_statement>, <12a:subroutine_header> ) 
 : SXML_TYPE_LIST ;
 
 $NAME(<99:symbolic_name>) : SXML_TYPE_TEXT; /* i.e., character string */
@@ -171,7 +171,8 @@ $LIST(<1:executable_program>)
 
 	{
 	$LIST(<1:executable_program>) = JSON_MAP (
-		JSON_KL ("function", TODO (1)));
+		JSON_KL ("function",
+                         JSON_MAP ($LIST(<3:function_subprogram>))));
 	}
 
 *------------------------------------------------------------------------------
@@ -183,7 +184,8 @@ $LIST(<1:executable_program>)
 
 	{
 	$LIST(<1:executable_program>) = JSON_MAP (
-		JSON_KL ("subroutine", TODO (2)));
+		JSON_KL ("subroutine",
+                         JSON_MAP ($LIST(<4:subroutine_subprogram>))));
 	}
 
 *------------------------------------------------------------------------------
@@ -381,6 +383,14 @@ $LIST(<2a:end_statement>)
 		= <10:function_statement> %EOL
 		  <2a:end_statement> ;
 
+$LIST(<3:function_subprogram>)
+
+	{
+	$LIST(<3:function_subprogram>) = SXML_LL (
+		$LIST(<10:function_statement>),
+		$LIST(<2a:end_statement>));
+	}
+
 *------------------------------------------------------------------------------
 
 <3:function_subprogram>
@@ -388,11 +398,28 @@ $LIST(<2a:end_statement>)
 		  <2c:statement_list>
 		  <2a:end_statement> ;
 
+		  
+$LIST(<3:function_subprogram>)
+
+	{
+	$LIST(<3:function_subprogram>) = SXML_LL (
+		$LIST(<10:function_statement>),
+		$LIST(<2a:end_statement>));
+	}
+
 *******************************************************************************
 
 <4:subroutine_subprogram>
 		= <12:subroutine_statement> %EOL
 		  <2a:end_statement> ;
+		  
+$LIST(<4:subroutine_subprogram>)
+
+	{
+	$LIST(<4:subroutine_subprogram>) = SXML_LL (
+		$LIST(<12:subroutine_statement>),
+		$LIST(<2a:end_statement>));
+	}
 
 *------------------------------------------------------------------------------
 
@@ -400,6 +427,15 @@ $LIST(<2a:end_statement>)
 		= <12:subroutine_statement> %EOL
 		  <2c:statement_list>
 		  <2a:end_statement> ;
+
+		  
+$LIST(<4:subroutine_subprogram>)
+
+	{
+	$LIST(<4:subroutine_subprogram>) = SXML_LL (
+		$LIST(<12:subroutine_statement>),
+		$LIST(<2a:end_statement>));
+	}
 
 *******************************************************************************
 
@@ -568,11 +604,8 @@ $LIST(<2a:end_statement>)
 $LIST(<8:program_statement>)
 
 	{
-	$LIST(<8:program_statement>) = SXML_TTTTL (
-		SXML_Q("name"),
-		":",
-		SXML_Q($NAME(<99:symbolic_name>)),
-		",\n",
+	$LIST(<8:program_statement>) = SXML_LL (
+		JSON_KTV("name", $NAME(<99:symbolic_name>)),
 		LOCATION (0));
 	}
 
@@ -587,20 +620,53 @@ $LIST(<8:program_statement>)
 <10:function_statement>
 		= <10a:type>  FUNCTION  <10d:function_header> ;
 
+$LIST(<10:function_statement>)
+
+	{
+	$LIST(<10:function_statement>) = SXML_LL (
+		$LIST(<10d:function_header>),
+		LOCATION (0));
+	}
+
 *------------------------------------------------------------------------------
 
 <10:function_statement>
 		= FUNCTION  <10d:function_header> ;
+
+
+$LIST(<10:function_statement>)
+
+	{
+	$LIST(<10:function_statement>) = SXML_LL (
+		$LIST(<10d:function_header>),
+		LOCATION (0));
+	}
 
 *******************************************************************************
 
 <10d:function_header>
 		= <99:symbolic_name>  ( ) ;
 
+$LIST(<10d:function_header>)
+
+	{
+	$LIST(<10d:function_header>) = JSON_KTV(
+                "name", 
+                $NAME(<99:symbolic_name>));
+	}
+
 *------------------------------------------------------------------------------
 
 <10d:function_header>
 		= <99:symbolic_name>  ( <99a:symbolic_name_list> ) ;
+
+$LIST(<10d:function_header>)
+
+	{
+	$LIST(<10d:function_header>) = JSON_KTV(
+                "name", 
+                $NAME(<99:symbolic_name>));
+	}
 
 *******************************************************************************
 
@@ -660,20 +726,52 @@ $LIST(<8:program_statement>)
 <12:subroutine_statement>
 		= SUBROUTINE  <12a:subroutine_header> ;
 
+$LIST(<12:subroutine_statement>)
+
+	{
+	$LIST(<12:subroutine_statement>) = SXML_LL (
+		$LIST(<12a:subroutine_header>),
+		LOCATION (0));
+	}
+
 *******************************************************************************
 
 <12a:subroutine_header>
 		= <99:symbolic_name> ;
+
+$LIST(<12a:subroutine_header>)
+
+	{
+	$LIST(<12a:subroutine_header>) = JSON_KTV(
+                "name", 
+                $NAME(<99:symbolic_name>));
+	}
 
 *------------------------------------------------------------------------------
 
 <12a:subroutine_header>
 		= <99:symbolic_name>  ( ) ;
 
+$LIST(<12a:subroutine_header>)
+
+	{
+	$LIST(<12a:subroutine_header>) = JSON_KTV(
+                "name", 
+                $NAME(<99:symbolic_name>));
+	}
+
 *------------------------------------------------------------------------------
 
 <12a:subroutine_header>
 		= <99:symbolic_name>  ( <12b:subroutine_parameter_list> ) ;
+
+$LIST(<12a:subroutine_header>)
+
+	{
+	$LIST(<12a:subroutine_header>) = JSON_KTV(
+                "name", 
+                $NAME(<99:symbolic_name>));
+	}
 
 *******************************************************************************
 
