@@ -11,5 +11,5 @@ for f in `ls test/nist/*.FOR`
 do
 	test_file=`basename ${f}`
 	actual="test-references/${test_file}.reference"
-	bin/f77.out -json "${f}"  > "${actual}"
+	bin/f77.out -json "${f}" | python -m json.tool > "${actual}"
 done

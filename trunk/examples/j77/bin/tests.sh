@@ -18,7 +18,7 @@ do
 	test_file=`basename ${f}`
 	expected="test-references/${test_file}.reference"
 	actual="test-references/${test_file}.actual"
-	bin/f77.out -json "${f}"  > "${actual}"
+	bin/f77.out -json "${f}" | python -m json.tool  > "${actual}"
 	if test $DETAILS = "yes"
 	then
 	    diff $expected $actual > $diff_output
