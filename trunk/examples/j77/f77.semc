@@ -26,10 +26,10 @@
 
 * The following declarations define the synthesized attributes
 
-$LIST(<0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <2e:statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <8:program_statement>, <10:function_statement>, <10d:function_header>, <12:subroutine_statement>, <12a:subroutine_header>, <13:function_or_subroutine_entry>, <20:type_statement>, <20b:scalar_name>, <20c:character_name_list>, <20d:character_name>) 
+$LIST(<0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <2e:statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <8:program_statement>, <10:function_statement>, <10d:function_header>, <12:subroutine_statement>, <12a:subroutine_header>, <13:function_or_subroutine_entry>, <20:type_statement>, <20a:scalar_name_list>, <20c:character_name_list>, <20d:character_name>) 
 : SXML_TYPE_LIST ;
 
-$NAME(<99:symbolic_name>) : SXML_TYPE_TEXT; /* i.e., character string */
+$NAME(<10b:scalar_type>, <20b:scalar_name>, <99:symbolic_name>) : SXML_TYPE_TEXT; /* i.e., character string */
 
 *------------------------------------------------------------------------------
 
@@ -783,25 +783,50 @@ $LIST(<10d:function_header>)
 <10b:scalar_type>
 		= INTEGER ;
 
+$NAME( <10b:scalar_type>)
+{
+  $NAME( <10b:scalar_type>) = "INTEGER";
+}
+
 *------------------------------------------------------------------------------
 
 <10b:scalar_type>
 		= REAL ;
+
+$NAME( <10b:scalar_type>)
+{
+  $NAME( <10b:scalar_type>) = "REAL";
+}
 
 *------------------------------------------------------------------------------
 
 <10b:scalar_type>
 		= DOUBLE  PRECISION ;
 
+$NAME( <10b:scalar_type>)
+{
+  $NAME( <10b:scalar_type>) = "DOUBLE";
+}
+
 *------------------------------------------------------------------------------
 
 <10b:scalar_type>
 		= COMPLEX ;
 
+$NAME( <10b:scalar_type>)
+{
+  $NAME( <10b:scalar_type>) = "COMPLEX";
+}
+
 *------------------------------------------------------------------------------
 
 <10b:scalar_type>
 		= LOGICAL ;
+
+$NAME( <10b:scalar_type>)
+{
+  $NAME( <10b:scalar_type>) = "LOGICAL";
+}
 
 *******************************************************************************
 
@@ -1080,10 +1105,11 @@ $LIST(<12a:subroutine_header>)
 
 $LIST(<20:type_statement>)
 {
-  $LIST(<20:type_statement>) = JSON_MAP(
-    SXML_LL(
-      JSON_KTV ("type_statement", "rule-20"),
-      LOCATION(0) ));
+  $LIST(<20:type_statement>) = json_type_statement(
+    $NAME( <10b:scalar_type>),
+    LOCATION(0), 
+    $LIST( <20a:scalar_name_list>));
+
 }
 
 *------------------------------------------------------------------------------
@@ -1094,10 +1120,11 @@ $LIST(<20:type_statement>)
 
 $LIST(<20:type_statement>)
 {
-  $LIST(<20:type_statement>) = JSON_MAP(
-    SXML_LL(
-      JSON_KTV ("type_statement", "rule-20"),
-      LOCATION(0) ));
+  $LIST(<20:type_statement>) = json_type_statement(
+    $NAME( <10b:scalar_type>),
+    LOCATION(0), 
+    $LIST( <20a:scalar_name_list>));
+
 }
 
 *------------------------------------------------------------------------------
@@ -1107,10 +1134,11 @@ $LIST(<20:type_statement>)
 
 $LIST(<20:type_statement>)
 {
-  $LIST(<20:type_statement>) = JSON_MAP(
-    SXML_LL(
-      JSON_KTV ("type_statement", "rule-20"),
-      LOCATION(0) ));
+  $LIST(<20:type_statement>) = json_type_statement(
+    $NAME( <10b:scalar_type>),
+    LOCATION(0), 
+    $LIST( <20a:scalar_name_list>));
+
 }
 
 *------------------------------------------------------------------------------
@@ -1120,19 +1148,10 @@ $LIST(<20:type_statement>)
 
 $LIST(<20:type_statement>)
 {
-  $LIST(<20:type_statement>) =
-    JSON_MAP(
-      SXML_LTL(
-        JSON_KL(
-          "type_statement",
-            JSON_MAP(
-              SXML_LL(
-                JSON_KTV("type","CHARACTER"),
-		JSON_KL(
-                  "declarators",
-		  JSON_ARRAY( $LIST( <20c:character_name_list>)) )))),
-        ",\n",
-	LOCATION(0) ));
+  $LIST(<20:type_statement>) = json_type_statement(
+      "CHARACTER",
+      LOCATION(0), 
+      $LIST( <20c:character_name_list>));
 }
 
 *------------------------------------------------------------------------------
@@ -1140,35 +1159,68 @@ $LIST(<20:type_statement>)
 <20:type_statement>
 		= CHARACTER * <22:len_specification>  <20c:character_name_list> ;
 
+$LIST(<20:type_statement>)
+{
+  $LIST(<20:type_statement>) = json_type_statement(
+      "CHARACTER",
+      LOCATION(0), 
+      $LIST( <20c:character_name_list>));
+}
+
 *------------------------------------------------------------------------------
 
 <20:type_statement>
 		= CHARACTER * <22:len_specification> ,  <20c:character_name_list> ;
+
+$LIST(<20:type_statement>)
+{
+  $LIST(<20:type_statement>) = json_type_statement(
+      "CHARACTER",
+      LOCATION(0), 
+      $LIST( <20c:character_name_list>));
+}
 
 *******************************************************************************
 
 <20a:scalar_name_list>
 		= <20a:scalar_name_list> ,  <20b:scalar_name> ;
 
+$LIST( <20a:scalar_name_list>)
+{
+  $LIST(<20a:scalar_name_list>) = SXML_LTT (
+    $LIST(<20a:scalar_name_list>'),
+    ",",
+    $NAME(<20b:scalar_name>));
+}
+
 *------------------------------------------------------------------------------
 
 <20a:scalar_name_list>
 		= <20b:scalar_name> ;
+
+$LIST( <20a:scalar_name_list>)
+{
+  $LIST(<20a:scalar_name_list>) = SXML_T( $NAME( <20b:scalar_name>));
+}
 
 *******************************************************************************
 
 <20b:scalar_name>
 		= <16:array_declarator> ;
 
+$NAME(<20b:scalar_name>)
+{
+  $NAME(<20b:scalar_name>) = "\"rule-20b\"";
+}
+
 *------------------------------------------------------------------------------
 
 <20b:scalar_name>
 		= <99:symbolic_name> ;
 
-$LIST(<20b:scalar_name>)
+$NAME(<20b:scalar_name>)
 {
-  // could make an "object" (JSON_MAP) of it
-  $LIST(<20b:scalar_name>) = SXML_T( SXML_Q( $NAME( <99:symbolic_name>)));
+  $NAME(<20b:scalar_name>) = SXML_Q( $NAME( <99:symbolic_name>));
 }
 
 *******************************************************************************
@@ -1201,7 +1253,7 @@ $LIST( <20c:character_name_list>)
 
 $LIST(<20d:character_name>)
 {
-  $LIST(<20d:character_name>) = $LIST( <20b:scalar_name>);
+  $LIST(<20d:character_name>) = SXML_T( $NAME( <20b:scalar_name>));
 }
 
 *------------------------------------------------------------------------------
@@ -1211,7 +1263,7 @@ $LIST(<20d:character_name>)
 
 $LIST(<20d:character_name>)
 {
-  $LIST(<20d:character_name>) = $LIST( <20b:scalar_name>);
+  $LIST(<20d:character_name>) = SXML_T( $NAME( <20b:scalar_name>));
 }
 
 *******************************************************************************

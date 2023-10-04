@@ -270,6 +270,16 @@ SXML_TYPE_LIST SXML_LTL (
 
 /* ------------------------------------------------------------------------- */
 
+SXML_TYPE_LIST SXML_LTT (
+		SXML_TYPE_LIST L1,
+		SXML_TYPE_TEXT T2,
+		SXML_TYPE_TEXT T3)
+{
+	return SXML_CONCAT ("LTT", L1, T2, T3);
+}
+
+/* ------------------------------------------------------------------------- */
+
 SXML_TYPE_LIST SXML_TLL (
 		SXML_TYPE_TEXT T1,
 		SXML_TYPE_LIST L2,
