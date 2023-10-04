@@ -26,7 +26,7 @@
 
 * The following declarations define the synthesized attributes
 
-$LIST(<0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <8:program_statement>, <10:function_statement>, <10d:function_header>, <12:subroutine_statement>, <12a:subroutine_header>, <13:function_or_subroutine_entry>, <20:type_statement>) 
+$LIST(<0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <2e:statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <8:program_statement>, <10:function_statement>, <10d:function_header>, <12:subroutine_statement>, <12a:subroutine_header>, <13:function_or_subroutine_entry>, <20:type_statement>, <20b:scalar_name>, <20c:character_name_list>, <20d:character_name>) 
 : SXML_TYPE_LIST ;
 
 $NAME(<99:symbolic_name>) : SXML_TYPE_TEXT; /* i.e., character string */
@@ -250,9 +250,10 @@ $LIST(<2:main_program>)
 $LIST(<2:main_program>)
 
 {
-  $LIST(<2:main_program>) = SXML_LLL (
+  $LIST(<2:main_program>) = SXML_LLTL (
     JSON_KTV ("name", "null"),
     LOCATION (0),
+    ",\n",
     $LIST(<2a:end_statement>));
 }
 
@@ -267,9 +268,12 @@ $LIST(<2:main_program>)
 $LIST(<2:main_program>)
 
 {
-  $LIST(<2:main_program>) = SXML_LL (
-    $LIST(<8:program_statement>),
-    $LIST(<2a:end_statement>));
+  $LIST(<2:main_program>) = SXML_LTLTL (
+    $LIST (<8:program_statement>),
+    ",\n",
+    JSON_KL ("statement_list", JSON_ARRAY ($LIST (<2c:statement_list>))),
+    ",\n",
+    $LIST (<2a:end_statement>));
 }
 
 
@@ -282,9 +286,11 @@ $LIST(<2:main_program>)
 $LIST(<2:main_program>)
 
 {
-  $LIST(<2:main_program>) = SXML_LLL (
+  $LIST(<2:main_program>) = SXML_LLTLL (
     JSON_KTV ("name", "null"),
     LOCATION (0),
+    ",\n",
+    JSON_KL ("statement_list", JSON_ARRAY ($LIST( <2c:statement_list>))),
     $LIST(<2a:end_statement>));
 }
 
@@ -325,15 +331,10 @@ $LIST(<2a:end_statement>)
 $LIST(<2c:statement_list>)
 
 {
-  SXML_TYPE_LIST stmt_list = $LIST(<2c:statement_list>');
-  SXML_TYPE_LIST last_stmt = $LIST(<2d:labeled_statement>);
-  if (last_stmt == NULL) {
-    $LIST(<2c:statement_list>) = stmt_list;
-  }
-  else {
-    $LIST(<2c:statement_list>) = SXML_LTL (
-      stmt_list, ",\n", last_stmt);
-  }
+  $LIST(<2c:statement_list>) = SXML_LTL (
+    $LIST(<2c:statement_list>'),
+    ",\n",
+    $LIST( <2d:labeled_statement>));
 }
 
 *------------------------------------------------------------------------------
@@ -342,9 +343,8 @@ $LIST(<2c:statement_list>)
 		= <2d:labeled_statement> %EOL ;
 
 $LIST(<2c:statement_list>)
-
 {
-  $LIST(<2c:statement_list>) = SXML_L ($LIST(<2d:labeled_statement>));
+  $LIST(<2c:statement_list>) = $LIST( <2d:labeled_statement>);
 }
 
 *******************************************************************************
@@ -352,15 +352,30 @@ $LIST(<2c:statement_list>)
 <2d:labeled_statement>
 		= <110:label> <2e:statement> ;
 
+$LIST(<2d:labeled_statement>)
+{
+  $LIST(<2d:labeled_statement>) = $LIST( <2e:statement>);
+}
+
 *------------------------------------------------------------------------------
 
 <2d:labeled_statement>
 		= <110:label> <58:format_statement> ;
 
+$LIST(<2d:labeled_statement>)
+{
+  $LIST(<2d:labeled_statement>) = JSON_MAP( JSON_KL( "stmt", TODO(2d)));
+}
+
 *------------------------------------------------------------------------------
 
 <2d:labeled_statement>
 		= <2e:statement> ;
+
+$LIST(<2d:labeled_statement>)
+{
+  $LIST(<2d:labeled_statement>) = $LIST(<2e:statement>);
+}
 
 *******************************************************************************
 
@@ -370,30 +385,65 @@ $LIST(<2c:statement_list>)
 
 <2e:statement>	= <7:executable_statement> ;
 
+$LIST(<2e:statement>)
+{
+  $LIST(<2e:statement>) = JSON_MAP( JSON_KL( "stmt", TODO(2e)));
+}
+
 *------------------------------------------------------------------------------
 
 <2e:statement>	= <7a:other_executable_statement> ;
+
+$LIST(<2e:statement>)
+{
+  $LIST(<2e:statement>) = JSON_MAP( JSON_KL( "stmt", TODO(2e)));
+}
 
 *------------------------------------------------------------------------------
 
 <2e:statement>	= <9:entry_statement> ;
 
+$LIST(<2e:statement>)
+{
+  $LIST(<2e:statement>) = JSON_MAP( JSON_KL( "stmt", TODO(2e)));
+}
+
 *------------------------------------------------------------------------------
 
 <2e:statement>	= <21:implicit_statement> ;
+
+$LIST(<2e:statement>)
+{
+  $LIST(<2e:statement>) = JSON_MAP( JSON_KL( "stmt", TODO(2e)));
+}
 
 *------------------------------------------------------------------------------
 
 <2e:statement>	= <23:parameter_statement> ;
 
+$LIST(<2e:statement>)
+{
+  $LIST(<2e:statement>) = JSON_MAP( JSON_KL( "stmt", TODO(2e)));
+}
+
 *------------------------------------------------------------------------------
 
 <2e:statement>	= <27:data_statement> ;
+
+$LIST(<2e:statement>)
+{
+  $LIST(<2e:statement>) = JSON_MAP( JSON_KL( "stmt", TODO(2e)));
+}
 
 *------------------------------------------------------------------------------
 
 <2e:statement>	= <70:statement_function_statement> ;
 
+$LIST(<2e:statement>)
+{
+  $LIST(<2e:statement>) = JSON_MAP( JSON_KL( "stmt", TODO(2e)));
+}
+
 *******************************************************************************
 
 <3:function_subprogram>
@@ -419,8 +469,11 @@ $LIST(<3:function_subprogram>)
 $LIST(<3:function_subprogram>)
 
 {
-  $LIST(<3:function_subprogram>) = SXML_LL (
+  $LIST(<3:function_subprogram>) = SXML_LTLTL (
     $LIST(<10:function_statement>),
+    ",\n",
+    JSON_KL("statement_list", JSON_ARRAY($LIST(<2c:statement_list>))),
+    ",\n",
     $LIST(<2a:end_statement>));
 }
 
@@ -449,8 +502,9 @@ $LIST(<4:subroutine_subprogram>)
 $LIST(<4:subroutine_subprogram>)
 
 {
-  $LIST(<4:subroutine_subprogram>) = SXML_LL (
+  $LIST(<4:subroutine_subprogram>) = SXML_LTL (
     $LIST(<12:subroutine_statement>),
+    ",\n",
     $LIST(<2a:end_statement>));
 }
 
@@ -813,8 +867,7 @@ $LIST(<12a:subroutine_header>)
 $LIST(<13:function_or_subroutine_entry>)
 
 {
-  // not dealing with ENTRY for now but <12a:subroutine_header> returns something
-  $LIST(<13:function_or_subroutine_entry>) = NULL;
+  $LIST(<13:function_or_subroutine_entry>) = TODO(13);
 }
 
 *******************************************************************************
@@ -1007,16 +1060,34 @@ $LIST(<13:function_or_subroutine_entry>)
 		= <10b:scalar_type>  <20a:scalar_name_list> ;
 * Non standard ANSI
 
+$LIST(<20:type_statement>)
+{
+  $LIST(<20:type_statement>) =
+    JSON_MAP( JSON_KL( "type_statement", TODO(20)));
+}
+
 *------------------------------------------------------------------------------
 
 <20:type_statement>
 		= <10b:scalar_type> * @0 <22:len_specification>  <20a:scalar_name_list> ;
 * Non standard ANSI
 
+$LIST(<20:type_statement>)
+{
+  $LIST(<20:type_statement>) =
+    JSON_MAP( JSON_KL( "type_statement", TODO(20)) );
+}
+
 *------------------------------------------------------------------------------
 
 <20:type_statement>
 		= <10b:scalar_type> * @0 <22:len_specification> ,  <20a:scalar_name_list> ;
+
+$LIST(<20:type_statement>)
+{
+  $LIST(<20:type_statement>) =
+    JSON_MAP( JSON_KL( "type_statement", TODO(20)));
+}
 
 *------------------------------------------------------------------------------
 
@@ -1024,6 +1095,18 @@ $LIST(<13:function_or_subroutine_entry>)
 		= CHARACTER  <20c:character_name_list> ;
 
 $LIST(<20:type_statement>)
+{
+  $LIST(<20:type_statement>) =
+    JSON_MAP(
+      JSON_KL(
+        "type_statement",
+          JSON_MAP(
+            SXML_LL(
+              JSON_KTV("type","CHARACTER"),
+	      JSON_KL(
+                "declarators",
+		JSON_ARRAY( $LIST( <20c:character_name_list>)) )))));
+}
 
 *------------------------------------------------------------------------------
 
@@ -1055,25 +1138,54 @@ $LIST(<20:type_statement>)
 <20b:scalar_name>
 		= <99:symbolic_name> ;
 
+$LIST(<20b:scalar_name>)
+{
+  // could make an "object" (JSON_MAP) of it
+  $LIST(<20b:scalar_name>) = SXML_T( SXML_Q( $NAME( <99:symbolic_name>)));
+}
+
 *******************************************************************************
 
 <20c:character_name_list>
 		= <20c:character_name_list> ,  <20d:character_name> ;
+
+$LIST( <20c:character_name_list>)
+{
+  $LIST(<20c:character_name_list>) = SXML_LTL (
+    $LIST(<20c:character_name_list>'),
+    ",\n",
+    $LIST(<20d:character_name>));
+}
 
 *------------------------------------------------------------------------------
 
 <20c:character_name_list>
 		= <20d:character_name> ;
 
+$LIST( <20c:character_name_list>)
+{
+  $LIST(<20c:character_name_list>) = $LIST(<20d:character_name>);
+}
+
 *******************************************************************************
 
 <20d:character_name>
 		= <20b:scalar_name> * <22:len_specification> ;
 
+$LIST(<20d:character_name>)
+{
+  $LIST(<20d:character_name>) = $LIST( <20b:scalar_name>);
+}
+
 *------------------------------------------------------------------------------
 
 <20d:character_name>
 		= <20b:scalar_name> ;
+
+$LIST(<20d:character_name>)
+{
+  $LIST(<20d:character_name>) = $LIST( <20b:scalar_name>);
+}
 
 *******************************************************************************
 

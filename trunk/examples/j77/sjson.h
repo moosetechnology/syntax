@@ -46,7 +46,7 @@ SXML_TYPE_LIST JSON_KT (SXML_TYPE_TEXT K, SXML_TYPE_TEXT V)
 
 SXML_TYPE_LIST JSON_KTV (SXML_TYPE_TEXT K, SXML_TYPE_TEXT V)
 {
-  return SXML_TTTTT( "\"", K, "\":\"", V, "\",\n");
+  return SXML_TTTTT( "\"", K, "\" : \"", V, "\",\n");
 }
 
 /* -------------------------------------------------------------------------
@@ -56,5 +56,5 @@ SXML_TYPE_LIST JSON_KTV (SXML_TYPE_TEXT K, SXML_TYPE_TEXT V)
 
 SXML_TYPE_LIST JSON_KL (SXML_TYPE_TEXT K, SXML_TYPE_LIST V)
 {
-  return SXML_TTTL( "\"", K, "\":\n", V);
+  return SXML_TTTL( "\"", K, "\" : ", V);
 }
