@@ -39,19 +39,1133 @@
       "405":"C****                                                                   04030825\nC**** FORMAT STATEMENTS FOR RUN SUMMARY                                 04040825\nC****                                                                   04050825\n",
       "413":"CBE** ********************** BBCFMT0B **********************************04110825\nC*****                                                                  04120825\nC*****    END OF TEST SEGMENT 198                                       04130825\n"
    },
-   "program_units":
-   [
+   "program_units" : [
+   {
+      "main" : {
+      "name" : "FM825",
+      "file" : "test/nist/FM825.FOR",
+      "line" : "1",
+      "column":"7"
+      ,
+      "statement_list" : [
       {
-         "main":
-         {
-            "name":"FM825",
-            "file":"test/nist/FM825.FOR",
-            "line":"1",
-            "column":"7"
-            "ending-file":"test/nist/FM825.FOR",
-            "ending-line":"417",
-            "ending-column":"9"
-         }
+         "type_statement" : {"TODO-20":null}
       }
-   ]
+      ,
+      {
+         "type_statement" : {
+         "type" : "CHARACTER",
+         "declarators" : [
+         "ZVERS",
+         "ZVERSD",
+         "ZDATE",
+         "ZPROG",
+         "ZCOMPL",
+         "ZNAME",
+         "ZTAPE",
+         "ZPROJ",
+         "REMRKS",
+         "ZTAPED"]
+      }
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2d":null}
+   }
+   ,
+   {
+      "stmt" : {"TODO-2e":null}
+   }
+]
+,
+"ending-file" : "test/nist/FM825.FOR",
+"ending-line" : "417",
+"ending-column":"9"
+}
+}
+]
 }

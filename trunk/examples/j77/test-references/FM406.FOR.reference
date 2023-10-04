@@ -32,19 +32,1352 @@
       "469":"C****                                                                   04670406\nC**** FORMAT STATEMENTS FOR RUN SUMMARY                                 04680406\nC****                                                                   04690406\n",
       "477":"CBE** ********************** BBCFMT0B **********************************04750406\nC*****                                                                  04760406\nC*****    END OF TEST SEGMENT 391                                       04770406\n"
    },
-   "program_units":
-   [
+   "program_units" : [
+   {
+      "main" : {
+      "name" : "FM406",
+      "file" : "test/nist/FM406.FOR",
+      "line" : "1",
+      "column":"7"
+      ,
+      "statement_list" : [
       {
-         "main":
-         {
-            "name":"FM406",
-            "file":"test/nist/FM406.FOR",
-            "line":"1",
-            "column":"7"
-            "ending-file":"test/nist/FM406.FOR",
-            "ending-line":"481",
-            "ending-column":"9"
-         }
+         "type_statement" : {"TODO-20":null}
       }
-   ]
+      ,
+      {
+         "type_statement" : {
+         "type" : "CHARACTER",
+         "declarators" : [
+         "A4VK",
+         "A5VK",
+         "A10VK",
+         "A38VK"]
+      }
+   }
+   ,
+   {
+      "type_statement" : {
+      "type" : "CHARACTER",
+      "declarators" : [
+      "CVCORR"]
+   }
+}
+,
+{
+   "type_statement" : {
+   "type" : "CHARACTER",
+   "declarators" : [
+   "ZVERS",
+   "ZVERSD",
+   "ZDATE",
+   "ZPROG",
+   "ZCOMPL",
+   "ZNAME",
+   "ZTAPE",
+   "ZPROJ",
+   "REMRKS",
+   "ZTAPED"]
+}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2d":null}
+}
+,
+{
+"stmt" : {"TODO-2e":null}
+}
+]
+,
+"ending-file" : "test/nist/FM406.FOR",
+"ending-line" : "481",
+"ending-column":"9"
+}
+}
+]
 }

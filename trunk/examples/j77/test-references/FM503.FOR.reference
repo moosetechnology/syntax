@@ -37,37 +37,45 @@
       "365":"C****                                                                   02890505\nC**** FORMAT STATEMENTS FOR RUN SUMMARY                                 02900505\nC****                                                                   02910505\n",
       "373":"CBE** ********************** BBCFMT0B **********************************02970505\nC*****                                                                  02980505\n"
    },
-   "program_units":
-   [
+   "program_units" : [
+   {
+      "main" : {
+      "name" : "FM503",
+      "file" : "test/nist/FM503.FOR",
+      "line" : "1",
+      "column":"7"
+      ,
+      "statement_list" : [
       {
-         "main":
-         {
-            "name":"FM503",
-            "file":"test/nist/FM503.FOR",
-            "line":"1",
-            "column":"7"
-            "ending-file":"test/nist/FM503.FOR",
-            "ending-line":"47",
-            "ending-column":"11"
-         }
+         "stmt" : {"TODO-2e":null}
       }
       ,
       {
-         "blockdata":
-         {"TODO-3":null}
-      }
-      ,
-      {
-         "subroutine":
-         {
-            "name":"SN505",
-            "file":"test/nist/FM503.FOR",
-            "line":"89",
-            "column":"9"
-            "ending-file":"test/nist/FM503.FOR",
-            "ending-line":"375",
-            "ending-column":"11"
-         }
+         "stmt" : {"TODO-2e":null}
       }
    ]
+   ,
+   "ending-file" : "test/nist/FM503.FOR",
+   "ending-line" : "47",
+   "ending-column":"11"
+}
+}
+,
+{
+"blockdata" : {"TODO-3":null}
+}
+,
+{
+"subroutine" : {
+"name" : "SN505",
+"file" : "test/nist/FM503.FOR",
+"line" : "89",
+"column":"9"
+,
+"ending-file" : "test/nist/FM503.FOR",
+"ending-line" : "375",
+"ending-column":"11"
+}
+}
+]
 }

@@ -30,58 +30,679 @@
       "304":"C     THIS SUBROUTINE IS TO BE RUN WITH ROUTINE 711.                    00010713\nC                                                                       00020713\nC     THIS SUBROUTINE TESTS ADJUSTABLE ARRAYS AND ADJUSTABLE            00030713\nC                           DIMENSIONS WHERE THE LOWER AND              00040713\nC                           UPPER BOUND MAY BE A DUMMY ARGUMENT         00050713\nC                           AND/OR IN COMMON.                           00060713\nC                                                                       00070713\n",
       "319":"C     THIS SUBROUTINE IS TO BE RUN WITH ROUTINE 711.                    00010714\nC                                                                       00020714\nC     THIS SUBROUTINE TESTS THE USE OF ARRAY NAMES IN A                 00030714\nC                           SAVE STATEMENT.                             00040714\nC                                                                       00050714\n"
    },
-   "program_units":
-   [
+   "program_units" : [
+   {
+      "main" : {
+      "name" : "FM711",
+      "file" : "test/nist/FM711.FOR",
+      "line" : "2",
+      "column":"7"
+      ,
+      "statement_list" : [
       {
-         "main":
-         {
-            "name":"FM711",
-            "file":"test/nist/FM711.FOR",
-            "line":"2",
-            "column":"7"
-            "ending-file":"test/nist/FM711.FOR",
-            "ending-line":"290",
-            "ending-column":"14"
-         }
+         "stmt" : {"TODO-2e":null}
       }
       ,
       {
-         "subroutine":
-         {
-            "name":"SN712",
-            "file":"test/nist/FM711.FOR",
-            "line":"298",
-            "column":"7"
-            "ending-file":"test/nist/FM711.FOR",
-            "ending-line":"302",
-            "ending-column":"9"
-         }
+         "stmt" : {"TODO-2e":null}
       }
       ,
       {
-         "subroutine":
-         {
-            "name":"SN713",
-            "file":"test/nist/FM711.FOR",
-            "line":"311",
-            "column":"7"
-            "ending-file":"test/nist/FM711.FOR",
-            "ending-line":"317",
-            "ending-column":"9"
-         }
+         "type_statement" : {
+         "type" : "CHARACTER",
+         "declarators" : [
+         "ZVERS",
+         "ZVERSD",
+         "ZDATE",
+         "ZPROG",
+         "ZCOMPL",
+         "ZNAME",
+         "ZTAPE",
+         "ZPROJ",
+         "REMRKS",
+         "ZTAPED"]
       }
-      ,
-      {
-         "subroutine":
-         {
-            "name":"SN714",
-            "file":"test/nist/FM711.FOR",
-            "line":"324",
-            "column":"7"
-            "ending-file":"test/nist/FM711.FOR",
-            "ending-line":"334",
-            "ending-column":"9"
-         }
-      }
-   ]
+   }
+   ,
+   {
+      "type_statement" : {"TODO-20":null}
+   }
+   ,
+   {
+      "type_statement" : {
+      "type" : "CHARACTER",
+      "declarators" : [
+      "CVCOMP",
+      "CVCORR",
+      "CVN001"]
+   }
+}
+,
+"ICC002",
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2e":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+,
+{
+   "stmt" : {"TODO-2d":null}
+}
+]
+,
+"ending-file" : "test/nist/FM711.FOR",
+"ending-line" : "290",
+"ending-column":"14"
+}
+}
+,
+{
+"subroutine" : {
+"name" : "SN712",
+"file" : "test/nist/FM711.FOR",
+"line" : "298",
+"column":"7"
+,
+"ending-file" : "test/nist/FM711.FOR",
+"ending-line" : "302",
+"ending-column":"9"
+}
+}
+,
+{
+"subroutine" : {
+"name" : "SN713",
+"file" : "test/nist/FM711.FOR",
+"line" : "311",
+"column":"7"
+,
+"ending-file" : "test/nist/FM711.FOR",
+"ending-line" : "317",
+"ending-column":"9"
+}
+}
+,
+{
+"subroutine" : {
+"name" : "SN714",
+"file" : "test/nist/FM711.FOR",
+"line" : "324",
+"column":"7"
+,
+"ending-file" : "test/nist/FM711.FOR",
+"ending-line" : "334",
+"ending-column":"9"
+}
+}
+]
 }

@@ -76,37 +76,40 @@
       "786":"C*****                                                                  00530502\n",
       "804":"C*****                                                                  00710502\n"
    },
-   "program_units":
-   [
+   "program_units" : [
+   {
+      "main" : {
+      ,
       {
-         "main":
-         {
-            "name":"FM500",
-            "file":"test/nist/FM500.FOR",
-            "line":"1",
-            "column":"7"
-            "ending-file":"test/nist/FM500.FOR",
-            "ending-line":"40",
-            "ending-column":"11"
-         }
+         "stmt" : {"TODO-2e":null}
       }
       ,
       {
-         "subroutine":
-         {
-            "name":"SN501",
-            "file":"test/nist/FM500.FOR",
-            "line":"69",
-            "column":"9"
-            "ending-file":"test/nist/FM500.FOR",
-            "ending-line":"732",
-            "ending-column":"11"
-         }
-      }
-      ,
-      {
-         "blockdata":
-         {"TODO-3":null}
+         "stmt" : {"TODO-2e":null}
       }
    ]
+   ,
+   "ending-file" : "test/nist/FM500.FOR",
+   "ending-line" : "40",
+   "ending-column":"11"
+}
+}
+,
+{
+"subroutine" : {
+"name" : "SN501",
+"file" : "test/nist/FM500.FOR",
+"line" : "69",
+"column":"9"
+,
+"ending-file" : "test/nist/FM500.FOR",
+"ending-line" : "732",
+"ending-column":"11"
+}
+}
+,
+{
+"blockdata" : {"TODO-3":null}
+}
+]
 }
