@@ -21,7 +21,12 @@ SXML_TYPE_LIST JSON_ARRAY (SXML_TYPE_LIST L)
 
 SXML_TYPE_LIST JSON_MAP (SXML_TYPE_LIST L)
 {
-  return SXML_TLT( "{\n", L, "}\n");
+  if (L == NULL) {
+    return SXML_T( "{ }\n");
+  }
+  else {
+    return SXML_TLT( "{\n", L, "}\n");
+  }
 }
 
 /* -------------------------------------------------------------------------

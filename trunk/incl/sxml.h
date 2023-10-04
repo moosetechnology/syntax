@@ -97,9 +97,10 @@ void SXML_PRINT (FILE *OUTPUT, SXML_TYPE_LIST LIST)
 	SXML_TYPE_LIST L;
 
 	/* prints LIST to OUTPUT file */
-	assert (LIST != NULL);
-	for (L = SXML_HEAD (LIST); L != NULL; L = SXML_SUCC (L, LIST)) {
+	if (LIST != NULL) {
+	  for (L = SXML_HEAD (LIST); L != NULL; L = SXML_SUCC (L, LIST)) {
 		fprintf (OUTPUT, "%s", L->TEXT);
+	  }
 	}
 }
 
@@ -117,7 +118,10 @@ SXML_TYPE_LIST SXML_T (SXML_TYPE_TEXT T)
 	SXML_TYPE_LIST L;
 
 	/* allocates and returns a list of length one */
-	assert (T != NULL);
+	if (T == NULL) {
+	  return NULL;
+	}
+
 	L = malloc (sizeof (SXML_BODY_LIST));
 	if (L == NULL) {
 		fprintf (sxstderr, "out of memory in sxml.h\n");
@@ -141,6 +145,10 @@ SXML_TYPE_TEXT SXML_Q (SXML_TYPE_TEXT T)
 	int TLen;
 	SXML_TYPE_TEXT quoted;
 
+	if (T == NULL) {
+	  return NULL;
+	}
+
 	TLen = strlen (T);
 	quoted = malloc (sizeof (char) * (TLen + 3)); // +3 for "\"" and "\0"
 	if (quoted == NULL) {
@@ -160,8 +168,14 @@ SXML_TYPE_LIST SXML_LL (SXML_TYPE_LIST L1, SXML_TYPE_LIST L2)
 	/* returns the in-place concatenation of L1 and L2 */
 	SXML_TYPE_LIST L;
 
-	assert (L1 != NULL);
-	assert (L2 != NULL);
+	if (L1 == NULL) {
+	  return L2;
+	}
+	
+	if (L2 == NULL) {
+	  return L1;
+	}
+	
 	L = SXML_HEAD (L1);
 	SXML_TAIL (L1)->SUCC = SXML_HEAD (L2);
 	SXML_TAIL (L2)->SUCC = L;

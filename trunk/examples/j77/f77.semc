@@ -26,7 +26,7 @@
 
 * The following declarations define the synthesized attributes
 
-$LIST(<0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <3:function_subprogram>, <4:subroutine_subprogram>, <8:program_statement>, <10:function_statement>, <10d:function_header>, <12:subroutine_statement>, <12a:subroutine_header> ) 
+$LIST(<0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <8:program_statement>, <10:function_statement>, <10d:function_header>, <12:subroutine_statement>, <12a:subroutine_header>, <13:function_or_subroutine_entry> ) 
 : SXML_TYPE_LIST ;
 
 $NAME(<99:symbolic_name>) : SXML_TYPE_TEXT; /* i.e., character string */
@@ -325,10 +325,30 @@ $LIST(<2a:end_statement>)
 		= <2c:statement_list>
 		  <2d:labeled_statement> %EOL ;
 
+$LIST(<2c:statement_list>)
+
+	{
+	SXML_TYPE_LIST stmt_list = $LIST(<2c:statement_list>');
+	SXML_TYPE_LIST last_stmt = $LIST(<2d:labeled_statement>);
+	if (last_stmt == NULL) {
+	  $LIST(<2c:statement_list>) = stmt_list;
+	}
+	else {
+	  $LIST(<2c:statement_list>) = SXML_LTL (
+		stmt_list, ",\n", last_stmt);
+	}
+	}
+
 *------------------------------------------------------------------------------
 
 <2c:statement_list>
 		= <2d:labeled_statement> %EOL ;
+
+$LIST(<2c:statement_list>)
+
+	{
+	$LIST(<2c:statement_list>) = SXML_L ($LIST(<2d:labeled_statement>));
+	}
 
 *******************************************************************************
 
@@ -797,6 +817,12 @@ $LIST(<12a:subroutine_header>)
 
 <13:function_or_subroutine_entry>
 		= ENTRY  <12a:subroutine_header> ;
+
+$LIST(<13:function_or_subroutine_entry>)
+
+	{
+	$LIST(<13:function_or_subroutine_entry>) = NULL;
+	}
 
 *******************************************************************************
 
