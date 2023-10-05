@@ -1,0 +1,3 @@
+      PROGRAM SIMPLEMAIN
+      INTEGER I
+      END
