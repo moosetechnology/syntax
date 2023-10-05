@@ -669,8 +669,8 @@ $LIST(<7:executable_statement>)
 
 $LIST(<7:executable_statement>)
 {
-  $LIST(<7:executable_statement>) = json_unknown_statement(
-    "7",
+  $LIST(<7:executable_statement>) = json_abstract_statement(
+    "continue_statement",
     LOCATION(0) );
 }
 
