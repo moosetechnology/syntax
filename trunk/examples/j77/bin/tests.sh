@@ -50,7 +50,6 @@ do
 		rm $actual
 	    fi
 	else
-	    echo "diffing ${f}"
 	    diff -q $expected $actual && rm $actual
 	fi
 done

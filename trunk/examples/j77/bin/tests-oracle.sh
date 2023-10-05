@@ -9,14 +9,16 @@ cd "${exec_dir}/.."
 
 rm test-references/*
 
-for f in `ls test/nist/*.FOR`
+echo "Recording oracle for test/unit-tests/*.FOR"
+for f in `ls test/unit-tests/*.FOR`
 do
 	test_file=`basename ${f}`
 	actual="test-references/${test_file}.reference"
 	bin/f77.out -json "${f}" | python -m json.tool > "${actual}"
 done
 
-for f in `ls test/unit-tests/*.FOR`
+echo "Recording oracle for test/nist/*.FOR"
+for f in `ls test/nist/*.FOR`
 do
 	test_file=`basename ${f}`
 	actual="test-references/${test_file}.reference"
