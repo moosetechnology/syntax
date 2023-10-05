@@ -40,10 +40,10 @@ do
 
 	bin/f77.out -json "${f}" | python -m json.tool  > "${actual}"
 
-	if test $DETAILS = "yes"
+	if [ $DETAILS = "yes" ]
 	then
 	    diff $expected $actual > $diff_output
-	    if test -s $diff_output
+	    if [ -s $diff_output ]
 	    then
 		less $diff_output
 	    else
