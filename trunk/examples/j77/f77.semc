@@ -1134,7 +1134,9 @@ $LIST(<12a:subroutine_header>)
 $LIST(<20:type_statement>)
 {
   $LIST(<20:type_statement>) = json_type_statement(
-    $NAME( <10b:scalar_type>),
+    json_type_reference(
+      $NAME (<10b:scalar_type>),
+      NULL),
     LOCATION(0), 
     $LIST( <20a:scalar_name_list>));
 
@@ -1149,7 +1151,9 @@ $LIST(<20:type_statement>)
 $LIST(<20:type_statement>)
 {
   $LIST(<20:type_statement>) = json_type_statement(
-    $NAME( <10b:scalar_type>),
+    json_type_reference(
+      $NAME (<10b:scalar_type>),
+      NULL),
     LOCATION(0), 
     $LIST( <20a:scalar_name_list>));
 
@@ -1163,7 +1167,9 @@ $LIST(<20:type_statement>)
 $LIST(<20:type_statement>)
 {
   $LIST(<20:type_statement>) = json_type_statement(
-    $NAME( <10b:scalar_type>),
+    json_type_reference(
+      $NAME (<10b:scalar_type>),
+      NULL),
     LOCATION(0), 
     $LIST( <20a:scalar_name_list>));
 
@@ -1177,7 +1183,9 @@ $LIST(<20:type_statement>)
 $LIST(<20:type_statement>)
 {
   $LIST(<20:type_statement>) = json_type_statement(
+    json_type_reference(
       "CHARACTER",
+      NULL),
       LOCATION(0), 
       $LIST( <20c:character_name_list>));
 }
@@ -1190,7 +1198,9 @@ $LIST(<20:type_statement>)
 $LIST(<20:type_statement>)
 {
   $LIST(<20:type_statement>) = json_type_statement(
+    json_type_reference(
       "CHARACTER",
+      NULL),
       LOCATION(0), 
       $LIST( <20c:character_name_list>));
 }
@@ -1203,7 +1213,9 @@ $LIST(<20:type_statement>)
 $LIST(<20:type_statement>)
 {
   $LIST(<20:type_statement>) = json_type_statement(
+    json_type_reference(
       "CHARACTER",
+      NULL),
       LOCATION(0), 
       $LIST( <20c:character_name_list>));
 }

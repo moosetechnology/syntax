@@ -97,19 +97,34 @@ SXML_TYPE_LIST json_unknown_statement( SXML_TYPE_TEXT rule,
 
 /* -------------------------------------------------------------------------
  * ouputs a type_statement (variable declaration)
- * - name of the type
+ * - type_reference
  * - Location of the statement
  * - list of variables
  */
-SXML_TYPE_LIST json_type_statement( SXML_TYPE_TEXT type,
+SXML_TYPE_LIST json_type_statement( SXML_TYPE_LIST type_reference,
 				    SXML_TYPE_LIST location,
 				    SXML_TYPE_LIST variables) {
 
   return JSON_MAP(
-      SXML_LLLTL(
+      SXML_LLTLTL(
 	JSON_KTV( "tag", "type_statement"),
-	JSON_KTV("type",type),
+	JSON_KL("type", type_reference),
+        ",\n",
 	JSON_KL( "declarators", JSON_ARRAY( variables) ),
         ",\n",
 	location ));
+}
+
+/* -------------------------------------------------------------------------
+ * ouputs a type_reference (typically in a variable declaration statement)
+ * - name of the type
+ * - len_specification
+ */
+SXML_TYPE_LIST json_type_reference( SXML_TYPE_TEXT name,
+				    SXML_TYPE_LIST len_specification) {
+
+  return JSON_MAP(
+      SXML_LL (
+	JSON_KTV( "tag", "type_reference"),
+	JSON_KT("name", name) ));
 }
