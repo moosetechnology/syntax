@@ -60,21 +60,41 @@ SXML_TYPE_LIST JSON_KL (SXML_TYPE_TEXT K, SXML_TYPE_LIST V)
 }
 
 /* -------------------------------------------------------------------------
+ * ouputs a program_unit
+ * - tag: main/function/subroutine/block_data
+ * - header line (name, possible parameters, return type, ...)
+ * - Location of the header
+ * - list of statements
+ */
+SXML_TYPE_LIST json_program_unit( SXML_TYPE_TEXT tag,
+				  SXML_TYPE_LIST header,
+				  SXML_TYPE_LIST location,
+				  SXML_TYPE_LIST statement_list) {
+
+  return JSON_MAP(
+      SXML_LLLTL(
+	JSON_KTV( "tag", tag),
+	header,
+	JSON_KL("statement_list", JSON_ARRAY( statement_list)),
+        ",\n",
+	location ));
+}
+
+/* -------------------------------------------------------------------------
  * ouputs a type_statement (variable declaration)
  * - name of the type
  * - Location of the statement
  * - list of variables
  */
-SXML_TYPE_LIST json_type_statement( SXML_TYPE_TEXT type, SXML_TYPE_LIST location, SXML_TYPE_LIST variables) {
+SXML_TYPE_LIST json_type_statement( SXML_TYPE_TEXT type,
+				    SXML_TYPE_LIST location,
+				    SXML_TYPE_LIST variables) {
 
   return JSON_MAP(
-      SXML_LTL(
-        JSON_KL(
-          "type_statement",
-            JSON_MAP(
-              SXML_LL(
-                JSON_KTV("type",type),
-		JSON_KL( "declarators", JSON_ARRAY( variables) )))),
+      SXML_LLLTL(
+	JSON_KTV( "tag", "type_statement"),
+	JSON_KTV("type",type),
+	JSON_KL( "declarators", JSON_ARRAY( variables) ),
         ",\n",
 	location ));
-}  
+}

@@ -420,6 +420,18 @@ SXML_TYPE_LIST SXML_LLLLL (
 
 /* ------------------------------------------------------------------------- */
 
+SXML_TYPE_LIST SXML_LLLTL (
+		SXML_TYPE_LIST L1,
+		SXML_TYPE_LIST L2,
+		SXML_TYPE_LIST L3,
+		SXML_TYPE_TEXT T4,
+		SXML_TYPE_LIST L5)
+{
+       return SXML_CONCAT ("LLLTL", L1, L2, L3, T4, L5);
+}
+
+/* ------------------------------------------------------------------------- */
+
 SXML_TYPE_LIST SXML_LLTLL (
 		SXML_TYPE_LIST L1,
 		SXML_TYPE_LIST L2,
