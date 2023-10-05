@@ -48,7 +48,7 @@
     },
     "program_units": [
         {
-            "tag": "main3",
+            "tag": "main",
             "name": "FM910",
             "statement_list": [
                 {
@@ -62,14 +62,15 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
                         "A4VK",
                         "B4VK",
                         "D4VK",
-                        "rule-20b",
-                        "rule-20b"
+                        "20b",
+                        "20b"
                     ],
                     "file": "test/nist/FM910.FOR",
                     "line": "33",
@@ -84,8 +85,8 @@
                     "declarators": [
                         "AVB",
                         "BVB",
-                        "rule-20b",
-                        "rule-20b"
+                        "20b",
+                        "20b"
                     ],
                     "file": "test/nist/FM910.FOR",
                     "line": "34",
@@ -100,8 +101,8 @@
                     "declarators": [
                         "AVD",
                         "BVD",
-                        "rule-20b",
-                        "rule-20b"
+                        "20b",
+                        "20b"
                     ],
                     "file": "test/nist/FM910.FOR",
                     "line": "35",
@@ -116,8 +117,8 @@
                     "declarators": [
                         "AVC",
                         "BVC",
-                        "rule-20b",
-                        "rule-20b"
+                        "20b",
+                        "20b"
                     ],
                     "file": "test/nist/FM910.FOR",
                     "line": "36",
@@ -127,7 +128,8 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
                         "CDIR"
@@ -1308,10 +1310,10 @@
                         "name": "REAL"
                     },
                     "declarators": [
-                        "rule-20b",
-                        "rule-20b",
-                        "rule-20b",
-                        "rule-20b"
+                        "20b",
+                        "20b",
+                        "20b",
+                        "20b"
                     ],
                     "file": "test/nist/FM910.FOR",
                     "line": "461",
@@ -1324,10 +1326,10 @@
                         "name": "LOGICAL"
                     },
                     "declarators": [
-                        "rule-20b",
-                        "rule-20b",
-                        "rule-20b",
-                        "rule-20b"
+                        "20b",
+                        "20b",
+                        "20b",
+                        "20b"
                     ],
                     "file": "test/nist/FM910.FOR",
                     "line": "462",
@@ -1340,10 +1342,10 @@
                         "name": "DOUBLE"
                     },
                     "declarators": [
-                        "rule-20b",
-                        "rule-20b",
-                        "rule-20b",
-                        "rule-20b"
+                        "20b",
+                        "20b",
+                        "20b",
+                        "20b"
                     ],
                     "file": "test/nist/FM910.FOR",
                     "line": "463",
@@ -1356,10 +1358,10 @@
                         "name": "COMPLEX"
                     },
                     "declarators": [
-                        "rule-20b",
-                        "rule-20b",
-                        "rule-20b",
-                        "rule-20b"
+                        "20b",
+                        "20b",
+                        "20b",
+                        "20b"
                     ],
                     "file": "test/nist/FM910.FOR",
                     "line": "464",
@@ -1369,13 +1371,14 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
-                        "rule-20b",
-                        "rule-20b",
-                        "rule-20b",
-                        "rule-20b"
+                        "20b",
+                        "20b",
+                        "20b",
+                        "20b"
                     ],
                     "file": "test/nist/FM910.FOR",
                     "line": "465",

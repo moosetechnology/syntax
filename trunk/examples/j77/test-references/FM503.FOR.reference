@@ -38,7 +38,7 @@
     },
     "program_units": [
         {
-            "tag": "main3",
+            "tag": "main",
             "name": "FM503",
             "statement_list": [
                 {
@@ -114,7 +114,8 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
                         "A6XVK",
@@ -172,7 +173,7 @@
                         "name": "REAL"
                     },
                     "declarators": [
-                        "rule-20b"
+                        "20b"
                     ],
                     "file": "test/nist/FM503.FOR",
                     "line": "103",

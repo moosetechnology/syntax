@@ -46,7 +46,7 @@
     },
     "program_units": [
         {
-            "tag": "main3",
+            "tag": "main",
             "name": "FM108",
             "statement_list": [
                 {
@@ -67,7 +67,8 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
                         "NINE",
@@ -83,7 +84,8 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
                         "IADN12",
@@ -97,7 +99,8 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
                         "IADN13"

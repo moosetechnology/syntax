@@ -56,7 +56,7 @@
     },
     "program_units": [
         {
-            "tag": "main3",
+            "tag": "main",
             "name": "FM903",
             "statement_list": [
                 {
@@ -66,7 +66,7 @@
                         "name": "INTEGER"
                     },
                     "declarators": [
-                        "rule-20b"
+                        "20b"
                     ],
                     "file": "test/nist/FM903.FOR",
                     "line": "68",
@@ -79,7 +79,7 @@
                         "name": "INTEGER"
                     },
                     "declarators": [
-                        "rule-20b"
+                        "20b"
                     ],
                     "file": "test/nist/FM903.FOR",
                     "line": "69",
@@ -89,7 +89,8 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
                         "A11VK"
@@ -102,10 +103,11 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
-                        "rule-20b"
+                        "20b"
                     ],
                     "file": "test/nist/FM903.FOR",
                     "line": "71",
@@ -115,7 +117,8 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
                         "A19VK"
@@ -128,10 +131,11 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
-                        "rule-20b"
+                        "20b"
                     ],
                     "file": "test/nist/FM903.FOR",
                     "line": "73",
@@ -141,7 +145,8 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
                         "A32VK"
@@ -154,7 +159,8 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
                         "A52VK"
@@ -167,7 +173,8 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
                         "A65VK"
@@ -180,7 +187,8 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
                         "A85VK"
@@ -197,8 +205,8 @@
                     },
                     "declarators": [
                         "AVD",
-                        "rule-20b",
-                        "rule-20b"
+                        "20b",
+                        "20b"
                     ],
                     "file": "test/nist/FM903.FOR",
                     "line": "78",
@@ -214,7 +222,7 @@
                         "AVC",
                         "BVC",
                         "CVC",
-                        "rule-20b"
+                        "20b"
                     ],
                     "file": "test/nist/FM903.FOR",
                     "line": "79",
@@ -2019,7 +2027,8 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "*"
                     },
                     "declarators": [
                         "A0WVK"
@@ -2032,7 +2041,8 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
                         "A130VK"
@@ -2048,7 +2058,7 @@
                         "name": "INTEGER"
                     },
                     "declarators": [
-                        "rule-20b"
+                        "20b"
                     ],
                     "file": "test/nist/FM903.FOR",
                     "line": "546",

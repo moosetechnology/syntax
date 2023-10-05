@@ -30,14 +30,15 @@
     },
     "program_units": [
         {
-            "tag": "main3",
+            "tag": "main",
             "name": "FM404",
             "statement_list": [
                 {
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
                         "A1VK"
@@ -50,7 +51,8 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
                         "A2VK"
@@ -63,7 +65,8 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
                         "A3VK"
@@ -76,12 +79,13 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
                         "A4VK",
-                        "rule-20b",
-                        "rule-20b"
+                        "20b",
+                        "20b"
                     ],
                     "file": "test/nist/FM404.FOR",
                     "line": "53",
@@ -91,7 +95,8 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
                         "A5VK"
@@ -104,7 +109,8 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
                         "A6VK"

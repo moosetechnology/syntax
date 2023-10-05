@@ -41,7 +41,7 @@
     },
     "program_units": [
         {
-            "tag": "main3",
+            "tag": "main",
             "name": "FM710",
             "statement_list": [
                 {
@@ -91,13 +91,14 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
                         "CVCOMP",
                         "CVCORR",
                         "CVN001",
-                        "rule-20b"
+                        "20b"
                     ],
                     "file": "test/nist/FM710.FOR",
                     "line": "36",

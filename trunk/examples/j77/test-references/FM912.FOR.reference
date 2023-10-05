@@ -69,7 +69,7 @@
     },
     "program_units": [
         {
-            "tag": "main3",
+            "tag": "main",
             "name": "FM912",
             "statement_list": [
                 {
@@ -83,14 +83,15 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
                         "A20VK",
                         "B20VK",
                         "C20VK",
-                        "rule-20b",
-                        "rule-20b"
+                        "20b",
+                        "20b"
                     ],
                     "file": "test/nist/FM912.FOR",
                     "line": "18",
@@ -100,7 +101,8 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
                         "A47VK",
@@ -115,7 +117,8 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
                         "A51VK"
@@ -128,7 +131,8 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
                         "A12VK"
@@ -157,7 +161,8 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
                         "REMK",
@@ -182,8 +187,8 @@
                         "AVB",
                         "BVB",
                         "CVB",
-                        "rule-20b",
-                        "rule-20b"
+                        "20b",
+                        "20b"
                     ],
                     "file": "test/nist/FM912.FOR",
                     "line": "24",
@@ -200,8 +205,8 @@
                         "BVD",
                         "CVD",
                         "DVD",
-                        "rule-20b",
-                        "rule-20b"
+                        "20b",
+                        "20b"
                     ],
                     "file": "test/nist/FM912.FOR",
                     "line": "25",
@@ -211,7 +216,8 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
                         "CDIR"
@@ -3947,10 +3953,10 @@
                         "name": "REAL"
                     },
                     "declarators": [
-                        "rule-20b",
-                        "rule-20b",
-                        "rule-20b",
-                        "rule-20b"
+                        "20b",
+                        "20b",
+                        "20b",
+                        "20b"
                     ],
                     "file": "test/nist/FM912.FOR",
                     "line": "905",
@@ -3963,10 +3969,10 @@
                         "name": "LOGICAL"
                     },
                     "declarators": [
-                        "rule-20b",
-                        "rule-20b",
-                        "rule-20b",
-                        "rule-20b"
+                        "20b",
+                        "20b",
+                        "20b",
+                        "20b"
                     ],
                     "file": "test/nist/FM912.FOR",
                     "line": "906",
@@ -3979,10 +3985,10 @@
                         "name": "DOUBLE"
                     },
                     "declarators": [
-                        "rule-20b",
-                        "rule-20b",
-                        "rule-20b",
-                        "rule-20b"
+                        "20b",
+                        "20b",
+                        "20b",
+                        "20b"
                     ],
                     "file": "test/nist/FM912.FOR",
                     "line": "907",
@@ -3992,13 +3998,14 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
-                        "rule-20b",
-                        "rule-20b",
-                        "rule-20b",
-                        "rule-20b"
+                        "20b",
+                        "20b",
+                        "20b",
+                        "20b"
                     ],
                     "file": "test/nist/FM912.FOR",
                     "line": "908",

@@ -51,7 +51,7 @@
     },
     "program_units": [
         {
-            "tag": "main3",
+            "tag": "main",
             "name": "FM909",
             "statement_list": [
                 {
@@ -78,7 +78,7 @@
                         "BVD",
                         "CVD",
                         "DVD",
-                        "rule-20b"
+                        "20b"
                     ],
                     "file": "test/nist/FM909.FOR",
                     "line": "32",
@@ -109,7 +109,7 @@
                         "A8VK",
                         "A97VK",
                         "CVCORR",
-                        "rule-20b"
+                        "20b"
                     ],
                     "file": "test/nist/FM909.FOR",
                     "line": "34",
@@ -119,10 +119,11 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
-                        "rule-20b"
+                        "20b"
                     ],
                     "file": "test/nist/FM909.FOR",
                     "line": "35",
@@ -132,10 +133,11 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
-                        "rule-20b"
+                        "20b"
                     ],
                     "file": "test/nist/FM909.FOR",
                     "line": "36",
@@ -145,11 +147,12 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
-                        "rule-20b",
-                        "rule-20b"
+                        "20b",
+                        "20b"
                     ],
                     "file": "test/nist/FM909.FOR",
                     "line": "37",

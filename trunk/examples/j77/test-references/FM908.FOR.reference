@@ -79,7 +79,7 @@
     },
     "program_units": [
         {
-            "tag": "main3",
+            "tag": "main",
             "name": "FM908",
             "statement_list": [
                 {
@@ -117,7 +117,8 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
                         "A43VK",
@@ -155,7 +156,7 @@
                     },
                     "declarators": [
                         "J97VK",
-                        "rule-20b",
+                        "20b",
                         "CVCORR"
                     ],
                     "file": "test/nist/FM908.FOR",
@@ -166,12 +167,13 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
-                        "rule-20b",
-                        "rule-20b",
-                        "rule-20b"
+                        "20b",
+                        "20b",
+                        "20b"
                     ],
                     "file": "test/nist/FM908.FOR",
                     "line": "35",
@@ -201,7 +203,7 @@
                         "name": "REAL"
                     },
                     "declarators": [
-                        "rule-20b"
+                        "20b"
                     ],
                     "file": "test/nist/FM908.FOR",
                     "line": "37",

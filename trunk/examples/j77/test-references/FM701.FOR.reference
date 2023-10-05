@@ -81,7 +81,7 @@
     },
     "program_units": [
         {
-            "tag": "main3",
+            "tag": "main",
             "name": "FM701",
             "statement_list": [
                 {
@@ -127,9 +127,9 @@
                         "name": "INTEGER"
                     },
                     "declarators": [
-                        "rule-20b",
-                        "rule-20b",
-                        "rule-20b"
+                        "20b",
+                        "20b",
+                        "20b"
                     ],
                     "file": "test/nist/FM701.FOR",
                     "line": "36",
@@ -167,7 +167,8 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
                         "CVCOMP",
@@ -181,15 +182,16 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
-                        "rule-20b",
-                        "rule-20b",
-                        "rule-20b",
-                        "rule-20b",
-                        "rule-20b",
-                        "rule-20b"
+                        "20b",
+                        "20b",
+                        "20b",
+                        "20b",
+                        "20b",
+                        "20b"
                     ],
                     "file": "test/nist/FM701.FOR",
                     "line": "45",
@@ -3717,12 +3719,13 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
                         "CVD001",
-                        "rule-20b",
-                        "rule-20b"
+                        "20b",
+                        "20b"
                     ],
                     "file": "test/nist/FM701.FOR",
                     "line": "835",
@@ -3776,11 +3779,12 @@
                     "tag": "type_statement",
                     "type": {
                         "tag": "type_reference",
-                        "name": "CHARACTER"
+                        "name": "CHARACTER",
+                        "len_specification": "<103:nonzero_unsigned_int_constant>"
                     },
                     "declarators": [
                         "CVD001",
-                        "rule-20b"
+                        "20b"
                     ],
                     "file": "test/nist/FM701.FOR",
                     "line": "850",
