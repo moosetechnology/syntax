@@ -81,6 +81,21 @@ SXML_TYPE_LIST json_program_unit( SXML_TYPE_TEXT tag,
 }
 
 /* -------------------------------------------------------------------------
+ * ouputs an unknown_statement (a statement we are not yet dealing with)
+ * - rule recognizing the statement
+ * - Location of the statement
+ */
+SXML_TYPE_LIST json_unknown_statement( SXML_TYPE_TEXT rule,
+				    SXML_TYPE_LIST location) {
+
+  return JSON_MAP(
+      SXML_LLL(
+	JSON_KTV( "tag", "unknown_statement"),
+	JSON_KTV("rule", rule),
+	location ));
+}
+
+/* -------------------------------------------------------------------------
  * ouputs a type_statement (variable declaration)
  * - name of the type
  * - Location of the statement
