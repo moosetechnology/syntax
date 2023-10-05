@@ -38,7 +38,10 @@
             "statement_list": [
                 {
                     "tag": "type_statement",
-                    "type": "CHARACTER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
                     "declarators": [
                         "ZVERS",
                         "ZVERSD",
@@ -777,7 +780,10 @@
             "statement_list": [
                 {
                     "tag": "type_statement",
-                    "type": "LOGICAL",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "LOGICAL"
+                    },
                     "declarators": [
                         "AWVB"
                     ],

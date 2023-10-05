@@ -62,7 +62,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "CHARACTER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
                     "declarators": [
                         "ZVERS",
                         "ZVERSD",
@@ -81,7 +84,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "INTEGER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "INTEGER"
+                    },
                     "declarators": [
                         "rule-20b"
                     ],
@@ -91,7 +97,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "CHARACTER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
                     "declarators": [
                         "CVCOMP",
                         "CVCORR",
@@ -103,7 +112,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "CHARACTER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
                     "declarators": [
                         "rule-20b"
                     ],
@@ -2152,7 +2164,10 @@
             "statement_list": [
                 {
                     "tag": "type_statement",
-                    "type": "INTEGER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "INTEGER"
+                    },
                     "declarators": [
                         "rule-20b"
                     ],
@@ -2416,7 +2431,10 @@
             "statement_list": [
                 {
                     "tag": "type_statement",
-                    "type": "CHARACTER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
                     "declarators": [
                         "CVD001",
                         "CVD002"
@@ -2450,7 +2468,10 @@
             "statement_list": [
                 {
                     "tag": "type_statement",
-                    "type": "CHARACTER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
                     "declarators": [
                         "rule-20b",
                         "CVD001"

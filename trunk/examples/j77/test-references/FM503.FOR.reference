@@ -71,7 +71,10 @@
             "statement_list": [
                 {
                     "tag": "type_statement",
-                    "type": "DOUBLE",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "DOUBLE"
+                    },
                     "declarators": [
                         "AXVD",
                         "DVCORR"
@@ -82,7 +85,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "COMPLEX",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "COMPLEX"
+                    },
                     "declarators": [
                         "AXVC",
                         "ZVCORR"
@@ -93,7 +99,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "LOGICAL",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "LOGICAL"
+                    },
                     "declarators": [
                         "AXVB"
                     ],
@@ -103,7 +112,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "CHARACTER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
                     "declarators": [
                         "A6XVK",
                         "B6XVK",
@@ -129,7 +141,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "DOUBLE",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "DOUBLE"
+                    },
                     "declarators": [
                         "AVD"
                     ],
@@ -139,7 +154,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "COMPLEX",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "COMPLEX"
+                    },
                     "declarators": [
                         "AVC"
                     ],
@@ -149,7 +167,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "REAL",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "REAL"
+                    },
                     "declarators": [
                         "rule-20b"
                     ],
@@ -166,7 +187,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "CHARACTER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
                     "declarators": [
                         "ZVERS",
                         "ZVERSD",

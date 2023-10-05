@@ -35,7 +35,10 @@
             "statement_list": [
                 {
                     "tag": "type_statement",
-                    "type": "COMPLEX",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "COMPLEX"
+                    },
                     "declarators": [
                         "CPAVC"
                     ],
@@ -45,7 +48,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "CHARACTER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
                     "declarators": [
                         "ZVERS",
                         "ZVERSD",

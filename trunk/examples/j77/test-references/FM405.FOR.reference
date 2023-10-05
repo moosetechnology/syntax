@@ -42,7 +42,10 @@
             "statement_list": [
                 {
                     "tag": "type_statement",
-                    "type": "LOGICAL",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "LOGICAL"
+                    },
                     "declarators": [
                         "AVB",
                         "BVB",
@@ -54,7 +57,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "CHARACTER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
                     "declarators": [
                         "A1VK",
                         "A4VK",
@@ -69,7 +75,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "CHARACTER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
                     "declarators": [
                         "A5VK",
                         "A8VK",
@@ -82,7 +91,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "CHARACTER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
                     "declarators": [
                         "ZVERS",
                         "ZVERSD",

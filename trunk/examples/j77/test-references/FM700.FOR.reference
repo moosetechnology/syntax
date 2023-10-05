@@ -64,7 +64,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "CHARACTER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
                     "declarators": [
                         "ZVERS",
                         "ZVERSD",
@@ -83,7 +86,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "INTEGER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "INTEGER"
+                    },
                     "declarators": [
                         "rule-20b",
                         "rule-20b",
@@ -95,7 +101,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "INTEGER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "INTEGER"
+                    },
                     "declarators": [
                         "rule-20b",
                         "rule-20b",
@@ -107,7 +116,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "CHARACTER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
                     "declarators": [
                         "CVCOMP",
                         "CVCORR",
@@ -119,7 +131,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "CHARACTER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
                     "declarators": [
                         "CVN001",
                         "CVN002",
@@ -131,7 +146,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "CHARACTER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
                     "declarators": [
                         "rule-20b",
                         "CVN003"
@@ -142,7 +160,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "REAL",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "REAL"
+                    },
                     "declarators": [
                         "rule-20b",
                         "rule-20b"
@@ -153,7 +174,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "DOUBLE",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "DOUBLE"
+                    },
                     "declarators": [
                         "DVCOMP",
                         "DVCORR",
@@ -167,7 +191,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "COMPLEX",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "COMPLEX"
+                    },
                     "declarators": [
                         "ZVCOMP",
                         "ZVCORR",

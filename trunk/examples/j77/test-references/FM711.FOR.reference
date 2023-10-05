@@ -50,7 +50,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "CHARACTER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
                     "declarators": [
                         "ZVERS",
                         "ZVERSD",
@@ -69,7 +72,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "INTEGER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "INTEGER"
+                    },
                     "declarators": [
                         "rule-20b"
                     ],
@@ -79,7 +85,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "CHARACTER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
                     "declarators": [
                         "CVCOMP",
                         "CVCORR",
@@ -1124,7 +1133,10 @@
             "statement_list": [
                 {
                     "tag": "type_statement",
-                    "type": "INTEGER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "INTEGER"
+                    },
                     "declarators": [
                         "rule-20b"
                     ],
@@ -1164,7 +1176,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "INTEGER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "INTEGER"
+                    },
                     "declarators": [
                         "rule-20b"
                     ],
@@ -1204,7 +1219,10 @@
             "statement_list": [
                 {
                     "tag": "type_statement",
-                    "type": "INTEGER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "INTEGER"
+                    },
                     "declarators": [
                         "rule-20b"
                     ],

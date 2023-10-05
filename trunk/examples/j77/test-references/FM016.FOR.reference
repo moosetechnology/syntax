@@ -52,7 +52,10 @@
             "statement_list": [
                 {
                     "tag": "type_statement",
-                    "type": "LOGICAL",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "LOGICAL"
+                    },
                     "declarators": [
                         "LCTNT1",
                         "LCTNF1",
@@ -66,7 +69,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "LOGICAL",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "LOGICAL"
+                    },
                     "declarators": [
                         "LADN1D",
                         "LADN1B"

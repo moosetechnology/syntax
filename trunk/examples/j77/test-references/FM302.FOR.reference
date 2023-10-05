@@ -255,7 +255,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "CHARACTER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
                     "declarators": [
                         "CVTN01",
                         "CVTN02",
@@ -267,7 +270,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "INTEGER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "INTEGER"
+                    },
                     "declarators": [
                         "FF304"
                     ],
@@ -3058,7 +3064,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "CHARACTER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
                     "declarators": [
                         "CVTN01",
                         "CVTN02",
@@ -3359,7 +3368,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "INTEGER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "INTEGER"
+                    },
                     "declarators": [
                         "FF305"
                     ],

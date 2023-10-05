@@ -80,7 +80,10 @@
             "statement_list": [
                 {
                     "tag": "type_statement",
-                    "type": "INTEGER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "INTEGER"
+                    },
                     "declarators": [
                         "rule-20b"
                     ],
@@ -90,7 +93,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "LOGICAL",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "LOGICAL"
+                    },
                     "declarators": [
                         "AVB",
                         "BVB",
@@ -107,7 +113,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "CHARACTER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
                     "declarators": [
                         "A2VK",
                         "A4VK",
@@ -121,7 +130,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "CHARACTER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
                     "declarators": [
                         "A8VK",
                         "A9VK",
@@ -134,7 +146,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "CHARACTER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
                     "declarators": [
                         "CVNX06",
                         "CVNY06",
@@ -146,7 +161,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "CHARACTER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
                     "declarators": [
                         "ZVERS",
                         "ZVERSD",

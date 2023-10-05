@@ -42,7 +42,10 @@
             "statement_list": [
                 {
                     "tag": "type_statement",
-                    "type": "LOGICAL",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "LOGICAL"
+                    },
                     "declarators": [
                         "LCTNT1",
                         "LCTNT2"

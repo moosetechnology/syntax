@@ -41,7 +41,10 @@
             "statement_list": [
                 {
                     "tag": "type_statement",
-                    "type": "DOUBLE",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "DOUBLE"
+                    },
                     "declarators": [
                         "AVD",
                         "BVD",
@@ -54,7 +57,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "CHARACTER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
                     "declarators": [
                         "ZVERS",
                         "ZVERSD",

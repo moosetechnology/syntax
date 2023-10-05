@@ -33,7 +33,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "INTEGER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "INTEGER"
+                    },
                     "declarators": [
                         "RVTNI1"
                     ],
@@ -43,7 +46,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "REAL",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "REAL"
+                    },
                     "declarators": [
                         "IVTNR1"
                     ],
@@ -53,7 +59,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "LOGICAL",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "LOGICAL"
+                    },
                     "declarators": [
                         "LVTNL1",
                         "LVTNL2"

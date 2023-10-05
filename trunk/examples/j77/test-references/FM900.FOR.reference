@@ -83,7 +83,10 @@
             "statement_list": [
                 {
                     "tag": "type_statement",
-                    "type": "DOUBLE",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "DOUBLE"
+                    },
                     "declarators": [
                         "rule-20b",
                         "rule-20b",
@@ -101,7 +104,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "COMPLEX",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "COMPLEX"
+                    },
                     "declarators": [
                         "BVC",
                         "QAVC",
@@ -122,7 +128,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "CHARACTER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
                     "declarators": [
                         "ZVERS",
                         "ZVERSD",

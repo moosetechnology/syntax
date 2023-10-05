@@ -135,7 +135,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "REAL",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "REAL"
+                    },
                     "declarators": [
                         "NDON01"
                     ],
@@ -145,7 +148,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "INTEGER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "INTEGER"
+                    },
                     "declarators": [
                         "EDON01"
                     ],
@@ -155,7 +161,10 @@
                 },
                 {
                     "tag": "type_statement",
-                    "type": "INTEGER",
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "INTEGER"
+                    },
                     "declarators": [
                         "FF312",
                         "FF314"
