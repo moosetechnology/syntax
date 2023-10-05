@@ -121,10 +121,19 @@ SXML_TYPE_LIST json_type_statement( SXML_TYPE_LIST type_reference,
  * - len_specification
  */
 SXML_TYPE_LIST json_type_reference( SXML_TYPE_TEXT name,
-				    SXML_TYPE_LIST len_specification) {
+				    SXML_TYPE_TEXT len_specification) {
 
-  return JSON_MAP(
+  if (len_specification == NULL) {
+    return JSON_MAP(
       SXML_LL (
 	JSON_KTV( "tag", "type_reference"),
-	JSON_KT("name", name) ));
+	JSON_KT( "name", name) ));
+  }
+else {
+  return JSON_MAP(
+    SXML_LLL (
+      JSON_KTV( "tag", "type_reference"),
+      JSON_KTV( "name", name),
+      JSON_KT( "len_specification", len_specification) ));
+ }
 }

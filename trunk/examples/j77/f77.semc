@@ -29,7 +29,7 @@
 $LIST(<0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <2e:statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <6:other_specification_statement>, <8:program_statement>, <10:function_statement>, <10d:function_header>, <12:subroutine_statement>, <12a:subroutine_header>, <13:function_or_subroutine_entry>, <20:type_statement>, <20a:scalar_name_list>, <20c:character_name_list>, <20d:character_name>) 
 : SXML_TYPE_LIST ;
 
-$NAME(<10b:scalar_type>, <20b:scalar_name>, <99:symbolic_name>) : SXML_TYPE_TEXT; /* i.e., character string */
+$NAME(<10b:scalar_type>, <20b:scalar_name>, <22:len_specification>, <99:symbolic_name>) : SXML_TYPE_TEXT; /* i.e., character string */
 
 *------------------------------------------------------------------------------
 
@@ -232,7 +232,7 @@ $LIST(<1a:executable_program_list>)
 $LIST(<2:main_program>)
 {
   $LIST(<2:main_program>) = json_program_unit(
-    "main1",
+    "main",
     $LIST (<8:program_statement>),
     LOCATION(0),
     NULL );
@@ -247,7 +247,7 @@ $LIST(<2:main_program>)
 $LIST(<2:main_program>)
 {
   $LIST(<2:main_program>) = json_program_unit(
-    "main2",
+    "main",
     JSON_KTV ("name", "null"),
     LOCATION(0),
     NULL );
@@ -264,7 +264,7 @@ $LIST(<2:main_program>)
 $LIST(<2:main_program>)
 {
   $LIST(<2:main_program>) = json_program_unit(
-    "main3",
+    "main",
     $LIST( <8:program_statement>),
     LOCATION(0),
     $LIST(<2c:statement_list>) );
@@ -280,7 +280,7 @@ $LIST(<2:main_program>)
 $LIST(<2:main_program>)
 {
   $LIST(<2:main_program>) = json_program_unit(
-    "main4",
+    "main",
     JSON_KTV ("name", "null"),
     LOCATION(0),
     $LIST(<2c:statement_list>) );
@@ -1200,9 +1200,9 @@ $LIST(<20:type_statement>)
   $LIST(<20:type_statement>) = json_type_statement(
     json_type_reference(
       "CHARACTER",
-      NULL),
-      LOCATION(0), 
-      $LIST( <20c:character_name_list>));
+      $NAME (<22:len_specification>)),
+    LOCATION(0), 
+    $LIST( <20c:character_name_list>));
 }
 
 *------------------------------------------------------------------------------
@@ -1215,7 +1215,7 @@ $LIST(<20:type_statement>)
   $LIST(<20:type_statement>) = json_type_statement(
     json_type_reference(
       "CHARACTER",
-      NULL),
+      $NAME (<22:len_specification>)),
       LOCATION(0), 
       $LIST( <20c:character_name_list>));
 }
@@ -1250,7 +1250,7 @@ $LIST( <20a:scalar_name_list>)
 
 $NAME(<20b:scalar_name>)
 {
-  $NAME(<20b:scalar_name>) = "\"rule-20b\"";
+  $NAME(<20b:scalar_name>) = "\"20b\"";
 }
 
 *------------------------------------------------------------------------------
@@ -1351,20 +1351,40 @@ $LIST(<20d:character_name>)
 <22:len_specification>
 		= ( * ) ;
 
+$NAME( <22:len_specification>)
+{
+  $NAME( <22:len_specification>) = "*";
+}
+
 *------------------------------------------------------------------------------
 
 <22:len_specification>
 		= <103:nonzero_unsigned_int_constant> ;
+
+$NAME( <22:len_specification>)
+{
+  $NAME( <22:len_specification>) = "<103:nonzero_unsigned_int_constant>";
+}
 
 *------------------------------------------------------------------------------
 
 <22:len_specification>
 		= %int_id ;
 
+$NAME( <22:len_specification>)
+{
+  $NAME( <22:len_specification>) = "<22:len_specification>";
+}
+
 *------------------------------------------------------------------------------
 
 <22:len_specification>
 		= ( <80:int_constant_expr> ) ;
+
+$NAME( <22:len_specification>)
+{
+  $NAME( <22:len_specification>) = "<80:int_constant_expr>";
+}
 
 *******************************************************************************
 
