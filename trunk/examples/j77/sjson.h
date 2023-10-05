@@ -80,22 +80,35 @@ SXML_TYPE_LIST json_program_unit( SXML_TYPE_TEXT tag,
 	location ));
 }
 
+
 /* -------------------------------------------------------------------------
- * ouputs an unknown_statement (a statement we are not yet dealing with)
- * - rule recognizing the statement
+ * outputs a generic statement of given tag
+ * - tag: the precise kinf of statement (ex: "continue_statement")
  * - Location of the statement
  */
-SXML_TYPE_LIST json_unknown_statement( SXML_TYPE_TEXT rule,
-				    SXML_TYPE_LIST location) {
+SXML_TYPE_LIST json_abstract_statement( SXML_TYPE_TEXT tag,
+					SXML_TYPE_LIST location) {
 
-  return SXML_LLL(
-    JSON_KTV( "tag", "unknown_statement"),
-    JSON_KTV("rule", rule),
+  return SXML_LL(
+    JSON_KTV( "tag", tag),
     location );
 }
 
 /* -------------------------------------------------------------------------
- * ouputs a type_statement (variable declaration)
+ * outputs an unknown_statement (a statement we are not yet dealing with)
+ * - rule recognizing the statement
+ * - Location of the statement
+ */
+SXML_TYPE_LIST json_unknown_statement( SXML_TYPE_TEXT rule,
+				       SXML_TYPE_LIST location) {
+
+  return SXML_LL(
+    JSON_KTV("rule", rule),
+    json_abstract_statement( "unknown_statement", location) );
+}
+
+/* -------------------------------------------------------------------------
+ * outputs a type_statement (variable declaration)
  * - type_reference
  * - Location of the statement
  * - list of variables
@@ -104,13 +117,12 @@ SXML_TYPE_LIST json_type_statement( SXML_TYPE_LIST type_reference,
 				    SXML_TYPE_LIST location,
 				    SXML_TYPE_LIST variables) {
 
-  return SXML_LLTLTL(
-    JSON_KTV( "tag", "type_statement"),
+  return SXML_LTLTL(
+    json_abstract_statement ( "type_statement", location),
+    ",\n",
     JSON_KL("type", type_reference),
     ",\n",
-    JSON_KL( "declarators", JSON_ARRAY( variables) ),
-    ",\n",
-    location );
+    JSON_KL( "declarators", JSON_ARRAY( variables) ));
 }
 
 /* -------------------------------------------------------------------------
