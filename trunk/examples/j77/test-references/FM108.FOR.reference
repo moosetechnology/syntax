@@ -1,430 +1,743 @@
 {
-   "comments":
-   {
-      "3":"C     COMMENT SECTION.                                                  00010108\nC                                                                       00020108\nC     FM108                                                             00030108\nC                                                                       00040108\nC         THIS ROUTINE IS A TEST OF THE X FORMAT AND IS TAPE AND PRINTER00050108\nC     ORIENTED.  THE ROUTINE CAN NOT  BE USED FOR DISK.  BOTH THE READ  00060108\nC     AND WRITE STATEMENTS ARE TESTED.  VARIABLES IN THE INPUT AND      00070108\nC     OUTPUT LISTS ARE INTEGER OR REAL VARIABLES, INTEGER ARRAY ELEMENTS00080108\nC     OR ARRAY NAME REFERENCES.   READ AND WRITE STATEMENTS ARE DONE    00090108\nC     WITH FORMAT STATEMENTS.  THE ROUTINE HAS AN OPTIONAL SECTION OF   00100108\nC     CODE TO DUMP THE FILE AFTER IT HAS BEEN WRITTEN.  DO LOOPS AND    00110108\nC     DO-IMPLIED LISTS ARE USED IN CONJUNCTION WITH A ONE DIMENSIONAL   00120108\nC     INTEGER ARRAY FOR THE DUMP SECTION.                               00130108\nC                                                                       00140108\nC         WITH THE EXCEPTION OF THE RECORD PREAMBLES ON EACH RECORD,    00150108\nC     ALL OF THE I, F, AND A-FIELDS HAVE A MINUS SIGN IN THE LEFTMOST   00160108\nC     CHARACTER POSITION OF EACH FIELD.                                 00170108\nC                                                                       00180108\nC          THIS ROUTINE WRITES A SINGLE SEQUENTIAL FILE WHICH IS        00190108\nC     REWOUND AND READ SEQUENTIALLY FORWARD AND THEN READ SEQUENTIALLY  00200108\nC     BACKWARD BY USING THE BACKSPACE COMMAND.   THE FORWARD READ IS    00210108\nC     USED TO CHECK ALL OF THE ODD RECORDS AND THE READ REVERSE IN      00220108\nC     EFFECT CHECKS THE EVEN NUMBERED RECORDS.  THE ENDFILE COMMAND IS  00230108\nC     ALSO USED AFTER THE WRITE SECTION BUT BECAUSE THE RESULT OF       00240108\nC     ATTEMPTING TO READ OR READ BEYOND THE ENDFILE MARK IS NOT POSSIBLE00250108\nC     TO PREDICT FOR ALL MACHINES, THE ENDFILE  MARK IS NEVER ACTUALLY  00260108\nC     READ.                                                             00270108\nC                                                                       00280108\nC          THE LINE CONTINUATION IN COLUMN 6 IS USED IN  READ, WRITE,   00290108\nC     AND FORMAT STATEMENTS.  FOR BOTH SYNTAX AND SEMANTIC TESTS, ALL   00300108\nC     STATEMENTS SHOULD BE CHECKED VISUALLY FOR THE PROPER FUNCTIONING  00310108\nC     OF THE CONTINUATION LINE.                                         00320108\nC                                                                       00330108\nC                                                                       00340108\nC      REFERENCES                                                       00350108\nC        AMERICAN NATIONAL STANDARD PROGRAMMING LANGUAGE FORTRAN,       00360108\nC              X3.9-1978                                                00370108\nC                                                                       00380108\nC        SECTION 8, SPECIFICATION STATEMENTS                            00390108\nC        SECTION 9, DATA STATEMENT                                      00400108\nC        SECTION 11.10, DO STATEMENT                                    00410108\nC        SECTION 12, INPUT/OUTPUT STATEMENTS                            00420108\nC        SECTION 12.8.2, INPUT/OUTPUT LIST                              00430108\nC        SECTION 12.9.5.2, FORMATTED DATA TRANSFER                      00440108\nC        SECTION 13, FORMAT STATEMENT                                   00450108\nC        SECTION 13.2.1, EDIT DESCRIPTORS                               00460108\nC                                                                       00470108\n",
-      "58":"C                                                                       00560108\n",
-      "73":"C                                                                       00710108\nC                                                                       00720108\nC      **********************************************************       00730108\nC                                                                       00740108\nC         A COMPILER VALIDATION SYSTEM FOR THE FORTRAN LANGUAGE         00750108\nC     BASED ON SPECIFICATIONS AS DEFINED IN AMERICAN NATIONAL STANDARD  00760108\nC     PROGRAMMING LANGUAGE FORTRAN X3.9-1978, HAS BEEN DEVELOPED BY THE 00770108\nC     FEDERAL COBOL COMPILER TESTING SERVICE.  THE FORTRAN COMPILER     00780108\nC     VALIDATION SYSTEM (FCVS) CONSISTS OF AUDIT ROUTINES, THEIR RELATED00790108\nC     DATA, AND AN EXECUTIVE SYSTEM.  EACH AUDIT ROUTINE IS A FORTRAN   00800108\nC     PROGRAM, SUBPROGRAM OR FUNCTION WHICH INCLUDES TESTS OF SPECIFIC  00810108\nC     LANGUAGE ELEMENTS AND SUPPORTING PROCEDURES INDICATING THE RESULT 00820108\nC     OF EXECUTING THESE TESTS.                                         00830108\nC                                                                       00840108\nC         THIS PARTICULAR PROGRAM/SUBPROGRAM/FUNCTION CONTAINS FEATURES 00850108\nC     FOUND ONLY IN THE SUBSET AS DEFINED IN X3.9-1978.                 00860108\nC                                                                       00870108\nC         SUGGESTIONS AND COMMENTS SHOULD BE FORWARDED TO -             00880108\nC                                                                       00890108\nC              NATIONAL INSTITUTE OF STANDARDS AND TECHNOLOGY           00900108\nC                   SOFTWARE STANDARDS VALIDATION GROUP                 00910108\nC                          BUILDING 225  RM A266                        00920108\nC                         GAITHERSBURG, MD  20899                       00930108\nC      **********************************************************       00940108\nC                                                                       00950108\nC                                                                       00960108\nC                                                                       00970108\nC     INITIALIZATION SECTION                                            00980108\nC                                                                       00990108\nC     INITIALIZE CONSTANTS                                              01000108\nC      **************                                                   01010108\nC     I01 CONTAINS THE LOGICAL UNIT NUMBER FOR THE CARD READER.         01020108\n",
-      "106":"C     I02 CONTAINS THE LOGICAL UNIT NUMBER FOR THE PRINTER.             01040108\n",
-      "108":"C     SYSTEM ENVIRONMENT SECTION                                        01060108\nC                                                                       01070108\nCX010    THIS CARD IS REPLACED BY CONTENTS OF FEXEC X-010 CONTROL CARD. 01080108\nC     THE CX010 CARD IS FOR OVERRIDING THE PROGRAM DEFAULT I01 = 5      01090108\nC     (UNIT NUMBER FOR CARD READER).                                    01100108\nCX011    THIS CARD IS REPLACED BY CONTENTS OF FEXEC X-011 CONTROL CARD. 01110108\nC     THE CX011 CARD IS FOR SYSTEMS WHICH REQUIRE ADDITIONAL            01120108\nC     FORTRAN STATEMENTS FOR FILES ASSOCIATED WITH CX010 ABOVE.         01130108\nC                                                                       01140108\nCX020    THIS CARD IS REPLACED BY CONTENTS OF FEXEC X-020 CONTROL CARD. 01150108\nC     THE CX020 CARD IS FOR OVERRIDING THE PROGRAM DEFAULT I02 = 6      01160108\nC     (UNIT NUMBER FOR PRINTER).                                        01170108\nCX021    THIS CARD IS REPLACED BY CONTENTS OF FEXEC X-021 CONTROL CARD. 01180108\nC     THE CX021 CARD IS FOR SYSTEMS WHICH REQUIRE ADDITIONAL            01190108\nC     FORTRAN STATEMENTS FOR FILES ASSOCIATED WITH CX020 ABOVE.         01200108\nC                                                                       01210108\n",
-      "128":"C                                                                       01260108\nC     WRITE PAGE HEADERS                                                01270108\n",
-      "144":"C                                                                       01420108\nC     DEFAULT ASSIGNMENT FOR FILE 09 IS I08 = 7                         01430108\n",
-      "147":"CX080 THIS CARD IS REPLACED BY THE CONTENTS OF CARD X-080               01450108\nCX081 THIS CARD IS REPLACED BY THE CONTENTS OF CARD X-081               01460108\nC                                                                       01470108\nC     WRITE SECTION....                                                 01480108\nC                                                                       01490108\nC     THIS SECTION OF CODE BUILDS A UNIT RECORD FILE ON LUN I08 THAT IS 01500108\nC     80 CHARACTERS PER RECORD, 31 RECORDS LONG, AND CONSISTS OF        01510108\nC     I, F, A, AND X FORMAT.   THIS IS THE ONLY FILE TESTED IN THE      01520108\nC     ROUTINE FM108 AND FOR PURPOSES OF IDENTIFICATION IS FILE 09.      01530108\nC     ALL ARRAY ELEMENT DATA FOR THE ALPHANUMERIC CHARACTERS IS SET BY  01540108\nC     THE DATA INITIALIZATION STATEMENT. INTEGER AND REAL VARIABLES ARE 01550108\nC     SET BY ASSIGNMENT STATEMENTS.                                     01560108\nC                                                                       01570108\n",
-      "183":"C                                                                       01810108\nC     ENDFILE SECTION ....                                              01820108\n",
-      "186":"C                                                                       01840108\nC     REWIND SECTION                                                    01850108\n",
-      "189":"C                                                                       01870108\nC                                                                       01880108\nC     READ FORWARD SECTION ....                                         01890108\nC                                                                       01900108\nC                                                                       01910108\n",
-      "195":"C                                                                       01930108\nC     ****    TEST  125  THRU  TEST  140    ****                        01940108\nC     TEST 125 THRU 140  -  THESE TESTS CHECK THE ODD NUMBERED RECORDS. 01950108\nC     THE FILE 09 IS READ SEQUENTIALLY FORWARD AND THE EVEN NUMBERED    01960108\nC     RECORDS ARE SKIPPED BY READING PAST THEM.                         01970108\nC                                                                       01980108\n",
-      "203":"C     THE INTEGER VARIABLE IS INITIALIZED TO ZERO FOR EACH TEST 125-140.02010108\n",
-      "205":"C     READ AN ODD NUMBERED RECORD....                                   02030108\n",
-      "207":"C     IRNO SHOULD BE THE RECORD NUMBER....                              02050108\n",
-      "209":"C     ICON03 SHOULD EQUAL -32766 ....                                   02070108\n",
-      "211":"C     ICON04 SHOULD EQUAL '-'  ....                                     02090108\n",
-      "213":"C     ICON05 SHOULD EQUAL -12345 ....                                   02110108\n",
-      "215":"C     RCON03 SHOULD EQUAL -.9999 ....                                   02130108\n",
-      "217":"C     ICON06 SHOULD EQUAL 'L'  ....                                     02150108\n",
-      "228":"C     THIS DOES NOT ALLOW READING THE ENDFILE MARK....                  02260108\n",
-      "230":"C     READ PAST THE EVEN NUMBERED RECORD ....                           02280108\n",
-      "232":"C     INCREMENT THE TEST NUMBER....                                     02300108\n",
-      "239":"C                                                                       02370108\nC     ****    TEST  141  THRU  TEST  155    ****                        02380108\nC     TEST 141 THRU 155  -  THESE TESTS USE THE BACKSPACE COMMAND       02390108\nC     TO READ REVERSE AND CHECK THE EVEN NUMBERED RECORDS.  AT THE      02400108\nC     BEGINNING OF THIS SERIES, THE FILE 09 SHOULD BE SETTING AT THE    02410108\nC     ENDFILE MARK PAST RECORD NUMBER 31.                               02420108\nC                                                                       02430108\n",
-      "249":"C     THE FILE SHOULD NOW BE SETTING AT RECORD NUMBER 30....            02470108\n",
-      "252":"C     THE INTEGER VARIABLE IS INITIALIZED TO ZERO FOR EACH TEST 141-155.02500108\n",
-      "254":"C     READ AN EVEN NUMBERED RECORD....                                  02520108\n",
-      "256":"C     IRNO SHOULD BE THE RECORD NUMBER....                              02540108\n",
-      "258":"C     ICON03 SHOULD EQUAL -32766 ....                                   02560108\n",
-      "260":"C     ICON04 SHOULD EQUAL '-'  ....                                     02580108\n",
-      "262":"C     ICON05 SHOULD EQUAL -12345 ....                                   02600108\n",
-      "264":"C     RCON03 SHOULD EQUAL -.9999 ....                                   02620108\n",
-      "266":"C     ICON06 SHOULD EQUAL 'LL'  ....                                    02640108\n",
-      "276":"C     THIS IS TO NOT ALLOW READING BACKWARDS PAST RECORD NUMBER 1....   02740108\n",
-      "278":"C     BACKSPACE TO THE NEXT EVEN RECORD....                             02760108\n",
-      "283":"C     INCREMENT THE TEST NUMBER....                                     02810108\n",
-      "285":"C     DECREMENT THE RECORD NUMBER POINTER BY 2 ....                     02830108\n",
-      "291":"C     THIS CODE IS OPTIONALLY COMPILED AND IS USED TO DUMP THE FILE 09  02890108\nC     TO THE LINE PRINTER.                                              02900108\nCDB**                                                                   02910108\nC     ILUN = I08                                                        02920108\nC     ITOTR = 31                                                        02930108\nC     IRLGN = 80                                                        02940108\nC7777 REWIND ILUN                                                       02950108\nC     DO 7778  IRNUM = 1, ITOTR                                         02960108\nC     READ (ILUN,77701) (IDUMP(ICHAR), ICHAR = 1, IRLGN)                02970108\nC     WRITE ( I02,77705) (IDUMP(ICHAR), ICHAR = 1, IRLGN)               02980108\nC     IF ( IDUMP(20) .EQ. NINE )  GO TO  7779                           02990108\nC7778 CONTINUE                                                          03000108\nC     GO TO 7782                                                        03010108\nC7779 IF ( IRNUM - ITOTR )   7780,  7781,  7782                         03020108\nC7780 WRITE (I02,77702) IRNUM,ILUN,ITOTR                                03030108\nC     GO TO  7784                                                       03040108\nC7781 WRITE (I02,77703) ILUN,ITOTR                                      03050108\nC     GO TO  7784                                                       03060108\nC7782 WRITE (I02,77704) ILUN, ITOTR                                     03070108\nC     DO  7783 I = 1, 5                                                 03080108\nC     READ (ILUN,77701) (IDUMP(ICHAR), ICHAR = 1, IRLGN)                03090108\nC     WRITE ( I02,77705) (IDUMP(ICHAR), ICHAR = 1, IRLGN)               03100108\nC     IF ( IDUMP(20) .EQ. NINE )  GO TO   7784                          03110108\nC7783 CONTINUE                                                          03120108\nC7784 GO TO 99999                                                       03130108\nCDE**                                                                   03140108\nC     WRITE PAGE FOOTINGS AND RUN SUMMARIES                             03150108\n",
-      "328":"C                                                                       03260108\nC                                                                       03270108\nC     TERMINATE ROUTINE EXECUTION                                       03280108\n",
-      "332":"C                                                                       03300108\nC     FORMAT STATEMENTS FOR PAGE HEADERS                                03310108\n",
-      "342":"C                                                                       03400108\nC     FORMAT STATEMENTS FOR RUN SUMMARIES                               03410108\n",
-      "347":"C                                                                       03450108\nC     FORMAT STATEMENTS FOR TEST RESULTS                                03460108\n",
-      "354":"C                                                                       03520108\n"
-   },
-   "program_units" : [
-   {
-      "main" : {
-      ,
-      "NINE",
-      "IADN11",
-      "ICON04",
-      "IDUMP",
-      "IADN12",
-      "ICON06",
-      "IADN13",
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2d":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2d":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2d":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2d":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2d":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2d":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2d":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2d":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2d":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2d":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2e":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2d":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2d":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2d":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2d":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2d":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2d":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2d":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2d":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2d":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2d":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2d":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2d":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2d":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2d":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2d":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2d":null}
-      }
-      ,
-      {
-         "stmt" : {"TODO-2d":null}
-      }
-   ]
-   ,
-   "ending-file" : "test/nist/FM108.FOR",
-   "ending-line" : "356",
-   "ending-column":"9"
-}
-}
-]
+    "comments": {
+        "3": "C     COMMENT SECTION.                                                  00010108\nC                                                                       00020108\nC     FM108                                                             00030108\nC                                                                       00040108\nC         THIS ROUTINE IS A TEST OF THE X FORMAT AND IS TAPE AND PRINTER00050108\nC     ORIENTED.  THE ROUTINE CAN NOT  BE USED FOR DISK.  BOTH THE READ  00060108\nC     AND WRITE STATEMENTS ARE TESTED.  VARIABLES IN THE INPUT AND      00070108\nC     OUTPUT LISTS ARE INTEGER OR REAL VARIABLES, INTEGER ARRAY ELEMENTS00080108\nC     OR ARRAY NAME REFERENCES.   READ AND WRITE STATEMENTS ARE DONE    00090108\nC     WITH FORMAT STATEMENTS.  THE ROUTINE HAS AN OPTIONAL SECTION OF   00100108\nC     CODE TO DUMP THE FILE AFTER IT HAS BEEN WRITTEN.  DO LOOPS AND    00110108\nC     DO-IMPLIED LISTS ARE USED IN CONJUNCTION WITH A ONE DIMENSIONAL   00120108\nC     INTEGER ARRAY FOR THE DUMP SECTION.                               00130108\nC                                                                       00140108\nC         WITH THE EXCEPTION OF THE RECORD PREAMBLES ON EACH RECORD,    00150108\nC     ALL OF THE I, F, AND A-FIELDS HAVE A MINUS SIGN IN THE LEFTMOST   00160108\nC     CHARACTER POSITION OF EACH FIELD.                                 00170108\nC                                                                       00180108\nC          THIS ROUTINE WRITES A SINGLE SEQUENTIAL FILE WHICH IS        00190108\nC     REWOUND AND READ SEQUENTIALLY FORWARD AND THEN READ SEQUENTIALLY  00200108\nC     BACKWARD BY USING THE BACKSPACE COMMAND.   THE FORWARD READ IS    00210108\nC     USED TO CHECK ALL OF THE ODD RECORDS AND THE READ REVERSE IN      00220108\nC     EFFECT CHECKS THE EVEN NUMBERED RECORDS.  THE ENDFILE COMMAND IS  00230108\nC     ALSO USED AFTER THE WRITE SECTION BUT BECAUSE THE RESULT OF       00240108\nC     ATTEMPTING TO READ OR READ BEYOND THE ENDFILE MARK IS NOT POSSIBLE00250108\nC     TO PREDICT FOR ALL MACHINES, THE ENDFILE  MARK IS NEVER ACTUALLY  00260108\nC     READ.                                                             00270108\nC                                                                       00280108\nC          THE LINE CONTINUATION IN COLUMN 6 IS USED IN  READ, WRITE,   00290108\nC     AND FORMAT STATEMENTS.  FOR BOTH SYNTAX AND SEMANTIC TESTS, ALL   00300108\nC     STATEMENTS SHOULD BE CHECKED VISUALLY FOR THE PROPER FUNCTIONING  00310108\nC     OF THE CONTINUATION LINE.                                         00320108\nC                                                                       00330108\nC                                                                       00340108\nC      REFERENCES                                                       00350108\nC        AMERICAN NATIONAL STANDARD PROGRAMMING LANGUAGE FORTRAN,       00360108\nC              X3.9-1978                                                00370108\nC                                                                       00380108\nC        SECTION 8, SPECIFICATION STATEMENTS                            00390108\nC        SECTION 9, DATA STATEMENT                                      00400108\nC        SECTION 11.10, DO STATEMENT                                    00410108\nC        SECTION 12, INPUT/OUTPUT STATEMENTS                            00420108\nC        SECTION 12.8.2, INPUT/OUTPUT LIST                              00430108\nC        SECTION 12.9.5.2, FORMATTED DATA TRANSFER                      00440108\nC        SECTION 13, FORMAT STATEMENT                                   00450108\nC        SECTION 13.2.1, EDIT DESCRIPTORS                               00460108\nC                                                                       00470108\n",
+        "58": "C                                                                       00560108\n",
+        "73": "C                                                                       00710108\nC                                                                       00720108\nC      **********************************************************       00730108\nC                                                                       00740108\nC         A COMPILER VALIDATION SYSTEM FOR THE FORTRAN LANGUAGE         00750108\nC     BASED ON SPECIFICATIONS AS DEFINED IN AMERICAN NATIONAL STANDARD  00760108\nC     PROGRAMMING LANGUAGE FORTRAN X3.9-1978, HAS BEEN DEVELOPED BY THE 00770108\nC     FEDERAL COBOL COMPILER TESTING SERVICE.  THE FORTRAN COMPILER     00780108\nC     VALIDATION SYSTEM (FCVS) CONSISTS OF AUDIT ROUTINES, THEIR RELATED00790108\nC     DATA, AND AN EXECUTIVE SYSTEM.  EACH AUDIT ROUTINE IS A FORTRAN   00800108\nC     PROGRAM, SUBPROGRAM OR FUNCTION WHICH INCLUDES TESTS OF SPECIFIC  00810108\nC     LANGUAGE ELEMENTS AND SUPPORTING PROCEDURES INDICATING THE RESULT 00820108\nC     OF EXECUTING THESE TESTS.                                         00830108\nC                                                                       00840108\nC         THIS PARTICULAR PROGRAM/SUBPROGRAM/FUNCTION CONTAINS FEATURES 00850108\nC     FOUND ONLY IN THE SUBSET AS DEFINED IN X3.9-1978.                 00860108\nC                                                                       00870108\nC         SUGGESTIONS AND COMMENTS SHOULD BE FORWARDED TO -             00880108\nC                                                                       00890108\nC              NATIONAL INSTITUTE OF STANDARDS AND TECHNOLOGY           00900108\nC                   SOFTWARE STANDARDS VALIDATION GROUP                 00910108\nC                          BUILDING 225  RM A266                        00920108\nC                         GAITHERSBURG, MD  20899                       00930108\nC      **********************************************************       00940108\nC                                                                       00950108\nC                                                                       00960108\nC                                                                       00970108\nC     INITIALIZATION SECTION                                            00980108\nC                                                                       00990108\nC     INITIALIZE CONSTANTS                                              01000108\nC      **************                                                   01010108\nC     I01 CONTAINS THE LOGICAL UNIT NUMBER FOR THE CARD READER.         01020108\n",
+        "106": "C     I02 CONTAINS THE LOGICAL UNIT NUMBER FOR THE PRINTER.             01040108\n",
+        "108": "C     SYSTEM ENVIRONMENT SECTION                                        01060108\nC                                                                       01070108\nCX010    THIS CARD IS REPLACED BY CONTENTS OF FEXEC X-010 CONTROL CARD. 01080108\nC     THE CX010 CARD IS FOR OVERRIDING THE PROGRAM DEFAULT I01 = 5      01090108\nC     (UNIT NUMBER FOR CARD READER).                                    01100108\nCX011    THIS CARD IS REPLACED BY CONTENTS OF FEXEC X-011 CONTROL CARD. 01110108\nC     THE CX011 CARD IS FOR SYSTEMS WHICH REQUIRE ADDITIONAL            01120108\nC     FORTRAN STATEMENTS FOR FILES ASSOCIATED WITH CX010 ABOVE.         01130108\nC                                                                       01140108\nCX020    THIS CARD IS REPLACED BY CONTENTS OF FEXEC X-020 CONTROL CARD. 01150108\nC     THE CX020 CARD IS FOR OVERRIDING THE PROGRAM DEFAULT I02 = 6      01160108\nC     (UNIT NUMBER FOR PRINTER).                                        01170108\nCX021    THIS CARD IS REPLACED BY CONTENTS OF FEXEC X-021 CONTROL CARD. 01180108\nC     THE CX021 CARD IS FOR SYSTEMS WHICH REQUIRE ADDITIONAL            01190108\nC     FORTRAN STATEMENTS FOR FILES ASSOCIATED WITH CX020 ABOVE.         01200108\nC                                                                       01210108\n",
+        "128": "C                                                                       01260108\nC     WRITE PAGE HEADERS                                                01270108\n",
+        "144": "C                                                                       01420108\nC     DEFAULT ASSIGNMENT FOR FILE 09 IS I08 = 7                         01430108\n",
+        "147": "CX080 THIS CARD IS REPLACED BY THE CONTENTS OF CARD X-080               01450108\nCX081 THIS CARD IS REPLACED BY THE CONTENTS OF CARD X-081               01460108\nC                                                                       01470108\nC     WRITE SECTION....                                                 01480108\nC                                                                       01490108\nC     THIS SECTION OF CODE BUILDS A UNIT RECORD FILE ON LUN I08 THAT IS 01500108\nC     80 CHARACTERS PER RECORD, 31 RECORDS LONG, AND CONSISTS OF        01510108\nC     I, F, A, AND X FORMAT.   THIS IS THE ONLY FILE TESTED IN THE      01520108\nC     ROUTINE FM108 AND FOR PURPOSES OF IDENTIFICATION IS FILE 09.      01530108\nC     ALL ARRAY ELEMENT DATA FOR THE ALPHANUMERIC CHARACTERS IS SET BY  01540108\nC     THE DATA INITIALIZATION STATEMENT. INTEGER AND REAL VARIABLES ARE 01550108\nC     SET BY ASSIGNMENT STATEMENTS.                                     01560108\nC                                                                       01570108\n",
+        "183": "C                                                                       01810108\nC     ENDFILE SECTION ....                                              01820108\n",
+        "186": "C                                                                       01840108\nC     REWIND SECTION                                                    01850108\n",
+        "189": "C                                                                       01870108\nC                                                                       01880108\nC     READ FORWARD SECTION ....                                         01890108\nC                                                                       01900108\nC                                                                       01910108\n",
+        "195": "C                                                                       01930108\nC     ****    TEST  125  THRU  TEST  140    ****                        01940108\nC     TEST 125 THRU 140  -  THESE TESTS CHECK THE ODD NUMBERED RECORDS. 01950108\nC     THE FILE 09 IS READ SEQUENTIALLY FORWARD AND THE EVEN NUMBERED    01960108\nC     RECORDS ARE SKIPPED BY READING PAST THEM.                         01970108\nC                                                                       01980108\n",
+        "203": "C     THE INTEGER VARIABLE IS INITIALIZED TO ZERO FOR EACH TEST 125-140.02010108\n",
+        "205": "C     READ AN ODD NUMBERED RECORD....                                   02030108\n",
+        "207": "C     IRNO SHOULD BE THE RECORD NUMBER....                              02050108\n",
+        "209": "C     ICON03 SHOULD EQUAL -32766 ....                                   02070108\n",
+        "211": "C     ICON04 SHOULD EQUAL '-'  ....                                     02090108\n",
+        "213": "C     ICON05 SHOULD EQUAL -12345 ....                                   02110108\n",
+        "215": "C     RCON03 SHOULD EQUAL -.9999 ....                                   02130108\n",
+        "217": "C     ICON06 SHOULD EQUAL 'L'  ....                                     02150108\n",
+        "228": "C     THIS DOES NOT ALLOW READING THE ENDFILE MARK....                  02260108\n",
+        "230": "C     READ PAST THE EVEN NUMBERED RECORD ....                           02280108\n",
+        "232": "C     INCREMENT THE TEST NUMBER....                                     02300108\n",
+        "239": "C                                                                       02370108\nC     ****    TEST  141  THRU  TEST  155    ****                        02380108\nC     TEST 141 THRU 155  -  THESE TESTS USE THE BACKSPACE COMMAND       02390108\nC     TO READ REVERSE AND CHECK THE EVEN NUMBERED RECORDS.  AT THE      02400108\nC     BEGINNING OF THIS SERIES, THE FILE 09 SHOULD BE SETTING AT THE    02410108\nC     ENDFILE MARK PAST RECORD NUMBER 31.                               02420108\nC                                                                       02430108\n",
+        "249": "C     THE FILE SHOULD NOW BE SETTING AT RECORD NUMBER 30....            02470108\n",
+        "252": "C     THE INTEGER VARIABLE IS INITIALIZED TO ZERO FOR EACH TEST 141-155.02500108\n",
+        "254": "C     READ AN EVEN NUMBERED RECORD....                                  02520108\n",
+        "256": "C     IRNO SHOULD BE THE RECORD NUMBER....                              02540108\n",
+        "258": "C     ICON03 SHOULD EQUAL -32766 ....                                   02560108\n",
+        "260": "C     ICON04 SHOULD EQUAL '-'  ....                                     02580108\n",
+        "262": "C     ICON05 SHOULD EQUAL -12345 ....                                   02600108\n",
+        "264": "C     RCON03 SHOULD EQUAL -.9999 ....                                   02620108\n",
+        "266": "C     ICON06 SHOULD EQUAL 'LL'  ....                                    02640108\n",
+        "276": "C     THIS IS TO NOT ALLOW READING BACKWARDS PAST RECORD NUMBER 1....   02740108\n",
+        "278": "C     BACKSPACE TO THE NEXT EVEN RECORD....                             02760108\n",
+        "283": "C     INCREMENT THE TEST NUMBER....                                     02810108\n",
+        "285": "C     DECREMENT THE RECORD NUMBER POINTER BY 2 ....                     02830108\n",
+        "291": "C     THIS CODE IS OPTIONALLY COMPILED AND IS USED TO DUMP THE FILE 09  02890108\nC     TO THE LINE PRINTER.                                              02900108\nCDB**                                                                   02910108\nC     ILUN = I08                                                        02920108\nC     ITOTR = 31                                                        02930108\nC     IRLGN = 80                                                        02940108\nC7777 REWIND ILUN                                                       02950108\nC     DO 7778  IRNUM = 1, ITOTR                                         02960108\nC     READ (ILUN,77701) (IDUMP(ICHAR), ICHAR = 1, IRLGN)                02970108\nC     WRITE ( I02,77705) (IDUMP(ICHAR), ICHAR = 1, IRLGN)               02980108\nC     IF ( IDUMP(20) .EQ. NINE )  GO TO  7779                           02990108\nC7778 CONTINUE                                                          03000108\nC     GO TO 7782                                                        03010108\nC7779 IF ( IRNUM - ITOTR )   7780,  7781,  7782                         03020108\nC7780 WRITE (I02,77702) IRNUM,ILUN,ITOTR                                03030108\nC     GO TO  7784                                                       03040108\nC7781 WRITE (I02,77703) ILUN,ITOTR                                      03050108\nC     GO TO  7784                                                       03060108\nC7782 WRITE (I02,77704) ILUN, ITOTR                                     03070108\nC     DO  7783 I = 1, 5                                                 03080108\nC     READ (ILUN,77701) (IDUMP(ICHAR), ICHAR = 1, IRLGN)                03090108\nC     WRITE ( I02,77705) (IDUMP(ICHAR), ICHAR = 1, IRLGN)               03100108\nC     IF ( IDUMP(20) .EQ. NINE )  GO TO   7784                          03110108\nC7783 CONTINUE                                                          03120108\nC7784 GO TO 99999                                                       03130108\nCDE**                                                                   03140108\nC     WRITE PAGE FOOTINGS AND RUN SUMMARIES                             03150108\n",
+        "328": "C                                                                       03260108\nC                                                                       03270108\nC     TERMINATE ROUTINE EXECUTION                                       03280108\n",
+        "332": "C                                                                       03300108\nC     FORMAT STATEMENTS FOR PAGE HEADERS                                03310108\n",
+        "342": "C                                                                       03400108\nC     FORMAT STATEMENTS FOR RUN SUMMARIES                               03410108\n",
+        "347": "C                                                                       03450108\nC     FORMAT STATEMENTS FOR TEST RESULTS                                03460108\n",
+        "354": "C                                                                       03520108\n"
+    },
+    "program_units": [
+        {
+            "tag": "main3",
+            "name": "FM108",
+            "statement_list": [
+                {
+                    "tag": "unknown_statement",
+                    "rule": "6",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "50",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "6",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "51",
+                    "column": "7"
+                },
+                {
+                    "tag": "type_statement",
+                    "type": "CHARACTER",
+                    "declarators": [
+                        "NINE",
+                        "IADN11",
+                        "ICON04",
+                        "IDUMP"
+                    ],
+                    "file": "test/nist/FM108.FOR",
+                    "line": "52",
+                    "column": "7"
+                },
+                {
+                    "tag": "type_statement",
+                    "type": "CHARACTER",
+                    "declarators": [
+                        "IADN12",
+                        "ICON06"
+                    ],
+                    "file": "test/nist/FM108.FOR",
+                    "line": "53",
+                    "column": "7"
+                },
+                {
+                    "tag": "type_statement",
+                    "type": "CHARACTER",
+                    "declarators": [
+                        "IADN13"
+                    ],
+                    "file": "test/nist/FM108.FOR",
+                    "line": "54",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "55",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "56",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2d",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "59",
+                    "column": "1"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2d",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "60",
+                    "column": "1"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2d",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "62",
+                    "column": "1"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2d",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "63",
+                    "column": "1"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2d",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "65",
+                    "column": "1"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2d",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "66",
+                    "column": "1"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2d",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "67",
+                    "column": "1"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2d",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "69",
+                    "column": "1"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2d",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "71",
+                    "column": "1"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2d",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "72",
+                    "column": "1"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "105",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "107",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "124",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "125",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "126",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "127",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "130",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "131",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "132",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "133",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "134",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "135",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "136",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "137",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "138",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "139",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "140",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "141",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "142",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "143",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "146",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "160",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "161",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "162",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "163",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "164",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "165",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "166",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "167",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "168",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "169",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "170",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "171",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "182",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "185",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "188",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "194",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "201",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "234",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "235",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "236",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "237",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "238",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "246",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "247",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "248",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "250",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "287",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "288",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "289",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "290",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "318",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "319",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "320",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "321",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "322",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "323",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "324",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "325",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "326",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "327",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2e",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "331",
+                    "column": "7"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2d",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "334",
+                    "column": "1"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2d",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "335",
+                    "column": "1"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2d",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "336",
+                    "column": "1"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2d",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "337",
+                    "column": "1"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2d",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "338",
+                    "column": "1"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2d",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "339",
+                    "column": "1"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2d",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "340",
+                    "column": "1"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2d",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "341",
+                    "column": "1"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2d",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "344",
+                    "column": "1"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2d",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "345",
+                    "column": "1"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2d",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "346",
+                    "column": "1"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2d",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "349",
+                    "column": "1"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2d",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "350",
+                    "column": "1"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2d",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "351",
+                    "column": "1"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2d",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "352",
+                    "column": "1"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2d",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "353",
+                    "column": "1"
+                },
+                {
+                    "tag": "unknown_statement",
+                    "rule": "2d",
+                    "file": "test/nist/FM108.FOR",
+                    "line": "355",
+                    "column": "1"
+                }
+            ],
+            "file": "test/nist/FM108.FOR",
+            "line": "1",
+            "column": "7"
+        }
+    ]
 }
