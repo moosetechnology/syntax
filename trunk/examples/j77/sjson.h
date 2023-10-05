@@ -88,11 +88,10 @@ SXML_TYPE_LIST json_program_unit( SXML_TYPE_TEXT tag,
 SXML_TYPE_LIST json_unknown_statement( SXML_TYPE_TEXT rule,
 				    SXML_TYPE_LIST location) {
 
-  return JSON_MAP(
-      SXML_LLL(
-	JSON_KTV( "tag", "unknown_statement"),
-	JSON_KTV("rule", rule),
-	location ));
+  return SXML_LLL(
+    JSON_KTV( "tag", "unknown_statement"),
+    JSON_KTV("rule", rule),
+    location );
 }
 
 /* -------------------------------------------------------------------------
@@ -105,14 +104,13 @@ SXML_TYPE_LIST json_type_statement( SXML_TYPE_LIST type_reference,
 				    SXML_TYPE_LIST location,
 				    SXML_TYPE_LIST variables) {
 
-  return JSON_MAP(
-      SXML_LLTLTL(
-	JSON_KTV( "tag", "type_statement"),
-	JSON_KL("type", type_reference),
-        ",\n",
-	JSON_KL( "declarators", JSON_ARRAY( variables) ),
-        ",\n",
-	location ));
+  return SXML_LLTLTL(
+    JSON_KTV( "tag", "type_statement"),
+    JSON_KL("type", type_reference),
+    ",\n",
+    JSON_KL( "declarators", JSON_ARRAY( variables) ),
+    ",\n",
+    location );
 }
 
 /* -------------------------------------------------------------------------

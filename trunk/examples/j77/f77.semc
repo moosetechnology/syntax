@@ -29,7 +29,7 @@
 $LIST(<0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <2e:statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <6:other_specification_statement>, <8:program_statement>, <10:function_statement>, <10d:function_header>, <12:subroutine_statement>, <12a:subroutine_header>, <13:function_or_subroutine_entry>, <20:type_statement>, <20a:scalar_name_list>, <20c:character_name_list>, <20d:character_name>) 
 : SXML_TYPE_LIST ;
 
-$NAME(<10b:scalar_type>, <20b:scalar_name>, <22:len_specification>, <99:symbolic_name>) : SXML_TYPE_TEXT; /* i.e., character string */
+$NAME(<10b:scalar_type>, <20b:scalar_name>, <22:len_specification>, <99:symbolic_name>, <103:nonzero_unsigned_int_constant>, <110:label>) : SXML_TYPE_TEXT; /* i.e., character string */
 
 *------------------------------------------------------------------------------
 
@@ -346,7 +346,10 @@ $LIST(<2c:statement_list>)
 
 $LIST(<2d:labeled_statement>)
 {
-  $LIST(<2d:labeled_statement>) = $LIST( <2e:statement>);
+  $LIST(<2d:labeled_statement>) = JSON_MAP( 
+    SXML_LL(
+      JSON_KTV("label", $NAME(<110:label>)), 
+      $LIST( <2e:statement>) ));
 }
 
 *------------------------------------------------------------------------------
@@ -356,9 +359,12 @@ $LIST(<2d:labeled_statement>)
 
 $LIST(<2d:labeled_statement>)
 {
-  $LIST(<2d:labeled_statement>) = json_unknown_statement(
-    "2d",
-    LOCATION(0) );
+  $LIST(<2d:labeled_statement>) =  JSON_MAP( 
+    SXML_LL(
+      JSON_KTV("label", $NAME(<110:label>)),
+      json_unknown_statement(
+        "2d",
+	LOCATION(0) )));
 }
 
 *------------------------------------------------------------------------------
@@ -368,7 +374,7 @@ $LIST(<2d:labeled_statement>)
 
 $LIST(<2d:labeled_statement>)
 {
-  $LIST(<2d:labeled_statement>) = $LIST(<2e:statement>);
+  $LIST(<2d:labeled_statement>) = JSON_MAP( $LIST(<2e:statement>) );
 }
 
 *******************************************************************************
@@ -1363,7 +1369,7 @@ $NAME( <22:len_specification>)
 
 $NAME( <22:len_specification>)
 {
-  $NAME( <22:len_specification>) = "<103:nonzero_unsigned_int_constant>";
+  $NAME( <22:len_specification>) = $NAME(<103:nonzero_unsigned_int_constant>) ;
 }
 
 *------------------------------------------------------------------------------
@@ -3431,6 +3437,11 @@ $NAME(<99:symbolic_name>)
 <103:nonzero_unsigned_int_constant>
 		= %unsigned_int_constant ;
 
+$NAME( <103:nonzero_unsigned_int_constant>)
+{
+  $NAME( <103:nonzero_unsigned_int_constant>) =  "%unsigned_int_constant";
+}
+
 *******************************************************************************
 
 *<104:integer_constant>
@@ -3497,6 +3508,11 @@ $NAME(<99:symbolic_name>)
 
 * At most 5 digits are allowed in a label or in a label_ref
 <110:label>	= %label ;
+
+$NAME( <110:label>)
+{
+  $NAME( <110:label>) =  "%label";
+}
 
 *******************************************************************************
 
