@@ -26,7 +26,7 @@
 
 * The following declarations define the synthesized attributes
 
-$LIST(<0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <2e:statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <6:other_specification_statement>, <8:program_statement>, <10:function_statement>, <10d:function_header>, <12:subroutine_statement>, <12a:subroutine_header>, <13:function_or_subroutine_entry>, <20:type_statement>, <20a:scalar_name_list>, <20c:character_name_list>, <20d:character_name>) 
+$LIST(<0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <2e:statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <6:other_specification_statement>, <7:executable_statement>, <8:program_statement>, <10:function_statement>, <10d:function_header>, <12:subroutine_statement>, <12a:subroutine_header>, <13:function_or_subroutine_entry>, <20:type_statement>, <20a:scalar_name_list>, <20c:character_name_list>, <20d:character_name>) 
 : SXML_TYPE_LIST ;
 
 $NAME(<10b:scalar_type>, <20b:scalar_name>, <22:len_specification>, <99:symbolic_name>, <103:nonzero_unsigned_int_constant>, <110:label>) : SXML_TYPE_TEXT; /* i.e., character string */
@@ -392,9 +392,7 @@ $LIST(<2e:statement>)
 
 $LIST(<2e:statement>)
 {
-  $LIST(<2e:statement>) = json_unknown_statement(
-    "2e",
-    LOCATION(0) );
+  $LIST(<2e:statement>) = $LIST( <7:executable_statement>);
 }
 
 *------------------------------------------------------------------------------
@@ -633,85 +631,204 @@ $LIST(<6:other_specification_statement>)
 <7:executable_statement>
 		= <29:assignment_statement> ;
 
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = json_unknown_statement(
+    "7",
+    LOCATION(0) );
+}
+
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <30:goto_statement> ;
+
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = json_unknown_statement(
+    "7",
+    LOCATION(0) );
+}
 
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <34:arithmetic_if_statement> ;
 
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = json_unknown_statement(
+    "7",
+    LOCATION(0) );
+}
+
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <41:continue_statement> ;
+
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = json_unknown_statement(
+    "7",
+    LOCATION(0) );
+}
 
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <42:stop_statement> ;
 
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = json_unknown_statement(
+    "7",
+    LOCATION(0) );
+}
+
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <43:pause_statement> ;
+
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = json_unknown_statement(
+    "7",
+    LOCATION(0) );
+}
 
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <44:write_statement> ;
 
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = json_unknown_statement(
+    "7",
+    LOCATION(0) );
+}
+
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <45:read_statement> ;
+
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = json_unknown_statement(
+    "7",
+    LOCATION(0) );
+}
 
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <46:print_statement> ;
 
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = json_unknown_statement(
+    "7",
+    LOCATION(0) );
+}
+
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <55:rewind_statement> ;
+
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = json_unknown_statement(
+    "7",
+    LOCATION(0) );
+}
 
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <53:backspace_statement> ;
 
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = json_unknown_statement(
+    "7",
+    LOCATION(0) );
+}
+
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <54:endfile_statement> ;
+
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = json_unknown_statement(
+    "7",
+    LOCATION(0) );
+}
 
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <50:open_statement> ;
 
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = json_unknown_statement(
+    "7",
+    LOCATION(0) );
+}
+
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <51:close_statement> ;
+
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = json_unknown_statement(
+    "7",
+    LOCATION(0) );
+}
 
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <52:inquire_statement> ;
 
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = json_unknown_statement(
+    "7",
+    LOCATION(0) );
+}
+
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <71:call_statement> ;
 
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = json_unknown_statement(
+    "7",
+    LOCATION(0) );
+}
+
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <72:return_statement> ;
+
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = json_unknown_statement(
+    "7",
+    LOCATION(0) );
+}
 
 *******************************************************************************
 
