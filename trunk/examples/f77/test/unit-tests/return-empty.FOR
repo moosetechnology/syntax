@@ -1,3 +1,3 @@
-      FUNCTION FCT()
+      INTEGER FUNCTION FCT()
       RETURN
       END
