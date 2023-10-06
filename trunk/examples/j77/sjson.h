@@ -75,9 +75,9 @@ SXML_TYPE_LIST json_program_unit( SXML_TYPE_TEXT tag,
       SXML_LLLTL(
 	JSON_KTV( "tag", tag),
 	header,
-	JSON_KL("statement_list", JSON_ARRAY( statement_list)),
+	location,
         ",\n",
-	location ));
+	JSON_KL("statement_list", JSON_ARRAY( statement_list)) ));
 }
 
 

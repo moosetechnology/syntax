@@ -26,10 +26,10 @@
 
 * The following declarations define the synthesized attributes
 
-$LIST(<0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <2e:statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <6:other_specification_statement>, <7:executable_statement>, <8:program_statement>, <10:function_statement>, <10d:function_header>, <12:subroutine_statement>, <12a:subroutine_header>, <13:function_or_subroutine_entry>, <20:type_statement>, <20a:scalar_name_list>, <20c:character_name_list>, <20d:character_name>) 
+$LIST(<0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <2e:statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <6:other_specification_statement>, <7:executable_statement>, <8:program_statement>, <10:function_statement>, <10d:function_header>, <10a:type>, <12:subroutine_statement>, <12a:subroutine_header>, <13:function_or_subroutine_entry>, <20:type_statement>, <20a:scalar_name_list>, <20c:character_name_list>, <20d:character_name>) 
 : SXML_TYPE_LIST ;
 
-$NAME(<10b:scalar_type>, <20b:scalar_name>, <22:len_specification>, <72:return_statement>, <99:symbolic_name>, <103:nonzero_unsigned_int_constant>, <110:label>) : SXML_TYPE_TEXT; /* i.e., character string */
+$NAME( <10b:scalar_type>, <20b:scalar_name>, <22:len_specification>, <72:return_statement>, <99:symbolic_name>, <103:nonzero_unsigned_int_constant>, <110:label>) : SXML_TYPE_TEXT; /* i.e., character string */
 
 *------------------------------------------------------------------------------
 
@@ -877,7 +877,10 @@ $LIST(<8:program_statement>)
 
 $LIST(<10:function_statement>)
 {
-  $LIST(<10:function_statement>) = $LIST(<10d:function_header>);
+  $LIST(<10:function_statement>) = SXML_LLT(
+    $LIST( <10d:function_header>),
+    JSON_KL( "return_type", $LIST( <10a:type>)),
+    ",\n" );
 }
 
 *------------------------------------------------------------------------------
@@ -919,17 +922,45 @@ $LIST(<10d:function_header>)
 <10a:type>	= <10b:scalar_type> ;
 * Non standard ANSI
 
+$LIST( <10a:type>)
+{
+  $LIST( <10a:type>) = json_type_reference(
+      $NAME( <10b:scalar_type>),
+      NULL);
+}
+
 *------------------------------------------------------------------------------
 
 <10a:type>	= <10b:scalar_type> * @0 <22:len_specification> ;
+
+$LIST( <10a:type>)
+{
+  $LIST( <10a:type>) = json_type_reference(
+      $NAME( <10b:scalar_type>),
+      $NAME (<22:len_specification>));
+}
 
 *------------------------------------------------------------------------------
 
 <10a:type>	= CHARACTER ;
 
+$LIST( <10a:type>)
+{
+  $LIST( <10a:type>) = json_type_reference(
+      "CHARACTER",
+      NULL );
+}
+
 *------------------------------------------------------------------------------
 
 <10a:type>	= CHARACTER  * <22:len_specification> ;
+
+$LIST( <10a:type>)
+{
+  $LIST( <10a:type>) = json_type_reference(
+      "CHARACTER",
+      $NAME (<22:len_specification>));
+}
 
 *******************************************************************************
 
