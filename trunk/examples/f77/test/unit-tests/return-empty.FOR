@@ -1,0 +1,3 @@
+      FUNCTION FCT()
+      RETURN
+      END
