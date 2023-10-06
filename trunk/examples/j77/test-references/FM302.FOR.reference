@@ -84,6 +84,9 @@
         {
             "tag": "main",
             "name": "FM302",
+            "file": "test/nist/FM302.FOR",
+            "line": "2",
+            "column": "7",
             "statement_list": [
                 {
                     "rule": "2e",
@@ -3051,14 +3054,14 @@
                     "line": "669",
                     "column": "1"
                 }
-            ],
-            "file": "test/nist/FM302.FOR",
-            "line": "2",
-            "column": "7"
+            ]
         },
         {
             "tag": "subroutine",
             "name": "FS303",
+            "file": "test/nist/FM302.FOR",
+            "line": "672",
+            "column": "7",
             "statement_list": [
                 {
                     "rule": "2e",
@@ -3321,20 +3324,23 @@
                     "column": "12"
                 },
                 {
-                    "rule": "7",
-                    "tag": "unknown_statement",
+                    "tag": "return_statement",
                     "file": "test/nist/FM302.FOR",
                     "line": "723",
                     "column": "7"
                 }
-            ],
-            "file": "test/nist/FM302.FOR",
-            "line": "672",
-            "column": "7"
+            ]
         },
         {
             "tag": "function",
             "name": "FF304",
+            "return_type": {
+                "tag": "type_reference",
+                "name": "INTEGER"
+            },
+            "file": "test/nist/FM302.FOR",
+            "line": "726",
+            "column": "7",
             "statement_list": [
                 {
                     "rule": "2e",
@@ -3651,20 +3657,23 @@
                     "column": "7"
                 },
                 {
-                    "rule": "7",
-                    "tag": "unknown_statement",
+                    "tag": "return_statement",
                     "file": "test/nist/FM302.FOR",
                     "line": "792",
                     "column": "7"
                 }
-            ],
-            "file": "test/nist/FM302.FOR",
-            "line": "726",
-            "column": "7"
+            ]
         },
         {
             "tag": "function",
             "name": "FF305",
+            "return_type": {
+                "tag": "type_reference",
+                "name": "INTEGER"
+            },
+            "file": "test/nist/FM302.FOR",
+            "line": "795",
+            "column": "7",
             "statement_list": [
                 {
                     "rule": "6",
@@ -3716,16 +3725,12 @@
                     "column": "7"
                 },
                 {
-                    "rule": "7",
-                    "tag": "unknown_statement",
+                    "tag": "return_statement",
                     "file": "test/nist/FM302.FOR",
                     "line": "810",
                     "column": "7"
                 }
-            ],
-            "file": "test/nist/FM302.FOR",
-            "line": "795",
-            "column": "7"
+            ]
         }
     ]
 }

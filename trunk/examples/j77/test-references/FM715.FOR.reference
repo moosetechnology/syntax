@@ -60,6 +60,9 @@
         {
             "tag": "main",
             "name": "FM715",
+            "file": "test/nist/FM715.FOR",
+            "line": "2",
+            "column": "7",
             "statement_list": [
                 {
                     "rule": "2e",
@@ -3983,14 +3986,19 @@
                     "line": "840",
                     "column": "1"
                 }
-            ],
-            "file": "test/nist/FM715.FOR",
-            "line": "2",
-            "column": "7"
+            ]
         },
         {
             "tag": "function",
             "name": "CF716",
+            "return_type": {
+                "tag": "type_reference",
+                "name": "CHARACTER",
+                "len_specification": "%unsigned_int_constant"
+            },
+            "file": "test/nist/FM715.FOR",
+            "line": "849",
+            "column": "7",
             "statement_list": [
                 {
                     "rule": "7",
@@ -4008,8 +4016,7 @@
                     "column": "7"
                 },
                 {
-                    "rule": "7",
-                    "tag": "unknown_statement",
+                    "tag": "return_statement",
                     "file": "test/nist/FM715.FOR",
                     "line": "852",
                     "column": "7"
@@ -4023,8 +4030,7 @@
                     "column": "7"
                 },
                 {
-                    "rule": "7",
-                    "tag": "unknown_statement",
+                    "tag": "return_statement",
                     "file": "test/nist/FM715.FOR",
                     "line": "854",
                     "column": "7"
@@ -4038,20 +4044,24 @@
                     "column": "7"
                 },
                 {
-                    "rule": "7",
-                    "tag": "unknown_statement",
+                    "tag": "return_statement",
                     "file": "test/nist/FM715.FOR",
                     "line": "856",
                     "column": "7"
                 }
-            ],
-            "file": "test/nist/FM715.FOR",
-            "line": "849",
-            "column": "7"
+            ]
         },
         {
             "tag": "function",
             "name": "CF717",
+            "return_type": {
+                "tag": "type_reference",
+                "name": "CHARACTER",
+                "len_specification": "*"
+            },
+            "file": "test/nist/FM715.FOR",
+            "line": "864",
+            "column": "7",
             "statement_list": [
                 {
                     "tag": "type_statement",
@@ -4075,16 +4085,12 @@
                     "column": "7"
                 },
                 {
-                    "rule": "7",
-                    "tag": "unknown_statement",
+                    "tag": "return_statement",
                     "file": "test/nist/FM715.FOR",
                     "line": "867",
                     "column": "7"
                 }
-            ],
-            "file": "test/nist/FM715.FOR",
-            "line": "864",
-            "column": "7"
+            ]
         }
     ]
 }

@@ -32,6 +32,9 @@
         {
             "tag": "main",
             "name": "FM056",
+            "file": "test/nist/FM056.FOR",
+            "line": "1",
+            "column": "7",
             "statement_list": [
                 {
                     "rule": "6",
@@ -1806,14 +1809,14 @@
                     "line": "419",
                     "column": "1"
                 }
-            ],
-            "file": "test/nist/FM056.FOR",
-            "line": "1",
-            "column": "7"
+            ]
         },
         {
             "tag": "subroutine",
             "name": "FS057",
+            "file": "test/nist/FM056.FOR",
+            "line": "450",
+            "column": "7",
             "statement_list": [
                 {
                     "rule": "6",
@@ -1858,20 +1861,19 @@
                     "column": "7"
                 },
                 {
-                    "rule": "7",
-                    "tag": "unknown_statement",
+                    "tag": "return_statement",
                     "file": "test/nist/FM056.FOR",
                     "line": "457",
                     "column": "7"
                 }
-            ],
-            "file": "test/nist/FM056.FOR",
-            "line": "450",
-            "column": "7"
+            ]
         },
         {
             "tag": "subroutine",
             "name": "FS058",
+            "file": "test/nist/FM056.FOR",
+            "line": "488",
+            "column": "7",
             "statement_list": [
                 {
                     "rule": "6",
@@ -1936,20 +1938,23 @@
                     "column": "7"
                 },
                 {
-                    "rule": "7",
-                    "tag": "unknown_statement",
+                    "tag": "return_statement",
                     "file": "test/nist/FM056.FOR",
                     "line": "497",
                     "column": "7"
                 }
-            ],
-            "file": "test/nist/FM056.FOR",
-            "line": "488",
-            "column": "7"
+            ]
         },
         {
             "tag": "function",
             "name": "FF059",
+            "return_type": {
+                "tag": "type_reference",
+                "name": "INTEGER"
+            },
+            "file": "test/nist/FM056.FOR",
+            "line": "524",
+            "column": "7",
             "statement_list": [
                 {
                     "rule": "6",
@@ -1994,16 +1999,12 @@
                     "column": "7"
                 },
                 {
-                    "rule": "7",
-                    "tag": "unknown_statement",
+                    "tag": "return_statement",
                     "file": "test/nist/FM056.FOR",
                     "line": "531",
                     "column": "7"
                 }
-            ],
-            "file": "test/nist/FM056.FOR",
-            "line": "524",
-            "column": "7"
+            ]
         }
     ]
 }

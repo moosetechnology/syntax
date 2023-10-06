@@ -50,6 +50,9 @@
         {
             "tag": "main",
             "name": "FM910",
+            "file": "test/nist/FM910.FOR",
+            "line": "1",
+            "column": "7",
             "statement_list": [
                 {
                     "rule": "6",
@@ -1346,14 +1349,14 @@
                     "line": "445",
                     "column": "7"
                 }
-            ],
-            "file": "test/nist/FM910.FOR",
-            "line": "1",
-            "column": "7"
+            ]
         },
         {
             "tag": "subroutine",
             "name": "SN911",
+            "file": "test/nist/FM910.FOR",
+            "line": "454",
+            "column": "9",
             "statement_list": [
                 {
                     "rule": "6",
@@ -1542,16 +1545,12 @@
                     "column": "9"
                 },
                 {
-                    "rule": "7",
-                    "tag": "unknown_statement",
+                    "tag": "return_statement",
                     "file": "test/nist/FM910.FOR",
                     "line": "514",
                     "column": "9"
                 }
-            ],
-            "file": "test/nist/FM910.FOR",
-            "line": "454",
-            "column": "9"
+            ]
         }
     ]
 }

@@ -38,6 +38,9 @@
         {
             "tag": "main",
             "name": "FM407",
+            "file": "test/nist/FM407.FOR",
+            "line": "1",
+            "column": "7",
             "statement_list": [
                 {
                     "rule": "6",
@@ -910,14 +913,14 @@
                     "line": "320",
                     "column": "7"
                 }
-            ],
-            "file": "test/nist/FM407.FOR",
-            "line": "1",
-            "column": "7"
+            ]
         },
         {
             "tag": "subroutine",
             "name": "SN408",
+            "file": "test/nist/FM407.FOR",
+            "line": "329",
+            "column": "9",
             "statement_list": [
                 {
                     "rule": "6",
@@ -1046,16 +1049,12 @@
                     "column": "9"
                 },
                 {
-                    "rule": "7",
-                    "tag": "unknown_statement",
+                    "tag": "return_statement",
                     "file": "test/nist/FM407.FOR",
                     "line": "366",
                     "column": "9"
                 }
-            ],
-            "file": "test/nist/FM407.FOR",
-            "line": "329",
-            "column": "9"
+            ]
         }
     ]
 }

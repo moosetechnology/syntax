@@ -22,6 +22,9 @@
         {
             "tag": "main",
             "name": "FM028",
+            "file": "test/nist/FM028.FOR",
+            "line": "1",
+            "column": "7",
             "statement_list": [
                 {
                     "tag": "type_statement",
@@ -909,14 +912,18 @@
                     "line": "236",
                     "column": "1"
                 }
-            ],
-            "file": "test/nist/FM028.FOR",
-            "line": "1",
-            "column": "7"
+            ]
         },
         {
             "tag": "function",
             "name": "FF029",
+            "return_type": {
+                "tag": "type_reference",
+                "name": "INTEGER"
+            },
+            "file": "test/nist/FM028.FOR",
+            "line": "239",
+            "column": "7",
             "statement_list": [
                 {
                     "rule": "7",
@@ -940,16 +947,12 @@
                     "column": "7"
                 },
                 {
-                    "rule": "7",
-                    "tag": "unknown_statement",
+                    "tag": "return_statement",
                     "file": "test/nist/FM028.FOR",
                     "line": "265",
                     "column": "7"
                 }
-            ],
-            "file": "test/nist/FM028.FOR",
-            "line": "239",
-            "column": "7"
+            ]
         }
     ]
 }

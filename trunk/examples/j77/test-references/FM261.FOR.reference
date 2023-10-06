@@ -35,6 +35,9 @@
         {
             "tag": "main",
             "name": "FM261",
+            "file": "test/nist/FM261.FOR",
+            "line": "1",
+            "column": "7",
             "statement_list": [
                 {
                     "tag": "type_statement",
@@ -758,14 +761,14 @@
                     "line": "217",
                     "column": "7"
                 }
-            ],
-            "file": "test/nist/FM261.FOR",
-            "line": "1",
-            "column": "7"
+            ]
         },
         {
             "tag": "subroutine",
             "name": "SN262",
+            "file": "test/nist/FM261.FOR",
+            "line": "227",
+            "column": "9",
             "statement_list": [
                 {
                     "rule": "7",
@@ -775,20 +778,19 @@
                     "column": "9"
                 },
                 {
-                    "rule": "7",
-                    "tag": "unknown_statement",
+                    "tag": "return_statement",
                     "file": "test/nist/FM261.FOR",
                     "line": "231",
                     "column": "9"
                 }
-            ],
-            "file": "test/nist/FM261.FOR",
-            "line": "227",
-            "column": "9"
+            ]
         },
         {
             "tag": "subroutine",
             "name": "SN263",
+            "file": "test/nist/FM261.FOR",
+            "line": "241",
+            "column": "9",
             "statement_list": [
                 {
                     "rule": "7",
@@ -798,20 +800,23 @@
                     "column": "9"
                 },
                 {
-                    "rule": "7",
-                    "tag": "unknown_statement",
+                    "tag": "return_statement",
                     "file": "test/nist/FM261.FOR",
                     "line": "245",
                     "column": "9"
                 }
-            ],
-            "file": "test/nist/FM261.FOR",
-            "line": "241",
-            "column": "9"
+            ]
         },
         {
             "tag": "function",
             "name": "IF264",
+            "return_type": {
+                "tag": "type_reference",
+                "name": "INTEGER"
+            },
+            "file": "test/nist/FM261.FOR",
+            "line": "255",
+            "column": "9",
             "statement_list": [
                 {
                     "tag": "type_statement",
@@ -834,16 +839,12 @@
                     "column": "9"
                 },
                 {
-                    "rule": "7",
-                    "tag": "unknown_statement",
+                    "tag": "return_statement",
                     "file": "test/nist/FM261.FOR",
                     "line": "265",
                     "column": "9"
                 }
-            ],
-            "file": "test/nist/FM261.FOR",
-            "line": "255",
-            "column": "9"
+            ]
         }
     ]
 }

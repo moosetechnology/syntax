@@ -39,6 +39,9 @@
         {
             "tag": "main",
             "name": "FM722",
+            "file": "test/nist/FM722.FOR",
+            "line": "2",
+            "column": "7",
             "statement_list": [
                 {
                     "rule": "2e",
@@ -2056,14 +2059,18 @@
                     "line": "477",
                     "column": "1"
                 }
-            ],
-            "file": "test/nist/FM722.FOR",
-            "line": "2",
-            "column": "7"
+            ]
         },
         {
             "tag": "function",
             "name": "DF723",
+            "return_type": {
+                "tag": "type_reference",
+                "name": "DOUBLE"
+            },
+            "file": "test/nist/FM722.FOR",
+            "line": "481",
+            "column": "7",
             "statement_list": [
                 {
                     "rule": "2e",
@@ -2080,20 +2087,23 @@
                     "column": "9"
                 },
                 {
-                    "rule": "7",
-                    "tag": "unknown_statement",
+                    "tag": "return_statement",
                     "file": "test/nist/FM722.FOR",
                     "line": "486",
                     "column": "9"
                 }
-            ],
-            "file": "test/nist/FM722.FOR",
-            "line": "481",
-            "column": "7"
+            ]
         },
         {
             "tag": "function",
             "name": "ZF724",
+            "return_type": {
+                "tag": "type_reference",
+                "name": "COMPLEX"
+            },
+            "file": "test/nist/FM722.FOR",
+            "line": "489",
+            "column": "7",
             "statement_list": [
                 {
                     "rule": "2e",
@@ -2110,20 +2120,19 @@
                     "column": "9"
                 },
                 {
-                    "rule": "7",
-                    "tag": "unknown_statement",
+                    "tag": "return_statement",
                     "file": "test/nist/FM722.FOR",
                     "line": "494",
                     "column": "9"
                 }
-            ],
-            "file": "test/nist/FM722.FOR",
-            "line": "489",
-            "column": "7"
+            ]
         },
         {
             "tag": "subroutine",
             "name": "SN725",
+            "file": "test/nist/FM722.FOR",
+            "line": "497",
+            "column": "7",
             "statement_list": [
                 {
                     "rule": "2e",
@@ -2147,16 +2156,12 @@
                     "column": "9"
                 },
                 {
-                    "rule": "7",
-                    "tag": "unknown_statement",
+                    "tag": "return_statement",
                     "file": "test/nist/FM722.FOR",
                     "line": "504",
                     "column": "9"
                 }
-            ],
-            "file": "test/nist/FM722.FOR",
-            "line": "497",
-            "column": "7"
+            ]
         }
     ]
 }
