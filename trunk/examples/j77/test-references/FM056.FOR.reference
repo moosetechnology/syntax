@@ -28,214 +28,185 @@
         "460": "C                                                                       00010058\nC     COMMENT SECTION                                                   00020058\nC                                                                       00030058\nC     FS058                                                             00040058\nC                                                                       00050058\nC          THIS SUBROUTINE IS CALLED BY SUBROUTINE FS057.  THE TWO      00060058\nC     ARGUMENTS PASSED FROM FS057 ALONG WITH A THIRD PARAMETER CREATED  00070058\nC     IN FS058 ARE THEN PASSED TO FUNCTION FF059 WHERE THEY ARE USED IN 00080058\nC     AN ARITHMETIC OPERATION.  FS058 THEN SAVES THE RESULT OF THIS     00090058\nC     OPERATION IN THE FIRST ARGUMENT AND RETURNS CONTROL TO FS057      00100058\nC     WITHOUT ANY ADDITIONAL PROCESSING.                                00110058\nC                                                                       00120058\nC          THE VALUES OF THE ARGUMENTS THAT ARE PASSED FROM FS057 TO    00130058\nC     FS058 AND RETURNED ARE SAVED IN AN INTEGER ARRAY FOR LATER        00140058\nC     VERIFICATION BY THE MAIN PROGRAM.                                 00150058\nC                                                                       00160058\nC      REFERENCES                                                       00170058\nC        AMERICAN NATIONAL STANDARD PROGRAMMING LANGUAGE FORTRAN,       00180058\nC              X3.9-1978                                                00190058\nC                                                                       00200058\nC        SECTION 15.5.2, REFERENCING EXTERNAL FUNCTIONS                 00210058\nC        SECTION 15.6, SUBROUTINES                                      00220058\nC        SECTION 15.8, RETURN STATEMENT                                 00230058\nC                                                                       00240058\nC     TEST SECTION                                                      00250058\nC                                                                       00260058\nC         SUBROUTINE SUBPROGRAM                                         00270058\nC                                                                       00280058\n",
         "500": "C                                                                       00010059\nC     COMMENT SECTION                                                   00020059\nC                                                                       00030059\nC     FF059                                                             00040059\nC                                                                       00050059\nC          THIS EXTERNAL FUNCTION IS REFERENCED WITHIN SUBROUTINE FS058.00060059\nC     THE THREE ARGUMENTS THAT ARE PASSED ARE SIMPLY ADDED TOGETHER AND 00070059\nC     THE RESULT SUBSTITUTED FOR THE ORIGINAL REFERENCE.  CONTROL IS    00080059\nC     THEN RETURNED TO FS058.                                           00090059\nC                                                                       00100059\nC          THE VALUES OF THE ARGUMENTS THAT ARE PASSED FROM FS058 TO    00110059\nC     FF059 AND THE RESULT THAT IS RETURNED ARE SAVED IN AN INTEGER     00120059\nC     ARRAY FOR LATER VERIFICATION BY THE MAIN PROGRAM.                 00130059\nC                                                                       00140059\nC      REFERENCES                                                       00150059\nC        AMERICAN NATIONAL STANDARD PROGRAMMING LANGUAGE FORTRAN,       00160059\nC              X3.9-1978                                                00170059\nC                                                                       00180059\nC        SECTION 15.5.1, FUNCTION SUBPROGRAM AND FUNCTION STATEMENT     00190059\nC        SECTION 15.8, RETURN STATEMENT                                 00200059\nC     TEST SECTION                                                      00210059\nC                                                                       00220059\nC         FUNCTION SUBPROGRAM                                           00230059\nC                                                                       00240059\n"
     },
+    "file": "test/nist/FM056.FOR",
     "program_units": [
         {
             "tag": "main",
             "name": "FM056",
-            "file": "test/nist/FM056.FOR",
             "line": "1",
             "column": "7",
             "statement_list": [
                 {
                     "rule": "6",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "28",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "60",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "62",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "79",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "80",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "81",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "82",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "85",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "86",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "87",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "88",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "89",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "90",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "91",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "92",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "93",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "94",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "95",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "96",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "97",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "98",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "104",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "105",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "106",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "107",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "114",
                     "column": "7"
                 },
                 {
                     "label": "%label",
                     "tag": "continue_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "115",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "116",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "117",
                     "column": "7"
                 },
@@ -243,21 +214,18 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "118",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "119",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "120",
                     "column": "7"
                 },
@@ -265,7 +233,6 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "121",
                     "column": "7"
                 },
@@ -273,21 +240,18 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "122",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "123",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "124",
                     "column": "7"
                 },
@@ -295,63 +259,54 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "125",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "126",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "127",
                     "column": "7"
                 },
                 {
                     "label": "%label",
                     "tag": "continue_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "128",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "129",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "137",
                     "column": "7"
                 },
                 {
                     "label": "%label",
                     "tag": "continue_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "138",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "139",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "140",
                     "column": "7"
                 },
@@ -359,21 +314,18 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "141",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "142",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "143",
                     "column": "7"
                 },
@@ -381,7 +333,6 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "144",
                     "column": "7"
                 },
@@ -389,21 +340,18 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "145",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "146",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "147",
                     "column": "7"
                 },
@@ -411,63 +359,54 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "148",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "149",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "150",
                     "column": "7"
                 },
                 {
                     "label": "%label",
                     "tag": "continue_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "151",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "152",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "160",
                     "column": "7"
                 },
                 {
                     "label": "%label",
                     "tag": "continue_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "161",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "162",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "163",
                     "column": "7"
                 },
@@ -475,21 +414,18 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "164",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "165",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "166",
                     "column": "7"
                 },
@@ -497,7 +433,6 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "167",
                     "column": "7"
                 },
@@ -505,21 +440,18 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "168",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "169",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "170",
                     "column": "7"
                 },
@@ -527,63 +459,54 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "171",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "172",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "173",
                     "column": "7"
                 },
                 {
                     "label": "%label",
                     "tag": "continue_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "174",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "175",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "183",
                     "column": "7"
                 },
                 {
                     "label": "%label",
                     "tag": "continue_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "184",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "185",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "186",
                     "column": "7"
                 },
@@ -591,21 +514,18 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "187",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "188",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "189",
                     "column": "7"
                 },
@@ -613,7 +533,6 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "190",
                     "column": "7"
                 },
@@ -621,21 +540,18 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "191",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "192",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "193",
                     "column": "7"
                 },
@@ -643,63 +559,54 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "194",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "195",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "196",
                     "column": "7"
                 },
                 {
                     "label": "%label",
                     "tag": "continue_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "197",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "198",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "206",
                     "column": "7"
                 },
                 {
                     "label": "%label",
                     "tag": "continue_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "207",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "208",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "209",
                     "column": "7"
                 },
@@ -707,21 +614,18 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "210",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "211",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "212",
                     "column": "7"
                 },
@@ -729,7 +633,6 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "213",
                     "column": "7"
                 },
@@ -737,21 +640,18 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "214",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "215",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "216",
                     "column": "7"
                 },
@@ -759,63 +659,54 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "217",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "218",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "219",
                     "column": "7"
                 },
                 {
                     "label": "%label",
                     "tag": "continue_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "220",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "221",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "229",
                     "column": "7"
                 },
                 {
                     "label": "%label",
                     "tag": "continue_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "230",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "231",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "232",
                     "column": "7"
                 },
@@ -823,21 +714,18 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "233",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "234",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "235",
                     "column": "7"
                 },
@@ -845,7 +733,6 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "236",
                     "column": "7"
                 },
@@ -853,21 +740,18 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "237",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "238",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "239",
                     "column": "7"
                 },
@@ -875,63 +759,54 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "240",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "241",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "242",
                     "column": "7"
                 },
                 {
                     "label": "%label",
                     "tag": "continue_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "243",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "244",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "252",
                     "column": "7"
                 },
                 {
                     "label": "%label",
                     "tag": "continue_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "253",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "254",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "255",
                     "column": "7"
                 },
@@ -939,21 +814,18 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "256",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "257",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "258",
                     "column": "7"
                 },
@@ -961,7 +833,6 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "259",
                     "column": "7"
                 },
@@ -969,21 +840,18 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "260",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "261",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "262",
                     "column": "7"
                 },
@@ -991,63 +859,54 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "263",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "264",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "265",
                     "column": "7"
                 },
                 {
                     "label": "%label",
                     "tag": "continue_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "266",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "267",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "275",
                     "column": "7"
                 },
                 {
                     "label": "%label",
                     "tag": "continue_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "276",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "277",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "278",
                     "column": "7"
                 },
@@ -1055,21 +914,18 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "279",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "280",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "281",
                     "column": "7"
                 },
@@ -1077,7 +933,6 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "282",
                     "column": "7"
                 },
@@ -1085,21 +940,18 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "283",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "284",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "285",
                     "column": "7"
                 },
@@ -1107,63 +959,54 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "286",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "287",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "288",
                     "column": "7"
                 },
                 {
                     "label": "%label",
                     "tag": "continue_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "289",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "290",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "297",
                     "column": "7"
                 },
                 {
                     "label": "%label",
                     "tag": "continue_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "298",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "299",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "300",
                     "column": "7"
                 },
@@ -1171,21 +1014,18 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "301",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "302",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "303",
                     "column": "7"
                 },
@@ -1193,7 +1033,6 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "304",
                     "column": "7"
                 },
@@ -1201,21 +1040,18 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "305",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "306",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "307",
                     "column": "7"
                 },
@@ -1223,63 +1059,54 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "308",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "309",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "310",
                     "column": "7"
                 },
                 {
                     "label": "%label",
                     "tag": "continue_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "311",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "312",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "320",
                     "column": "7"
                 },
                 {
                     "label": "%label",
                     "tag": "continue_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "321",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "322",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "323",
                     "column": "7"
                 },
@@ -1287,21 +1114,18 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "324",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "325",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "326",
                     "column": "7"
                 },
@@ -1309,7 +1133,6 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "327",
                     "column": "7"
                 },
@@ -1317,21 +1140,18 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "328",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "329",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "330",
                     "column": "7"
                 },
@@ -1339,63 +1159,54 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "331",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "332",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "333",
                     "column": "7"
                 },
                 {
                     "label": "%label",
                     "tag": "continue_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "334",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "335",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "342",
                     "column": "7"
                 },
                 {
                     "label": "%label",
                     "tag": "continue_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "343",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "344",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "345",
                     "column": "7"
                 },
@@ -1403,21 +1214,18 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "346",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "347",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "348",
                     "column": "7"
                 },
@@ -1425,7 +1233,6 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "349",
                     "column": "7"
                 },
@@ -1433,21 +1240,18 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "350",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "351",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "352",
                     "column": "7"
                 },
@@ -1455,63 +1259,54 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "353",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "354",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "355",
                     "column": "7"
                 },
                 {
                     "label": "%label",
                     "tag": "continue_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "356",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "357",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "365",
                     "column": "7"
                 },
                 {
                     "label": "%label",
                     "tag": "continue_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "366",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "367",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "368",
                     "column": "7"
                 },
@@ -1519,21 +1314,18 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "369",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "370",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "371",
                     "column": "7"
                 },
@@ -1541,7 +1333,6 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "372",
                     "column": "7"
                 },
@@ -1549,21 +1340,18 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "373",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "374",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "375",
                     "column": "7"
                 },
@@ -1571,105 +1359,89 @@
                     "label": "%label",
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "376",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "377",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "378",
                     "column": "7"
                 },
                 {
                     "label": "%label",
                     "tag": "continue_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "379",
                     "column": "7"
                 },
                 {
                     "label": "%label",
                     "tag": "continue_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "382",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "383",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "384",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "385",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "386",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "387",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "388",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "389",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "390",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "391",
                     "column": "7"
                 },
                 {
-                    "rule": "7",
-                    "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
+                    "tag": "stop_statement",
                     "line": "395",
                     "column": "7"
                 },
@@ -1677,7 +1449,6 @@
                     "label": "%label",
                     "rule": "2d",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "398",
                     "column": "1"
                 },
@@ -1685,7 +1456,6 @@
                     "label": "%label",
                     "rule": "2d",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "399",
                     "column": "1"
                 },
@@ -1693,7 +1463,6 @@
                     "label": "%label",
                     "rule": "2d",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "400",
                     "column": "1"
                 },
@@ -1701,7 +1470,6 @@
                     "label": "%label",
                     "rule": "2d",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "401",
                     "column": "1"
                 },
@@ -1709,7 +1477,6 @@
                     "label": "%label",
                     "rule": "2d",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "402",
                     "column": "1"
                 },
@@ -1717,7 +1484,6 @@
                     "label": "%label",
                     "rule": "2d",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "403",
                     "column": "1"
                 },
@@ -1725,7 +1491,6 @@
                     "label": "%label",
                     "rule": "2d",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "404",
                     "column": "1"
                 },
@@ -1733,7 +1498,6 @@
                     "label": "%label",
                     "rule": "2d",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "405",
                     "column": "1"
                 },
@@ -1741,7 +1505,6 @@
                     "label": "%label",
                     "rule": "2d",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "408",
                     "column": "1"
                 },
@@ -1749,7 +1512,6 @@
                     "label": "%label",
                     "rule": "2d",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "409",
                     "column": "1"
                 },
@@ -1757,7 +1519,6 @@
                     "label": "%label",
                     "rule": "2d",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "410",
                     "column": "1"
                 },
@@ -1765,7 +1526,6 @@
                     "label": "%label",
                     "rule": "2d",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "413",
                     "column": "1"
                 },
@@ -1773,7 +1533,6 @@
                     "label": "%label",
                     "rule": "2d",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "414",
                     "column": "1"
                 },
@@ -1781,7 +1540,6 @@
                     "label": "%label",
                     "rule": "2d",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "415",
                     "column": "1"
                 },
@@ -1789,7 +1547,6 @@
                     "label": "%label",
                     "rule": "2d",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "416",
                     "column": "1"
                 },
@@ -1797,7 +1554,6 @@
                     "label": "%label",
                     "rule": "2d",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "417",
                     "column": "1"
                 },
@@ -1805,7 +1561,6 @@
                     "label": "%label",
                     "rule": "2d",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "419",
                     "column": "1"
                 }
@@ -1814,55 +1569,47 @@
         {
             "tag": "subroutine",
             "name": "FS057",
-            "file": "test/nist/FM056.FOR",
             "line": "450",
             "column": "7",
             "statement_list": [
                 {
                     "rule": "6",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "451",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "452",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "453",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "454",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "455",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "456",
                     "column": "7"
                 },
                 {
                     "tag": "return_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "457",
                     "column": "7"
                 }
@@ -1871,20 +1618,17 @@
         {
             "tag": "subroutine",
             "name": "FS058",
-            "file": "test/nist/FM056.FOR",
             "line": "488",
             "column": "7",
             "statement_list": [
                 {
                     "rule": "6",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "489",
                     "column": "7"
                 },
                 {
                     "tag": "type_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "490",
                     "column": "7",
                     "type": {
@@ -1898,48 +1642,41 @@
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "491",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "492",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "493",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "494",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "495",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "496",
                     "column": "7"
                 },
                 {
                     "tag": "return_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "497",
                     "column": "7"
                 }
@@ -1952,55 +1689,47 @@
                 "tag": "type_reference",
                 "name": "INTEGER"
             },
-            "file": "test/nist/FM056.FOR",
             "line": "524",
             "column": "7",
             "statement_list": [
                 {
                     "rule": "6",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "525",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "526",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "527",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "528",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "529",
                     "column": "7"
                 },
                 {
                     "rule": "7",
                     "tag": "unknown_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "530",
                     "column": "7"
                 },
                 {
                     "tag": "return_statement",
-                    "file": "test/nist/FM056.FOR",
                     "line": "531",
                     "column": "7"
                 }
