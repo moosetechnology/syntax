@@ -1,0 +1,3 @@
+      SUBROUTINE SUBRTN
+      ENTRY XYZ(ABC,*)
+      END
