@@ -235,6 +235,7 @@ $LIST(<2:main_program>)
     "main",
     $LIST (<8:program_statement>),
     LOCATION(0),
+    $LIST( <2a:end_statement>),
     NULL );
 }
 
@@ -250,6 +251,7 @@ $LIST(<2:main_program>)
     "main",
     JSON_KTV ("name", "null"),
     LOCATION(0),
+    $LIST( <2a:end_statement>),
     NULL );
 }
 
@@ -267,6 +269,7 @@ $LIST(<2:main_program>)
     "main",
     $LIST( <8:program_statement>),
     LOCATION(0),
+    $LIST( <2a:end_statement>),
     $LIST(<2c:statement_list>) );
 }
 
@@ -283,6 +286,7 @@ $LIST(<2:main_program>)
     "main",
     JSON_KTV ("name", "null"),
     LOCATION(0),
+    $LIST( <2a:end_statement>),
     $LIST(<2c:statement_list>) );
 }
 
@@ -473,6 +477,7 @@ $LIST(<3:function_subprogram>)
     "function",
     $LIST( <10:function_statement>),
     LOCATION(0),
+    $LIST( <2a:end_statement>),
     NULL );
 }
 
@@ -491,6 +496,7 @@ $LIST(<3:function_subprogram>)
     "function",
     $LIST( <10:function_statement>),
     LOCATION(0),
+    $LIST( <2a:end_statement>),
     $LIST(<2c:statement_list>) );
 }
 
@@ -507,6 +513,7 @@ $LIST(<4:subroutine_subprogram>)
     "subroutine",
     $LIST( <12:subroutine_statement>),
     LOCATION(0),
+    $LIST( <2a:end_statement>),
     NULL );
 }
 
@@ -525,6 +532,7 @@ $LIST(<4:subroutine_subprogram>)
     "subroutine",
     $LIST( <12:subroutine_statement>),
     LOCATION(0),
+    $LIST( <2a:end_statement>),
     $LIST(<2c:statement_list>) );
 }
 

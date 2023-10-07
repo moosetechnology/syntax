@@ -64,18 +64,22 @@ SXML_TYPE_LIST JSON_KL (SXML_TYPE_TEXT K, SXML_TYPE_LIST V)
  * - tag: main/function/subroutine/block_data
  * - header line (name, possible parameters, return type, ...)
  * - Location of the header
+ * - end location of the program unit
  * - list of statements
  */
 SXML_TYPE_LIST json_program_unit( SXML_TYPE_TEXT tag,
 				  SXML_TYPE_LIST header,
 				  SXML_TYPE_LIST location,
+				  SXML_TYPE_LIST end_location,
 				  SXML_TYPE_LIST statement_list) {
 
   return JSON_MAP(
-      SXML_LLLTL(
+      SXML_LLLTLTL(
 	JSON_KTV( "tag", tag),
 	header,
 	location,
+        ",\n",
+	end_location,
         ",\n",
 	JSON_KL("statement_list", JSON_ARRAY( statement_list)) ));
 }

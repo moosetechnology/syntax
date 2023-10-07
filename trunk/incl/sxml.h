@@ -540,6 +540,20 @@ SXML_TYPE_LIST SXML_TTTTTT (
 
 /* ------------------------------------------------------------------------- */
 
+SXML_TYPE_LIST SXML_LLLTLTL (
+		SXML_TYPE_LIST L1,
+		SXML_TYPE_LIST L2,
+		SXML_TYPE_LIST L3,
+		SXML_TYPE_TEXT T4, 
+		SXML_TYPE_LIST L5,
+		SXML_TYPE_TEXT T6,
+		SXML_TYPE_LIST L7)
+{
+  return SXML_CONCAT ("LLLTLTL", L1, L2, L3, T4, L5, T6, L7);
+}
+
+/* ------------------------------------------------------------------------- */
+
 SXML_TYPE_LIST SXML_TTTLTLT (
 		SXML_TYPE_TEXT T1,
 		SXML_TYPE_TEXT T2,
