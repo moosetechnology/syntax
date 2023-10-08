@@ -923,31 +923,6 @@ $LIST(<10:function_statement>)
 
 *******************************************************************************
 
-<10d:function_header>
-		= <99:symbolic_name>  ( ) ;
-
-$LIST(<10d:function_header>)
-
-{
-  $LIST(<10d:function_header>) = subprogram_header(
-    $NAME(<99:symbolic_name>),
-    NULL );
-}
-
-*------------------------------------------------------------------------------
-
-<10d:function_header>
-		= <99:symbolic_name>  ( <99a:symbolic_name_list> ) ;
-
-$LIST(<10d:function_header>)
-{
-  $LIST(<10d:function_header>) = subprogram_header(
-    $NAME(<99:symbolic_name>),
-    $LIST( <99a:symbolic_name_list>) );
-}
-
-*******************************************************************************
-
 <10a:type>	= <10b:scalar_type> ;
 * Non standard ANSI
 
@@ -1039,6 +1014,31 @@ $NAME( <10b:scalar_type>)
 $NAME( <10b:scalar_type>)
 {
   $NAME( <10b:scalar_type>) = "LOGICAL";
+}
+
+*******************************************************************************
+
+<10d:function_header>
+		= <99:symbolic_name>  ( ) ;
+
+$LIST(<10d:function_header>)
+
+{
+  $LIST(<10d:function_header>) = subprogram_header(
+    $NAME(<99:symbolic_name>),
+    NULL );
+}
+
+*------------------------------------------------------------------------------
+
+<10d:function_header>
+		= <99:symbolic_name>  ( <99a:symbolic_name_list> ) ;
+
+$LIST(<10d:function_header>)
+{
+  $LIST(<10d:function_header>) = subprogram_header(
+    $NAME(<99:symbolic_name>),
+    $LIST( <99a:symbolic_name_list>) );
 }
 
 *******************************************************************************
