@@ -26,7 +26,7 @@
 
 * The following declarations define the synthesized attributes
 
-$LIST(<0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <2e:statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <6:other_specification_statement>, <7:executable_statement>, <8:program_statement>, <9:entry_statement>, <10:function_statement>, <10d:function_header>, <10a:type>, <12:subroutine_statement>, <12a:subroutine_header>, <12b:subroutine_parameter_list>, <13:function_or_subroutine_entry>, <20:type_statement>, <20a:scalar_name_list>, <20c:character_name_list>, <20d:character_name>, <42:stop_statement>, <99a:symbolic_name_list>) 
+$LIST(<0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <2e:statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <6:other_specification_statement>, <7:executable_statement>, <8:program_statement>, <9:entry_statement>, <10:function_statement>, <10d:function_header>, <10a:type>, <12:subroutine_statement>, <12a:subroutine_header>, <12b:subroutine_parameter_list>, <13:function_or_subroutine_entry>, <20:type_statement>, <20a:scalar_name_list>, <20c:character_name_list>, <20d:character_name>, <42:stop_statement>, <43:pause_statement>, <99a:symbolic_name_list>) 
 : SXML_TYPE_LIST ;
 
 $NAME( <10b:scalar_type>, <12c:subroutine_parameter>, <20b:scalar_name>, <22:len_specification>, <72:return_statement>, <99:symbolic_name>, <103:nonzero_unsigned_int_constant>, <110:label>) : SXML_TYPE_TEXT; /* i.e., character string */
@@ -689,10 +689,15 @@ $LIST(<7:executable_statement>)
 {
   SXML_TYPE_LIST stop_argument = $LIST( <42:stop_statement>) ;
 
-  $LIST(<7:executable_statement>) = SXML_LTL(
-    json_abstract_statement( "stop_statement", LOCATION(0)),
-    (stop_argument == NULL ? NULL : ",\n"),
-    stop_argument);
+  if (stop_argument == NULL) {
+    $LIST(<7:executable_statement>) = json_abstract_statement( "stop_statement", LOCATION(0));
+  }
+  else {
+    $LIST(<7:executable_statement>) = SXML_LTL(
+      json_abstract_statement( "stop_statement", LOCATION(0)),
+      ",\n",
+      stop_argument);
+  }
 }
 
 *------------------------------------------------------------------------------
@@ -702,9 +707,17 @@ $LIST(<7:executable_statement>)
 
 $LIST(<7:executable_statement>)
 {
-  $LIST(<7:executable_statement>) = json_unknown_statement(
-    "<7>.6",
-    LOCATION(0) );
+  SXML_TYPE_LIST pause_argument = $LIST( <43:pause_statement>) ;
+
+  if (pause_argument == NULL) {
+    $LIST(<7:executable_statement>) = json_abstract_statement( "pause_statement", LOCATION(0));
+  }
+  else {
+    $LIST(<7:executable_statement>) = SXML_LTL(
+      json_abstract_statement( "pause_statement", LOCATION(0)),
+      ",\n",
+      pause_argument);
+  }
 }
 
 *------------------------------------------------------------------------------
@@ -2000,7 +2013,7 @@ $LIST( <42:stop_statement>)
 {
   $LIST( <42:stop_statement>) = JSON_KT(
     "uint_constant",
-    "<42:stop_statement>");
+    "<42>.2");
 }
 
 *------------------------------------------------------------------------------
@@ -2012,7 +2025,7 @@ $LIST( <42:stop_statement>)
 {
   $LIST( <42:stop_statement>) = JSON_KT(
     "character_constant",
-    "<42:stop_statement>");
+    "<42>.3");
 }
 
 *******************************************************************************
@@ -2020,15 +2033,34 @@ $LIST( <42:stop_statement>)
 <43:pause_statement>
 		= PAUSE  ;
 
+$LIST( <43:pause_statement>)
+{
+  $LIST( <43:pause_statement>) = NULL;
+}
+
 *------------------------------------------------------------------------------
 
 <43:pause_statement>
 		= PAUSE  <102:unsigned_int_constant> ;
 
+$LIST( <43:pause_statement>)
+{
+  $LIST( <43:pause_statement>) = JSON_KT(
+    "uint_constant",
+    "<43>.3");
+}
+
 *------------------------------------------------------------------------------
 
 <43:pause_statement>
 		= PAUSE  <109:character_constant> ;
+
+$LIST( <43:pause_statement>)
+{
+  $LIST( <43:pause_statement>) = JSON_KT(
+    "character_constant",
+    "<43>.3");
+}
 
 *******************************************************************************
 
