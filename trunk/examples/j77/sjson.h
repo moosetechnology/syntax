@@ -86,6 +86,22 @@ SXML_TYPE_LIST json_program_unit( SXML_TYPE_TEXT tag,
 
 
 /* -------------------------------------------------------------------------
+ * outputs header of a function or subroutine
+ * - name
+ * - parameters
+ */
+SXML_TYPE_LIST subprogram_header( SXML_TYPE_TEXT name,
+				  SXML_TYPE_LIST parameters) {
+
+  return SXML_LLT(
+    JSON_KTV( "name", name),
+    JSON_KL(
+      "parameters",
+      JSON_ARRAY( parameters) ),
+    ",\n");
+}
+
+/* -------------------------------------------------------------------------
  * outputs a generic statement of given tag
  * - tag: the precise kinf of statement (ex: "continue_statement")
  * - Location of the statement

@@ -26,7 +26,7 @@
 
 * The following declarations define the synthesized attributes
 
-$LIST(<0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <2e:statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <6:other_specification_statement>, <7:executable_statement>, <8:program_statement>, <9:entry_statement>, <10:function_statement>, <10d:function_header>, <10a:type>, <12:subroutine_statement>, <12a:subroutine_header>, <12b:subroutine_parameter_list>, <13:function_or_subroutine_entry>, <20:type_statement>, <20a:scalar_name_list>, <20c:character_name_list>, <20d:character_name>, <42:stop_statement>) 
+$LIST(<0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <2e:statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <6:other_specification_statement>, <7:executable_statement>, <8:program_statement>, <9:entry_statement>, <10:function_statement>, <10d:function_header>, <10a:type>, <12:subroutine_statement>, <12a:subroutine_header>, <12b:subroutine_parameter_list>, <13:function_or_subroutine_entry>, <20:type_statement>, <20a:scalar_name_list>, <20c:character_name_list>, <20d:character_name>, <42:stop_statement>, <99a:symbolic_name_list>) 
 : SXML_TYPE_LIST ;
 
 $NAME( <10b:scalar_type>, <12c:subroutine_parameter>, <20b:scalar_name>, <22:len_specification>, <72:return_statement>, <99:symbolic_name>, <103:nonzero_unsigned_int_constant>, <110:label>) : SXML_TYPE_TEXT; /* i.e., character string */
@@ -916,8 +916,9 @@ $LIST(<10:function_statement>)
 $LIST(<10d:function_header>)
 
 {
-  $LIST(<10d:function_header>) = JSON_KTV(
-    "name", $NAME( <99:symbolic_name>));
+  $LIST(<10d:function_header>) = subprogram_header(
+    $NAME(<99:symbolic_name>),
+    NULL );
 }
 
 *------------------------------------------------------------------------------
@@ -927,8 +928,9 @@ $LIST(<10d:function_header>)
 
 $LIST(<10d:function_header>)
 {
-  $LIST(<10d:function_header>) = JSON_KTV(
-    "name", $NAME( <99:symbolic_name>));
+  $LIST(<10d:function_header>) = subprogram_header(
+    $NAME(<99:symbolic_name>),
+    $LIST( <99a:symbolic_name_list>) );
 }
 
 *******************************************************************************
@@ -1054,8 +1056,9 @@ $LIST(<12:subroutine_statement>)
 
 $LIST(<12a:subroutine_header>)
 {
-  $LIST(<12a:subroutine_header>) = JSON_KTV(
-    "name", $NAME(<99:symbolic_name>));
+  $LIST(<12a:subroutine_header>) = subprogram_header(
+    $NAME(<99:symbolic_name>),
+    NULL );
 }
 
 *------------------------------------------------------------------------------
@@ -1065,8 +1068,9 @@ $LIST(<12a:subroutine_header>)
 
 $LIST(<12a:subroutine_header>)
 {
-  $LIST(<12a:subroutine_header>) = JSON_KTV(
-    "name", $NAME(<99:symbolic_name>));
+  $LIST(<12a:subroutine_header>) = subprogram_header(
+    $NAME(<99:symbolic_name>),
+    NULL );
 }
 
 *------------------------------------------------------------------------------
@@ -1076,12 +1080,9 @@ $LIST(<12a:subroutine_header>)
 
 $LIST(<12a:subroutine_header>)
 {
-  $LIST(<12a:subroutine_header>) = SXML_LLT(
-    JSON_KTV( "name", $NAME(<99:symbolic_name>)),
-    JSON_KL(
-      "parameters",
-      JSON_ARRAY( $LIST (<12b:subroutine_parameter_list> )) ),
-    ",\n");
+  $LIST(<12a:subroutine_header>) = subprogram_header(
+    $NAME(<99:symbolic_name>),
+    $LIST (<12b:subroutine_parameter_list> ) );
 }
 
 *******************************************************************************
@@ -3609,10 +3610,24 @@ $NAME(<99:symbolic_name>)
 <99a:symbolic_name_list>
 		= <99a:symbolic_name_list> ,  <99:symbolic_name> ;
 
+$LIST(<99a:symbolic_name_list>)
+{
+  $LIST(<99a:symbolic_name_list>) = SXML_LTT(
+    $LIST( <99a:symbolic_name_list>'),
+    ",\n",
+    SXML_Q ($NAME( <99:symbolic_name>)) );
+}
+
 *------------------------------------------------------------------------------
 
 <99a:symbolic_name_list>
 		= <99:symbolic_name> ;
+
+$LIST(<99a:symbolic_name_list>)
+{
+  $LIST(<99a:symbolic_name_list>) = SXML_T(
+    SXML_Q ( $NAME( <99:symbolic_name>)) );
+}
 
 *******************************************************************************
 
