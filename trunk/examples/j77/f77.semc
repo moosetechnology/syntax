@@ -26,7 +26,7 @@
 
 * The following declarations define the synthesized attributes
 
-$LIST(<0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <2e:statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <6:other_specification_statement>, <7:executable_statement>, <8:program_statement>, <9:entry_statement>, <10:function_statement>, <10d:function_header>, <10a:type>, <12:subroutine_statement>, <12a:subroutine_header>, <12b:subroutine_parameter_list>, <13:function_or_subroutine_entry>, <20:type_statement>, <20a:scalar_name_list>, <20c:character_name_list>, <20d:character_name>, <42:stop_statement>, <43:pause_statement>, <99a:symbolic_name_list>) 
+$LIST(<0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <2e:statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <6:other_specification_statement>, <7:executable_statement>, <8:program_statement>, <9:entry_statement>, <10:function_statement>, <10d:function_header>, <10a:type>, <12:subroutine_statement>, <12a:subroutine_header>, <12b:subroutine_parameter_list>, <13:function_or_subroutine_entry>, <20:type_statement>, <20a:scalar_name_list>, <20c:character_name_list>, <20d:character_name>, <42:stop_statement>, <43:pause_statement>, <71:call_statement>, <71a:actual_argument_list>, <71b:actual_argument>, <99a:symbolic_name_list>) 
 : SXML_TYPE_LIST ;
 
 $NAME( <10b:scalar_type>, <12c:subroutine_parameter>, <20b:scalar_name>, <22:len_specification>, <72:return_statement>, <99:symbolic_name>, <103:nonzero_unsigned_int_constant>, <110:label>) : SXML_TYPE_TEXT; /* i.e., character string */
@@ -47,12 +47,12 @@ SXBOOLEAN pclose_needed;
 #define TODO(N) SXML_T("{\"TODO-" #N "\":null}\n")
 
 #define LOCATION(N) SXML_LL ( \
-		JSON_KTV ("line", SXML_UINT (sxcurrent_parsed_line (N))), \
-		JSON_KT ("column", SXML_UINT (sxcurrent_parsed_column (N))) )
+		JSON_KQ_ ("line", SXML_UINT (sxcurrent_parsed_line (N))), \
+		JSON_KQ ("column", SXML_UINT (sxcurrent_parsed_column (N))) )
 
 #define ENDING_LOCATION(N,STRING) SXML_LL ( \
-		JSON_KTV ("ending-line", SXML_UINT (sxcurrent_parsed_line (N))), \
-		JSON_KT ("ending-column", SXML_UINT (sxcurrent_parsed_column (N) + strlen (STRING) - 1)) )
+		JSON_KQ_ ("ending-line", SXML_UINT (sxcurrent_parsed_line (N))), \
+		JSON_KQ ("ending-column", SXML_UINT (sxcurrent_parsed_column (N) + strlen (STRING) - 1)) )
 
 *------------------------------------------------------------------------------
 
@@ -111,8 +111,8 @@ $LIST(<0:F77>)
 
 {
   $LIST(<0:F77>) = SXML_LL(
-    JSON_KTV ("file", sxcurrent_parsed_file_name (0)),
-    JSON_KL (
+    JSON_KQ_ ("file", sxcurrent_parsed_file_name (0)),
+    JSON_KU (
       "program_units",
       JSON_ARRAY( $LIST(<1a:executable_program_list>) )));
   ROOT = $LIST(<0:F77>);
@@ -191,7 +191,7 @@ $LIST(<1:executable_program>)
 
 {
   $LIST(<1:executable_program>) = JSON_MAP (
-    JSON_KL ("blockdata", TODO (3)));
+    JSON_KU ("blockdata", TODO (3)));
 }
 
 
@@ -249,7 +249,7 @@ $LIST(<2:main_program>)
 {
   $LIST(<2:main_program>) = json_program_unit(
     "main",
-    JSON_KTV ("name", "null"),
+    JSON_KQ_ ("name", "null"),
     LOCATION(0),
     $LIST( <2a:end_statement>),
     NULL );
@@ -284,7 +284,7 @@ $LIST(<2:main_program>)
 {
   $LIST(<2:main_program>) = json_program_unit(
     "main",
-    JSON_KTV ("name", "null"),
+    JSON_KQ_ ("name", "null"),
     LOCATION(0),
     $LIST( <2a:end_statement>),
     $LIST(<2c:statement_list>) );
@@ -352,7 +352,7 @@ $LIST(<2d:labeled_statement>)
 {
   $LIST(<2d:labeled_statement>) = JSON_MAP( 
     SXML_LL(
-      JSON_KTV("label", $NAME(<110:label>)), 
+      JSON_KQ_ ("label", $NAME(<110:label>)), 
       $LIST( <2e:statement>) ));
 }
 
@@ -365,7 +365,7 @@ $LIST(<2d:labeled_statement>)
 {
   $LIST(<2d:labeled_statement>) =  JSON_MAP( 
     SXML_LL(
-      JSON_KTV("label", $NAME(<110:label>)),
+      JSON_KQ_ ("label", $NAME(<110:label>)),
       json_unknown_statement(
         "2d",
 	LOCATION(0) )));
@@ -882,7 +882,7 @@ $LIST(<7:executable_statement>)
 
 $LIST(<8:program_statement>)
 {
-  $LIST(<8:program_statement>) = JSON_KTV(
+  $LIST(<8:program_statement>) = JSON_KQ_ (
     "name", $NAME( <99:symbolic_name>));
 }
 
@@ -906,7 +906,7 @@ $LIST(<10:function_statement>)
 {
   $LIST(<10:function_statement>) = SXML_LLT(
     $LIST( <10d:function_header>),
-    JSON_KL( "return_type", $LIST( <10a:type>)),
+    JSON_KU( "return_type", $LIST( <10a:type>)),
     ",\n" );
 }
 
@@ -2011,7 +2011,7 @@ $LIST( <42:stop_statement>)
 
 $LIST( <42:stop_statement>)
 {
-  $LIST( <42:stop_statement>) = JSON_KT(
+  $LIST( <42:stop_statement>) = JSON_KQ(
     "uint_constant",
     "<42>.2");
 }
@@ -2023,7 +2023,7 @@ $LIST( <42:stop_statement>)
 
 $LIST( <42:stop_statement>)
 {
-  $LIST( <42:stop_statement>) = JSON_KT(
+  $LIST( <42:stop_statement>) = JSON_KQ(
     "character_constant",
     "<42>.3");
 }
@@ -2045,7 +2045,7 @@ $LIST( <43:pause_statement>)
 
 $LIST( <43:pause_statement>)
 {
-  $LIST( <43:pause_statement>) = JSON_KT(
+  $LIST( <43:pause_statement>) = JSON_KQ(
     "uint_constant",
     "<43>.3");
 }
@@ -2057,7 +2057,7 @@ $LIST( <43:pause_statement>)
 
 $LIST( <43:pause_statement>)
 {
-  $LIST( <43:pause_statement>) = JSON_KT(
+  $LIST( <43:pause_statement>) = JSON_KQ(
     "character_constant",
     "<43>.3");
 }

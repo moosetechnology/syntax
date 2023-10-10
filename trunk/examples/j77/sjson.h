@@ -30,31 +30,31 @@ SXML_TYPE_LIST JSON_MAP (SXML_TYPE_LIST L)
 }
 
 /* -------------------------------------------------------------------------
- * outputs a JSON key/value pair where value is a text:
+ * outputs a JSON key/value pair where value must be Quoted:
  *   quoted(K) ":" quoted(value)
  */
 
-SXML_TYPE_LIST JSON_KT (SXML_TYPE_TEXT K, SXML_TYPE_TEXT V)
+SXML_TYPE_LIST JSON_KQ (SXML_TYPE_TEXT K, SXML_TYPE_TEXT V)
 {
   return SXML_TTTTT( "\"", K, "\":\"", V, "\"");
 }
 
 /* -------------------------------------------------------------------------
- * same as preceeding with a comma at the end:
+ * same as previous one with a comma at the end:
  *   quoted(K) ":" quoted(value) ","
  */
 
-SXML_TYPE_LIST JSON_KTV (SXML_TYPE_TEXT K, SXML_TYPE_TEXT V)
+SXML_TYPE_LIST JSON_KQ_ (SXML_TYPE_TEXT K, SXML_TYPE_TEXT V)
 {
   return SXML_TTTTT( "\"", K, "\" : \"", V, "\",");
 }
 
 /* -------------------------------------------------------------------------
- * outputs a JSON key/value pair where value is a list:
+ * outputs a JSON key/value pair where value remains Unquoted:
  *   quoted(K) ":" value
  */
 
-SXML_TYPE_LIST JSON_KL (SXML_TYPE_TEXT K, SXML_TYPE_LIST V)
+SXML_TYPE_LIST JSON_KU (SXML_TYPE_TEXT K, SXML_TYPE_LIST V)
 {
   return SXML_TTTL( "\"", K, "\" : ", V);
 }
@@ -75,13 +75,13 @@ SXML_TYPE_LIST json_program_unit( SXML_TYPE_TEXT tag,
 
   return JSON_MAP(
       SXML_LLLTLTL(
-	JSON_KTV( "tag", tag),
+	JSON_KQ_ ("tag", tag),
 	header,
 	location,
         ",\n",
 	end_location,
         ",\n",
-	JSON_KL("statement_list", JSON_ARRAY( statement_list)) ));
+	JSON_KU ("statement_list", JSON_ARRAY( statement_list)) ));
 }
 
 
@@ -94,8 +94,8 @@ SXML_TYPE_LIST subprogram_header( SXML_TYPE_TEXT name,
 				  SXML_TYPE_LIST parameters) {
 
   return SXML_LLT(
-    JSON_KTV( "name", name),
-    JSON_KL(
+    JSON_KQ_ ("name", name),
+    JSON_KU (
       "parameters",
       JSON_ARRAY( parameters) ),
     ",\n");
@@ -110,7 +110,7 @@ SXML_TYPE_LIST json_abstract_statement( SXML_TYPE_TEXT tag,
 					SXML_TYPE_LIST location) {
 
   return SXML_LL(
-    JSON_KTV( "tag", tag),
+    JSON_KQ_ ("tag", tag),
     location );
 }
 
@@ -123,7 +123,7 @@ SXML_TYPE_LIST json_unknown_statement( SXML_TYPE_TEXT rule,
 				       SXML_TYPE_LIST location) {
 
   return SXML_LL(
-    JSON_KTV("rule", rule),
+    JSON_KQ_ ("rule", rule),
     json_abstract_statement( "unknown_statement", location) );
 }
 
@@ -140,9 +140,9 @@ SXML_TYPE_LIST json_type_statement( SXML_TYPE_LIST type_reference,
   return SXML_LTLTL(
     json_abstract_statement ( "type_statement", location),
     ",\n",
-    JSON_KL("type", type_reference),
+    JSON_KU ("type", type_reference),
     ",\n",
-    JSON_KL( "declarators", JSON_ARRAY( variables) ));
+    JSON_KU ( "declarators", JSON_ARRAY( variables) ));
 }
 
 /* -------------------------------------------------------------------------
@@ -156,14 +156,14 @@ SXML_TYPE_LIST json_type_reference( SXML_TYPE_TEXT name,
   if (len_specification == NULL) {
     return JSON_MAP(
       SXML_LL (
-	JSON_KTV( "tag", "type_reference"),
-	JSON_KT( "name", name) ));
+	JSON_KQ_ ("tag", "type_reference"),
+	JSON_KQ ("name", name) ));
   }
 else {
   return JSON_MAP(
     SXML_LLL (
-      JSON_KTV( "tag", "type_reference"),
-      JSON_KTV( "name", name),
-      JSON_KT( "len_specification", len_specification) ));
+      JSON_KQ_ ("tag", "type_reference"),
+      JSON_KQ_ ("name", name),
+      JSON_KQ ("len_specification", len_specification) ));
  }
 }
