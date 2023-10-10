@@ -29,7 +29,7 @@
 $LIST(<0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <2e:statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <6:other_specification_statement>, <7:executable_statement>, <8:program_statement>, <9:entry_statement>, <10:function_statement>, <10d:function_header>, <10a:type>, <12:subroutine_statement>, <12a:subroutine_header>, <12b:subroutine_parameter_list>, <13:function_or_subroutine_entry>, <20:type_statement>, <20a:scalar_name_list>, <20c:character_name_list>, <20d:character_name>, <42:stop_statement>, <43:pause_statement>, <71:call_statement>, <71a:actual_argument_list>, <71b:actual_argument>, <99a:symbolic_name_list>) 
 : SXML_TYPE_LIST ;
 
-$NAME( <10b:scalar_type>, <12c:subroutine_parameter>, <20b:scalar_name>, <22:len_specification>, <72:return_statement>, <99:symbolic_name>, <103:nonzero_unsigned_int_constant>, <110:label>) : SXML_TYPE_TEXT; /* i.e., character string */
+$NAME( <10b:scalar_type>, <12c:subroutine_parameter>, <20b:scalar_name>, <22:len_specification>, <72:return_statement>, <99:symbolic_name>, <102:unsigned_int_constant>, <103:nonzero_unsigned_int_constant>, <109:character_constant>, <110:label>) : SXML_TYPE_TEXT; /* i.e., character string */
 
 *------------------------------------------------------------------------------
 
@@ -366,9 +366,7 @@ $LIST(<2d:labeled_statement>)
   $LIST(<2d:labeled_statement>) =  JSON_MAP( 
     SXML_LL(
       JSON_KQ_ ("label", $NAME(<110:label>)),
-      json_unknown_statement(
-        "2d",
-	LOCATION(0) )));
+      json_unknown_statement( "<2d>.2", LOCATION(0) )));
 }
 
 *------------------------------------------------------------------------------
@@ -1461,7 +1459,7 @@ $LIST( <20a:scalar_name_list>)
 
 $NAME(<20b:scalar_name>)
 {
-  $NAME(<20b:scalar_name>) = "\"20b\"";
+  $NAME(<20b:scalar_name>) = "\"<20b>.1\"";
 }
 
 *------------------------------------------------------------------------------
@@ -2043,8 +2041,8 @@ $LIST( <43:pause_statement>)
 $LIST( <43:pause_statement>)
 {
   $LIST( <43:pause_statement>) = JSON_KQ(
-    "uint_constant",
-    "<43>.3");
+   "unsigned_int_constant",
+   $NAME (<102:unsigned_int_constant>));
 }
 
 *------------------------------------------------------------------------------
@@ -2056,7 +2054,7 @@ $LIST( <43:pause_statement>)
 {
   $LIST( <43:pause_statement>) = JSON_KQ(
     "character_constant",
-    "<43>.3");
+    $NAME (<109:character_constant>));
 }
 
 *******************************************************************************
@@ -3746,6 +3744,11 @@ $LIST(<99a:symbolic_name_list>)
 <102:unsigned_int_constant>
 		= %unsigned_int_constant ;
 
+$NAME (<102:unsigned_int_constant>)
+{
+  $NAME (<102:unsigned_int_constant>) = $ptext( "%unsigned_int_constant");
+}
+
 *******************************************************************************
 
 <103:nonzero_unsigned_int_constant>
@@ -3817,6 +3820,11 @@ $NAME( <103:nonzero_unsigned_int_constant>)
 
 <109:character_constant>
 		= %character_constant ;
+
+$NAME (<109:character_constant>)
+{
+  $NAME (<109:character_constant>) = $ptext( "%character_constant");
+}
 
 *******************************************************************************
 
