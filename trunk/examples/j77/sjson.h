@@ -46,7 +46,7 @@ SXML_TYPE_LIST JSON_KQ (SXML_TYPE_TEXT K, SXML_TYPE_TEXT V)
 
 SXML_TYPE_LIST JSON_KQ_ (SXML_TYPE_TEXT K, SXML_TYPE_TEXT V)
 {
-  return SXML_TTTTT( "\"", K, "\" : \"", V, "\",");
+  return SXML_TTTTT ("\"", K, "\" : \"", V, "\",\n");
 }
 
 /* -------------------------------------------------------------------------
@@ -56,7 +56,17 @@ SXML_TYPE_LIST JSON_KQ_ (SXML_TYPE_TEXT K, SXML_TYPE_TEXT V)
 
 SXML_TYPE_LIST JSON_KU (SXML_TYPE_TEXT K, SXML_TYPE_LIST V)
 {
-  return SXML_TTTL( "\"", K, "\" : ", V);
+  return SXML_TTTL ("\"", K, "\" : ", V);
+}
+
+/* -------------------------------------------------------------------------
+ * same as previous one with a comma at the end:
+ *   quoted(K) ":" value ","
+ */
+
+SXML_TYPE_LIST JSON_KU_ (SXML_TYPE_TEXT K, SXML_TYPE_LIST V)
+{
+  return SXML_TTTLT ("\"", K, "\" : ", V, "\",\n");
 }
 
 /* -------------------------------------------------------------------------

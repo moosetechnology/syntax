@@ -835,9 +835,10 @@ $LIST(<7:executable_statement>)
 
 $LIST(<7:executable_statement>)
 {
-  $LIST(<7:executable_statement>) = json_unknown_statement(
-    "<7>.16",
-    LOCATION(0) );
+  $LIST(<7:executable_statement>) = SXML_LTL(
+    json_abstract_statement( "call_statement", LOCATION(0)),
+    ",\n",
+    $LIST( <71:call_statement>) );
 }
 
 *------------------------------------------------------------------------------
@@ -904,10 +905,9 @@ $LIST( <9:entry_statement>)
 
 $LIST(<10:function_statement>)
 {
-  $LIST(<10:function_statement>) = SXML_LLT(
+  $LIST(<10:function_statement>) = SXML_LL(
     $LIST( <10d:function_header>),
-    JSON_KU( "return_type", $LIST( <10a:type>)),
-    ",\n" );
+    JSON_KU_ ("return_type", $LIST( <10a:type>)) );
 }
 
 *------------------------------------------------------------------------------
@@ -2874,30 +2874,71 @@ $LIST( <43:pause_statement>)
 <71:call_statement>
 		= CALL  <99:symbolic_name> ;
 
+$LIST(<71:call_statement>)
+{
+  $LIST(<71:call_statement>) = JSON_KQ (
+    "name",
+    $NAME( <99:symbolic_name>) );
+}
+
 *------------------------------------------------------------------------------
 
 <71:call_statement>
 		= CALL  <99:symbolic_name>  ( ) ;
+
+$LIST(<71:call_statement>)
+{
+  $LIST(<71:call_statement>) = SXML_LL(
+    JSON_KQ_ ("name", $NAME( <99:symbolic_name>)),
+    JSON_KU("arguments", SXML_T ("[]")));
+}
 
 *------------------------------------------------------------------------------
 
 <71:call_statement>
 		= CALL  <99:symbolic_name>  ( <71a:actual_argument_list> ) ;
 
+$LIST( <71:call_statement>)
+{
+  $LIST( <71:call_statement>) = SXML_LL(
+    JSON_KQ_ ("name", $NAME( <99:symbolic_name>)),
+    JSON_KU(
+      "arguments",
+      JSON_ARRAY( $LIST( <71a:actual_argument_list>))) );
+}
+
 *******************************************************************************
 
 <71a:actual_argument_list>
 		= <71a:actual_argument_list> ,  <71b:actual_argument> ;
+
+$LIST( <71a:actual_argument_list>)
+{
+  $LIST( <71a:actual_argument_list>) = SXML_LTL(
+    $LIST( <71a:actual_argument_list>'),
+    ",\n",
+    $LIST( <71b:actual_argument>) );
+}
 
 *------------------------------------------------------------------------------
 
 <71a:actual_argument_list>
 		= <71b:actual_argument> ;
 
+$LIST( <71a:actual_argument_list>)
+{
+  $LIST( <71a:actual_argument_list>) = SXML_T("\"<71a>.2\"");
+}
+
 *******************************************************************************
 
 <71b:actual_argument>
 		= <74:expression> ;
+
+$LIST( <71b:actual_argument>)
+{
+  $LIST( <71b:actual_argument>) = SXML_T("\"<71b>.1\"");
+}
 
 *------------------------------------------------------------------------------
 
@@ -2909,6 +2950,11 @@ $LIST( <43:pause_statement>)
 
 <71b:actual_argument>
 		= * <110b:label_ref> ;
+
+$LIST( <71b:actual_argument>)
+{
+  $LIST( <71b:actual_argument>) = SXML_T("\"<71b>.2\"");
+}
 
 *******************************************************************************
 
