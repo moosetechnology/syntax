@@ -231,3 +231,154 @@ else {
       JSON_KQ ("len_specification", len_specification) ));
  }
 }
+
+
+/* -------------------------------------------------------------------------
+ * check that the first element of the list contains "/"
+ */
+SXBOOLEAN isSlash( SXML_TYPE_LIST l) {
+  return (l->TEXT[0] == '/') && (l->TEXT[1] == '\0');
+}
+
+
+
+/* -------------------------------------------------------------------------
+ * creates a common_part
+ * - name: optional name of the common_part
+ * - declarators of the common_part
+ */
+SXML_TYPE_LIST json_common_part( SXML_TYPE_TEXT name,
+				 SXML_TYPE_LIST declarators) {
+  if (name == NULL) {
+    return JSON_MAP(
+      JSON_KU ( "declarators", JSON_ARRAY( declarators)) );
+  }
+  else {
+    return JSON_MAP(
+      SXML_LL (
+        JSON_KQ_( "name", name),
+	JSON_KU ( "declarators", JSON_ARRAY( declarators)) ));
+  }
+}
+
+
+/* -------------------------------------------------------------------------
+ * creates a common_part without a name
+ * must add "," between the declarators
+ * - declarators of the common_part
+ */
+SXML_TYPE_LIST json_unnamed_common_part( SXML_TYPE_LIST declarators) {
+  SXML_TYPE_LIST common_part;
+  SXML_TYPE_LIST l;
+
+  l = SXML_HEAD (declarators);
+  common_part = SXML_T( l->TEXT);
+  l = SXML_SUCC (l, declarators);  // next name
+
+  for ( ; l != NULL ; l = SXML_SUCC (l, declarators) ) {
+    common_part = SXML_LTT(
+      common_part,
+      ", " ,
+      l->TEXT);
+  }
+
+  return JSON_MAP(
+    JSON_KU ( "declarators", JSON_ARRAY( common_part)) );
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a common_statement.
+ * common_statment come unstructured in a list of /name/ decls , /name/decls
+ * - common_parts: list of the common_parts
+ * - Location of the statement
+ */
+SXML_TYPE_LIST json_common_statement( SXML_TYPE_LIST common_parts,
+				      SXML_TYPE_LIST location) {
+
+  return SXML_LTL(
+    json_abstract_statement( "common_statement", location),
+    ",\n",
+    JSON_KU ("common_parts", JSON_ARRAY( common_parts)) );
+}
+
+
+
+/* -------------------------------------------------------------------------
+ * adding a Common_part to a possibly empty list of common_parts
+ */
+SXML_TYPE_LIST add_common_part( SXML_TYPE_LIST common,
+				SXML_TYPE_TEXT common_part_name,
+				SXML_TYPE_LIST common_part_declarators) {
+  if (common == NULL) {
+    // it is the first common_part
+    return json_common_part( common_part_name, common_part_declarators);
+  }
+  else {
+    // adding common_part to 'common'
+    return SXML_LTL(
+      common,
+      ",\n",
+      json_common_part( common_part_name, common_part_declarators) );
+  }
+}
+
+
+/* -------------------------------------------------------------------------
+ * parse a common_satetment dec laration to export it
+ * common_statment come unstructured in a flat list of
+ *   / name / decls , / name / decls
+ */
+SXML_TYPE_LIST parse_common_statement( SXML_TYPE_LIST common_declaration,
+				      SXML_TYPE_LIST location) {
+  SXML_TYPE_LIST common = NULL;
+  SXML_TYPE_LIST common_part_declarators = NULL;
+  SXML_TYPE_TEXT common_part_name = NULL;
+  SXML_TYPE_LIST l;
+
+  l = SXML_HEAD (common_declaration);
+  if (! isSlash(l)) {
+    // only 1 unnammed common_part
+    return json_common_statement(
+      json_unnamed_common_part( common_declaration),
+      location );
+  }
+
+  for ( ; l != NULL ; l = SXML_SUCC (l, common_declaration) ) {
+
+    if (isSlash(l)) {
+      if (common_part_declarators != NULL) {
+	common = add_common_part(
+          common,
+	  common_part_name,
+	  common_part_declarators);
+      }
+
+      l = SXML_SUCC (l, common_declaration);  // skip 1st "/"
+      if  (! isSlash(l)) {
+	common_part_name = l->TEXT;  // get common_part name
+	l = SXML_SUCC (l, common_declaration);  // skip common_part name
+      }
+      l = SXML_SUCC (l, common_declaration);  // skip 2nd "/"
+      // 1st declarator after "/.../" (in new common_part)
+      common_part_declarators = SXML_T( l->TEXT);
+    }
+
+    else {
+      // next declarator for this common_part
+      common_part_declarators = SXML_LTT(
+        common_part_declarators,
+	", " ,
+	l->TEXT);
+    }
+  }
+
+  // last common_part
+  common = add_common_part(
+    common,
+    common_part_name,
+    common_part_declarators);
+
+  return json_common_statement( common, location);
+}
+

@@ -26,7 +26,7 @@
 
 * The following declarations define the synthesized attributes
 
-$LIST(<0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <2e:statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <6:other_specification_statement>, <7:executable_statement>, <8:program_statement>, <9:entry_statement>, <10:function_statement>, <10d:function_header>, <10a:type>, <12:subroutine_statement>, <12a:subroutine_header>, <12b:subroutine_parameter_list>, <13:function_or_subroutine_entry>, <20:type_statement>, <20a:scalar_name_list>, <20c:character_name_list>, <20d:character_name>, <42:stop_statement>, <43:pause_statement>, <71:call_statement>, <71a:actual_argument_list>, <71b:actual_argument>, <99a:symbolic_name_list>) 
+$LIST( <common_body>, <,common_body>, <0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <2e:statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <6:other_specification_statement>, <7:executable_statement>, <8:program_statement>, <9:entry_statement>, <10:function_statement>, <10d:function_header>, <10a:type>, <12:subroutine_statement>, <12a:subroutine_header>, <12b:subroutine_parameter_list>, <13:function_or_subroutine_entry>, <19:common_statement>, <19a:common_body_list>, <19b:common_part>, <20:type_statement>, <20a:scalar_name_list>, <20c:character_name_list>, <20d:character_name>, <42:stop_statement>, <43:pause_statement>, <71:call_statement>, <71a:actual_argument_list>, <71b:actual_argument>, <99a:symbolic_name_list>) 
 : SXML_TYPE_LIST ;
 
 $NAME( <10b:scalar_type>, <12c:subroutine_parameter>, <20b:scalar_name>, <22:len_specification>, <72:return_statement>, <99:symbolic_name>, <102:unsigned_int_constant>, <103:nonzero_unsigned_int_constant>, <109:character_constant>, <110:label>) : SXML_TYPE_TEXT; /* i.e., character string */
@@ -207,7 +207,7 @@ $LIST(<1a:executable_program_list>)
   $LIST(<1a:executable_program_list>) = SXML_LTL (
     $LIST(<1a:executable_program_list>'),
     ",\n",
-    $LIST(<1:executable_program>));
+    $LIST(<1:executable_program>) );
 }
 
 
@@ -330,7 +330,7 @@ $LIST(<2c:statement_list>)
   $LIST(<2c:statement_list>) = SXML_LTL (
     $LIST(<2c:statement_list>'),
     ",\n",
-    $LIST( <2d:labeled_statement>));
+    $LIST( <2d:labeled_statement>) );
 }
 
 *------------------------------------------------------------------------------
@@ -579,9 +579,7 @@ $LIST(<6:other_specification_statement>)
 
 $LIST(<6:other_specification_statement>)
 {
-  $LIST(<6:other_specification_statement>) = json_unknown_statement(
-    "<6>.3",
-    LOCATION(0) );
+  $LIST(<6:other_specification_statement>) = $LIST (<19:common_statement>);
 }
 
 *------------------------------------------------------------------------------
@@ -1260,6 +1258,13 @@ $LIST( <13:function_or_subroutine_entry>)
 <19:common_statement>
 		= COMMON   <19a:common_body_list> ;
 
+$LIST( <19:common_statement>)
+{
+  $LIST( <19:common_statement>) = parse_common_statement(
+    $LIST( <19a:common_body_list> ),
+    LOCATION( 0) );
+}
+
 *******************************************************************************
 
 *<19a:common_body_list>
@@ -1272,14 +1277,31 @@ $LIST( <13:function_or_subroutine_entry>)
 <19a:common_body_list>
 		= <19a:common_body_list>  <,common_body> ;
 
+$LIST( <19a:common_body_list>)
+{
+  $LIST( <19a:common_body_list>) = SXML_LL(
+    $LIST( <19a:common_body_list>' ),
+    $LIST( <,common_body> ) ) ;
+}
+
 *------------------------------------------------------------------------------
 
 <19a:common_body_list>
 		= <common_body> ;
 
+$LIST( <19a:common_body_list>)
+{
+  $LIST( <19a:common_body_list>) = $LIST( <common_body> ) ;
+}
+
 *******************************************************************************
 
 <,common_body>	= ,  <common_body> ;
+
+$LIST( <,common_body>)
+{
+  $LIST( <,common_body>) = $LIST( <common_body> ) ;
+}
 
 *------------------------------------------------------------------------------
 
@@ -1287,13 +1309,28 @@ $LIST( <13:function_or_subroutine_entry>)
 
 <,common_body>	= <19b:common_part> ;
 
+$LIST( <,common_body>)
+{
+  $LIST( <,common_body>) = $LIST( <19b:common_part>) ;
+}
+
 *******************************************************************************
 
 <common_body>	= <19b:common_part> ;
 
+$LIST( <common_body>)
+{
+  $LIST( <common_body>) = $LIST( <19b:common_part>) ;
+}
+
 *------------------------------------------------------------------------------
 
 <common_body>	= <20b:scalar_name> ;
+
+$LIST( <common_body>)
+{
+  $LIST( <common_body>) = SXML_T( $NAME( <20b:scalar_name>)) ;
+}
 
 *******************************************************************************
 
@@ -1309,6 +1346,15 @@ $LIST( <13:function_or_subroutine_entry>)
 <19b:common_part>
 		= / <99:symbolic_name> /  <20b:scalar_name> ;
 
+$LIST( <19b:common_part>)
+{
+  $LIST( <19b:common_part>) = SXML_TTTT(
+    "/",
+    $NAME( <99:symbolic_name>),
+    "/",
+    $NAME( <20b:scalar_name>) );
+}
+
 *------------------------------------------------------------------------------
 
 * Voir ci-dessous le commentaire de la regle <60f:/:>. La situation est
@@ -1317,6 +1363,14 @@ $LIST( <13:function_or_subroutine_entry>)
 
 <19b:common_part>
 		= // <20b:scalar_name> ;
+
+$LIST( <19b:common_part>)
+{
+  $LIST( <19b:common_part>) = SXML_TTT(
+    "/",
+    "/",
+    $NAME( <20b:scalar_name>) );
+}
 
 *******************************************************************************
 
@@ -1327,9 +1381,7 @@ $LIST( <13:function_or_subroutine_entry>)
 $LIST(<20:type_statement>)
 {
   $LIST(<20:type_statement>) = json_type_statement(
-    json_type_reference(
-      $NAME (<10b:scalar_type>),
-      NULL),
+    json_type_reference( $NAME (<10b:scalar_type>), NULL),
     LOCATION(0), 
     $LIST( <20a:scalar_name_list>));
 
@@ -1344,9 +1396,7 @@ $LIST(<20:type_statement>)
 $LIST(<20:type_statement>)
 {
   $LIST(<20:type_statement>) = json_type_statement(
-    json_type_reference(
-      $NAME (<10b:scalar_type>),
-      NULL),
+    json_type_reference( $NAME (<10b:scalar_type>), NULL),
     LOCATION(0), 
     $LIST( <20a:scalar_name_list>));
 
@@ -1360,9 +1410,7 @@ $LIST(<20:type_statement>)
 $LIST(<20:type_statement>)
 {
   $LIST(<20:type_statement>) = json_type_statement(
-    json_type_reference(
-      $NAME (<10b:scalar_type>),
-      NULL),
+    json_type_reference( $NAME (<10b:scalar_type>), NULL),
     LOCATION(0), 
     $LIST( <20a:scalar_name_list>));
 
@@ -1376,11 +1424,9 @@ $LIST(<20:type_statement>)
 $LIST(<20:type_statement>)
 {
   $LIST(<20:type_statement>) = json_type_statement(
-    json_type_reference(
-      "CHARACTER",
-      NULL),
-      LOCATION(0), 
-      $LIST( <20c:character_name_list>));
+    json_type_reference( "CHARACTER", NULL),
+    LOCATION(0), 
+    $LIST( <20c:character_name_list>));
 }
 
 *------------------------------------------------------------------------------
@@ -1391,9 +1437,7 @@ $LIST(<20:type_statement>)
 $LIST(<20:type_statement>)
 {
   $LIST(<20:type_statement>) = json_type_statement(
-    json_type_reference(
-      "CHARACTER",
-      $NAME (<22:len_specification>)),
+    json_type_reference( "CHARACTER", $NAME (<22:len_specification>)),
     LOCATION(0), 
     $LIST( <20c:character_name_list>));
 }
@@ -1406,11 +1450,9 @@ $LIST(<20:type_statement>)
 $LIST(<20:type_statement>)
 {
   $LIST(<20:type_statement>) = json_type_statement(
-    json_type_reference(
-      "CHARACTER",
-      $NAME (<22:len_specification>)),
-      LOCATION(0), 
-      $LIST( <20c:character_name_list>));
+    json_type_reference( "CHARACTER", $NAME (<22:len_specification>)),
+    LOCATION(0), 
+    $LIST( <20c:character_name_list>));
 }
 
 *******************************************************************************
