@@ -173,6 +173,24 @@ SXML_TYPE_LIST json_pause_statement( SXML_TYPE_LIST argument,
 }
 
 /* -------------------------------------------------------------------------
+ * outputs a stop_statement (with optional "argument")
+ * - argument of the STOP
+ * - Location of the statement
+ */
+SXML_TYPE_LIST json_stop_statement( SXML_TYPE_LIST argument,
+				    SXML_TYPE_LIST location) {
+  if (argument == NULL) {
+    return json_abstract_statement( "stop_statement", location);
+  }
+  else {
+    return SXML_LTL(
+      json_abstract_statement( "stop_statement", location),
+      ",\n",
+      argument);
+  }
+}
+
+/* -------------------------------------------------------------------------
  * outputs a call_statement
  * - name of the procedure called
  * - Location of the statement

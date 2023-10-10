@@ -685,17 +685,9 @@ $LIST(<7:executable_statement>)
 
 $LIST(<7:executable_statement>)
 {
-  SXML_TYPE_LIST stop_argument = $LIST( <42:stop_statement>) ;
-
-  if (stop_argument == NULL) {
-    $LIST(<7:executable_statement>) = json_abstract_statement( "stop_statement", LOCATION(0));
-  }
-  else {
-    $LIST(<7:executable_statement>) = SXML_LTL(
-      json_abstract_statement( "stop_statement", LOCATION(0)),
-      ",\n",
-      stop_argument);
-  }
+  $LIST(<7:executable_statement>) = json_stop_statement(
+    $LIST( <42:stop_statement>),
+    LOCATION(0) );
 }
 
 *------------------------------------------------------------------------------
@@ -705,17 +697,9 @@ $LIST(<7:executable_statement>)
 
 $LIST(<7:executable_statement>)
 {
-  SXML_TYPE_LIST pause_argument = $LIST( <43:pause_statement>) ;
-
-  if (pause_argument == NULL) {
-    $LIST(<7:executable_statement>) = json_abstract_statement( "pause_statement", LOCATION(0));
-  }
-  else {
-    $LIST(<7:executable_statement>) = SXML_LTL(
-      json_abstract_statement( "pause_statement", LOCATION(0)),
-      ",\n",
-      pause_argument);
-  }
+  $LIST(<7:executable_statement>) = json_pause_statement(
+    $LIST( <43:pause_statement>),
+    LOCATION(0) );
 }
 
 *------------------------------------------------------------------------------
