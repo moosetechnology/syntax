@@ -7,7 +7,7 @@
 SXML_TYPE_LIST JSON_ARRAY (SXML_TYPE_LIST L)
 {
   if (L == NULL) {
-    return SXML_T( "[ ]\n");
+    return SXML_T( "[]");
   }
   else {
     return SXML_TLT( "[", L, "]");
@@ -66,7 +66,7 @@ SXML_TYPE_LIST JSON_KU (SXML_TYPE_TEXT K, SXML_TYPE_LIST V)
 
 SXML_TYPE_LIST JSON_KU_ (SXML_TYPE_TEXT K, SXML_TYPE_LIST V)
 {
-  return SXML_TTTLT ("\"", K, "\" : ", V, "\",\n");
+  return SXML_TTTLT ("\"", K, "\" : ", V, ",\n");
 }
 
 /* -------------------------------------------------------------------------
@@ -103,12 +103,11 @@ SXML_TYPE_LIST json_program_unit( SXML_TYPE_TEXT tag,
 SXML_TYPE_LIST subprogram_header( SXML_TYPE_TEXT name,
 				  SXML_TYPE_LIST parameters) {
 
-  return SXML_LLT(
+  return SXML_LL(
     JSON_KQ_ ("name", name),
-    JSON_KU (
+    JSON_KU_ (
       "parameters",
-      JSON_ARRAY( parameters) ),
-    ",\n");
+      JSON_ARRAY( parameters) ));
 }
 
 /* -------------------------------------------------------------------------
@@ -153,6 +152,25 @@ SXML_TYPE_LIST json_type_statement( SXML_TYPE_LIST type_reference,
     JSON_KU ("type", type_reference),
     ",\n",
     JSON_KU ( "declarators", JSON_ARRAY( variables) ));
+}
+
+/* -------------------------------------------------------------------------
+ * outputs a call_statement
+ * - name of the procedure called
+ * - Location of the statement
+ * - list of arguments
+ */
+SXML_TYPE_LIST json_call_statement( SXML_TYPE_TEXT name,
+				    SXML_TYPE_LIST location,
+				    SXML_TYPE_LIST arguments) {
+
+  return SXML_LTLL(
+    json_abstract_statement( "call_statement", location),
+    ",\n",
+    JSON_KQ_ ("name", name),
+    JSON_KU(
+      "arguments",
+      JSON_ARRAY( arguments)) );
 }
 
 /* -------------------------------------------------------------------------
