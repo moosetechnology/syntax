@@ -155,6 +155,24 @@ SXML_TYPE_LIST json_type_statement( SXML_TYPE_LIST type_reference,
 }
 
 /* -------------------------------------------------------------------------
+ * outputs a pause_statement (with optional "argument")
+ * - argument of the PAUSE
+ * - Location of the statement
+ */
+SXML_TYPE_LIST json_pause_statement( SXML_TYPE_LIST argument,
+				     SXML_TYPE_LIST location) {
+  if (argument == NULL) {
+    return json_abstract_statement( "pause_statement", location);
+  }
+  else {
+    return SXML_LTL(
+      json_abstract_statement( "pause_statement", location),
+      ",\n",
+      argument);
+  }
+}
+
+/* -------------------------------------------------------------------------
  * outputs a call_statement
  * - name of the procedure called
  * - Location of the statement
