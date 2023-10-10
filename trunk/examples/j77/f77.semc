@@ -1584,7 +1584,7 @@ $NAME( <22:len_specification>)
 
 $NAME( <22:len_specification>)
 {
-  $NAME( <22:len_specification>) = "<22>.3";
+  $NAME( <22:len_specification>) = $ptext ("%int_id");
 }
 
 *------------------------------------------------------------------------------
@@ -3753,7 +3753,7 @@ $LIST(<99a:symbolic_name_list>)
 
 $NAME( <103:nonzero_unsigned_int_constant>)
 {
-  $NAME( <103:nonzero_unsigned_int_constant>) =  "%uint_constant";
+  $NAME( <103:nonzero_unsigned_int_constant>) = $ptext ("%unsigned_int_constant");
 }
 
 *******************************************************************************
@@ -3825,7 +3825,7 @@ $NAME( <103:nonzero_unsigned_int_constant>)
 
 $NAME( <110:label>)
 {
-  $NAME( <110:label>) =  "%label";
+  $NAME( <110:label>) = $ptext ("%label");
 }
 
 *******************************************************************************
