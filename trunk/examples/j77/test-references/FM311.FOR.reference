@@ -200,10 +200,17 @@
                     "column": "7"
                 },
                 {
-                    "rule": "<6>.3",
-                    "tag": "unknown_statement",
+                    "tag": "common_statement",
                     "line": "87",
-                    "column": "7"
+                    "column": "7",
+                    "common_parts": [
+                        {
+                            "name": "IFOS19",
+                            "declarators": [
+                                "IVCN01"
+                            ]
+                        }
+                    ]
                 },
                 {
                     "rule": "<2e>.7",
