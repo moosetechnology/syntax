@@ -263,31 +263,6 @@ SXML_TYPE_LIST json_common_part( SXML_TYPE_TEXT name,
 
 
 /* -------------------------------------------------------------------------
- * creates a common_part without a name
- * must add "," between the declarators
- * - declarators of the common_part
- */
-SXML_TYPE_LIST json_unnamed_common_part( SXML_TYPE_LIST declarators) {
-  SXML_TYPE_LIST common_part;
-  SXML_TYPE_LIST l;
-
-  l = SXML_HEAD (declarators);
-  common_part = SXML_T( l->TEXT);
-  l = SXML_SUCC (l, declarators);  // next name
-
-  for ( ; l != NULL ; l = SXML_SUCC (l, declarators) ) {
-    common_part = SXML_LTT(
-      common_part,
-      ", " ,
-      l->TEXT);
-  }
-
-  return JSON_MAP(
-    JSON_KU ( "declarators", JSON_ARRAY( common_part)) );
-}
-
-
-/* -------------------------------------------------------------------------
  * outputs a common_statement.
  * common_statment come unstructured in a list of /name/ decls , /name/decls
  * - common_parts: list of the common_parts
@@ -338,10 +313,9 @@ SXML_TYPE_LIST parse_common_statement( SXML_TYPE_LIST common_declaration,
 
   l = SXML_HEAD (common_declaration);
   if (! isSlash(l)) {
-    // only 1 unnammed common_part
-    return json_common_statement(
-      json_unnamed_common_part( common_declaration),
-      location );
+    // 1st common_part is unnammed, get 1st declarator
+    common_part_declarators = SXML_T( l->TEXT);
+    l = SXML_SUCC (l, common_declaration);
   }
 
   for ( ; l != NULL ; l = SXML_SUCC (l, common_declaration) ) {
@@ -355,10 +329,14 @@ SXML_TYPE_LIST parse_common_statement( SXML_TYPE_LIST common_declaration,
       }
 
       l = SXML_SUCC (l, common_declaration);  // skip 1st "/"
-      if  (! isSlash(l)) {
+      if  (isSlash(l)) {
+	common_part_name = "//";
+      }
+      else {
 	common_part_name = l->TEXT;  // get common_part name
 	l = SXML_SUCC (l, common_declaration);  // skip common_part name
       }
+
       l = SXML_SUCC (l, common_declaration);  // skip 2nd "/"
       // 1st declarator after "/.../" (in new common_part)
       common_part_declarators = SXML_T( l->TEXT);
