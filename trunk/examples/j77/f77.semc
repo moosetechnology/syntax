@@ -26,10 +26,10 @@
 
 * The following declarations define the synthesized attributes
 
-$LIST( <common_body>, <,common_body>, <0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <2e:statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <6:other_specification_statement>, <7:executable_statement>, <8:program_statement>, <9:entry_statement>, <10:function_statement>, <10d:function_header>, <10a:type>, <12:subroutine_statement>, <12a:subroutine_header>, <12b:subroutine_parameter_list>, <13:function_or_subroutine_entry>, <19:common_statement>, <19a:common_body_list>, <19b:common_part>, <20:type_statement>, <20a:scalar_name_list>, <20c:character_name_list>, <20d:character_name>, <42:stop_statement>, <43:pause_statement>, <71:call_statement>, <71a:actual_argument_list>, <71b:actual_argument>, <99a:symbolic_name_list>) 
+$LIST( <common_body>, <,common_body>, <0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <2e:statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <6:other_specification_statement>, <7:executable_statement>, <8:program_statement>, <9:entry_statement>, <10:function_statement>, <10d:function_header>, <10a:type>, <12:subroutine_statement>, <12a:subroutine_header>, <12b:subroutine_parameter_list>, <13:function_or_subroutine_entry>, <16:array_declarator>, <16a:array_declarator_list>, <16b:dimension_declarator_list>, <16c:dimension_declarator>, <16d:last_dimension_declarator>, <16e:last_upper_dimension_bound>, <19:common_statement>, <19a:common_body_list>, <19b:common_part>, <20:type_statement>, <20a:scalar_name_list>, <20b:scalar_name>, <20c:character_name_list>, <20d:character_name>, <42:stop_statement>, <43:pause_statement>, <71:call_statement>, <71a:actual_argument_list>, <71b:actual_argument>, <80:int_constant_expr>, <81:dim_bound_expr>, <99a:symbolic_name_list>) 
 : SXML_TYPE_LIST ;
 
-$NAME( <10b:scalar_type>, <12c:subroutine_parameter>, <20b:scalar_name>, <22:len_specification>, <72:return_statement>, <99:symbolic_name>, <102:unsigned_int_constant>, <103:nonzero_unsigned_int_constant>, <109:character_constant>, <110:label>) : SXML_TYPE_TEXT; /* i.e., character string */
+$NAME( <10b:scalar_type>, <12c:subroutine_parameter>, <22:len_specification>, <72:return_statement>, <80:int_constant_expr>, <80a:int_constant_expr>, <81:dim_bound_expr>, <99:symbolic_name>, <102:unsigned_int_constant>, <103:nonzero_unsigned_int_constant>, <109:character_constant>, <110:label>, <114:sign>) : SXML_TYPE_TEXT; /* i.e., character string */
 
 *------------------------------------------------------------------------------
 
@@ -1156,57 +1156,130 @@ $LIST( <13:function_or_subroutine_entry>)
 <16:array_declarator>
 		= <99:symbolic_name>  ( <16b:dimension_declarator_list> ) ;
 
+$LIST( <16:array_declarator>)
+{
+ $LIST( <16:array_declarator>) = json_variable_declarator(
+    $NAME( <99:symbolic_name>),
+    $LIST( <16b:dimension_declarator_list>) );
+}
+
 *******************************************************************************
 
 <16a:array_declarator_list>
 		= <16a:array_declarator_list> ,  <16:array_declarator> ;
+
+$LIST( <16a:array_declarator_list>)
+{
+  $LIST( <16a:array_declarator_list>) = SXML_LTL(
+    $LIST( <16a:array_declarator_list>'),
+    ",\n",
+    $LIST( <16:array_declarator>) );
+}
 
 *------------------------------------------------------------------------------
 
 <16a:array_declarator_list>
 		= <16:array_declarator> ;
 
+$LIST( <16a:array_declarator_list>)
+{
+  $LIST( <16a:array_declarator_list>) = $LIST( <16:array_declarator>);
+}
+
 *******************************************************************************
 
 * The maximum number of dimensions is seven.
+*** Why the order is inversed here ?
 
 <16b:dimension_declarator_list>
 		= <16c:dimension_declarator> ,  <16b:dimension_declarator_list> ;
+
+$LIST( <16b:dimension_declarator_list>)
+{
+  $LIST( <16b:dimension_declarator_list>) = SXML_LTL(
+    $LIST( <16c:dimension_declarator>),
+    ",\n",
+    $LIST( <16b:dimension_declarator_list>') );
+}
 
 *------------------------------------------------------------------------------
 
 <16b:dimension_declarator_list>
 		= <16d:last_dimension_declarator> ;
 
+$LIST( <16b:dimension_declarator_list>)
+{
+  $LIST( <16b:dimension_declarator_list>) =
+    $LIST( <16d:last_dimension_declarator>);
+}
+
 *******************************************************************************
 
 <16c:dimension_declarator>
 		= <81:dim_bound_expr>  :  <81:dim_bound_expr> ;
 
+$LIST( <16c:dimension_declarator>)
+{
+  $LIST( <16c:dimension_declarator>) = json_lower_upper_bound(
+    $LIST( <81:dim_bound_expr>),
+    $LIST( <81:dim_bound_expr>') );
+}
+
 *------------------------------------------------------------------------------
 
 <16c:dimension_declarator>
 		= <81:dim_bound_expr> ;
+
+$LIST( <16c:dimension_declarator>)
+{
+  $LIST( <16c:dimension_declarator>) = json_lower_upper_bound(
+    $LIST( <81:dim_bound_expr>),
+    NULL );
+}
 
 *******************************************************************************
 
 <16d:last_dimension_declarator>
 		= <81:dim_bound_expr>  :  <16e:last_upper_dimension_bound> ;
 
+$LIST( <16d:last_dimension_declarator>)
+{
+  $LIST( <16d:last_dimension_declarator>) = json_lower_upper_bound(
+    $LIST( <81:dim_bound_expr>),
+    $LIST( <16e:last_upper_dimension_bound>) );
+}
+
 *------------------------------------------------------------------------------
 
 <16d:last_dimension_declarator>
 		= <16e:last_upper_dimension_bound> ;
+
+$LIST( <16d:last_dimension_declarator>)
+{
+  $LIST( <16d:last_dimension_declarator>) = $LIST( <16e:last_upper_dimension_bound>);
+}
 
 *******************************************************************************
 
 <16e:last_upper_dimension_bound>
 		= <81:dim_bound_expr> ;
 
+$LIST( <16e:last_upper_dimension_bound>)
+{
+  $LIST( <16e:last_upper_dimension_bound>) =
+    $LIST( <81:dim_bound_expr>);
+}
+
 *------------------------------------------------------------------------------
 
 <16e:last_upper_dimension_bound>
 		= * ;
+
+$LIST( <16e:last_upper_dimension_bound>)
+{
+  $LIST( <16e:last_upper_dimension_bound>) =
+    json_literal_expression( "*");
+}
 
 *******************************************************************************
 
@@ -1331,7 +1404,7 @@ $LIST( <common_body>)
 
 $LIST( <common_body>)
 {
-  $LIST( <common_body>) = SXML_T( $NAME( <20b:scalar_name>)) ;
+  $LIST( <common_body>) = SXML_T( $LIST( <20b:scalar_name>)) ;
 }
 
 *******************************************************************************
@@ -1350,11 +1423,11 @@ $LIST( <common_body>)
 
 $LIST( <19b:common_part>)
 {
-  $LIST( <19b:common_part>) = SXML_TTTT(
+  $LIST( <19b:common_part>) = SXML_TTTL(
     "/",
     $NAME( <99:symbolic_name>),
     "/",
-    $NAME( <20b:scalar_name>) );
+    $LIST( <20b:scalar_name>) );
 }
 
 *------------------------------------------------------------------------------
@@ -1371,7 +1444,7 @@ $LIST( <19b:common_part>)
   $LIST( <19b:common_part>) = SXML_TTT(
     "/",
     "/",
-    $NAME( <20b:scalar_name>) );
+    $LIST( <20b:scalar_name>) );
 }
 
 *******************************************************************************
@@ -1383,7 +1456,9 @@ $LIST( <19b:common_part>)
 $LIST(<20:type_statement>)
 {
   $LIST(<20:type_statement>) = json_type_statement(
-    json_type_reference( $NAME (<10b:scalar_type>), NULL),
+    json_type_reference(
+      $NAME (<10b:scalar_type>),
+      NULL ),
     LOCATION(0), 
     $LIST( <20a:scalar_name_list>));
 
@@ -1398,7 +1473,9 @@ $LIST(<20:type_statement>)
 $LIST(<20:type_statement>)
 {
   $LIST(<20:type_statement>) = json_type_statement(
-    json_type_reference( $NAME (<10b:scalar_type>), NULL),
+    json_type_reference(
+      $NAME ( <10b:scalar_type>),
+      $NAME ( <22:len_specification>)),
     LOCATION(0), 
     $LIST( <20a:scalar_name_list>));
 
@@ -1412,7 +1489,9 @@ $LIST(<20:type_statement>)
 $LIST(<20:type_statement>)
 {
   $LIST(<20:type_statement>) = json_type_statement(
-    json_type_reference( $NAME (<10b:scalar_type>), NULL),
+    json_type_reference(
+      $NAME ( <10b:scalar_type>),
+      $NAME( <22:len_specification>)),
     LOCATION(0), 
     $LIST( <20a:scalar_name_list>));
 
@@ -1439,7 +1518,9 @@ $LIST(<20:type_statement>)
 $LIST(<20:type_statement>)
 {
   $LIST(<20:type_statement>) = json_type_statement(
-    json_type_reference( "CHARACTER", $NAME (<22:len_specification>)),
+    json_type_reference(
+      "CHARACTER",
+      $NAME (<22:len_specification>)),
     LOCATION(0), 
     $LIST( <20c:character_name_list>));
 }
@@ -1452,7 +1533,9 @@ $LIST(<20:type_statement>)
 $LIST(<20:type_statement>)
 {
   $LIST(<20:type_statement>) = json_type_statement(
-    json_type_reference( "CHARACTER", $NAME (<22:len_specification>)),
+    json_type_reference(
+      "CHARACTER",
+      $NAME (<22:len_specification>)),
     LOCATION(0), 
     $LIST( <20c:character_name_list>));
 }
@@ -1464,10 +1547,10 @@ $LIST(<20:type_statement>)
 
 $LIST( <20a:scalar_name_list>)
 {
-  $LIST(<20a:scalar_name_list>) = SXML_LTT (
+  $LIST(<20a:scalar_name_list>) = SXML_LTL (
     $LIST(<20a:scalar_name_list>'),
     ",",
-    $NAME(<20b:scalar_name>));
+    $LIST(<20b:scalar_name>));
 }
 
 *------------------------------------------------------------------------------
@@ -1477,7 +1560,7 @@ $LIST( <20a:scalar_name_list>)
 
 $LIST( <20a:scalar_name_list>)
 {
-  $LIST(<20a:scalar_name_list>) = SXML_T( $NAME( <20b:scalar_name>));
+  $LIST(<20a:scalar_name_list>) = $LIST( <20b:scalar_name>));
 }
 
 *******************************************************************************
@@ -1485,9 +1568,9 @@ $LIST( <20a:scalar_name_list>)
 <20b:scalar_name>
 		= <16:array_declarator> ;
 
-$NAME(<20b:scalar_name>)
+$LIST(<20b:scalar_name>)
 {
-  $NAME(<20b:scalar_name>) = "\"<20b>.1\"";
+  $LIST(<20b:scalar_name>) = $LIST( <16:array_declarator>);
 }
 
 *------------------------------------------------------------------------------
@@ -1495,9 +1578,11 @@ $NAME(<20b:scalar_name>)
 <20b:scalar_name>
 		= <99:symbolic_name> ;
 
-$NAME(<20b:scalar_name>)
+$LIST(<20b:scalar_name>)
 {
-  $NAME(<20b:scalar_name>) = SXML_Q( $NAME( <99:symbolic_name>));
+  $LIST(<20b:scalar_name>) =  json_variable_declarator(
+    $NAME( <99:symbolic_name>),
+    NULL);
 }
 
 *******************************************************************************
@@ -1520,7 +1605,9 @@ $LIST( <20c:character_name_list>)
 
 $LIST( <20c:character_name_list>)
 {
-  $LIST(<20c:character_name_list>) = $LIST(<20d:character_name>);
+  $LIST(<20c:character_name_list>) = json_variable_declarator(
+    $LIST( <20b:scalar_name>),
+    NULL );
 }
 
 *******************************************************************************
@@ -1530,7 +1617,9 @@ $LIST( <20c:character_name_list>)
 
 $LIST(<20d:character_name>)
 {
-  $LIST(<20d:character_name>) = SXML_T( $NAME( <20b:scalar_name>));
+  $LIST(<20d:character_name>) = json_variable_declarator(
+    $LIST( <20b:scalar_name>),
+    $NAME( <22:len_specification>));
 }
 
 *------------------------------------------------------------------------------
@@ -1540,7 +1629,7 @@ $LIST(<20d:character_name>)
 
 $LIST(<20d:character_name>)
 {
-  $LIST(<20d:character_name>) = SXML_T( $NAME( <20b:scalar_name>));
+  $LIST(<20d:character_name>) = $LIST( <20b:scalar_name>);
 }
 
 *******************************************************************************
@@ -3245,50 +3334,120 @@ $NAME( <72:return_statement>)
 <80:int_constant_expr>
 		= <114:sign> <80a:int_constant_expr> ;
 
+$LIST( <80:int_constant_expr>)
+{
+  $LIST( <80:int_constant_expr>) = json_unary_expression(
+    $NAME( <114:sign>),
+    $LIST( <80a:int_constant_expr>) );
+}
+
 *------------------------------------------------------------------------------
 
 <80:int_constant_expr>
 		= <80a:int_constant_expr> ;
+
+$LIST( <80:int_constant_expr>)
+{
+  $LIST( <80:int_constant_expr>) = $LIST( <80a:int_constant_expr>);
+}
 
 *******************************************************************************
 
 <80a:int_constant_expr>
 		= <80a:int_constant_expr> + <80a:int_constant_expr> ;
 
+$LIST( <80a:int_constant_expr>)
+{
+  $LIST( <80a:int_constant_expr>) = json_binary_expression(
+    $LIST( <80a:int_constant_expr>' ),
+    "+",
+    $LIST( <80a:int_constant_expr>'') );
+}
+
 *------------------------------------------------------------------------------
 
 <80a:int_constant_expr>
 		= <80a:int_constant_expr> - <80a:int_constant_expr> ;
+
+$LIST( <80a:int_constant_expr>)
+{
+  $LIST( <80a:int_constant_expr>) = json_binary_expression(
+    $LIST( <80a:int_constant_expr>' ),
+    "-",
+    $LIST( <80a:int_constant_expr>'') );
+}
 
 *------------------------------------------------------------------------------
 
 <80a:int_constant_expr>
 		= <80a:int_constant_expr> * <80a:int_constant_expr> ;
 
+$LIST( <80a:int_constant_expr>)
+{
+  $LIST( <80a:int_constant_expr>) = json_binary_expression(
+    $LIST( <80a:int_constant_expr>' ),
+    "*",
+    $LIST( <80a:int_constant_expr>'') );
+}
+
 *------------------------------------------------------------------------------
 
 <80a:int_constant_expr>
 		= <80a:int_constant_expr> / <80a:int_constant_expr> ;
+
+$LIST( <80a:int_constant_expr>)
+{
+  $LIST( <80a:int_constant_expr>) = json_binary_expression(
+    $LIST( <80a:int_constant_expr>' ),
+    "/",
+    $LIST( <80a:int_constant_expr>'') );
+}
 
 *------------------------------------------------------------------------------
 
 <80a:int_constant_expr>
 		= <80a:int_constant_expr> ** <80a:int_constant_expr> ;
 
+$LIST( <80a:int_constant_expr>)
+{
+  $LIST( <80a:int_constant_expr>) = json_binary_expression(
+    $LIST( <80a:int_constant_expr>' ),
+    "**",
+    $LIST( <80a:int_constant_expr>'') );
+}
+
 *------------------------------------------------------------------------------
 
 <80a:int_constant_expr>
 		= <102:unsigned_int_constant> ;
+
+$LIST( <80a:int_constant_expr>)
+{
+  $LIST( <80a:int_constant_expr>) = json_literal_expression(
+    $NAME( <102:unsigned_int_constant>) );
+}
 
 *------------------------------------------------------------------------------
 
 <80a:int_constant_expr>
 		= <99:symbolic_name> ;
 
+$LIST( <80a:int_constant_expr>)
+{
+  $LIST( <80a:int_constant_expr>) = json_variable_expression(
+    $NAME( <99:symbolic_name>) );
+}
+
 *------------------------------------------------------------------------------
 
 <80a:int_constant_expr>
 		= ( <80:int_constant_expr> ) ;
+
+$LIST( <80a:int_constant_expr>)
+{
+  $LIST( <80a:int_constant_expr>) = json_parenthesis_expression(
+    $LIST( <80:int_constant_expr>) );
+}
 
 *******************************************************************************
 
@@ -3297,6 +3456,11 @@ $NAME( <72:return_statement>)
 
 <81:dim_bound_expr>
 		= <80:int_constant_expr> ;
+
+$LIST( <81:dim_bound_expr>)
+{
+  $LIST( <81:dim_bound_expr>) = $LIST( <80:int_constant_expr>);
+}
 
 *------------------------------------------------------------------------------
 
@@ -3924,9 +4088,19 @@ $NAME( <110:label>)
 
 <114:sign>	= + ;
 
+$NAME( <114:sign>)
+{
+  $NAME( <114:sign>) = "+";
+}
+
 *------------------------------------------------------------------------------
 
 <114:sign>	= - ;
+
+$NAME( <114:sign>)
+{
+  $NAME( <114:sign>) = "-";
+}
 
 *******************************************************************************
 

@@ -69,6 +69,15 @@ SXML_TYPE_LIST JSON_KU_ (SXML_TYPE_TEXT K, SXML_TYPE_LIST V)
   return SXML_TTTLT ("\"", K, "\" : ", V, ",\n");
 }
 
+
+/* -------------------------------------------------------------------------
+ * ouputs a tag
+ */
+SXML_TYPE_LIST json_tag( SXML_TYPE_TEXT tag) {
+  return JSON_KQ_ ("tag", tag);
+}
+
+
 /* -------------------------------------------------------------------------
  * ouputs a program_unit
  * - tag: main/function/subroutine/block_data
@@ -85,7 +94,7 @@ SXML_TYPE_LIST json_program_unit( SXML_TYPE_TEXT tag,
 
   return JSON_MAP(
       SXML_LLLTLTL(
-	JSON_KQ_ ("tag", tag),
+	json_tag(tag),
 	header,
 	location,
         ",\n",
@@ -119,7 +128,7 @@ SXML_TYPE_LIST json_abstract_statement( SXML_TYPE_TEXT tag,
 					SXML_TYPE_LIST location) {
 
   return SXML_LL(
-    JSON_KQ_ ("tag", tag),
+    json_tag(tag),
     location );
 }
 
@@ -153,6 +162,30 @@ SXML_TYPE_LIST json_type_statement( SXML_TYPE_LIST type_reference,
     ",\n",
     JSON_KU ( "declarators", JSON_ARRAY( variables) ));
 }
+
+/* -------------------------------------------------------------------------
+ * ouputs a type_reference (typically in a variable declaration statement)
+ * - name of the type
+ * - len_specification
+ */
+SXML_TYPE_LIST json_type_reference( SXML_TYPE_TEXT name,
+				    SXML_TYPE_TEXT len_specification) {
+
+  if (len_specification == NULL) {
+    return JSON_MAP(
+      SXML_LL (
+        json_tag("type_reference"),
+	JSON_KQ ("name", name) ));
+  }
+  else {
+    return JSON_MAP(
+      SXML_LLL (
+        json_tag("type_reference"),
+	JSON_KQ_ ("name", name),
+	JSON_KQ ("len_specification", len_specification) ));
+  }
+}
+
 
 /* -------------------------------------------------------------------------
  * outputs a pause/stop_statement (with optional "argument")
@@ -192,29 +225,6 @@ SXML_TYPE_LIST json_call_statement( SXML_TYPE_TEXT name,
     JSON_KU(
       "arguments",
       JSON_ARRAY( arguments)) );
-}
-
-/* -------------------------------------------------------------------------
- * ouputs a type_reference (typically in a variable declaration statement)
- * - name of the type
- * - len_specification
- */
-SXML_TYPE_LIST json_type_reference( SXML_TYPE_TEXT name,
-				    SXML_TYPE_TEXT len_specification) {
-
-  if (len_specification == NULL) {
-    return JSON_MAP(
-      SXML_LL (
-	JSON_KQ_ ("tag", "type_reference"),
-	JSON_KQ ("name", name) ));
-  }
-else {
-  return JSON_MAP(
-    SXML_LLL (
-      JSON_KQ_ ("tag", "type_reference"),
-      JSON_KQ_ ("name", name),
-      JSON_KQ ("len_specification", len_specification) ));
- }
 }
 
 
@@ -345,3 +355,85 @@ SXML_TYPE_LIST parse_common_statement( SXML_TYPE_LIST common_declaration,
   return json_common_statement( common, location);
 }
 
+
+/* -------------------------------------------------------------------------
+ * outputs a literal_expression.
+ */
+SXML_TYPE_LIST json_literal_expression( SXML_TYPE_TEXT literal) {
+
+  return JSON_MAP (
+    SXML_LLL(
+      json_tag( "literal_expression"),
+      JSON_KQ( "literal", literal) ));
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a variable_expression.
+ */
+SXML_TYPE_LIST json_variable_expression( SXML_TYPE_TEXT variable) {
+
+  return JSON_MAP (
+    SXML_LLL(
+      json_tag( "variable_expression"),
+      JSON_KQ( "variable", variable) ));
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a parenthesis_expression (expresison between parentheses)
+ */
+SXML_TYPE_LIST json_parenthesis_expression( SXML_TYPE_LIST expression) {
+
+  return JSON_MAP (
+    SXML_LLL(
+      json_tag( "parenthesis_expression"),
+      JSON_KU( "expression", expression) ));
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a unary_expression.
+ * - unary_operator
+ * - expression
+ */
+SXML_TYPE_LIST json_unary_expression( SXML_TYPE_TEXT unary_operator,
+				      SXML_TYPE_LIST expression) {
+
+  return JSON_MAP (
+    SXML_LLL(
+      json_tag( "unary_expression"),
+      JSON_KU_( "operator", unary_operator),
+      JSON_KU( "expression", expression) ));
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a binary_expression.
+ */
+SXML_TYPE_LIST json_binary_expression( SXML_TYPE_LIST lhs_expression,
+				       SXML_TYPE_TEXT binary_operator,
+				       SXML_TYPE_LIST rhs_expression) {
+
+  return JSON_MAP (
+    SXML_LLLL(
+      json_tag( "binary_expression"),
+      JSON_KU ( "lhs", lhs_expression),
+      JSON_KU_( "operator", binary_operator),
+      JSON_KU ( "expression", rhs_expression) ));
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a variable declarator
+ * - name of the variable
+ * - dimension_declarator
+ */
+SXML_TYPE_LIST json_variable_declarator( SXML_TYPE_LIST variable,
+					 SXML_TYPE_LIST dimension_declarator) {
+ return JSON_MAP(
+   SXML_LLL(
+     json_tag( "variable_declarator"),
+     JSON_KU_( "name", variable),
+     JSON_KU(  "dimension_declarators", JSON_ARRAY( dimension_declarator)) ) );
+}
