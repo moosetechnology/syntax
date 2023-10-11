@@ -683,7 +683,8 @@ $LIST(<7:executable_statement>)
 
 $LIST(<7:executable_statement>)
 {
-  $LIST(<7:executable_statement>) = json_stop_statement(
+  $LIST(<7:executable_statement>) = json_pause_stop_statement(
+    "stop_statement",
     $LIST( <42:stop_statement>),
     LOCATION(0) );
 }
@@ -695,7 +696,8 @@ $LIST(<7:executable_statement>)
 
 $LIST(<7:executable_statement>)
 {
-  $LIST(<7:executable_statement>) = json_pause_statement(
+  $LIST(<7:executable_statement>) = json_pause_stop_statement(
+    "pause_statement",
     $LIST( <43:pause_statement>),
     LOCATION(0) );
 }
