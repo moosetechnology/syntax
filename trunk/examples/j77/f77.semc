@@ -2122,7 +2122,7 @@ $LIST( <42:stop_statement>)
 {
   $LIST( <42:stop_statement>) = JSON_KQ(
     "uint_constant",
-    "<42>.2");
+    $NAME( <102:unsigned_int_constant>));
 }
 
 *------------------------------------------------------------------------------
@@ -2134,7 +2134,7 @@ $LIST( <42:stop_statement>)
 {
   $LIST( <42:stop_statement>) = JSON_KQ(
     "character_constant",
-    "<42>.3");
+    $NAME( <109:character_constant>));
 }
 
 *******************************************************************************
