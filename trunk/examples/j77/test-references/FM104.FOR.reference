@@ -45,20 +45,7 @@
             "ending-line": "328",
             "ending-column": "9",
             "statement_list": [
-                {
-                    "tag": "common_statement",
-                    "line": "41",
-                    "column": "7",
-                    "common_parts": [
-                        {
-                            "declarators": [
-                                "<20b>.1",
-                                "<20b>.1",
-                                "ICHEC"
-                            ]
-                        }
-                    ]
-                },
+                {},
                 {
                     "rule": "<6>.1",
                     "tag": "unknown_statement",
@@ -81,9 +68,21 @@
                         "len_specification": "1"
                     },
                     "declarators": [
-                        "NINE",
-                        "IZERO",
-                        "IDUMP"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "NINE",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "IZERO",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "IDUMP",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {

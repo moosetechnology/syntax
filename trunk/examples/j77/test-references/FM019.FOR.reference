@@ -54,8 +54,16 @@
                         "name": "LOGICAL"
                     },
                     "declarators": [
-                        "LCTNT1",
-                        "LCTNT2"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "LCTNT1",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "LCTNT2",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {

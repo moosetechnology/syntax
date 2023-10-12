@@ -88,7 +88,11 @@
                         "name": "INTEGER"
                     },
                     "declarators": [
-                        "MAX1"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "MAX1",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -100,7 +104,11 @@
                         "name": "REAL"
                     },
                     "declarators": [
-                        "SINH"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "SINH",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -115,18 +123,7 @@
                     "line": "112",
                     "column": "7"
                 },
-                {
-                    "tag": "common_statement",
-                    "line": "113",
-                    "column": "7",
-                    "common_parts": [
-                        {
-                            "declarators": [
-                                "RVCN01"
-                            ]
-                        }
-                    ]
-                },
+                {},
                 {
                     "rule": "<6>.2",
                     "tag": "unknown_statement",
@@ -3993,18 +3990,7 @@
             "ending-line": "942",
             "ending-column": "9",
             "statement_list": [
-                {
-                    "tag": "common_statement",
-                    "line": "939",
-                    "column": "7",
-                    "common_parts": [
-                        {
-                            "declarators": [
-                                "RVCN01"
-                            ]
-                        }
-                    ]
-                },
+                {},
                 {
                     "rule": "<7>.1",
                     "tag": "unknown_statement",

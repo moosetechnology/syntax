@@ -19,8 +19,16 @@
                         "name": "CHARACTER"
                     },
                     "declarators": [
-                        "VAR1",
-                        "VAR2"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "VAR1",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "VAR2",
+                            "dimension_declarators": []
+                        }
                     ]
                 }
             ]

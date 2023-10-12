@@ -110,16 +110,66 @@
                         "name": "CHARACTER"
                     },
                     "declarators": [
-                        "ZVERS",
-                        "ZVERSD",
-                        "ZDATE",
-                        "ZPROG",
-                        "ZCOMPL",
-                        "ZNAME",
-                        "ZTAPE",
-                        "ZPROJ",
-                        "REMRKS",
-                        "ZTAPED"
+                        {
+                            "len_specifier": "13",
+                            "tag": "variable_declarator",
+                            "variable": "ZVERS",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "17",
+                            "tag": "variable_declarator",
+                            "variable": "ZVERSD",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "17",
+                            "tag": "variable_declarator",
+                            "variable": "ZDATE",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "5",
+                            "tag": "variable_declarator",
+                            "variable": "ZPROG",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "20",
+                            "tag": "variable_declarator",
+                            "variable": "ZCOMPL",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "20",
+                            "tag": "variable_declarator",
+                            "variable": "ZNAME",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "10",
+                            "tag": "variable_declarator",
+                            "variable": "ZTAPE",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "13",
+                            "tag": "variable_declarator",
+                            "variable": "ZPROJ",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "31",
+                            "tag": "variable_declarator",
+                            "variable": "REMRKS",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "13",
+                            "tag": "variable_declarator",
+                            "variable": "ZTAPED",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -131,9 +181,54 @@
                         "name": "INTEGER"
                     },
                     "declarators": [
-                        "<20b>.1",
-                        "<20b>.1",
-                        "<20b>.1"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "I2D001",
+                            "dimension_declarators": [
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "3"
+                                    }
+                                },
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "5"
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "I2D002",
+                            "dimension_declarators": [
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "2"
+                                    }
+                                },
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "4"
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "I2D003",
+                            "dimension_declarators": [
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "5"
+                                    }
+                                },
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "2"
+                                }
+                            ]
+                        }
                     ]
                 },
                 {
@@ -170,8 +265,16 @@
                         "len_specification": "4"
                     },
                     "declarators": [
-                        "CVCOMP",
-                        "CVCORR"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "CVCOMP",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "CVCORR",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -184,12 +287,162 @@
                         "len_specification": "4"
                     },
                     "declarators": [
-                        "<20b>.1",
-                        "<20b>.1",
-                        "<20b>.1",
-                        "<20b>.1",
-                        "<20b>.1",
-                        "<20b>.1"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "C2N001",
+                            "dimension_declarators": [
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "0"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "5"
+                                    }
+                                },
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "1"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "6"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "C2D002",
+                            "dimension_declarators": [
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "2"
+                                    }
+                                },
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "1"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "3"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "C2N003",
+                            "dimension_declarators": [
+                                {
+                                    "lower_bound": {
+                                        "tag": "unary_expression",
+                                        "operator": "-",
+                                        "expression": {
+                                            "tag": "literal_expression",
+                                            "literal": "2"
+                                        }
+                                    },
+                                    "upper_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "1"
+                                    }
+                                },
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "3"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "10"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "C2D004",
+                            "dimension_declarators": [
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "1"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "2"
+                                    }
+                                },
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "5"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "7"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "C1N005",
+                            "dimension_declarators": [
+                                {
+                                    "lower_bound": {
+                                        "tag": "unary_expression",
+                                        "operator": "+",
+                                        "expression": {
+                                            "tag": "literal_expression",
+                                            "literal": "1"
+                                        }
+                                    },
+                                    "upper_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "6"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "C3D006",
+                            "dimension_declarators": [
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "1"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "2"
+                                    }
+                                },
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "2"
+                                    }
+                                },
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "5"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "7"
+                                    }
+                                }
+                            ]
+                        }
                     ]
                 },
                 {
@@ -3546,9 +3799,59 @@
                         "len_specification": "4"
                     },
                     "declarators": [
-                        "CVD001",
-                        "<20b>.1",
-                        "<20b>.1"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "CVD001",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "C2D001",
+                            "dimension_declarators": [
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "2"
+                                    }
+                                },
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "1"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "*"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "C2D002",
+                            "dimension_declarators": [
+                                {
+                                    "lower_bound": {
+                                        "tag": "variable_expression",
+                                        "variable": "IVD002"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "variable_expression",
+                                        "variable": "IVD003"
+                                    }
+                                },
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "5"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "7"
+                                    }
+                                }
+                            ]
+                        }
                     ]
                 },
                 {
@@ -3609,8 +3912,43 @@
                         "len_specification": "4"
                     },
                     "declarators": [
-                        "CVD001",
-                        "<20b>.1"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "CVD001",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "C3D001",
+                            "dimension_declarators": [
+                                {
+                                    "lower_bound": {
+                                        "tag": "variable_expression",
+                                        "variable": "IVD002"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "variable_expression",
+                                        "variable": "IVD003"
+                                    }
+                                },
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "2"
+                                    }
+                                },
+                                {
+                                    "lower_bound": {
+                                        "tag": "variable_expression",
+                                        "variable": "IVD004"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "7"
+                                    }
+                                }
+                            ]
+                        }
                     ]
                 },
                 {

@@ -44,7 +44,11 @@
                         "name": "INTEGER"
                     },
                     "declarators": [
-                        "RVTNI1"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "RVTNI1",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -56,7 +60,11 @@
                         "name": "REAL"
                     },
                     "declarators": [
-                        "IVTNR1"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "IVTNR1",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -68,22 +76,19 @@
                         "name": "LOGICAL"
                     },
                     "declarators": [
-                        "LVTNL1",
-                        "LVTNL2"
-                    ]
-                },
-                {
-                    "tag": "common_statement",
-                    "line": "19",
-                    "column": "7",
-                    "common_parts": [
                         {
-                            "declarators": [
-                                "<20b>.1"
-                            ]
+                            "tag": "variable_declarator",
+                            "variable": "LVTNL1",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "LVTNL2",
+                            "dimension_declarators": []
                         }
                     ]
                 },
+                {},
                 {
                     "rule": "<6>.2",
                     "tag": "unknown_statement",

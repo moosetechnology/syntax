@@ -19,7 +19,11 @@
                         "name": "LOGICAL"
                     },
                     "declarators": [
-                        "BOOL"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "BOOL",
+                            "dimension_declarators": []
+                        }
                     ]
                 }
             ]

@@ -113,10 +113,30 @@
                         "name": "CHARACTER"
                     },
                     "declarators": [
-                        "CATN11",
-                        "CVTN11",
-                        "CATN12",
-                        "CATN31"
+                        {
+                            "len_specifier": "1",
+                            "tag": "variable_declarator",
+                            "variable": "CATN11",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "1",
+                            "tag": "variable_declarator",
+                            "variable": "CVTN11",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "5",
+                            "tag": "variable_declarator",
+                            "variable": "CATN12",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "1",
+                            "tag": "variable_declarator",
+                            "variable": "CATN31",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -128,11 +148,36 @@
                         "name": "CHARACTER"
                     },
                     "declarators": [
-                        "CVTN12",
-                        "CVTN13",
-                        "CATN14",
-                        "CCTN15",
-                        "CVTN15"
+                        {
+                            "len_specifier": "10",
+                            "tag": "variable_declarator",
+                            "variable": "CVTN12",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "2",
+                            "tag": "variable_declarator",
+                            "variable": "CVTN13",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "1",
+                            "tag": "variable_declarator",
+                            "variable": "CATN14",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "50",
+                            "tag": "variable_declarator",
+                            "variable": "CCTN15",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "50",
+                            "tag": "variable_declarator",
+                            "variable": "CVTN15",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -144,7 +189,12 @@
                         "name": "CHARACTER"
                     },
                     "declarators": [
-                        "CVTN01"
+                        {
+                            "len_specifier": "1",
+                            "tag": "variable_declarator",
+                            "variable": "CVTN01",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {

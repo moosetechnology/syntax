@@ -48,10 +48,26 @@
                         "name": "DOUBLE PRECISION"
                     },
                     "declarators": [
-                        "DYAVD",
-                        "DYBVD",
-                        "DYDVD",
-                        "DVCORR"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "DYAVD",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "DYBVD",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "DYDVD",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "DVCORR",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -63,9 +79,21 @@
                         "name": "COMPLEX"
                     },
                     "declarators": [
-                        "CYAVC",
-                        "CYDVC",
-                        "ZVCORR"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "CYAVC",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "CYDVC",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "ZVCORR",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -77,7 +105,16 @@
                         "name": "REAL"
                     },
                     "declarators": [
-                        "<20b>.1"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "R2E",
+                            "dimension_declarators": [
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "2"
+                                }
+                            ]
+                        }
                     ]
                 },
                 {
@@ -95,16 +132,66 @@
                         "name": "CHARACTER"
                     },
                     "declarators": [
-                        "ZVERS",
-                        "ZVERSD",
-                        "ZDATE",
-                        "ZPROG",
-                        "ZCOMPL",
-                        "ZNAME",
-                        "ZTAPE",
-                        "ZPROJ",
-                        "REMRKS",
-                        "ZTAPED"
+                        {
+                            "len_specifier": "13",
+                            "tag": "variable_declarator",
+                            "variable": "ZVERS",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "17",
+                            "tag": "variable_declarator",
+                            "variable": "ZVERSD",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "17",
+                            "tag": "variable_declarator",
+                            "variable": "ZDATE",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "5",
+                            "tag": "variable_declarator",
+                            "variable": "ZPROG",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "20",
+                            "tag": "variable_declarator",
+                            "variable": "ZCOMPL",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "20",
+                            "tag": "variable_declarator",
+                            "variable": "ZNAME",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "10",
+                            "tag": "variable_declarator",
+                            "variable": "ZTAPE",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "13",
+                            "tag": "variable_declarator",
+                            "variable": "ZPROJ",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "31",
+                            "tag": "variable_declarator",
+                            "variable": "REMRKS",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "13",
+                            "tag": "variable_declarator",
+                            "variable": "ZTAPED",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {

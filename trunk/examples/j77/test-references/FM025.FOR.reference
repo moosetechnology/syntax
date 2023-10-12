@@ -35,20 +35,7 @@
             "ending-line": "439",
             "ending-column": "9",
             "statement_list": [
-                {
-                    "tag": "common_statement",
-                    "line": "29",
-                    "column": "7",
-                    "common_parts": [
-                        {
-                            "declarators": [
-                                "<20b>.1",
-                                "<20b>.1",
-                                "<20b>.1"
-                            ]
-                        }
-                    ]
-                },
+                {},
                 {
                     "rule": "<6>.1",
                     "tag": "unknown_statement",
@@ -64,7 +51,11 @@
                         "name": "LOGICAL"
                     },
                     "declarators": [
-                        "LADN31"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "LADN31",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -76,9 +67,54 @@
                         "name": "INTEGER"
                     },
                     "declarators": [
-                        "<20b>.1",
-                        "<20b>.1",
-                        "<20b>.1"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "RADN33",
+                            "dimension_declarators": [
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "2"
+                                    }
+                                },
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "2"
+                                    }
+                                },
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "2"
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "RADN21",
+                            "dimension_declarators": [
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "2"
+                                    }
+                                },
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "4"
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "RADN11",
+                            "dimension_declarators": [
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "8"
+                                }
+                            ]
+                        }
                     ]
                 },
                 {
@@ -90,9 +126,54 @@
                         "name": "REAL"
                     },
                     "declarators": [
-                        "<20b>.1",
-                        "<20b>.1",
-                        "<20b>.1"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "IADN33",
+                            "dimension_declarators": [
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "2"
+                                    }
+                                },
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "2"
+                                    }
+                                },
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "2"
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "IADN22",
+                            "dimension_declarators": [
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "2"
+                                    }
+                                },
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "4"
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "IADN12",
+                            "dimension_declarators": [
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "8"
+                                }
+                            ]
+                        }
                     ]
                 },
                 {

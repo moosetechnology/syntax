@@ -72,10 +72,26 @@
                         "name": "REAL"
                     },
                     "declarators": [
-                        "RVTN01",
-                        "RVTN02",
-                        "RVTN03",
-                        "YVTN02"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "RVTN01",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "RVTN02",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "RVTN03",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "YVTN02",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -87,9 +103,21 @@
                         "name": "INTEGER"
                     },
                     "declarators": [
-                        "IVTN01",
-                        "IVTN02",
-                        "MVTN02"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "IVTN01",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "IVTN02",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "MVTN02",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {

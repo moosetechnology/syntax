@@ -99,7 +99,11 @@
                         "name": "INTEGER"
                     },
                     "declarators": [
-                        "AVTN01"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "AVTN01",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -111,7 +115,11 @@
                         "name": "REAL"
                     },
                     "declarators": [
-                        "KVTN01"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "KVTN01",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -123,9 +131,21 @@
                         "name": "INTEGER"
                     },
                     "declarators": [
-                        "KVTN02",
-                        "AVTN02",
-                        "KVTN03"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "KVTN02",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "AVTN02",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "KVTN03",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -137,9 +157,21 @@
                         "name": "REAL"
                     },
                     "declarators": [
-                        "AVTN03",
-                        "AVTN04",
-                        "KVTN04"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "AVTN03",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "AVTN04",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "KVTN04",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -151,7 +183,11 @@
                         "name": "LOGICAL"
                     },
                     "declarators": [
-                        "HVTN01"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "HVTN01",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -163,7 +199,11 @@
                         "name": "REAL"
                     },
                     "declarators": [
-                        "MVTN01"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "MVTN01",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -175,7 +215,16 @@
                         "name": "INTEGER"
                     },
                     "declarators": [
-                        "<20b>.1"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "NVTN11",
+                            "dimension_declarators": [
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "4"
+                                }
+                            ]
+                        }
                     ]
                 },
                 {
@@ -187,7 +236,22 @@
                         "name": "REAL"
                     },
                     "declarators": [
-                        "<20b>.1"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "NVTN22",
+                            "dimension_declarators": [
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "2"
+                                    }
+                                },
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "2"
+                                }
+                            ]
+                        }
                     ]
                 },
                 {
@@ -199,8 +263,38 @@
                         "name": "INTEGER"
                     },
                     "declarators": [
-                        "<20b>.1",
-                        "<20b>.1"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "NVTN33",
+                            "dimension_declarators": [
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "3"
+                                    }
+                                },
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "3"
+                                    }
+                                },
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "3"
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "AVTN15",
+                            "dimension_declarators": [
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "5"
+                                }
+                            ]
+                        }
                     ]
                 },
                 {
@@ -218,7 +312,11 @@
                         "name": "INTEGER"
                     },
                     "declarators": [
-                        "NVTN14"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "NVTN14",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -236,7 +334,11 @@
                         "name": "INTEGER"
                     },
                     "declarators": [
-                        "AVTN16"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "AVTN16",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -248,8 +350,23 @@
                         "name": "CHARACTER"
                     },
                     "declarators": [
-                        "CVTN01",
-                        "<20b>.1"
+                        {
+                            "len_specifier": "14",
+                            "tag": "variable_declarator",
+                            "variable": "CVTN01",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "14",
+                            "tag": "variable_declarator",
+                            "variable": "CATN12",
+                            "dimension_declarators": [
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "4"
+                                }
+                            ]
+                        }
                     ]
                 },
                 {
@@ -267,7 +384,12 @@
                         "name": "CHARACTER"
                     },
                     "declarators": [
-                        "CADN13"
+                        {
+                            "len_specifier": "14",
+                            "tag": "variable_declarator",
+                            "variable": "CADN13",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -279,7 +401,11 @@
                         "name": "CHARACTER"
                     },
                     "declarators": [
-                        "KVTN05"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "KVTN05",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -291,7 +417,12 @@
                         "name": "CHARACTER"
                     },
                     "declarators": [
-                        "GVTN01"
+                        {
+                            "len_specifier": "3",
+                            "tag": "variable_declarator",
+                            "variable": "GVTN01",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -303,7 +434,12 @@
                         "name": "CHARACTER"
                     },
                     "declarators": [
-                        "FVTN01"
+                        {
+                            "len_specifier": "3",
+                            "tag": "variable_declarator",
+                            "variable": "FVTN01",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -315,7 +451,11 @@
                         "name": "INTEGER"
                     },
                     "declarators": [
-                        "IFTN01"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "IFTN01",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {

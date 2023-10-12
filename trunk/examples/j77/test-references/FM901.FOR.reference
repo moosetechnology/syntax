@@ -47,7 +47,11 @@
                         "len_specification": "13"
                     },
                     "declarators": [
-                        "A13VK"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "A13VK",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -60,7 +64,11 @@
                         "len_specification": "27"
                     },
                     "declarators": [
-                        "A27VK"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "A27VK",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -73,7 +81,11 @@
                         "len_specification": "29"
                     },
                     "declarators": [
-                        "A29VK"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "A29VK",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -86,7 +98,11 @@
                         "len_specification": "36"
                     },
                     "declarators": [
-                        "A36VK"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "A36VK",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -99,7 +115,11 @@
                         "len_specification": "43"
                     },
                     "declarators": [
-                        "B43VK"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "B43VK",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -111,16 +131,66 @@
                         "name": "CHARACTER"
                     },
                     "declarators": [
-                        "ZVERS",
-                        "ZVERSD",
-                        "ZDATE",
-                        "ZPROG",
-                        "ZCOMPL",
-                        "ZNAME",
-                        "ZTAPE",
-                        "ZPROJ",
-                        "REMRKS",
-                        "ZTAPED"
+                        {
+                            "len_specifier": "13",
+                            "tag": "variable_declarator",
+                            "variable": "ZVERS",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "17",
+                            "tag": "variable_declarator",
+                            "variable": "ZVERSD",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "17",
+                            "tag": "variable_declarator",
+                            "variable": "ZDATE",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "5",
+                            "tag": "variable_declarator",
+                            "variable": "ZPROG",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "20",
+                            "tag": "variable_declarator",
+                            "variable": "ZCOMPL",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "20",
+                            "tag": "variable_declarator",
+                            "variable": "ZNAME",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "10",
+                            "tag": "variable_declarator",
+                            "variable": "ZTAPE",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "13",
+                            "tag": "variable_declarator",
+                            "variable": "ZPROJ",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "31",
+                            "tag": "variable_declarator",
+                            "variable": "REMRKS",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "13",
+                            "tag": "variable_declarator",
+                            "variable": "ZTAPED",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {

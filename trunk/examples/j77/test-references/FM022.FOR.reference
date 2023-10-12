@@ -54,20 +54,7 @@
             "ending-line": "812",
             "ending-column": "9",
             "statement_list": [
-                {
-                    "tag": "common_statement",
-                    "line": "28",
-                    "column": "7",
-                    "common_parts": [
-                        {
-                            "declarators": [
-                                "<20b>.1",
-                                "<20b>.1",
-                                "<20b>.1"
-                            ]
-                        }
-                    ]
-                },
+                {},
                 {
                     "rule": "<6>.1",
                     "tag": "unknown_statement",
@@ -101,7 +88,16 @@
                         "name": "INTEGER"
                     },
                     "declarators": [
-                        "<20b>.1"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "RADN13",
+                            "dimension_declarators": [
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "5"
+                                }
+                            ]
+                        }
                     ]
                 },
                 {
@@ -113,7 +109,16 @@
                         "name": "REAL"
                     },
                     "declarators": [
-                        "<20b>.1"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "IADN13",
+                            "dimension_declarators": [
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "5"
+                                }
+                            ]
+                        }
                     ]
                 },
                 {
@@ -125,10 +130,26 @@
                         "name": "LOGICAL"
                     },
                     "declarators": [
-                        "LADN11",
-                        "LADN12",
-                        "LADN13",
-                        "LCTN01"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "LADN11",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "LADN12",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "LADN13",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "LCTN01",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {

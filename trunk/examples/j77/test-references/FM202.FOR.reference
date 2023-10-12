@@ -75,8 +75,16 @@
                         "len_specification": "1"
                     },
                     "declarators": [
-                        "CVTN01",
-                        "CVTN02"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "CVTN01",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "CVTN02",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -89,8 +97,16 @@
                         "len_specification": "2"
                     },
                     "declarators": [
-                        "CVTN03",
-                        "CVTN04"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "CVTN03",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "CVTN04",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {

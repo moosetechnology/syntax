@@ -66,9 +66,21 @@
                         "len_specification": "1"
                     },
                     "declarators": [
-                        "NINE",
-                        "IZERO",
-                        "IDUMP"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "NINE",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "IZERO",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "IDUMP",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {

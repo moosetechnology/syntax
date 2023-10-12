@@ -71,7 +71,16 @@
                         "name": "INTEGER"
                     },
                     "declarators": [
-                        "<20b>.1"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "RATN11",
+                            "dimension_declarators": [
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "3"
+                                }
+                            ]
+                        }
                     ]
                 },
                 {
@@ -83,10 +92,31 @@
                         "name": "LOGICAL"
                     },
                     "declarators": [
-                        "LCTN01",
-                        "LCTN02",
-                        "<20b>.1",
-                        "LADN11"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "LCTN01",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "LCTN02",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "LATN11",
+                            "dimension_declarators": [
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "3"
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "LADN11",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -98,7 +128,16 @@
                         "name": "REAL"
                     },
                     "declarators": [
-                        "<20b>.1"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "IATN11",
+                            "dimension_declarators": [
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "3"
+                                }
+                            ]
+                        }
                     ]
                 },
                 {

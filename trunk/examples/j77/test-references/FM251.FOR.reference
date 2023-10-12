@@ -73,14 +73,46 @@
                         "name": "INTEGER"
                     },
                     "declarators": [
-                        "IVCOMP",
-                        "IVPASS",
-                        "IVCORR",
-                        "IVTNUM",
-                        "IVDELE",
-                        "IVFAIL",
-                        "I01",
-                        "I02"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "IVCOMP",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "IVPASS",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "IVCORR",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "IVTNUM",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "IVDELE",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "IVFAIL",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "I01",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "I02",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -92,7 +124,11 @@
                         "name": "INTEGER"
                     },
                     "declarators": [
-                        "ICZERO"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "ICZERO",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -104,7 +140,11 @@
                         "name": "INTEGER"
                     },
                     "declarators": [
-                        "MVTN01"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "MVTN01",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -116,7 +156,11 @@
                         "name": "REAL"
                     },
                     "declarators": [
-                        "NVTN01"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "NVTN01",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -128,9 +172,32 @@
                         "name": "LOGICAL"
                     },
                     "declarators": [
-                        "MVTN02",
-                        "NVTN02",
-                        "<20b>.1"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "MVTN02",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "NVTN02",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "MATN21",
+                            "dimension_declarators": [
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "3"
+                                    }
+                                },
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "3"
+                                }
+                            ]
+                        }
                     ]
                 },
                 {
@@ -142,7 +209,11 @@
                         "name": "LOGICAL"
                     },
                     "declarators": [
-                        "AVTN01"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "AVTN01",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -154,7 +225,11 @@
                         "name": "LOGICAL"
                     },
                     "declarators": [
-                        "IVTN01"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "IVTN01",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {

@@ -72,7 +72,22 @@
                         "name": "INTEGER"
                     },
                     "declarators": [
-                        "<20b>.1"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "IATN11",
+                            "dimension_declarators": [
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "2"
+                                    }
+                                },
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "3"
+                                }
+                            ]
+                        }
                     ]
                 },
                 {
@@ -84,7 +99,22 @@
                         "name": "REAL"
                     },
                     "declarators": [
-                        "<20b>.1"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "RATN11",
+                            "dimension_declarators": [
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "3"
+                                    }
+                                },
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "4"
+                                }
+                            ]
+                        }
                     ]
                 },
                 {
@@ -96,7 +126,11 @@
                         "name": "INTEGER"
                     },
                     "declarators": [
-                        "FF330"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "FF330",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -117,34 +151,8 @@
                     "line": "90",
                     "column": "7"
                 },
-                {
-                    "tag": "common_statement",
-                    "line": "91",
-                    "column": "7",
-                    "common_parts": [
-                        {
-                            "name": "BLK1",
-                            "declarators": [
-                                "IVCN01",
-                                "RVCN01",
-                                "LVCN01"
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "tag": "common_statement",
-                    "line": "92",
-                    "column": "7",
-                    "common_parts": [
-                        {
-                            "declarators": [
-                                "<20b>.1",
-                                "<20b>.1"
-                            ]
-                        }
-                    ]
-                },
+                {},
+                {},
                 {
                     "rule": "<6>.5",
                     "tag": "unknown_statement",
@@ -3347,21 +3355,7 @@
                     "line": "793",
                     "column": "7"
                 },
-                {
-                    "tag": "common_statement",
-                    "line": "794",
-                    "column": "7",
-                    "common_parts": [
-                        {
-                            "name": "BLK1",
-                            "declarators": [
-                                "IVCN01",
-                                "RVCN01",
-                                "LVCN01"
-                            ]
-                        }
-                    ]
-                },
+                {},
                 {
                     "rule": "<7>.1",
                     "tag": "unknown_statement",
@@ -3435,7 +3429,11 @@
                         "name": "LOGICAL"
                     },
                     "declarators": [
-                        "LVCN01"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "LVCN01",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -3444,21 +3442,7 @@
                     "line": "820",
                     "column": "7"
                 },
-                {
-                    "tag": "common_statement",
-                    "line": "821",
-                    "column": "7",
-                    "common_parts": [
-                        {
-                            "name": "BLK1",
-                            "declarators": [
-                                "IVCN01",
-                                "RVCN01",
-                                "LVCN01"
-                            ]
-                        }
-                    ]
-                },
+                {},
                 {
                     "rule": "<7>.1",
                     "tag": "unknown_statement",
@@ -3498,24 +3482,25 @@
                         "name": "REAL"
                     },
                     "declarators": [
-                        "<20b>.1"
-                    ]
-                },
-                {
-                    "tag": "common_statement",
-                    "line": "835",
-                    "column": "7",
-                    "common_parts": [
                         {
-                            "name": "BLK1",
-                            "declarators": [
-                                "IVCN01",
-                                "RVCN01",
-                                "LVCN01"
+                            "tag": "variable_declarator",
+                            "variable": "RDTN21",
+                            "dimension_declarators": [
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "2"
+                                    }
+                                },
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "2"
+                                }
                             ]
                         }
                     ]
                 },
+                {},
                 {
                     "rule": "<7>.1",
                     "tag": "unknown_statement",
@@ -3547,21 +3532,7 @@
                     "line": "849",
                     "column": "7"
                 },
-                {
-                    "tag": "common_statement",
-                    "line": "850",
-                    "column": "7",
-                    "common_parts": [
-                        {
-                            "name": "BLK1",
-                            "declarators": [
-                                "IVCN01",
-                                "RVCN01",
-                                "LVCN01"
-                            ]
-                        }
-                    ]
-                },
+                {},
                 {
                     "rule": "<7>.1",
                     "tag": "unknown_statement",
@@ -3593,21 +3564,7 @@
                     "line": "865",
                     "column": "7"
                 },
-                {
-                    "tag": "common_statement",
-                    "line": "866",
-                    "column": "7",
-                    "common_parts": [
-                        {
-                            "name": "BLK1",
-                            "declarators": [
-                                "IVCN01",
-                                "RVCN01",
-                                "LVCN01"
-                            ]
-                        }
-                    ]
-                },
+                {},
                 {
                     "tag": "call_statement",
                     "line": "867",

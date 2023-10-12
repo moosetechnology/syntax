@@ -76,10 +76,26 @@
                         "len_specification": "1"
                     },
                     "declarators": [
-                        "NINE",
-                        "IADN11",
-                        "ICON04",
-                        "IDUMP"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "NINE",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "IADN11",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "ICON04",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "IDUMP",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -92,8 +108,16 @@
                         "len_specification": "2"
                     },
                     "declarators": [
-                        "IADN12",
-                        "ICON06"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "IADN12",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "ICON06",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -106,7 +130,11 @@
                         "len_specification": "3"
                     },
                     "declarators": [
-                        "IADN13"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "IADN13",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {

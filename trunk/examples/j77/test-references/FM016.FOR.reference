@@ -64,11 +64,36 @@
                         "name": "LOGICAL"
                     },
                     "declarators": [
-                        "LCTNT1",
-                        "LCTNF1",
-                        "LVTNTF",
-                        "LVTNFT",
-                        "<20b>.1"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "LCTNT1",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "LCTNF1",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "LVTNTF",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "LVTNFT",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "LATN1A",
+                            "dimension_declarators": [
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "2"
+                                }
+                            ]
+                        }
                     ]
                 },
                 {
@@ -80,8 +105,16 @@
                         "name": "LOGICAL"
                     },
                     "declarators": [
-                        "LADN1D",
-                        "LADN1B"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "LADN1D",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "LADN1B",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {

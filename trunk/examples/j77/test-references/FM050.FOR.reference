@@ -42,21 +42,7 @@
             "ending-line": "399",
             "ending-column": "9",
             "statement_list": [
-                {
-                    "tag": "common_statement",
-                    "line": "26",
-                    "column": "7",
-                    "common_parts": [
-                        {
-                            "declarators": [
-                                "RVCN01",
-                                "IVCN01",
-                                "IVCN02",
-                                "<20b>.1"
-                            ]
-                        }
-                    ]
-                },
+                {},
                 {
                     "tag": "type_statement",
                     "line": "27",
@@ -66,7 +52,11 @@
                         "name": "INTEGER"
                     },
                     "declarators": [
-                        "FF054"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "FF054",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -1585,19 +1575,7 @@
             "ending-line": "427",
             "ending-column": "9",
             "statement_list": [
-                {
-                    "tag": "common_statement",
-                    "line": "424",
-                    "column": "7",
-                    "common_parts": [
-                        {
-                            "name": "//",
-                            "declarators": [
-                                "RVCN01"
-                            ]
-                        }
-                    ]
-                },
+                {},
                 {
                     "rule": "<7>.1",
                     "tag": "unknown_statement",
@@ -1620,20 +1598,7 @@
             "ending-line": "466",
             "ending-column": "9",
             "statement_list": [
-                {
-                    "tag": "common_statement",
-                    "line": "454",
-                    "column": "7",
-                    "common_parts": [
-                        {
-                            "declarators": [
-                                "RVDN01",
-                                "IVCN01",
-                                "IVCN02"
-                            ]
-                        }
-                    ]
-                },
+                {},
                 {
                     "rule": "<7>.2",
                     "tag": "unknown_statement",
@@ -1832,21 +1797,7 @@
             "ending-line": "566",
             "ending-column": "9",
             "statement_list": [
-                {
-                    "tag": "common_statement",
-                    "line": "560",
-                    "column": "7",
-                    "common_parts": [
-                        {
-                            "declarators": [
-                                "RVCN01",
-                                "IVCN01",
-                                "IVCN02",
-                                "IACN11"
-                            ]
-                        }
-                    ]
-                },
+                {},
                 {
                     "rule": "<6>.1",
                     "tag": "unknown_statement",

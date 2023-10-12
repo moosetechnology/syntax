@@ -76,9 +76,36 @@
                         "len_specification": "1"
                     },
                     "declarators": [
-                        "<20b>.1",
-                        "<20b>.1",
-                        "<20b>.1"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "CATN11",
+                            "dimension_declarators": [
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "47"
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "CATN12",
+                            "dimension_declarators": [
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "26"
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "CATN13",
+                            "dimension_declarators": [
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "10"
+                                }
+                            ]
+                        }
                     ]
                 },
                 {
@@ -90,9 +117,28 @@
                         "name": "CHARACTER"
                     },
                     "declarators": [
-                        "CVTN10",
-                        "<20b>.1",
-                        "CVTN01"
+                        {
+                            "len_specifier": "1",
+                            "tag": "variable_declarator",
+                            "variable": "CVTN10",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "1",
+                            "tag": "variable_declarator",
+                            "variable": "CATN14",
+                            "dimension_declarators": [
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "6"
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "CVTN01",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {

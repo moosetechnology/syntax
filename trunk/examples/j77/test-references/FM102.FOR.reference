@@ -57,19 +57,7 @@
             "ending-line": "367",
             "ending-column": "9",
             "statement_list": [
-                {
-                    "tag": "common_statement",
-                    "line": "42",
-                    "column": "7",
-                    "common_parts": [
-                        {
-                            "declarators": [
-                                "<20b>.1",
-                                "<20b>.1"
-                            ]
-                        }
-                    ]
-                },
+                {},
                 {
                     "rule": "<6>.1",
                     "tag": "unknown_statement",
@@ -98,10 +86,26 @@
                         "len_specification": "1"
                     },
                     "declarators": [
-                        "NINE",
-                        "IADN11",
-                        "IACN11",
-                        "IDUMP"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "NINE",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "IADN11",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "IACN11",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "IDUMP",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -114,8 +118,16 @@
                         "len_specification": "2"
                     },
                     "declarators": [
-                        "IADN12",
-                        "IACN12"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "IADN12",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "IACN12",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {

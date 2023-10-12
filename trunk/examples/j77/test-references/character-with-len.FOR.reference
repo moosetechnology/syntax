@@ -20,7 +20,11 @@
                         "len_specification": "40"
                     },
                     "declarators": [
-                        "STRING"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "STRING",
+                            "dimension_declarators": []
+                        }
                     ]
                 }
             ]

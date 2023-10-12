@@ -94,9 +94,24 @@
                         "name": "CHARACTER"
                     },
                     "declarators": [
-                        "CVTE01",
-                        "CVTE02",
-                        "CVCOMP"
+                        {
+                            "len_specifier": "3",
+                            "tag": "variable_declarator",
+                            "variable": "CVTE01",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "3",
+                            "tag": "variable_declarator",
+                            "variable": "CVTE02",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "3",
+                            "tag": "variable_declarator",
+                            "variable": "CVCOMP",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {

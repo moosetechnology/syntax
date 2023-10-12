@@ -87,16 +87,66 @@
                         "name": "CHARACTER"
                     },
                     "declarators": [
-                        "ZVERS",
-                        "ZVERSD",
-                        "ZDATE",
-                        "ZPROG",
-                        "ZCOMPL",
-                        "ZNAME",
-                        "ZTAPE",
-                        "ZPROJ",
-                        "REMRKS",
-                        "ZTAPED"
+                        {
+                            "len_specifier": "13",
+                            "tag": "variable_declarator",
+                            "variable": "ZVERS",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "17",
+                            "tag": "variable_declarator",
+                            "variable": "ZVERSD",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "17",
+                            "tag": "variable_declarator",
+                            "variable": "ZDATE",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "5",
+                            "tag": "variable_declarator",
+                            "variable": "ZPROG",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "20",
+                            "tag": "variable_declarator",
+                            "variable": "ZCOMPL",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "20",
+                            "tag": "variable_declarator",
+                            "variable": "ZNAME",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "10",
+                            "tag": "variable_declarator",
+                            "variable": "ZTAPE",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "13",
+                            "tag": "variable_declarator",
+                            "variable": "ZPROJ",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "31",
+                            "tag": "variable_declarator",
+                            "variable": "REMRKS",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "13",
+                            "tag": "variable_declarator",
+                            "variable": "ZTAPED",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -108,10 +158,30 @@
                         "name": "CHARACTER"
                     },
                     "declarators": [
-                        "CVCOMP",
-                        "CVCORR",
-                        "CPN001",
-                        "CPN002"
+                        {
+                            "len_specifier": "65",
+                            "tag": "variable_declarator",
+                            "variable": "CVCOMP",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "65",
+                            "tag": "variable_declarator",
+                            "variable": "CVCORR",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "5",
+                            "tag": "variable_declarator",
+                            "variable": "CPN001",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "10",
+                            "tag": "variable_declarator",
+                            "variable": "CPN002",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -123,10 +193,41 @@
                         "name": "CHARACTER"
                     },
                     "declarators": [
-                        "CVN001",
-                        "CVN002",
-                        "<20b>.1",
-                        "CF716"
+                        {
+                            "len_specifier": "7",
+                            "tag": "variable_declarator",
+                            "variable": "CVN001",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "35",
+                            "tag": "variable_declarator",
+                            "variable": "CVN002",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "6",
+                            "tag": "variable_declarator",
+                            "variable": "C2N001",
+                            "dimension_declarators": [
+                                {
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "literal": "2"
+                                    }
+                                },
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "2"
+                                }
+                            ]
+                        },
+                        {
+                            "len_specifier": "10",
+                            "tag": "variable_declarator",
+                            "variable": "CF716",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -139,7 +240,11 @@
                         "len_specification": "*"
                     },
                     "declarators": [
-                        "CPN003"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "CPN003",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -152,10 +257,26 @@
                         "len_specification": "2"
                     },
                     "declarators": [
-                        "CVN003",
-                        "CVN004",
-                        "CVD005",
-                        "CF717"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "CVN003",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "CVN004",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "CVD005",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "CF717",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -3541,7 +3662,11 @@
                         "len_specification": "*"
                     },
                     "declarators": [
-                        "CVD001"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "CVD001",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {

@@ -141,7 +141,11 @@
                         "name": "REAL"
                     },
                     "declarators": [
-                        "NDON01"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "NDON01",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -153,7 +157,11 @@
                         "name": "INTEGER"
                     },
                     "declarators": [
-                        "EDON01"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "EDON01",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -165,8 +173,16 @@
                         "name": "INTEGER"
                     },
                     "declarators": [
-                        "FF312",
-                        "FF314"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "FF312",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "FF314",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -199,19 +215,7 @@
                     "line": "86",
                     "column": "7"
                 },
-                {
-                    "tag": "common_statement",
-                    "line": "87",
-                    "column": "7",
-                    "common_parts": [
-                        {
-                            "name": "IFOS19",
-                            "declarators": [
-                                "IVCN01"
-                            ]
-                        }
-                    ]
-                },
+                {},
                 {
                     "rule": "<2e>.7",
                     "tag": "unknown_statement",

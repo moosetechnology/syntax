@@ -72,10 +72,31 @@
                         "name": "LOGICAL"
                     },
                     "declarators": [
-                        "LVTN01",
-                        "LVTN02",
-                        "<20b>.1",
-                        "LADN11"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "LVTN01",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "LVTN02",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "LATN11",
+                            "dimension_declarators": [
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "2"
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "LADN11",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {

@@ -38,18 +38,7 @@
             "ending-line": "420",
             "ending-column": "9",
             "statement_list": [
-                {
-                    "tag": "common_statement",
-                    "line": "28",
-                    "column": "7",
-                    "common_parts": [
-                        {
-                            "declarators": [
-                                "<20b>.1"
-                            ]
-                        }
-                    ]
-                },
+                {},
                 {
                     "rule": "<7>.1",
                     "tag": "unknown_statement",
@@ -1588,18 +1577,7 @@
             "ending-line": "458",
             "ending-column": "9",
             "statement_list": [
-                {
-                    "tag": "common_statement",
-                    "line": "451",
-                    "column": "7",
-                    "common_parts": [
-                        {
-                            "declarators": [
-                                "<20b>.1"
-                            ]
-                        }
-                    ]
-                },
+                {},
                 {
                     "rule": "<7>.1",
                     "tag": "unknown_statement",
@@ -1653,18 +1631,7 @@
             "ending-line": "498",
             "ending-column": "9",
             "statement_list": [
-                {
-                    "tag": "common_statement",
-                    "line": "489",
-                    "column": "7",
-                    "common_parts": [
-                        {
-                            "declarators": [
-                                "<20b>.1"
-                            ]
-                        }
-                    ]
-                },
+                {},
                 {
                     "tag": "type_statement",
                     "line": "490",
@@ -1674,7 +1641,11 @@
                         "name": "INTEGER"
                     },
                     "declarators": [
-                        "FF059"
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "FF059",
+                            "dimension_declarators": []
+                        }
                     ]
                 },
                 {
@@ -1737,18 +1708,7 @@
             "ending-line": "532",
             "ending-column": "9",
             "statement_list": [
-                {
-                    "tag": "common_statement",
-                    "line": "525",
-                    "column": "7",
-                    "common_parts": [
-                        {
-                            "declarators": [
-                                "<20b>.1"
-                            ]
-                        }
-                    ]
-                },
+                {},
                 {
                     "rule": "<7>.1",
                     "tag": "unknown_statement",
