@@ -120,11 +120,13 @@ SXML_TYPE_LIST json_program_unit( SXML_TYPE_TEXT tag,
 
 
 /* -------------------------------------------------------------------------
- * outputs header of a function or subroutine
+ * outputs header of a program_unit (some, e.g. main_program,
+ * don't have parameters, but we still output empty 'parameters')
+ * Is that a problem ?
  * - name
  * - parameters
  */
-SXML_TYPE_LIST subprogram_header( SXML_TYPE_TEXT name,
+SXML_TYPE_LIST json_program_unit_header( SXML_TYPE_TEXT name,
 				  SXML_TYPE_LIST parameters) {
 
   return SXML_LL(

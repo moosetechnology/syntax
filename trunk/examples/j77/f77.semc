@@ -865,8 +865,9 @@ $LIST(<7:executable_statement>)
 
 $LIST(<8:program_statement>)
 {
-  $LIST(<8:program_statement>) = JSON_KQ_ (
-    "name", $NAME( <99:symbolic_name>));
+  $LIST(<8:program_statement>) = json_program_unit_header (
+    $NAME( <99:symbolic_name>),
+    NULL);
 }
 
 
@@ -1006,7 +1007,7 @@ $NAME( <10b:scalar_type>)
 $LIST(<10d:function_header>)
 
 {
-  $LIST(<10d:function_header>) = subprogram_header(
+  $LIST(<10d:function_header>) = json_program_unit_header(
     $NAME(<99:symbolic_name>),
     NULL );
 }
@@ -1018,7 +1019,7 @@ $LIST(<10d:function_header>)
 
 $LIST(<10d:function_header>)
 {
-  $LIST(<10d:function_header>) = subprogram_header(
+  $LIST(<10d:function_header>) = json_program_unit_header(
     $NAME(<99:symbolic_name>),
     $LIST( <99a:symbolic_name_list>) );
 }
@@ -1051,7 +1052,7 @@ $LIST(<12:subroutine_statement>)
 
 $LIST(<12a:subroutine_header>)
 {
-  $LIST(<12a:subroutine_header>) = subprogram_header(
+  $LIST(<12a:subroutine_header>) = json_program_unit_header(
     $NAME(<99:symbolic_name>),
     NULL );
 }
@@ -1063,7 +1064,7 @@ $LIST(<12a:subroutine_header>)
 
 $LIST(<12a:subroutine_header>)
 {
-  $LIST(<12a:subroutine_header>) = subprogram_header(
+  $LIST(<12a:subroutine_header>) = json_program_unit_header(
     $NAME(<99:symbolic_name>),
     NULL );
 }
@@ -1075,7 +1076,7 @@ $LIST(<12a:subroutine_header>)
 
 $LIST(<12a:subroutine_header>)
 {
-  $LIST(<12a:subroutine_header>) = subprogram_header(
+  $LIST(<12a:subroutine_header>) = json_program_unit_header(
     $NAME(<99:symbolic_name>),
     $LIST (<12b:subroutine_parameter_list> ) );
 }
