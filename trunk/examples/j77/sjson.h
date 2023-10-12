@@ -242,7 +242,7 @@ SXBOOLEAN isSlash( SXML_TYPE_LIST l) {
  * - name: optional name of the common_part
  * - declarators of the common_part
  */
-SXML_TYPE_LIST json_common_part( SXML_TYPE_TEXT name,
+SXML_TYPE_LIST output_common_part( SXML_TYPE_TEXT name,
 				 SXML_TYPE_LIST declarators) {
   if (name == NULL) {
     return JSON_MAP(
@@ -263,7 +263,7 @@ SXML_TYPE_LIST json_common_part( SXML_TYPE_TEXT name,
  * - common_parts: list of the common_parts
  * - Location of the statement
  */
-SXML_TYPE_LIST json_common_statement( SXML_TYPE_LIST common_parts,
+SXML_TYPE_LIST output_common_statement( SXML_TYPE_LIST common_parts,
 				      SXML_TYPE_LIST location) {
 
   return SXML_LTL(
@@ -282,24 +282,24 @@ SXML_TYPE_LIST add_common_part( SXML_TYPE_LIST common,
 				SXML_TYPE_LIST common_part_declarators) {
   if (common == NULL) {
     // it is the first common_part
-    return json_common_part( common_part_name, common_part_declarators);
+    return output_common_part( common_part_name, common_part_declarators);
   }
   else {
     // adding common_part to 'common'
     return SXML_LTL(
       common,
       ",\n",
-      json_common_part( common_part_name, common_part_declarators) );
+      output_common_part( common_part_name, common_part_declarators) );
   }
 }
 
 
 /* -------------------------------------------------------------------------
- * parse a common_satetment dec laration to export it
- * common_statment come unstructured in a flat list of
+ * parse a common_satetment declaration to export it
+ * common_statment are in an unstructured flat list of
  *   / name / decls , / name / decls
  */
-SXML_TYPE_LIST parse_common_statement( SXML_TYPE_LIST common_declaration,
+SXML_TYPE_LIST json_common_statement( SXML_TYPE_LIST common_declaration,
 				      SXML_TYPE_LIST location) {
   SXML_TYPE_LIST common = NULL;
   SXML_TYPE_LIST common_part_declarators = NULL;
@@ -352,7 +352,7 @@ SXML_TYPE_LIST parse_common_statement( SXML_TYPE_LIST common_declaration,
     common_part_name,
     common_part_declarators);
 
-  return json_common_statement( common, location);
+  return output_common_statement( common, location);
 }
 
 
@@ -362,7 +362,7 @@ SXML_TYPE_LIST parse_common_statement( SXML_TYPE_LIST common_declaration,
 SXML_TYPE_LIST json_literal_expression( SXML_TYPE_TEXT literal) {
 
   return JSON_MAP (
-    SXML_LLL(
+    SXML_LL(
       json_tag( "literal_expression"),
       JSON_KQ( "literal", literal) ));
 }
@@ -374,7 +374,7 @@ SXML_TYPE_LIST json_literal_expression( SXML_TYPE_TEXT literal) {
 SXML_TYPE_LIST json_variable_expression( SXML_TYPE_TEXT variable) {
 
   return JSON_MAP (
-    SXML_LLL(
+    SXML_LL(
       json_tag( "variable_expression"),
       JSON_KQ( "variable", variable) ));
 }
@@ -386,7 +386,7 @@ SXML_TYPE_LIST json_variable_expression( SXML_TYPE_TEXT variable) {
 SXML_TYPE_LIST json_parenthesis_expression( SXML_TYPE_LIST expression) {
 
   return JSON_MAP (
-    SXML_LLL(
+    SXML_LL(
       json_tag( "parenthesis_expression"),
       JSON_KU( "expression", expression) ));
 }
@@ -403,8 +403,8 @@ SXML_TYPE_LIST json_unary_expression( SXML_TYPE_TEXT unary_operator,
   return JSON_MAP (
     SXML_LLL(
       json_tag( "unary_expression"),
-      JSON_KU_( "operator", unary_operator),
-      JSON_KU( "expression", expression) ));
+      JSON_KQ_( "operator", unary_operator),
+      JSON_KU ( "expression", expression) ));
 }
 
 
@@ -419,7 +419,7 @@ SXML_TYPE_LIST json_binary_expression( SXML_TYPE_LIST lhs_expression,
     SXML_LLLL(
       json_tag( "binary_expression"),
       JSON_KU ( "lhs", lhs_expression),
-      JSON_KU_( "operator", binary_operator),
+      JSON_KQ_( "operator", binary_operator),
       JSON_KU ( "expression", rhs_expression) ));
 }
 
@@ -429,11 +429,44 @@ SXML_TYPE_LIST json_binary_expression( SXML_TYPE_LIST lhs_expression,
  * - name of the variable
  * - dimension_declarator
  */
-SXML_TYPE_LIST json_variable_declarator( SXML_TYPE_LIST variable,
+SXML_TYPE_LIST json_variable_declarator( SXML_TYPE_TEXT variable,
 					 SXML_TYPE_LIST dimension_declarator) {
  return JSON_MAP(
    SXML_LLL(
      json_tag( "variable_declarator"),
-     JSON_KU_( "name", variable),
-     JSON_KU(  "dimension_declarators", JSON_ARRAY( dimension_declarator)) ) );
+     JSON_KQ_( "variable", variable),
+     JSON_KU (  "dimension_declarators", JSON_ARRAY( dimension_declarator)) ) );
+}
+
+
+/* -------------------------------------------------------------------------
+ * adds a len_specifier in a json_map for a variable_declarator
+ * needs to insert a new element in before the last element of the list
+ * (which contains "}" closing a json_map)
+ */
+SXML_TYPE_LIST json_add_declarator_len( SXML_TYPE_LIST variable_declarator,
+					 SXML_TYPE_TEXT len_specifier) {
+  SXML_LL(
+    JSON_KQ_ ("len_specifier", len_specifier),
+    variable_declarator->SUCC );
+
+  return variable_declarator;
+}
+
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST json_lower_upper_bound(SXML_TYPE_LIST lower_bound,
+				      SXML_TYPE_LIST upper_bound) {
+  if (upper_bound == NULL) {
+    return JSON_MAP(
+      JSON_KU("lower_bound", lower_bound) );
+  }
+  else {
+    return JSON_MAP(
+      SXML_LL(
+        JSON_KU_("lower_bound", lower_bound),
+        JSON_KU ("upper_bound", upper_bound) ));
+  }
+
 }
