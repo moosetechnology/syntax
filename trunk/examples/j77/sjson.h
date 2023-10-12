@@ -147,6 +147,7 @@ SXML_TYPE_LIST json_abstract_statement( SXML_TYPE_TEXT tag,
     location );
 }
 
+
 /* -------------------------------------------------------------------------
  * outputs an unknown_statement (a statement we are not yet dealing with)
  * - rule recognizing the statement
@@ -159,6 +160,26 @@ SXML_TYPE_LIST json_unknown_statement( SXML_TYPE_TEXT rule,
     JSON_KQ_ ("rule", rule),
     json_abstract_statement( "unknown_statement", location) );
 }
+
+
+/* -------------------------------------------------------------------------
+ * outputs an labeled_statement
+ * - label (optional)
+ * - statement
+ */
+SXML_TYPE_LIST json_labeled_statement( SXML_TYPE_TEXT label,
+				       SXML_TYPE_LIST statement) {
+  if (label == NULL) {
+    return JSON_MAP( statement);
+  }
+  else {
+    return JSON_MAP( 
+      SXML_LL(
+        JSON_KQ_ ("label", label), 
+	statement) );
+  }
+}
+
 
 /* -------------------------------------------------------------------------
  * outputs a type_statement (variable declaration)

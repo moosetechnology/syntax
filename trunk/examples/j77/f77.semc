@@ -353,10 +353,9 @@ $LIST(<2c:statement_list>)
 
 $LIST(<2d:labeled_statement>)
 {
-  $LIST(<2d:labeled_statement>) = JSON_MAP( 
-    SXML_LL(
-      JSON_KQ_ ("label", $NAME(<110:label>)), 
-      $LIST( <2e:statement>) ));
+  $LIST(<2d:labeled_statement>) = json_labeled_statement(
+      $NAME(<110:label>),
+      $LIST( <2e:statement>) );
 }
 
 *------------------------------------------------------------------------------
@@ -366,10 +365,9 @@ $LIST(<2d:labeled_statement>)
 
 $LIST(<2d:labeled_statement>)
 {
-  $LIST(<2d:labeled_statement>) =  JSON_MAP( 
-    SXML_LL(
-      JSON_KQ_ ("label", $NAME(<110:label>)),
-      json_unknown_statement( "<2d>.2", LOCATION(0) )));
+  $LIST(<2d:labeled_statement>) =  json_labeled_statement(
+      $NAME(<110:label>),
+      json_unknown_statement( "<2d>.2", LOCATION(0) ));
 }
 
 *------------------------------------------------------------------------------
@@ -379,7 +377,9 @@ $LIST(<2d:labeled_statement>)
 
 $LIST(<2d:labeled_statement>)
 {
-  $LIST(<2d:labeled_statement>) = JSON_MAP( $LIST(<2e:statement>) );
+  $LIST(<2d:labeled_statement>) = json_labeled_statement(
+    NULL,
+    $LIST(<2e:statement>) );
 }
 
 *******************************************************************************
