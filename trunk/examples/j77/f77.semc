@@ -110,11 +110,10 @@ $
 $LIST(<0:F77>)
 
 {
-  $LIST(<0:F77>) = SXML_LL(
-    JSON_KQ_ ("file", sxcurrent_parsed_file_name (0)),
-    JSON_KU (
-      "program_units",
-      JSON_ARRAY( $LIST(<1a:executable_program_list>) )));
+  $LIST(<0:F77>) = json_program_file(
+    sxcurrent_parsed_file_name (0),
+    $LIST(<1a:executable_program_list>) );
+
   ROOT = $LIST(<0:F77>);
 }
 

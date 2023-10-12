@@ -77,6 +77,14 @@ SXML_TYPE_LIST json_tag( SXML_TYPE_TEXT tag) {
   return JSON_KQ_ ("tag", tag);
 }
 
+SXML_TYPE_LIST json_program_file( SXML_TYPE_TEXT file_name,
+				  SXML_TYPE_LIST program_units) {
+  return SXML_LL(
+    JSON_KQ_ ("file", file_name),
+    JSON_KU (
+      "program_units",
+      JSON_ARRAY( program_units )));
+}
 
 /* -------------------------------------------------------------------------
  * ouputs a program_unit
