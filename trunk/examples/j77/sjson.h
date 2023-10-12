@@ -136,6 +136,22 @@ SXML_TYPE_LIST json_program_unit_header( SXML_TYPE_TEXT name,
       JSON_ARRAY( parameters) ));
 }
 
+
+
+
+/* -------------------------------------------------------------------------
+ * adds a return type to a function_header
+ * - function_header
+ * - return_type
+ */
+SXML_TYPE_LIST json_add_return_type(SXML_TYPE_LIST function_header,
+				    SXML_TYPE_LIST return_type) {
+  return SXML_LL(
+    function_header,
+    JSON_KU_ ("return_type", return_type) );
+}
+
+
 /* -------------------------------------------------------------------------
  * outputs a generic statement of given tag
  * - tag: the precise kinf of statement (ex: "continue_statement")

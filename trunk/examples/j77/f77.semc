@@ -888,9 +888,9 @@ $LIST( <9:entry_statement>)
 
 $LIST(<10:function_statement>)
 {
-  $LIST(<10:function_statement>) = SXML_LL(
+  $LIST(<10:function_statement>) = json_add_return_type(
     $LIST( <10d:function_header>),
-    JSON_KU_ ("return_type", $LIST( <10a:type>)) );
+    $LIST( <10a:type>) );
 }
 
 *------------------------------------------------------------------------------
