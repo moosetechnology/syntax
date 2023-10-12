@@ -189,8 +189,12 @@ $LIST(<1:executable_program>)
 $LIST(<1:executable_program>)
 
 {
-  $LIST(<1:executable_program>) = JSON_MAP (
-    JSON_KU ("blockdata", TODO (3)));
+  $LIST(<1:executable_program>) = json_program_unit(
+    "block_data",
+    NULL,
+    LOCATION(0),
+    ENDING_LOCATION(0, "END"),
+    NULL );
 }
 
 

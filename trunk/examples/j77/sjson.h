@@ -77,6 +77,12 @@ SXML_TYPE_LIST json_tag( SXML_TYPE_TEXT tag) {
   return JSON_KQ_ ("tag", tag);
 }
 
+
+/* -------------------------------------------------------------------------
+ * ouputs a Fortran file
+ * - file_name: path of the file
+ * - program_units contained in the file
+ */
 SXML_TYPE_LIST json_program_file( SXML_TYPE_TEXT file_name,
 				  SXML_TYPE_LIST program_units) {
   return SXML_LL(
