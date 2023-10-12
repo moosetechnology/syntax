@@ -411,6 +411,15 @@ SXML_TYPE_LIST json_common_statement( SXML_TYPE_LIST common_declaration,
 
 
 /* -------------------------------------------------------------------------
+ * outputs a constant
+ */
+SXML_TYPE_LIST json_constant( SXML_TYPE_TEXT constant_type,
+			      SXML_TYPE_TEXT constant) {
+  return JSON_KQ( constant_type, constant);
+}
+
+
+/* -------------------------------------------------------------------------
  * outputs a literal_expression.
  */
 SXML_TYPE_LIST json_literal_expression( SXML_TYPE_TEXT literal) {

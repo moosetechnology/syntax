@@ -2124,9 +2124,9 @@ $LIST( <42:stop_statement>)
 
 $LIST( <42:stop_statement>)
 {
-  $LIST( <42:stop_statement>) = JSON_KQ(
+  $LIST( <42:stop_statement>) = json_constant(
     "uint_constant",
-    $NAME( <102:unsigned_int_constant>));
+    $NAME( <102:unsigned_int_constant>) );
 }
 
 *------------------------------------------------------------------------------
@@ -2136,7 +2136,7 @@ $LIST( <42:stop_statement>)
 
 $LIST( <42:stop_statement>)
 {
-  $LIST( <42:stop_statement>) = JSON_KQ(
+  $LIST( <42:stop_statement>) = json_constant(
     "character_constant",
     $NAME( <109:character_constant>));
 }
@@ -2158,7 +2158,7 @@ $LIST( <43:pause_statement>)
 
 $LIST( <43:pause_statement>)
 {
-  $LIST( <43:pause_statement>) = JSON_KQ(
+  $LIST( <43:pause_statement>) = json_constant(
    "unsigned_int_constant",
    $NAME (<102:unsigned_int_constant>));
 }
@@ -2170,7 +2170,7 @@ $LIST( <43:pause_statement>)
 
 $LIST( <43:pause_statement>)
 {
-  $LIST( <43:pause_statement>) = JSON_KQ(
+  $LIST( <43:pause_statement>) = json_constant(
     "character_constant",
     $NAME (<109:character_constant>));
 }
