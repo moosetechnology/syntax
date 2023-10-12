@@ -13,17 +13,13 @@ exec_dir="`dirname $0`"
 
 diff_output="/tmp/syntax-diff.txt"
 
-DETAILS="no"
 SUITE="unit-tests"
 
 # Loop through all the provided arguments
 for arg in "$@"
 do
     # Check if arg1 is empty and assign the first argument to it
-    if [ "$arg" = "-v" ]
-    then
-        DETAILS="yes"
-    elif [ "$arg" = "-b" ]
+    if [ "$arg" = "-b" ]
     then
         SUITE="nist"
     fi
@@ -33,23 +29,6 @@ done
 cd "${exec_dir}/.."
 
 for f in `ls test/${SUITE}/*.FOR`
-do	
-	test_file=`basename ${f}`
-	expected="test-references/${test_file}.reference"
-	actual="test-references/${test_file}.actual"
-
-	bin/f77.out -json "${f}" | python -m json.tool  > "${actual}"
-
-	if [ $DETAILS = "yes" ]
-	then
-	    diff $expected $actual > $diff_output
-	    if [ -s $diff_output ]
-	    then
-		less $diff_output
-	    else
-		rm $actual
-	    fi
-	else
-	    diff -q $expected $actual && rm $actual
-	fi
+do
+  ${exec_dir}/test.sh $* $f
 done
