@@ -92,6 +92,7 @@ SXML_TYPE_LIST json_program_file( SXML_TYPE_TEXT file_name,
       JSON_ARRAY( program_units )));
 }
 
+
 /* -------------------------------------------------------------------------
  * ouputs a program_unit
  * - tag: main/function/subroutine/block_data
@@ -109,7 +110,7 @@ SXML_TYPE_LIST json_program_unit( SXML_TYPE_TEXT tag,
   return JSON_MAP(
       SXML_LLLTLTL(
 	json_tag(tag),
-	header,
+	(header == NULL ? JSON_KQ_ ("name", "null") : header),
 	location,
         ",\n",
 	end_location,

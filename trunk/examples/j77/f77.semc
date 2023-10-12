@@ -252,7 +252,7 @@ $LIST(<2:main_program>)
 {
   $LIST(<2:main_program>) = json_program_unit(
     "main",
-    JSON_KQ_ ("name", "null"),
+    NULL,
     LOCATION(0),
     $LIST( <2a:end_statement>),
     NULL );
@@ -287,7 +287,7 @@ $LIST(<2:main_program>)
 {
   $LIST(<2:main_program>) = json_program_unit(
     "main",
-    JSON_KQ_ ("name", "null"),
+    NULL,
     LOCATION(0),
     $LIST( <2a:end_statement>),
     $LIST(<2c:statement_list>) );
