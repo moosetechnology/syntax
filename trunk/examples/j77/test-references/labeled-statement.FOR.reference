@@ -6,16 +6,22 @@
             "tag": "main",
             "name": "SIMPLEMAIN",
             "parameters": [],
-            "line": "1",
-            "column": "7",
-            "ending-line": "3",
-            "ending-column": "9",
+            "start_pos": {
+                "line": "1",
+                "column": "7"
+            },
+            "end_pos": {
+                "line": "3",
+                "column": "9"
+            },
             "statement_list": [
                 {
                     "label": "123",
                     "tag": "type_statement",
-                    "line": "2",
-                    "column": "7",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "7"
+                    },
                     "type": {
                         "tag": "type_reference",
                         "name": "INTEGER"
