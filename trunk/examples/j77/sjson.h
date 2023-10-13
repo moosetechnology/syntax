@@ -71,6 +71,41 @@ SXML_TYPE_LIST JSON_KU_ (SXML_TYPE_TEXT K, SXML_TYPE_LIST V)
 
 
 /* -------------------------------------------------------------------------
+ * ouputs line and column  position
+ */
+SXML_TYPE_LIST json_location( SXML_TYPE_TEXT position,
+			      SXUINT line,
+			      SXUINT column) {
+  return JSON_KU(
+    position,
+    JSON_MAP (
+      SXML_LL (
+        JSON_KQ_ ("line", SXML_UINT(line)),
+	JSON_KQ ("column", SXML_UINT(column)) )));
+}
+
+
+/* -------------------------------------------------------------------------
+ * ouputs line and column start position
+ */
+SXML_TYPE_LIST json_start_location( SXUINT line,
+				    SXUINT column) {
+  return json_location( "start_pos", line, column);
+}
+
+
+
+/* -------------------------------------------------------------------------
+ * ouputs line and column end position
+ */
+SXML_TYPE_LIST json_end_location( SXUINT line,
+				  SXUINT column,
+				  SXML_TYPE_TEXT string) {
+  return json_location( "end_pos", line, column + strlen(string) - 1);
+}
+
+
+/* -------------------------------------------------------------------------
  * ouputs a tag
  */
 SXML_TYPE_LIST json_tag( SXML_TYPE_TEXT tag) {

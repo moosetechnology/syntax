@@ -46,13 +46,14 @@ SXBOOLEAN pclose_needed;
 
 #define TODO(N) SXML_T("{\"TODO-" #N "\":null}\n")
 
-#define LOCATION(N) SXML_LL ( \
-		JSON_KQ_ ("line", SXML_UINT (sxcurrent_parsed_line (N))), \
-		JSON_KQ ("column", SXML_UINT (sxcurrent_parsed_column (N))) )
+#define LOCATION(N) json_start_location( \
+	   sxcurrent_parsed_line (N),\
+           sxcurrent_parsed_column (N) )
 
-#define ENDING_LOCATION(N,STRING) SXML_LL ( \
-		JSON_KQ_ ("ending-line", SXML_UINT (sxcurrent_parsed_line (N))), \
-		JSON_KQ ("ending-column", SXML_UINT (sxcurrent_parsed_column (N) + strlen (STRING) - 1)) )
+#define ENDING_LOCATION(N,STRING) json_end_location( \
+	   sxcurrent_parsed_line (N),\
+           sxcurrent_parsed_column (N),\
+	   STRING)
 
 *------------------------------------------------------------------------------
 
@@ -1340,7 +1341,9 @@ $LIST( <16e:last_upper_dimension_bound>)
 $LIST( <19:common_statement>)
 {
   $LIST( <19:common_statement>) = NULL;
-/* json_common_statement( $LIST( <19a:common_body_list> ), LOCATION( 0) ); */
+/* json_common_statement(
+    $LIST( <19a:common_body_list> ),
+    LOCATION( 0) ); */
 }
 
 *******************************************************************************
