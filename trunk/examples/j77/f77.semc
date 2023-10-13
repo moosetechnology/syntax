@@ -61,31 +61,15 @@ $
 open =
 	{
 		if (is_json == SXFALSE) {
-			/* no JSON output will be emitted */
-			json_pipe = fopen ("/dev/null", "w");
-			pclose_needed = SXFALSE;
+		  /* no JSON output will be emitted */
+		  json_pipe = fopen ("/dev/null", "w");
+		  pclose_needed = SXFALSE;
 		} else {
-			json_pipe = popen ("awk '\
-			BEGIN { TAB = 0 } \
-			function TABULATE() { \
-				for (I = 1; I <= TAB; ++I) printf \"   \" \
-			} \
-			/^{$/ || /^\\[$/ { \
-				TABULATE(); print; ++ TAB; next \
-			} \
-			/^}$/ || /^},$/ || /^\\]$/ || /^\\],$/ { \
-				-- TAB; TABULATE(); print; next \
-			} \
-			{ TABULATE(); print $0 }'","w");
-			if (json_pipe != NULL) {
-				pclose_needed = SXTRUE;
-			} else {
-				pclose_needed = SXFALSE;
-				json_pipe = stdout;
-			}
+		  pclose_needed = SXFALSE;
+		  json_pipe = stdout;
 		}
 		/* beginning of table of comments */
-		fprintf (json_pipe, "{\n\"comments\":\n{");
+		fprintf (json_pipe, "{\n\"tag\":\"fortran_file\",\n\"comments\":\n{");
 	}
 
 *------------------------------------------------------------------------------
