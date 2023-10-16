@@ -46,11 +46,11 @@ SXBOOLEAN pclose_needed;
 
 #define TODO(N) SXML_T("{\"TODO-" #N "\":null}\n")
 
-#define LOCATION(N) json_start_location( \
+#define LOCATION(N) ast_start_location( \
 	   sxcurrent_parsed_line (N),\
            sxcurrent_parsed_column (N) )
 
-#define ENDING_LOCATION(N,STRING) json_end_location( \
+#define ENDING_LOCATION(N,STRING) ast_end_location( \
 	   sxcurrent_parsed_line (N),\
            sxcurrent_parsed_column (N),\
 	   STRING)
@@ -95,7 +95,7 @@ $
 $LIST(<0:F77>)
 
 {
-  $LIST(<0:F77>) = json_program_file(
+  $LIST(<0:F77>) = ast_program_file(
     sxcurrent_parsed_file_name (0),
     $LIST(<1a:executable_program_list>) );
 
@@ -174,7 +174,7 @@ $LIST(<1:executable_program>)
 $LIST(<1:executable_program>)
 
 {
-  $LIST(<1:executable_program>) = json_program_unit(
+  $LIST(<1:executable_program>) = ast_program_unit(
     "block_data",
     NULL,
     LOCATION(0),
@@ -219,7 +219,7 @@ $LIST(<1a:executable_program_list>)
 
 $LIST(<2:main_program>)
 {
-  $LIST(<2:main_program>) = json_program_unit(
+  $LIST(<2:main_program>) = ast_program_unit(
     "main",
     $LIST (<8:program_statement>),
     LOCATION(0),
@@ -235,7 +235,7 @@ $LIST(<2:main_program>)
 
 $LIST(<2:main_program>)
 {
-  $LIST(<2:main_program>) = json_program_unit(
+  $LIST(<2:main_program>) = ast_program_unit(
     "main",
     NULL,
     LOCATION(0),
@@ -253,7 +253,7 @@ $LIST(<2:main_program>)
 
 $LIST(<2:main_program>)
 {
-  $LIST(<2:main_program>) = json_program_unit(
+  $LIST(<2:main_program>) = ast_program_unit(
     "main",
     $LIST( <8:program_statement>),
     LOCATION(0),
@@ -270,7 +270,7 @@ $LIST(<2:main_program>)
 
 $LIST(<2:main_program>)
 {
-  $LIST(<2:main_program>) = json_program_unit(
+  $LIST(<2:main_program>) = ast_program_unit(
     "main",
     NULL,
     LOCATION(0),
@@ -338,7 +338,7 @@ $LIST(<2c:statement_list>)
 
 $LIST(<2d:labeled_statement>)
 {
-  $LIST(<2d:labeled_statement>) = json_labeled_statement(
+  $LIST(<2d:labeled_statement>) = ast_labeled_statement(
       $NAME(<110:label>),
       $LIST( <2e:statement>) );
 }
@@ -350,9 +350,9 @@ $LIST(<2d:labeled_statement>)
 
 $LIST(<2d:labeled_statement>)
 {
-  $LIST(<2d:labeled_statement>) =  json_labeled_statement(
+  $LIST(<2d:labeled_statement>) =  ast_labeled_statement(
       $NAME(<110:label>),
-      json_unknown_statement( "<2d>.2", LOCATION(0) ));
+      ast_unknown_statement( "<2d>.2", LOCATION(0) ));
 }
 
 *------------------------------------------------------------------------------
@@ -362,7 +362,7 @@ $LIST(<2d:labeled_statement>)
 
 $LIST(<2d:labeled_statement>)
 {
-  $LIST(<2d:labeled_statement>) = json_labeled_statement(
+  $LIST(<2d:labeled_statement>) = ast_labeled_statement(
     NULL,
     $LIST(<2e:statement>) );
 }
@@ -391,7 +391,7 @@ $LIST(<2e:statement>)
 
 $LIST(<2e:statement>)
 {
-  $LIST(<2e:statement>) = json_unknown_statement(
+  $LIST(<2e:statement>) = ast_unknown_statement(
     "<2e>.3",
     LOCATION(0) );
 }
@@ -411,7 +411,7 @@ $LIST(<2e:statement>)
 
 $LIST(<2e:statement>)
 {
-  $LIST(<2e:statement>) = json_unknown_statement(
+  $LIST(<2e:statement>) = ast_unknown_statement(
     "<2e>.5",
     LOCATION(0) );
 }
@@ -422,7 +422,7 @@ $LIST(<2e:statement>)
 
 $LIST(<2e:statement>)
 {
-  $LIST(<2e:statement>) = json_unknown_statement(
+  $LIST(<2e:statement>) = ast_unknown_statement(
     "<2e>.6",
     LOCATION(0) );
 }
@@ -433,7 +433,7 @@ $LIST(<2e:statement>)
 
 $LIST(<2e:statement>)
 {
-  $LIST(<2e:statement>) = json_unknown_statement(
+  $LIST(<2e:statement>) = ast_unknown_statement(
     "<2e>.7",
     LOCATION(0) );
 }
@@ -444,7 +444,7 @@ $LIST(<2e:statement>)
 
 $LIST(<2e:statement>)
 {
-  $LIST(<2e:statement>) = json_unknown_statement(
+  $LIST(<2e:statement>) = ast_unknown_statement(
     "<2e>.8",
     LOCATION(0) );
 }
@@ -457,7 +457,7 @@ $LIST(<2e:statement>)
 
 $LIST(<3:function_subprogram>)
 {
-  $LIST(<3:function_subprogram>) = json_program_unit(
+  $LIST(<3:function_subprogram>) = ast_program_unit(
     "function",
     $LIST( <10:function_statement>),
     LOCATION(0),
@@ -476,7 +476,7 @@ $LIST(<3:function_subprogram>)
 $LIST(<3:function_subprogram>)
 
 {
-  $LIST(<3:function_subprogram>) = json_program_unit(
+  $LIST(<3:function_subprogram>) = ast_program_unit(
     "function",
     $LIST( <10:function_statement>),
     LOCATION(0),
@@ -493,7 +493,7 @@ $LIST(<3:function_subprogram>)
 $LIST(<4:subroutine_subprogram>)
 
 {
-  $LIST(<4:subroutine_subprogram>) = json_program_unit(
+  $LIST(<4:subroutine_subprogram>) = ast_program_unit(
     "subroutine",
     $LIST( <12:subroutine_statement>),
     LOCATION(0),
@@ -512,7 +512,7 @@ $LIST(<4:subroutine_subprogram>)
 $LIST(<4:subroutine_subprogram>)
 
 {
-  $LIST(<4:subroutine_subprogram>) = json_program_unit(
+  $LIST(<4:subroutine_subprogram>) = ast_program_unit(
     "subroutine",
     $LIST( <12:subroutine_statement>),
     LOCATION(0),
@@ -543,7 +543,7 @@ $LIST(<4:subroutine_subprogram>)
 
 $LIST(<6:other_specification_statement>)
 {
-  $LIST(<6:other_specification_statement>) = json_unknown_statement(
+  $LIST(<6:other_specification_statement>) = ast_unknown_statement(
     "<6>.1",
     LOCATION(0) );
 }
@@ -555,7 +555,7 @@ $LIST(<6:other_specification_statement>)
 
 $LIST(<6:other_specification_statement>)
 {
-  $LIST(<6:other_specification_statement>) = json_unknown_statement(
+  $LIST(<6:other_specification_statement>) = ast_unknown_statement(
     "<6>.2",
     LOCATION(0) );
 }
@@ -567,7 +567,7 @@ $LIST(<6:other_specification_statement>)
 
 $LIST(<6:other_specification_statement>)
 {
-  $LIST(<6:other_specification_statement>) = json_unknown_statement(
+  $LIST(<6:other_specification_statement>) = ast_unknown_statement(
     "<6>.3",
     LOCATION(0) );
 }
@@ -589,7 +589,7 @@ $LIST(<6:other_specification_statement>)
 
 $LIST(<6:other_specification_statement>)
 {
-  $LIST(<6:other_specification_statement>) = json_unknown_statement(
+  $LIST(<6:other_specification_statement>) = ast_unknown_statement(
     "<6>.5",
     LOCATION(0) );
 }
@@ -601,7 +601,7 @@ $LIST(<6:other_specification_statement>)
 
 $LIST(<6:other_specification_statement>)
 {
-  $LIST(<6:other_specification_statement>) = json_unknown_statement(
+  $LIST(<6:other_specification_statement>) = ast_unknown_statement(
     "<6>.6",
     LOCATION(0) );
 }
@@ -613,7 +613,7 @@ $LIST(<6:other_specification_statement>)
 
 $LIST(<6:other_specification_statement>)
 {
-  $LIST(<6:other_specification_statement>) = json_unknown_statement(
+  $LIST(<6:other_specification_statement>) = ast_unknown_statement(
     "<6>.7",
     LOCATION(0) );
 }
@@ -625,7 +625,7 @@ $LIST(<6:other_specification_statement>)
 
 $LIST(<7:executable_statement>)
 {
-  $LIST(<7:executable_statement>) = json_unknown_statement(
+  $LIST(<7:executable_statement>) = ast_unknown_statement(
     "<7>.1",
     LOCATION(0) );
 }
@@ -637,7 +637,7 @@ $LIST(<7:executable_statement>)
 
 $LIST(<7:executable_statement>)
 {
-  $LIST(<7:executable_statement>) = json_unknown_statement(
+  $LIST(<7:executable_statement>) = ast_unknown_statement(
     "<7>.2",
     LOCATION(0) );
 }
@@ -649,7 +649,7 @@ $LIST(<7:executable_statement>)
 
 $LIST(<7:executable_statement>)
 {
-  $LIST(<7:executable_statement>) = json_unknown_statement(
+  $LIST(<7:executable_statement>) = ast_unknown_statement(
     "<7>.3",
     LOCATION(0) );
 }
@@ -661,7 +661,7 @@ $LIST(<7:executable_statement>)
 
 $LIST(<7:executable_statement>)
 {
-  $LIST(<7:executable_statement>) = json_abstract_statement(
+  $LIST(<7:executable_statement>) = ast_abstract_statement(
     "continue_statement",
     LOCATION(0) );
 }
@@ -673,7 +673,7 @@ $LIST(<7:executable_statement>)
 
 $LIST(<7:executable_statement>)
 {
-  $LIST(<7:executable_statement>) = json_pause_stop_statement(
+  $LIST(<7:executable_statement>) = ast_pause_stop_statement(
     "stop_statement",
     $LIST( <42:stop_statement>),
     LOCATION(0) );
@@ -686,7 +686,7 @@ $LIST(<7:executable_statement>)
 
 $LIST(<7:executable_statement>)
 {
-  $LIST(<7:executable_statement>) = json_pause_stop_statement(
+  $LIST(<7:executable_statement>) = ast_pause_stop_statement(
     "pause_statement",
     $LIST( <43:pause_statement>),
     LOCATION(0) );
@@ -699,7 +699,7 @@ $LIST(<7:executable_statement>)
 
 $LIST(<7:executable_statement>)
 {
-  $LIST(<7:executable_statement>) = json_unknown_statement(
+  $LIST(<7:executable_statement>) = ast_unknown_statement(
     "<7>.7",
     LOCATION(0) );
 }
@@ -711,7 +711,7 @@ $LIST(<7:executable_statement>)
 
 $LIST(<7:executable_statement>)
 {
-  $LIST(<7:executable_statement>) = json_unknown_statement(
+  $LIST(<7:executable_statement>) = ast_unknown_statement(
     "<7>.8",
     LOCATION(0) );
 }
@@ -723,7 +723,7 @@ $LIST(<7:executable_statement>)
 
 $LIST(<7:executable_statement>)
 {
-  $LIST(<7:executable_statement>) = json_unknown_statement(
+  $LIST(<7:executable_statement>) = ast_unknown_statement(
     "<7>.9",
     LOCATION(0) );
 }
@@ -735,7 +735,7 @@ $LIST(<7:executable_statement>)
 
 $LIST(<7:executable_statement>)
 {
-  $LIST(<7:executable_statement>) = json_unknown_statement(
+  $LIST(<7:executable_statement>) = ast_unknown_statement(
     "<7>.10",
     LOCATION(0) );
 }
@@ -747,7 +747,7 @@ $LIST(<7:executable_statement>)
 
 $LIST(<7:executable_statement>)
 {
-  $LIST(<7:executable_statement>) = json_unknown_statement(
+  $LIST(<7:executable_statement>) = ast_unknown_statement(
     "<7>.11",
     LOCATION(0) );
 }
@@ -759,7 +759,7 @@ $LIST(<7:executable_statement>)
 
 $LIST(<7:executable_statement>)
 {
-  $LIST(<7:executable_statement>) = json_unknown_statement(
+  $LIST(<7:executable_statement>) = ast_unknown_statement(
     "<7>.12",
     LOCATION(0) );
 }
@@ -771,7 +771,7 @@ $LIST(<7:executable_statement>)
 
 $LIST(<7:executable_statement>)
 {
-  $LIST(<7:executable_statement>) = json_unknown_statement(
+  $LIST(<7:executable_statement>) = ast_unknown_statement(
     "<7>.13",
     LOCATION(0) );
 }
@@ -783,7 +783,7 @@ $LIST(<7:executable_statement>)
 
 $LIST(<7:executable_statement>)
 {
-  $LIST(<7:executable_statement>) = json_unknown_statement(
+  $LIST(<7:executable_statement>) = ast_unknown_statement(
     "<7>.14",
     LOCATION(0) );
 }
@@ -795,7 +795,7 @@ $LIST(<7:executable_statement>)
 
 $LIST(<7:executable_statement>)
 {
-  $LIST(<7:executable_statement>) = json_unknown_statement(
+  $LIST(<7:executable_statement>) = ast_unknown_statement(
     "<7>.15",
     LOCATION(0) );
 }
@@ -817,7 +817,7 @@ $LIST(<7:executable_statement>)
 
 $LIST(<7:executable_statement>)
 {
-  $LIST(<7:executable_statement>) = json_abstract_statement(
+  $LIST(<7:executable_statement>) = ast_abstract_statement(
     "return_statement",
     LOCATION(0) );
 }
@@ -852,7 +852,7 @@ $LIST(<7:executable_statement>)
 
 $LIST(<8:program_statement>)
 {
-  $LIST(<8:program_statement>) = json_program_unit_header (
+  $LIST(<8:program_statement>) = ast_program_unit_header (
     $NAME( <99:symbolic_name>),
     NULL);
 }
@@ -875,7 +875,7 @@ $LIST( <9:entry_statement>)
 
 $LIST(<10:function_statement>)
 {
-  $LIST(<10:function_statement>) = json_add_return_type(
+  $LIST(<10:function_statement>) = ast_add_return_type(
     $LIST( <10d:function_header>),
     $LIST( <10a:type>) );
 }
@@ -898,7 +898,7 @@ $LIST(<10:function_statement>)
 
 $LIST( <10a:type>)
 {
-  $LIST( <10a:type>) = json_type_reference(
+  $LIST( <10a:type>) = ast_type_reference(
       $NAME( <10b:scalar_type>),
       NULL);
 }
@@ -909,7 +909,7 @@ $LIST( <10a:type>)
 
 $LIST( <10a:type>)
 {
-  $LIST( <10a:type>) = json_type_reference(
+  $LIST( <10a:type>) = ast_type_reference(
       $NAME( <10b:scalar_type>),
       $NAME (<22:len_specification>));
 }
@@ -920,7 +920,7 @@ $LIST( <10a:type>)
 
 $LIST( <10a:type>)
 {
-  $LIST( <10a:type>) = json_type_reference(
+  $LIST( <10a:type>) = ast_type_reference(
       "CHARACTER",
       NULL );
 }
@@ -931,7 +931,7 @@ $LIST( <10a:type>)
 
 $LIST( <10a:type>)
 {
-  $LIST( <10a:type>) = json_type_reference(
+  $LIST( <10a:type>) = ast_type_reference(
       "CHARACTER",
       $NAME (<22:len_specification>));
 }
@@ -994,7 +994,7 @@ $NAME( <10b:scalar_type>)
 $LIST(<10d:function_header>)
 
 {
-  $LIST(<10d:function_header>) = json_program_unit_header(
+  $LIST(<10d:function_header>) = ast_program_unit_header(
     $NAME(<99:symbolic_name>),
     NULL );
 }
@@ -1006,7 +1006,7 @@ $LIST(<10d:function_header>)
 
 $LIST(<10d:function_header>)
 {
-  $LIST(<10d:function_header>) = json_program_unit_header(
+  $LIST(<10d:function_header>) = ast_program_unit_header(
     $NAME(<99:symbolic_name>),
     $LIST( <99a:symbolic_name_list>) );
 }
@@ -1039,7 +1039,7 @@ $LIST(<12:subroutine_statement>)
 
 $LIST(<12a:subroutine_header>)
 {
-  $LIST(<12a:subroutine_header>) = json_program_unit_header(
+  $LIST(<12a:subroutine_header>) = ast_program_unit_header(
     $NAME(<99:symbolic_name>),
     NULL );
 }
@@ -1051,7 +1051,7 @@ $LIST(<12a:subroutine_header>)
 
 $LIST(<12a:subroutine_header>)
 {
-  $LIST(<12a:subroutine_header>) = json_program_unit_header(
+  $LIST(<12a:subroutine_header>) = ast_program_unit_header(
     $NAME(<99:symbolic_name>),
     NULL );
 }
@@ -1063,7 +1063,7 @@ $LIST(<12a:subroutine_header>)
 
 $LIST(<12a:subroutine_header>)
 {
-  $LIST(<12a:subroutine_header>) = json_program_unit_header(
+  $LIST(<12a:subroutine_header>) = ast_program_unit_header(
     $NAME(<99:symbolic_name>),
     $LIST (<12b:subroutine_parameter_list> ) );
 }
@@ -1120,7 +1120,7 @@ $LIST( <13:function_or_subroutine_entry>)
 {
   $LIST( <13:function_or_subroutine_entry>) = SXML_LL(
     $LIST( <12a:subroutine_header>),
-    json_abstract_statement(
+    ast_abstract_statement(
       "entry_statement",
       LOCATION(0)) );
 }
@@ -1149,7 +1149,7 @@ $LIST( <13:function_or_subroutine_entry>)
 
 $LIST( <16:array_declarator>)
 {
- $LIST( <16:array_declarator>) = json_variable_declarator(
+ $LIST( <16:array_declarator>) = ast_variable_declarator(
     $NAME( <99:symbolic_name>),
     $LIST( <16b:dimension_declarator_list>) );
 }
@@ -1211,7 +1211,7 @@ $LIST( <16b:dimension_declarator_list>)
 
 $LIST( <16c:dimension_declarator>)
 {
-  $LIST( <16c:dimension_declarator>) = json_lower_upper_bound(
+  $LIST( <16c:dimension_declarator>) = ast_lower_upper_bound(
     $LIST( <81:dim_bound_expr>),
     $LIST( <81:dim_bound_expr>') );
 }
@@ -1223,7 +1223,7 @@ $LIST( <16c:dimension_declarator>)
 
 $LIST( <16c:dimension_declarator>)
 {
-  $LIST( <16c:dimension_declarator>) = json_lower_upper_bound(
+  $LIST( <16c:dimension_declarator>) = ast_lower_upper_bound(
     $LIST( <81:dim_bound_expr>),
     NULL );
 }
@@ -1235,7 +1235,7 @@ $LIST( <16c:dimension_declarator>)
 
 $LIST( <16d:last_dimension_declarator>)
 {
-  $LIST( <16d:last_dimension_declarator>) = json_lower_upper_bound(
+  $LIST( <16d:last_dimension_declarator>) = ast_lower_upper_bound(
     $LIST( <81:dim_bound_expr>),
     $LIST( <16e:last_upper_dimension_bound>) );
 }
@@ -1269,7 +1269,7 @@ $LIST( <16e:last_upper_dimension_bound>)
 $LIST( <16e:last_upper_dimension_bound>)
 {
   $LIST( <16e:last_upper_dimension_bound>) =
-    json_literal_expression( "*");
+    ast_literal_expression( "*");
 }
 
 *******************************************************************************
@@ -1390,8 +1390,8 @@ $LIST( <16e:last_upper_dimension_bound>)
 
 $LIST(<20:type_statement>)
 {
-  $LIST(<20:type_statement>) = json_type_statement(
-    json_type_reference(
+  $LIST(<20:type_statement>) = ast_type_statement(
+    ast_type_reference(
       $NAME (<10b:scalar_type>),
       NULL ),
     LOCATION(0), 
@@ -1407,8 +1407,8 @@ $LIST(<20:type_statement>)
 
 $LIST(<20:type_statement>)
 {
-  $LIST(<20:type_statement>) = json_type_statement(
-    json_type_reference(
+  $LIST(<20:type_statement>) = ast_type_statement(
+    ast_type_reference(
       $NAME ( <10b:scalar_type>),
       $NAME ( <22:len_specification>)),
     LOCATION(0), 
@@ -1423,8 +1423,8 @@ $LIST(<20:type_statement>)
 
 $LIST(<20:type_statement>)
 {
-  $LIST(<20:type_statement>) = json_type_statement(
-    json_type_reference(
+  $LIST(<20:type_statement>) = ast_type_statement(
+    ast_type_reference(
       $NAME ( <10b:scalar_type>),
       $NAME( <22:len_specification>)),
     LOCATION(0), 
@@ -1439,8 +1439,8 @@ $LIST(<20:type_statement>)
 
 $LIST(<20:type_statement>)
 {
-  $LIST(<20:type_statement>) = json_type_statement(
-    json_type_reference( "CHARACTER", NULL),
+  $LIST(<20:type_statement>) = ast_type_statement(
+    ast_type_reference( "CHARACTER", NULL),
     LOCATION(0), 
     $LIST( <20c:character_name_list>));
 }
@@ -1452,8 +1452,8 @@ $LIST(<20:type_statement>)
 
 $LIST(<20:type_statement>)
 {
-  $LIST(<20:type_statement>) = json_type_statement(
-    json_type_reference(
+  $LIST(<20:type_statement>) = ast_type_statement(
+    ast_type_reference(
       "CHARACTER",
       $NAME (<22:len_specification>)),
     LOCATION(0), 
@@ -1467,8 +1467,8 @@ $LIST(<20:type_statement>)
 
 $LIST(<20:type_statement>)
 {
-  $LIST(<20:type_statement>) = json_type_statement(
-    json_type_reference(
+  $LIST(<20:type_statement>) = ast_type_statement(
+    ast_type_reference(
       "CHARACTER",
       $NAME (<22:len_specification>)),
     LOCATION(0), 
@@ -1515,7 +1515,7 @@ $LIST(<20b:scalar_name>)
 
 $LIST(<20b:scalar_name>)
 {
-  $LIST(<20b:scalar_name>) =  json_variable_declarator(
+  $LIST(<20b:scalar_name>) =  ast_variable_declarator(
     $NAME( <99:symbolic_name>),
     NULL);
 }
@@ -1550,7 +1550,7 @@ $LIST( <20c:character_name_list>)
 
 $LIST(<20d:character_name>)
 {
-  $LIST(<20d:character_name>) = json_add_declarator_len(
+  $LIST(<20d:character_name>) = ast_add_declarator_len(
     $LIST( <20b:scalar_name>),
     $NAME( <22:len_specification>) );
 }
@@ -2056,7 +2056,7 @@ $LIST( <42:stop_statement>)
 
 $LIST( <42:stop_statement>)
 {
-  $LIST( <42:stop_statement>) = json_constant(
+  $LIST( <42:stop_statement>) = ast_constant(
     "uint_constant",
     $NAME( <102:unsigned_int_constant>) );
 }
@@ -2068,7 +2068,7 @@ $LIST( <42:stop_statement>)
 
 $LIST( <42:stop_statement>)
 {
-  $LIST( <42:stop_statement>) = json_constant(
+  $LIST( <42:stop_statement>) = ast_constant(
     "character_constant",
     $NAME( <109:character_constant>));
 }
@@ -2090,7 +2090,7 @@ $LIST( <43:pause_statement>)
 
 $LIST( <43:pause_statement>)
 {
-  $LIST( <43:pause_statement>) = json_constant(
+  $LIST( <43:pause_statement>) = ast_constant(
    "unsigned_int_constant",
    $NAME (<102:unsigned_int_constant>));
 }
@@ -2102,7 +2102,7 @@ $LIST( <43:pause_statement>)
 
 $LIST( <43:pause_statement>)
 {
-  $LIST( <43:pause_statement>) = json_constant(
+  $LIST( <43:pause_statement>) = ast_constant(
     "character_constant",
     $NAME (<109:character_constant>));
 }
@@ -2921,7 +2921,7 @@ $LIST( <43:pause_statement>)
 
 $LIST(<71:call_statement>)
 {
-  $LIST(<71:call_statement>) = json_call_statement(
+  $LIST(<71:call_statement>) = ast_call_statement(
     $NAME( <99:symbolic_name>),
     LOCATION(0),
     NULL );
@@ -2934,7 +2934,7 @@ $LIST(<71:call_statement>)
 
 $LIST(<71:call_statement>)
 {
-  $LIST(<71:call_statement>) = json_call_statement(
+  $LIST(<71:call_statement>) = ast_call_statement(
     $NAME( <99:symbolic_name>),
     LOCATION(0),
     NULL );
@@ -2947,7 +2947,7 @@ $LIST(<71:call_statement>)
 
 $LIST( <71:call_statement>)
 {
-  $LIST(<71:call_statement>) = json_call_statement(
+  $LIST(<71:call_statement>) = ast_call_statement(
     $NAME( <99:symbolic_name>),
     LOCATION(0),
     $LIST( <71a:actual_argument_list>) );
@@ -3269,7 +3269,7 @@ $NAME( <72:return_statement>)
 
 $LIST( <80:int_constant_expr>)
 {
-  $LIST( <80:int_constant_expr>) = json_unary_expression(
+  $LIST( <80:int_constant_expr>) = ast_unary_expression(
     $NAME( <114:sign>),
     $LIST( <80a:int_constant_expr>) );
 }
@@ -3291,7 +3291,7 @@ $LIST( <80:int_constant_expr>)
 
 $LIST( <80a:int_constant_expr>)
 {
-  $LIST( <80a:int_constant_expr>) = json_binary_expression(
+  $LIST( <80a:int_constant_expr>) = ast_binary_expression(
     $LIST( <80a:int_constant_expr>' ),
     "+",
     $LIST( <80a:int_constant_expr>'') );
@@ -3304,7 +3304,7 @@ $LIST( <80a:int_constant_expr>)
 
 $LIST( <80a:int_constant_expr>)
 {
-  $LIST( <80a:int_constant_expr>) = json_binary_expression(
+  $LIST( <80a:int_constant_expr>) = ast_binary_expression(
     $LIST( <80a:int_constant_expr>' ),
     "-",
     $LIST( <80a:int_constant_expr>'') );
@@ -3317,7 +3317,7 @@ $LIST( <80a:int_constant_expr>)
 
 $LIST( <80a:int_constant_expr>)
 {
-  $LIST( <80a:int_constant_expr>) = json_binary_expression(
+  $LIST( <80a:int_constant_expr>) = ast_binary_expression(
     $LIST( <80a:int_constant_expr>' ),
     "*",
     $LIST( <80a:int_constant_expr>'') );
@@ -3330,7 +3330,7 @@ $LIST( <80a:int_constant_expr>)
 
 $LIST( <80a:int_constant_expr>)
 {
-  $LIST( <80a:int_constant_expr>) = json_binary_expression(
+  $LIST( <80a:int_constant_expr>) = ast_binary_expression(
     $LIST( <80a:int_constant_expr>' ),
     "/",
     $LIST( <80a:int_constant_expr>'') );
@@ -3343,7 +3343,7 @@ $LIST( <80a:int_constant_expr>)
 
 $LIST( <80a:int_constant_expr>)
 {
-  $LIST( <80a:int_constant_expr>) = json_binary_expression(
+  $LIST( <80a:int_constant_expr>) = ast_binary_expression(
     $LIST( <80a:int_constant_expr>' ),
     "**",
     $LIST( <80a:int_constant_expr>'') );
@@ -3356,7 +3356,7 @@ $LIST( <80a:int_constant_expr>)
 
 $LIST( <80a:int_constant_expr>)
 {
-  $LIST( <80a:int_constant_expr>) = json_literal_expression(
+  $LIST( <80a:int_constant_expr>) = ast_literal_expression(
     $NAME( <102:unsigned_int_constant>) );
 }
 
@@ -3367,7 +3367,7 @@ $LIST( <80a:int_constant_expr>)
 
 $LIST( <80a:int_constant_expr>)
 {
-  $LIST( <80a:int_constant_expr>) = json_variable_expression(
+  $LIST( <80a:int_constant_expr>) = ast_variable_expression(
     $NAME( <99:symbolic_name>) );
 }
 
@@ -3378,7 +3378,7 @@ $LIST( <80a:int_constant_expr>)
 
 $LIST( <80a:int_constant_expr>)
 {
-  $LIST( <80a:int_constant_expr>) = json_parenthesis_expression(
+  $LIST( <80a:int_constant_expr>) = ast_parenthesis_expression(
     $LIST( <80:int_constant_expr>) );
 }
 

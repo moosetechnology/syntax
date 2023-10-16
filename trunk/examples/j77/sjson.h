@@ -73,7 +73,7 @@ SXML_TYPE_LIST JSON_KU_ (SXML_TYPE_TEXT K, SXML_TYPE_LIST V)
 /* -------------------------------------------------------------------------
  * ouputs line and column  position
  */
-SXML_TYPE_LIST json_location( SXML_TYPE_TEXT position,
+SXML_TYPE_LIST ast_location( SXML_TYPE_TEXT position,
 			      SXUINT line,
 			      SXUINT column) {
   return JSON_KU(
@@ -88,9 +88,9 @@ SXML_TYPE_LIST json_location( SXML_TYPE_TEXT position,
 /* -------------------------------------------------------------------------
  * ouputs line and column start position
  */
-SXML_TYPE_LIST json_start_location( SXUINT line,
+SXML_TYPE_LIST ast_start_location( SXUINT line,
 				    SXUINT column) {
-  return json_location( "start_pos", line, column);
+  return ast_location( "start_pos", line, column);
 }
 
 
@@ -98,17 +98,17 @@ SXML_TYPE_LIST json_start_location( SXUINT line,
 /* -------------------------------------------------------------------------
  * ouputs line and column end position
  */
-SXML_TYPE_LIST json_end_location( SXUINT line,
+SXML_TYPE_LIST ast_end_location( SXUINT line,
 				  SXUINT column,
 				  SXML_TYPE_TEXT string) {
-  return json_location( "end_pos", line, column + strlen(string) - 1);
+  return ast_location( "end_pos", line, column + strlen(string) - 1);
 }
 
 
 /* -------------------------------------------------------------------------
  * ouputs a tag
  */
-SXML_TYPE_LIST json_tag( SXML_TYPE_TEXT tag) {
+SXML_TYPE_LIST ast_tag( SXML_TYPE_TEXT tag) {
   return JSON_KQ_ ("tag", tag);
 }
 
@@ -118,7 +118,7 @@ SXML_TYPE_LIST json_tag( SXML_TYPE_TEXT tag) {
  * - file_name: path of the file
  * - program_units contained in the file
  */
-SXML_TYPE_LIST json_program_file( SXML_TYPE_TEXT file_name,
+SXML_TYPE_LIST ast_program_file( SXML_TYPE_TEXT file_name,
 				  SXML_TYPE_LIST program_units) {
   return SXML_LL(
     JSON_KQ_ ("file", file_name),
@@ -136,7 +136,7 @@ SXML_TYPE_LIST json_program_file( SXML_TYPE_TEXT file_name,
  * - end location of the program unit
  * - list of statements
  */
-SXML_TYPE_LIST json_program_unit( SXML_TYPE_TEXT tag,
+SXML_TYPE_LIST ast_program_unit( SXML_TYPE_TEXT tag,
 				  SXML_TYPE_LIST header,
 				  SXML_TYPE_LIST location,
 				  SXML_TYPE_LIST end_location,
@@ -144,7 +144,7 @@ SXML_TYPE_LIST json_program_unit( SXML_TYPE_TEXT tag,
 
   return JSON_MAP(
       SXML_LLLTLTL(
-	json_tag(tag),
+	ast_tag(tag),
 	(header == NULL ? JSON_KQ_ ("name", "null") : header),
 	location,
         ",\n",
@@ -161,7 +161,7 @@ SXML_TYPE_LIST json_program_unit( SXML_TYPE_TEXT tag,
  * - name
  * - parameters
  */
-SXML_TYPE_LIST json_program_unit_header( SXML_TYPE_TEXT name,
+SXML_TYPE_LIST ast_program_unit_header( SXML_TYPE_TEXT name,
 				  SXML_TYPE_LIST parameters) {
 
   return SXML_LL(
@@ -179,7 +179,7 @@ SXML_TYPE_LIST json_program_unit_header( SXML_TYPE_TEXT name,
  * - function_header
  * - return_type
  */
-SXML_TYPE_LIST json_add_return_type(SXML_TYPE_LIST function_header,
+SXML_TYPE_LIST ast_add_return_type(SXML_TYPE_LIST function_header,
 				    SXML_TYPE_LIST return_type) {
   return SXML_LL(
     function_header,
@@ -192,11 +192,11 @@ SXML_TYPE_LIST json_add_return_type(SXML_TYPE_LIST function_header,
  * - tag: the precise kinf of statement (ex: "continue_statement")
  * - Location of the statement
  */
-SXML_TYPE_LIST json_abstract_statement( SXML_TYPE_TEXT tag,
+SXML_TYPE_LIST ast_abstract_statement( SXML_TYPE_TEXT tag,
 					SXML_TYPE_LIST location) {
 
   return SXML_LL(
-    json_tag(tag),
+    ast_tag(tag),
     location );
 }
 
@@ -206,12 +206,12 @@ SXML_TYPE_LIST json_abstract_statement( SXML_TYPE_TEXT tag,
  * - rule recognizing the statement
  * - Location of the statement
  */
-SXML_TYPE_LIST json_unknown_statement( SXML_TYPE_TEXT rule,
+SXML_TYPE_LIST ast_unknown_statement( SXML_TYPE_TEXT rule,
 				       SXML_TYPE_LIST location) {
 
   return SXML_LL(
     JSON_KQ_ ("rule", rule),
-    json_abstract_statement( "unknown_statement", location) );
+    ast_abstract_statement( "unknown_statement", location) );
 }
 
 
@@ -220,7 +220,7 @@ SXML_TYPE_LIST json_unknown_statement( SXML_TYPE_TEXT rule,
  * - label (optional)
  * - statement
  */
-SXML_TYPE_LIST json_labeled_statement( SXML_TYPE_TEXT label,
+SXML_TYPE_LIST ast_labeled_statement( SXML_TYPE_TEXT label,
 				       SXML_TYPE_LIST statement) {
   if (label == NULL) {
     return JSON_MAP( statement);
@@ -240,12 +240,12 @@ SXML_TYPE_LIST json_labeled_statement( SXML_TYPE_TEXT label,
  * - Location of the statement
  * - list of variables
  */
-SXML_TYPE_LIST json_type_statement( SXML_TYPE_LIST type_reference,
+SXML_TYPE_LIST ast_type_statement( SXML_TYPE_LIST type_reference,
 				    SXML_TYPE_LIST location,
 				    SXML_TYPE_LIST variables) {
 
   return SXML_LTLTL(
-    json_abstract_statement ( "type_statement", location),
+    ast_abstract_statement ( "type_statement", location),
     ",\n",
     JSON_KU ("type", type_reference),
     ",\n",
@@ -257,19 +257,19 @@ SXML_TYPE_LIST json_type_statement( SXML_TYPE_LIST type_reference,
  * - name of the type
  * - len_specification
  */
-SXML_TYPE_LIST json_type_reference( SXML_TYPE_TEXT name,
+SXML_TYPE_LIST ast_type_reference( SXML_TYPE_TEXT name,
 				    SXML_TYPE_TEXT len_specification) {
 
   if (len_specification == NULL) {
     return JSON_MAP(
       SXML_LL (
-        json_tag("type_reference"),
+        ast_tag("type_reference"),
 	JSON_KQ ("name", name) ));
   }
   else {
     return JSON_MAP(
       SXML_LLL (
-        json_tag("type_reference"),
+        ast_tag("type_reference"),
 	JSON_KQ_ ("name", name),
 	JSON_KQ ("len_specification", len_specification) ));
   }
@@ -282,15 +282,15 @@ SXML_TYPE_LIST json_type_reference( SXML_TYPE_TEXT name,
  * - argument of the PAUSE/STOP
  * - Location of the statement
  */
-SXML_TYPE_LIST json_pause_stop_statement(SXML_TYPE_TEXT pause_stop, 
+SXML_TYPE_LIST ast_pause_stop_statement(SXML_TYPE_TEXT pause_stop, 
 					 SXML_TYPE_LIST argument,
 					 SXML_TYPE_LIST location) {
   if (argument == NULL) {
-    return json_abstract_statement( pause_stop, location);
+    return ast_abstract_statement( pause_stop, location);
   }
   else {
     return SXML_LTL(
-      json_abstract_statement( pause_stop, location),
+      ast_abstract_statement( pause_stop, location),
       ",\n",
       argument);
   }
@@ -303,12 +303,12 @@ SXML_TYPE_LIST json_pause_stop_statement(SXML_TYPE_TEXT pause_stop,
  * - Location of the statement
  * - list of arguments
  */
-SXML_TYPE_LIST json_call_statement( SXML_TYPE_TEXT name,
+SXML_TYPE_LIST ast_call_statement( SXML_TYPE_TEXT name,
 				    SXML_TYPE_LIST location,
 				    SXML_TYPE_LIST arguments) {
 
   return SXML_LTLL(
-    json_abstract_statement( "call_statement", location),
+    ast_abstract_statement( "call_statement", location),
     ",\n",
     JSON_KQ_ ("name", name),
     JSON_KU(
@@ -320,7 +320,7 @@ SXML_TYPE_LIST json_call_statement( SXML_TYPE_TEXT name,
 /* -------------------------------------------------------------------------
  * outputs a constant
  */
-SXML_TYPE_LIST json_constant( SXML_TYPE_TEXT constant_type,
+SXML_TYPE_LIST ast_constant( SXML_TYPE_TEXT constant_type,
 			      SXML_TYPE_TEXT constant) {
   return JSON_KQ( constant_type, constant);
 }
@@ -329,11 +329,11 @@ SXML_TYPE_LIST json_constant( SXML_TYPE_TEXT constant_type,
 /* -------------------------------------------------------------------------
  * outputs a literal_expression.
  */
-SXML_TYPE_LIST json_literal_expression( SXML_TYPE_TEXT literal) {
+SXML_TYPE_LIST ast_literal_expression( SXML_TYPE_TEXT literal) {
 
   return JSON_MAP (
     SXML_LL(
-      json_tag( "literal_expression"),
+      ast_tag( "literal_expression"),
       JSON_KQ( "literal", literal) ));
 }
 
@@ -341,11 +341,11 @@ SXML_TYPE_LIST json_literal_expression( SXML_TYPE_TEXT literal) {
 /* -------------------------------------------------------------------------
  * outputs a variable_expression.
  */
-SXML_TYPE_LIST json_variable_expression( SXML_TYPE_TEXT variable) {
+SXML_TYPE_LIST ast_variable_expression( SXML_TYPE_TEXT variable) {
 
   return JSON_MAP (
     SXML_LL(
-      json_tag( "variable_expression"),
+      ast_tag( "variable_expression"),
       JSON_KQ( "variable", variable) ));
 }
 
@@ -353,11 +353,11 @@ SXML_TYPE_LIST json_variable_expression( SXML_TYPE_TEXT variable) {
 /* -------------------------------------------------------------------------
  * outputs a parenthesis_expression (expresison between parentheses)
  */
-SXML_TYPE_LIST json_parenthesis_expression( SXML_TYPE_LIST expression) {
+SXML_TYPE_LIST ast_parenthesis_expression( SXML_TYPE_LIST expression) {
 
   return JSON_MAP (
     SXML_LL(
-      json_tag( "parenthesis_expression"),
+      ast_tag( "parenthesis_expression"),
       JSON_KU( "expression", expression) ));
 }
 
@@ -367,12 +367,12 @@ SXML_TYPE_LIST json_parenthesis_expression( SXML_TYPE_LIST expression) {
  * - unary_operator
  * - expression
  */
-SXML_TYPE_LIST json_unary_expression( SXML_TYPE_TEXT unary_operator,
+SXML_TYPE_LIST ast_unary_expression( SXML_TYPE_TEXT unary_operator,
 				      SXML_TYPE_LIST expression) {
 
   return JSON_MAP (
     SXML_LLL(
-      json_tag( "unary_expression"),
+      ast_tag( "unary_expression"),
       JSON_KQ_( "operator", unary_operator),
       JSON_KU ( "expression", expression) ));
 }
@@ -381,13 +381,13 @@ SXML_TYPE_LIST json_unary_expression( SXML_TYPE_TEXT unary_operator,
 /* -------------------------------------------------------------------------
  * outputs a binary_expression.
  */
-SXML_TYPE_LIST json_binary_expression( SXML_TYPE_LIST lhs_expression,
+SXML_TYPE_LIST ast_binary_expression( SXML_TYPE_LIST lhs_expression,
 				       SXML_TYPE_TEXT binary_operator,
 				       SXML_TYPE_LIST rhs_expression) {
 
   return JSON_MAP (
     SXML_LLLL(
-      json_tag( "binary_expression"),
+      ast_tag( "binary_expression"),
       JSON_KU ( "lhs", lhs_expression),
       JSON_KQ_( "operator", binary_operator),
       JSON_KU ( "expression", rhs_expression) ));
@@ -399,11 +399,11 @@ SXML_TYPE_LIST json_binary_expression( SXML_TYPE_LIST lhs_expression,
  * - name of the variable
  * - dimension_declarator
  */
-SXML_TYPE_LIST json_variable_declarator( SXML_TYPE_TEXT variable,
+SXML_TYPE_LIST ast_variable_declarator( SXML_TYPE_TEXT variable,
 					 SXML_TYPE_LIST dimension_declarator) {
  return JSON_MAP(
    SXML_LLL(
-     json_tag( "variable_declarator"),
+     ast_tag( "variable_declarator"),
      JSON_KQ_( "variable", variable),
      JSON_KU (  "dimension_declarators", JSON_ARRAY( dimension_declarator)) ) );
 }
@@ -414,7 +414,7 @@ SXML_TYPE_LIST json_variable_declarator( SXML_TYPE_TEXT variable,
  * needs to insert a new element in before the last element of the list
  * (which contains "}" closing a json_map)
  */
-SXML_TYPE_LIST json_add_declarator_len( SXML_TYPE_LIST variable_declarator,
+SXML_TYPE_LIST ast_add_declarator_len( SXML_TYPE_LIST variable_declarator,
 					 SXML_TYPE_TEXT len_specifier) {
   SXML_LL(
     JSON_KQ_ ("len_specifier", len_specifier),
@@ -426,7 +426,7 @@ SXML_TYPE_LIST json_add_declarator_len( SXML_TYPE_LIST variable_declarator,
 
 /* -------------------------------------------------------------------------
  */
-SXML_TYPE_LIST json_lower_upper_bound(SXML_TYPE_LIST lower_bound,
+SXML_TYPE_LIST ast_lower_upper_bound(SXML_TYPE_LIST lower_bound,
 				      SXML_TYPE_LIST upper_bound) {
   if (upper_bound == NULL) {
     return JSON_MAP(
