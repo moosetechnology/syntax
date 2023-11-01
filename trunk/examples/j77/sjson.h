@@ -259,7 +259,7 @@ SXML_TYPE_LIST ast_type_statement( SXML_TYPE_LIST type_reference,
  * - len_specification
  */
 SXML_TYPE_LIST ast_type_reference( SXML_TYPE_LIST name,
-				    SXML_TYPE_TEXT len_specification) {
+				    SXML_TYPE_LIST len_specification) {
 
   if (len_specification == NULL) {
     return JSON_MAP(
@@ -272,7 +272,7 @@ SXML_TYPE_LIST ast_type_reference( SXML_TYPE_LIST name,
       SXML_LLL (
         ast_tag("type_reference"),
 	JSON_KQ_ ("name", name->TEXT),
-	JSON_KQ ("len_specification", len_specification) ));
+	JSON_KQ ("len_specification", len_specification->TEXT) ));
   }
 }
 
@@ -416,9 +416,9 @@ SXML_TYPE_LIST ast_variable_declarator( SXML_TYPE_TEXT variable,
  * (which contains "}" closing a json_map)
  */
 SXML_TYPE_LIST ast_add_declarator_len( SXML_TYPE_LIST variable_declarator,
-					 SXML_TYPE_TEXT len_specifier) {
+					 SXML_TYPE_LIST len_specifier) {
   SXML_LL(
-    JSON_KQ_ ("len_specifier", len_specifier),
+    JSON_KQ_ ("len_specifier", len_specifier->TEXT),
     variable_declarator->SUCC );
 
   return variable_declarator;
