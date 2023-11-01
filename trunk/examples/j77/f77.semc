@@ -26,10 +26,10 @@
 
 * The following declarations define the synthesized attributes
 
-$LIST( <common_body>, <,common_body>, <0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <2e:statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <6:other_specification_statement>, <7:executable_statement>, <8:program_statement>, <9:entry_statement>, <10:function_statement>, <10b:scalar_type>, <10d:function_header>, <10a:type>, <12:subroutine_statement>, <12a:subroutine_header>, <12b:subroutine_parameter_list>, <13:function_or_subroutine_entry>, <16:array_declarator>, <16a:array_declarator_list>, <16b:dimension_declarator_list>, <16c:dimension_declarator>, <16d:last_dimension_declarator>, <16e:last_upper_dimension_bound>, <19:common_statement>, <19a:common_body_list>, <19b:common_part>, <20:type_statement>, <20a:scalar_name_list>, <20b:scalar_name>, <20c:character_name_list>, <20d:character_name>, <22:len_specification>, <42:stop_statement>, <43:pause_statement>, <71:call_statement>, <71a:actual_argument_list>, <71b:actual_argument>, <72:return_statement>, <80:int_constant_expr>, <80a:int_constant_expr>, <81:dim_bound_expr>, <99a:symbolic_name_list>) 
+$LIST( <common_body>, <,common_body>, <0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <2e:statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <6:other_specification_statement>, <7:executable_statement>, <8:program_statement>, <9:entry_statement>, <10:function_statement>, <10b:scalar_type>, <10d:function_header>, <10a:type>, <12:subroutine_statement>, <12a:subroutine_header>, <12b:subroutine_parameter_list>, <12c:subroutine_parameter>, <13:function_or_subroutine_entry>, <16:array_declarator>, <16a:array_declarator_list>, <16b:dimension_declarator_list>, <16c:dimension_declarator>, <16d:last_dimension_declarator>, <16e:last_upper_dimension_bound>, <19:common_statement>, <19a:common_body_list>, <19b:common_part>, <20:type_statement>, <20a:scalar_name_list>, <20b:scalar_name>, <20c:character_name_list>, <20d:character_name>, <22:len_specification>, <42:stop_statement>, <43:pause_statement>, <71:call_statement>, <71a:actual_argument_list>, <71b:actual_argument>, <72:return_statement>, <80:int_constant_expr>, <80a:int_constant_expr>, <81:dim_bound_expr>, <99a:symbolic_name_list>) 
 : SXML_TYPE_LIST ;
 
-$NAME(<12c:subroutine_parameter>, <80:int_constant_expr>, <80a:int_constant_expr>, <81:dim_bound_expr>, <99:symbolic_name>, <102:unsigned_int_constant>, <103:nonzero_unsigned_int_constant>, <109:character_constant>, <110:label>, <114:sign>) : SXML_TYPE_TEXT; /* i.e., character string */
+$NAME( <80:int_constant_expr>, <80a:int_constant_expr>, <81:dim_bound_expr>, <99:symbolic_name>, <102:unsigned_int_constant>, <103:nonzero_unsigned_int_constant>, <109:character_constant>, <110:label>, <114:sign>) : SXML_TYPE_TEXT; /* i.e., character string */
 
 *------------------------------------------------------------------------------
 
@@ -1073,10 +1073,10 @@ $LIST(<12a:subroutine_header>)
 
 $LIST(<12b:subroutine_parameter_list>)
 {
-  $LIST(<12b:subroutine_parameter_list>) = SXML_LTT(
+  $LIST(<12b:subroutine_parameter_list>) = SXML_LTL(
     $LIST( <12b:subroutine_parameter_list>'),
     ",\n",
-    $NAME( <12c:subroutine_parameter>) );
+    $LIST( <12c:subroutine_parameter>) );
 }
 
 *------------------------------------------------------------------------------
@@ -1086,7 +1086,7 @@ $LIST(<12b:subroutine_parameter_list>)
 
 $LIST( <12b:subroutine_parameter_list>)
 {
-  $LIST( <12b:subroutine_parameter_list>) = SXML_T( $NAME(<12c:subroutine_parameter>));
+  $LIST( <12b:subroutine_parameter_list>) = $LIST(<12c:subroutine_parameter>);
 }
 
 *******************************************************************************
@@ -1094,9 +1094,9 @@ $LIST( <12b:subroutine_parameter_list>)
 <12c:subroutine_parameter>
 		= <99:symbolic_name> ;
 
-$NAME( <12c:subroutine_parameter>)
+$LIST( <12c:subroutine_parameter>)
 {
-  $NAME( <12c:subroutine_parameter>) = SXML_Q( $NAME (<99:symbolic_name>));
+  $LIST( <12c:subroutine_parameter>) = SXML_T( SXML_Q( $NAME (<99:symbolic_name>)) );
 }
 
 *------------------------------------------------------------------------------
@@ -1104,9 +1104,9 @@ $NAME( <12c:subroutine_parameter>)
 <12c:subroutine_parameter>
 		= * ;
 
-$NAME( <12c:subroutine_parameter>)
+$LIST( <12c:subroutine_parameter>)
 {
-  $NAME( <12c:subroutine_parameter>) = "\"*\"";
+  $LIST( <12c:subroutine_parameter>) = SXML_T( "\"*\"");
 }
 
 *******************************************************************************
