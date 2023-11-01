@@ -3,7 +3,6 @@
  * outputs a JSON array:
  *   "[" LIST "]"
  */
-
 SXML_TYPE_LIST JSON_ARRAY (SXML_TYPE_LIST L)
 {
   if (L == NULL) {
@@ -18,7 +17,6 @@ SXML_TYPE_LIST JSON_ARRAY (SXML_TYPE_LIST L)
  * outputs a JSON map:
  *   "{" LIST "}"
  */
-
 SXML_TYPE_LIST JSON_MAP (SXML_TYPE_LIST L)
 {
   if (L == NULL) {
@@ -33,7 +31,6 @@ SXML_TYPE_LIST JSON_MAP (SXML_TYPE_LIST L)
  * outputs a JSON key/value pair where value must be Quoted:
  *   quoted(K) ":" quoted(value)
  */
-
 SXML_TYPE_LIST JSON_KQ (SXML_TYPE_TEXT K, SXML_TYPE_TEXT V)
 {
   return SXML_TTTTT( "\"", K, "\":\"", V, "\"");
@@ -68,6 +65,10 @@ SXML_TYPE_LIST JSON_KU_ (SXML_TYPE_TEXT K, SXML_TYPE_LIST V)
 {
   return SXML_TTTLT ("\"", K, "\" : ", V, ",\n");
 }
+
+// END OF THE "JSON LIBRARY"
+
+// START OF THE "AST LIBRARY"
 
 
 /* -------------------------------------------------------------------------
@@ -257,20 +258,20 @@ SXML_TYPE_LIST ast_type_statement( SXML_TYPE_LIST type_reference,
  * - name of the type
  * - len_specification
  */
-SXML_TYPE_LIST ast_type_reference( SXML_TYPE_TEXT name,
+SXML_TYPE_LIST ast_type_reference( SXML_TYPE_LIST name,
 				    SXML_TYPE_TEXT len_specification) {
 
   if (len_specification == NULL) {
     return JSON_MAP(
       SXML_LL (
         ast_tag("type_reference"),
-	JSON_KQ ("name", name) ));
+	JSON_KQ ("name", name->TEXT) ));
   }
   else {
     return JSON_MAP(
       SXML_LLL (
         ast_tag("type_reference"),
-	JSON_KQ_ ("name", name),
+	JSON_KQ_ ("name", name->TEXT),
 	JSON_KQ ("len_specification", len_specification) ));
   }
 }
