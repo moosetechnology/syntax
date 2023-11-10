@@ -46,6 +46,14 @@ cd syntax/trunk/examples/j77
 sh bin/f77.out -json test/nist/FM001.FOR
 ```
 
+## To test it
+Look into `trunk/examples/j77/bin` for testing tools
+- `tests.sh` runs syntax against the unit-tests and compare generated results with the ones from `test-references` folder.
+  - with the `-b` flag it executes also heavy NIST tests
+  - with the `-v` flag it shows the diff between the test and its reference
+- `test-oracle.sh` - generate new test references. It needs to be used after you change a test or generate a new one
+- `metrics.sh` shows the % of rules covered
+
 ## Syntax F77 essential files
 
 - `f77.semc` -- Grammar in SEMC format
