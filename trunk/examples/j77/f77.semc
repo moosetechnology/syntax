@@ -41,6 +41,8 @@ decl =
 SXML_TYPE_LIST ROOT;
 
 extern SXBOOLEAN is_json; /* declared in "f77_main.c" */
+extern SXBOOLEAN is_indent; /* declared in "f77_main.c" */
+extern char *json_indent_command; /* declared in "f77_main.c" */
 extern FILE *json_pipe; /* declared in "f77_analyse.c" */
 SXBOOLEAN pclose_needed;
 
@@ -64,9 +66,20 @@ open =
 		  /* no JSON output will be emitted */
 		  json_pipe = fopen ("/dev/null", "w");
 		  pclose_needed = SXFALSE;
-		} else {
-		  pclose_needed = SXFALSE;
+		} else if (is_indent == SXFALSE) {
+		  /* non-indented JSON output will be emitted */
 		  json_pipe = stdout;
+		  pclose_needed = SXFALSE;
+		} else {
+		  /* indented JSON output will be emitted, if possible */
+		  json_pipe = popen (json_indent_command, "w");
+		  if (json_pipe != NULL) {
+		     pclose_needed = SXTRUE;
+		  } else {
+		     /* indenting is impossible */
+		     json_pipe = stdout;
+		     pclose_needed = SXFALSE;
+		  }
 		}
 		/* beginning of table of comments */
 		fprintf (json_pipe, "{\n\"tag\":\"fortran_file\",\n\"comments\":\n{");
@@ -139,6 +152,7 @@ $LIST(<0:F77>)
 		= <2:main_program> %EOL ;
 
 $LIST(<1:executable_program>)
+
 {
   $LIST(<1:executable_program>) = $LIST(<2:main_program>);
 }
@@ -149,6 +163,7 @@ $LIST(<1:executable_program>)
 		= <3:function_subprogram> %EOL ;
 
 $LIST(<1:executable_program>)
+
 {
   $LIST(<1:executable_program>) = $LIST(<3:function_subprogram>);
 }
