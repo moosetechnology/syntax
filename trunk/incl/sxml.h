@@ -76,31 +76,32 @@ SXML_TYPE_TEXT SXML_INT (SXINT N)
 	}
 }
 
-/* -------------------------------------------------------------------------
- * Create a "quoted" SXML_TYPE_TEXT from a character string
- * similar to SXML_Q with the added quotes
- * NOTE: creates a copy of the parameter string.
- *   The user is reponsible for freeing the parameter string where applicable
- */
+/* ------------------------------------------------------------------------- */
 
-SXML_TYPE_TEXT SXML_Q (SXML_TYPE_TEXT T)
+SXML_TYPE_TEXT SXML_QUOTED (char C1, char *S, char C2)
 {
-	int TLen;
-	SXML_TYPE_TEXT quoted;
+	/* returns a copy of S enclosed between characters C1 on the left
+	 * and C2 on the right; for instance C1 and C2 may be single quotes,
+	 * double quotes, parentheses, brackets, braces, etc.
+	 * Note: the user is reponsible for freeing S where applicable
+	 */
+	int LENGTH;
+	char *STRING;
 
-	if (T == NULL) {
-	  return NULL;
+	assert (S != NULL);
+	LENGTH = strlen (S) + 2; // +2 for C1 and C2
+	STRING = calloc (sizeof (char), LENGTH + 1); // +1 for '\0'
+	if (STRING == NULL) {
+		SXML_OOM_ERROR ("out of memory in SXML_QUOTED()");
+	} else {
+		snprintf (STRING, LENGTH + 1, "%c%s%c", C1, S, C2);
+    		return STRING;
 	}
-
-	TLen = strlen (T);
-	quoted = malloc (sizeof (char) * (TLen + 3)); // +3 for "\"" and "\0"
-	if (quoted == NULL) {
-		SXML_OOM_ERROR ("out of memory in SXML_Q()");
-	}
-
-	snprintf (quoted, TLen + 3, "\"%s\"", T);
-	return quoted;
 }
+
+/* ------------------------------------------------------------------------- */
+
+#define SXML_Q(T) ((T) == NULL ? NULL : SXML_QUOTED ('\"', (T), '\"'))
 
 /* ------------------------------------------------------------------------- */
 
