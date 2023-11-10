@@ -66,6 +66,34 @@ SXML_TYPE_TEXT SXML_INT (SXINT N)
 	}
 }
 
+/* -------------------------------------------------------------------------
+ * Create a "quoted" SXML_TYPE_TEXT from a character string
+ * similar to SXML_Q with the added quotes
+ * NOTE: creates a copy of the parameter string.
+ *   The user is reponsible for freeing the parameter string where applicable
+ */
+
+SXML_TYPE_TEXT SXML_Q (SXML_TYPE_TEXT T)
+{
+	int TLen;
+	SXML_TYPE_TEXT quoted;
+
+	if (T == NULL) {
+	  return NULL;
+	}
+
+	TLen = strlen (T);
+	quoted = malloc (sizeof (char) * (TLen + 3)); // +3 for "\"" and "\0"
+	if (quoted == NULL) {
+		fprintf (sxstderr, "out of memory in sxml.h\n");
+		sxexit (sxerr_max_severity ());
+		return NULL;
+	}
+
+	snprintf (quoted, TLen + 3, "\"%s\"", T);
+	return quoted;
+}
+
 /* ------------------------------------------------------------------------- */
 
 typedef struct SXML_STRUCT_LIST {
@@ -131,34 +159,6 @@ SXML_TYPE_LIST SXML_T (SXML_TYPE_TEXT T)
 	L->TEXT = T;
 	L->SUCC = L; /* circular link */
 	return L;
-}
-
-/* -------------------------------------------------------------------------
- * Create a "quoted" SXML_TYPE_TEXT from a character string
- * similar to SXML_Q with the added quotes
- * NOTE: creates a copy of the parameter string.
- *   The user is reponsible for freeing the parameter string where applicable
- */
-
-SXML_TYPE_TEXT SXML_Q (SXML_TYPE_TEXT T)
-{
-	int TLen;
-	SXML_TYPE_TEXT quoted;
-
-	if (T == NULL) {
-	  return NULL;
-	}
-
-	TLen = strlen (T);
-	quoted = malloc (sizeof (char) * (TLen + 3)); // +3 for "\"" and "\0"
-	if (quoted == NULL) {
-		fprintf (sxstderr, "out of memory in sxml.h\n");
-		sxexit (sxerr_max_severity ());
-		return NULL;
-	}
-
-	snprintf (quoted, TLen + 3, "\"%s\"", T);
-	return quoted;
 }
 
 /* ------------------------------------------------------------------------- */
