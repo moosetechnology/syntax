@@ -26,6 +26,16 @@ char WHAT_XMLBUILD[] = "@(#)SYNTAX - $Id: sxml.h 3546 2023-08-26 07:53:18Z garav
 
 /* ------------------------------------------------------------------------- */
 
+// #define SXML_OOM_ERROR(OOM_MESSAGE) return (OOM_MESSAGE)
+
+#define SXML_OOM_ERROR(OOM_MESSAGE) { \
+	fprintf (sxstderr, "%s\n", OOM_MESSAGE); \
+	sxexit (sxerr_max_severity ()); \
+	return NULL; \
+	}
+
+/* ------------------------------------------------------------------------- */
+
 typedef char *SXML_TYPE_TEXT;
 
 /* ------------------------------------------------------------------------- */
@@ -39,7 +49,7 @@ SXML_TYPE_TEXT SXML_UINT (SXUINT N)
 	LENGTH = (N == 0) ? 1 : floor (log10l (N)) + 1;
 	STRING = calloc (sizeof (char), LENGTH + 1); // +1 for '\0'
 	if (STRING == NULL) {
-		return "out-of-memory";
+		SXML_OOM_ERROR ("out of memory in SXML_UINT()");
 	} else {
 		snprintf (STRING, LENGTH + 1, "%lu", N);
     		return STRING;
@@ -59,7 +69,7 @@ SXML_TYPE_TEXT SXML_INT (SXINT N)
 	if (N < 0) ++ LENGTH; // +1 for negative sign '-'
 	STRING = calloc (sizeof (char), LENGTH + 1); // +1 for '\0'
 	if (STRING == NULL) {
-		return "out-of-memory";
+		SXML_OOM_ERROR ("out of memory in SXML_INT()");
 	} else {
 		snprintf (STRING, LENGTH + 1, "%ld", N);
     		return STRING;
@@ -85,9 +95,7 @@ SXML_TYPE_TEXT SXML_Q (SXML_TYPE_TEXT T)
 	TLen = strlen (T);
 	quoted = malloc (sizeof (char) * (TLen + 3)); // +3 for "\"" and "\0"
 	if (quoted == NULL) {
-		fprintf (sxstderr, "out of memory in sxml.h\n");
-		sxexit (sxerr_max_severity ());
-		return NULL;
+		SXML_OOM_ERROR ("out of memory in SXML_Q()");
 	}
 
 	snprintf (quoted, TLen + 3, "\"%s\"", T);
