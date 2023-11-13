@@ -42,6 +42,14 @@ SXML_TYPE_LIST ast_tag( SXML_TYPE_TEXT tag) {
 
 
 /* -------------------------------------------------------------------------
+ * creates a name
+ */
+SXML_TYPE_LIST ast_name( SXML_TYPE_TEXT name) {
+  return JSON_KQ_ ("name", name);
+}
+
+
+/* -------------------------------------------------------------------------
  * ouputs a Fortran file
  * - file_name: path of the file
  * - program_units contained in the file
