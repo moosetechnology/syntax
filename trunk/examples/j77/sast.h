@@ -264,6 +264,7 @@ SXML_TYPE_LIST ast_call_statement( SXML_TYPE_TEXT name,
       JSON_ARRAY( arguments)) );
 }
 
+
 /* -------------------------------------------------------------------------
  * outputs a logical if statement
  * - Location of the statement
@@ -282,6 +283,73 @@ SXML_TYPE_LIST ast_logical_if_statement(
     JSON_KU ("statement", JSON_MAP(statement))
     );
 }
+
+/* -------------------------------------------------------------------------
+ * creates a do loop
+ * - description of a do loop (location, loop control, etc)
+ * - statements list
+ */
+SXML_TYPE_LIST ast_do_loop(
+            SXML_TYPE_LIST do_statement,
+            SXML_TYPE_LIST statements_list) {
+
+  return SXML_LL(
+    do_statement,
+    JSON_KU("statements_list", JSON_MAP(statements_list))
+    );
+}
+
+
+/* -------------------------------------------------------------------------
+ * prepares a do statement used in a do loop
+ * - Location of the statement
+ * - statment number
+ * - variable name to use with loop control parameters
+ * - loop control parameters (initial, limit, increment)
+ */
+SXML_TYPE_LIST ast_do_statement(
+            SXML_TYPE_LIST location,
+            SXML_TYPE_TEXT statement_number,
+            SXML_TYPE_TEXT variable_name,
+            SXML_TYPE_LIST do_parameters) {
+
+  return SXML_LTLL(
+    ast_abstract_statement( "do_statement", location),
+    ",\n",
+    JSON_KQ_ ("statement_number", statement_number),
+    JSON_KU_ ("loop_control", 
+      JSON_MAP(
+        SXML_LL(
+          JSON_KQ_("variable_name", variable_name),
+          do_parameters
+        )
+      )
+    )
+  );
+}
+
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_do_parameters(SXML_TYPE_LIST init,
+              SXML_TYPE_LIST limit,
+              SXML_TYPE_LIST increment) {
+  if (increment == NULL) {
+    return SXML_LLL(
+      JSON_KU_("init", init),
+      JSON_KU_("limit", limit),
+      JSON_KU("increment", increment)
+    );    
+  }
+  else {
+    return SXML_LLL(
+        JSON_KU_("init", init),
+        JSON_KU_("limit", limit),
+        JSON_KQ("increment", "null")
+    );
+  }
+}
+
 
 /* -------------------------------------------------------------------------
  * outputs a constant
