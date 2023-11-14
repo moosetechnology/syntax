@@ -2698,7 +2698,7 @@ $LIST( <60a:fmt_spec_list>)
 
 {
   $LIST( <60a:fmt_spec_list>) = SXML_LTL(
-    $LIST(<60a:fmt_spec_list>),
+    $LIST(<60a:fmt_spec_list>'),
     ",",
     $LIST(<60c:fmt_spec>));
 }    
@@ -2750,7 +2750,7 @@ $LIST( <60b:fmt_spec_list_/:>)
 
 {
   $LIST( <60b:fmt_spec_list_/:>) = SXML_LL(
-    $LIST(<60b:fmt_spec_list_/:>),
+    $LIST(<60b:fmt_spec_list_/:>'),
     $LIST(<60d:fmt_spec_/:>));
 }    
 
@@ -2762,7 +2762,10 @@ $LIST( <60b:fmt_spec_list_/:>)
 $LIST( <60b:fmt_spec_list_/:>)    
 
 {
-  $LIST( <60b:fmt_spec_list_/:>) = SXML_LTL($LIST(<60b:fmt_spec_list_/:>), ",", $LIST(<60d:fmt_spec_/:>));
+  $LIST( <60b:fmt_spec_list_/:>) = SXML_LTL(
+    $LIST(<60b:fmt_spec_list_/:>'),
+    ",",
+    $LIST(<60d:fmt_spec_/:>));
 }    
 
 *------------------------------------------------------------------------------
