@@ -359,9 +359,9 @@ $LIST(<2d:labeled_statement>)
 
 $LIST(<2d:labeled_statement>)
 {
-  $LIST(<2d:labeled_statement>) =  ast_format_statement(
+  $LIST(<2d:labeled_statement>) =  ast_labeled_statement(
       $NAME(<110:label>),
-      $LIST( <58:format_statement>) );
+      ast_format_statement( $LIST( <58:format_statement>) ));
 }
 
 *------------------------------------------------------------------------------
