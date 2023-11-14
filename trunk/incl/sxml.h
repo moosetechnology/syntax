@@ -396,6 +396,17 @@ SXML_TYPE_LIST SXML_LTLT (
 
 /* ------------------------------------------------------------------------- */
 
+SXML_TYPE_LIST SXML_LTTL (
+		SXML_TYPE_LIST L1,
+		SXML_TYPE_TEXT T2,
+		SXML_TYPE_TEXT T3,
+		SXML_TYPE_LIST L4)
+{
+	return SXML_CONCAT ("LTTL", L1, T2, T3, L4);
+}
+
+/* ------------------------------------------------------------------------- */
+
 SXML_TYPE_LIST SXML_LTTT (
 		SXML_TYPE_LIST L1,
 		SXML_TYPE_TEXT T2,
@@ -664,3 +675,9 @@ SXML_TYPE_LIST SXML_TTTTTTTTTTT (
 
 /* ------------------------------------------------------------------------- */
 
+SXML_TYPE_LIST SXML_QUOTED_LIST (SXML_TYPE_LIST L)
+{
+	return SXML_TLT("\"", L, "\"");
+}
+
+/* ------------------------------------------------------------------------- */
