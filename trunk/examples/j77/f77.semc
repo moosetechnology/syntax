@@ -26,10 +26,10 @@
 
 * The following declarations define the synthesized attributes
 
-$LIST( <common_body>, <,common_body>, <0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <2e:statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <5:block_data_subprogram>, <6:other_specification_statement>, <7:executable_statement>, <8:program_statement>, <9:entry_statement>, <10:function_statement>, <10b:scalar_type>, <10d:function_header>, <10a:type>, <12:subroutine_statement>, <12a:subroutine_header>, <12b:subroutine_parameter_list>, <12c:subroutine_parameter>, <13:function_or_subroutine_entry>, <14:block_data_statement>, <16:array_declarator>, <16a:array_declarator_list>, <16b:dimension_declarator_list>, <16c:dimension_declarator>, <16d:last_dimension_declarator>, <16e:last_upper_dimension_bound>, <19:common_statement>, <19a:common_body_list>, <19b:common_part>, <20:type_statement>, <20a:scalar_name_list>, <20b:scalar_name>, <20c:character_name_list>, <20d:character_name>, <22:len_specification>, <42:stop_statement>, <43:pause_statement>, <71:call_statement>, <71a:actual_argument_list>, <71b:actual_argument>, <72:return_statement>, <80:int_constant_expr>, <80a:int_constant_expr>, <81:dim_bound_expr>, <99a:symbolic_name_list>) 
+$LIST( <common_body>, <,common_body>, <0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <2e:statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <5:block_data_subprogram>, <6:other_specification_statement>, <7:executable_statement>, <8:program_statement>, <9:entry_statement>, <10:function_statement>, <10b:scalar_type>, <10d:function_header>, <10a:type>, <12:subroutine_statement>, <12a:subroutine_header>, <12b:subroutine_parameter_list>, <12c:subroutine_parameter>, <13:function_or_subroutine_entry>, <14:block_data_statement>, <16:array_declarator>, <16a:array_declarator_list>, <16b:dimension_declarator_list>, <16c:dimension_declarator>, <16d:last_dimension_declarator>, <16e:last_upper_dimension_bound>, <19:common_statement>, <19a:common_body_list>, <19b:common_part>, <20:type_statement>, <20a:scalar_name_list>, <20b:scalar_name>, <20c:character_name_list>, <20d:character_name>, <22:len_specification>, <42:stop_statement>, <43:pause_statement>, <58:format_statement>, <59:format_specification>, <60:fmt_specification>, <60a:fmt_spec_list>, <60b:fmt_spec_list_/:>, <60c:fmt_spec>, <60d:fmt_spec_/:>, <60e:repeatable_edit_descriptor>, <60g:float_editing>, <60h:nonrepeatable_edit_descriptor>, <65:c>,<68:k>, <71:call_statement>, <71a:actual_argument_list>, <71b:actual_argument>, <72:return_statement>, <80:int_constant_expr>, <80a:int_constant_expr>, <81:dim_bound_expr>, <99a:symbolic_name_list>) 
 : SXML_TYPE_LIST ;
 
-$NAME( <99:symbolic_name>, <102:unsigned_int_constant>, <103:nonzero_unsigned_int_constant>, <109:character_constant>, <110:label>, <114:sign>, <108:logical_constant>) : SXML_TYPE_TEXT; /* i.e., character string */
+$NAME( <60f:/:>, <61:repeat_spec>, <61a:[repeat_spec]>, <62:w>, <63:e>, <64:n>, <65:c>, <66:d>, <67:m>, <99:symbolic_name>, <102:unsigned_int_constant>, <103:nonzero_unsigned_int_constant>, <109:character_constant>, <110:label>, <114:sign>, <108:logical_constant>) : SXML_TYPE_TEXT; /* i.e., character string */
 
 *------------------------------------------------------------------------------
 
@@ -359,9 +359,9 @@ $LIST(<2d:labeled_statement>)
 
 $LIST(<2d:labeled_statement>)
 {
-  $LIST(<2d:labeled_statement>) =  ast_labeled_statement(
+  $LIST(<2d:labeled_statement>) =  ast_format_statement(
       $NAME(<110:label>),
-      ast_unknown_statement( "<2d>.2", LOCATION(0) ));
+      $LIST( <58:format_statement>) );
 }
 
 *------------------------------------------------------------------------------
@@ -2638,197 +2638,438 @@ $LIST( <43:pause_statement>)
 <58:format_statement>
 		= FORMAT  <59:format_specification> ;
 
+$LIST( <58:format_statement>)
+
+{
+  $LIST( <58:format_statement>) = $LIST( <59:format_specification>);
+}
+
+
 *******************************************************************************
 
 <59:format_specification>
 		= ( ) ;
 
+$LIST( <59:format_specification>)
+
+{
+  $LIST( <59:format_specification>) = NULL;
+}    
+
 *------------------------------------------------------------------------------
 
 <59:format_specification>
 		= ( <60:fmt_specification> ) ;
+
+$LIST( <59:format_specification>)
+
+{
+  $LIST( <59:format_specification>) = $LIST( <60:fmt_specification>);
+}    
 
 *******************************************************************************
 
 <60:fmt_specification>
 		= <60a:fmt_spec_list> ;
 
+$LIST( <60:fmt_specification>)
+
+{
+  $LIST( <60:fmt_specification>) = $LIST( <60a:fmt_spec_list>);
+}     
+
 *------------------------------------------------------------------------------
 
 <60:fmt_specification>
 		= <60b:fmt_spec_list_/:> ;
+
+$LIST( <60:fmt_specification>)    
+
+{
+  $LIST( <60:fmt_specification>) = $LIST( <60b:fmt_spec_list_/:>);
+}    
 
 *******************************************************************************
 
 <60a:fmt_spec_list>
 		= <60a:fmt_spec_list> ,  <60c:fmt_spec> ;
 
+$LIST( <60a:fmt_spec_list>)    
+
+{
+  $LIST( <60a:fmt_spec_list>) = SXML_LTL($LIST(<60a:fmt_spec_list>), ",", $LIST(<60c:fmt_spec>));
+}    
+
 *------------------------------------------------------------------------------
 
 <60a:fmt_spec_list>
 		= <60b:fmt_spec_list_/:> <60c:fmt_spec> ;
+
+$LIST( <60a:fmt_spec_list>)    
+
+{
+  $LIST( <60a:fmt_spec_list>) = SXML_LL($LIST(<60b:fmt_spec_list_/:>), $LIST(<60c:fmt_spec>));
+}    
 
 *------------------------------------------------------------------------------
 
 <60a:fmt_spec_list>
 		= <60b:fmt_spec_list_/:> ,  <60c:fmt_spec> ;
 
+$LIST( <60a:fmt_spec_list>)    
+
+{
+  $LIST( <60a:fmt_spec_list>) = SXML_LTL($LIST(<60b:fmt_spec_list_/:>), ",", $LIST(<60c:fmt_spec>));
+}    
+
 *------------------------------------------------------------------------------
 
 <60a:fmt_spec_list>
 		= <60c:fmt_spec> ;
+
+$LIST( <60a:fmt_spec_list>)    
+
+{
+  $LIST( <60a:fmt_spec_list>) = $LIST(<60c:fmt_spec>);
+}    
 
 *******************************************************************************
 
 <60b:fmt_spec_list_/:>
 		= <60b:fmt_spec_list_/:> <60d:fmt_spec_/:> ;
 
+$LIST( <60b:fmt_spec_list_/:>)    
+
+{
+  $LIST( <60b:fmt_spec_list_/:>) = SXML_LL($LIST(<60b:fmt_spec_list_/:>), $LIST(<60d:fmt_spec_/:>));
+}    
+
 *------------------------------------------------------------------------------
 
 <60b:fmt_spec_list_/:>
 		= <60b:fmt_spec_list_/:> ,  <60d:fmt_spec_/:> ;
+
+$LIST( <60b:fmt_spec_list_/:>)    
+
+{
+  $LIST( <60b:fmt_spec_list_/:>) = SXML_LTL($LIST(<60b:fmt_spec_list_/:>), ",", $LIST(<60d:fmt_spec_/:>));
+}    
 
 *------------------------------------------------------------------------------
 
 <60b:fmt_spec_list_/:>
 		= <60a:fmt_spec_list> ,  <60d:fmt_spec_/:> ;
 
+$LIST( <60b:fmt_spec_list_/:>)    
+
+{
+  $LIST( <60b:fmt_spec_list_/:>) = SXML_LTL($LIST(<60a:fmt_spec_list>), ",", $LIST(<60d:fmt_spec_/:>));
+}    
+
 *------------------------------------------------------------------------------
 
 <60b:fmt_spec_list_/:>
 		= <60d:fmt_spec_/:> ;
 
+$LIST( <60b:fmt_spec_list_/:>)    
+
+{
+  $LIST( <60b:fmt_spec_list_/:>) = $LIST(<60d:fmt_spec_/:>);
+}    
+
 *******************************************************************************
 
 <60c:fmt_spec>	= <61a:[repeat_spec]> <60e:repeatable_edit_descriptor> ;
 
+$LIST( <60c:fmt_spec>)    
+
+{
+  $LIST( <60c:fmt_spec>) = SXML_TL($NAME(<61a:[repeat_spec]>), $LIST(<60e:repeatable_edit_descriptor>));
+}
+
 *------------------------------------------------------------------------------
 
 <60c:fmt_spec>	= <60h:nonrepeatable_edit_descriptor> ;
+
+$LIST( <60c:fmt_spec>)    
+
+{
+  $LIST( <60c:fmt_spec>) = $LIST(<60h:nonrepeatable_edit_descriptor>);
+}
 
 *******************************************************************************
 
 <60d:fmt_spec_/:>
 		= <61a:[repeat_spec]> <60e:repeatable_edit_descriptor> <60f:/:> ;
 
+$LIST( <60d:fmt_spec_/:>)    
+
+{
+  $LIST( <60d:fmt_spec_/:>) = SXML_TLT($NAME(<61a:[repeat_spec]>), $LIST(<60e:repeatable_edit_descriptor>), $NAME(<60f:/:>));
+}    
+
 *------------------------------------------------------------------------------
 
 <60d:fmt_spec_/:>
 		= <60h:nonrepeatable_edit_descriptor> <60f:/:> ;
+
+$LIST( <60d:fmt_spec_/:>)    
+
+{
+  $LIST( <60d:fmt_spec_/:>) = SXML_LT($LIST(<60h:nonrepeatable_edit_descriptor>), $NAME(<60f:/:>));
+}    
 
 *------------------------------------------------------------------------------
 
 <60d:fmt_spec_/:>
 		= <60f:/:> ;
 
+$LIST( <60d:fmt_spec_/:>)    
+
+{
+  $LIST( <60d:fmt_spec_/:>) = SXML_T($NAME(<60f:/:>));
+}    
+
 *******************************************************************************
 
 <60e:repeatable_edit_descriptor>
 		= ( <60:fmt_specification> ) ;
+
+$LIST( <60e:repeatable_edit_descriptor>)    
+
+{
+  $LIST( <60e:repeatable_edit_descriptor>) = SXML_TLT("(", $LIST(<60:fmt_specification>), ")");
+}    
 
 *------------------------------------------------------------------------------
 
 <60e:repeatable_edit_descriptor>
 		= I <62:w> ;
 
+$LIST( <60e:repeatable_edit_descriptor>)    
+
+{
+  $LIST( <60e:repeatable_edit_descriptor>) = SXML_TT("I", $NAME(<62:w>));
+}    
+
 *------------------------------------------------------------------------------
 
 <60e:repeatable_edit_descriptor>
 		= I <62:w> . <67:m> ;
+
+$LIST( <60e:repeatable_edit_descriptor>)    
+
+{
+  $LIST( <60e:repeatable_edit_descriptor>) = SXML_TTTT("L", $NAME(<62:w>), ".", $NAME(<67:m>));;
+}    
 
 *------------------------------------------------------------------------------
 
 <60e:repeatable_edit_descriptor>
 		= A ;
 
+$LIST( <60e:repeatable_edit_descriptor>)    
+
+{
+  $LIST( <60e:repeatable_edit_descriptor>) = SXML_T("A");
+}    
+
 *------------------------------------------------------------------------------
 
 <60e:repeatable_edit_descriptor>
 		= A <62:w> ;
+
+$LIST( <60e:repeatable_edit_descriptor>)    
+
+{
+  $LIST( <60e:repeatable_edit_descriptor>) = SXML_TT("A", $NAME(<62:w>));
+}    
 
 *------------------------------------------------------------------------------
 
 <60e:repeatable_edit_descriptor>
 		= L <62:w> ;
 
+$LIST( <60e:repeatable_edit_descriptor>)    
+
+{
+  $LIST( <60e:repeatable_edit_descriptor>) = SXML_TT("L", $NAME(<62:w>));
+}    
+
 *------------------------------------------------------------------------------
 
 <60e:repeatable_edit_descriptor>
 		= <60g:float_editing> ;
+
+$LIST( <60e:repeatable_edit_descriptor>)    
+
+{
+  $LIST( <60e:repeatable_edit_descriptor>) = $LIST(<60g:float_editing>);
+}   
 
 *******************************************************************************
 
 <60h:nonrepeatable_edit_descriptor>
 		= <68:k> P ;
 
+$LIST( <60h:nonrepeatable_edit_descriptor>)    
+
+{
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_LT($LIST(<68:k>), "P");
+}    
+
 *------------------------------------------------------------------------------
 
 <60h:nonrepeatable_edit_descriptor>
 		= <68:k> P <61a:[repeat_spec]> <60g:float_editing> ;
+
+$LIST( <60h:nonrepeatable_edit_descriptor>)    
+
+{
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_LTTL($LIST(<68:k>), "P", $NAME(<61a:[repeat_spec]>), $LIST(<60g:float_editing>));
+}    
 
 *------------------------------------------------------------------------------
 
 <60h:nonrepeatable_edit_descriptor>
 		= P ;
 
+$LIST( <60h:nonrepeatable_edit_descriptor>)    
+
+{
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_T("P");
+}
+
 *------------------------------------------------------------------------------
 
 <60h:nonrepeatable_edit_descriptor>
 		= P <61a:[repeat_spec]> <60g:float_editing> ;
+
+$LIST( <60h:nonrepeatable_edit_descriptor>)    
+
+{
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_TTL("P", $NAME(<61a:[repeat_spec]>), $LIST(<60g:float_editing>));
+}    
 
 *------------------------------------------------------------------------------
 
 <60h:nonrepeatable_edit_descriptor>
 		= <109:character_constant> ;
 
+$LIST( <60h:nonrepeatable_edit_descriptor>)    
+
+{
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_T($NAME(<109:character_constant>));
+}    
+
 *------------------------------------------------------------------------------
 
 <60h:nonrepeatable_edit_descriptor>
 		= T <65:c> ;
+
+$LIST( <60h:nonrepeatable_edit_descriptor>)    
+
+{
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_TT("T", $NAME(<65:c>));
+}    
 
 *------------------------------------------------------------------------------
 
 <60h:nonrepeatable_edit_descriptor>
 		= T L <65:c> ;
 
+$LIST( <60h:nonrepeatable_edit_descriptor>)    
+
+{
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_TTT("T", "L", $NAME(<65:c>));
+}    
+
 *------------------------------------------------------------------------------
 
 <60h:nonrepeatable_edit_descriptor>
 		= T R <65:c> ;
+
+$LIST( <60h:nonrepeatable_edit_descriptor>)    
+
+{
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_TTT("T", "R", $NAME(<65:c>));
+}
 
 *------------------------------------------------------------------------------
 
 <60h:nonrepeatable_edit_descriptor>
 		= <64:n> X ;
 
+$LIST( <60h:nonrepeatable_edit_descriptor>)    
+
+{
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_TT($NAME(<64:n>), "X");
+}    
+
 *------------------------------------------------------------------------------
 
 <60h:nonrepeatable_edit_descriptor>
 		= S ;
+
+$LIST( <60h:nonrepeatable_edit_descriptor>)    
+
+{
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_T ( "S");
+}    
 
 *------------------------------------------------------------------------------
 
 <60h:nonrepeatable_edit_descriptor>
 		= S P ;
 
+$LIST( <60h:nonrepeatable_edit_descriptor>)    
+
+{
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_T ( "S P");
+}    
+
 *------------------------------------------------------------------------------
 
 <60h:nonrepeatable_edit_descriptor>
 		= S S ;
+
+$LIST( <60h:nonrepeatable_edit_descriptor>)    
+
+{
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_T ( "S S");
+}    
 
 *------------------------------------------------------------------------------
 
 <60h:nonrepeatable_edit_descriptor>
 		= B N ;
 
+$LIST( <60h:nonrepeatable_edit_descriptor>)    
+
+{
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_T ( "B N");
+}    
+
 *------------------------------------------------------------------------------
 
 <60h:nonrepeatable_edit_descriptor>
 		= B Z ;
 
+$LIST( <60h:nonrepeatable_edit_descriptor>)    
+
+{
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_T ( "B Z");
+}
+
 *******************************************************************************
 
 <60f:/:>	= / ;
+
+$NAME( <60f:/:>)    
+
+{
+  $NAME( <60f:/:>) = "/";
+}
 
 *------------------------------------------------------------------------------
 
@@ -2846,39 +3087,87 @@ $LIST( <43:pause_statement>)
 
 <60f:/:>	= // ;
 
+$NAME( <60f:/:>)    
+
+{
+  $NAME( <60f:/:>) = "//";
+}
+
 *------------------------------------------------------------------------------
 
 <60f:/:>	= : ;
+
+$NAME( <60f:/:>)
+
+{
+  $NAME( <60f:/:>) = ":";
+}
 
 *******************************************************************************
 
 <60g:float_editing>
 		= F <62:w> . <66:d> ;
 
+$LIST(<60g:float_editing>)
+
+{
+  $LIST(<60g:float_editing>) = SXML_TTTT("F", $NAME(<62:w>), ".", $NAME(<66:d>));
+}    
+
 *------------------------------------------------------------------------------
 
 <60g:float_editing>
 		= D <62:w> . <66:d> ;
+
+$LIST(<60g:float_editing>)
+
+{
+  $LIST(<60g:float_editing>) = SXML_TTTT("D", $NAME(<62:w>), ".", $NAME(<66:d>));
+}    
 
 *------------------------------------------------------------------------------
 
 <60g:float_editing>
 		= E <62:w> . <66:d> ;
 
+$LIST(<60g:float_editing>)
+
+{
+  $LIST(<60g:float_editing>) = SXML_TTTT("E", $NAME(<62:w>), ".", $NAME(<66:d>));
+}    
+
 *------------------------------------------------------------------------------
 
 <60g:float_editing>
 		= E <62:w> . <66:d> E <63:e> ;
+
+$LIST(<60g:float_editing>)
+
+{
+  $LIST(<60g:float_editing>) = SXML_TTTTTT("E", $NAME(<62:w>), ".", $NAME(<66:d>), "E", $NAME(<63:e>));
+}    
 
 *------------------------------------------------------------------------------
 
 <60g:float_editing>
 		= G <62:w> . <66:d> ;
 
+$LIST(<60g:float_editing>)
+
+{
+  $LIST(<60g:float_editing>) = SXML_TTTT("G", $NAME(<62:w>), ".", $NAME(<66:d>));
+}
+
 *------------------------------------------------------------------------------
 
 <60g:float_editing>
 		= G <62:w> . <66:d> E <63:e> ;
+
+$LIST(<60g:float_editing>)
+
+{
+  $LIST(<60g:float_editing>) = SXML_TTTTTT("G", $NAME(<62:w>), ".", $NAME(<66:d>), "E", $NAME(<63:e>));
+}    
 
 *******************************************************************************
 
@@ -2890,15 +3179,33 @@ $LIST( <43:pause_statement>)
 <61:repeat_spec>
 		= %repeat_spec ;
 
+$NAME(<61:repeat_spec>)
+
+{
+  $NAME(<61:repeat_spec>) = $ptext ("%repeat_spec");
+}    
+
 *******************************************************************************
 
 <61a:[repeat_spec]>
 		= ;
 
+$NAME(<61a:[repeat_spec]>)
+
+{
+  $NAME(<61a:[repeat_spec]>) = NULL;
+}    
+
 *------------------------------------------------------------------------------
 
 <61a:[repeat_spec]>
 		= <61:repeat_spec> ;
+
+$NAME(<61a:[repeat_spec]>)
+
+{
+  $NAME(<61a:[repeat_spec]>) = $NAME( <61:repeat_spec>);
+}    
 
 *******************************************************************************
 
@@ -2906,11 +3213,23 @@ $LIST( <43:pause_statement>)
 
 <62:w>		= %repeat_spec ;
 
+$NAME(<62:w>)
+
+{
+  $NAME(<62:w>) = $ptext ("%repeat_spec");
+}
+
 *******************************************************************************
 
 *<63:e>		= <103:nonzero_unsigned_int_constant> ;
 
 <63:e>		= %repeat_spec ;
+
+$NAME(<63:e>)
+
+{
+  $NAME(<63:e>) = $ptext ("%repeat_spec");
+}
 
 *******************************************************************************
 
@@ -2918,11 +3237,23 @@ $LIST( <43:pause_statement>)
 
 <64:n>		= %repeat_spec ;
 
+$NAME(<64:n>)
+
+{
+  $NAME(<64:n>) = $ptext ("%repeat_spec");
+}
+
 *******************************************************************************
 
 *<65:c>		= <103:nonzero_unsigned_int_constant> ;
 
 <65:c>		= %repeat_spec ;
+
+$NAME(<65:c>)
+
+{
+  $NAME(<65:c>) = $ptext ("%repeat_spec");
+}
 
 *******************************************************************************
 
@@ -2930,11 +3261,23 @@ $LIST( <43:pause_statement>)
 
 <66:d>		= %repeat_spec ;
 
+$NAME(<66:d>)
+
+{
+  $NAME(<66:d>) = $ptext ("%repeat_spec");
+}
+
 *******************************************************************************
 
 *<67:m>		= <102:unsigned_int_constant> ;
 
 <67:m>		= %repeat_spec ;
+
+$NAME(<67:m>)
+
+{
+  $NAME(<67:m>) = $ptext ("%repeat_spec");
+}
 
 *******************************************************************************
 
@@ -2942,9 +3285,21 @@ $LIST( <43:pause_statement>)
 
 <68:k>		= %repeat_spec ;
 
+$LIST(<68:k>)
+
+{
+  $LIST(<68:k>) = SXML_T($ptext ("%repeat_spec"));
+}
+
 *------------------------------------------------------------------------------
 
 <68:k>		= <114:sign> %repeat_spec ;
+
+$LIST(<68:k>)
+
+{
+  $LIST(<68:k>) = SXML_TT($NAME(<114:sign>), $ptext ("%repeat_spec"));
+}
 
 *******************************************************************************
 
@@ -3918,7 +4273,7 @@ $LIST(<99a:symbolic_name_list>)
 
 $NAME (<102:unsigned_int_constant>)
 {
-  $NAME (<102:unsigned_int_constant>) = "blah" ;//$ptext( "%unsigned_int_constant");
+  $NAME (<102:unsigned_int_constant>) = $ptext( "%unsigned_int_constant");
 }
 
 *******************************************************************************

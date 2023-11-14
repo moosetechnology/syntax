@@ -171,6 +171,21 @@ SXML_TYPE_LIST ast_labeled_statement( SXML_TYPE_TEXT label,
 
 
 /* -------------------------------------------------------------------------
+ * outputs a format statement
+ * - label (optional)
+ * - format statement
+ */
+SXML_TYPE_LIST ast_format_statement( SXML_TYPE_TEXT label,
+               SXML_TYPE_LIST format) {
+  return JSON_MAP( 
+      SXML_LLL(
+        JSON_KQ_ ("label", label),
+        JSON_KQ_ ("tag", "format_statement"), 
+        JSON_KU  ("specification", JSON_ARRAY(format))
+        ));
+}
+
+/* -------------------------------------------------------------------------
  * outputs a type_statement (variable declaration)
  * - type_reference
  * - Location of the statement
