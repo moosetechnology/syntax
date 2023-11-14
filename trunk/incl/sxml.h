@@ -105,39 +105,6 @@ SXML_TYPE_TEXT SXML_QUOTED (char C1, char *S, char C2)
 
 /* ------------------------------------------------------------------------- */
 
-SXML_TYPE_TEXT SXMT_TT (SXML_TYPE_TEXT S1, SXML_TYPE_TEXT S2)
-{
-	int len_s1 = 0;
-    	while (S1[len_s1] != '\0') {
-        	len_s1++;
-    	}
-
-    	int len_s2 = 0;
-    	while (S2[len_s2] != '\0') {
-        	len_s2++;
-    	}
-
-    	// Allocate memory for the concatenated string
-    	char* result = (char*)malloc(len_s1 + len_s2 + 1);
-
-    	// Copy characters from s1 to result
-    	for (int i = 0; i < len_s1; i++) {
-        	result[i] = S1[i];
-    	}
-
-    	// Copy characters from s2 to result
-    	for (int j = 0; j < len_s2; j++) {
-        	result[len_s1 + j] = S2[j];
-    	}
-
-    	// Add null-terminator to the end of the concatenated string
-    	result[len_s1 + len_s2] = '\0';
-
-    	return result;
-}
-
-/* ------------------------------------------------------------------------- */
-
 typedef struct SXML_STRUCT_LIST {
    SXML_TYPE_TEXT TEXT;
    struct SXML_STRUCT_LIST *SUCC;
@@ -708,3 +675,9 @@ SXML_TYPE_LIST SXML_TTTTTTTTTTT (
 
 /* ------------------------------------------------------------------------- */
 
+SXML_TYPE_LIST SXML_QUOTED_LIST (SXML_TYPE_LIST L)
+{
+	return SXML_TLT("\"", L, "\"");
+}
+
+/* ------------------------------------------------------------------------- */
