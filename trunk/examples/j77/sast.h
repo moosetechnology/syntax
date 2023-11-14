@@ -264,6 +264,24 @@ SXML_TYPE_LIST ast_call_statement( SXML_TYPE_TEXT name,
       JSON_ARRAY( arguments)) );
 }
 
+/* -------------------------------------------------------------------------
+ * outputs a logical if statement
+ * - Location of the statement
+ * - logical expression
+ * - statement to execute
+ */
+SXML_TYPE_LIST ast_logical_if_statement(
+            SXML_TYPE_LIST location,
+            SXML_TYPE_LIST expression,
+            SXML_TYPE_LIST statement) {
+
+  return SXML_LTLL(
+    ast_abstract_statement( "logical_if_statement", location),
+    ",\n",
+    JSON_KU_ ("expression", JSON_MAP(expression)),
+    JSON_KU ("statement", JSON_MAP(statement))
+    );
+}
 
 /* -------------------------------------------------------------------------
  * outputs a constant
