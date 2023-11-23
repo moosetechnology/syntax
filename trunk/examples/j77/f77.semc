@@ -26,7 +26,7 @@
 
 * The following declarations define the synthesized attributes
 
-$LIST( <common_body>, <,common_body>, <0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <2e:statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <5:block_data_subprogram>, <6:other_specification_statement>, <7:executable_statement>, <8:program_statement>, <9:entry_statement>, <10:function_statement>, <10b:scalar_type>, <10d:function_header>, <10a:type>, <12:subroutine_statement>, <12a:subroutine_header>, <12b:subroutine_parameter_list>, <12c:subroutine_parameter>, <13:function_or_subroutine_entry>, <14:block_data_statement>, <16:array_declarator>, <16a:array_declarator_list>, <16b:dimension_declarator_list>, <16c:dimension_declarator>, <16d:last_dimension_declarator>, <16e:last_upper_dimension_bound>, <19:common_statement>, <19a:common_body_list>, <19b:common_part>, <20:type_statement>, <20a:scalar_name_list>, <20b:scalar_name>, <20c:character_name_list>, <20d:character_name>, <21:implicit_statement>, <21a:implicit_body_list>, <21b:implicit_body>, <21c:implicit_elem_list>, <21d:implicit_elem>, <22:len_specification>, <42:stop_statement>, <43:pause_statement>, <58:format_statement>, <59:format_specification>, <60:fmt_specification>, <60a:fmt_spec_list>, <60b:fmt_spec_list_/:>, <60c:fmt_spec>, <60d:fmt_spec_/:>, <60e:repeatable_edit_descriptor>, <60g:float_editing>, <60h:nonrepeatable_edit_descriptor>, <65:c>,<68:k>, <71:call_statement>, <71a:actual_argument_list>, <71b:actual_argument>, <72:return_statement>, <80:int_constant_expr>, <80a:int_constant_expr>, <81:dim_bound_expr>, <99a:symbolic_name_list>) 
+$LIST( <common_body>, <,common_body>, <0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <2e:statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <5:block_data_subprogram>, <6:other_specification_statement>, <7:executable_statement>, <8:program_statement>, <9:entry_statement>, <10:function_statement>, <10b:scalar_type>, <10d:function_header>, <10a:type>, <12:subroutine_statement>, <12a:subroutine_header>, <12b:subroutine_parameter_list>, <12c:subroutine_parameter>, <13:function_or_subroutine_entry>, <14:block_data_statement>, <16:array_declarator>, <16a:array_declarator_list>, <16b:dimension_declarator_list>, <16c:dimension_declarator>, <16d:last_dimension_declarator>, <16e:last_upper_dimension_bound>, <19:common_statement>, <19a:common_body_list>, <19b:common_part>, <20:type_statement>, <20a:scalar_name_list>, <20b:scalar_name>, <20c:character_name_list>, <20d:character_name>, <21:implicit_statement>, <21a:implicit_body_list>, <21b:implicit_body>, <21c:implicit_elem_list>, <21d:implicit_elem>, <22:len_specification>, <23:parameter_statement>, <23a:assign_list>, <23b:assign>, <42:stop_statement>, <43:pause_statement>, <58:format_statement>, <59:format_specification>, <60:fmt_specification>, <60a:fmt_spec_list>, <60b:fmt_spec_list_/:>, <60c:fmt_spec>, <60d:fmt_spec_/:>, <60e:repeatable_edit_descriptor>, <60g:float_editing>, <60h:nonrepeatable_edit_descriptor>, <65:c>,<68:k>, <71:call_statement>, <71a:actual_argument_list>, <71b:actual_argument>, <72:return_statement>, <80:int_constant_expr>, <80a:int_constant_expr>, <81:dim_bound_expr>, <99a:symbolic_name_list>) 
 : SXML_TYPE_LIST ;
 
 $NAME( <60f:/:>, <61:repeat_spec>, <61a:[repeat_spec]>, <62:w>, <63:e>, <64:n>, <65:c>, <66:d>, <67:m>, <99:symbolic_name>, <102:unsigned_int_constant>, <103:nonzero_unsigned_int_constant>, <109:character_constant>, <110:label>, <114:sign>, <108:logical_constant>) : SXML_TYPE_TEXT; /* i.e., character string */
@@ -429,9 +429,7 @@ $LIST(<2e:statement>)
 
 $LIST(<2e:statement>)
 {
-  $LIST(<2e:statement>) = ast_unknown_statement(
-    "<2e>.6",
-    LOCATION(0) );
+  $LIST(<2e:statement>) = $LIST(<23:parameter_statement>);
 }
 
 *------------------------------------------------------------------------------
@@ -1760,19 +1758,49 @@ $LIST( <22:len_specification>)
 <23:parameter_statement>
 		= PARAMETER  ( <23a:assign_list> ) ;
 
+$LIST( <23:parameter_statement>)
+{
+  $LIST( <23:parameter_statement>) = ast_parameter_statement(
+    LOCATION(0),
+    $LIST(<23a:assign_list>)
+    );
+}    
+
 *******************************************************************************
 
 <23a:assign_list>
 		= <23a:assign_list> ,  <23b:assign> ;
+
+$LIST( <23a:assign_list>)
+{
+  $LIST( <23a:assign_list>) = SXML_LTL(
+    $LIST(<23a:assign_list>'),
+    ",",
+    $LIST(<23b:assign>)
+    );
+}    
 
 *------------------------------------------------------------------------------
 
 <23a:assign_list>
 		= <23b:assign> ;
 
+$LIST( <23a:assign_list>)
+{
+  $LIST( <23a:assign_list>) = $LIST(<23b:assign>);
+}    
+
 *******************************************************************************
 
 <23b:assign>	= <99:symbolic_name>  =  <75:constant_expr> ;
+
+$LIST( <23b:assign>)
+{
+  $LIST( <23b:assign>) = ast_parameter_statement_parameter(
+    $NAME(<99:symbolic_name>), 
+    ast_unknown_parameter("<23b>",LOCATION(0)) 
+    );
+}
 
 *******************************************************************************
 

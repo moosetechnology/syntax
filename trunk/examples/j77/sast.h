@@ -150,6 +150,18 @@ SXML_TYPE_LIST ast_unknown_statement( SXML_TYPE_TEXT rule,
     ast_abstract_statement( "unknown_statement", location) );
 }
 
+/* -------------------------------------------------------------------------
+ * outputs an unknown_parameter (a parameter we are not yet dealing with)
+ * - rule recognizing the parameter
+ * - Location of the parameter
+ */
+SXML_TYPE_LIST ast_unknown_parameter( SXML_TYPE_TEXT rule,
+               SXML_TYPE_LIST location) {
+
+  return JSON_MAP(
+    ast_unknown_statement(rule, location) 
+    );
+}
 
 /* -------------------------------------------------------------------------
  * outputs an labeled_statement
@@ -264,6 +276,7 @@ SXML_TYPE_LIST ast_call_statement( SXML_TYPE_TEXT name,
       JSON_ARRAY( arguments)) );
 }
 
+
 /* -------------------------------------------------------------------------
  * outputs an implicit_statement
  * - list of parameters
@@ -279,6 +292,7 @@ SXML_TYPE_LIST ast_implicit_statement( SXML_TYPE_LIST location,
       JSON_ARRAY( parameters)) ); 
 }
 
+
 /* -------------------------------------------------------------------------
  * outputs an typed element parameter of a body of an implicit statement
  * - a type
@@ -293,6 +307,37 @@ SXML_TYPE_LIST ast_implicit_body_parameter(
         JSON_KU_("type", type),
         JSON_KU("elements", JSON_ARRAY(elements))
       ));
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a parameter_statement
+ * - list of parameters
+ */
+SXML_TYPE_LIST ast_parameter_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST parameters) {
+    
+    return SXML_LTL(
+    ast_abstract_statement( "parameter_statement", location),
+    ",\n",
+    JSON_KU(
+      "parameters",
+      JSON_ARRAY( parameters)) ); 
+}
+
+/* -------------------------------------------------------------------------
+ * outputs a parameter_statement
+ * - list of parameters
+ */
+SXML_TYPE_LIST ast_parameter_statement_parameter(
+            SXML_TYPE_TEXT name,
+            SXML_TYPE_LIST constant_expression) {
+    
+    return JSON_MAP(
+      SXML_LL(
+        JSON_KQ_("name", name),
+        JSON_KU("expression", constant_expression))  
+    );
 }
 
 
