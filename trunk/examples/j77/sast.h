@@ -264,6 +264,37 @@ SXML_TYPE_LIST ast_call_statement( SXML_TYPE_TEXT name,
       JSON_ARRAY( arguments)) );
 }
 
+/* -------------------------------------------------------------------------
+ * outputs an implicit_statement
+ * - list of parameters
+ */
+SXML_TYPE_LIST ast_implicit_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST parameters) {
+    
+    return SXML_LTL(
+    ast_abstract_statement( "implicit_statement", location),
+    ",\n",
+    JSON_KU(
+      "parameters",
+      JSON_ARRAY( parameters)) ); 
+}
+
+/* -------------------------------------------------------------------------
+ * outputs an typed element parameter of a body of an implicit statement
+ * - a type
+ * - a list of elements
+ */
+SXML_TYPE_LIST ast_implicit_body_parameter( 
+            SXML_TYPE_LIST type,
+            SXML_TYPE_LIST elements) {
+    
+    return JSON_MAP(
+      SXML_LL(
+        JSON_KU_("type", type),
+        JSON_KU("elements", JSON_ARRAY(elements))
+      ));
+}
+
 
 /* -------------------------------------------------------------------------
  * outputs a constant
