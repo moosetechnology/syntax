@@ -399,6 +399,23 @@ SXML_TYPE_LIST ast_function_statement( SXML_TYPE_LIST location,
 
 
 /* -------------------------------------------------------------------------
+ * outputs a dimension_statement
+ * - list of array declarators
+ */
+SXML_TYPE_LIST ast_dimension_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST array_declarators) {
+    
+    return SXML_LTL(
+    ast_abstract_statement( "dimension_statement", location),
+    ",\n",
+    JSON_KU(
+      "array_declarators",
+      JSON_ARRAY( array_declarators))
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
  * outputs a constant
  */
 SXML_TYPE_LIST ast_constant( SXML_TYPE_TEXT constant_type,
@@ -469,7 +486,7 @@ SXML_TYPE_LIST ast_binary_expression( SXML_TYPE_LIST lhs_expression,
   return JSON_MAP (
     SXML_LLLL(
       ast_tag( "binary_expression"),
-      JSON_KU ( "lhs", lhs_expression),
+      JSON_KU_ ( "lhs", lhs_expression),
       JSON_KQ_( "operator", binary_operator),
       JSON_KU ( "expression", rhs_expression) ));
 }
