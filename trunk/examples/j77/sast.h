@@ -325,6 +325,21 @@ SXML_TYPE_LIST ast_parameter_statement( SXML_TYPE_LIST location,
       JSON_ARRAY( parameters)) ); 
 }
 
+/* -------------------------------------------------------------------------
+ * outputs a parameter_statement
+ * - list of parameters
+ */
+SXML_TYPE_LIST ast_parameter_statement_parameter(
+            SXML_TYPE_TEXT name,
+            SXML_TYPE_LIST constant_expression) {
+    
+    return JSON_MAP(
+      SXML_LL(
+        JSON_KQ_("name", name),
+        JSON_KU("expression", constant_expression))  
+    );
+}
+
 
 /* -------------------------------------------------------------------------
  * outputs a constant

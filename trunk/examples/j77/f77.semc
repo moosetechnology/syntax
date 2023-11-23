@@ -1796,9 +1796,10 @@ $LIST( <23a:assign_list>)
 
 $LIST( <23b:assign>)
 {
-  $LIST( <23b:assign>) = ast_unknown_parameter(
-    "<23b>",
-    LOCATION(0) );
+  $LIST( <23b:assign>) = ast_parameter_statement_parameter(
+    $NAME(<99:symbolic_name>), 
+    ast_unknown_parameter("<23b>",LOCATION(0)) 
+    );
 }
 
 *******************************************************************************
