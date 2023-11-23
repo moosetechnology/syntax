@@ -376,6 +376,29 @@ SXML_TYPE_LIST ast_data_statement_parameter(
 
 
 /* -------------------------------------------------------------------------
+ * outputs a function_statement
+ * - function name
+ * - list of parameters
+ * - function expression
+ */
+SXML_TYPE_LIST ast_function_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_TEXT name,
+            SXML_TYPE_LIST parameters,
+            SXML_TYPE_LIST expression) {
+    
+    return SXML_LTLLL(
+    ast_abstract_statement( "function_statement", location),
+    ",\n",
+    JSON_KQ_("name", name),  
+    JSON_KU_(
+      "parameters",
+      JSON_ARRAY( parameters)),
+    JSON_KU("expression", expression)
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
  * outputs a constant
  */
 SXML_TYPE_LIST ast_constant( SXML_TYPE_TEXT constant_type,

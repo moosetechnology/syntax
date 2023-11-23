@@ -1,0 +1,98 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/function-statement-arith.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": "MAIN",
+            "parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "7",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "parameter_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "8"
+                    },
+                    "parameters": [
+                        {
+                            "name": "PI",
+                            "expression": {
+                                "rule": "<23b>",
+                                "tag": "unknown_statement",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "20"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "tag": "type_statement",
+                    "start_pos": {
+                        "line": "3",
+                        "column": "8"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "REAL"
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "RADIUS",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "VOLUME",
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "data_statement",
+                    "start_pos": {
+                        "line": "4",
+                        "column": "8"
+                    },
+                    "name": "SPHERE",
+                    "parameters": [],
+                    "expression": {
+                        "rule": "<74>.1",
+                        "tag": "unknown_statement",
+                        "start_pos": {
+                            "line": "4",
+                            "column": "20"
+                        }
+                    }
+                },
+                {
+                    "rule": "<7>.8",
+                    "tag": "unknown_statement",
+                    "start_pos": {
+                        "line": "5",
+                        "column": "8"
+                    }
+                },
+                {
+                    "rule": "<7>.1",
+                    "tag": "unknown_statement",
+                    "start_pos": {
+                        "line": "6",
+                        "column": "8"
+                    }
+                }
+            ]
+        }
+    ]
+}
