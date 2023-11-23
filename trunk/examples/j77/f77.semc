@@ -586,9 +586,7 @@ $LIST(<6:other_specification_statement>)
 
 $LIST(<6:other_specification_statement>)
 {
-  $LIST(<6:other_specification_statement>) = ast_unknown_statement(
-    "<6>.3",
-    LOCATION(0) );
+  $LIST(<6:other_specification_statement>) = $LIST(<19:common_statement>);
 }
 
 *------------------------------------------------------------------------------
@@ -1417,6 +1415,14 @@ $LIST( <18c:equiv_entity_list>)
 <19:common_statement>
 		= COMMON   <19a:common_body_list> ;
 
+$LIST( <19:common_statement>)
+{
+  $LIST( <19:common_statement>) = ast_common_statement(
+    LOCATION(0),
+    $LIST(<19a:common_body_list>)
+  );
+}    
+
 *******************************************************************************
 
 *<19a:common_body_list>
@@ -1429,14 +1435,33 @@ $LIST( <18c:equiv_entity_list>)
 <19a:common_body_list>
 		= <19a:common_body_list>  <,common_body> ;
 
+$LIST( <19a:common_body_list>)
+{
+  $LIST( <19a:common_body_list>) = SXML_LTL(
+    $LIST(<19a:common_body_list>'),
+    ",",
+    $LIST(<,common_body>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <19a:common_body_list>
 		= <common_body> ;
 
+$LIST( <19a:common_body_list>)
+{
+  $LIST( <19a:common_body_list>) = $LIST(<common_body>);
+}    
+
 *******************************************************************************
 
 <,common_body>	= ,  <common_body> ;
+
+$LIST( <,common_body>)
+{
+  $LIST( <,common_body>) = $LIST(<common_body>);
+}
 
 *------------------------------------------------------------------------------
 
@@ -1444,13 +1469,31 @@ $LIST( <18c:equiv_entity_list>)
 
 <,common_body>	= <19b:common_part> ;
 
+$LIST( <,common_body>)
+{
+  $LIST( <,common_body>) = $LIST(<19b:common_part>);
+}
+
 *******************************************************************************
 
 <common_body>	= <19b:common_part> ;
 
+$LIST( <common_body>)
+{
+  $LIST( <common_body>) = $LIST(<19b:common_part>);
+}
+
 *------------------------------------------------------------------------------
 
 <common_body>	= <20b:scalar_name> ;
+
+$LIST( <common_body>)
+{
+  $LIST( <common_body>) = ast_common_body(
+    NULL, 
+    $LIST(<20b:scalar_name>)
+  );
+}
 
 *******************************************************************************
 
@@ -1466,6 +1509,14 @@ $LIST( <18c:equiv_entity_list>)
 <19b:common_part>
 		= / <99:symbolic_name> /  <20b:scalar_name> ;
 
+$LIST( <19b:common_part>)
+{
+  $LIST( <19b:common_part>) = ast_common_body(
+    $NAME(<99:symbolic_name>), 
+    $LIST(<20b:scalar_name>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 * Voir ci-dessous le commentaire de la regle <60f:/:>. La situation est
@@ -1474,6 +1525,14 @@ $LIST( <18c:equiv_entity_list>)
 
 <19b:common_part>
 		= // <20b:scalar_name> ;
+
+$LIST( <19b:common_part>)
+{
+  $LIST( <19b:common_part>) = ast_common_body(
+    NULL, 
+    $LIST(<20b:scalar_name>)
+  );
+}    
 
 *******************************************************************************
 
