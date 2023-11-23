@@ -416,6 +416,33 @@ SXML_TYPE_LIST ast_dimension_statement( SXML_TYPE_LIST location,
 
 
 /* -------------------------------------------------------------------------
+ * outputs an equivalence_statement
+ * - list of lists of variable names, array element names, array names, and character substring names separated by commas  
+ */
+SXML_TYPE_LIST ast_equivalence_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST parameters) {
+    
+    return SXML_LTL(
+    ast_abstract_statement( "equivalence_statement", location),
+    ",\n",
+    JSON_KU(
+      "parameters",
+      JSON_ARRAY( parameters))
+    ); 
+}
+
+/* -------------------------------------------------------------------------
+ * outputs a parameter of a equivalence_statement
+ * - list of variable names, array element names, array names, and character substring names separated by commas  
+ */
+SXML_TYPE_LIST ast_equiv_entity_list(
+            SXML_TYPE_LIST entity_list) {
+    
+    return JSON_ARRAY(entity_list);
+}
+
+
+/* -------------------------------------------------------------------------
  * outputs a constant
  */
 SXML_TYPE_LIST ast_constant( SXML_TYPE_TEXT constant_type,
