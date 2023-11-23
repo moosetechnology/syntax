@@ -325,6 +325,7 @@ SXML_TYPE_LIST ast_parameter_statement( SXML_TYPE_LIST location,
       JSON_ARRAY( parameters)) ); 
 }
 
+
 /* -------------------------------------------------------------------------
  * outputs a parameter_statement
  * - list of parameters
@@ -337,6 +338,39 @@ SXML_TYPE_LIST ast_parameter_statement_parameter(
       SXML_LL(
         JSON_KQ_("name", name),
         JSON_KU("expression", constant_expression))  
+    );
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a data_statement
+ * - list of parameters
+ */
+SXML_TYPE_LIST ast_data_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST parameters) {
+    
+    return SXML_LTL(
+    ast_abstract_statement( "data_statement", location),
+    ",\n",
+    JSON_KU(
+      "parameters",
+      JSON_ARRAY( parameters)) ); 
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a parameter of a data_statement. parameter consists of:
+ * - nlist: List of variables, arrays, array elements, substrings, and implied DO lists separated by commas
+ * - clist: List of constants
+ */
+SXML_TYPE_LIST ast_data_statement_parameter(
+            SXML_TYPE_LIST nlist,
+            SXML_TYPE_LIST clist) {
+    
+    return JSON_MAP(
+      SXML_LL(
+        JSON_KU_("nlist", JSON_ARRAY(nlist)),
+        JSON_KU("clist", JSON_ARRAY(clist)))  
     );
 }
 
