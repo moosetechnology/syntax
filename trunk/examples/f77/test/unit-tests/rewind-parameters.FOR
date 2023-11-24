@@ -1,0 +1,2 @@
+      REWIND (UNIT = 3, IOSTAT = CODE, ERR = 100)
+      END
