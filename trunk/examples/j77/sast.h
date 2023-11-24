@@ -512,6 +512,23 @@ SXML_TYPE_LIST ast_intrinsic_statement( SXML_TYPE_LIST location,
 
 
 /* -------------------------------------------------------------------------
+ * outputs a save statement
+ * - var_list: list of names of an array, variables, or common blocks (enclosed in slashes), occurring in a subprogram  
+ */
+SXML_TYPE_LIST ast_save_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST var_list) {
+    
+    return SXML_LTL(
+    ast_abstract_statement( "save_statement", location),
+    ",\n",
+    JSON_KU(
+      "var_list",
+      JSON_ARRAY( var_list))
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
  * outputs a constant
  */
 SXML_TYPE_LIST ast_constant( SXML_TYPE_TEXT constant_type,
