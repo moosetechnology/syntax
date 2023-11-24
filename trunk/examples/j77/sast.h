@@ -551,6 +551,31 @@ SXML_TYPE_LIST ast_assignment_statement( SXML_TYPE_LIST location,
 
 
 /* -------------------------------------------------------------------------
+ * outputs an goto_statement
+ * - type (unconditional, computed, assigned)
+ * - label(s)
+ * - variable or expression to which goto branches
+ */
+SXML_TYPE_LIST ast_goto_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_TEXT type,
+            SXML_TYPE_LIST labels,
+            SXML_TYPE_LIST var) {
+    
+    return SXML_LTLLL(
+    ast_abstract_statement( "goto_statement", location),
+    ",\n",
+    JSON_KQ_("type", type),
+    JSON_KU_(
+      "labels",
+      JSON_ARRAY( labels)),
+    JSON_KU(
+      "var",
+      JSON_ARRAY( var))
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
  * outputs a constant
  */
 SXML_TYPE_LIST ast_constant( SXML_TYPE_TEXT constant_type,
