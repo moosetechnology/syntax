@@ -603,6 +603,45 @@ SXML_TYPE_LIST ast_arithmetic_if_statement( SXML_TYPE_LIST location,
 
 
 /* -------------------------------------------------------------------------
+ * outputs a write_statement
+ * - control_info_list of parameters UNIT, FMT, IOSTAT, REC, ERR, NML
+ * - io_list: list of variables 
+ */
+SXML_TYPE_LIST ast_write_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST control_info_list,
+            SXML_TYPE_LIST io_list) {
+    
+    return SXML_LTLL(
+    ast_abstract_statement( "write_statement", location),
+    ",\n",
+    JSON_KU_(
+      "control_info_list",
+      JSON_ARRAY( control_info_list)),
+    JSON_KU(
+      "io_list",
+      JSON_ARRAY( io_list))
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a parameter of a write_statement. possible parameters UNIT, FMT, IOSTAT, REC, ERR, NML
+ * - parameter name (optional)
+ * - parameter
+ */
+SXML_TYPE_LIST ast_control_info_elem(
+            SXML_TYPE_TEXT name,
+            SXML_TYPE_LIST parameter) {
+    
+    return JSON_MAP(
+      SXML_LL(
+        JSON_KQ_("name", name),
+        JSON_KU("parameter", parameter))  
+    );
+}
+
+
+/* -------------------------------------------------------------------------
  * outputs a constant
  */
 SXML_TYPE_LIST ast_constant( SXML_TYPE_TEXT constant_type,
@@ -725,3 +764,16 @@ SXML_TYPE_LIST ast_lower_upper_bound(SXML_TYPE_LIST lower_bound,
   }
 
 }
+
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_text_to_map(
+              SXML_TYPE_TEXT tag,
+              SXML_TYPE_TEXT obj) {
+  return JSON_MAP(
+    JSON_KQ(tag, obj)
+  );
+}
+
+

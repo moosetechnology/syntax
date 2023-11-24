@@ -26,7 +26,7 @@
 
 * The following declarations define the synthesized attributes
 
-$LIST( <common_body>, <,common_body>, <0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <2e:statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <5:block_data_subprogram>, <6:other_specification_statement>, <7:executable_statement>, <8:program_statement>, <9:entry_statement>, <10:function_statement>, <10b:scalar_type>, <10d:function_header>, <10a:type>, <12:subroutine_statement>, <12a:subroutine_header>, <12b:subroutine_parameter_list>, <12c:subroutine_parameter>, <13:function_or_subroutine_entry>, <14:block_data_statement>, <15:dimension_statement>, <16:array_declarator>, <16a:array_declarator_list>, <16b:dimension_declarator_list>, <16c:dimension_declarator>, <16d:last_dimension_declarator>, <16e:last_upper_dimension_bound>, <17:equivalence_statement>, <18:equiv_entity>, <18a:equiv_list>, <18b:equiv>, <18c:equiv_entity_list>, <19:common_statement>, <19a:common_body_list>, <19b:common_part>, <20:type_statement>, <20a:scalar_name_list>, <20b:scalar_name>, <20c:character_name_list>, <20d:character_name>, <21:implicit_statement>, <21a:implicit_body_list>, <21b:implicit_body>, <21c:implicit_elem_list>, <21d:implicit_elem>, <22:len_specification>, <23:parameter_statement>, <23a:assign_list>, <23b:assign>, <24:external_statement>, <25:intrinsic_statement>, <26:save_statement>, <26a:save_statement_name_list>, <26b:save_statement_name>, <27:data_statement>, <27a:data_statement_body_list>, <27b:data_statement_body>, <27c:data_statement_name_list>, <27d:data_statement_name>, <27e:data_statement_constant_list>, <27f:data_statement_constant>, <28:data_imply_do_list>, <28a:data_imply_do_list_head_list>, <28b:data_imply_do_list_head>, <29:assignment_statement>, <29a:left_hand_side>, <30:goto_statement>, <31:unconditional_goto>, <32:computed_goto>, <33:assigned_goto>, <34:arithmetic_if_statement>, <42:stop_statement>, <43:pause_statement>, <58:format_statement>, <59:format_specification>, <60:fmt_specification>, <60a:fmt_spec_list>, <60b:fmt_spec_list_/:>, <60c:fmt_spec>, <60d:fmt_spec_/:>, <60e:repeatable_edit_descriptor>, <60g:float_editing>, <60h:nonrepeatable_edit_descriptor>, <65:c>,<68:k>, <70:statement_function_statement>, <71:call_statement>, <71a:actual_argument_list>, <71b:actual_argument>, <72:return_statement>, <74:expression>, <74a:non_typed_expression>, <76:arithmetic_expression>, <77:integer_expr>, <80:int_constant_expr>, <80a:int_constant_expr>, <81:dim_bound_expr>, <88:array_element_name>, <89:substring_name>, <99a:symbolic_name_list>, <110a:label_ref_list>) 
+$LIST( <common_body>, <,common_body>, <0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <2e:statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <5:block_data_subprogram>, <6:other_specification_statement>, <7:executable_statement>, <8:program_statement>, <9:entry_statement>, <10:function_statement>, <10b:scalar_type>, <10d:function_header>, <10a:type>, <12:subroutine_statement>, <12a:subroutine_header>, <12b:subroutine_parameter_list>, <12c:subroutine_parameter>, <13:function_or_subroutine_entry>, <14:block_data_statement>, <15:dimension_statement>, <16:array_declarator>, <16a:array_declarator_list>, <16b:dimension_declarator_list>, <16c:dimension_declarator>, <16d:last_dimension_declarator>, <16e:last_upper_dimension_bound>, <17:equivalence_statement>, <18:equiv_entity>, <18a:equiv_list>, <18b:equiv>, <18c:equiv_entity_list>, <19:common_statement>, <19a:common_body_list>, <19b:common_part>, <20:type_statement>, <20a:scalar_name_list>, <20b:scalar_name>, <20c:character_name_list>, <20d:character_name>, <21:implicit_statement>, <21a:implicit_body_list>, <21b:implicit_body>, <21c:implicit_elem_list>, <21d:implicit_elem>, <22:len_specification>, <23:parameter_statement>, <23a:assign_list>, <23b:assign>, <24:external_statement>, <25:intrinsic_statement>, <26:save_statement>, <26a:save_statement_name_list>, <26b:save_statement_name>, <27:data_statement>, <27a:data_statement_body_list>, <27b:data_statement_body>, <27c:data_statement_name_list>, <27d:data_statement_name>, <27e:data_statement_constant_list>, <27f:data_statement_constant>, <28:data_imply_do_list>, <28a:data_imply_do_list_head_list>, <28b:data_imply_do_list_head>, <29:assignment_statement>, <29a:left_hand_side>, <30:goto_statement>, <31:unconditional_goto>, <32:computed_goto>, <33:assigned_goto>, <34:arithmetic_if_statement>, <42:stop_statement>, <43:pause_statement>, <44:write_statement>, <47:control_info_list>, <47a:control_info_elem>, <47b:control_info_elem_list>, <48:io_list>, <49:io_imply_do_list>, <56:unit_identifier>, <57:format_identifier>, <58:format_statement>, <59:format_specification>, <60:fmt_specification>, <60a:fmt_spec_list>, <60b:fmt_spec_list_/:>, <60c:fmt_spec>, <60d:fmt_spec_/:>, <60e:repeatable_edit_descriptor>, <60g:float_editing>, <60h:nonrepeatable_edit_descriptor>, <65:c>,<68:k>, <70:statement_function_statement>, <71:call_statement>, <71a:actual_argument_list>, <71b:actual_argument>, <72:return_statement>, <74:expression>, <74a:non_typed_expression>, <76:arithmetic_expression>, <77:integer_expr>, <80:int_constant_expr>, <80a:int_constant_expr>, <81:dim_bound_expr>, <82a:character_or_non_typed_expression>, <88:array_element_name>, <88a:variable_or_array_element_name>, <88b:function_reference_or_array_element_name>, <89:substring_name>, <99a:symbolic_name_list>, <110a:label_ref_list>) 
 : SXML_TYPE_LIST ;
 
 $NAME( <60f:/:>, <61:repeat_spec>, <61a:[repeat_spec]>, <62:w>, <63:e>, <64:n>, <65:c>, <66:d>, <67:m>, <99:symbolic_name>, <102:unsigned_int_constant>, <103:nonzero_unsigned_int_constant>, <109:character_constant>, <110:label>, <110b:label_ref>, <114:sign>, <108:logical_constant>) : SXML_TYPE_TEXT; /* i.e., character string */
@@ -713,9 +713,7 @@ $LIST(<7:executable_statement>)
 
 $LIST(<7:executable_statement>)
 {
-  $LIST(<7:executable_statement>) = ast_unknown_statement(
-    "<7>.7",
-    LOCATION(0) );
+  $LIST(<7:executable_statement>) = $LIST(<44:write_statement>);
 }
 
 *------------------------------------------------------------------------------
@@ -2672,10 +2670,28 @@ $LIST( <43:pause_statement>)
 <44:write_statement>
 		= WRITE  ( <47:control_info_list> )  <48:io_list> ;
 
+$LIST( <44:write_statement>)
+{
+  $LIST( <44:write_statement>) = ast_write_statement(
+    LOCATION(0),
+    $LIST(<47:control_info_list>),
+    $LIST(<48:io_list>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <44:write_statement>
 		= WRITE  ( <47:control_info_list> ) ;
+
+$LIST( <44:write_statement>)
+{
+  $LIST( <44:write_statement>) = ast_write_statement(
+    LOCATION(0),
+    $LIST(<47:control_info_list>),
+    NULL
+  );
+}    
 
 *******************************************************************************
 
@@ -2720,60 +2736,144 @@ $LIST( <43:pause_statement>)
 <47:control_info_list>
 		= <56:unit_identifier> ;
 
+$LIST( <47:control_info_list>)
+{ //TODO : object UnitIdentifier
+  $LIST( <47:control_info_list>) = $LIST(<56:unit_identifier>);
+}    
+
 *------------------------------------------------------------------------------
 
 <47:control_info_list>
 		= <47b:control_info_elem_list> ;
+
+$LIST( <47:control_info_list>)
+{
+  $LIST( <47:control_info_list>) = $LIST(<47b:control_info_elem_list>);
+}     
 
 *******************************************************************************
 
 <47b:control_info_elem_list>
 		= <47b:control_info_elem_list> ,  <47a:control_info_elem> ;
 
+$LIST( <47b:control_info_elem_list>)
+{
+  $LIST( <47b:control_info_elem_list>) = SXML_LTL(
+    $LIST(<47b:control_info_elem_list>'),
+    ",",
+    $LIST(<47a:control_info_elem>)
+  );
+}
+
 *------------------------------------------------------------------------------
 
 <47b:control_info_elem_list>
 		= <56:unit_identifier> ,  <57:format_identifier> ;
+
+$LIST( <47b:control_info_elem_list>)
+{
+  $LIST( <47b:control_info_elem_list>) = SXML_LTL(
+    $LIST(<56:unit_identifier>),
+    ",",
+    $LIST(<57:format_identifier>)
+  );
+}    
 
 *------------------------------------------------------------------------------
 
 <47b:control_info_elem_list>
 		= <56:unit_identifier> ,  <47a:control_info_elem> ;
 
+$LIST( <47b:control_info_elem_list>)
+{
+  $LIST( <47b:control_info_elem_list>) = SXML_LTL(
+    $LIST(<56:unit_identifier>),
+    ",",
+    $LIST(<47a:control_info_elem>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <47b:control_info_elem_list>
 		= <47a:control_info_elem> ;
+
+$LIST( <47b:control_info_elem_list>)
+{
+  $LIST( <47b:control_info_elem_list>) = $LIST(<47a:control_info_elem>);
+}    
 
 *******************************************************************************
 
 <47a:control_info_elem>
 		= FMT  =  <57:format_identifier> ;
 
+$LIST( <47a:control_info_elem>)
+{
+  $LIST( <47a:control_info_elem>) = $LIST(<57:format_identifier>);
+}    
+
 *------------------------------------------------------------------------------
 
 <47a:control_info_elem>
 		= UNIT  =  <56:unit_identifier> ;
+
+$LIST( <47a:control_info_elem>)
+{
+  $LIST( <47a:control_info_elem>) = $LIST(<56:unit_identifier>);
+}
 
 *------------------------------------------------------------------------------
 
 <47a:control_info_elem>
 		= REC  =  <77:integer_expr> ;
 
+$LIST( <47a:control_info_elem>)
+{
+  $LIST( <47a:control_info_elem>) = ast_control_info_elem(
+    "REC",
+    $LIST(<77:integer_expr>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <47a:control_info_elem>
 		= END  =  <110b:label_ref> ;
+
+$LIST( <47a:control_info_elem>)
+{
+  $LIST( <47a:control_info_elem>) = ast_control_info_elem(
+    "END",
+    SXML_T(SXML_Q($NAME(<110b:label_ref>)))
+  );
+}   
 
 *------------------------------------------------------------------------------
 
 <47a:control_info_elem>
 		= ERR  =  <110b:label_ref> ;
 
+$LIST( <47a:control_info_elem>)
+{
+  $LIST( <47a:control_info_elem>) = ast_control_info_elem(
+    "ERR",
+    SXML_T(SXML_Q($NAME(<110b:label_ref>)))
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <47a:control_info_elem>
 		= IOSTAT  =  <88a:variable_or_array_element_name> ;
+
+$LIST( <47a:control_info_elem>)
+{
+  $LIST( <47a:control_info_elem>) = ast_control_info_elem(
+    "END",
+    $LIST(<88a:variable_or_array_element_name>)
+  );
+}    
 
 *******************************************************************************
 
@@ -2784,27 +2884,69 @@ $LIST( <43:pause_statement>)
 
 <48:io_list>	= <48:io_list> , &1  <74:expression> ;
 
+$LIST( <48:io_list>)
+{
+  $LIST( <48:io_list>) = SXML_LTL(
+    $LIST(<48:io_list>'),
+    ",",
+    $LIST(<74:expression>));
+}
+
 *------------------------------------------------------------------------------
 
 <48:io_list>	= <48:io_list> , &1  <49:io_imply_do_list> ;
+
+$LIST( <48:io_list>)
+{
+  $LIST( <48:io_list>) = SXML_LTL(
+    $LIST(<48:io_list>'),
+    ",",
+    $LIST(<49:io_imply_do_list>));
+}
 
 *------------------------------------------------------------------------------
 
 <48:io_list>	= <74:expression> ;
 
+$LIST( <48:io_list>)
+{
+  $LIST( <48:io_list>) = $LIST(<74:expression>);
+}
+
 *------------------------------------------------------------------------------
 
 <48:io_list>	= <49:io_imply_do_list> ;
+
+$LIST( <48:io_list>)
+{
+  $LIST( <48:io_list>) = $LIST(<49:io_imply_do_list>);
+}
 
 *******************************************************************************
 
 <49:io_imply_do_list>
 		= ( <48:io_list> , &1  <99:symbolic_name>  =  <78:int_real_dp_expr> ,  <78:int_real_dp_expr> ,  <78:int_real_dp_expr> ) ;
 
+$LIST( <49:io_imply_do_list>)
+{
+  $LIST( <49:io_imply_do_list>) = ast_unknown_parameter(
+    "<49>.1",
+    LOCATION(0)
+    );
+}
+
 *------------------------------------------------------------------------------
 
 <49:io_imply_do_list>
 		= ( <48:io_list> , &1  <99:symbolic_name>  =  <78:int_real_dp_expr> ,  <78:int_real_dp_expr> ) ;
+
+$LIST( <49:io_imply_do_list>)
+{
+  $LIST( <49:io_imply_do_list>) = ast_unknown_parameter(
+    "<49>.2",
+    LOCATION(0)
+    );
+}    
 
 *******************************************************************************
 
@@ -3110,15 +3252,39 @@ $LIST( <43:pause_statement>)
 <56:unit_identifier>
 		= <77:integer_expr> ;
 
+$LIST( <56:unit_identifier>)
+{
+  $LIST( <56:unit_identifier>) = ast_control_info_elem(
+    "UNIT", 
+    $LIST( <77:integer_expr>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <56:unit_identifier>
 		= <89:substring_name> ;
 
+$LIST( <56:unit_identifier>)
+{
+  $LIST( <56:unit_identifier>) = ast_control_info_elem(
+    "UNIT", 
+    $LIST( <89:substring_name>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <56:unit_identifier>
 		= * ;
+
+$LIST( <56:unit_identifier>)
+{
+  $LIST( <56:unit_identifier>) = ast_control_info_elem(
+    "UNIT", 
+    ast_text_to_map("asterisk", "*")
+  );
+}
 
 *******************************************************************************
 
@@ -3129,12 +3295,28 @@ $LIST( <43:pause_statement>)
 <57:format_identifier>
 		= <110b:label_ref> ;
 
+$LIST( <57:format_identifier>)
+{
+  $LIST( <57:format_identifier>) = ast_control_info_elem(
+    "FMT", 
+    ast_text_to_map("label_ref", $NAME(<110b:label_ref>))
+  );
+}
+
 *------------------------------------------------------------------------------
 
 * (to be tested) Covers both <99:symbolic_name> and <82:character_expression>
 
 <57:format_identifier>
 		= <82a:character_or_non_typed_expression> ;
+
+$LIST( <57:format_identifier>)
+{
+  $LIST( <57:format_identifier>) = ast_control_info_elem(
+    "FMT", 
+    $LIST(<82a:character_or_non_typed_expression>)
+  );
+}
 
 *------------------------------------------------------------------------------
 
@@ -3145,6 +3327,14 @@ $LIST( <43:pause_statement>)
 
 <57:format_identifier>
 		= * ;
+
+$LIST( <57:format_identifier>)
+{
+  $LIST( <57:format_identifier>) = ast_control_info_elem(
+    "FMT", 
+    ast_text_to_map("asterisk", "*")
+  );
+}    
 
 *******************************************************************************
 
@@ -3411,7 +3601,7 @@ $LIST( <60e:repeatable_edit_descriptor>)
     "L",
     $NAME(<62:w>),
     ".",
-    $NAME(<67:m>));;
+    $NAME(<67:m>));
 }    
 
 *------------------------------------------------------------------------------
@@ -4524,10 +4714,26 @@ $LIST( <81:dim_bound_expr>)
 <82a:character_or_non_typed_expression>
 		= <82:character_expression> ;
 
+$LIST( <82a:character_or_non_typed_expression>)
+{
+  $LIST( <82a:character_or_non_typed_expression>) = ast_unknown_parameter(
+    "<82a>.1",
+    LOCATION(0)
+    );
+}    
+
 *------------------------------------------------------------------------------
 
 <82a:character_or_non_typed_expression>
 		= <74a:non_typed_expression> ;
+
+$LIST( <82a:character_or_non_typed_expression>)
+{
+  $LIST( <82a:character_or_non_typed_expression>) = ast_unknown_parameter(
+    "<82a>.2",
+    LOCATION(0)
+    );
+}    
 
 *******************************************************************************
 
@@ -4811,20 +5017,46 @@ $LIST( <88:array_element_name>)
 <88b:function_reference_or_array_element_name>
 		= <88:array_element_name> ;
 
+$LIST( <88b:function_reference_or_array_element_name>)
+{
+  $LIST( <88b:function_reference_or_array_element_name>) = ast_unknown_parameter(
+    "<88b>.1",
+    LOCATION(0)
+    );
+}    
+
 *------------------------------------------------------------------------------
 
 <88b:function_reference_or_array_element_name>
 		= <99:symbolic_name>  ( ) ;
+
+$LIST( <88b:function_reference_or_array_element_name>)
+{
+  $LIST( <88b:function_reference_or_array_element_name>) = ast_unknown_parameter(
+    "<88b>.2",
+    LOCATION(0)
+    );
+}    
 
 *******************************************************************************
 
 <88a:variable_or_array_element_name>
 		= <99:symbolic_name> ;
 
+$LIST( <88a:variable_or_array_element_name>)
+{
+  $LIST( <88a:variable_or_array_element_name>) = SXML_T(SXML_Q($NAME(<99:symbolic_name>)));
+}    
+
 *------------------------------------------------------------------------------
 
 <88a:variable_or_array_element_name>
 		= <88b:function_reference_or_array_element_name> ;
+
+$LIST( <88a:variable_or_array_element_name>)
+{
+  $LIST( <88a:variable_or_array_element_name>) = $LIST(<88b:function_reference_or_array_element_name>);
+}    
 
 *******************************************************************************
 
