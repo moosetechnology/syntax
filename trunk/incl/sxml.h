@@ -462,6 +462,18 @@ SXML_TYPE_LIST SXML_TTTT (
 
 /* ------------------------------------------------------------------------- */
 
+SXML_TYPE_LIST SXML_LTLLL (
+		SXML_TYPE_LIST L1,
+		SXML_TYPE_TEXT T2,
+		SXML_TYPE_LIST L3,
+		SXML_TYPE_LIST L4,
+		SXML_TYPE_LIST L5)
+{
+	return SXML_CONCAT ("LTLLL", L1, T2, L3, L4, L5);
+}
+
+/* ------------------------------------------------------------------------- */
+
 SXML_TYPE_LIST SXML_LLLLL (
 		SXML_TYPE_LIST L1,
 		SXML_TYPE_LIST L2,
@@ -567,6 +579,19 @@ SXML_TYPE_LIST SXML_LLTLTL (
 		SXML_TYPE_LIST L6)
 {
 	return SXML_CONCAT ("LLTLTL", L1, L2, T3, L4, T5, L6);
+}
+
+/* ------------------------------------------------------------------------- */
+
+SXML_TYPE_LIST SXML_LTLLLL (
+		SXML_TYPE_LIST L1,
+		SXML_TYPE_TEXT T2,
+		SXML_TYPE_LIST L3,
+		SXML_TYPE_LIST L4,
+		SXML_TYPE_LIST L5,
+		SXML_TYPE_LIST L6)
+{
+	return SXML_CONCAT ("LTLLLL", L1, T2, L3, L4, L5, L6);
 }
 
 /* ------------------------------------------------------------------------- */

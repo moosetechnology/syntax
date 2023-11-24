@@ -1,0 +1,51 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/endfile-parameters.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": "null",
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "2",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "endfile_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "8"
+                    },
+                    "parameters": [
+                        {
+                            "name": "UNIT",
+                            "parameter": {
+                                "rule": "<76>",
+                                "tag": "unknown_statement",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "24"
+                                }
+                            }
+                        },
+                        {
+                            "name": "IOSTAT",
+                            "parameter": "KODE"
+                        },
+                        {
+                            "name": "ERR",
+                            "parameter": {
+                                "label_ref": "9"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

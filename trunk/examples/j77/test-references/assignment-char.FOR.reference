@@ -1,0 +1,209 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/assignment-char.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": "null",
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "9",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "type_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "8"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
+                    "declarators": [
+                        {
+                            "len_specifier": "1",
+                            "tag": "variable_declarator",
+                            "variable": "BELL",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "2",
+                            "tag": "variable_declarator",
+                            "variable": "C2",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "3",
+                            "tag": "variable_declarator",
+                            "variable": "C3",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "5",
+                            "tag": "variable_declarator",
+                            "variable": "C5",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": "6",
+                            "tag": "variable_declarator",
+                            "variable": "C6",
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "type_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "8"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "REAL"
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "Z",
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "assignment_statement",
+                    "start_pos": {
+                        "line": "3",
+                        "column": "8"
+                    },
+                    "left": [
+                        "C2"
+                    ],
+                    "right": [
+                        {
+                            "rule": "<74>.2",
+                            "tag": "unknown_statement",
+                            "start_pos": {
+                                "line": "3",
+                                "column": "13"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "tag": "assignment_statement",
+                    "start_pos": {
+                        "line": "4",
+                        "column": "8"
+                    },
+                    "left": [
+                        "C3"
+                    ],
+                    "right": [
+                        {
+                            "rule": "<74>.2",
+                            "tag": "unknown_statement",
+                            "start_pos": {
+                                "line": "4",
+                                "column": "13"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "tag": "assignment_statement",
+                    "start_pos": {
+                        "line": "5",
+                        "column": "8"
+                    },
+                    "left": [
+                        "C5"
+                    ],
+                    "right": [
+                        {
+                            "rule": "<74>.2",
+                            "tag": "unknown_statement",
+                            "start_pos": {
+                                "line": "5",
+                                "column": "13"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "tag": "assignment_statement",
+                    "start_pos": {
+                        "line": "6",
+                        "column": "8"
+                    },
+                    "left": [
+                        {
+                            "rule": "<89>.1",
+                            "tag": "unknown_statement",
+                            "start_pos": {
+                                "line": "6",
+                                "column": "8"
+                            }
+                        }
+                    ],
+                    "right": [
+                        {
+                            "rule": "<74>.2",
+                            "tag": "unknown_statement",
+                            "start_pos": {
+                                "line": "6",
+                                "column": "18"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "tag": "assignment_statement",
+                    "start_pos": {
+                        "line": "7",
+                        "column": "8"
+                    },
+                    "left": [
+                        "C6"
+                    ],
+                    "right": [
+                        {
+                            "rule": "<74>.2",
+                            "tag": "unknown_statement",
+                            "start_pos": {
+                                "line": "7",
+                                "column": "13"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "tag": "assignment_statement",
+                    "start_pos": {
+                        "line": "8",
+                        "column": "8"
+                    },
+                    "left": [
+                        "BELL"
+                    ],
+                    "right": [
+                        {
+                            "rule": "<74>.4",
+                            "tag": "unknown_statement",
+                            "start_pos": {
+                                "line": "8",
+                                "column": "15"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -376,6 +376,422 @@ SXML_TYPE_LIST ast_data_statement_parameter(
 
 
 /* -------------------------------------------------------------------------
+ * outputs a function_statement
+ * - function name
+ * - list of parameters
+ * - function expression
+ */
+SXML_TYPE_LIST ast_function_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_TEXT name,
+            SXML_TYPE_LIST parameters,
+            SXML_TYPE_LIST expression) {
+    
+    return SXML_LTLLL(
+    ast_abstract_statement( "function_statement", location),
+    ",\n",
+    JSON_KQ_("name", name),  
+    JSON_KU_(
+      "parameters",
+      JSON_ARRAY( parameters)),
+    JSON_KU("expression", expression)
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a dimension_statement
+ * - list of array declarators
+ */
+SXML_TYPE_LIST ast_dimension_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST array_declarators) {
+    
+    return SXML_LTL(
+    ast_abstract_statement( "dimension_statement", location),
+    ",\n",
+    JSON_KU(
+      "array_declarators",
+      JSON_ARRAY( array_declarators))
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs an equivalence_statement
+ * - list of lists of variable names, array element names, array names, and character substring names separated by commas  
+ */
+SXML_TYPE_LIST ast_equivalence_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST parameters) {
+    
+    return SXML_LTL(
+    ast_abstract_statement( "equivalence_statement", location),
+    ",\n",
+    JSON_KU(
+      "parameters",
+      JSON_ARRAY( parameters))
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a parameter of a equivalence_statement
+ * - list of variable names, array element names, array names, and character substring names separated by commas  
+ */
+SXML_TYPE_LIST ast_equiv_entity_list(
+            SXML_TYPE_LIST entity_list) {
+    
+    return JSON_ARRAY(entity_list);
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a parameter of a common_statement
+ * - array of parameters, where each parameter is a pair of [name] and list of variable names, array names, and array declarators 
+ */
+SXML_TYPE_LIST ast_common_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST parameters) {
+    
+    return SXML_LTL(
+    ast_abstract_statement( "common_statement", location),
+    ",\n",
+    JSON_KU(
+      "parameters",
+      JSON_ARRAY( parameters))
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a parameter of a common_statement. parameter consists of:
+ * - name (optional)
+ * - nlist: List of variables, arrays, array elements, substrings, and implied DO lists separated by commas
+ */
+SXML_TYPE_LIST ast_common_body(
+            SXML_TYPE_TEXT name,
+            SXML_TYPE_LIST nlist) {
+    
+    return JSON_MAP(
+      SXML_LL(
+        JSON_KQ_("name", name),
+        JSON_KU("nlist", JSON_ARRAY(nlist)))  
+    );
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs an external statement
+ * - proc_list: names of external procedure, dummy procedure, or block data routine.
+ */
+SXML_TYPE_LIST ast_external_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST proc_list) {
+    
+    return SXML_LTL(
+    ast_abstract_statement( "external_statement", location),
+    ",\n",
+    JSON_KU(
+      "proc_list",
+      JSON_ARRAY( proc_list))
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs an intrinsic statement
+ * - proc_list: list of function names  
+ */
+SXML_TYPE_LIST ast_intrinsic_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST fun_list) {
+    
+    return SXML_LTL(
+    ast_abstract_statement( "intrinsic_statement", location),
+    ",\n",
+    JSON_KU(
+      "fun_list",
+      JSON_ARRAY( fun_list))
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a save statement
+ * - var_list: list of names of an array, variables, or common blocks (enclosed in slashes), occurring in a subprogram  
+ */
+SXML_TYPE_LIST ast_save_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST var_list) {
+    
+    return SXML_LTL(
+    ast_abstract_statement( "save_statement", location),
+    ",\n",
+    JSON_KU(
+      "var_list",
+      JSON_ARRAY( var_list))
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs an assignment_statement
+ * - left part (assignee)
+ * - right part (assigned)
+ */
+SXML_TYPE_LIST ast_assignment_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST left,
+            SXML_TYPE_LIST right) {
+    
+    return SXML_LTLL(
+    ast_abstract_statement( "assignment_statement", location),
+    ",\n",
+    JSON_KU_(
+      "left",
+      JSON_ARRAY( left)),
+    JSON_KU(
+      "right",
+      JSON_ARRAY( right))
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs an goto_statement
+ * - type (unconditional, computed, assigned)
+ * - label(s)
+ * - variable or expression to which goto branches
+ */
+SXML_TYPE_LIST ast_goto_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_TEXT type,
+            SXML_TYPE_LIST labels,
+            SXML_TYPE_LIST var) {
+    
+    return SXML_LTLLL(
+    ast_abstract_statement( "goto_statement", location),
+    ",\n",
+    JSON_KQ_("type", type),
+    JSON_KU_(
+      "labels",
+      JSON_ARRAY( labels)),
+    JSON_KU(
+      "var",
+      JSON_ARRAY( var))
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs an arithmetic_if_statement
+ * - conditional expression
+ * - label s1 of executable statements
+ * - label s2 of executable statements
+* - label s3 of executable statements
+ */
+SXML_TYPE_LIST ast_arithmetic_if_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST expression,
+            SXML_TYPE_TEXT s1,
+            SXML_TYPE_TEXT s2,
+            SXML_TYPE_TEXT s3
+            ) {
+    
+    return SXML_LTLLLL(
+    ast_abstract_statement( "arithmetic_if_statement", location),
+    ",\n",
+    JSON_KU_(
+      "expression",
+      JSON_ARRAY( expression)),
+    JSON_KQ_("s1", s1),
+    JSON_KQ_("s2", s2),
+    JSON_KQ ("s3", s3)
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a write_statement
+ * - control_info_list of parameters UNIT, FMT, IOSTAT, REC, ERR, NML
+ * - io_list: list of variables 
+ */
+SXML_TYPE_LIST ast_write_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST control_info_list,
+            SXML_TYPE_LIST io_list) {
+    
+    return SXML_LTLL(
+    ast_abstract_statement( "write_statement", location),
+    ",\n",
+    JSON_KU_(
+      "control_info_list",
+      JSON_ARRAY( control_info_list)),
+    JSON_KU(
+      "io_list",
+      JSON_ARRAY( io_list))
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a read_statement
+ * - control_info_list of parameters UNIT, FMT, IOSTAT, REC, ERR, NML, etc
+ * - io_list: list of variables
+ * - format identifier  
+ */
+SXML_TYPE_LIST ast_read_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST control_info_list,
+            SXML_TYPE_LIST io_list,
+            SXML_TYPE_LIST format) {
+    
+    return SXML_LTLLL(
+    ast_abstract_statement( "read_statement", location),
+    ",\n",
+    JSON_KU_(
+      "control_info_list",
+      JSON_ARRAY( control_info_list)),
+    JSON_KU_(
+      "io_list",
+      JSON_ARRAY( io_list)),
+    JSON_KU(
+      "format",
+      JSON_ARRAY( format))
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a print_statement
+ * - io_list: list of variables
+ * - format identifier  
+ */
+SXML_TYPE_LIST ast_print_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST io_list,
+            SXML_TYPE_LIST format) {
+    
+    return SXML_LTLL(
+    ast_abstract_statement( "print_statement", location),
+    ",\n",
+    JSON_KU_(
+      "io_list",
+      JSON_ARRAY( io_list)),
+    JSON_KU(
+      "format",
+      JSON_ARRAY( format))
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a rewind_statement
+ * - parameters: UNIT, [IOSTAT], [ERR]
+ */
+SXML_TYPE_LIST ast_rewind_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST parameters) {
+    
+    return SXML_LTL(
+    ast_abstract_statement( "rewind_statement", location),
+    ",\n",
+    JSON_KU(
+      "parameters",
+      JSON_ARRAY( parameters))
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a backspace_statement
+ * - parameters: UNIT, [IOSTAT], [ERR]
+ */
+SXML_TYPE_LIST ast_backspace_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST parameters) {
+    
+    return SXML_LTL(
+    ast_abstract_statement( "backspace_statement", location),
+    ",\n",
+    JSON_KU(
+      "parameters",
+      JSON_ARRAY( parameters))
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs an endfile_statement
+ * - parameters: UNIT, [IOSTAT], [ERR]
+ */
+SXML_TYPE_LIST ast_endfile_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST parameters) {
+    
+    return SXML_LTL(
+    ast_abstract_statement( "endfile_statement", location),
+    ",\n",
+    JSON_KU(
+      "parameters",
+      JSON_ARRAY( parameters))
+    ); 
+}
+
+/* -------------------------------------------------------------------------
+ * outputs an open_statement
+ * - parameters: UNIT, and optional parameters (FILE, ACCESS, BLANK, ERR, FORM, IOSTAT, RECL/RECORDSIZE, STATUS/TYPE)
+ */
+SXML_TYPE_LIST ast_open_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST parameters) {
+    
+    return SXML_LTL(
+    ast_abstract_statement( "open_statement", location),
+    ",\n",
+    JSON_KU(
+      "parameters",
+      JSON_ARRAY( parameters))
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a close_statement
+ * - parameters: UNIT, and optional parameters (ERR, IOSTAT, STATUS)
+ */
+SXML_TYPE_LIST ast_close_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST parameters) {
+    
+    return SXML_LTL(
+    ast_abstract_statement( "close_statement", location),
+    ",\n",
+    JSON_KU(
+      "parameters",
+      JSON_ARRAY( parameters))
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs an inquire_statement
+ * - parameters: UNIT, and optional parameters
+ */
+SXML_TYPE_LIST ast_inquire_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST parameters) {
+    
+    return SXML_LTL(
+    ast_abstract_statement( "inquire_statement", location),
+    ",\n",
+    JSON_KU(
+      "parameters",
+      JSON_ARRAY( parameters))
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a parameter of a write_statement. possible parameters UNIT, FMT, IOSTAT, REC, ERR, NML
+ * - parameter name (optional)
+ * - parameter
+ */
+SXML_TYPE_LIST ast_control_info_elem(
+            SXML_TYPE_TEXT name,
+            SXML_TYPE_LIST parameter) {
+    
+    return JSON_MAP(
+      SXML_LL(
+        JSON_KQ_("name", name),
+        JSON_KU("parameter", parameter))  
+    );
+}
+
+
+/* -------------------------------------------------------------------------
  * outputs a constant
  */
 SXML_TYPE_LIST ast_constant( SXML_TYPE_TEXT constant_type,
@@ -446,7 +862,7 @@ SXML_TYPE_LIST ast_binary_expression( SXML_TYPE_LIST lhs_expression,
   return JSON_MAP (
     SXML_LLLL(
       ast_tag( "binary_expression"),
-      JSON_KU ( "lhs", lhs_expression),
+      JSON_KU_ ( "lhs", lhs_expression),
       JSON_KQ_( "operator", binary_operator),
       JSON_KU ( "expression", rhs_expression) ));
 }
@@ -498,3 +914,16 @@ SXML_TYPE_LIST ast_lower_upper_bound(SXML_TYPE_LIST lower_bound,
   }
 
 }
+
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_text_to_map(
+              SXML_TYPE_TEXT tag,
+              SXML_TYPE_TEXT obj) {
+  return JSON_MAP(
+    JSON_KQ(tag, obj)
+  );
+}
+
+

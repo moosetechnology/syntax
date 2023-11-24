@@ -1,0 +1,171 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/assignment-hollerith.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": "null",
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "8",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "type_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "8"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
+                    "declarators": [
+                        {
+                            "len_specifier": "4",
+                            "tag": "variable_declarator",
+                            "variable": "S",
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "type_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "8"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "INTEGER"
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "I2",
+                            "dimension_declarators": [
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "*"
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "I4",
+                            "dimension_declarators": [
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "*"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "tag": "type_statement",
+                    "start_pos": {
+                        "line": "3",
+                        "column": "8"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "REAL"
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "R",
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "assignment_statement",
+                    "start_pos": {
+                        "line": "4",
+                        "column": "8"
+                    },
+                    "left": [
+                        "S"
+                    ],
+                    "right": [
+                        {
+                            "rule": "<74>.2",
+                            "tag": "unknown_statement",
+                            "start_pos": {
+                                "line": "4",
+                                "column": "12"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "tag": "assignment_statement",
+                    "start_pos": {
+                        "line": "5",
+                        "column": "8"
+                    },
+                    "left": [
+                        "I2"
+                    ],
+                    "right": [
+                        {
+                            "rule": "<74>.2",
+                            "tag": "unknown_statement",
+                            "start_pos": {
+                                "line": "5",
+                                "column": "13"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "tag": "assignment_statement",
+                    "start_pos": {
+                        "line": "6",
+                        "column": "8"
+                    },
+                    "left": [
+                        "I4"
+                    ],
+                    "right": [
+                        {
+                            "rule": "<74>.2",
+                            "tag": "unknown_statement",
+                            "start_pos": {
+                                "line": "6",
+                                "column": "13"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "tag": "assignment_statement",
+                    "start_pos": {
+                        "line": "7",
+                        "column": "8"
+                    },
+                    "left": [
+                        "R"
+                    ],
+                    "right": [
+                        {
+                            "rule": "<74>.2",
+                            "tag": "unknown_statement",
+                            "start_pos": {
+                                "line": "7",
+                                "column": "12"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

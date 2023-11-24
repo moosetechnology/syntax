@@ -1,0 +1,69 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/write-star-star-iolist.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": "null",
+            "start_pos": {
+                "line": "1",
+                "column": "1"
+            },
+            "end_pos": {
+                "line": "2",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "label": "8",
+                    "tag": "write_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "8"
+                    },
+                    "control_info_list": [
+                        {
+                            "name": "UNIT",
+                            "parameter": {
+                                "asterisk": "*"
+                            }
+                        },
+                        {
+                            "name": "FMT",
+                            "parameter": {
+                                "asterisk": "*"
+                            }
+                        }
+                    ],
+                    "io_list": [
+                        {
+                            "rule": "<74>.2",
+                            "tag": "unknown_statement",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "22"
+                            }
+                        },
+                        {
+                            "rule": "<74>.4",
+                            "tag": "unknown_statement",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "38"
+                            }
+                        },
+                        {
+                            "rule": "<74>.2",
+                            "tag": "unknown_statement",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "41"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

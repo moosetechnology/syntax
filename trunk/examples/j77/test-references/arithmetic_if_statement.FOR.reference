@@ -1,0 +1,61 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/arithmetic_if_statement.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": "null",
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "3",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "assignment_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "8"
+                    },
+                    "left": [
+                        "N"
+                    ],
+                    "right": [
+                        {
+                            "rule": "<74>.1",
+                            "tag": "unknown_statement",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "12"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "tag": "arithmetic_if_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "8"
+                    },
+                    "expression": [
+                        {
+                            "rule": "<74>.4",
+                            "tag": "unknown_statement",
+                            "start_pos": {
+                                "line": "2",
+                                "column": "13"
+                            }
+                        }
+                    ],
+                    "s1": "10",
+                    "s2": "20",
+                    "s3": "30"
+                }
+            ]
+        }
+    ]
+}

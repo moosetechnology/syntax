@@ -1,0 +1,53 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/inquire-unit-open-names.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": "null",
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "2",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "inquire_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "8"
+                    },
+                    "parameters": [
+                        {
+                            "name": "UNIT",
+                            "parameter": {
+                                "rule": "<76>",
+                                "tag": "unknown_statement",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "18"
+                                }
+                            }
+                        },
+                        {
+                            "name": "OPENED",
+                            "parameter": "OK"
+                        },
+                        {
+                            "name": "NAMED",
+                            "parameter": "HASNAME"
+                        },
+                        {
+                            "name": "NAME",
+                            "parameter": "FN"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

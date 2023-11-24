@@ -1,0 +1,137 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/assignment-logical.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": "null",
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "6",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "type_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "8"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "LOGICAL"
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "B1",
+                            "dimension_declarators": [
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "*"
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "B2",
+                            "dimension_declarators": [
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "*"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "tag": "type_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "8"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "LOGICAL"
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "L3",
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "L4",
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "assignment_statement",
+                    "start_pos": {
+                        "line": "3",
+                        "column": "8"
+                    },
+                    "left": [
+                        "L4"
+                    ],
+                    "right": [
+                        {
+                            "rule": "<74>.3",
+                            "tag": "unknown_statement",
+                            "start_pos": {
+                                "line": "3",
+                                "column": "13"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "tag": "assignment_statement",
+                    "start_pos": {
+                        "line": "4",
+                        "column": "8"
+                    },
+                    "left": [
+                        "B1"
+                    ],
+                    "right": [
+                        {
+                            "rule": "<74>.4",
+                            "tag": "unknown_statement",
+                            "start_pos": {
+                                "line": "4",
+                                "column": "13"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "tag": "assignment_statement",
+                    "start_pos": {
+                        "line": "5",
+                        "column": "8"
+                    },
+                    "left": [
+                        "B2"
+                    ],
+                    "right": [
+                        {
+                            "rule": "<74>.4",
+                            "tag": "unknown_statement",
+                            "start_pos": {
+                                "line": "5",
+                                "column": "13"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

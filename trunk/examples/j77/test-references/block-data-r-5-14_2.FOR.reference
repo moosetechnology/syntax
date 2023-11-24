@@ -1,0 +1,97 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/block-data-r-5-14_2.FOR",
+    "program_units": [
+        {
+            "tag": "block_data",
+            "name": "INIT",
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "4",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "common_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "8"
+                    },
+                    "parameters": [
+                        {
+                            "name": "RANGE",
+                            "nlist": [
+                                {
+                                    "tag": "variable_declarator",
+                                    "variable": "X0",
+                                    "dimension_declarators": []
+                                }
+                            ]
+                        },
+                        {
+                            "name": "",
+                            "nlist": [
+                                {
+                                    "tag": "variable_declarator",
+                                    "variable": "X1",
+                                    "dimension_declarators": []
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "tag": "data_statement",
+                    "start_pos": {
+                        "line": "3",
+                        "column": "8"
+                    },
+                    "parameters": [
+                        {
+                            "nlist": [
+                                {
+                                    "rule": "<27d>.1",
+                                    "tag": "unknown_statement",
+                                    "start_pos": {
+                                        "line": "3",
+                                        "column": "13"
+                                    }
+                                },
+                                {
+                                    "rule": "<27d>.1",
+                                    "tag": "unknown_statement",
+                                    "start_pos": {
+                                        "line": "3",
+                                        "column": "17"
+                                    }
+                                }
+                            ],
+                            "clist": [
+                                {
+                                    "rule": "<27f>.2",
+                                    "tag": "unknown_statement",
+                                    "start_pos": {
+                                        "line": "3",
+                                        "column": "22"
+                                    }
+                                },
+                                {
+                                    "rule": "<27f>.2",
+                                    "tag": "unknown_statement",
+                                    "start_pos": {
+                                        "line": "3",
+                                        "column": "27"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
