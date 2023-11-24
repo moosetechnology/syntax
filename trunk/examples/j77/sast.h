@@ -576,6 +576,33 @@ SXML_TYPE_LIST ast_goto_statement( SXML_TYPE_LIST location,
 
 
 /* -------------------------------------------------------------------------
+ * outputs an arithmetic_if_statement
+ * - conditional expression
+ * - label s1 of executable statements
+ * - label s2 of executable statements
+* - label s3 of executable statements
+ */
+SXML_TYPE_LIST ast_arithmetic_if_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST expression,
+            SXML_TYPE_TEXT s1,
+            SXML_TYPE_TEXT s2,
+            SXML_TYPE_TEXT s3
+            ) {
+    
+    return SXML_LTLLLL(
+    ast_abstract_statement( "arithmetic_if_statement", location),
+    ",\n",
+    JSON_KU_(
+      "expression",
+      JSON_ARRAY( expression)),
+    JSON_KQ_("s1", s1),
+    JSON_KQ_("s2", s2),
+    JSON_KQ ("s3", s3)
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
  * outputs a constant
  */
 SXML_TYPE_LIST ast_constant( SXML_TYPE_TEXT constant_type,
