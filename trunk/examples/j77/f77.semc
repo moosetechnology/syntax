@@ -2875,6 +2875,17 @@ $LIST( <47a:control_info_elem>)
   );
 }    
 
+<47a:control_info_elem>
+		= NML  =  <99:symbolic_name> ;
+
+$LIST( <47a:control_info_elem>)
+{
+  $LIST( <47a:control_info_elem>) = ast_control_info_elem(
+    "NML",
+    SXML_T(SXML_Q($NAME(<99:symbolic_name>)))
+  );
+}    
+
 *******************************************************************************
 
 * &1 Check that the "," is not the one inside a <107:complex_constant>
