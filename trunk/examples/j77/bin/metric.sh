@@ -1,6 +1,6 @@
 #!/bin/sh
 
-total=`grep -c '^<[0-9][0-9]*:' f77.semc`
+total=`grep -c '^<[^>]*>' f77.semc`
 done_list=`grep -c '^\$LIST' f77.semc`
 done_name=`grep -c '^\$NAME' f77.semc`
 unknown_statement=`grep -c "unknown_statement" f77.semc`
