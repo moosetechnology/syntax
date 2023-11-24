@@ -1,0 +1,2 @@
+       INQUIRE ( 3, OPENED=OK, NAMED=HASNAME, NAME=FN )
+       END

@@ -741,7 +741,7 @@ SXML_TYPE_LIST ast_open_statement( SXML_TYPE_LIST location,
 
 
 /* -------------------------------------------------------------------------
- * outputs an close_statement
+ * outputs a close_statement
  * - parameters: UNIT, and optional parameters (ERR, IOSTAT, STATUS)
  */
 SXML_TYPE_LIST ast_close_statement( SXML_TYPE_LIST location,
@@ -749,6 +749,23 @@ SXML_TYPE_LIST ast_close_statement( SXML_TYPE_LIST location,
     
     return SXML_LTL(
     ast_abstract_statement( "close_statement", location),
+    ",\n",
+    JSON_KU(
+      "parameters",
+      JSON_ARRAY( parameters))
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs an inquire_statement
+ * - parameters: UNIT, and optional parameters
+ */
+SXML_TYPE_LIST ast_inquire_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST parameters) {
+    
+    return SXML_LTL(
+    ast_abstract_statement( "inquire_statement", location),
     ",\n",
     JSON_KU(
       "parameters",
