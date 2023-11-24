@@ -1,0 +1,2 @@
+       INTRINSIC SIN, COS
+       END

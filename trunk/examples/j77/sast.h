@@ -476,6 +476,7 @@ SXML_TYPE_LIST ast_common_body(
     );
 }
 
+
 /* -------------------------------------------------------------------------
  * outputs an external statement
  * - proc_list: names of external procedure, dummy procedure, or block data routine.
@@ -487,8 +488,25 @@ SXML_TYPE_LIST ast_external_statement( SXML_TYPE_LIST location,
     ast_abstract_statement( "external_statement", location),
     ",\n",
     JSON_KU(
-      "proc_names",
+      "proc_list",
       JSON_ARRAY( proc_list))
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs an intrinsic statement
+ * - proc_list: list of function names  
+ */
+SXML_TYPE_LIST ast_intrinsic_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST fun_list) {
+    
+    return SXML_LTL(
+    ast_abstract_statement( "intrinsic_statement", location),
+    ",\n",
+    JSON_KU(
+      "fun_list",
+      JSON_ARRAY( fun_list))
     ); 
 }
 
