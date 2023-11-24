@@ -476,6 +476,22 @@ SXML_TYPE_LIST ast_common_body(
     );
 }
 
+/* -------------------------------------------------------------------------
+ * outputs an external statement
+ * - proc_list: names of external procedure, dummy procedure, or block data routine.
+ */
+SXML_TYPE_LIST ast_external_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST proc_list) {
+    
+    return SXML_LTL(
+    ast_abstract_statement( "external_statement", location),
+    ",\n",
+    JSON_KU(
+      "proc_names",
+      JSON_ARRAY( proc_list))
+    ); 
+}
+
 
 /* -------------------------------------------------------------------------
  * outputs a constant
