@@ -1,0 +1,149 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/data-int-char.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": "MAIN",
+            "parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "5",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "type_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "8"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
+                    "declarators": [
+                        {
+                            "len_specifier": "1",
+                            "tag": "variable_declarator",
+                            "variable": "CR",
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "type_statement",
+                    "start_pos": {
+                        "line": "3",
+                        "column": "8"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "INTEGER"
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "I",
+                            "dimension_declarators": [
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "*"
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "N",
+                            "dimension_declarators": [
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "*"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "tag": "data_statement",
+                    "start_pos": {
+                        "line": "4",
+                        "column": "8"
+                    },
+                    "parameters": [
+                        {
+                            "nlist": [
+                                {
+                                    "rule": "<27d>.1",
+                                    "tag": "unknown_statement",
+                                    "start_pos": {
+                                        "line": "4",
+                                        "column": "13"
+                                    }
+                                }
+                            ],
+                            "clist": [
+                                {
+                                    "rule": "<27f>.2",
+                                    "tag": "unknown_statement",
+                                    "start_pos": {
+                                        "line": "4",
+                                        "column": "16"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "nlist": [
+                                {
+                                    "rule": "<27d>.1",
+                                    "tag": "unknown_statement",
+                                    "start_pos": {
+                                        "line": "4",
+                                        "column": "22"
+                                    }
+                                }
+                            ],
+                            "clist": [
+                                {
+                                    "rule": "<27f>.2",
+                                    "tag": "unknown_statement",
+                                    "start_pos": {
+                                        "line": "4",
+                                        "column": "24"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "nlist": [
+                                {
+                                    "rule": "<27d>.1",
+                                    "tag": "unknown_statement",
+                                    "start_pos": {
+                                        "line": "4",
+                                        "column": "32"
+                                    }
+                                }
+                            ],
+                            "clist": [
+                                {
+                                    "rule": "<27f>.2",
+                                    "tag": "unknown_statement",
+                                    "start_pos": {
+                                        "line": "4",
+                                        "column": "35"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

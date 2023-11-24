@@ -1,0 +1,193 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/data-scalars.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": "MAIN",
+            "parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "5",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "type_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "8"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
+                    "declarators": [
+                        {
+                            "len_specifier": "16",
+                            "tag": "variable_declarator",
+                            "variable": "TTL",
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "type_statement",
+                    "start_pos": {
+                        "line": "3",
+                        "column": "8"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "REAL"
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "VEC",
+                            "dimension_declarators": [
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "5"
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "PAIR",
+                            "dimension_declarators": [
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": "2"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "tag": "data_statement",
+                    "start_pos": {
+                        "line": "4",
+                        "column": "8"
+                    },
+                    "parameters": [
+                        {
+                            "nlist": [
+                                {
+                                    "rule": "<27d>.1",
+                                    "tag": "unknown_statement",
+                                    "start_pos": {
+                                        "line": "4",
+                                        "column": "13"
+                                    }
+                                }
+                            ],
+                            "clist": [
+                                {
+                                    "rule": "<27f>.2",
+                                    "tag": "unknown_statement",
+                                    "start_pos": {
+                                        "line": "4",
+                                        "column": "18"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "nlist": [
+                                {
+                                    "rule": "<27d>.1",
+                                    "tag": "unknown_statement",
+                                    "start_pos": {
+                                        "line": "4",
+                                        "column": "39"
+                                    }
+                                }
+                            ],
+                            "clist": [
+                                {
+                                    "rule": "<27f>.2",
+                                    "tag": "unknown_statement",
+                                    "start_pos": {
+                                        "line": "4",
+                                        "column": "42"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "nlist": [
+                                {
+                                    "rule": "<27d>.1",
+                                    "tag": "unknown_statement",
+                                    "start_pos": {
+                                        "line": "4",
+                                        "column": "46"
+                                    }
+                                }
+                            ],
+                            "clist": [
+                                {
+                                    "rule": "<27f>.2",
+                                    "tag": "unknown_statement",
+                                    "start_pos": {
+                                        "line": "4",
+                                        "column": "49"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "nlist": [
+                                {
+                                    "rule": "<27d>.2",
+                                    "tag": "unknown_statement",
+                                    "start_pos": {
+                                        "line": "4",
+                                        "column": "53"
+                                    }
+                                }
+                            ],
+                            "clist": [
+                                {
+                                    "rule": "<27f>.2",
+                                    "tag": "unknown_statement",
+                                    "start_pos": {
+                                        "line": "4",
+                                        "column": "62"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "nlist": [
+                                {
+                                    "rule": "<27d>.1",
+                                    "tag": "unknown_statement",
+                                    "start_pos": {
+                                        "line": "4",
+                                        "column": "68"
+                                    }
+                                }
+                            ],
+                            "clist": [
+                                {
+                                    "rule": "<27f>.1",
+                                    "tag": "unknown_statement",
+                                    "start_pos": {
+                                        "line": "4",
+                                        "column": "81"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

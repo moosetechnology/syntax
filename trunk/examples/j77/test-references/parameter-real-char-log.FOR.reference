@@ -1,0 +1,112 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/parameter-real-char-log.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": "MAIN",
+            "parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "5",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "type_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "8"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
+                    "declarators": [
+                        {
+                            "len_specifier": "10",
+                            "tag": "variable_declarator",
+                            "variable": "HEADING",
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "type_statement",
+                    "start_pos": {
+                        "line": "3",
+                        "column": "8"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "LOGICAL"
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "T",
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "parameter_statement",
+                    "start_pos": {
+                        "line": "4",
+                        "column": "8"
+                    },
+                    "parameters": [
+                        {
+                            "name": "EPSILON",
+                            "expression": {
+                                "rule": "<23b>",
+                                "tag": "unknown_statement",
+                                "start_pos": {
+                                    "line": "4",
+                                    "column": "19"
+                                }
+                            }
+                        },
+                        {
+                            "name": "PI",
+                            "expression": {
+                                "rule": "<23b>",
+                                "tag": "unknown_statement",
+                                "start_pos": {
+                                    "line": "4",
+                                    "column": "35"
+                                }
+                            }
+                        },
+                        {
+                            "name": "HEADING",
+                            "expression": {
+                                "rule": "<23b>",
+                                "tag": "unknown_statement",
+                                "start_pos": {
+                                    "line": "4",
+                                    "column": "48"
+                                }
+                            }
+                        },
+                        {
+                            "name": "T",
+                            "expression": {
+                                "rule": "<23b>",
+                                "tag": "unknown_statement",
+                                "start_pos": {
+                                    "line": "4",
+                                    "column": "71"
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
