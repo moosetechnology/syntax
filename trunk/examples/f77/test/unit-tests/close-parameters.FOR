@@ -1,0 +1,2 @@
+      CLOSE ( 2, STATUS='DELETE', IOSTAT=I, ERR=99 )
+      END

@@ -741,6 +741,23 @@ SXML_TYPE_LIST ast_open_statement( SXML_TYPE_LIST location,
 
 
 /* -------------------------------------------------------------------------
+ * outputs an close_statement
+ * - parameters: UNIT, and optional parameters (ERR, IOSTAT, STATUS)
+ */
+SXML_TYPE_LIST ast_close_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST parameters) {
+    
+    return SXML_LTL(
+    ast_abstract_statement( "close_statement", location),
+    ",\n",
+    JSON_KU(
+      "parameters",
+      JSON_ARRAY( parameters))
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
  * outputs a parameter of a write_statement. possible parameters UNIT, FMT, IOSTAT, REC, ERR, NML
  * - parameter name (optional)
  * - parameter
