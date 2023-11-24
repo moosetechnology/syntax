@@ -708,6 +708,23 @@ SXML_TYPE_LIST ast_backspace_statement( SXML_TYPE_LIST location,
 
 
 /* -------------------------------------------------------------------------
+ * outputs an endfile_statement
+ * - parameters: UNIT, [IOSTAT], [ERR]
+ */
+SXML_TYPE_LIST ast_endfile_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST parameters) {
+    
+    return SXML_LTL(
+    ast_abstract_statement( "endfile_statement", location),
+    ",\n",
+    JSON_KU(
+      "parameters",
+      JSON_ARRAY( parameters))
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
  * outputs a parameter of a write_statement. possible parameters UNIT, FMT, IOSTAT, REC, ERR, NML
  * - parameter name (optional)
  * - parameter

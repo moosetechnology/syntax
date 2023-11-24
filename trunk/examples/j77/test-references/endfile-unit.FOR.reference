@@ -1,0 +1,41 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/endfile-unit.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": "null",
+            "start_pos": {
+                "line": "1",
+                "column": "7"
+            },
+            "end_pos": {
+                "line": "2",
+                "column": "9"
+            },
+            "statement_list": [
+                {
+                    "tag": "endfile_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "7"
+                    },
+                    "parameters": [
+                        {
+                            "name": "UNIT",
+                            "parameter": {
+                                "rule": "<76>",
+                                "tag": "unknown_statement",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "23"
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
