@@ -1,0 +1,59 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/assign-label.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": "null",
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "4",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "type_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "8"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "INTEGER"
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "variable": "PHORMAT",
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "label": "2",
+                    "tag": "format_statement",
+                    "specification": [
+                        "A80"
+                    ]
+                },
+                {
+                    "tag": "assignment_statement",
+                    "start_pos": {
+                        "line": "3",
+                        "column": "8"
+                    },
+                    "left": [
+                        "PHORMAT"
+                    ],
+                    "right": [
+                        "2"
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -529,6 +529,28 @@ SXML_TYPE_LIST ast_save_statement( SXML_TYPE_LIST location,
 
 
 /* -------------------------------------------------------------------------
+ * outputs an assignment_statement
+ * - left part (assignee)
+ * - right part (assigned)
+ */
+SXML_TYPE_LIST ast_assignment_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST left,
+            SXML_TYPE_LIST right) {
+    
+    return SXML_LTLL(
+    ast_abstract_statement( "assignment_statement", location),
+    ",\n",
+    JSON_KU_(
+      "left",
+      JSON_ARRAY( left)),
+    JSON_KU(
+      "right",
+      JSON_ARRAY( right))
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
  * outputs a constant
  */
 SXML_TYPE_LIST ast_constant( SXML_TYPE_TEXT constant_type,
