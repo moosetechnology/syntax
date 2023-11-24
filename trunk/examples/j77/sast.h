@@ -636,11 +636,33 @@ SXML_TYPE_LIST ast_read_statement( SXML_TYPE_LIST location,
             SXML_TYPE_LIST format) {
     
     return SXML_LTLLL(
-    ast_abstract_statement( "write_statement", location),
+    ast_abstract_statement( "read_statement", location),
     ",\n",
     JSON_KU_(
       "control_info_list",
       JSON_ARRAY( control_info_list)),
+    JSON_KU_(
+      "io_list",
+      JSON_ARRAY( io_list)),
+    JSON_KU(
+      "format",
+      JSON_ARRAY( format))
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a print_statement
+ * - io_list: list of variables
+ * - format identifier  
+ */
+SXML_TYPE_LIST ast_print_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST io_list,
+            SXML_TYPE_LIST format) {
+    
+    return SXML_LTLL(
+    ast_abstract_statement( "print_statement", location),
+    ",\n",
     JSON_KU_(
       "io_list",
       JSON_ARRAY( io_list)),
