@@ -25,7 +25,14 @@
                     "type": {
                         "tag": "type_reference",
                         "name": "CHARACTER",
-                        "len_specification": "40"
+                        "len_specification": {
+                            "tag": "nonzero_unsigned_int_constant",
+                            "start_pos": {
+                                "line": "2",
+                                "column": "17"
+                            },
+                            "value": "40"
+                        }
                     },
                     "declarators": [
                         {

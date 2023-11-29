@@ -26,11 +26,14 @@
                     ],
                     "right": [
                         {
-                            "rule": "<74>.1",
-                            "tag": "unknown_statement",
-                            "start_pos": {
-                                "line": "1",
-                                "column": "12"
+                            "tag": "arithmetic_expression",
+                            "expression": {
+                                "tag": "unsigned_real_constant",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "12"
+                                },
+                                "value": "100.0"
                             }
                         }
                     ]
@@ -46,11 +49,14 @@
                     ],
                     "right": [
                         {
-                            "rule": "<74>.1",
-                            "tag": "unknown_statement",
-                            "start_pos": {
-                                "line": "2",
-                                "column": "12"
+                            "tag": "arithmetic_expression",
+                            "expression": {
+                                "tag": "unsigned_real_constant",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "12"
+                                },
+                                "value": "0.01"
                             }
                         }
                     ]

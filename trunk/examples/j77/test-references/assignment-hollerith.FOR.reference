@@ -27,7 +27,14 @@
                     },
                     "declarators": [
                         {
-                            "len_specifier": "4",
+                            "len_specifier": {
+                                "tag": "nonzero_unsigned_int_constant",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "20"
+                                },
+                                "value": "4"
+                            },
                             "tag": "variable_declarator",
                             "variable": "S",
                             "dimension_declarators": []
@@ -51,7 +58,9 @@
                             "dimension_declarators": [
                                 {
                                     "tag": "literal_expression",
-                                    "literal": "*"
+                                    "literal": {
+                                        "asterisk": "*"
+                                    }
                                 }
                             ]
                         },
@@ -61,7 +70,9 @@
                             "dimension_declarators": [
                                 {
                                     "tag": "literal_expression",
-                                    "literal": "*"
+                                    "literal": {
+                                        "asterisk": "*"
+                                    }
                                 }
                             ]
                         }

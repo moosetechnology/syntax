@@ -28,7 +28,14 @@
                     },
                     "declarators": [
                         {
-                            "len_specifier": "16",
+                            "len_specifier": {
+                                "tag": "nonzero_unsigned_int_constant",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "22"
+                                },
+                                "value": "16"
+                            },
                             "tag": "variable_declarator",
                             "variable": "TTL",
                             "dimension_declarators": []
@@ -52,7 +59,14 @@
                             "dimension_declarators": [
                                 {
                                     "tag": "literal_expression",
-                                    "literal": "5"
+                                    "literal": {
+                                        "tag": "unsigned_int_constant",
+                                        "start_pos": {
+                                            "line": "3",
+                                            "column": "17"
+                                        },
+                                        "value": "5"
+                                    }
                                 }
                             ]
                         },
@@ -62,7 +76,14 @@
                             "dimension_declarators": [
                                 {
                                     "tag": "literal_expression",
-                                    "literal": "2"
+                                    "literal": {
+                                        "tag": "unsigned_int_constant",
+                                        "start_pos": {
+                                            "line": "3",
+                                            "column": "26"
+                                        },
+                                        "value": "2"
+                                    }
                                 }
                             ]
                         }

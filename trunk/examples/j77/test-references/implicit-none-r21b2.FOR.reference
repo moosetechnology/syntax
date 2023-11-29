@@ -47,7 +47,14 @@
                     },
                     "declarators": [
                         {
-                            "len_specifier": "8",
+                            "len_specifier": {
+                                "tag": "nonzero_unsigned_int_constant",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "22"
+                                },
+                                "value": "8"
+                            },
                             "tag": "variable_declarator",
                             "variable": "STR",
                             "dimension_declarators": []
@@ -101,11 +108,14 @@
                     ],
                     "right": [
                         {
-                            "rule": "<74>.1",
-                            "tag": "unknown_statement",
-                            "start_pos": {
-                                "line": "5",
-                                "column": "12"
+                            "tag": "arithmetic_expression",
+                            "expression": {
+                                "tag": "unsigned_int_constant",
+                                "start_pos": {
+                                    "line": "5",
+                                    "column": "12"
+                                },
+                                "value": "100"
                             }
                         }
                     ]
@@ -121,11 +131,14 @@
                     ],
                     "right": [
                         {
-                            "rule": "<74>.1",
-                            "tag": "unknown_statement",
-                            "start_pos": {
-                                "line": "6",
-                                "column": "12"
+                            "tag": "arithmetic_expression",
+                            "expression": {
+                                "tag": "unsigned_real_constant",
+                                "start_pos": {
+                                    "line": "6",
+                                    "column": "12"
+                                },
+                                "value": "1.0E5"
                             }
                         }
                     ]

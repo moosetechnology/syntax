@@ -74,7 +74,14 @@
                                         "operator": "*",
                                         "expression": {
                                             "tag": "literal_expression",
-                                            "literal": "3"
+                                            "literal": {
+                                                "tag": "unsigned_int_constant",
+                                                "start_pos": {
+                                                    "line": "2",
+                                                    "column": "27"
+                                                },
+                                                "value": "3"
+                                            }
                                         }
                                     },
                                     "operator": "+",

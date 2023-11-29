@@ -28,7 +28,14 @@
                     },
                     "declarators": [
                         {
-                            "len_specifier": "10",
+                            "len_specifier": {
+                                "tag": "nonzero_unsigned_int_constant",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "26"
+                                },
+                                "value": "10"
+                            },
                             "tag": "variable_declarator",
                             "variable": "HEADING",
                             "dimension_declarators": []

@@ -29,12 +29,26 @@
                                 {
                                     "lower_bound": {
                                         "tag": "literal_expression",
-                                        "literal": "4"
+                                        "literal": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "1",
+                                                "column": "20"
+                                            },
+                                            "value": "4"
+                                        }
                                     }
                                 },
                                 {
                                     "tag": "literal_expression",
-                                    "literal": "4"
+                                    "literal": {
+                                        "tag": "unsigned_int_constant",
+                                        "start_pos": {
+                                            "line": "1",
+                                            "column": "22"
+                                        },
+                                        "value": "4"
+                                    }
                                 }
                             ]
                         },
@@ -44,7 +58,14 @@
                             "dimension_declarators": [
                                 {
                                     "tag": "literal_expression",
-                                    "literal": "1000"
+                                    "literal": {
+                                        "tag": "unsigned_int_constant",
+                                        "start_pos": {
+                                            "line": "1",
+                                            "column": "28"
+                                        },
+                                        "value": "1000"
+                                    }
                                 }
                             ]
                         }
