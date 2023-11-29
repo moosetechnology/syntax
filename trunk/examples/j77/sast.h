@@ -1075,3 +1075,35 @@ SXML_TYPE_LIST ast_symbolic_name( SXML_TYPE_LIST location,
     )
   );
 }
+
+
+/* -------------------------------------------------------------------------
+ * ouputs a logical primary
+ * - primary expression
+ */
+SXML_TYPE_LIST ast_logical_primary( SXML_TYPE_LIST expression) {
+
+  return JSON_MAP(
+    SXML_LL (
+      ast_tag("logical_primary"),
+      JSON_KU("expression", expression)
+    )
+  );
+}
+
+
+/* -------------------------------------------------------------------------
+ * ouputs a logical factor
+ * - primary expression
+ */
+SXML_TYPE_LIST ast_logical_factor( SXML_TYPE_TEXT negated,
+                SXML_TYPE_LIST expression) {
+
+  return JSON_MAP(
+    SXML_LLL (
+      ast_tag("logical_factor"),
+      JSON_KQ_("negated", negated),
+      JSON_KU("expression", expression)
+    )
+  );
+}
