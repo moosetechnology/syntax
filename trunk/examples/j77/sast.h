@@ -812,6 +812,41 @@ SXML_TYPE_LIST ast_constant(
 
 
 /* -------------------------------------------------------------------------
+ * outputs a signed constant
+ * constant sign
+ * constant object
+ */
+SXML_TYPE_LIST ast_constant_signed(
+            SXML_TYPE_TEXT sign,
+            SXML_TYPE_LIST constant) {
+  return JSON_MAP(
+    SXML_LLL(
+      ast_tag("constant_signed"),
+      JSON_KQ_("sign", sign),
+      JSON_KU( "constant", constant)
+    )
+  );
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a constant expression
+ * constant expression type 
+ * expression value
+ */
+SXML_TYPE_LIST ast_const_expression(
+            SXML_TYPE_TEXT type,
+            SXML_TYPE_LIST expression) {
+  return JSON_MAP(
+    SXML_LL(
+      ast_tag(type),
+      JSON_KU( "expression", expression)
+    )
+  );
+}
+
+
+/* -------------------------------------------------------------------------
  * outputs a complex constant
  * location
  * constant type
