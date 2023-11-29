@@ -38,27 +38,33 @@
                     ],
                     "io_list": [
                         {
-                            "rule": "<74>.2",
-                            "tag": "unknown_statement",
-                            "start_pos": {
-                                "line": "1",
-                                "column": "22"
+                            "tag": "character_expression",
+                            "expression": {
+                                "tag": "character_constant",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "22"
+                                },
+                                "value": "'I/O error # '"
                             }
                         },
                         {
-                            "rule": "<74>.4",
-                            "tag": "unknown_statement",
+                            "tag": "symbolic_name",
                             "start_pos": {
                                 "line": "1",
                                 "column": "38"
-                            }
+                            },
+                            "name": "N"
                         },
                         {
-                            "rule": "<74>.2",
-                            "tag": "unknown_statement",
-                            "start_pos": {
-                                "line": "1",
-                                "column": "41"
+                            "tag": "character_expression",
+                            "expression": {
+                                "tag": "character_constant",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "41"
+                                },
+                                "value": "', on 1'"
                             }
                         }
                     ]

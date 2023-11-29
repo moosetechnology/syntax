@@ -231,7 +231,7 @@ SXML_TYPE_LIST ast_type_reference( SXML_TYPE_LIST name,
       SXML_LLL (
         ast_tag("type_reference"),
   JSON_KQ_ ("name", name->TEXT),
-  JSON_KQ ("len_specification", len_specification->TEXT) ));
+  JSON_KU ("len_specification", len_specification) ));
   }
 }
 
@@ -793,22 +793,70 @@ SXML_TYPE_LIST ast_control_info_elem(
 
 /* -------------------------------------------------------------------------
  * outputs a constant
+ * location
+ * constant type (int, real, dp; signed or unsigned)
+ * constant value
  */
-SXML_TYPE_LIST ast_constant( SXML_TYPE_TEXT constant_type,
+SXML_TYPE_LIST ast_constant(
+            SXML_TYPE_LIST location, 
+            SXML_TYPE_TEXT constant_type,
             SXML_TYPE_TEXT constant) {
-  return JSON_KQ( constant_type, constant);
+  return JSON_MAP(
+    SXML_LTL(
+      ast_abstract_statement(constant_type, location),
+      ",\n",
+      JSON_KQ( "value", constant)
+    )
+  );
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a complex constant
+ * location
+ * constant type
+ * constant value
+ */
+SXML_TYPE_LIST ast_complex_constant(
+            SXML_TYPE_LIST location, 
+            SXML_TYPE_LIST real_part,
+            SXML_TYPE_LIST complex_part) {
+  return JSON_MAP(
+    SXML_LTLL(
+      ast_abstract_statement("complex_constant", location),
+      ",\n",
+      JSON_KU_( "real_part", real_part),
+      JSON_KU( "complex_part", complex_part)
+    )
+  );
+}
+
+/* -------------------------------------------------------------------------
+ * outputs a real part of a complex constant
+ * [sign]
+ * constant
+ */
+SXML_TYPE_LIST ast_complex_constant_real_part(
+            SXML_TYPE_TEXT sign,
+            SXML_TYPE_LIST constant) {
+  return JSON_MAP(
+    SXML_LL(
+      JSON_KQ_( "sign", sign),
+      JSON_KU( "constant", constant)
+    )
+  );
 }
 
 
 /* -------------------------------------------------------------------------
  * outputs a literal_expression.
  */
-SXML_TYPE_LIST ast_literal_expression( SXML_TYPE_TEXT literal) {
+SXML_TYPE_LIST ast_literal_expression( SXML_TYPE_LIST literal) {
 
   return JSON_MAP (
     SXML_LL(
       ast_tag( "literal_expression"),
-      JSON_KQ( "literal", literal) ));
+      JSON_KU( "literal", literal) ));
 }
 
 
@@ -867,6 +915,20 @@ SXML_TYPE_LIST ast_binary_expression( SXML_TYPE_LIST lhs_expression,
       JSON_KU ( "expression", rhs_expression) ));
 }
 
+/* -------------------------------------------------------------------------
+ * outputs an expression.
+ */
+SXML_TYPE_LIST ast_expression( SXML_TYPE_TEXT tag,
+  SXML_TYPE_LIST expression) {
+
+  return JSON_MAP (
+    SXML_LL(
+      ast_tag(tag),
+      JSON_KU( "expression", expression) 
+    )
+  );
+}
+
 
 /* -------------------------------------------------------------------------
  * outputs a variable declarator
@@ -891,7 +953,7 @@ SXML_TYPE_LIST ast_variable_declarator( SXML_TYPE_TEXT variable,
 SXML_TYPE_LIST ast_add_declarator_len( SXML_TYPE_LIST variable_declarator,
            SXML_TYPE_LIST len_specifier) {
   SXML_LL(
-    JSON_KQ_ ("len_specifier", len_specifier->TEXT),
+    JSON_KU_ ("len_specifier", len_specifier),
     variable_declarator->SUCC );
 
   return variable_declarator;
@@ -917,6 +979,70 @@ SXML_TYPE_LIST ast_lower_upper_bound(SXML_TYPE_LIST lower_bound,
 
 
 /* -------------------------------------------------------------------------
+ * outputs a substring
+ * - character variable name 
+ * - character array element name 
+ * - leftmost character position of the substring 
+ * - rightmost character position of the substring 
+ */
+SXML_TYPE_LIST ast_substring(SXML_TYPE_LIST variable,
+              SXML_TYPE_LIST array,
+              SXML_TYPE_LIST lower_bound,
+              SXML_TYPE_LIST upper_bound) {
+  
+  SXML_TYPE_LIST variable_or_array;
+
+  if (array == NULL) {
+    variable_or_array = JSON_KU_("variable", variable);
+  } 
+  else 
+    variable_or_array = JSON_KU_("array", array);
+
+  return JSON_MAP(
+    SXML_LLLL(
+      ast_tag("substring"),
+      variable_or_array,
+      JSON_KU_("lower_bound", lower_bound),
+      JSON_KU ("upper_bound", upper_bound)
+      )
+    );
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs an array_element_name qualified by a subscript.
+ * - array name 
+ * - qualifiers
+ */
+SXML_TYPE_LIST ast_array_element_name(SXML_TYPE_LIST name,
+              SXML_TYPE_LIST qualifiers) {
+  
+  return JSON_MAP(
+    SXML_LLL(
+      ast_tag("array_element_name"),
+      JSON_KU_("name", name),
+      JSON_KU ("qualifiers_list", qualifiers)
+      )
+    );
+}
+
+
+/* -------------------------------------------------------------------------
+ * ouputs a funciton_reference
+ * - name of the function
+ */
+SXML_TYPE_LIST ast_function_reference( SXML_TYPE_LIST name) {
+
+  return JSON_MAP(
+    SXML_LL (
+        ast_tag("function_reference"),
+        JSON_KU("name", name)
+    )
+  );
+}
+
+
+/* -------------------------------------------------------------------------
  */
 SXML_TYPE_LIST ast_text_to_map(
               SXML_TYPE_TEXT tag,
@@ -927,3 +1053,25 @@ SXML_TYPE_LIST ast_text_to_map(
 }
 
 
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST name_to_list(
+              SXML_TYPE_TEXT name) {
+  return SXML_T(SXML_Q(name));
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a symbolic name
+ */
+SXML_TYPE_LIST ast_symbolic_name( SXML_TYPE_LIST location,
+  SXML_TYPE_TEXT name) {
+
+  return JSON_MAP (
+    SXML_LTL(
+      ast_abstract_statement( "symbolic_name", location),
+      ",\n",
+      JSON_KQ("name", name)
+    )
+  );
+}

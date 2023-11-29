@@ -122,11 +122,14 @@
                     ],
                     "right": [
                         {
-                            "rule": "<74>.2",
-                            "tag": "unknown_statement",
-                            "start_pos": {
-                                "line": "3",
-                                "column": "13"
+                            "tag": "character_expression",
+                            "expression": {
+                                "tag": "character_constant",
+                                "start_pos": {
+                                    "line": "3",
+                                    "column": "13"
+                                },
+                                "value": "'z'"
                             }
                         }
                     ]
@@ -142,11 +145,14 @@
                     ],
                     "right": [
                         {
-                            "rule": "<74>.2",
-                            "tag": "unknown_statement",
-                            "start_pos": {
-                                "line": "4",
-                                "column": "13"
+                            "tag": "character_expression",
+                            "expression": {
+                                "tag": "character_constant",
+                                "start_pos": {
+                                    "line": "4",
+                                    "column": "13"
+                                },
+                                "value": "'uvwxyz'"
                             }
                         }
                     ]
@@ -162,11 +168,14 @@
                     ],
                     "right": [
                         {
-                            "rule": "<74>.2",
-                            "tag": "unknown_statement",
-                            "start_pos": {
-                                "line": "5",
-                                "column": "13"
+                            "tag": "character_expression",
+                            "expression": {
+                                "tag": "character_constant",
+                                "start_pos": {
+                                    "line": "5",
+                                    "column": "13"
+                                },
+                                "value": "'vwxyz'"
                             }
                         }
                     ]
@@ -179,21 +188,46 @@
                     },
                     "left": [
                         {
-                            "rule": "<89>.1",
-                            "tag": "unknown_statement",
-                            "start_pos": {
-                                "line": "6",
-                                "column": "8"
+                            "tag": "substring",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "6",
+                                    "column": "8"
+                                },
+                                "name": "C5"
+                            },
+                            "lower_bound": {
+                                "tag": "arithmetic_expression",
+                                "expression": {
+                                    "tag": "unsigned_int_constant",
+                                    "start_pos": {
+                                        "line": "6",
+                                        "column": "11"
+                                    },
+                                    "value": "1"
+                                }
+                            },
+                            "upper_bound": {
+                                "tag": "unsigned_int_constant",
+                                "start_pos": {
+                                    "line": "6",
+                                    "column": "13"
+                                },
+                                "value": "2"
                             }
                         }
                     ],
                     "right": [
                         {
-                            "rule": "<74>.2",
-                            "tag": "unknown_statement",
-                            "start_pos": {
-                                "line": "6",
-                                "column": "18"
+                            "tag": "character_expression",
+                            "expression": {
+                                "tag": "character_constant",
+                                "start_pos": {
+                                    "line": "6",
+                                    "column": "18"
+                                },
+                                "value": "'AB'"
                             }
                         }
                     ]
@@ -209,11 +243,26 @@
                     ],
                     "right": [
                         {
-                            "rule": "<74>.2",
-                            "tag": "unknown_statement",
-                            "start_pos": {
-                                "line": "7",
-                                "column": "13"
+                            "tag": "character_expression",
+                            "expression": {
+                                "tag": "binary_expression",
+                                "lhs": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "7",
+                                        "column": "13"
+                                    },
+                                    "name": "C5"
+                                },
+                                "operator": "//",
+                                "expression": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "7",
+                                        "column": "19"
+                                    },
+                                    "name": "C2"
+                                }
                             }
                         }
                     ]
@@ -229,11 +278,25 @@
                     ],
                     "right": [
                         {
-                            "rule": "<74>.4",
-                            "tag": "unknown_statement",
-                            "start_pos": {
-                                "line": "8",
-                                "column": "15"
+                            "tag": "array_element_name",
+                            "name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "8",
+                                    "column": "15"
+                                },
+                                "name": "CHAR"
+                            },
+                            "qualifiers_list": {
+                                "tag": "arithmetic_expression",
+                                "expression": {
+                                    "tag": "unsigned_int_constant",
+                                    "start_pos": {
+                                        "line": "8",
+                                        "column": "20"
+                                    },
+                                    "value": "7"
+                                }
                             }
                         }
                     ]
