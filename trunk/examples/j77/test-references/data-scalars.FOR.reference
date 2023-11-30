@@ -99,21 +99,25 @@
                         {
                             "nlist": [
                                 {
-                                    "rule": "<27d>.1",
-                                    "tag": "unknown_statement",
+                                    "tag": "symbolic_name",
                                     "start_pos": {
                                         "line": "4",
                                         "column": "13"
-                                    }
+                                    },
+                                    "name": "TTL"
                                 }
                             ],
                             "clist": [
                                 {
-                                    "rule": "<27f>.2",
-                                    "tag": "unknown_statement",
-                                    "start_pos": {
-                                        "line": "4",
-                                        "column": "18"
+                                    "tag": "data_statement_constant",
+                                    "occurence": {},
+                                    "constant": {
+                                        "tag": "character_constant",
+                                        "start_pos": {
+                                            "line": "4",
+                                            "column": "18"
+                                        },
+                                        "value": "'Arbitrary Titles'"
                                     }
                                 }
                             ]
@@ -121,21 +125,25 @@
                         {
                             "nlist": [
                                 {
-                                    "rule": "<27d>.1",
-                                    "tag": "unknown_statement",
+                                    "tag": "symbolic_name",
                                     "start_pos": {
                                         "line": "4",
                                         "column": "39"
-                                    }
+                                    },
+                                    "name": "M"
                                 }
                             ],
                             "clist": [
                                 {
-                                    "rule": "<27f>.2",
-                                    "tag": "unknown_statement",
-                                    "start_pos": {
-                                        "line": "4",
-                                        "column": "42"
+                                    "tag": "data_statement_constant",
+                                    "occurence": {},
+                                    "constant": {
+                                        "tag": "unsigned_int_constant",
+                                        "start_pos": {
+                                            "line": "4",
+                                            "column": "42"
+                                        },
+                                        "value": "9"
                                     }
                                 }
                             ]
@@ -143,21 +151,25 @@
                         {
                             "nlist": [
                                 {
-                                    "rule": "<27d>.1",
-                                    "tag": "unknown_statement",
+                                    "tag": "symbolic_name",
                                     "start_pos": {
                                         "line": "4",
                                         "column": "46"
-                                    }
+                                    },
+                                    "name": "N"
                                 }
                             ],
                             "clist": [
                                 {
-                                    "rule": "<27f>.2",
-                                    "tag": "unknown_statement",
-                                    "start_pos": {
-                                        "line": "4",
-                                        "column": "49"
+                                    "tag": "data_statement_constant",
+                                    "occurence": {},
+                                    "constant": {
+                                        "tag": "unsigned_int_constant",
+                                        "start_pos": {
+                                            "line": "4",
+                                            "column": "49"
+                                        },
+                                        "value": "0"
                                     }
                                 }
                             ]
@@ -165,21 +177,39 @@
                         {
                             "nlist": [
                                 {
-                                    "rule": "<27d>.2",
-                                    "tag": "unknown_statement",
-                                    "start_pos": {
-                                        "line": "4",
-                                        "column": "53"
+                                    "tag": "array_element_name",
+                                    "name": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "4",
+                                            "column": "53"
+                                        },
+                                        "name": "PAIR"
+                                    },
+                                    "qualifiers_list": {
+                                        "tag": "arithmetic_expression",
+                                        "expression": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "4",
+                                                "column": "58"
+                                            },
+                                            "value": "1"
+                                        }
                                     }
                                 }
                             ],
                             "clist": [
                                 {
-                                    "rule": "<27f>.2",
-                                    "tag": "unknown_statement",
-                                    "start_pos": {
-                                        "line": "4",
-                                        "column": "62"
+                                    "tag": "data_statement_constant",
+                                    "occurence": {},
+                                    "constant": {
+                                        "tag": "unsigned_real_constant",
+                                        "start_pos": {
+                                            "line": "4",
+                                            "column": "62"
+                                        },
+                                        "value": "9.0"
                                     }
                                 }
                             ]
@@ -187,21 +217,25 @@
                         {
                             "nlist": [
                                 {
-                                    "rule": "<27d>.1",
-                                    "tag": "unknown_statement",
+                                    "tag": "symbolic_name",
                                     "start_pos": {
                                         "line": "4",
                                         "column": "68"
-                                    }
+                                    },
+                                    "name": "VEC"
                                 }
                             ],
                             "clist": [
                                 {
-                                    "rule": "<27f>.1",
-                                    "tag": "unknown_statement",
-                                    "start_pos": {
-                                        "line": "4",
-                                        "column": "81"
+                                    "tag": "data_statement_constant",
+                                    "occurence": {},
+                                    "constant": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "4",
+                                            "column": "81"
+                                        },
+                                        "name": ""
                                     }
                                 }
                             ]

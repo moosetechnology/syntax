@@ -1318,7 +1318,7 @@ $LIST( <18:equiv_entity>)
 
 $LIST( <18:equiv_entity>)
 {
-  $LIST( <18:equiv_entity>) = ast_unknown_parameter("<18>.2",LOCATION(0));
+  $LIST( <18:equiv_entity>) = $LIST(<88b:function_reference_or_array_element_name>);
 }    
 
 *------------------------------------------------------------------------------
@@ -1328,7 +1328,7 @@ $LIST( <18:equiv_entity>)
 
 $LIST( <18:equiv_entity>)
 {
-  $LIST( <18:equiv_entity>) = ast_unknown_parameter("<18>.3",LOCATION(0));
+  $LIST( <18:equiv_entity>) = $LIST(<89:substring_name>);
 }    
 
 *******************************************************************************
@@ -1891,7 +1891,7 @@ $LIST( <23b:assign>)
 {
   $LIST( <23b:assign>) = ast_parameter_statement_parameter(
     $NAME(<99:symbolic_name>), 
-    ast_unknown_parameter("<23b>",LOCATION(0)) 
+    $LIST(<75:constant_expr>) 
     );
 }
 
@@ -2074,10 +2074,10 @@ $LIST( <27c:data_statement_name_list>)
 
 $LIST( <27d:data_statement_name>)
 {
-  $LIST( <27d:data_statement_name>) = ast_unknown_parameter(
-    "<27d>.1",
-    LOCATION(0)
-    );
+  $LIST( <27d:data_statement_name>) = ast_symbolic_name(
+    LOCATION(0), 
+    $NAME(<99:symbolic_name>)
+  );
 }
 
 *------------------------------------------------------------------------------
@@ -2087,10 +2087,7 @@ $LIST( <27d:data_statement_name>)
 
 $LIST( <27d:data_statement_name>)
 {
-  $LIST( <27d:data_statement_name>) = ast_unknown_parameter(
-    "<27d>.2",
-    LOCATION(0)
-    );
+  $LIST( <27d:data_statement_name>) = $LIST(<88b:function_reference_or_array_element_name>);
 }    
 
 *------------------------------------------------------------------------------
@@ -2100,10 +2097,7 @@ $LIST( <27d:data_statement_name>)
 
 $LIST( <27d:data_statement_name>)
 {
-  $LIST( <27d:data_statement_name>) = ast_unknown_parameter(
-    "<27d>.3",
-    LOCATION(0)
-    );
+  $LIST( <27d:data_statement_name>) = $LIST(<89:substring_name>);
 }    
 
 *------------------------------------------------------------------------------
@@ -2113,10 +2107,7 @@ $LIST( <27d:data_statement_name>)
 
 $LIST( <27d:data_statement_name>)
 {
-  $LIST( <27d:data_statement_name>) = ast_unknown_parameter(
-    "<27d>.4",
-    LOCATION(0)
-    );
+  $LIST( <27d:data_statement_name>) = $LIST(<28:data_imply_do_list>);
 }    
 
 *******************************************************************************
@@ -2150,10 +2141,10 @@ $LIST( <27e:data_statement_constant_list>)
 
 $LIST( <27f:data_statement_constant>)
 {
-  $LIST( <27f:data_statement_constant>) = ast_unknown_parameter(
-    "<27f>.1",
-    LOCATION(0)
-    );
+  $LIST( <27f:data_statement_constant>) = ast_data_statement_constant(
+    SXML_T("{}"),
+    ast_symbolic_name(LOCATION(0), $NAME(<99:symbolic_name>))
+  );
 }    
 
 *------------------------------------------------------------------------------
@@ -2163,10 +2154,10 @@ $LIST( <27f:data_statement_constant>)
 
 $LIST( <27f:data_statement_constant>)
 {
-  $LIST( <27f:data_statement_constant>) = ast_unknown_parameter(
-    "<27f>.2",
-    LOCATION(0)
-    );
+  $LIST( <27f:data_statement_constant>) = ast_data_statement_constant(
+    SXML_T("{}"),
+    $LIST(<100:constant>)
+  );
 }    
 
 *------------------------------------------------------------------------------
@@ -2176,10 +2167,10 @@ $LIST( <27f:data_statement_constant>)
 
 $LIST( <27f:data_statement_constant>)
 {
-  $LIST( <27f:data_statement_constant>) = ast_unknown_parameter(
-    "<27f>.3",
-    LOCATION(0)
-    );
+  $LIST( <27f:data_statement_constant>) = ast_data_statement_constant(
+    $LIST(<103:nonzero_unsigned_int_constant>),
+    $LIST(<100:constant>)
+  );
 }    
 
 *------------------------------------------------------------------------------
@@ -2189,10 +2180,10 @@ $LIST( <27f:data_statement_constant>)
 
 $LIST( <27f:data_statement_constant>)
 {
-  $LIST( <27f:data_statement_constant>) = ast_unknown_parameter(
-    "<27f>.4",
-    LOCATION(0)
-    );
+  $LIST( <27f:data_statement_constant>) = ast_data_statement_constant(
+    $LIST(<103:nonzero_unsigned_int_constant>),
+    ast_symbolic_name(LOCATION(0), $NAME(<99:symbolic_name>))
+  );
 }    
 
 *------------------------------------------------------------------------------
@@ -2202,10 +2193,10 @@ $LIST( <27f:data_statement_constant>)
 
 $LIST( <27f:data_statement_constant>)
 {
-  $LIST( <27f:data_statement_constant>) = ast_unknown_parameter(
-    "<27f>.5",
-    LOCATION(0)
-    );
+  $LIST( <27f:data_statement_constant>) = ast_data_statement_constant(
+    ast_symbolic_name(LOCATION(0), $NAME(<99:symbolic_name>)),
+    $LIST(<100:constant>)
+  );
 }    
 
 *------------------------------------------------------------------------------
@@ -2215,10 +2206,10 @@ $LIST( <27f:data_statement_constant>)
 
 $LIST( <27f:data_statement_constant>)
 {
-  $LIST( <27f:data_statement_constant>) = ast_unknown_parameter(
-    "<27f>.6",
-    LOCATION(0)
-    );
+  $LIST( <27f:data_statement_constant>) = ast_data_statement_constant(
+    ast_symbolic_name(LOCATION(0), $NAME(<99:symbolic_name>)),
+    ast_symbolic_name(LOCATION(0), $NAME(<99:symbolic_name>))
+  );
 }    
 
 *******************************************************************************
@@ -2226,30 +2217,78 @@ $LIST( <27f:data_statement_constant>)
 <28:data_imply_do_list>
 		= ( <28a:data_imply_do_list_head_list>  =  <80:int_constant_expr> ,  <80:int_constant_expr> ) ;
 
+$LIST( <28:data_imply_do_list>)
+{
+  $LIST( <28:data_imply_do_list>) = ast_data_imply_do_list(
+    $LIST(<28a:data_imply_do_list_head_list>),
+    $LIST(<80:int_constant_expr>),
+    $LIST(<80:int_constant_expr>'),
+    SXML_T("{}")
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <28:data_imply_do_list>
 		= ( <28a:data_imply_do_list_head_list>  =  <80:int_constant_expr> ,  <80:int_constant_expr> ,  <80:int_constant_expr> ) ;
+
+$LIST( <28:data_imply_do_list>)
+{
+  $LIST( <28:data_imply_do_list>) = ast_data_imply_do_list(
+    $LIST(<28a:data_imply_do_list_head_list>),
+    $LIST(<80:int_constant_expr>),
+    $LIST(<80:int_constant_expr>'),
+    $LIST(<80:int_constant_expr>'')
+  ); 
+}   
 
 *******************************************************************************
 
 <28a:data_imply_do_list_head_list>
 		= <28b:data_imply_do_list_head> ,  <28a:data_imply_do_list_head_list> ;
 
+$LIST( <28a:data_imply_do_list_head_list>)
+{
+  $LIST( <28a:data_imply_do_list_head_list>) = SXML_LTL(
+    $LIST(<28b:data_imply_do_list_head>),
+    ",",
+    $LIST(<28a:data_imply_do_list_head_list>')
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <28a:data_imply_do_list_head_list>
 		= <28b:data_imply_do_list_head> ,  <99:symbolic_name> ;
+
+$LIST( <28a:data_imply_do_list_head_list>)
+{
+  $LIST( <28a:data_imply_do_list_head_list>) = SXML_LTL(
+    $LIST(<28b:data_imply_do_list_head>),
+    ",",
+    ast_symbolic_name(LOCATION(0), $NAME(<99:symbolic_name>))
+  );
+}    
 
 *******************************************************************************
 
 <28b:data_imply_do_list_head>
 		= <88b:function_reference_or_array_element_name> ;
 
+$LIST( <28b:data_imply_do_list_head>)
+{
+  $LIST( <28b:data_imply_do_list_head>) = $LIST(<88b:function_reference_or_array_element_name>);
+}    
+
 *------------------------------------------------------------------------------
 
 <28b:data_imply_do_list_head>
 		= <28:data_imply_do_list> ;
+
+$LIST( <28b:data_imply_do_list_head>)
+{
+  $LIST( <28b:data_imply_do_list_head>) = $LIST(<28:data_imply_do_list>);
+}  
 
 *******************************************************************************
 
@@ -2973,10 +3012,12 @@ $LIST( <48:io_list>)
 
 $LIST( <49:io_imply_do_list>)
 {
-  $LIST( <49:io_imply_do_list>) = ast_unknown_parameter(
-    "<49>.1",
-    LOCATION(0)
-    );
+  $LIST( <49:io_imply_do_list>) = ast_data_imply_do_list(
+    SXML_LL($LIST(<48:io_list>), ast_symbolic_name(LOCATION(0), $NAME(<99:symbolic_name>))),
+    $LIST(<78:int_real_dp_expr>),
+    $LIST(<78:int_real_dp_expr>'),
+    $LIST(<78:int_real_dp_expr>'')
+  );
 }
 
 *------------------------------------------------------------------------------
@@ -2986,10 +3027,12 @@ $LIST( <49:io_imply_do_list>)
 
 $LIST( <49:io_imply_do_list>)
 {
-  $LIST( <49:io_imply_do_list>) = ast_unknown_parameter(
-    "<49>.2",
-    LOCATION(0)
-    );
+  $LIST( <49:io_imply_do_list>) = ast_data_imply_do_list(
+    SXML_LL($LIST(<48:io_list>), ast_symbolic_name(LOCATION(0), $NAME(<99:symbolic_name>))),
+    $LIST(<78:int_real_dp_expr>),
+    $LIST(<78:int_real_dp_expr>'),
+    SXML_T("{}")
+  );
 }    
 
 *******************************************************************************
@@ -4589,7 +4632,7 @@ $LIST( <71a:actual_argument_list>)
 
 $LIST( <71a:actual_argument_list>)
 {
-  $LIST( <71a:actual_argument_list>) = SXML_T("\"<71a>.2\"");
+  $LIST( <71a:actual_argument_list>) = $LIST(<71b:actual_argument>);
 }
 
 *******************************************************************************
@@ -4599,7 +4642,7 @@ $LIST( <71a:actual_argument_list>)
 
 $LIST( <71b:actual_argument>)
 {
-  $LIST( <71b:actual_argument>) = SXML_T("\"<71b>.1\"");
+  $LIST( <71b:actual_argument>) = $LIST(<74:expression>);
 }
 
 *------------------------------------------------------------------------------
@@ -4615,7 +4658,11 @@ $LIST( <71b:actual_argument>)
 
 $LIST( <71b:actual_argument>)
 {
-  $LIST( <71b:actual_argument>) = SXML_T("\"<71b>.2\"");
+  $LIST( <71b:actual_argument>) = ast_call_argument_with_return_specifier(
+    LOCATION(0),
+    "*",
+    $NAME(<110b:label_ref>)
+  );
 }
 
 *******************************************************************************

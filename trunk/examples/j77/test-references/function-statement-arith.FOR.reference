@@ -26,11 +26,14 @@
                         {
                             "name": "PI",
                             "expression": {
-                                "rule": "<23b>",
-                                "tag": "unknown_statement",
-                                "start_pos": {
-                                    "line": "2",
-                                    "column": "20"
+                                "tag": "logical_const_expr",
+                                "expression": {
+                                    "tag": "unsigned_real_constant",
+                                    "start_pos": {
+                                        "line": "2",
+                                        "column": "23"
+                                    },
+                                    "value": "3.14159"
                                 }
                             }
                         }

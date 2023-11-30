@@ -89,22 +89,50 @@
                         [
                             "A",
                             {
-                                "rule": "<18>.2",
-                                "tag": "unknown_statement",
-                                "start_pos": {
-                                    "line": "2",
-                                    "column": "23"
+                                "tag": "array_element_name",
+                                "name": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "2",
+                                        "column": "23"
+                                    },
+                                    "name": "C"
+                                },
+                                "qualifiers_list": {
+                                    "tag": "arithmetic_expression",
+                                    "expression": {
+                                        "tag": "unsigned_int_constant",
+                                        "start_pos": {
+                                            "line": "2",
+                                            "column": "25"
+                                        },
+                                        "value": "1"
+                                    }
                                 }
                             }
                         ],
                         [
                             "B",
                             {
-                                "rule": "<18>.2",
-                                "tag": "unknown_statement",
-                                "start_pos": {
-                                    "line": "2",
-                                    "column": "32"
+                                "tag": "array_element_name",
+                                "name": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "2",
+                                        "column": "32"
+                                    },
+                                    "name": "C"
+                                },
+                                "qualifiers_list": {
+                                    "tag": "arithmetic_expression",
+                                    "expression": {
+                                        "tag": "unsigned_int_constant",
+                                        "start_pos": {
+                                            "line": "2",
+                                            "column": "34"
+                                        },
+                                        "value": "2"
+                                    }
                                 }
                             }
                         ]

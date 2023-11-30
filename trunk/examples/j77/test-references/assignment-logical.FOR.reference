@@ -86,11 +86,21 @@
                     ],
                     "right": [
                         {
-                            "rule": "<74>.3",
-                            "tag": "unknown_statement",
-                            "start_pos": {
-                                "line": "3",
-                                "column": "13"
+                            "tag": "logical_expression",
+                            "expression": {
+                                "tag": "logical_factor",
+                                "negated": "false",
+                                "expression": {
+                                    "tag": "logical_primary",
+                                    "expression": {
+                                        "tag": "logical_constant",
+                                        "start_pos": {
+                                            "line": "3",
+                                            "column": "13"
+                                        },
+                                        "value": ".TRUE."
+                                    }
+                                }
                             }
                         }
                     ]

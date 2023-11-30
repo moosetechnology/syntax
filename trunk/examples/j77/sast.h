@@ -278,6 +278,24 @@ SXML_TYPE_LIST ast_call_statement( SXML_TYPE_TEXT name,
 
 
 /* -------------------------------------------------------------------------
+ * outputs an actual argument with return specifier
+ * - return specifier
+ * - argument
+ */
+SXML_TYPE_LIST ast_call_argument_with_return_specifier( SXML_TYPE_LIST location,
+            SXML_TYPE_TEXT return_specifier,
+            SXML_TYPE_TEXT argument) {
+
+  return SXML_LTLL(
+    ast_abstract_statement( "argument_with_return_specifier", location),
+    ",\n",
+    JSON_KQ_ ("return_specifier", return_specifier),
+    JSON_KQ("argument", argument)
+  );
+}
+
+
+/* -------------------------------------------------------------------------
  * outputs an implicit_statement
  * - list of parameters
  */
@@ -1139,6 +1157,49 @@ SXML_TYPE_LIST ast_logical_factor( SXML_TYPE_TEXT negated,
       ast_tag("logical_factor"),
       JSON_KQ_("negated", negated),
       JSON_KU("expression", expression)
+    )
+  );
+}
+
+
+/* -------------------------------------------------------------------------
+ * ouputs a data_statement_constant
+ * - number of successive occurrences of the constant
+ * - constant
+ */
+SXML_TYPE_LIST ast_data_statement_constant( SXML_TYPE_LIST occurence,
+                SXML_TYPE_LIST constant) {
+
+  return JSON_MAP(
+    SXML_LLL (
+      ast_tag("data_statement_constant"),
+      JSON_KU_("occurence", occurence),
+      JSON_KU("constant", constant)
+    )
+  );
+}
+
+
+/* -------------------------------------------------------------------------
+ * ouputs a data_imply_do_list
+ * - dlist: list of array element names and implied DO lists
+ * -- the last element of dlist is iv: implied DO variable
+ * - m1: initial value of iv
+ * - m2: limit value of iv
+ * - [m3]: increment value of iv (if m3 is omitted, then a default value of 1 is assumed)
+ */
+SXML_TYPE_LIST ast_data_imply_do_list( SXML_TYPE_LIST dlist,
+                SXML_TYPE_LIST m1,
+                SXML_TYPE_LIST m2,
+                SXML_TYPE_LIST m3) {
+
+  return JSON_MAP(
+    SXML_LLLLL (
+      ast_tag("data_imply_do_list"),
+      JSON_KU_("dlist", JSON_ARRAY(dlist)),
+      JSON_KU_("m1", m1),
+      JSON_KU_("m2", m2),
+      JSON_KU("m3", m3)
     )
   );
 }

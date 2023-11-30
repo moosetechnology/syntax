@@ -70,45 +70,54 @@
                         {
                             "name": "EPSILON",
                             "expression": {
-                                "rule": "<23b>",
-                                "tag": "unknown_statement",
-                                "start_pos": {
-                                    "line": "4",
-                                    "column": "19"
+                                "tag": "logical_const_expr",
+                                "expression": {
+                                    "tag": "unsigned_real_constant",
+                                    "start_pos": {
+                                        "line": "4",
+                                        "column": "27"
+                                    },
+                                    "value": "1.0E-6"
                                 }
                             }
                         },
                         {
                             "name": "PI",
                             "expression": {
-                                "rule": "<23b>",
-                                "tag": "unknown_statement",
-                                "start_pos": {
-                                    "line": "4",
-                                    "column": "35"
+                                "tag": "logical_const_expr",
+                                "expression": {
+                                    "tag": "unsigned_real_constant",
+                                    "start_pos": {
+                                        "line": "4",
+                                        "column": "38"
+                                    },
+                                    "value": "3.141593"
                                 }
                             }
                         },
                         {
                             "name": "HEADING",
                             "expression": {
-                                "rule": "<23b>",
-                                "tag": "unknown_statement",
-                                "start_pos": {
-                                    "line": "4",
-                                    "column": "48"
+                                "tag": "logical_const_expr",
+                                "expression": {
+                                    "tag": "character_constant",
+                                    "start_pos": {
+                                        "line": "4",
+                                        "column": "56"
+                                    },
+                                    "value": "' IO Error #'"
                                 }
                             }
                         },
                         {
                             "name": "T",
                             "expression": {
-                                "rule": "<23b>",
-                                "tag": "unknown_statement",
+                                "tag": "symbolic_name",
                                 "start_pos": {
                                     "line": "4",
-                                    "column": "71"
-                                }
+                                    "column": "80"
+                                },
+                                "name": ""
                             }
                         }
                     ]
