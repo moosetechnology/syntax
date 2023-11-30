@@ -54,37 +54,45 @@
                         {
                             "nlist": [
                                 {
-                                    "rule": "<27d>.1",
-                                    "tag": "unknown_statement",
+                                    "tag": "symbolic_name",
                                     "start_pos": {
                                         "line": "3",
                                         "column": "13"
-                                    }
+                                    },
+                                    "name": "X0"
                                 },
                                 {
-                                    "rule": "<27d>.1",
-                                    "tag": "unknown_statement",
+                                    "tag": "symbolic_name",
                                     "start_pos": {
                                         "line": "3",
                                         "column": "17"
-                                    }
+                                    },
+                                    "name": "X1"
                                 }
                             ],
                             "clist": [
                                 {
-                                    "rule": "<27f>.2",
-                                    "tag": "unknown_statement",
-                                    "start_pos": {
-                                        "line": "3",
-                                        "column": "22"
+                                    "tag": "data_statement_constant",
+                                    "occurence": {},
+                                    "constant": {
+                                        "tag": "unsigned_real_constant",
+                                        "start_pos": {
+                                            "line": "3",
+                                            "column": "22"
+                                        },
+                                        "value": "2.0"
                                     }
                                 },
                                 {
-                                    "rule": "<27f>.2",
-                                    "tag": "unknown_statement",
-                                    "start_pos": {
-                                        "line": "3",
-                                        "column": "27"
+                                    "tag": "data_statement_constant",
+                                    "occurence": {},
+                                    "constant": {
+                                        "tag": "unsigned_real_constant",
+                                        "start_pos": {
+                                            "line": "3",
+                                            "column": "27"
+                                        },
+                                        "value": "6.0"
                                     }
                                 }
                             ]

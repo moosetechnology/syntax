@@ -28,7 +28,9 @@
                     },
                     "declarators": [
                         {
-                            "len_specifier": "*",
+                            "len_specifier": {
+                                "asterisk": "*"
+                            },
                             "tag": "variable_declarator",
                             "variable": "HEADING",
                             "dimension_declarators": []
@@ -45,11 +47,14 @@
                         {
                             "name": "HEADING",
                             "expression": {
-                                "rule": "<23b>",
-                                "tag": "unknown_statement",
-                                "start_pos": {
-                                    "line": "3",
-                                    "column": "19"
+                                "tag": "logical_const_expr",
+                                "expression": {
+                                    "tag": "character_constant",
+                                    "start_pos": {
+                                        "line": "3",
+                                        "column": "27"
+                                    },
+                                    "value": "'I/O Error Number'"
                                 }
                             }
                         }

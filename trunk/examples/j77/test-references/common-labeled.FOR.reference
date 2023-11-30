@@ -28,7 +28,14 @@
                             "dimension_declarators": [
                                 {
                                     "tag": "literal_expression",
-                                    "literal": "100"
+                                    "literal": {
+                                        "tag": "unsigned_int_constant",
+                                        "start_pos": {
+                                            "line": "1",
+                                            "column": "20"
+                                        },
+                                        "value": "100"
+                                    }
                                 }
                             ]
                         }

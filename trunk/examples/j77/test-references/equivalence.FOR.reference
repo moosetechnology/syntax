@@ -27,25 +27,53 @@
                     },
                     "declarators": [
                         {
-                            "len_specifier": "4",
+                            "len_specifier": {
+                                "tag": "nonzero_unsigned_int_constant",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "20"
+                                },
+                                "value": "4"
+                            },
                             "tag": "variable_declarator",
                             "variable": "A",
                             "dimension_declarators": []
                         },
                         {
-                            "len_specifier": "4",
+                            "len_specifier": {
+                                "tag": "nonzero_unsigned_int_constant",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "25"
+                                },
+                                "value": "4"
+                            },
                             "tag": "variable_declarator",
                             "variable": "B",
                             "dimension_declarators": []
                         },
                         {
-                            "len_specifier": "3",
+                            "len_specifier": {
+                                "tag": "nonzero_unsigned_int_constant",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "33"
+                                },
+                                "value": "3"
+                            },
                             "tag": "variable_declarator",
                             "variable": "C",
                             "dimension_declarators": [
                                 {
                                     "tag": "literal_expression",
-                                    "literal": "2"
+                                    "literal": {
+                                        "tag": "unsigned_int_constant",
+                                        "start_pos": {
+                                            "line": "1",
+                                            "column": "30"
+                                        },
+                                        "value": "2"
+                                    }
                                 }
                             ]
                         }
@@ -61,22 +89,50 @@
                         [
                             "A",
                             {
-                                "rule": "<18>.2",
-                                "tag": "unknown_statement",
-                                "start_pos": {
-                                    "line": "2",
-                                    "column": "23"
+                                "tag": "array_element_name",
+                                "name": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "2",
+                                        "column": "23"
+                                    },
+                                    "name": "C"
+                                },
+                                "qualifiers_list": {
+                                    "tag": "arithmetic_expression",
+                                    "expression": {
+                                        "tag": "unsigned_int_constant",
+                                        "start_pos": {
+                                            "line": "2",
+                                            "column": "25"
+                                        },
+                                        "value": "1"
+                                    }
                                 }
                             }
                         ],
                         [
                             "B",
                             {
-                                "rule": "<18>.2",
-                                "tag": "unknown_statement",
-                                "start_pos": {
-                                    "line": "2",
-                                    "column": "32"
+                                "tag": "array_element_name",
+                                "name": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "2",
+                                        "column": "32"
+                                    },
+                                    "name": "C"
+                                },
+                                "qualifiers_list": {
+                                    "tag": "arithmetic_expression",
+                                    "expression": {
+                                        "tag": "unsigned_int_constant",
+                                        "start_pos": {
+                                            "line": "2",
+                                            "column": "34"
+                                        },
+                                        "value": "2"
+                                    }
                                 }
                             }
                         ]

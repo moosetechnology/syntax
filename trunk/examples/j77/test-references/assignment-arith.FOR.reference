@@ -67,11 +67,26 @@
                     ],
                     "right": [
                         {
-                            "rule": "<74>.1",
-                            "tag": "unknown_statement",
-                            "start_pos": {
-                                "line": "3",
-                                "column": "12"
+                            "tag": "arithmetic_expression",
+                            "expression": {
+                                "tag": "binary_expression",
+                                "lhs": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "3",
+                                        "column": "12"
+                                    },
+                                    "name": "A"
+                                },
+                                "operator": "*",
+                                "expression": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "3",
+                                        "column": "16"
+                                    },
+                                    "name": "B"
+                                }
                             }
                         }
                     ]

@@ -25,22 +25,28 @@
                         {
                             "name": "LO",
                             "expression": {
-                                "rule": "<23b>",
-                                "tag": "unknown_statement",
-                                "start_pos": {
-                                    "line": "1",
-                                    "column": "20"
+                                "tag": "logical_const_expr",
+                                "expression": {
+                                    "tag": "unsigned_int_constant",
+                                    "start_pos": {
+                                        "line": "1",
+                                        "column": "25"
+                                    },
+                                    "value": "1"
                                 }
                             }
                         },
                         {
                             "name": "HI",
                             "expression": {
-                                "rule": "<23b>",
-                                "tag": "unknown_statement",
-                                "start_pos": {
-                                    "line": "1",
-                                    "column": "28"
+                                "tag": "logical_const_expr",
+                                "expression": {
+                                    "tag": "unsigned_real_constant",
+                                    "start_pos": {
+                                        "line": "1",
+                                        "column": "33"
+                                    },
+                                    "value": "9.3"
                                 }
                             }
                         }
@@ -74,7 +80,14 @@
                                         "operator": "*",
                                         "expression": {
                                             "tag": "literal_expression",
-                                            "literal": "3"
+                                            "literal": {
+                                                "tag": "unsigned_int_constant",
+                                                "start_pos": {
+                                                    "line": "2",
+                                                    "column": "27"
+                                                },
+                                                "value": "3"
+                                            }
                                         }
                                     },
                                     "operator": "+",

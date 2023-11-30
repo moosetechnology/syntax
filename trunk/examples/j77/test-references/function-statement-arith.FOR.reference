@@ -26,11 +26,14 @@
                         {
                             "name": "PI",
                             "expression": {
-                                "rule": "<23b>",
-                                "tag": "unknown_statement",
-                                "start_pos": {
-                                    "line": "2",
-                                    "column": "20"
+                                "tag": "logical_const_expr",
+                                "expression": {
+                                    "tag": "unsigned_real_constant",
+                                    "start_pos": {
+                                        "line": "2",
+                                        "column": "23"
+                                    },
+                                    "value": "3.14159"
                                 }
                             }
                         }
@@ -45,11 +48,65 @@
                     "name": "SPHERE",
                     "parameters": [],
                     "expression": {
-                        "rule": "<74>.1",
-                        "tag": "unknown_statement",
-                        "start_pos": {
-                            "line": "3",
-                            "column": "21"
+                        "tag": "arithmetic_expression",
+                        "expression": {
+                            "tag": "binary_expression",
+                            "lhs": {
+                                "tag": "binary_expression",
+                                "lhs": {
+                                    "tag": "binary_expression",
+                                    "lhs": {
+                                        "tag": "unsigned_real_constant",
+                                        "start_pos": {
+                                            "line": "3",
+                                            "column": "21"
+                                        },
+                                        "value": "4.0"
+                                    },
+                                    "operator": "*",
+                                    "expression": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "3",
+                                            "column": "27"
+                                        },
+                                        "name": "PI"
+                                    }
+                                },
+                                "operator": "*",
+                                "expression": {
+                                    "tag": "parenthesis_expression",
+                                    "expression": {
+                                        "tag": "binary_expression",
+                                        "lhs": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "3",
+                                                "column": "33"
+                                            },
+                                            "value": "1"
+                                        },
+                                        "operator": "**",
+                                        "expression": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "3",
+                                                "column": "36"
+                                            },
+                                            "value": "3"
+                                        }
+                                    }
+                                }
+                            },
+                            "operator": "/",
+                            "expression": {
+                                "tag": "unsigned_real_constant",
+                                "start_pos": {
+                                    "line": "3",
+                                    "column": "41"
+                                },
+                                "value": "3.0"
+                            }
                         }
                     }
                 }

@@ -37,7 +37,14 @@
                             "type": {
                                 "tag": "type_reference",
                                 "name": "CHARACTER",
-                                "len_specification": "4"
+                                "len_specification": {
+                                    "tag": "nonzero_unsigned_int_constant",
+                                    "start_pos": {
+                                        "line": "1",
+                                        "column": "44"
+                                    },
+                                    "value": "4"
+                                }
                             },
                             "elements": [
                                 "C",
