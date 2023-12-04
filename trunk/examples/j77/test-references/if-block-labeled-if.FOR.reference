@@ -1,0 +1,103 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/if-block-labeled-if.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": "MAIN",
+            "parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "7"
+            },
+            "end_pos": {
+                "line": "5",
+                "column": "9"
+            },
+            "statement_list": [
+                {
+                    "label": "9",
+                    "tag": "block_if_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "8"
+                    },
+                    "expression": {
+                        "tag": "logical_expression",
+                        "expression": {
+                            "tag": "logical_factor",
+                            "negated": "false",
+                            "expression": {
+                                "tag": "logical_primary",
+                                "expression": {
+                                    "tag": "binary_expression",
+                                    "lhs": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "2",
+                                            "column": "13"
+                                        },
+                                        "name": "Y"
+                                    },
+                                    "operator": ".LT.",
+                                    "expression": {
+                                        "tag": "unsigned_real_constant",
+                                        "start_pos": {
+                                            "line": "2",
+                                            "column": "20"
+                                        },
+                                        "value": "0.0"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "then_statements": [
+                        {
+                            "tag": "assignment_statement",
+                            "start_pos": {
+                                "line": "3",
+                                "column": "15"
+                            },
+                            "left": [
+                                "MIN"
+                            ],
+                            "right": [
+                                {
+                                    "tag": "arithmetic_expression",
+                                    "expression": {
+                                        "tag": "binary_expression",
+                                        "lhs": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "3",
+                                                "column": "21"
+                                            },
+                                            "name": "NODE"
+                                        },
+                                        "operator": "-",
+                                        "expression": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "3",
+                                                "column": "28"
+                                            },
+                                            "value": "1"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "else_block": {
+                        "else_statements": [],
+                        "end_if": {
+                            "label": ""
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
