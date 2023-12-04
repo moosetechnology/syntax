@@ -1074,7 +1074,7 @@ SXML_TYPE_LIST ast_array_element_name(SXML_TYPE_LIST name,
     SXML_LLL(
       ast_tag("array_element_name"),
       JSON_KU_("name", name),
-      JSON_KU ("qualifiers_list", qualifiers)
+      JSON_KU ("qualifiers_list", JSON_ARRAY(qualifiers))
       )
     );
 }
