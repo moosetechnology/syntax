@@ -2573,7 +2573,11 @@ $LIST(<36:block_if_statement>)
 
 $LIST(<36a:else_blocks>)
 {
-  $LIST(<36a:else_blocks>) = $LIST(<39:end_if_statement>);
+  $LIST(<36a:else_blocks>) = ast_else_block(
+    NULL,
+    NULL,
+    $LIST(<39:end_if_statement>)
+  );
 }
 
 *------------------------------------------------------------------------------
@@ -2585,11 +2589,9 @@ $LIST(<36a:else_blocks>)
 
 $LIST(<36a:else_blocks>)
 {
-  $LIST(<36a:else_blocks>) = SXML_LL(
-    ast_else_block(
-      $LIST(<38:else_statement>),
-      $LIST(<2c:statement_list>)
-    ),
+  $LIST(<36a:else_blocks>) = ast_else_block(
+    $LIST(<38:else_statement>),
+    $LIST(<2c:statement_list>),
     $LIST(<39:end_if_statement>)
   );
 }      
@@ -2602,11 +2604,9 @@ $LIST(<36a:else_blocks>)
 
 $LIST(<36a:else_blocks>)
 {
-  $LIST(<36a:else_blocks>) = SXML_LL(
-    ast_else_block(
-      $LIST(<38:else_statement>),
-      NULL
-    ),
+  $LIST(<36a:else_blocks>) =  ast_else_block(
+    $LIST(<38:else_statement>),
+    NULL,
     $LIST(<39:end_if_statement>)
   );
 }      
@@ -2620,11 +2620,9 @@ $LIST(<36a:else_blocks>)
 
 $LIST(<36a:else_blocks>)
 {
-  $LIST(<36a:else_blocks>) = SXML_LL(
-    ast_else_if_block(
-      $LIST(<37:else_if_statement>),
-      $LIST(<2c:statement_list>)
-    ),
+  $LIST(<36a:else_blocks>) = ast_if_else_block(
+    $LIST(<37:else_if_statement>),
+    $LIST(<2c:statement_list>),
     $LIST(<36a:else_blocks>)
   );
 }
@@ -2637,7 +2635,11 @@ $LIST(<36a:else_blocks>)
 
 $LIST(<36a:else_blocks>)
 {
-  $LIST(<36a:else_blocks>) = 
+  $LIST(<36a:else_blocks>) = ast_if_else_block(
+    $LIST(<37:else_if_statement>),
+    NULL,
+    $LIST(<36a:else_blocks>)
+  );
 }      
 
 *******************************************************************************
@@ -2647,8 +2649,8 @@ $LIST(<36a:else_blocks>)
 
 $LIST(<37:else_if_statement>)
 {
-  $LIST(<37:else_if_statement>) = ast_if_else_statement
-    $NAME(""),
+  $LIST(<37:else_if_statement>) = ast_if_else_statement(
+    "",
     $LIST(<74:expression>)
   );
 }   
@@ -2660,7 +2662,7 @@ $LIST(<37:else_if_statement>)
 
 $LIST(<37:else_if_statement>)
 {
-  $LIST(<37:else_if_statement>) = ast_if_else_statement
+  $LIST(<37:else_if_statement>) = ast_if_else_statement(
     $NAME(<110:label>),
     $LIST(<74:expression>)
   );

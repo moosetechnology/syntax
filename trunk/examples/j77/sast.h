@@ -1293,21 +1293,41 @@ SXML_TYPE_LIST ast_do_parameters(SXML_TYPE_LIST init,
 
 /* -------------------------------------------------------------------------
  */
-SXML_TYPE_LIST ast_end_if(
-              SXML_TYPE_TEXT label) {
+SXML_TYPE_LIST ast_end_if(SXML_TYPE_TEXT label) {
   
     return JSON_KU_(
-      "end_if": JSON_MAP(JSON_KQ("label": label))
+      "end_if", JSON_MAP(
+        JSON_KQ("label", label)
+      )
     );
 }
 
 
 /* -------------------------------------------------------------------------
  */
-SXML_TYPE_LIST ast_else_statement(
-              SXML_TYPE_TEXT label) {
+SXML_TYPE_LIST ast_else_statement(SXML_TYPE_TEXT else_label) {
 
-    return JSON_KQ_("label": label);
+    return SXML_LL(
+      ast_tag("else_statement"),  
+      JSON_KQ_("else_label", else_label)
+    );
+}
+
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_else_block(SXML_TYPE_LIST else_label,
+              SXML_TYPE_LIST else_statements,
+              SXML_TYPE_LIST end_if) {
+
+    return JSON_MAP(
+      SXML_LLL(
+        else_label,
+        JSON_KU("else_statements", JSON_ARRAY(else_statements)),
+        end_if
+      )
+    );
+    
 }
 
 
@@ -1318,9 +1338,29 @@ SXML_TYPE_LIST ast_if_else_statement(
               SXML_TYPE_LIST expression
               ) {
 
-    return SXML_LL(  
-      JSON_KQ_("label": label),
-      JSON_KU_("expression": expression)
+    return SXML_LLL(
+      ast_tag("if_else_statement"),  
+      JSON_KQ_("label", label),
+      JSON_KU_("expression", expression)
+    );
+}
+
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_if_else_block(
+              SXML_TYPE_LIST if_else_statement,
+              SXML_TYPE_LIST then_statements,
+              SXML_TYPE_LIST else_block
+              ) {
+
+    return JSON_MAP(
+      SXML_LLLL(  
+        ast_tag("if_else_block"),
+        if_else_statement,
+        JSON_KU_("then_statements", then_statements),
+        JSON_KU("else_block", else_block)
+      )
     );
 }
 
@@ -1330,19 +1370,17 @@ SXML_TYPE_LIST ast_if_else_statement(
 SXML_TYPE_LIST ast_block_if_statement(
               SXML_TYPE_LIST location,
               SXML_TYPE_LIST expression,
-              SXML_TYPE_LIST then_block,
-              SXML_TYPE_LIST else_block,
-              SXML_TYPE_LIST end_if,
+              SXML_TYPE_LIST then_statements,
+              SXML_TYPE_LIST else_block
               ) {
   return JSON_MAP(
-    SXML_LTLLLL(
+    SXML_LTLLL(
       ast_abstract_statement("block_if_statement", location),
       ",\n",
-      JSON_KU_("expression": expression),
-      JSON_KU_("then_block": then_block),
-      JSON_KU_("else_block": else_block),
-      JSON_KU("end_if": end_if)
+      JSON_KU_("expression", expression),
+      JSON_KU_("then_statements", then_statements),
+      JSON_KU("else_block", else_block)
     )
-  )
+  );
 }
   
