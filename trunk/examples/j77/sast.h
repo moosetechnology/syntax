@@ -1203,3 +1203,182 @@ SXML_TYPE_LIST ast_data_imply_do_list( SXML_TYPE_LIST dlist,
     )
   );
 }
+
+
+/* -------------------------------------------------------------------------
+ * outputs a logical if statement
+ * - Location of the statement
+ * - logical expression
+ * - statement to execute
+ */
+SXML_TYPE_LIST ast_logical_if_statement(
+            SXML_TYPE_LIST location,
+            SXML_TYPE_LIST expression,
+            SXML_TYPE_LIST statement) {
+
+  return SXML_LTLL(
+    ast_abstract_statement( "logical_if_statement", location),
+    ",\n",
+    JSON_KU_ ("expression", JSON_MAP(expression)),
+    JSON_KU ("statement", JSON_MAP(statement))
+    );
+}
+
+/* -------------------------------------------------------------------------
+ * creates a do loop
+ * - description of a do loop (location, loop control, etc)
+ * - statements list
+ */
+SXML_TYPE_LIST ast_do_loop(
+            SXML_TYPE_LIST do_statement,
+            SXML_TYPE_LIST statements_list) {
+
+  return SXML_LL(
+    do_statement,
+    JSON_KU("statements_list", JSON_MAP(statements_list))
+    );
+}
+
+
+/* -------------------------------------------------------------------------
+ * prepares a do statement used in a do loop
+ * - Location of the statement
+ * - statment number
+ * - variable name to use with loop control parameters
+ * - loop control parameters (initial, limit, increment)
+ */
+SXML_TYPE_LIST ast_do_statement(
+            SXML_TYPE_LIST location,
+            SXML_TYPE_TEXT statement_number,
+            SXML_TYPE_TEXT variable_name,
+            SXML_TYPE_LIST do_parameters) {
+
+  return SXML_LTLL(
+    ast_abstract_statement( "do_statement", location),
+    ",\n",
+    JSON_KQ_ ("statement_number", statement_number),
+    JSON_KU_ ("loop_control", 
+      JSON_MAP(
+        SXML_LL(
+          JSON_KQ_("variable_name", variable_name),
+          do_parameters
+        )
+      )
+    )
+  );
+}
+
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_do_parameters(SXML_TYPE_LIST init,
+              SXML_TYPE_LIST limit,
+              SXML_TYPE_LIST increment) {
+  if (increment == NULL) {
+    return SXML_LLL(
+      JSON_KU_("init", init),
+      JSON_KU_("limit", limit),
+      JSON_KU("increment", increment)
+    );    
+  }
+  else {
+    return SXML_LLL(
+        JSON_KU_("init", init),
+        JSON_KU_("limit", limit),
+        JSON_KQ("increment", "null")
+    );
+  }
+}
+
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_end_if(SXML_TYPE_TEXT label) {
+  
+    return JSON_KU(
+      "end_if", JSON_MAP(
+        JSON_KQ("label", label)
+      )
+    );
+}
+
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_else_statement(SXML_TYPE_TEXT else_label) {
+
+    return SXML_LL(
+      ast_tag("else_statement"),  
+      JSON_KQ_("else_label", else_label)
+    );
+}
+
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_else_block(SXML_TYPE_LIST else_label,
+              SXML_TYPE_LIST else_statements,
+              SXML_TYPE_LIST end_if) {
+
+    return JSON_MAP(
+      SXML_LLL(
+        else_label,
+        JSON_KU_("else_statements", JSON_ARRAY(else_statements)),
+        end_if
+      )
+    );
+    
+}
+
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_if_else_statement(
+              SXML_TYPE_TEXT label,
+              SXML_TYPE_LIST expression
+              ) {
+
+    return SXML_LL(  
+      JSON_KQ_("label", label),
+      JSON_KU_("expression", expression)
+    );
+}
+
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_if_else_block(
+              SXML_TYPE_LIST if_else_statement,
+              SXML_TYPE_LIST then_statements,
+              SXML_TYPE_LIST else_block
+              ) {
+
+    return JSON_MAP(
+      SXML_LLLL(  
+        ast_tag("if_else_block"),
+        if_else_statement,
+        JSON_KU_("then_statements", JSON_ARRAY(then_statements)),
+        JSON_KU("else_block", else_block)
+      )
+    );
+}
+
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_block_if_statement(
+              SXML_TYPE_LIST location,
+              SXML_TYPE_LIST expression,
+              SXML_TYPE_LIST then_statements,
+              SXML_TYPE_LIST else_block
+              ) {
+  return
+    SXML_LTLLL(
+      ast_abstract_statement("block_if_statement", location),
+      ",\n",
+      JSON_KU_("expression", expression),
+      JSON_KU_("then_statements", JSON_ARRAY(then_statements)),
+      JSON_KU("else_block", else_block)
+  );
+}
+  

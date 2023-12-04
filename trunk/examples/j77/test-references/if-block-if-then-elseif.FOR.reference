@@ -1,0 +1,191 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/if-block-if-then-elseif.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": "MAIN",
+            "parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "7"
+            },
+            "end_pos": {
+                "line": "9",
+                "column": "9"
+            },
+            "statement_list": [
+                {
+                    "tag": "block_if_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "8"
+                    },
+                    "expression": {
+                        "tag": "logical_expression",
+                        "expression": {
+                            "tag": "logical_factor",
+                            "negated": "false",
+                            "expression": {
+                                "tag": "logical_primary",
+                                "expression": {
+                                    "tag": "binary_expression",
+                                    "lhs": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "2",
+                                            "column": "13"
+                                        },
+                                        "name": "C"
+                                    },
+                                    "operator": ".EQ.",
+                                    "expression": {
+                                        "tag": "character_constant",
+                                        "start_pos": {
+                                            "line": "2",
+                                            "column": "20"
+                                        },
+                                        "value": "'a'"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "then_statements": [
+                        {
+                            "tag": "assignment_statement",
+                            "start_pos": {
+                                "line": "3",
+                                "column": "15"
+                            },
+                            "left": [
+                                "NA"
+                            ],
+                            "right": [
+                                {
+                                    "tag": "arithmetic_expression",
+                                    "expression": {
+                                        "tag": "binary_expression",
+                                        "lhs": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "3",
+                                                "column": "18"
+                                            },
+                                            "name": "NA"
+                                        },
+                                        "operator": "+",
+                                        "expression": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "3",
+                                                "column": "21"
+                                            },
+                                            "value": "1"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "call_statement",
+                            "start_pos": {
+                                "line": "4",
+                                "column": "15"
+                            },
+                            "name": "APPEND",
+                            "arguments": []
+                        }
+                    ],
+                    "else_block": {
+                        "tag": "if_else_block",
+                        "label": "",
+                        "expression": {
+                            "tag": "logical_expression",
+                            "expression": {
+                                "tag": "logical_factor",
+                                "negated": "false",
+                                "expression": {
+                                    "tag": "logical_primary",
+                                    "expression": {
+                                        "tag": "binary_expression",
+                                        "lhs": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "5",
+                                                "column": "18"
+                                            },
+                                            "name": "C"
+                                        },
+                                        "operator": ".EQ.",
+                                        "expression": {
+                                            "tag": "character_constant",
+                                            "start_pos": {
+                                                "line": "5",
+                                                "column": "25"
+                                            },
+                                            "value": "'b'"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "then_statements": [
+                            {
+                                "tag": "assignment_statement",
+                                "start_pos": {
+                                    "line": "6",
+                                    "column": "15"
+                                },
+                                "left": [
+                                    "NB"
+                                ],
+                                "right": [
+                                    {
+                                        "tag": "arithmetic_expression",
+                                        "expression": {
+                                            "tag": "binary_expression",
+                                            "lhs": {
+                                                "tag": "symbolic_name",
+                                                "start_pos": {
+                                                    "line": "6",
+                                                    "column": "18"
+                                                },
+                                                "name": "NB"
+                                            },
+                                            "operator": "+",
+                                            "expression": {
+                                                "tag": "unsigned_int_constant",
+                                                "start_pos": {
+                                                    "line": "6",
+                                                    "column": "21"
+                                                },
+                                                "value": "1"
+                                            }
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "tag": "call_statement",
+                                "start_pos": {
+                                    "line": "7",
+                                    "column": "15"
+                                },
+                                "name": "BEFORE",
+                                "arguments": []
+                            }
+                        ],
+                        "else_block": {
+                            "else_statements": [],
+                            "end_if": {
+                                "label": ""
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
