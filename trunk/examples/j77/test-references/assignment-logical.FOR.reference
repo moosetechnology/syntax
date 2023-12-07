@@ -28,7 +28,14 @@
                     "declarators": [
                         {
                             "tag": "variable_declarator",
-                            "variable": "B1",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "16"
+                                },
+                                "name": "B1"
+                            },
                             "dimension_declarators": [
                                 {
                                     "tag": "literal_expression",
@@ -40,7 +47,14 @@
                         },
                         {
                             "tag": "variable_declarator",
-                            "variable": "B2",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "22"
+                                },
+                                "name": "B2"
+                            },
                             "dimension_declarators": [
                                 {
                                     "tag": "literal_expression",
@@ -65,12 +79,26 @@
                     "declarators": [
                         {
                             "tag": "variable_declarator",
-                            "variable": "L3",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "16"
+                                },
+                                "name": "L3"
+                            },
                             "dimension_declarators": []
                         },
                         {
                             "tag": "variable_declarator",
-                            "variable": "L4",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "20"
+                                },
+                                "name": "L4"
+                            },
                             "dimension_declarators": []
                         }
                     ]
@@ -82,7 +110,14 @@
                         "column": "8"
                     },
                     "left": [
-                        "L4"
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "3",
+                                "column": "8"
+                            },
+                            "name": "L4"
+                        }
                     ],
                     "right": [
                         {
@@ -112,7 +147,14 @@
                         "column": "8"
                     },
                     "left": [
-                        "B1"
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "4",
+                                "column": "8"
+                            },
+                            "name": "B1"
+                        }
                     ],
                     "right": [
                         {
@@ -132,7 +174,14 @@
                         "column": "8"
                     },
                     "left": [
-                        "B2"
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "5",
+                                "column": "8"
+                            },
+                            "name": "B2"
+                        }
                     ],
                     "right": [
                         {

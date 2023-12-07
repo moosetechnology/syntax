@@ -23,21 +23,42 @@
                     },
                     "parameters": [
                         {
-                            "name": "RANGE",
+                            "name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "16"
+                                },
+                                "name": "RANGE"
+                            },
                             "nlist": [
                                 {
                                     "tag": "variable_declarator",
-                                    "variable": "X0",
+                                    "variable": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "2",
+                                            "column": "23"
+                                        },
+                                        "name": "X0"
+                                    },
                                     "dimension_declarators": []
                                 }
                             ]
                         },
                         {
-                            "name": "",
+                            "name": {},
                             "nlist": [
                                 {
                                     "tag": "variable_declarator",
-                                    "variable": "X1",
+                                    "variable": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "2",
+                                            "column": "27"
+                                        },
+                                        "name": "X1"
+                                    },
                                     "dimension_declarators": []
                                 }
                             ]

@@ -28,7 +28,25 @@
                                 "name": "INTEGER"
                             },
                             "elements": [
-                                "A-Z"
+                                {
+                                    "tag": "implicit_element",
+                                    "left": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "1",
+                                            "column": "26"
+                                        },
+                                        "name": "A"
+                                    },
+                                    "right": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "1",
+                                            "column": "28"
+                                        },
+                                        "name": "Z"
+                                    }
+                                }
                             ]
                         }
                     ]

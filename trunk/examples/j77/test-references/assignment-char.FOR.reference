@@ -36,7 +36,14 @@
                                 "value": "1"
                             },
                             "tag": "variable_declarator",
-                            "variable": "BELL",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "18"
+                                },
+                                "name": "BELL"
+                            },
                             "dimension_declarators": []
                         },
                         {
@@ -49,7 +56,14 @@
                                 "value": "2"
                             },
                             "tag": "variable_declarator",
-                            "variable": "C2",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "26"
+                                },
+                                "name": "C2"
+                            },
                             "dimension_declarators": []
                         },
                         {
@@ -62,7 +76,14 @@
                                 "value": "3"
                             },
                             "tag": "variable_declarator",
-                            "variable": "C3",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "32"
+                                },
+                                "name": "C3"
+                            },
                             "dimension_declarators": []
                         },
                         {
@@ -75,7 +96,14 @@
                                 "value": "5"
                             },
                             "tag": "variable_declarator",
-                            "variable": "C5",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "38"
+                                },
+                                "name": "C5"
+                            },
                             "dimension_declarators": []
                         },
                         {
@@ -88,7 +116,14 @@
                                 "value": "6"
                             },
                             "tag": "variable_declarator",
-                            "variable": "C6",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "44"
+                                },
+                                "name": "C6"
+                            },
                             "dimension_declarators": []
                         }
                     ]
@@ -106,7 +141,14 @@
                     "declarators": [
                         {
                             "tag": "variable_declarator",
-                            "variable": "Z",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "13"
+                                },
+                                "name": "Z"
+                            },
                             "dimension_declarators": []
                         }
                     ]
@@ -118,7 +160,14 @@
                         "column": "8"
                     },
                     "left": [
-                        "C2"
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "3",
+                                "column": "8"
+                            },
+                            "name": "C2"
+                        }
                     ],
                     "right": [
                         {
@@ -141,7 +190,14 @@
                         "column": "8"
                     },
                     "left": [
-                        "C3"
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "4",
+                                "column": "8"
+                            },
+                            "name": "C3"
+                        }
                     ],
                     "right": [
                         {
@@ -164,7 +220,14 @@
                         "column": "8"
                     },
                     "left": [
-                        "C5"
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "5",
+                                "column": "8"
+                            },
+                            "name": "C5"
+                        }
                     ],
                     "right": [
                         {
@@ -239,7 +302,14 @@
                         "column": "8"
                     },
                     "left": [
-                        "C6"
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "7",
+                                "column": "8"
+                            },
+                            "name": "C6"
+                        }
                     ],
                     "right": [
                         {
@@ -274,7 +344,14 @@
                         "column": "8"
                     },
                     "left": [
-                        "BELL"
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "8",
+                                "column": "8"
+                            },
+                            "name": "BELL"
+                        }
                     ],
                     "right": [
                         {
@@ -287,17 +364,19 @@
                                 },
                                 "name": "CHAR"
                             },
-                            "qualifiers_list": {
-                                "tag": "arithmetic_expression",
-                                "expression": {
-                                    "tag": "unsigned_int_constant",
-                                    "start_pos": {
-                                        "line": "8",
-                                        "column": "20"
-                                    },
-                                    "value": "7"
+                            "qualifiers_list": [
+                                {
+                                    "tag": "arithmetic_expression",
+                                    "expression": {
+                                        "tag": "unsigned_int_constant",
+                                        "start_pos": {
+                                            "line": "8",
+                                            "column": "20"
+                                        },
+                                        "value": "7"
+                                    }
                                 }
-                            }
+                            ]
                         }
                     ]
                 }

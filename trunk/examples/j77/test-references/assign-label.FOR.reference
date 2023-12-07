@@ -28,7 +28,14 @@
                     "declarators": [
                         {
                             "tag": "variable_declarator",
-                            "variable": "PHORMAT",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "16"
+                                },
+                                "name": "PHORMAT"
+                            },
                             "dimension_declarators": []
                         }
                     ]
@@ -47,10 +54,14 @@
                         "column": "8"
                     },
                     "left": [
-                        "PHORMAT"
-                    ],
-                    "right": [
-                        "2"
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "3",
+                                "column": "20"
+                            },
+                            "name": "PHORMAT"
+                        }
                     ]
                 }
             ]

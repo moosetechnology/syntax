@@ -28,12 +28,26 @@
                     "declarators": [
                         {
                             "tag": "variable_declarator",
-                            "variable": "A",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "13"
+                                },
+                                "name": "A"
+                            },
                             "dimension_declarators": []
                         },
                         {
                             "tag": "variable_declarator",
-                            "variable": "B",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "16"
+                                },
+                                "name": "B"
+                            },
                             "dimension_declarators": []
                         }
                     ]
@@ -51,7 +65,14 @@
                     "declarators": [
                         {
                             "tag": "variable_declarator",
-                            "variable": "V",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "25"
+                                },
+                                "name": "V"
+                            },
                             "dimension_declarators": []
                         }
                     ]
@@ -63,7 +84,14 @@
                         "column": "8"
                     },
                     "left": [
-                        "V"
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "3",
+                                "column": "8"
+                            },
+                            "name": "V"
+                        }
                     ],
                     "right": [
                         {

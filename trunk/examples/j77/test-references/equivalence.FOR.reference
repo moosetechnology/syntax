@@ -36,7 +36,14 @@
                                 "value": "4"
                             },
                             "tag": "variable_declarator",
-                            "variable": "A",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "18"
+                                },
+                                "name": "A"
+                            },
                             "dimension_declarators": []
                         },
                         {
@@ -49,7 +56,14 @@
                                 "value": "4"
                             },
                             "tag": "variable_declarator",
-                            "variable": "B",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "23"
+                                },
+                                "name": "B"
+                            },
                             "dimension_declarators": []
                         },
                         {
@@ -62,7 +76,14 @@
                                 "value": "3"
                             },
                             "tag": "variable_declarator",
-                            "variable": "C",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "28"
+                                },
+                                "name": "C"
+                            },
                             "dimension_declarators": [
                                 {
                                     "tag": "literal_expression",
@@ -87,7 +108,14 @@
                     },
                     "parameters": [
                         [
-                            "A",
+                            {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "21"
+                                },
+                                "name": "A"
+                            },
                             {
                                 "tag": "array_element_name",
                                 "name": {
@@ -98,21 +126,30 @@
                                     },
                                     "name": "C"
                                 },
-                                "qualifiers_list": {
-                                    "tag": "arithmetic_expression",
-                                    "expression": {
-                                        "tag": "unsigned_int_constant",
-                                        "start_pos": {
-                                            "line": "2",
-                                            "column": "25"
-                                        },
-                                        "value": "1"
+                                "qualifiers_list": [
+                                    {
+                                        "tag": "arithmetic_expression",
+                                        "expression": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "2",
+                                                "column": "25"
+                                            },
+                                            "value": "1"
+                                        }
                                     }
-                                }
+                                ]
                             }
                         ],
                         [
-                            "B",
+                            {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "30"
+                                },
+                                "name": "B"
+                            },
                             {
                                 "tag": "array_element_name",
                                 "name": {
@@ -123,17 +160,19 @@
                                     },
                                     "name": "C"
                                 },
-                                "qualifiers_list": {
-                                    "tag": "arithmetic_expression",
-                                    "expression": {
-                                        "tag": "unsigned_int_constant",
-                                        "start_pos": {
-                                            "line": "2",
-                                            "column": "34"
-                                        },
-                                        "value": "2"
+                                "qualifiers_list": [
+                                    {
+                                        "tag": "arithmetic_expression",
+                                        "expression": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "2",
+                                                "column": "34"
+                                            },
+                                            "value": "2"
+                                        }
                                     }
-                                }
+                                ]
                             }
                         ]
                     ]

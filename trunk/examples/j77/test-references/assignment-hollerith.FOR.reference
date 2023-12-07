@@ -36,7 +36,14 @@
                                 "value": "4"
                             },
                             "tag": "variable_declarator",
-                            "variable": "S",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "18"
+                                },
+                                "name": "S"
+                            },
                             "dimension_declarators": []
                         }
                     ]
@@ -54,7 +61,14 @@
                     "declarators": [
                         {
                             "tag": "variable_declarator",
-                            "variable": "I2",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "16"
+                                },
+                                "name": "I2"
+                            },
                             "dimension_declarators": [
                                 {
                                     "tag": "literal_expression",
@@ -66,7 +80,14 @@
                         },
                         {
                             "tag": "variable_declarator",
-                            "variable": "I4",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "22"
+                                },
+                                "name": "I4"
+                            },
                             "dimension_declarators": [
                                 {
                                     "tag": "literal_expression",
@@ -91,7 +112,14 @@
                     "declarators": [
                         {
                             "tag": "variable_declarator",
-                            "variable": "R",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "3",
+                                    "column": "13"
+                                },
+                                "name": "R"
+                            },
                             "dimension_declarators": []
                         }
                     ]
@@ -103,7 +131,14 @@
                         "column": "8"
                     },
                     "left": [
-                        "S"
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "4",
+                                "column": "8"
+                            },
+                            "name": "S"
+                        }
                     ],
                     "right": [
                         {
@@ -126,7 +161,14 @@
                         "column": "8"
                     },
                     "left": [
-                        "I2"
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "5",
+                                "column": "8"
+                            },
+                            "name": "I2"
+                        }
                     ],
                     "right": [
                         {
@@ -149,7 +191,14 @@
                         "column": "8"
                     },
                     "left": [
-                        "I4"
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "6",
+                                "column": "8"
+                            },
+                            "name": "I4"
+                        }
                     ],
                     "right": [
                         {
@@ -172,7 +221,14 @@
                         "column": "8"
                     },
                     "left": [
-                        "R"
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "7",
+                                "column": "8"
+                            },
+                            "name": "R"
+                        }
                     ],
                     "right": [
                         {

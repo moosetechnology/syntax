@@ -23,7 +23,14 @@
                     },
                     "parameters": [
                         {
-                            "name": "LO",
+                            "name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "20"
+                                },
+                                "name": "LO"
+                            },
                             "expression": {
                                 "tag": "logical_const_expr",
                                 "expression": {
@@ -37,7 +44,14 @@
                             }
                         },
                         {
-                            "name": "HI",
+                            "name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "28"
+                                },
+                                "name": "HI"
+                            },
                             "expression": {
                                 "tag": "logical_const_expr",
                                 "expression": {
@@ -61,12 +75,26 @@
                     "array_declarators": [
                         {
                             "tag": "variable_declarator",
-                            "variable": "A",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "18"
+                                },
+                                "name": "A"
+                            },
                             "dimension_declarators": [
                                 {
                                     "lower_bound": {
                                         "tag": "variable_expression",
-                                        "variable": "HI"
+                                        "variable": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "2",
+                                                "column": "20"
+                                            },
+                                            "name": "HI"
+                                        }
                                     }
                                 },
                                 {
@@ -75,7 +103,14 @@
                                         "tag": "binary_expression",
                                         "lhs": {
                                             "tag": "variable_expression",
-                                            "variable": "HI"
+                                            "variable": {
+                                                "tag": "symbolic_name",
+                                                "start_pos": {
+                                                    "line": "2",
+                                                    "column": "24"
+                                                },
+                                                "name": "HI"
+                                            }
                                         },
                                         "operator": "*",
                                         "expression": {
@@ -93,7 +128,14 @@
                                     "operator": "+",
                                     "expression": {
                                         "tag": "variable_expression",
-                                        "variable": "LO"
+                                        "variable": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "2",
+                                                "column": "31"
+                                            },
+                                            "name": "LO"
+                                        }
                                     }
                                 }
                             ]
