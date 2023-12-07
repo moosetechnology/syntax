@@ -2954,6 +2954,8 @@ associated with the type CHARACTER.",
 
 static SXBOOLEAN check_stmt_sequence (SXINT lahead, SXINT tok_no, SXINT newla)
 {
+    return SXTRUE;
+    
     /* Cette procedure verifie le sequencement correct des instructions */
     /* ETAT est une variable globale initialisee a ETAT_0 au debut et apres
        chaque END. */
