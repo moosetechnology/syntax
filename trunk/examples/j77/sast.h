@@ -97,11 +97,11 @@ SXML_TYPE_LIST ast_program_unit( SXML_TYPE_TEXT tag,
  * - name
  * - parameters
  */
-SXML_TYPE_LIST ast_program_unit_header( SXML_TYPE_TEXT name,
+SXML_TYPE_LIST ast_program_unit_header( SXML_TYPE_LIST name,
           SXML_TYPE_LIST parameters) {
 
   return SXML_LL(
-    JSON_KQ_ ("name", name),
+    JSON_KU_ ("name", name),
     JSON_KU_ (
       "parameters",
       JSON_ARRAY( parameters) ));
@@ -263,14 +263,14 @@ SXML_TYPE_LIST ast_pause_stop_statement(SXML_TYPE_TEXT pause_stop,
  * - Location of the statement
  * - list of arguments
  */
-SXML_TYPE_LIST ast_call_statement( SXML_TYPE_TEXT name,
+SXML_TYPE_LIST ast_call_statement( SXML_TYPE_LIST name,
             SXML_TYPE_LIST location,
             SXML_TYPE_LIST arguments) {
 
   return SXML_LTLL(
     ast_abstract_statement( "call_statement", location),
     ",\n",
-    JSON_KQ_ ("name", name),
+    JSON_KU_ ("name", name),
     JSON_KU(
       "arguments",
       JSON_ARRAY( arguments)) );
@@ -349,12 +349,12 @@ SXML_TYPE_LIST ast_parameter_statement( SXML_TYPE_LIST location,
  * - list of parameters
  */
 SXML_TYPE_LIST ast_parameter_statement_parameter(
-            SXML_TYPE_TEXT name,
+            SXML_TYPE_LIST name,
             SXML_TYPE_LIST constant_expression) {
     
     return JSON_MAP(
       SXML_LL(
-        JSON_KQ_("name", name),
+        JSON_KU_("name", name),
         JSON_KU("expression", constant_expression))  
     );
 }
@@ -400,14 +400,14 @@ SXML_TYPE_LIST ast_data_statement_parameter(
  * - function expression
  */
 SXML_TYPE_LIST ast_function_statement( SXML_TYPE_LIST location,
-            SXML_TYPE_TEXT name,
+            SXML_TYPE_LIST name,
             SXML_TYPE_LIST parameters,
             SXML_TYPE_LIST expression) {
     
     return SXML_LTLLL(
     ast_abstract_statement( "function_statement", location),
     ",\n",
-    JSON_KQ_("name", name),  
+    JSON_KU_("name", name),  
     JSON_KU_(
       "parameters",
       JSON_ARRAY( parameters)),
@@ -484,12 +484,12 @@ SXML_TYPE_LIST ast_common_statement( SXML_TYPE_LIST location,
  * - nlist: List of variables, arrays, array elements, substrings, and implied DO lists separated by commas
  */
 SXML_TYPE_LIST ast_common_body(
-            SXML_TYPE_TEXT name,
+            SXML_TYPE_LIST name,
             SXML_TYPE_LIST nlist) {
     
     return JSON_MAP(
       SXML_LL(
-        JSON_KQ_("name", name),
+        JSON_KU_("name", name),
         JSON_KU("nlist", JSON_ARRAY(nlist)))  
     );
 }
@@ -916,12 +916,12 @@ SXML_TYPE_LIST ast_literal_expression( SXML_TYPE_LIST literal) {
 /* -------------------------------------------------------------------------
  * outputs a variable_expression.
  */
-SXML_TYPE_LIST ast_variable_expression( SXML_TYPE_TEXT variable) {
+SXML_TYPE_LIST ast_variable_expression( SXML_TYPE_LIST variable) {
 
   return JSON_MAP (
     SXML_LL(
       ast_tag( "variable_expression"),
-      JSON_KQ( "variable", variable) ));
+      JSON_KU( "variable", variable) ));
 }
 
 
@@ -988,12 +988,12 @@ SXML_TYPE_LIST ast_expression( SXML_TYPE_TEXT tag,
  * - name of the variable
  * - dimension_declarator
  */
-SXML_TYPE_LIST ast_variable_declarator( SXML_TYPE_TEXT variable,
+SXML_TYPE_LIST ast_variable_declarator( SXML_TYPE_LIST variable,
            SXML_TYPE_LIST dimension_declarator) {
  return JSON_MAP(
    SXML_LLL(
      ast_tag( "variable_declarator"),
-     JSON_KQ_( "variable", variable),
+     JSON_KU_( "variable", variable),
      JSON_KU (  "dimension_declarators", JSON_ARRAY( dimension_declarator)) ) );
 }
 
@@ -1250,7 +1250,7 @@ SXML_TYPE_LIST ast_do_loop(
 SXML_TYPE_LIST ast_do_statement(
             SXML_TYPE_LIST location,
             SXML_TYPE_TEXT statement_number,
-            SXML_TYPE_TEXT variable_name,
+            SXML_TYPE_LIST variable_name,
             SXML_TYPE_LIST do_parameters) {
 
   return SXML_LTLL(
@@ -1260,7 +1260,7 @@ SXML_TYPE_LIST ast_do_statement(
     JSON_KU_ ("loop_control", 
       JSON_MAP(
         SXML_LL(
-          JSON_KQ_("variable_name", variable_name),
+          JSON_KU_("variable_name", variable_name),
           do_parameters
         )
       )
@@ -1381,4 +1381,18 @@ SXML_TYPE_LIST ast_block_if_statement(
       JSON_KU("else_block", else_block)
   );
 }
-  
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_implicit_element(
+              SXML_TYPE_LIST left,
+              SXML_TYPE_LIST right
+              ) {
+  return JSON_MAP(
+    SXML_LLL(
+      ast_tag("implicit_element"),
+      JSON_KU_("left", left),
+      JSON_KU("right", right)
+      )
+  );
+}
