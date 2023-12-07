@@ -1481,7 +1481,7 @@ $LIST( <common_body>)
 $LIST( <common_body>)
 {
   $LIST( <common_body>) = ast_common_body(
-    NULL, 
+    ast_empty_map(), 
     $LIST(<20b:scalar_name>)
   );
 }
@@ -1520,7 +1520,7 @@ $LIST( <19b:common_part>)
 $LIST( <19b:common_part>)
 {
   $LIST( <19b:common_part>) = ast_common_body(
-    NULL, 
+    ast_empty_map(), 
     $LIST(<20b:scalar_name>)
   );
 }    
@@ -1802,7 +1802,7 @@ $LIST(<21d:implicit_elem>)
 {
   $LIST(<21d:implicit_elem>) = ast_implicit_element(
     $LIST(<99:symbolic_name>),
-    NULL
+    ast_empty_map()
   );
 }
 
@@ -2152,7 +2152,7 @@ $LIST( <27e:data_statement_constant_list>)
 $LIST( <27f:data_statement_constant>)
 {
   $LIST( <27f:data_statement_constant>) = ast_data_statement_constant(
-    SXML_T("{}"),
+    ast_empty_map(),
     $LIST(<99:symbolic_name>)
   );
 }    
@@ -2165,7 +2165,7 @@ $LIST( <27f:data_statement_constant>)
 $LIST( <27f:data_statement_constant>)
 {
   $LIST( <27f:data_statement_constant>) = ast_data_statement_constant(
-    SXML_T("{}"),
+    ast_empty_map(),
     $LIST(<100:constant>)
   );
 }    
@@ -2233,7 +2233,7 @@ $LIST( <28:data_imply_do_list>)
     $LIST(<28a:data_imply_do_list_head_list>),
     $LIST(<80:int_constant_expr>),
     $LIST(<80:int_constant_expr>'),
-    SXML_T("{}")
+    ast_empty_map()
   );
 }    
 
@@ -3194,7 +3194,7 @@ $LIST( <49:io_imply_do_list>)
     SXML_LL($LIST(<48:io_list>), $LIST(<99:symbolic_name>)),
     $LIST(<78:int_real_dp_expr>),
     $LIST(<78:int_real_dp_expr>'),
-    SXML_T("{}")
+    ast_empty_map()
   );
 }    
 

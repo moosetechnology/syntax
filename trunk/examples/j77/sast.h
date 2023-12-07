@@ -81,7 +81,7 @@ SXML_TYPE_LIST ast_program_unit( SXML_TYPE_TEXT tag,
   return JSON_MAP(
       SXML_LLLTLTL(
   ast_tag(tag),
-  (header == NULL ? JSON_KQ_ ("name", "null") : header),
+  (header == NULL ? JSON_KQ_ ("name", "null") : JSON_KU_ ("name", header)),
   location,
         ",\n",
   end_location,
@@ -252,7 +252,8 @@ SXML_TYPE_LIST ast_pause_stop_statement(SXML_TYPE_TEXT pause_stop,
     return SXML_LTL(
       ast_abstract_statement( pause_stop, location),
       ",\n",
-      argument);
+      JSON_KU("argument", argument)
+    );
   }
 }
 
@@ -1395,4 +1396,11 @@ SXML_TYPE_LIST ast_implicit_element(
       JSON_KU("right", right)
       )
   );
+}
+
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_empty_map() {
+  return SXML_T("{}");
 }
