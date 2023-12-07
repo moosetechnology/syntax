@@ -35,15 +35,36 @@
                         },
                         {
                             "name": "OPENED",
-                            "parameter": "OK"
+                            "parameter": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "28"
+                                },
+                                "name": "OK"
+                            }
                         },
                         {
                             "name": "NAMED",
-                            "parameter": "HASNAME"
+                            "parameter": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "38"
+                                },
+                                "name": "HASNAME"
+                            }
                         },
                         {
                             "name": "NAME",
-                            "parameter": "FN"
+                            "parameter": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "52"
+                                },
+                                "name": "FN"
+                            }
                         }
                     ]
                 }

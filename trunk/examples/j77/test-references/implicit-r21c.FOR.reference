@@ -28,9 +28,42 @@
                                 "name": "COMPLEX"
                             },
                             "elements": [
-                                "U",
-                                "V",
-                                "W"
+                                {
+                                    "tag": "implicit_element",
+                                    "left": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "1",
+                                            "column": "26"
+                                        },
+                                        "name": "U"
+                                    },
+                                    "right": {}
+                                },
+                                {
+                                    "tag": "implicit_element",
+                                    "left": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "1",
+                                            "column": "28"
+                                        },
+                                        "name": "V"
+                                    },
+                                    "right": {}
+                                },
+                                {
+                                    "tag": "implicit_element",
+                                    "left": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "1",
+                                            "column": "30"
+                                        },
+                                        "name": "W"
+                                    },
+                                    "right": {}
+                                }
                             ]
                         },
                         {
@@ -47,8 +80,30 @@
                                 }
                             },
                             "elements": [
-                                "C",
-                                "S"
+                                {
+                                    "tag": "implicit_element",
+                                    "left": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "1",
+                                            "column": "47"
+                                        },
+                                        "name": "C"
+                                    },
+                                    "right": {}
+                                },
+                                {
+                                    "tag": "implicit_element",
+                                    "left": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "1",
+                                            "column": "49"
+                                        },
+                                        "name": "S"
+                                    },
+                                    "right": {}
+                                }
                             ]
                         }
                     ]

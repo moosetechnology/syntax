@@ -45,7 +45,14 @@
                         },
                         {
                             "name": "END",
-                            "parameter": "N"
+                            "parameter": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "35"
+                                },
+                                "name": "N"
+                            }
                         }
                     ],
                     "io_list": [

@@ -22,7 +22,14 @@
                         "column": "8"
                     },
                     "left": [
-                        "IMPLICITNONE"
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "8"
+                            },
+                            "name": "IMPLICITNONE"
+                        }
                     ],
                     "right": [
                         {
@@ -59,7 +66,14 @@
                                 "value": "8"
                             },
                             "tag": "variable_declarator",
-                            "variable": "STR",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "18"
+                                },
+                                "name": "STR"
+                            },
                             "dimension_declarators": []
                         }
                     ]
@@ -77,7 +91,14 @@
                     "declarators": [
                         {
                             "tag": "variable_declarator",
-                            "variable": "N",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "3",
+                                    "column": "16"
+                                },
+                                "name": "N"
+                            },
                             "dimension_declarators": []
                         }
                     ]
@@ -95,7 +116,14 @@
                     "declarators": [
                         {
                             "tag": "variable_declarator",
-                            "variable": "Y",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "4",
+                                    "column": "13"
+                                },
+                                "name": "Y"
+                            },
                             "dimension_declarators": []
                         }
                     ]
@@ -107,7 +135,14 @@
                         "column": "8"
                     },
                     "left": [
-                        "N"
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "5",
+                                "column": "8"
+                            },
+                            "name": "N"
+                        }
                     ],
                     "right": [
                         {
@@ -130,7 +165,14 @@
                         "column": "8"
                     },
                     "left": [
-                        "Y"
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "6",
+                                "column": "8"
+                            },
+                            "name": "Y"
+                        }
                     ],
                     "right": [
                         {
@@ -153,7 +195,14 @@
                         "column": "8"
                     },
                     "left": [
-                        "STR"
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "7",
+                                "column": "8"
+                            },
+                            "name": "STR"
+                        }
                     ],
                     "right": [
                         {

@@ -24,7 +24,14 @@
                     "array_declarators": [
                         {
                             "tag": "variable_declarator",
-                            "variable": "M",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "18"
+                                },
+                                "name": "M"
+                            },
                             "dimension_declarators": [
                                 {
                                     "lower_bound": {
@@ -54,7 +61,14 @@
                         },
                         {
                             "tag": "variable_declarator",
-                            "variable": "V",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "26"
+                                },
+                                "name": "V"
+                            },
                             "dimension_declarators": [
                                 {
                                     "tag": "literal_expression",

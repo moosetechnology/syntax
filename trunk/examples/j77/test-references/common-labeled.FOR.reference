@@ -24,7 +24,14 @@
                     "array_declarators": [
                         {
                             "tag": "variable_declarator",
-                            "variable": "V",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "18"
+                                },
+                                "name": "V"
+                            },
                             "dimension_declarators": [
                                 {
                                     "tag": "literal_expression",
@@ -49,21 +56,42 @@
                     },
                     "parameters": [
                         {
-                            "name": "LIMITS",
+                            "name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "16"
+                                },
+                                "name": "LIMITS"
+                            },
                             "nlist": [
                                 {
                                     "tag": "variable_declarator",
-                                    "variable": "I",
+                                    "variable": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "2",
+                                            "column": "23"
+                                        },
+                                        "name": "I"
+                                    },
                                     "dimension_declarators": []
                                 }
                             ]
                         },
                         {
-                            "name": "",
+                            "name": {},
                             "nlist": [
                                 {
                                     "tag": "variable_declarator",
-                                    "variable": "J",
+                                    "variable": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "2",
+                                            "column": "26"
+                                        },
+                                        "name": "J"
+                                    },
                                     "dimension_declarators": []
                                 }
                             ]

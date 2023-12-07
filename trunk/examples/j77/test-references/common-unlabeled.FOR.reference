@@ -24,7 +24,14 @@
                     "array_declarators": [
                         {
                             "tag": "variable_declarator",
-                            "variable": "V",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "18"
+                                },
+                                "name": "V"
+                            },
                             "dimension_declarators": [
                                 {
                                     "tag": "literal_expression",
@@ -49,21 +56,35 @@
                     },
                     "parameters": [
                         {
-                            "name": "",
+                            "name": {},
                             "nlist": [
                                 {
                                     "tag": "variable_declarator",
-                                    "variable": "V",
+                                    "variable": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "2",
+                                            "column": "15"
+                                        },
+                                        "name": "V"
+                                    },
                                     "dimension_declarators": []
                                 }
                             ]
                         },
                         {
-                            "name": "",
+                            "name": {},
                             "nlist": [
                                 {
                                     "tag": "variable_declarator",
-                                    "variable": "M",
+                                    "variable": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "2",
+                                            "column": "18"
+                                        },
+                                        "name": "M"
+                                    },
                                     "dimension_declarators": []
                                 }
                             ]
