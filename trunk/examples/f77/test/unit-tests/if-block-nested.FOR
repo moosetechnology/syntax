@@ -1,5 +1,5 @@
       PROGRAM MAIN
-       IF ( PRESSURE .GT 1000.0 ) THEN 
+       IF ( PRESSURE .GT. 1000.0 ) THEN 
               IF ( N .LT. 0.0 ) THEN 
                      X = 0.0 
                      Y = 0.0 

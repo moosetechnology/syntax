@@ -1,0 +1,100 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/dimension-adjustable-nonint-bounds.FOR",
+    "program_units": [
+        {
+            "tag": "subroutine",
+            "name": {
+                "tag": "symbolic_name",
+                "start_pos": {
+                    "line": "1",
+                    "column": "19"
+                },
+                "name": "ENHANCE"
+            },
+            "parameters": [
+                {
+                    "tag": "symbolic_name",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "28"
+                    },
+                    "name": "A"
+                },
+                {
+                    "tag": "symbolic_name",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "31"
+                    },
+                    "name": "X"
+                },
+                {
+                    "tag": "symbolic_name",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "34"
+                    },
+                    "name": "Y"
+                }
+            ],
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "3",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "dimension_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "8"
+                    },
+                    "array_declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "18"
+                                },
+                                "name": "A"
+                            },
+                            "dimension_declarators": [
+                                {
+                                    "lower_bound": {
+                                        "tag": "variable_expression",
+                                        "variable": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "2",
+                                                "column": "20"
+                                            },
+                                            "name": "X"
+                                        }
+                                    },
+                                    "upper_bound": {
+                                        "tag": "variable_expression",
+                                        "variable": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "2",
+                                                "column": "24"
+                                            },
+                                            "name": "Y"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

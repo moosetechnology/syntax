@@ -11,7 +11,7 @@
                 "column": "8"
             },
             "end_pos": {
-                "line": "6",
+                "line": "4",
                 "column": "10"
             },
             "statement_list": [
@@ -34,16 +34,9 @@
                                     "line": "1",
                                     "column": "16"
                                 },
-                                "name": "B1"
+                                "name": "L1"
                             },
-                            "dimension_declarators": [
-                                {
-                                    "tag": "literal_expression",
-                                    "literal": {
-                                        "asterisk": "*"
-                                    }
-                                }
-                            ]
+                            "dimension_declarators": []
                         },
                         {
                             "tag": "variable_declarator",
@@ -51,55 +44,48 @@
                                 "tag": "symbolic_name",
                                 "start_pos": {
                                     "line": "1",
-                                    "column": "22"
+                                    "column": "20"
                                 },
-                                "name": "B2"
+                                "name": "L2"
                             },
-                            "dimension_declarators": [
-                                {
-                                    "tag": "literal_expression",
-                                    "literal": {
-                                        "asterisk": "*"
-                                    }
-                                }
-                            ]
+                            "dimension_declarators": []
                         }
                     ]
                 },
                 {
-                    "tag": "type_statement",
+                    "tag": "assignment_statement",
                     "start_pos": {
                         "line": "2",
                         "column": "8"
                     },
-                    "type": {
-                        "tag": "type_reference",
-                        "name": "LOGICAL"
-                    },
-                    "declarators": [
+                    "left": [
                         {
-                            "tag": "variable_declarator",
-                            "variable": {
-                                "tag": "symbolic_name",
-                                "start_pos": {
-                                    "line": "2",
-                                    "column": "16"
-                                },
-                                "name": "L3"
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "2",
+                                "column": "8"
                             },
-                            "dimension_declarators": []
-                        },
+                            "name": "L2"
+                        }
+                    ],
+                    "right": [
                         {
-                            "tag": "variable_declarator",
-                            "variable": {
-                                "tag": "symbolic_name",
-                                "start_pos": {
-                                    "line": "2",
-                                    "column": "20"
-                                },
-                                "name": "L4"
-                            },
-                            "dimension_declarators": []
+                            "tag": "logical_expression",
+                            "expression": {
+                                "tag": "logical_factor",
+                                "negated": "false",
+                                "expression": {
+                                    "tag": "logical_primary",
+                                    "expression": {
+                                        "tag": "logical_constant",
+                                        "start_pos": {
+                                            "line": "2",
+                                            "column": "13"
+                                        },
+                                        "value": ".TRUE."
+                                    }
+                                }
+                            }
                         }
                     ]
                 },
@@ -116,81 +102,17 @@
                                 "line": "3",
                                 "column": "8"
                             },
-                            "name": "L4"
-                        }
-                    ],
-                    "right": [
-                        {
-                            "tag": "logical_expression",
-                            "expression": {
-                                "tag": "logical_factor",
-                                "negated": "false",
-                                "expression": {
-                                    "tag": "logical_primary",
-                                    "expression": {
-                                        "tag": "logical_constant",
-                                        "start_pos": {
-                                            "line": "3",
-                                            "column": "13"
-                                        },
-                                        "value": ".TRUE."
-                                    }
-                                }
-                            }
-                        }
-                    ]
-                },
-                {
-                    "tag": "assignment_statement",
-                    "start_pos": {
-                        "line": "4",
-                        "column": "8"
-                    },
-                    "left": [
-                        {
-                            "tag": "symbolic_name",
-                            "start_pos": {
-                                "line": "4",
-                                "column": "8"
-                            },
-                            "name": "B1"
+                            "name": "L1"
                         }
                     ],
                     "right": [
                         {
                             "tag": "symbolic_name",
                             "start_pos": {
-                                "line": "4",
+                                "line": "3",
                                 "column": "13"
                             },
-                            "name": "L4"
-                        }
-                    ]
-                },
-                {
-                    "tag": "assignment_statement",
-                    "start_pos": {
-                        "line": "5",
-                        "column": "8"
-                    },
-                    "left": [
-                        {
-                            "tag": "symbolic_name",
-                            "start_pos": {
-                                "line": "5",
-                                "column": "8"
-                            },
-                            "name": "B2"
-                        }
-                    ],
-                    "right": [
-                        {
-                            "tag": "symbolic_name",
-                            "start_pos": {
-                                "line": "5",
-                                "column": "13"
-                            },
-                            "name": "B1"
+                            "name": "L2"
                         }
                     ]
                 }

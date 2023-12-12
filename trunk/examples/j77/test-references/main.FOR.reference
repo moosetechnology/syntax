@@ -1,7 +1,7 @@
 {
     "tag": "fortran_file",
     "comments": {},
-    "file": "test/unit-tests/continue-statement.FOR",
+    "file": "test/unit-tests/main.FOR",
     "program_units": [
         {
             "tag": "main",
@@ -11,7 +11,7 @@
                     "line": "1",
                     "column": "15"
                 },
-                "name": "SIMPLEMAIN"
+                "name": "MAIN"
             },
             "parameters": [],
             "start_pos": {
@@ -19,19 +19,10 @@
                 "column": "7"
             },
             "end_pos": {
-                "line": "3",
+                "line": "2",
                 "column": "9"
             },
-            "statement_list": [
-                {
-                    "label": "10",
-                    "tag": "continue_statement",
-                    "start_pos": {
-                        "line": "2",
-                        "column": "7"
-                    }
-                }
-            ]
+            "statement_list": []
         }
     ]
 }

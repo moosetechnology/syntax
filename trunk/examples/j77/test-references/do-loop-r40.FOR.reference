@@ -1,0 +1,143 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/do-loop-r40.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": {
+                "tag": "symbolic_name",
+                "start_pos": {
+                    "line": "1",
+                    "column": "15"
+                },
+                "name": "SIMPLEMAIN"
+            },
+            "parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "7"
+            },
+            "end_pos": {
+                "line": "5",
+                "column": "9"
+            },
+            "statement_list": [
+                {
+                    "tag": "assignment_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "7"
+                    },
+                    "left": [
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "2",
+                                "column": "7"
+                            },
+                            "name": "DOOUTER"
+                        }
+                    ],
+                    "right": [
+                        {
+                            "tag": "arithmetic_expression",
+                            "expression": {
+                                "tag": "binary_expression",
+                                "lhs": {
+                                    "tag": "unsigned_int_constant",
+                                    "start_pos": {
+                                        "line": "2",
+                                        "column": "18"
+                                    },
+                                    "value": "1"
+                                },
+                                "operator": "*",
+                                "expression": {
+                                    "tag": "unsigned_int_constant",
+                                    "start_pos": {
+                                        "line": "2",
+                                        "column": "21"
+                                    },
+                                    "value": "5"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "tag": "assignment_statement",
+                    "start_pos": {
+                        "line": "3",
+                        "column": "9"
+                    },
+                    "left": [
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "3",
+                                "column": "9"
+                            },
+                            "name": "OUTER"
+                        }
+                    ],
+                    "right": [
+                        {
+                            "tag": "arithmetic_expression",
+                            "expression": {
+                                "tag": "binary_expression",
+                                "lhs": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "3",
+                                        "column": "17"
+                                    },
+                                    "name": "OUTER"
+                                },
+                                "operator": "+",
+                                "expression": {
+                                    "tag": "unsigned_int_constant",
+                                    "start_pos": {
+                                        "line": "3",
+                                        "column": "23"
+                                    },
+                                    "value": "1"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "tag": "assignment_statement",
+                    "start_pos": {
+                        "line": "4",
+                        "column": "7"
+                    },
+                    "left": [
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "4",
+                                "column": "7"
+                            },
+                            "name": "ENDDO"
+                        }
+                    ],
+                    "right": [
+                        {
+                            "tag": "character_expression",
+                            "expression": {
+                                "tag": "character_constant",
+                                "start_pos": {
+                                    "line": "4",
+                                    "column": "13"
+                                },
+                                "value": ""
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

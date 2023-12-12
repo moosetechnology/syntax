@@ -81,7 +81,7 @@ SXML_TYPE_LIST ast_program_unit( SXML_TYPE_TEXT tag,
   return JSON_MAP(
       SXML_LLLTLTL(
   ast_tag(tag),
-  (header == NULL ? JSON_KQ_ ("name", "null") : JSON_KU_ ("name", header)),
+  (header == NULL ? JSON_KQ_ ("name", "null") : header),
   location,
         ",\n",
   end_location,
@@ -1220,7 +1220,7 @@ SXML_TYPE_LIST ast_logical_if_statement(
   return SXML_LTLL(
     ast_abstract_statement( "logical_if_statement", location),
     ",\n",
-    JSON_KU_ ("expression", JSON_MAP(expression)),
+    JSON_KU_ ("expression", expression),
     JSON_KU ("statement", JSON_MAP(statement))
     );
 }

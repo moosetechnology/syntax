@@ -1,0 +1,54 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/logical-variable.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": {
+                "tag": "symbolic_name",
+                "start_pos": {
+                    "line": "1",
+                    "column": "15"
+                },
+                "name": "SIMPLEMAIN"
+            },
+            "parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "7"
+            },
+            "end_pos": {
+                "line": "3",
+                "column": "9"
+            },
+            "statement_list": [
+                {
+                    "tag": "type_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "7"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "LOGICAL"
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "15"
+                                },
+                                "name": "BOOL"
+                            },
+                            "dimension_declarators": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
