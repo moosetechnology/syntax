@@ -4134,8 +4134,7 @@ $LIST( <60c:fmt_spec>)
 $LIST( <60c:fmt_spec>)    
 
 {
-  $LIST( <60c:fmt_spec>) = SXML_QUOTED_LIST(
-    $LIST(<60h:nonrepeatable_edit_descriptor>));
+  $LIST( <60c:fmt_spec>) = $LIST(<60h:nonrepeatable_edit_descriptor>);
 }
 
 *******************************************************************************
@@ -4161,10 +4160,10 @@ $LIST( <60d:fmt_spec_/:>)
 $LIST( <60d:fmt_spec_/:>)    
 
 {
-  $LIST( <60d:fmt_spec_/:>) = SXML_QUOTED_LIST(
-    SXML_LT(
-      $LIST(<60h:nonrepeatable_edit_descriptor>),
-      $NAME(<60f:/:>)));
+  $LIST( <60d:fmt_spec_/:>) = SXML_LT(
+    $LIST(<60h:nonrepeatable_edit_descriptor>),
+    $NAME(<60f:/:>)
+  );
 }    
 
 *------------------------------------------------------------------------------
@@ -4278,9 +4277,12 @@ $LIST( <60e:repeatable_edit_descriptor>)
 $LIST( <60h:nonrepeatable_edit_descriptor>)    
 
 {
-  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_LT(
-    $LIST(<68:k>),
-    "P");
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_QUOTED_LIST(
+  	SXML_LT(
+    	$LIST(<68:k>),
+    	"P"
+    )
+  );
 }    
 
 *------------------------------------------------------------------------------
@@ -4306,7 +4308,7 @@ $LIST( <60h:nonrepeatable_edit_descriptor>)
 $LIST( <60h:nonrepeatable_edit_descriptor>)    
 
 {
-  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_T("P");
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_QUOTED_LIST(SXML_T("P"));
 }
 
 *------------------------------------------------------------------------------
@@ -4342,9 +4344,12 @@ $LIST( <60h:nonrepeatable_edit_descriptor>)
 $LIST( <60h:nonrepeatable_edit_descriptor>)    
 
 {
-  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_TT(
-    "T",
-    $NAME(<65:c>));
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_QUOTED_LIST(
+  	SXML_TT(
+    	"T",
+    	$NAME(<65:c>)
+    )
+  );
 }    
 
 *------------------------------------------------------------------------------
@@ -4355,10 +4360,13 @@ $LIST( <60h:nonrepeatable_edit_descriptor>)
 $LIST( <60h:nonrepeatable_edit_descriptor>)    
 
 {
-  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_TTT(
-    "T",
-    "L",
-    $NAME(<65:c>));
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_QUOTED_LIST(
+  	SXML_TTT(
+    	"T",
+    	"L",
+    	$NAME(<65:c>)
+    )
+  );
 }    
 
 *------------------------------------------------------------------------------
@@ -4369,10 +4377,13 @@ $LIST( <60h:nonrepeatable_edit_descriptor>)
 $LIST( <60h:nonrepeatable_edit_descriptor>)    
 
 {
-  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_TTT(
-    "T",
-    "R",
-    $NAME(<65:c>));
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_QUOTED_LIST(
+  	SXML_TTT(
+    	"T",
+    	"R",
+    	$NAME(<65:c>)
+   	)
+  );
 }
 
 *------------------------------------------------------------------------------
@@ -4383,9 +4394,12 @@ $LIST( <60h:nonrepeatable_edit_descriptor>)
 $LIST( <60h:nonrepeatable_edit_descriptor>)    
 
 {
-  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_TT(
-    $NAME(<64:n>),
-    "X");
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_QUOTED_LIST(
+  	SXML_TT(
+    	$NAME(<64:n>),
+   		"X"
+    )
+  );
 }    
 
 *------------------------------------------------------------------------------
@@ -4396,7 +4410,7 @@ $LIST( <60h:nonrepeatable_edit_descriptor>)
 $LIST( <60h:nonrepeatable_edit_descriptor>)    
 
 {
-  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_T ( "S");
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_QUOTED_LIST(SXML_T ( "S"));
 }    
 
 *------------------------------------------------------------------------------
@@ -4407,7 +4421,7 @@ $LIST( <60h:nonrepeatable_edit_descriptor>)
 $LIST( <60h:nonrepeatable_edit_descriptor>)    
 
 {
-  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_T ( "S P");
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_QUOTED_LIST(SXML_T ( "S P"));
 }    
 
 *------------------------------------------------------------------------------
@@ -4418,7 +4432,7 @@ $LIST( <60h:nonrepeatable_edit_descriptor>)
 $LIST( <60h:nonrepeatable_edit_descriptor>)    
 
 {
-  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_T ( "S S");
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_QUOTED_LIST(SXML_T ( "S S"));
 }    
 
 *------------------------------------------------------------------------------
@@ -4429,7 +4443,7 @@ $LIST( <60h:nonrepeatable_edit_descriptor>)
 $LIST( <60h:nonrepeatable_edit_descriptor>)    
 
 {
-  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_T ( "B N");
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_QUOTED_LIST(SXML_T ( "B N"));
 }    
 
 *------------------------------------------------------------------------------
@@ -4440,7 +4454,7 @@ $LIST( <60h:nonrepeatable_edit_descriptor>)
 $LIST( <60h:nonrepeatable_edit_descriptor>)    
 
 {
-  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_T ( "B Z");
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_QUOTED_LIST(SXML_T ( "B Z"));
 }
 
 *******************************************************************************

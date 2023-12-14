@@ -1,0 +1,483 @@
+{
+    "tag": "fortran_file",
+    "comments": {
+        "2": "C     FORMAT STATEMENTS FOR PAGE HEADERS                                02700011\n",
+        "11": "C                                                                       02790011\nC     FORMAT STATEMENTS FOR RUN SUMMARIES                               02800011\n",
+        "16": "C                                                                       02840011\nC     FORMAT STATEMENTS FOR TEST RESULTS                                02850011\n",
+        "23": "C                                                                       02910011\n"
+    },
+    "file": "test/unit-tests/format-parentheses.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": "null",
+            "start_pos": {
+                "line": "1",
+                "column": "7"
+            },
+            "end_pos": {
+                "line": "25",
+                "column": "9"
+            },
+            "statement_list": [
+                {
+                    "tag": "write_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "7"
+                    },
+                    "control_info_list": [
+                        {
+                            "name": "UNIT",
+                            "parameter": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "14"
+                                },
+                                "name": "I02"
+                            }
+                        },
+                        {
+                            "name": "FMT",
+                            "parameter": {
+                                "label_ref": "90010"
+                            }
+                        }
+                    ],
+                    "io_list": [
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "25"
+                            },
+                            "name": "IVDELE"
+                        }
+                    ]
+                },
+                {
+                    "label": "90000",
+                    "tag": "format_statement",
+                    "specification": [
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "3",
+                                "column": "15"
+                            },
+                            "value": "1H1"
+                        }
+                    ]
+                },
+                {
+                    "label": "90002",
+                    "tag": "format_statement",
+                    "specification": [
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "4",
+                                "column": "15"
+                            },
+                            "value": "1H "
+                        }
+                    ]
+                },
+                {
+                    "label": "90001",
+                    "tag": "format_statement",
+                    "specification": [
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "5",
+                                "column": "15"
+                            },
+                            "value": "1H "
+                        },
+                        "10X",
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "5",
+                                "column": "23"
+                            },
+                            "value": "34HFORTRAN COMPILER VALIDATION SYSTEM"
+                        }
+                    ]
+                },
+                {
+                    "label": "90003",
+                    "tag": "format_statement",
+                    "specification": [
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "6",
+                                "column": "15"
+                            },
+                            "value": "1H "
+                        },
+                        "21X",
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "6",
+                                "column": "23"
+                            },
+                            "value": "11HVERSION 2.1"
+                        }
+                    ]
+                },
+                {
+                    "label": "90004",
+                    "tag": "format_statement",
+                    "specification": [
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "7",
+                                "column": "15"
+                            },
+                            "value": "1H "
+                        },
+                        "10X",
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "7",
+                                "column": "23"
+                            },
+                            "value": "38HFOR OFFICIAL USE ONLY - COPYRIGHT 1978"
+                        }
+                    ]
+                },
+                {
+                    "label": "90005",
+                    "tag": "format_statement",
+                    "specification": [
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "8",
+                                "column": "15"
+                            },
+                            "value": "1H "
+                        },
+                        "5X",
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "8",
+                                "column": "22"
+                            },
+                            "value": "4HTEST"
+                        },
+                        "5X",
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "8",
+                                "column": "32"
+                            },
+                            "value": "9HPASS/FAIL"
+                        },
+                        "5X",
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "8",
+                                "column": "48"
+                            },
+                            "value": "8HCOMPUTED"
+                        },
+                        "8X",
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "8",
+                                "column": "62"
+                            },
+                            "value": "7HCORRECT"
+                        }
+                    ]
+                },
+                {
+                    "label": "90006",
+                    "tag": "format_statement",
+                    "specification": [
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "9",
+                                "column": "15"
+                            },
+                            "value": "1H "
+                        },
+                        "5X",
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "9",
+                                "column": "22"
+                            },
+                            "value": "46H----------------------------------------------"
+                        }
+                    ]
+                },
+                {
+                    "label": "90011",
+                    "tag": "format_statement",
+                    "specification": [
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "10",
+                                "column": "15"
+                            },
+                            "value": "1H "
+                        },
+                        "18X",
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "10",
+                                "column": "23"
+                            },
+                            "value": "17HSUBSET LEVEL TEST"
+                        }
+                    ]
+                },
+                {
+                    "label": "90008",
+                    "tag": "format_statement",
+                    "specification": [
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "13",
+                                "column": "15"
+                            },
+                            "value": "1H "
+                        },
+                        "15X",
+                        "I5",
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "13",
+                                "column": "26"
+                            },
+                            "value": "19H ERRORS ENCOUNTERED"
+                        }
+                    ]
+                },
+                {
+                    "label": "90009",
+                    "tag": "format_statement",
+                    "specification": [
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "14",
+                                "column": "15"
+                            },
+                            "value": "1H "
+                        },
+                        "15X",
+                        "I5",
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "14",
+                                "column": "26"
+                            },
+                            "value": "13H TESTS PASSED"
+                        }
+                    ]
+                },
+                {
+                    "label": "90010",
+                    "tag": "format_statement",
+                    "specification": [
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "15",
+                                "column": "15"
+                            },
+                            "value": "1H "
+                        },
+                        "15X",
+                        "I5",
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "15",
+                                "column": "26"
+                            },
+                            "value": "14H TESTS DELETED"
+                        }
+                    ]
+                },
+                {
+                    "label": "80001",
+                    "tag": "format_statement",
+                    "specification": [
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "18",
+                                "column": "15"
+                            },
+                            "value": "1H "
+                        },
+                        "4X",
+                        "I5",
+                        "7X",
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "18",
+                                "column": "28"
+                            },
+                            "value": "4HPASS"
+                        }
+                    ]
+                },
+                {
+                    "label": "80002",
+                    "tag": "format_statement",
+                    "specification": [
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "19",
+                                "column": "15"
+                            },
+                            "value": "1H "
+                        },
+                        "4X",
+                        "I5",
+                        "7X",
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "19",
+                                "column": "28"
+                            },
+                            "value": "4HFAIL"
+                        }
+                    ]
+                },
+                {
+                    "label": "80003",
+                    "tag": "format_statement",
+                    "specification": [
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "20",
+                                "column": "15"
+                            },
+                            "value": "1H "
+                        },
+                        "4X",
+                        "I5",
+                        "7X",
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "20",
+                                "column": "28"
+                            },
+                            "value": "7HDELETED"
+                        }
+                    ]
+                },
+                {
+                    "label": "80004",
+                    "tag": "format_statement",
+                    "specification": [
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "21",
+                                "column": "15"
+                            },
+                            "value": "1H "
+                        },
+                        "4X",
+                        "I5",
+                        "7X",
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "21",
+                                "column": "28"
+                            },
+                            "value": "4HFAIL"
+                        },
+                        "10X",
+                        "I6",
+                        "9X",
+                        "I6"
+                    ]
+                },
+                {
+                    "label": "80005",
+                    "tag": "format_statement",
+                    "specification": [
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "22",
+                                "column": "15"
+                            },
+                            "value": "1H "
+                        },
+                        "4X",
+                        "I5",
+                        "7X",
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "22",
+                                "column": "28"
+                            },
+                            "value": "4HFAIL"
+                        },
+                        "4X",
+                        "E12.5",
+                        "3X",
+                        "E12.5"
+                    ]
+                },
+                {
+                    "label": "90007",
+                    "tag": "format_statement",
+                    "specification": [
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "24",
+                                "column": "15"
+                            },
+                            "value": "1H "
+                        },
+                        "20X",
+                        {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "24",
+                                "column": "23"
+                            },
+                            "value": "20HEND OF PROGRAM FM011"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
