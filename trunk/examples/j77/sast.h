@@ -1404,3 +1404,20 @@ SXML_TYPE_LIST ast_implicit_element(
 SXML_TYPE_LIST ast_empty_map() {
   return SXML_T("{}");
 }
+
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_segment(
+              SXML_TYPE_LIST location,
+              SXML_TYPE_LIST name,
+              SXML_TYPE_LIST variables
+              ) {
+  return
+    SXML_LTLL(
+      ast_abstract_statement("segment", location),
+      ",\n",
+      JSON_KU_("name", name),
+      JSON_KU("variables", JSON_ARRAY(variables))
+  );
+}
