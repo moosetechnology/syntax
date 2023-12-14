@@ -1421,3 +1421,19 @@ SXML_TYPE_LIST ast_segment(
       JSON_KU("variables", JSON_ARRAY(variables))
   );
 }
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_pointeur(
+              SXML_TYPE_LIST location,
+              SXML_TYPE_LIST pointeur_name,
+              SXML_TYPE_LIST segment_name
+              ) {
+  return
+    SXML_LTLL(
+      ast_abstract_statement("pointeur", location),
+      ",\n",
+      JSON_KU_("pointeur_name", pointeur_name),
+      JSON_KU("segment_name", segment_name)
+  );
+}
