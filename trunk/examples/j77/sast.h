@@ -1424,16 +1424,32 @@ SXML_TYPE_LIST ast_segment(
 
 /* -------------------------------------------------------------------------
  */
-SXML_TYPE_LIST ast_pointeur(
-              SXML_TYPE_LIST location,
+SXML_TYPE_LIST ast_pointeur_name(
               SXML_TYPE_LIST pointeur_name,
               SXML_TYPE_LIST segment_name
               ) {
-  return
-    SXML_LTLL(
-      ast_abstract_statement("pointeur", location),
-      ",\n",
+  
+  return JSON_MAP(
+    SXML_LLL(
+      ast_tag("pointeur"),
       JSON_KU_("pointeur_name", pointeur_name),
       JSON_KU("segment_name", segment_name)
+      )
+  );
+}
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_pointeur_declaration(
+              SXML_TYPE_LIST location,
+              SXML_TYPE_LIST declarators
+              ) {
+  
+  return JSON_MAP(
+    SXML_LTL(
+      ast_abstract_statement("pointeur_declaration", location),
+      ",\n",
+      JSON_KU("declarators", JSON_ARRAY(declarators))
+      )
   );
 }
