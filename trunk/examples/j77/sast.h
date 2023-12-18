@@ -1453,3 +1453,20 @@ SXML_TYPE_LIST ast_pointeur_declaration(
       )
   );
 }
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_segment_operation(
+              SXML_TYPE_LIST location,
+              SXML_TYPE_LIST name,
+              SXML_TYPE_LIST declarators
+              ) {
+  
+  return JSON_MAP(
+    SXML_LTL(
+      ast_abstract_statement(name->TEXT, location),
+      ",\n",
+      JSON_KU("declarators", JSON_ARRAY(declarators))
+      )
+  );
+}
