@@ -21,6 +21,7 @@
 * This grammar of FORTRAN 77 is based upon the ANSI standard syntax charts
 * Annex F of https://nvlpubs.nist.gov/nistpubs/Legacy/FIPS/fipspub69-1.pdf
 *
+* Il contains a few usual extensions, marked with the word "EXTENSION"
 
 <0:F77>		= ~COL(7)~ <1a:executable_program_list> ~COL(1)~ ;
 
@@ -31,6 +32,9 @@
 *<0:F77>	= !DO  =  <78:int_real_dp_expr> , ;
 * (pb) : changed by
 <0:F77>		= !DO  <110b:label_ref>  <99:symbolic_name>  =  <40b:do_parameters> ;
+
+* EXTENSION (loop without label)
+<0:F77>		= !DO  <99:symbolic_name>  =  <40b:do_parameters> ;
 
 <0:F77>		= !FORMAT <59:format_specification> ;
 
@@ -652,14 +656,57 @@
 <39:end_if_statement>
 		= ~COL(1)~ <110:label> ~MARGIN~ END  IF ;
 
+* EXTENSION
+* On introduit la notion de bloc <40a:do_loop> avec un header <40:do_statement>,
+* un corps <2c:statement_list> et une fin de bloc %ENDDO.
+* Ce %ENDDO est un dummy terminal zombie (voir f77.lecl) generique (il 
+* commence par un "%"). Zombie signifie qu'il a un code (comme n'importe quel 
+* terminal) mais qu'aucune sous-chaine d'un programme source ne pourra être
+* reconnue comme étant %ENDDO. Les %ENDDO sont injectes dans la chaine de
+* tokens, non par le scanner, mais par une post-action lexicale (@0) associee
+* a la reconnaissance de %label.
+*
+* Considerant le programme suivant, ou les labi sont des labels (nombres entiers)
+* ...
+*       DO lab0 ...
+*         DO lab1 ...
+*           ...
+*                 DO labn ...
+*                   ...
+* lab0              CONTINUE
+*       ...
+*
+* après la reconnaissance lexicale de lab0 en position etiquette, la 
+* post-action lexicale @3 va generer n+1 tokens de type %ENDDO, qui vont donc
+* fermer les n+1 DO ouverts.
+*
+* Cette description permet d'exclure syntaxiquement la presence de blocs 
+* imbriques. L'indentation du programme par le paragrapheur ppf77 va être
+* correcte et revenir a la position occupee avant le premier DO.
+*
+* De plus, si, ayant associe' au terminal generique %ENDDO un texte vide 
+* (string_table_entry == EMPTY_STE), aucun texte parasite ne sera produit par 
+* ppf77 lorsqu'il traversera les noeuds associes aux %ENDDO dans l'arbre
+* d'analyse.
+
+<40a:do_loop>	= <40:do_statement>
+		     <2c:statement_list> %ENDDO ;
+
+* EXTENSION. Ci-apres, on a un vrai "do_block" se terminant par un vrai END DO 
+* qui va aussi fermer tous les <40:do_statement> ouverts dans le "do_block".
+
+<40a:do_loop>	= DO  <99:symbolic_name>  =  <40b:do_parameters> %EOL
+		     <2c:statement_list>
+                  <40c:end_do> ;
 
 <40:do_statement>
 		= DO  <110b:label_ref> ,  <99:symbolic_name>  =  <40b:do_parameters> %EOL ;
 <40:do_statement>
 		= DO  <110b:label_ref>  <99:symbolic_name>  =  <40b:do_parameters> %EOL ;
 
-<40a:do_loop>	= <40:do_statement>
-		     <2c:statement_list> %ENDDO ;
+* EXTENSION
+<40c:end_do>    = END  DO ;
+<40c:end_do>    = ~COL(1)~ <110:label> ~MARGIN~ END  DO ;
 
 <40b:do_parameters>
 		= <78:int_real_dp_expr> ,  <78:int_real_dp_expr> ,  <78:int_real_dp_expr> ;
@@ -829,40 +876,42 @@
 <52b:inquire_info_elem>
 		= UNIT =   <56:unit_identifier> ;
 <52b:inquire_info_elem>
-		= ERR  =  <110b:label_ref> ;
-<52b:inquire_info_elem>
 		= FILE  =  <82a:character_or_non_typed_expression> ;
 <52b:inquire_info_elem>
-		= IOSTAT  =  <88a:variable_or_array_element_name> ;
+		= ERR  =  <110b:label_ref> ;
 <52b:inquire_info_elem>
-		= EXIST  =  <88a:variable_or_array_element_name> ;
-<52b:inquire_info_elem>
-		= OPENED  =  <88a:variable_or_array_element_name> ;
-<52b:inquire_info_elem>
-		= NUMBER  =  <88a:variable_or_array_element_name> ;
-<52b:inquire_info_elem>
-		= NAMED  =  <88a:variable_or_array_element_name> ;
-<52b:inquire_info_elem>
-		= NAME  =  <88a:variable_or_array_element_name> ;
-<52b:inquire_info_elem>
-		= ACCESS  =  <88a:variable_or_array_element_name> ;
-<52b:inquire_info_elem>
-		= SEQUENTIAL  =  <88a:variable_or_array_element_name> ;
-<52b:inquire_info_elem>
-		= DIRECT  =  <88a:variable_or_array_element_name> ;
-<52b:inquire_info_elem>
-		= FORM  =  <88a:variable_or_array_element_name> ;
-<52b:inquire_info_elem>
-		= FORMATTED  =  <88a:variable_or_array_element_name> ;
-<52b:inquire_info_elem>
-		= UNFORMATTED  =  <88a:variable_or_array_element_name> ;
-<52b:inquire_info_elem>
-		= RECL  =  <88a:variable_or_array_element_name> ;
-<52b:inquire_info_elem>
-		= NEXTREC  =  <88a:variable_or_array_element_name> ;
-<52b:inquire_info_elem>
-		= BLANK  =  <88a:variable_or_array_element_name> ;
+		= <52c:inquire_info_key>  =  <82a:character_or_non_typed_expression> ;
 
+<52c:inquire_info_key>
+		= IOSTAT ;
+<52c:inquire_info_key>
+		= EXIST ;
+<52c:inquire_info_key>
+		= OPENED ;
+<52c:inquire_info_key>
+		= NUMBER ;
+<52c:inquire_info_key>
+		= NAMED ;
+<52c:inquire_info_key>
+		= NAME ;
+<52c:inquire_info_key>
+		= ACCESS ;
+<52c:inquire_info_key>
+		= SEQUENTIAL ;
+<52c:inquire_info_key>
+		= DIRECT ;
+<52c:inquire_info_key>
+		= FORM ;
+<52c:inquire_info_key>
+		= FORMATTED ;
+<52c:inquire_info_key>
+		= UNFORMATTED ;
+<52c:inquire_info_key>
+		= RECL ;
+<52c:inquire_info_key>
+		= NEXTREC ;
+<52c:inquire_info_key>
+		= BLANK ;
 
 * BACKSPACE statement must contain a unit identifier.
 * Each backspace_or_endfile_or_rewind_info_elem must appear at most one time.
