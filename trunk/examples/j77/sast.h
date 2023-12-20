@@ -1462,11 +1462,12 @@ SXML_TYPE_LIST ast_segment_operation(
               SXML_TYPE_LIST declarators
               ) {
   
-  return JSON_MAP(
-    SXML_LTL(
-      ast_abstract_statement(name->TEXT, location),
+  
+    return SXML_LTLL(
+      ast_abstract_statement("segment_operation", location),
       ",\n",
+      JSON_KQ_("name", name->TEXT),
       JSON_KU("declarators", JSON_ARRAY(declarators))
-      )
+    
   );
 }

@@ -1,2 +1,2 @@
-      pointeur p.toto, QQ(M).R
+      POINTEUR foo.bar
       end

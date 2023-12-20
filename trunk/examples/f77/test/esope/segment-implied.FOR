@@ -1,3 +1,3 @@
       SEGMENT , FONC
        IMPLIED X(N),Y(M),Z(N,M)
-      ENDSEGMENT
+      END SEGMENT

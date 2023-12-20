@@ -151,7 +151,7 @@ static char *kw_prefixes [] = {"", "DO", "ASSIGN", "CALL", "GOTO", "RETURN", "PR
 				   "ENTRY", "SUBROUTINE", "BLOCKDATA", "COMMON",
 				   "PARAMETER", "EXTERNAL", "INTRINSIC", "FUNCTION",
 				   "CONTINUE", "STOP", "PAUSE", "SAVE", "DATA",
-				   "IMPLICIT", "DIMENSION", "PROGRAM", "ELSEIF", "ENDIF"};
+				   "IMPLICIT", "DIMENSION", "PROGRAM", "ELSEIF", "ENDIF", "SEGMENT", "IMPLIED", "POINTEUR"};
 static SXINT kw_codes [] = {0, DO_t, ASSIGN_t, CALL_t, GO_t, RETURN_t, PRINT_t, READ_KW_t,
 			      BACKSPACE_KW_t, ENDFILE_KW_t, REWIND_KW_t, INTEGER_t, REAL_t,
 			      DOUBLE_t, COMPLEX_t, LOGICAL_t, CHARACTER_t,
