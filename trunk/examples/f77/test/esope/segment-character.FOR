@@ -1,4 +1,4 @@
       SEGMENT , FONC
-       REAL X(N),Y(M),Z(N,M)
+       CHARACTER KK*5, LL(M)*(N)
       ENDSEGMENT
       END

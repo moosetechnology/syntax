@@ -1,0 +1,4 @@
+      SEGMENT , FONC
+       DOUBLEPRECISION II, JJ(M)
+      ENDSEGMENT
+      END

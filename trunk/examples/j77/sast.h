@@ -1471,3 +1471,23 @@ SXML_TYPE_LIST ast_segment_operation(
     
   );
 }
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_segment_operation_segina_segind(
+              SXML_TYPE_LIST location,
+              SXML_TYPE_LIST name,
+              SXML_TYPE_LIST copy_from,
+              SXML_TYPE_LIST copy_to,
+              SXML_TYPE_LIST type
+              ) {
+  
+    return SXML_LTLLL(
+      ast_abstract_statement(name->TEXT, location),
+      ",\n",
+      JSON_KU_("copy_from", copy_from),
+      JSON_KU_("copy_to", copy_to),
+      JSON_KU("type", type)
+    
+  );
+}
