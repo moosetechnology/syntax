@@ -6867,7 +6867,7 @@ $LIST( <122a:pointeur_name_list>)
 
 *------------------------------------------------------------------------------
 
-<122:pointeur_name> = <20b:scalar_name>  <99:symbolic_name>;
+<122:pointeur_name> = <20b:scalar_name> "." <99:symbolic_name>;
 
 $LIST( <122:pointeur_name>)
 {
