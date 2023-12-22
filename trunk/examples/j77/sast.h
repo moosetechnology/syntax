@@ -1236,7 +1236,7 @@ SXML_TYPE_LIST ast_do_loop(
 
   return SXML_LL(
     do_statement,
-    JSON_KU("statements_list", JSON_MAP(statements_list))
+    JSON_KU("statements_list", JSON_ARRAY(statements_list))
     );
 }
 
@@ -1275,20 +1275,12 @@ SXML_TYPE_LIST ast_do_statement(
 SXML_TYPE_LIST ast_do_parameters(SXML_TYPE_LIST init,
               SXML_TYPE_LIST limit,
               SXML_TYPE_LIST increment) {
-  if (increment == NULL) {
+    
     return SXML_LLL(
       JSON_KU_("init", init),
       JSON_KU_("limit", limit),
       JSON_KU("increment", increment)
     );    
-  }
-  else {
-    return SXML_LLL(
-        JSON_KU_("init", init),
-        JSON_KU_("limit", limit),
-        JSON_KQ("increment", "null")
-    );
-  }
 }
 
 

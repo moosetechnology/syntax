@@ -2758,7 +2758,11 @@ $LIST(<40a:do_loop>)
 
 $LIST(<40b:do_parameters>)
 {
-  $LIST(<40b:do_parameters>) = ast_do_parameters($LIST(<78:int_real_dp_expr>), $LIST(<78:int_real_dp_expr>), $LIST(<78:int_real_dp_expr>));
+  $LIST(<40b:do_parameters>) = ast_do_parameters(
+  	$LIST(<78:int_real_dp_expr>), 
+  	$LIST(<78:int_real_dp_expr>'), 
+  	$LIST(<78:int_real_dp_expr>'')
+  );
 }    
 
 *------------------------------------------------------------------------------
@@ -2768,7 +2772,11 @@ $LIST(<40b:do_parameters>)
 
 $LIST(<40b:do_parameters>)
 {
-  $LIST(<40b:do_parameters>) = ast_do_parameters($LIST(<78:int_real_dp_expr>), $LIST(<78:int_real_dp_expr>), NULL);
+  $LIST(<40b:do_parameters>) = ast_do_parameters(
+  	$LIST(<78:int_real_dp_expr>), 
+  	$LIST(<78:int_real_dp_expr>), 
+  	SXML_T("null")
+  );
 }    
 
 *******************************************************************************
@@ -4034,8 +4042,9 @@ $LIST( <60a:fmt_spec_list>)
 $LIST( <60a:fmt_spec_list>)    
 
 {
-  $LIST( <60a:fmt_spec_list>) = SXML_LL(
+  $LIST( <60a:fmt_spec_list>) = SXML_LTL(
     $LIST(<60b:fmt_spec_list_/:>),
+    ",",
     $LIST(<60c:fmt_spec>));
 }    
 
@@ -4072,8 +4081,9 @@ $LIST( <60a:fmt_spec_list>)
 $LIST( <60b:fmt_spec_list_/:>)    
 
 {
-  $LIST( <60b:fmt_spec_list_/:>) = SXML_LL(
+  $LIST( <60b:fmt_spec_list_/:>) = SXML_LTL(
     $LIST(<60b:fmt_spec_list_/:>'),
+    ",",
     $LIST(<60d:fmt_spec_/:>));
 }    
 
@@ -4136,8 +4146,7 @@ $LIST( <60c:fmt_spec>)
 $LIST( <60c:fmt_spec>)    
 
 {
-  $LIST( <60c:fmt_spec>) = SXML_QUOTED_LIST(
-    $LIST(<60h:nonrepeatable_edit_descriptor>));
+  $LIST( <60c:fmt_spec>) = $LIST(<60h:nonrepeatable_edit_descriptor>);
 }
 
 *******************************************************************************
@@ -4163,10 +4172,9 @@ $LIST( <60d:fmt_spec_/:>)
 $LIST( <60d:fmt_spec_/:>)    
 
 {
-  $LIST( <60d:fmt_spec_/:>) = SXML_QUOTED_LIST(
-    SXML_LT(
+  $LIST( <60d:fmt_spec_/:>) = SXML_LT( 
       $LIST(<60h:nonrepeatable_edit_descriptor>),
-      $NAME(<60f:/:>)));
+      $NAME(<60f:/:>));
 }    
 
 *------------------------------------------------------------------------------
@@ -4385,9 +4393,12 @@ $LIST( <60h:nonrepeatable_edit_descriptor>)
 $LIST( <60h:nonrepeatable_edit_descriptor>)    
 
 {
-  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_TT(
-    $NAME(<64:n>),
-    "X");
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_QUOTED_LIST(
+  	SXML_TT(
+    	$NAME(<64:n>),
+    	"X"
+    )
+  );
 }    
 
 *------------------------------------------------------------------------------
