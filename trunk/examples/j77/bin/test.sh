@@ -35,8 +35,14 @@ fi
 cd "${exec_dir}/.."
 
 test_file=`basename ${FILE}`
-expected="test-references/${test_file}.reference"
-actual="test-references/${test_file}.actual"
+test_dir_long=`dirname ${FILE}`
+test_dir=`basename ${test_dir_long}`
+out_folder="test-references/${test_dir}"
+
+[ ! -d "${out_folder}" ] && mkdir "${out_folder}"
+
+expected="${out_folder}/${test_file}.reference"
+actual="${out_folder}/${test_file}.actual"
 
 bin/f77.out -json "${FILE}" | python -m json.tool  > "${actual}"
 
