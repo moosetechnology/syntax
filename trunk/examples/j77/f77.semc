@@ -21,6 +21,7 @@
 * This grammar of FORTRAN 77 is based upon the ANSI standard syntax charts
 * Annex F of https://nvlpubs.nist.gov/nistpubs/Legacy/FIPS/fipspub69-1.pdf
 *
+* Il contains a few usual extensions, marked with the word "EXTENSION"
 
 *******************************************************************************
 
@@ -133,6 +134,11 @@ $LIST(<0:F77>)
 *------------------------------------------------------------------------------
 
 * ENTRY POINT USED BY THE LOOK-AHEAD MECANISM
+
+* EXTENSION (loop without label)
+<0:F77>		= !DO  <99:symbolic_name>  =  <40b:do_parameters> ;
+
+*------------------------------------------------------------------------------
 
 <0:F77>		= !FORMAT <59:format_specification> ;
 
@@ -2741,13 +2747,50 @@ $LIST(<40:do_statement>)
 
 *******************************************************************************
 
+* EXTENSION
+* On introduit la notion de bloc <40a:do_loop> avec un header <40:do_statement>,
+* un corps <2c:statement_list> et une fin de bloc %ENDDO.
+* Ce %ENDDO est un dummy terminal zombie (voir f77.lecl) generique (il 
+* commence par un "%"). Zombie signifie qu'il a un code (comme n'importe quel 
+* terminal) mais qu'aucune sous-chaine d'un programme source ne pourra être
+* reconnue comme étant %ENDDO. Les %ENDDO sont injectes dans la chaine de
+* tokens, non par le scanner, mais par une post-action lexicale (@0) associee
+* a la reconnaissance de %label.
+*
+* Considerant le programme suivant, ou les labi sont des labels (nombres entiers)
+* ...
+*       DO lab0 ...
+*         DO lab1 ...
+*           ...
+*                 DO labn ...
+*                   ...
+* lab0              CONTINUE
+*       ...
+*
+* après la reconnaissance lexicale de lab0 en position etiquette, la 
+* post-action lexicale @3 va generer n+1 tokens de type %ENDDO, qui vont donc
+* fermer les n+1 DO ouverts.
+*
+* Cette description permet d'exclure syntaxiquement la presence de blocs 
+* imbriques. L'indentation du programme par le paragrapheur ppf77 va être
+* correcte et revenir a la position occupee avant le premier DO.
+*
+* De plus, si, ayant associe' au terminal generique %ENDDO un texte vide 
+* (string_table_entry == EMPTY_STE), aucun texte parasite ne sera produit par 
+* ppf77 lorsqu'il traversera les noeuds associes aux %ENDDO dans l'arbre
+* d'analyse.
+
 <40a:do_loop>	= <40:do_statement>
 		     <2c:statement_list> %ENDDO ;
 
-$LIST(<40a:do_loop>)
-{
-  $LIST(<40a:do_loop>) = ast_do_loop($LIST(<40:do_statement>), $LIST(<2c:statement_list>));
-}         
+*------------------------------------------------------------------------------
+
+* EXTENSION. Ci-apres, on a un vrai "do_block" se terminant par un vrai END DO 
+* qui va aussi fermer tous les <40:do_statement> ouverts dans le "do_block".
+
+<40a:do_loop>	= DO  <99:symbolic_name>  =  <40b:do_parameters> %EOL
+		     <2c:statement_list>
+                  <40c:end_do> ;        
 
 *******************************************************************************
 
@@ -2767,7 +2810,13 @@ $LIST(<40b:do_parameters>)
 $LIST(<40b:do_parameters>)
 {
   $LIST(<40b:do_parameters>) = ast_do_parameters($LIST(<78:int_real_dp_expr>), $LIST(<78:int_real_dp_expr>), NULL);
-}    
+}
+
+*******************************************************************************
+
+* EXTENSION
+<40c:end_do>    = END  DO ;
+<40c:end_do>    = ~COL(1)~ <110:label> ~MARGIN~ END  DO ;    
 
 *******************************************************************************
 
