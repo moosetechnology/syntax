@@ -5,122 +5,20 @@
     "program_units": [
         {
             "tag": "main",
-            "name": {
-                "tag": "symbolic_name",
-                "start_pos": {
-                    "line": "1",
-                    "column": "16"
-                },
-                "name": "MAIN"
-            },
-            "parameters": [],
+            "name": "null",
             "start_pos": {
                 "line": "1",
                 "column": "8"
             },
             "end_pos": {
-                "line": "5",
+                "line": "3",
                 "column": "10"
             },
             "statement_list": [
                 {
-                    "tag": "type_statement",
-                    "start_pos": {
-                        "line": "2",
-                        "column": "8"
-                    },
-                    "type": {
-                        "tag": "type_reference",
-                        "name": "CHARACTER"
-                    },
-                    "declarators": [
-                        {
-                            "len_specifier": {
-                                "tag": "nonzero_unsigned_int_constant",
-                                "start_pos": {
-                                    "line": "2",
-                                    "column": "22"
-                                },
-                                "value": "16"
-                            },
-                            "tag": "variable_declarator",
-                            "variable": {
-                                "tag": "symbolic_name",
-                                "start_pos": {
-                                    "line": "2",
-                                    "column": "18"
-                                },
-                                "name": "TTL"
-                            },
-                            "dimension_declarators": []
-                        }
-                    ]
-                },
-                {
-                    "tag": "type_statement",
-                    "start_pos": {
-                        "line": "3",
-                        "column": "8"
-                    },
-                    "type": {
-                        "tag": "type_reference",
-                        "name": "REAL"
-                    },
-                    "declarators": [
-                        {
-                            "tag": "variable_declarator",
-                            "variable": {
-                                "tag": "symbolic_name",
-                                "start_pos": {
-                                    "line": "3",
-                                    "column": "13"
-                                },
-                                "name": "VEC"
-                            },
-                            "dimension_declarators": [
-                                {
-                                    "tag": "literal_expression",
-                                    "literal": {
-                                        "tag": "unsigned_int_constant",
-                                        "start_pos": {
-                                            "line": "3",
-                                            "column": "17"
-                                        },
-                                        "value": "5"
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            "tag": "variable_declarator",
-                            "variable": {
-                                "tag": "symbolic_name",
-                                "start_pos": {
-                                    "line": "3",
-                                    "column": "21"
-                                },
-                                "name": "PAIR"
-                            },
-                            "dimension_declarators": [
-                                {
-                                    "tag": "literal_expression",
-                                    "literal": {
-                                        "tag": "unsigned_int_constant",
-                                        "start_pos": {
-                                            "line": "3",
-                                            "column": "26"
-                                        },
-                                        "value": "2"
-                                    }
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
                     "tag": "data_statement",
                     "start_pos": {
-                        "line": "4",
+                        "line": "1",
                         "column": "8"
                     },
                     "parameters": [
@@ -129,7 +27,7 @@
                                 {
                                     "tag": "symbolic_name",
                                     "start_pos": {
-                                        "line": "4",
+                                        "line": "1",
                                         "column": "13"
                                     },
                                     "name": "TTL"
@@ -142,7 +40,7 @@
                                     "constant": {
                                         "tag": "character_constant",
                                         "start_pos": {
-                                            "line": "4",
+                                            "line": "1",
                                             "column": "18"
                                         },
                                         "value": "'Arbitrary Titles'"
@@ -155,7 +53,7 @@
                                 {
                                     "tag": "symbolic_name",
                                     "start_pos": {
-                                        "line": "4",
+                                        "line": "1",
                                         "column": "39"
                                     },
                                     "name": "M"
@@ -168,7 +66,7 @@
                                     "constant": {
                                         "tag": "unsigned_int_constant",
                                         "start_pos": {
-                                            "line": "4",
+                                            "line": "1",
                                             "column": "42"
                                         },
                                         "value": "9"
@@ -181,7 +79,7 @@
                                 {
                                     "tag": "symbolic_name",
                                     "start_pos": {
-                                        "line": "4",
+                                        "line": "1",
                                         "column": "46"
                                     },
                                     "name": "N"
@@ -194,7 +92,7 @@
                                     "constant": {
                                         "tag": "unsigned_int_constant",
                                         "start_pos": {
-                                            "line": "4",
+                                            "line": "1",
                                             "column": "49"
                                         },
                                         "value": "0"
@@ -209,7 +107,7 @@
                                     "name": {
                                         "tag": "symbolic_name",
                                         "start_pos": {
-                                            "line": "4",
+                                            "line": "1",
                                             "column": "53"
                                         },
                                         "name": "PAIR"
@@ -220,7 +118,7 @@
                                             "expression": {
                                                 "tag": "unsigned_int_constant",
                                                 "start_pos": {
-                                                    "line": "4",
+                                                    "line": "1",
                                                     "column": "58"
                                                 },
                                                 "value": "1"
@@ -236,7 +134,7 @@
                                     "constant": {
                                         "tag": "unsigned_real_constant",
                                         "start_pos": {
-                                            "line": "4",
+                                            "line": "1",
                                             "column": "62"
                                         },
                                         "value": "9.0"
@@ -249,8 +147,8 @@
                                 {
                                     "tag": "symbolic_name",
                                     "start_pos": {
-                                        "line": "4",
-                                        "column": "68"
+                                        "line": "2",
+                                        "column": "9"
                                     },
                                     "name": "VEC"
                                 }
@@ -258,14 +156,45 @@
                             "clist": [
                                 {
                                     "tag": "data_statement_constant",
+                                    "occurence": {
+                                        "tag": "nonzero_unsigned_int_constant",
+                                        "start_pos": {
+                                            "line": "2",
+                                            "column": "14"
+                                        },
+                                        "value": "3"
+                                    },
+                                    "constant": {
+                                        "tag": "unsigned_real_constant",
+                                        "start_pos": {
+                                            "line": "2",
+                                            "column": "16"
+                                        },
+                                        "value": "9.0"
+                                    }
+                                },
+                                {
+                                    "tag": "data_statement_constant",
                                     "occurence": {},
                                     "constant": {
-                                        "tag": "symbolic_name",
+                                        "tag": "unsigned_real_constant",
                                         "start_pos": {
-                                            "line": "4",
-                                            "column": "81"
+                                            "line": "2",
+                                            "column": "21"
                                         },
-                                        "name": ""
+                                        "value": "0.1"
+                                    }
+                                },
+                                {
+                                    "tag": "data_statement_constant",
+                                    "occurence": {},
+                                    "constant": {
+                                        "tag": "unsigned_real_constant",
+                                        "start_pos": {
+                                            "line": "2",
+                                            "column": "26"
+                                        },
+                                        "value": "0.9"
                                     }
                                 }
                             ]

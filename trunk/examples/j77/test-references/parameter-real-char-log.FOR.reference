@@ -11,7 +11,7 @@
                 "column": "8"
             },
             "end_pos": {
-                "line": "2",
+                "line": "3",
                 "column": "10"
             },
             "statement_list": [
@@ -89,18 +89,21 @@
                             "name": {
                                 "tag": "symbolic_name",
                                 "start_pos": {
-                                    "line": "1",
-                                    "column": "71"
+                                    "line": "2",
+                                    "column": "9"
                                 },
                                 "name": "T"
                             },
                             "expression": {
-                                "tag": "symbolic_name",
-                                "start_pos": {
-                                    "line": "1",
-                                    "column": "80"
-                                },
-                                "name": ""
+                                "tag": "logical_const_expr",
+                                "expression": {
+                                    "tag": "logical_constant",
+                                    "start_pos": {
+                                        "line": "2",
+                                        "column": "11"
+                                    },
+                                    "value": ".TRUE."
+                                }
                             }
                         }
                     ]

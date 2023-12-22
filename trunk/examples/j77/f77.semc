@@ -1151,7 +1151,9 @@ $LIST( <14:block_data_statement>)
 
 $LIST( <14:block_data_statement>)
 {
-  $LIST( <14:block_data_statement>) = $LIST(<99:symbolic_name>);
+  $LIST( <14:block_data_statement>) = ast_program_unit_header(
+    $LIST(<99:symbolic_name>),
+    NULL );
 }    
 
 *******************************************************************************

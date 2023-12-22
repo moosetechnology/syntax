@@ -1,11 +1,19 @@
 {
     "tag": "fortran_file",
     "comments": {},
-    "file": "test/unit-tests/block-data-empty-name-r5-14_1.FOR",
+    "file": "test/unit-tests/block-data.FOR",
     "program_units": [
         {
             "tag": "block_data",
-            "name": "null",
+            "name": {
+                "tag": "symbolic_name",
+                "start_pos": {
+                    "line": "1",
+                    "column": "19"
+                },
+                "name": "INIT"
+            },
+            "parameters": [],
             "start_pos": {
                 "line": "1",
                 "column": "8"
