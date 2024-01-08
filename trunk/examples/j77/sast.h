@@ -194,6 +194,68 @@ SXML_TYPE_LIST ast_format_statement( SXML_TYPE_LIST format) {
         );
 }
 
+
+/* -------------------------------------------------------------------------
+ * outputs a format specification
+ * - repeat factor
+ * - descriptor
+ * - slash (present or absent)
+ */
+SXML_TYPE_LIST ast_fmt_specification( SXML_TYPE_TEXT repeat_factor,
+            SXML_TYPE_LIST descriptor,
+            SXML_TYPE_TEXT slash ) {
+  
+  return JSON_MAP(
+    SXML_LLLL(
+      ast_tag ("format_specification"),
+      JSON_KQ_ ("repeat_factor", repeat_factor), 
+      JSON_KU_ ("descriptor", descriptor),
+      JSON_KQ ("slash", slash)
+    )
+  );
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a format statement nonrepeatable edit descriptor
+ * - descriptor
+ */
+SXML_TYPE_LIST ast_nonrepeatable_edit_descriptor( SXML_TYPE_LIST descriptor) {
+  return JSON_MAP(
+    SXML_LL(
+      ast_tag ( "nonrepeatable_edit_descriptor"), 
+      JSON_KU  ("descriptor", SXML_QUOTED_LIST (descriptor))
+    )
+  );
+}
+
+/* -------------------------------------------------------------------------
+ * outputs a format statement nonrepeatable edit descriptor
+ * - descriptor
+ */
+SXML_TYPE_LIST ast_nonrepeatable_edit_descriptor_character( SXML_TYPE_LIST descriptor) {
+  return JSON_MAP(
+    SXML_LL(
+      ast_tag ( "nonrepeatable_edit_descriptor"), 
+      JSON_KU  ("descriptor", descriptor)
+    )
+  );
+}
+
+/* -------------------------------------------------------------------------
+ * outputs a format statement repeatable edit descriptor
+ * - descriptor
+ */
+SXML_TYPE_LIST ast_repeatable_edit_descriptor( SXML_TYPE_LIST descriptor) {
+  return JSON_MAP(
+    SXML_LL(
+      ast_tag ( "repeatable_edit_descriptor"), 
+      JSON_KU  ("repeated_descriptors", JSON_ARRAY(descriptor))
+    )
+  );
+}
+
+
 /* -------------------------------------------------------------------------
  * outputs a type_statement (variable declaration)
  * - type_reference
