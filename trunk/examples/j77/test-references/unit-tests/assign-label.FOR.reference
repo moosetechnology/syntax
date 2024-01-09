@@ -44,7 +44,17 @@
                     "label": "2",
                     "tag": "format_statement",
                     "specification": [
-                        "A80"
+                        {
+                            "tag": "format_specification",
+                            "repeat_factor": "",
+                            "descriptor": {
+                                "tag": "repeatable_edit_descriptor",
+                                "repeated_descriptors": [
+                                    "A80"
+                                ]
+                            },
+                            "slash": ""
+                        }
                     ]
                 },
                 {
