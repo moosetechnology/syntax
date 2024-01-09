@@ -349,11 +349,13 @@ SXML_TYPE_LIST ast_call_argument_with_return_specifier( SXML_TYPE_LIST location,
             SXML_TYPE_TEXT return_specifier,
             SXML_TYPE_TEXT argument) {
 
-  return SXML_LTLL(
-    ast_abstract_statement( "argument_with_return_specifier", location),
-    ",\n",
-    JSON_KQ_ ("return_specifier", return_specifier),
-    JSON_KQ("argument", argument)
+  return JSON_MAP(
+    SXML_LTLL(
+      ast_abstract_statement( "argument_with_return_specifier", location),
+      ",\n",
+      JSON_KQ_ ("return_specifier", return_specifier),
+      JSON_KQ("argument", argument)
+    )
   );
 }
 
