@@ -3186,7 +3186,11 @@ $LIST( <48:io_list>)
 $LIST( <49:io_imply_do_list>)
 {
   $LIST( <49:io_imply_do_list>) = ast_data_imply_do_list(
-    SXML_LL($LIST(<48:io_list>), $LIST(<99:symbolic_name>)),
+    SXML_LTL(
+    	$LIST(<48:io_list>), 
+    	",", 
+    	$LIST(<99:symbolic_name>)
+    ),
     $LIST(<78:int_real_dp_expr>),
     $LIST(<78:int_real_dp_expr>'),
     $LIST(<78:int_real_dp_expr>'')
@@ -3201,7 +3205,11 @@ $LIST( <49:io_imply_do_list>)
 $LIST( <49:io_imply_do_list>)
 {
   $LIST( <49:io_imply_do_list>) = ast_data_imply_do_list(
-    SXML_LL($LIST(<48:io_list>), $LIST(<99:symbolic_name>)),
+    SXML_LTL(
+    	$LIST(<48:io_list>),
+    	",", 
+    	$LIST(<99:symbolic_name>)
+    ),
     $LIST(<78:int_real_dp_expr>),
     $LIST(<78:int_real_dp_expr>'),
     ast_empty_map()
@@ -4194,7 +4202,7 @@ $LIST( <60d:fmt_spec_/:>)
 {
   $LIST( <60d:fmt_spec_/:>) = ast_fmt_specification(
     NULL,
-    SXML_T(""),
+    SXML_T("{}"),
     $NAME(<60f:/:>)
   );
 }    
