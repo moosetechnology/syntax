@@ -1858,7 +1858,7 @@ $LIST( <22:len_specification>)
 
 $LIST( <22:len_specification>)
 {
-  $LIST( <22:len_specification>) = SXML_T("<22>.4");
+  $LIST( <22:len_specification>) = $LIST(<80:int_constant_expr>);
 }
 
 *******************************************************************************
