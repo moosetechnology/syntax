@@ -4202,7 +4202,7 @@ $LIST( <60d:fmt_spec_/:>)
 {
   $LIST( <60d:fmt_spec_/:>) = ast_fmt_specification(
     NULL,
-    SXML_T("{}"),
+    ast_empty_map(),
     $NAME(<60f:/:>)
   );
 }    
@@ -6311,7 +6311,7 @@ $LIST( <89:substring_name>)
   $LIST( <89:substring_name>) = ast_substring(
     $LIST(<99:symbolic_name>),
     NULL,
-    NULL,
+    ast_empty_string(),
     $LIST(<77b:[integer_expr]>)
   );
 }    

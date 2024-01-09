@@ -1,4 +1,17 @@
 /* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_empty_map() {
+  return SXML_T("{}");
+}
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_empty_string() {
+  return SXML_T("\"\"");
+}
+
+
+/* -------------------------------------------------------------------------
  * ouputs line and column  position
  */
 SXML_TYPE_LIST ast_location( SXML_TYPE_TEXT position,
@@ -1116,12 +1129,24 @@ SXML_TYPE_LIST ast_substring(SXML_TYPE_LIST variable,
   else 
     variable_or_array = JSON_KU_("array", array);
 
+  SXML_TYPE_LIST upper_bound_safe = upper_bound;
+  SXML_TYPE_LIST lower_bound_safe = lower_bound;
+  
+  if (upper_bound == NULL) {
+    upper_bound_safe = ast_empty_string();
+  } 
+
+  if (lower_bound == NULL) {
+    lower_bound_safe = ast_empty_string();
+  }  
+
+
   return JSON_MAP(
     SXML_LLLL(
       ast_tag("substring"),
       variable_or_array,
-      JSON_KU_("lower_bound", lower_bound),
-      JSON_KU ("upper_bound", upper_bound)
+      JSON_KU_("lower_bound", lower_bound_safe),
+      JSON_KU ("upper_bound", upper_bound_safe)
       )
     );
 }
@@ -1452,11 +1477,4 @@ SXML_TYPE_LIST ast_implicit_element(
       JSON_KU("right", right)
       )
   );
-}
-
-
-/* -------------------------------------------------------------------------
- */
-SXML_TYPE_LIST ast_empty_map() {
-  return SXML_T("{}");
 }
