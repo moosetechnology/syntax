@@ -1,4 +1,17 @@
 /* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_empty_map() {
+  return SXML_T("{}");
+}
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_empty_string() {
+  return SXML_T("\"\"");
+}
+
+
+/* -------------------------------------------------------------------------
  * ouputs line and column  position
  */
 SXML_TYPE_LIST ast_location( SXML_TYPE_TEXT position,
@@ -194,6 +207,68 @@ SXML_TYPE_LIST ast_format_statement( SXML_TYPE_LIST format) {
         );
 }
 
+
+/* -------------------------------------------------------------------------
+ * outputs a format specification
+ * - repeat factor
+ * - descriptor
+ * - slash (present or absent)
+ */
+SXML_TYPE_LIST ast_fmt_specification( SXML_TYPE_TEXT repeat_factor,
+            SXML_TYPE_LIST descriptor,
+            SXML_TYPE_TEXT slash ) {
+  
+  return JSON_MAP(
+    SXML_LLLL(
+      ast_tag ("format_specification"),
+      JSON_KQ_ ("repeat_factor", repeat_factor), 
+      JSON_KU_ ("descriptor", descriptor),
+      JSON_KQ ("slash", slash)
+    )
+  );
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a format statement nonrepeatable edit descriptor
+ * - descriptor
+ */
+SXML_TYPE_LIST ast_nonrepeatable_edit_descriptor( SXML_TYPE_LIST descriptor) {
+  return JSON_MAP(
+    SXML_LL(
+      ast_tag ( "nonrepeatable_edit_descriptor"), 
+      JSON_KU  ("descriptor", SXML_QUOTED_LIST (descriptor))
+    )
+  );
+}
+
+/* -------------------------------------------------------------------------
+ * outputs a format statement nonrepeatable edit descriptor
+ * - descriptor
+ */
+SXML_TYPE_LIST ast_nonrepeatable_edit_descriptor_character( SXML_TYPE_LIST descriptor) {
+  return JSON_MAP(
+    SXML_LL(
+      ast_tag ( "nonrepeatable_edit_descriptor"), 
+      JSON_KU  ("descriptor", descriptor)
+    )
+  );
+}
+
+/* -------------------------------------------------------------------------
+ * outputs a format statement repeatable edit descriptor
+ * - descriptor
+ */
+SXML_TYPE_LIST ast_repeatable_edit_descriptor( SXML_TYPE_LIST descriptor) {
+  return JSON_MAP(
+    SXML_LL(
+      ast_tag ( "repeatable_edit_descriptor"), 
+      JSON_KU  ("repeated_descriptors", JSON_ARRAY(descriptor))
+    )
+  );
+}
+
+
 /* -------------------------------------------------------------------------
  * outputs a type_statement (variable declaration)
  * - type_reference
@@ -287,11 +362,13 @@ SXML_TYPE_LIST ast_call_argument_with_return_specifier( SXML_TYPE_LIST location,
             SXML_TYPE_TEXT return_specifier,
             SXML_TYPE_TEXT argument) {
 
-  return SXML_LTLL(
-    ast_abstract_statement( "argument_with_return_specifier", location),
-    ",\n",
-    JSON_KQ_ ("return_specifier", return_specifier),
-    JSON_KQ("argument", argument)
+  return JSON_MAP(
+    SXML_LTLL(
+      ast_abstract_statement( "argument_with_return_specifier", location),
+      ",\n",
+      JSON_KQ_ ("return_specifier", return_specifier),
+      JSON_KQ("argument", argument)
+    )
   );
 }
 
@@ -1052,12 +1129,24 @@ SXML_TYPE_LIST ast_substring(SXML_TYPE_LIST variable,
   else 
     variable_or_array = JSON_KU_("array", array);
 
+  SXML_TYPE_LIST upper_bound_safe = upper_bound;
+  SXML_TYPE_LIST lower_bound_safe = lower_bound;
+  
+  if (upper_bound == NULL) {
+    upper_bound_safe = ast_empty_string();
+  } 
+
+  if (lower_bound == NULL) {
+    lower_bound_safe = ast_empty_string();
+  }  
+
+
   return JSON_MAP(
     SXML_LLLL(
       ast_tag("substring"),
       variable_or_array,
-      JSON_KU_("lower_bound", lower_bound),
-      JSON_KU ("upper_bound", upper_bound)
+      JSON_KU_("lower_bound", lower_bound_safe),
+      JSON_KU ("upper_bound", upper_bound_safe)
       )
     );
 }
@@ -1236,7 +1325,7 @@ SXML_TYPE_LIST ast_do_loop(
 
   return SXML_LL(
     do_statement,
-    JSON_KU("statements_list", JSON_MAP(statements_list))
+    JSON_KU("statements_list", JSON_ARRAY(statements_list))
     );
 }
 
@@ -1275,20 +1364,12 @@ SXML_TYPE_LIST ast_do_statement(
 SXML_TYPE_LIST ast_do_parameters(SXML_TYPE_LIST init,
               SXML_TYPE_LIST limit,
               SXML_TYPE_LIST increment) {
-  if (increment == NULL) {
+    
     return SXML_LLL(
       JSON_KU_("init", init),
       JSON_KU_("limit", limit),
       JSON_KU("increment", increment)
     );    
-  }
-  else {
-    return SXML_LLL(
-        JSON_KU_("init", init),
-        JSON_KU_("limit", limit),
-        JSON_KQ("increment", "null")
-    );
-  }
 }
 
 
@@ -1396,11 +1477,4 @@ SXML_TYPE_LIST ast_implicit_element(
       JSON_KU("right", right)
       )
   );
-}
-
-
-/* -------------------------------------------------------------------------
- */
-SXML_TYPE_LIST ast_empty_map() {
-  return SXML_T("{}");
 }
