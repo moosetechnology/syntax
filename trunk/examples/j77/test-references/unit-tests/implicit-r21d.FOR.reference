@@ -1,0 +1,57 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/implicit-r21d.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": "null",
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "2",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "implicit_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "8"
+                    },
+                    "parameters": [
+                        {
+                            "type": {
+                                "tag": "type_reference",
+                                "name": "INTEGER"
+                            },
+                            "elements": [
+                                {
+                                    "tag": "implicit_element",
+                                    "left": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "1",
+                                            "column": "26"
+                                        },
+                                        "name": "A"
+                                    },
+                                    "right": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "1",
+                                            "column": "28"
+                                        },
+                                        "name": "Z"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

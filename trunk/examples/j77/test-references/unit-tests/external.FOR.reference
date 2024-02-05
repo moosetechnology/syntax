@@ -1,0 +1,54 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/external.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": "null",
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "2",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "external_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "8"
+                    },
+                    "proc_list": [
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "17"
+                            },
+                            "name": "TAN"
+                        },
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "22"
+                            },
+                            "name": "COS"
+                        },
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "27"
+                            },
+                            "name": "SIN"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

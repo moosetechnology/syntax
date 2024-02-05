@@ -1,0 +1,75 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/write-star-star-iolist.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": "null",
+            "start_pos": {
+                "line": "1",
+                "column": "1"
+            },
+            "end_pos": {
+                "line": "2",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "label": "8",
+                    "tag": "write_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "8"
+                    },
+                    "control_info_list": [
+                        {
+                            "name": "UNIT",
+                            "parameter": {
+                                "asterisk": "*"
+                            }
+                        },
+                        {
+                            "name": "FMT",
+                            "parameter": {
+                                "asterisk": "*"
+                            }
+                        }
+                    ],
+                    "io_list": [
+                        {
+                            "tag": "character_expression",
+                            "expression": {
+                                "tag": "character_constant",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "22"
+                                },
+                                "value": "'I/O error # '"
+                            }
+                        },
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "38"
+                            },
+                            "name": "N"
+                        },
+                        {
+                            "tag": "character_expression",
+                            "expression": {
+                                "tag": "character_constant",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "41"
+                                },
+                                "value": "', on 1'"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

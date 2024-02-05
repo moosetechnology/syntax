@@ -1,0 +1,2 @@
+      BACKSPACE ( 2, IOSTAT=CODE, ERR=9 )
+      END

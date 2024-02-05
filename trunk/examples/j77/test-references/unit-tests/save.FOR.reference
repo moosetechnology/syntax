@@ -1,0 +1,46 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/save.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": "null",
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "2",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "save_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "8"
+                    },
+                    "var_list": [
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "13"
+                            },
+                            "name": "A"
+                        },
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "17"
+                            },
+                            "name": "B"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

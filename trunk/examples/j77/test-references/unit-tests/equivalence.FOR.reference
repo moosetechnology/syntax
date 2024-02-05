@@ -1,0 +1,183 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/equivalence.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": "null",
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "3",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "type_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "8"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "name": "CHARACTER"
+                    },
+                    "declarators": [
+                        {
+                            "len_specifier": {
+                                "tag": "nonzero_unsigned_int_constant",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "20"
+                                },
+                                "value": "4"
+                            },
+                            "tag": "variable_declarator",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "18"
+                                },
+                                "name": "A"
+                            },
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": {
+                                "tag": "nonzero_unsigned_int_constant",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "25"
+                                },
+                                "value": "4"
+                            },
+                            "tag": "variable_declarator",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "23"
+                                },
+                                "name": "B"
+                            },
+                            "dimension_declarators": []
+                        },
+                        {
+                            "len_specifier": {
+                                "tag": "nonzero_unsigned_int_constant",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "33"
+                                },
+                                "value": "3"
+                            },
+                            "tag": "variable_declarator",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "28"
+                                },
+                                "name": "C"
+                            },
+                            "dimension_declarators": [
+                                {
+                                    "tag": "literal_expression",
+                                    "literal": {
+                                        "tag": "unsigned_int_constant",
+                                        "start_pos": {
+                                            "line": "1",
+                                            "column": "30"
+                                        },
+                                        "value": "2"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "tag": "equivalence_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "8"
+                    },
+                    "parameters": [
+                        [
+                            {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "21"
+                                },
+                                "name": "A"
+                            },
+                            {
+                                "tag": "array_element_name",
+                                "name": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "2",
+                                        "column": "23"
+                                    },
+                                    "name": "C"
+                                },
+                                "qualifiers_list": [
+                                    {
+                                        "tag": "arithmetic_expression",
+                                        "expression": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "2",
+                                                "column": "25"
+                                            },
+                                            "value": "1"
+                                        }
+                                    }
+                                ]
+                            }
+                        ],
+                        [
+                            {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "30"
+                                },
+                                "name": "B"
+                            },
+                            {
+                                "tag": "array_element_name",
+                                "name": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "2",
+                                        "column": "32"
+                                    },
+                                    "name": "C"
+                                },
+                                "qualifiers_list": [
+                                    {
+                                        "tag": "arithmetic_expression",
+                                        "expression": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "2",
+                                                "column": "34"
+                                            },
+                                            "value": "2"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    ]
+                }
+            ]
+        }
+    ]
+}

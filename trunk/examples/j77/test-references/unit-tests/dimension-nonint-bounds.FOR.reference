@@ -1,0 +1,148 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/dimension-nonint-bounds.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": "null",
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "3",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "parameter_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "8"
+                    },
+                    "parameters": [
+                        {
+                            "name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "20"
+                                },
+                                "name": "LO"
+                            },
+                            "expression": {
+                                "tag": "logical_const_expr",
+                                "expression": {
+                                    "tag": "unsigned_int_constant",
+                                    "start_pos": {
+                                        "line": "1",
+                                        "column": "25"
+                                    },
+                                    "value": "1"
+                                }
+                            }
+                        },
+                        {
+                            "name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "28"
+                                },
+                                "name": "HI"
+                            },
+                            "expression": {
+                                "tag": "logical_const_expr",
+                                "expression": {
+                                    "tag": "unsigned_real_constant",
+                                    "start_pos": {
+                                        "line": "1",
+                                        "column": "33"
+                                    },
+                                    "value": "9.3"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "tag": "dimension_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "8"
+                    },
+                    "array_declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "variable": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "18"
+                                },
+                                "name": "A"
+                            },
+                            "dimension_declarators": [
+                                {
+                                    "lower_bound": {
+                                        "tag": "variable_expression",
+                                        "variable": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "2",
+                                                "column": "20"
+                                            },
+                                            "name": "HI"
+                                        }
+                                    }
+                                },
+                                {
+                                    "tag": "binary_expression",
+                                    "lhs": {
+                                        "tag": "binary_expression",
+                                        "lhs": {
+                                            "tag": "variable_expression",
+                                            "variable": {
+                                                "tag": "symbolic_name",
+                                                "start_pos": {
+                                                    "line": "2",
+                                                    "column": "24"
+                                                },
+                                                "name": "HI"
+                                            }
+                                        },
+                                        "operator": "*",
+                                        "expression": {
+                                            "tag": "literal_expression",
+                                            "literal": {
+                                                "tag": "unsigned_int_constant",
+                                                "start_pos": {
+                                                    "line": "2",
+                                                    "column": "27"
+                                                },
+                                                "value": "3"
+                                            }
+                                        }
+                                    },
+                                    "operator": "+",
+                                    "expression": {
+                                        "tag": "variable_expression",
+                                        "variable": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "2",
+                                                "column": "31"
+                                            },
+                                            "name": "LO"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
