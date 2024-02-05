@@ -29,7 +29,7 @@ static char	ME [] = "semat";
 #include "T_tables.h"
 #include "varstr.h"
 
-char WHAT_SEMATSACT[] = "@(#)SYNTAX - $Id: semat_sact.c 3598 2023-09-18 11:39:54Z garavel $" WHAT_DEBUG;
+char WHAT_SEMATSACT[] = "@(#)SYNTAX - $Id: semat_sact.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 #define NO_ACT 			0
 #define CREATE_FAMILY 		1
@@ -42,18 +42,18 @@ char WHAT_SEMATSACT[] = "@(#)SYNTAX - $Id: semat_sact.c 3598 2023-09-18 11:39:54
 /*   E X T E R N A L    E N T R I E S   */
 
 extern SXINT	genat_c (struct T_ag_item *T_ag);
-extern SXBOOLEAN  semat_write (struct T_ag_item *T_ag, char *langname);
-extern SXVOID     semat_free (struct T_ag_item *T_ag);
+extern bool  semat_write (struct T_ag_item *T_ag, char *langname);
+extern void     semat_free (struct T_ag_item *T_ag);
 
 /*   E X T E R N   */
 
 extern struct sxtables	semat_tables;
-extern SXBOOLEAN		is_check, is_c;
+extern bool		is_check, is_c;
 
 /*   S T A T I C   */
 
 struct T_ag_item	T_ag;
-static SXBOOLEAN	SUCCESS;
+static bool	SUCCESS;
 static SXINT	tok_lgth, rule_no;
 static struct sxtoken	null_token = {0, 0, {NULL,0,0}, NULL};
 static struct sxtoken	*tok /* extensible */ ;
@@ -68,7 +68,7 @@ static SXINT	*sorted /* 1:st_top */ ;
 static SXINT	*t_to_node_name /* 1:-tmax */ ;
 static SXINT	st_top, internal_node_name, max_ate;
 static char	VIDE [] = "VOID";
-static SXBOOLEAN	b_list, b_nt, b_recur, b_right_list;
+static bool	b_list, b_nt, b_recur, b_right_list;
 static char	*node_name;
 static struct sxsource_coord	current_rule_semi_colon_source_index;
 
@@ -97,21 +97,21 @@ static SXINT	get_ate (char *get_ate_node_name, SXINT x_prod)
 {
     SXINT	ate;
     char	*s, c;
-    SXBOOLEAN	is_id;
+    bool	is_id;
 
 
 /* We first check that the get_ate_node_name is a C identifier : */
 /* letter {letter|digit|"_"} */
 
-    is_id = SXTRUE;
+    is_id = true;
 
     if (isalpha (*get_ate_node_name)) {
 	for (c = *(s = get_ate_node_name + 1); (c != SXNUL) && is_id; c = *++s)
 	    if (!(isalpha (c) || isdigit (c) || c == '_'))
-		is_id = SXFALSE;
+		is_id = false;
     }
     else
-	is_id = SXFALSE;
+	is_id = false;
 
     if (!is_id)
 	sxerror (tok [x_prod].source_index,
@@ -131,7 +131,7 @@ static SXINT	get_ate (char *get_ate_node_name, SXINT x_prod)
 
 
 
-static SXVOID	symbol_table (char *symbol_table_node_name, 
+static void	symbol_table (char *symbol_table_node_name, 
 			      SXINT x_prod, 
 			      SXINT degree, 
 			      SXINT ate, 
@@ -172,27 +172,27 @@ static SXVOID	symbol_table (char *symbol_table_node_name,
 
 
 
-static SXVOID	put_in_stack_schema (SXINT delta)
+static void	put_in_stack_schema (SXINT delta)
 {
     T_ag.T_stack_schema [T_ag.T_constants.T_stack_schema_size++] = delta;
 }
 
 
 
-static SXBOOLEAN	compare_node_name (SXINT i, SXINT j)
+static bool	compare_node_name (SXINT i, SXINT j)
 {
     return (strcmp (sxstrget (st [i].node_name_to_alpha), sxstrget (st [j].node_name_to_alpha)) < 0);
 }
 
 
 
-static SXBOOLEAN	is_post (SXINT nt, char *post)
+static bool	is_post (SXINT nt, char *post)
 {
     SXINT	l, lpost;
     char	*s;
 
     if ((l = strlen (s = bnf_ag.NT_STRING + bnf_ag.ADR [nt]) - (lpost = strlen (post)) - 1) <= 0)
-	return SXFALSE;
+	return false;
 
     return strncmp (s + l, post, lpost) == 0;
 }
@@ -226,7 +226,7 @@ static char	*get_node_name (SXINT i)
 
 
 
-static SXVOID	print_node_name (SXINT nt)
+static void	print_node_name (SXINT nt)
 {
     SXINT	j, k, m, n, lim1, lim2;
 
@@ -262,7 +262,7 @@ static SXVOID	print_node_name (SXINT nt)
 #ifdef __GNUC__
 __attribute__ ((noreturn))
 #endif
-static SXVOID	gripe (void)
+static void	gripe (void)
 {
     fputs ("\nA function of \"semat\" is out of date with respect to its specification.\n", sxstderr);
     sxexit(1);
@@ -308,15 +308,15 @@ semat_semact (SXINT code, SXINT numact)
 
 
 
-SXBOOLEAN		semat_sem (void)
+bool		semat_sem (void)
 {
     if (bnf_ag.WS_TBL_SIZE.nbpro != rule_no) {
 	fprintf (sxstderr, "%s: internal inconsistency %ld-%ld;\n\ttables will not be produced.\n", ME, bnf_ag.WS_TBL_SIZE.
 	     nbpro, rule_no);
-	return SUCCESS = SXFALSE;
+	return SUCCESS = false;
     }
 
-    SUCCESS = SXTRUE;
+    SUCCESS = true;
 
 /* semantic processing failed (a priori) */
 
@@ -356,16 +356,16 @@ SXBOOLEAN		semat_sem (void)
 	    SXINT	i, nt;
 	    SXINT	lim;
 	    SXINT	nb_rhs, degree, t_or_nt_code, ate;
-	    SXBOOLEAN		rhs_list = SXFALSE;
+	    bool		rhs_list = false;
 
 	    T_ag.SXT_node_info [x_prod].T_ss_indx = T_ag.T_constants.T_stack_schema_size;
 	    nt = bnf_ag.WS_NBPRO [x_prod].reduc;
-	    b_nt = b_recur = SXFALSE;
+	    b_nt = b_recur = false;
 
 	    if ((b_list = is_post (nt, "_LIST")))
 		b_right_list = is_post (nt, "_RIGHT_LIST");
 	    else
-		b_right_list = SXFALSE;
+		b_right_list = false;
 
 	    {
 		SXINT	x;
@@ -381,10 +381,10 @@ SXBOOLEAN		semat_sem (void)
 			if (!IS_A_PARSACT (t_or_nt_code)) {
 			    /* [x]nt */
 			    nb_rhs++;
-			    b_nt = SXTRUE;
+			    b_nt = true;
 
 			    if ((t_or_nt_code = XNT_TO_NT (t_or_nt_code)) == nt)
-				b_recur = SXTRUE;
+				b_recur = true;
 
 			    if (nb_rhs == 1)
 				rhs_list = is_post (t_or_nt_code, "_LIST");
@@ -482,7 +482,7 @@ SXBOOLEAN		semat_sem (void)
 			    degree = -1;
 			}
 			else {
-			    /* Empty RHS, the name SXVOID is given */
+			    /* Empty RHS, the name void is given */
 			    node_name = VIDE;
 			    /* create family with an empty stack_schema */
 			    action_no = CREATE_FAMILY;
@@ -545,7 +545,7 @@ SXBOOLEAN		semat_sem (void)
 		}
 
 		if (action_no != NO_ACT)
-		    bnf_ag.WS_NBPRO [x_prod].bprosimpl = SXFALSE;
+		    bnf_ag.WS_NBPRO [x_prod].bprosimpl = false;
 
 		bnf_ag.WS_NBPRO [x_prod].action = action_no;
 	    }
@@ -644,7 +644,7 @@ SXBOOLEAN		semat_sem (void)
 	       working_dir */
 	if (!is_check) {
 	    if (!semat_write (&T_ag, prgentname))
-		SUCCESS = SXFALSE;
+		SUCCESS = false;
 	    else {
 		/* Generation, si necessaire des trames des passes
 		       heritees et synthetisees */
@@ -668,7 +668,7 @@ SXBOOLEAN		semat_sem (void)
 
 
 
-SXVOID	semat_lo (void)
+void	semat_lo (void)
 {
     /*     L I S T I N G _ O U T P U T     */
     if (is_list && SUCCESS) {

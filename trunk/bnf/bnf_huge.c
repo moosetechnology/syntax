@@ -28,7 +28,7 @@ char WHAT_BNFHUGE[] = "@(#)SYNTAX - $Id: bnf_huge.c 3147 2023-05-02 13:42:48Z ga
  * natural language processing
  */ 
 
-SXVOID
+void
 bnf_huge (struct bnf_ag_item *B, char *langname)
 {
   sxuse (B);

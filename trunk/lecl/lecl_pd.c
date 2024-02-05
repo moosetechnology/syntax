@@ -27,7 +27,7 @@
 #include "varstr.h"
 #include "lecl_ag.h"
 
-char WHAT_LECLPD[] = "@(#)SYNTAX - $Id: lecl_pd.c 3603 2023-09-23 20:02:36Z garavel $" WHAT_DEBUG;
+char WHAT_LECLPD[] = "@(#)SYNTAX - $Id: lecl_pd.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 static SXINT	node_no;
 static SXBA	/* max_re_lgth */ next_set;
@@ -35,13 +35,13 @@ static SXBA	/* max_re_lgth */ first_set;
 
 
 
-static SXVOID	set_current_pos (SXINT re_no, 
+static void	set_current_pos (SXINT re_no, 
 				 SXINT *current_pos, 
 				 SXINT code_no, 
 				 SXINT prdct_no, 
 				 SXBA next, 
 				 struct sxsource_coord *designator, 
-				 SXBOOLEAN is_erased)
+				 bool is_erased)
 {
     struct ers_item	*ers_ptr;
 
@@ -63,7 +63,7 @@ static SXVOID	set_current_pos (SXINT re_no,
 
 
 
-static SXBOOLEAN	is_path (SXBOOLEAN one_path, 
+static bool	is_path (bool one_path, 
 			 SXINT debut, 
 			 SXINT fin, 
 			 SXBA /* re_lgth */ not_already_seen, 
@@ -89,7 +89,7 @@ static SXBOOLEAN	is_path (SXBOOLEAN one_path,
 
 	    if (xl == fin) {
 		if (one_path) {
-		    return (SXTRUE);
+		    return (true);
 		}
 	    }
 	    else    
@@ -101,7 +101,7 @@ static SXBOOLEAN	is_path (SXBOOLEAN one_path,
 	    }
 	    else {
 	        if (!one_path) {
-		    return SXFALSE;
+		    return false;
 		}
 	    }
 	    
@@ -113,7 +113,7 @@ static SXBOOLEAN	is_path (SXBOOLEAN one_path,
 
 
 
-static SXVOID	bitassign (SXBA lhs, SXINT x, SXINT lgth, SXBA rhs)
+static void	bitassign (SXBA lhs, SXINT x, SXINT lgth, SXBA rhs)
 {
     x += lgth;
 
@@ -129,7 +129,7 @@ static SXVOID	bitassign (SXBA lhs, SXINT x, SXINT lgth, SXBA rhs)
     }
 }
 
-static SXVOID	st_set_debutant (SXBA first, SXINT item_no, SXINT item_code)
+static void	st_set_debutant (SXBA first, SXINT item_no, SXINT item_code)
 {
     SXINT		origine, delta;
 
@@ -149,12 +149,12 @@ static SXVOID	st_set_debutant (SXBA first, SXINT item_no, SXINT item_code)
 
 
 
-static SXVOID	st_set_lispro (SXINT re_no, 
+static void	st_set_lispro (SXINT re_no, 
 			       SXINT item_no, 
 			       SXBA next, 
 			       SXINT item_code, 
 			       SXINT prdct_no, 
-			       SXBOOLEAN is_erased, 
+			       bool is_erased, 
 			       struct sxsource_coord *designator)
 {
     /* xlis est l'index dans lispro du debut de l'E.R. en cours de construction;
@@ -180,7 +180,7 @@ static SXVOID	st_set_lispro (SXINT re_no,
 
 	    ers_ptr = ers + i;
 	    set_current_pos (re_no, &current_pos, ers_ptr->lispro, ers_ptr->prdct_no, st_set_lispro_follow, &(ers_ptr->liserindx), 
-			     (SXBOOLEAN) (ers_ptr->is_erased || is_erased));
+			     (bool) (ers_ptr->is_erased || is_erased));
 	}
     }
     else
@@ -189,12 +189,12 @@ static SXVOID	st_set_lispro (SXINT re_no,
     sxfree (st_set_lispro_follow);
 }
 
-static SXVOID	st_set_lispro_action (SXINT re_no, 
+static void	st_set_lispro_action (SXINT re_no, 
 				      SXINT item_no, 
 				      SXBA next, 
 				      SXINT item_code, 
 				      SXINT prdct_no, 
-				      SXBOOLEAN is_erased, 
+				      bool is_erased, 
 				      struct sxsource_coord *designator)
 {
     /* xlis est l'index dans lispro du debut de l'E.R. en cours de construction;
@@ -205,19 +205,19 @@ static SXVOID	st_set_lispro_action (SXINT re_no,
     set_current_pos (re_no, &current_pos, item_code, prdct_no, next, designator, is_erased);
 }
 
-static SXVOID	st_initialize_lispro (SXINT re_no, SXBA next)
+static void	st_initialize_lispro (SXINT re_no, SXBA next)
 {
     /* xlis est l'index dans lispro du debut de l'E.R. en cours de construction;
    on a deja verifie qu'elle tient dans lispro */
     SXINT		current_pos;
 
     current_pos = xlis;
-    set_current_pos (re_no, &current_pos,  (SXINT)-1, (SXINT)0, next, (struct sxsource_coord *)NULL, SXFALSE);
+    set_current_pos (re_no, &current_pos,  (SXINT)-1, (SXINT)0, next, (struct sxsource_coord *)NULL, false);
 }
 
-static SXVOID	st_check_token (SXINT *st_check_token_xlis, 
+static void	st_check_token (SXINT *st_check_token_xlis, 
 				SXINT item_no, 
-				SXBOOLEAN is_empty, 
+				bool is_empty, 
 				struct sxsource_coord *designator)
 {
     /* This procedure checks that in the current regular expression
@@ -241,7 +241,7 @@ static SXVOID	st_check_token (SXINT *st_check_token_xlis,
 	not_already_seen = sxba_calloc (re_lgth + 1);
 	to_be_processed = (SXINT*) sxalloc ((SXINT) re_lgth + 1, sizeof (SXINT));
 
-	if (is_path (SXTRUE, *st_check_token_xlis, EOT, not_already_seen, to_be_processed))
+	if (is_path (true, *st_check_token_xlis, EOT, not_already_seen, to_be_processed))
 	    sxerror (*designator,
 		     err_titles [2][0],
 		     "%sIllegal token specification : it exists a path involving only actions.",
@@ -249,7 +249,7 @@ static SXVOID	st_check_token (SXINT *st_check_token_xlis,
 
 	for (xl = *st_check_token_xlis + 1; xl < EOT; xl++) {
 	    if (ers [xl].lispro <= xactmin) {
-		if (is_path (SXTRUE, xl, xl, not_already_seen, to_be_processed))
+		if (is_path (true, xl, xl, not_already_seen, to_be_processed))
 		    sxerror (ers [xl].liserindx,
 			     err_titles [2][0],
 			     "%sIllegal token specification : it exists a loop involving only actions.", 
@@ -287,7 +287,7 @@ static SXINT	get_prdct_value (struct lecl_node *visited)
 
 
 
-SXVOID	lecl_pd (void)
+void	lecl_pd (void)
 {
     struct lecl_node	*visited = SXVISITED;
     struct lecl_node	*son_1, *son_2;
@@ -478,7 +478,7 @@ D E R I V E D
 
     case OPTION_n  :
 	if (!visited->not_is_first_visit) {
-	    visited->is_empty = SXTRUE;
+	    visited->is_empty = true;
 	    sxba_copy (tfirst [visited->node_no], tfirst [sxson (visited, 1)->node_no]);
 	}
 
@@ -509,7 +509,7 @@ D E R I V E D
 	    sxat_snv (SXINHERITED, sxson (visited, 1));
 	}
 	else {
-	    abbrev [(visited->father)->item_code].is_empty = SXFALSE;
+	    abbrev [(visited->father)->item_code].is_empty = false;
 	    xlis += son_1->d_item_no + 1;
 	    ers [xlis].lispro = -1;
 	}
@@ -549,7 +549,7 @@ D E R I V E D
 
     case REF_TRANS_CLOSURE_n  :
 	if (!visited->not_is_first_visit) {
-	    visited->is_empty = SXTRUE;
+	    visited->is_empty = true;
 	    sxba_copy (tfirst [visited->node_no], tfirst [sxson (visited, 1)->node_no]);
 	}
 
@@ -576,7 +576,7 @@ D E R I V E D
 		st_initialize_lispro (current_re_no, first_set);
 		st_set_lispro (current_re_no, (SXINT)1 /* item_no */ , next_set, (SXINT)2
 			       /* eof code */
-									   , (SXINT)0 /* prdct_no */ , SXTRUE, &(son_1->token.
+									   , (SXINT)0 /* prdct_no */ , true, &(son_1->token.
 		     source_index));
 	    }
 	    else if (son_1->is_empty) {
@@ -693,20 +693,20 @@ D E R I V E D
     }
 
 visited_node_kind_end:
-    visited->not_is_first_visit = SXTRUE;
+    visited->not_is_first_visit = true;
     return;
 
 action:
     node_no = visited->node_no;
 
     if (!visited->not_is_first_visit) {
-	/* visited -> is_empty = SXFALSE; init_value */
+	/* visited -> is_empty = false; init_value */
 	sxba_empty (tfirst [node_no]);
 	SXBA_1_bit (tfirst [node_no], visited->i_item_no);
     }
     else
 	st_set_lispro_action (current_re_no, visited->i_item_no, tnext [node_no], visited->item_code, (SXINT)0 /* prdct_no */ ,
-	     SXFALSE
+	     false
 			      /* is_erased */
 		  , &(visited->token.source_index));
 
@@ -738,7 +738,7 @@ sc_ref_in_re:
 	}
 
 
-/*        else visited -> is_empty = SXFALSE; init_value */
+/*        else visited -> is_empty = false; init_value */
 
 	st_set_debutant (tfirst [node_no], visited->i_item_no, visited->item_code);
     }
@@ -750,7 +750,7 @@ sc_ref_in_re:
 
 propagate:
     if (!visited->not_is_first_visit) {
-	visited->not_is_first_visit = SXTRUE;
+	visited->not_is_first_visit = true;
 	visited->is_empty = (son_1 = sxson (visited, 1))->is_empty;
 	sxba_copy (tfirst [visited->node_no], tfirst [son_1->node_no]);
     }

@@ -20,11 +20,11 @@
 #include "sxunix.h"
 #include "sxdico.h"
 
-char WHAT_DICOACT[] = "@(#)SYNTAX - $Id: dico_act.c 3359 2023-06-16 15:20:30Z garavel $" WHAT_DEBUG;
+char WHAT_DICOACT[] = "@(#)SYNTAX - $Id: dico_act.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 extern SXINT             optim_kind, process_kind, print_on_sxtty;
 extern char            *dico_name, *prgentname;
-extern SXBOOLEAN                static_kind, extern_kind;
+extern bool                static_kind, extern_kind;
 
 static FILE	*dico_file = {NULL};
 
@@ -49,7 +49,7 @@ word_list_set_oflw (void)
     word_list_set = sxba_resize (word_list_set, (word_list_set_size *= 2) + 1);
 }
 
-static SXVOID	gripe (void)
+static void	gripe (void)
 {
     fputs ("\nA function of \"dico\" is out of date with respect to its specification.\n", sxstderr);
     sxexit(1);

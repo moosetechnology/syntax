@@ -35,7 +35,7 @@
 /* Definit la constante HIBITS == 1<<15 pour les mots de 32! */
 
 
-SXBOOLEAN		is_default_semantics, is_print_prod, is_print_time, is_no_semantics, is_parse_tree_number;
+bool		is_default_semantics, is_print_prod, is_print_time, is_no_semantics, is_parse_tree_number;
 
 
 #define TIME_INIT	0
@@ -64,7 +64,7 @@ sxtime (what, str)
 #define POP(s)		(s)[(*(s))--]
 #define IS_EMPTY(s)	(*(s)==0)
 
-static SXBOOLEAN		is_semact_fun, is_constraint_fun, is_prdct_fun;
+static bool		is_semact_fun, is_constraint_fun, is_prdct_fun;
 
 static SXINT		n;
 
@@ -109,8 +109,8 @@ static SXBA_fdcl (T2_item_set, itemmax + 1);
 static SXBA	FSA_states_tbp;
 
 
-static SXBOOLEAN		is_FSA_loop;
-static SXBOOLEAN		T2_has_non_kernel, T2_has_changed;
+static bool		is_FSA_loop;
+static bool		T2_has_non_kernel, T2_has_changed;
 static SXINT		**T1_shift_NT_hd, **T2_shift_NT_hd;
 static SXINT		*T1_items_stack, *T2_items_stack;
 /* static SXINT		*T1_shift_state_stack, *T2_shift_state_stack; */
@@ -197,7 +197,7 @@ struct spf /* shared_parse_forest */
     struct lhs
     {
 	SXINT		prolon, reduc, next_lhs, init_prod;
-	SXBOOLEAN		is_erased;
+	bool		is_erased;
     } *lhs;
 };
 
@@ -211,7 +211,7 @@ static ushort		prod_core [rhs_lgth];
 
 static struct Aij_pool {
   SXINT		A, i, j, first_lhs, first_rhs;
-  SXBOOLEAN	is_erased;
+  bool	is_erased;
 }			*Aij_pool;
 static SXINT		Aij_top, Aij_size;
 
@@ -287,7 +287,7 @@ static SXBA     Aij_sem_lhs_set;
 #endif
 
 
-static SXBOOLEAN
+static bool
 NON_EQUAL (lhs_bits_array, rhs_bits_array)
     SXBA	lhs_bits_array, rhs_bits_array;
 {
@@ -299,13 +299,13 @@ NON_EQUAL (lhs_bits_array, rhs_bits_array)
     while (slices_number-- > 0)
     {
 	if (*lhs_bits_ptr-- != *rhs_bits_ptr--)
-	    return SXTRUE;
+	    return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
-static SXBOOLEAN
+static bool
 OR_AND (bits_array1, bits_array2, bits_array3)
     SXBA	bits_array1, bits_array2, bits_array3;
 {
@@ -313,7 +313,7 @@ OR_AND (bits_array1, bits_array2, bits_array3)
     SXBA	bits_ptr1, bits_ptr2, bits_ptr3;
     SXINT	slices_number = SXNBLONGS (SXBASIZE (bits_array2));
     SXBA_ELT	val1, val2;
-    SXBOOLEAN		has_changed = SXFALSE;
+    bool		has_changed = false;
 
     bits_ptr1 = bits_array1 + slices_number, bits_ptr2 = bits_array2 + slices_number, bits_ptr3 = bits_array3 + slices_number;
 
@@ -327,7 +327,7 @@ OR_AND (bits_array1, bits_array2, bits_array3)
 	    if (val1 != val2)
 	    {
 		*bits_ptr1 = val2;
-		has_changed = SXTRUE;
+		has_changed = true;
 	    }
 	}
 
@@ -338,7 +338,7 @@ OR_AND (bits_array1, bits_array2, bits_array3)
 }
 
 
-static SXBOOLEAN
+static bool
 OR_AND_MINUS (bits_array1, bits_array2, bits_array3, bits_array4)
     SXBA	bits_array1, bits_array2, bits_array3, bits_array4;
 {
@@ -349,7 +349,7 @@ OR_AND_MINUS (bits_array1, bits_array2, bits_array3, bits_array4)
     /* On change la taille! */
     SXINT	slices_number = SXNBLONGS (SXBASIZE (bits_array4) = SXBASIZE (bits_array2));
     SXBA_ELT	val;
-    SXBOOLEAN		is_set = SXFALSE;
+    bool		is_set = false;
 
     bits_ptr1 = bits_array1 + slices_number,
     bits_ptr2 = bits_array2 + slices_number,
@@ -359,7 +359,7 @@ OR_AND_MINUS (bits_array1, bits_array2, bits_array3, bits_array4)
     while (slices_number-- > 0)
     {
 	if ((val = *bits_ptr4-- = (*bits_ptr2--) & (*bits_ptr3--) & (~(*bits_ptr1)))) {
-	    is_set = SXTRUE;
+	    is_set = true;
 	    *bits_ptr1-- |= val;
 	}
 	else
@@ -369,14 +369,14 @@ OR_AND_MINUS (bits_array1, bits_array2, bits_array3, bits_array4)
     return is_set;
 }
 
-static SXBOOLEAN
+static bool
 AND (lhs_bits_array, rhs_bits_array)
     SXBA	lhs_bits_array, rhs_bits_array;
 {
     SXBA	lhs_bits_ptr, rhs_bits_ptr;
     SXINT	slices_number = SXNBLONGS (SXBASIZE (rhs_bits_array));
     SXINT	lhs_slices_number = SXNBLONGS (SXBASIZE (lhs_bits_array));
-    SXBOOLEAN		ret_val = SXFALSE;
+    bool		ret_val = false;
 
 #if EBUG
     if (*lhs_bits_array < *rhs_bits_array)
@@ -396,14 +396,14 @@ AND (lhs_bits_array, rhs_bits_array)
     while (slices_number-- > 0)
     {
 	if (*lhs_bits_ptr-- &= *rhs_bits_ptr--)
-	    ret_val = SXTRUE;
+	    ret_val = true;
     }
 
     return ret_val;
 }
 
 
-static SXBOOLEAN
+static bool
 AND3 (lhs_bits_array, op1_bits_array, op2_bits_array)
     SXBA	lhs_bits_array, op1_bits_array, op2_bits_array;
 {
@@ -411,7 +411,7 @@ AND3 (lhs_bits_array, op1_bits_array, op2_bits_array)
 
     SXBA	lhs_bits_ptr, op1_bits_ptr, op2_bits_ptr;
     SXINT	slices_number = SXNBLONGS (SXBASIZE (op2_bits_array));
-    SXBOOLEAN		ret_val = SXFALSE;
+    bool		ret_val = false;
 
 #if EBUG
     if (*op1_bits_array < *op2_bits_array)
@@ -425,13 +425,13 @@ AND3 (lhs_bits_array, op1_bits_array, op2_bits_array)
     while (slices_number-- > 0)
     {
 	if (*lhs_bits_ptr-- = (*op1_bits_ptr-- & *op2_bits_ptr--))
-	    ret_val = SXTRUE;
+	    ret_val = true;
     }
 
     return ret_val;
 }
 
-static SXBOOLEAN
+static bool
 AND3_SHIFT (lhs_bits_array, op1_bits_array, op2_bits_array, shift)
     SXBA	lhs_bits_array, op1_bits_array, op2_bits_array;
 {
@@ -445,7 +445,7 @@ AND3_SHIFT (lhs_bits_array, op1_bits_array, op2_bits_array, shift)
     SXINT			left_shift = SXBITS_PER_LONG - right_shift;
     SXBA_ELT		filtre = (~((SXBA_ELT)0)) >> left_shift;
     SXBA_ELT		op2val = (SXBA_ELT)0, prev_op2val;
-    SXBOOLEAN		ret_val = SXFALSE;
+    bool		ret_val = false;
 
 #if EBUG
     if (*op1_bits_array < *op2_bits_array)
@@ -462,7 +462,7 @@ AND3_SHIFT (lhs_bits_array, op1_bits_array, op2_bits_array, shift)
 	op2val = *op2_bits_ptr--;
 
 	if (*lhs_bits_ptr-- = (*op1_bits_ptr-- & ((op2val >> right_shift) | ((prev_op2val & filtre) << left_shift))))
-	    ret_val = SXTRUE;
+	    ret_val = true;
     }
 
     return ret_val;
@@ -470,7 +470,7 @@ AND3_SHIFT (lhs_bits_array, op1_bits_array, op2_bits_array, shift)
 
 
 
-static SXBOOLEAN
+static bool
 IS_AND (lhs_bits_array, rhs_bits_array)
     SXBA	lhs_bits_array, rhs_bits_array;
 {
@@ -486,10 +486,10 @@ IS_AND (lhs_bits_array, rhs_bits_array)
     while (slices_number-- > 0)
     {
 	if (*lhs_bits_ptr-- & *rhs_bits_ptr--)
-	    return SXTRUE;
+	    return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
@@ -500,7 +500,7 @@ IS_AND (lhs_bits_array, rhs_bits_array)
 #endif	
 
 #if 0
-static SXBOOLEAN
+static bool
 IS_OR_MINUS (bits_array1, bits_array2)
     SXBA	bits_array1, bits_array2;
 {
@@ -511,12 +511,12 @@ IS_OR_MINUS (bits_array1, bits_array2)
     SXBA	bits_ptr1 = bits_array1 + slices_number, bits_ptr2 = bits_array2 + slices_number;
 
     SXBA_ELT	val;
-    SXBOOLEAN		is_set = SXFALSE;
+    bool		is_set = false;
 
     while (slices_number-- > 0)
     {
 	if ((val = (*bits_ptr2-- &= ~(*bits_ptr1)))) {
-	    is_set = SXTRUE;
+	    is_set = true;
 	    *bits_ptr1-- |= val;
 	}
 	else
@@ -560,14 +560,14 @@ OR (lhs_bits_array, rhs_bits_array)
     }
 }
 
-static SXBOOLEAN
+static bool
 IS_OR (lhs_bits_array, rhs_bits_array)
     SXBA	lhs_bits_array, rhs_bits_array;
 {
     SXINT	slices_number = SXNBLONGS (SXBASIZE (rhs_bits_array));
     SXBA	lhs_bits_ptr = lhs_bits_array + slices_number, rhs_bits_ptr = rhs_bits_array + slices_number;
     SXBA_ELT	val1, val2;
-    SXBOOLEAN		has_changed = SXFALSE;
+    bool		has_changed = false;
 
     while (slices_number-- > 0)
     {
@@ -578,7 +578,7 @@ IS_OR (lhs_bits_array, rhs_bits_array)
 	    if (val1 != val2)
 	    {
 		*lhs_bits_ptr = val2;
-		has_changed = SXTRUE;
+		has_changed = true;
 	    }
 	}
 
@@ -711,7 +711,7 @@ bag_clear (pbag)
     
 
 #if 0
-static SXBOOLEAN
+static bool
 shift (item_p, item_q, p, q)
     SXINT item_p, item_q, p, q;
 {
@@ -746,7 +746,7 @@ shift (item_p, item_q, p, q)
 
 		if (Y > 0 && !SXBA_bit_is_set (T2_left_corner, Y)) {
 		    sxba_or (T2_left_corner, left_corner [Y]);
-		    T2_has_non_kernel = SXTRUE;
+		    T2_has_non_kernel = true;
 		    sxba_or (T2_non_kernel_item_set, nt2item_set [Y]);
 		}
 	    }
@@ -793,7 +793,7 @@ shift (item_p, item_q, p, q)
 		!(*for_semact.prdct) (1 /* No de passe : reconnaisseur */,
 				      item_q, q, q, prdct_no)) {
 		/* Le predicat a echoue */
-		return SXFALSE;
+		return false;
 	    }
 #endif
 
@@ -801,7 +801,7 @@ shift (item_p, item_q, p, q)
 
 	    if (!SXBA_bit_is_set (T2_item_set, item_q))
 		/* Le look-ahead a echoue */
-		return SXFALSE;
+		return false;
 
 #if is_parser
 	    new_p = q;
@@ -813,7 +813,7 @@ shift (item_p, item_q, p, q)
 	}
 	else
 #endif
-	    return SXFALSE;	/* Pas de scan_reduce */
+	    return false;	/* Pas de scan_reduce */
     }
 
     /* Y == 0 */
@@ -826,13 +826,13 @@ shift (item_p, item_q, p, q)
 	if (index_set_p == NULL) {
 	    if (!(*for_semact.constraint) (1 /* No de passe : reconnaisseur */,
 					   prdct_no, prod, NULL, p, q))
-		return SXFALSE;
+		return false;
 	}
 	else {
 	    /* Il semble qu'on peut directement modifier index_set_p!! */
 	    if (!(*for_semact.constraint) (1 /* No de passe : reconnaisseur */,
 					   prdct_no, prod, index_set_p, p, q))
-		return SXFALSE;
+		return false;
 	    /* ici index_set_p a pu etre touche */
 	}
     }
@@ -897,12 +897,12 @@ shift (item_p, item_q, p, q)
 	   et \alpha \not =>* \epsilon */
 	OR (ntXindex_set [B], index_set_p);
 
-    return SXTRUE;		/* is_scan_reduce */
+    return true;		/* is_scan_reduce */
 }
 #endif
 
 
-static SXBOOLEAN
+static bool
 shift (item_p, item_q, p, q)
     SXINT item_p, item_q, p, q;
 {
@@ -940,7 +940,7 @@ shift (item_p, item_q, p, q)
 	    if (index_set_q != NULL)
 		sxtrap (ME, "shift");
 #endif
-	    T2_has_changed = SXTRUE;
+	    T2_has_changed = true;
 
 	    if (*(ptr2 = &(T2_shift_NT_hd [YY])) == NULL) {
 		/* c'est la 1ere fois qu'on rencontre YY */
@@ -949,7 +949,7 @@ shift (item_p, item_q, p, q)
 
 		if (Y > 0 && !SXBA_bit_is_set (T2_left_corner, Y)) {
 		    sxba_or (T2_left_corner, left_corner [Y]);
-		    T2_has_non_kernel = SXTRUE;
+		    T2_has_non_kernel = true;
 		    sxba_or (T2_non_kernel_item_set, nt2item_set [Y]);
 		}
 	    }
@@ -980,11 +980,11 @@ shift (item_p, item_q, p, q)
 
 	if (index_set_p == NULL) {
 	    if (SXBA_bit_is_reset_set (index_set_q, p))
-		T2_has_changed = SXTRUE;
+		T2_has_changed = true;
 	}
 	else {
 	    if (IS_OR (index_set_q, index_set_p))
-		T2_has_changed = SXTRUE;
+		T2_has_changed = true;
 	}
 
 #if is_parser
@@ -999,7 +999,7 @@ shift (item_p, item_q, p, q)
 		!(*for_semact.prdct) (1 /* No de passe : reconnaisseur */,
 				      item_q, q, q, prdct_no)) {
 		/* Le predicat a echoue */
-		return SXFALSE;
+		return false;
 	    }
 #endif
 
@@ -1007,7 +1007,7 @@ shift (item_p, item_q, p, q)
 
 	    if (!SXBA_bit_is_set (T2_item_set, item_q))
 		/* Le look-ahead a echoue */
-		return SXFALSE;
+		return false;
 
 #if is_parser
 	    new_p = q;
@@ -1018,10 +1018,10 @@ shift (item_p, item_q, p, q)
 	    index_set_q = T2_index_sets [item_q];
 	}
 	else
-	    return SXFALSE;	/* Pas de scan_reduce */
+	    return false;	/* Pas de scan_reduce */
 #else
-	/* is_epsilon == SXFALSE */
-	return SXFALSE;	/* Pas de scan_reduce */
+	/* is_epsilon == false */
+	return false;	/* Pas de scan_reduce */
 #endif
     }
 
@@ -1035,13 +1035,13 @@ shift (item_p, item_q, p, q)
 	if (index_set_p == NULL) {
 	    if (!(*for_semact.constraint) (1 /* No de passe : reconnaisseur */,
 					   prdct_no, prod, NULL, p, q))
-		return SXFALSE;
+		return false;
 	}
 	else {
 	    /* Il semble qu'on peut directement modifier index_set_p!! */
 	    if (!(*for_semact.constraint) (1 /* No de passe : reconnaisseur */,
 					   prdct_no, prod, index_set_p, p, q))
-		return SXFALSE;
+		return false;
 	    /* ici index_set_p a pu etre touche */
 	}
     }
@@ -1111,7 +1111,7 @@ shift (item_p, item_q, p, q)
 	   et \alpha \not =>* \epsilon */
 	OR (ntXindex_set [B], index_set_p);
 
-    return SXTRUE;		/* is_scan_reduce */
+    return true;		/* is_scan_reduce */
 }
 
 
@@ -1216,7 +1216,7 @@ process_non_kernel (q)
     SXINT		item, A, X, prdct_no, prod;
     SXBA	index_set;
 #if is_epsilon
-    SXBOOLEAN	is_initial_item;
+    bool	is_initial_item;
 #endif
 #if parser
     SXBA	backward_index_set;
@@ -1293,7 +1293,7 @@ process_non_kernel (q)
 		}
 	    }
 #else
-	    /* is_epsilon == SXFALSE */
+	    /* is_epsilon == false */
 	    /* On a obligatoirement \alpha == \epsilon et T2_index_sets [item] == NULL */
 	    if (SXBA_bit_is_reset_set (T2_item_is_used, item)) {
 		/* C'est la premiere fois qu'on trouve item dans T2. */
@@ -1389,7 +1389,7 @@ process_non_kernel (q)
 #endif
 	    }
 #else
-	    /* is_epsilon == SXFALSE */
+	    /* is_epsilon == false */
 	    /* On est obligatoirement en debut de partie droite */
 	    /* X > 0 et T2_index_sets [item] == NULL */
 	    if (SXBA_bit_is_reset_set (T2_item_is_used, item)) {
@@ -1413,7 +1413,7 @@ process_non_kernel (q)
 
 /* On commence par traiter le cas ou le FSA est un DAG */
 
-static SXBOOLEAN
+static bool
 complete (p, q)
     SXINT p, q;
 {
@@ -1431,7 +1431,7 @@ complete (p, q)
     /* Le look_ahead des items de T1 n'est pas verifie. */
     SXINT				item, next_item, prdct_no;
     SXINT				*top_ptr, *bot_ptr;
-    SXBOOLEAN			is_scan_reduce = SXFALSE;
+    bool			is_scan_reduce = false;
 
     top_ptr = T1_shift_NT_hd [0];
 
@@ -1460,7 +1460,7 @@ complete (p, q)
 	    if (SXBA_bit_is_set (T2_item_set, next_item)) {
 		/* De plus le look-ahead est verifie */
 		if (shift (item, next_item, p, q))
-		    is_scan_reduce = SXTRUE;
+		    is_scan_reduce = true;
 	    }
 	}
     }
@@ -1475,13 +1475,13 @@ complete (p, q)
 }
 
 #if 0
-static SXBOOLEAN
+static bool
 fusion (p)
     SXINT p;
 {
     /* T1 = T2 - T[p], T[p] U= T1 return T1 != vide */
     SXINT		**ptr2;
-    SXBOOLEAN	has_grown = SXFALSE;
+    bool	has_grown = false;
 
     sxba_empty (RTp_non_kernel_item_set);
     RTp = &(RT [p]);
@@ -1514,7 +1514,7 @@ fusion (p)
 		       bits_array2 -= bits_array1;
 		       bits_array1 U= bits_array2;
 		       return bits_array2 != vide */
-		    has_grown = SXTRUE;
+		    has_grown = true;
 
 		    if (*(ptr2 = &(T1_shift_NT_hd [0])) == NULL) {
 			/* c'est la 1ere fois qu'on rencontre un terminal */
@@ -1545,7 +1545,7 @@ fusion (p)
 	else {
 	    /* Cet item n'existe pas deja ds RT [p] */
 	    /* On le met ds RT [p] et dans T1 */
-	    has_grown = SXTRUE;
+	    has_grown = true;
 
 	    if (*(ptr2 = &(T1_shift_NT_hd [0])) == NULL) {
 		/* c'est la 1ere fois qu'on rencontre un terminal */
@@ -1602,11 +1602,11 @@ process_FSA_state (p)
 	    q = p;
 
 	    do {
-		T2_has_changed = SXFALSE;
+		T2_has_changed = false;
 
 		RTq = &(RT [q]);
 
-		T2_has_non_kernel = SXFALSE;
+		T2_has_non_kernel = false;
 		T2_shift_NT_hd = &(RTq->shift_NT_hd [0]);
 		T2_items_stack = &(RTq->items_stack [0]);
 		T2_index_sets = &(RTq->index_sets [0]);
@@ -1650,7 +1650,7 @@ process_FSA_state (p)
 
 	RTq = &(RT [q]);
 
-	T2_has_non_kernel = SXFALSE;
+	T2_has_non_kernel = false;
 	T2_shift_NT_hd = &(RTq->shift_NT_hd [0]);
 	T2_items_stack = &(RTq->items_stack [0]);
 	T2_index_sets = &(RTq->index_sets [0]);
@@ -1688,11 +1688,11 @@ process_FSA_state (p)
 
 
 
-static SXBOOLEAN
+static bool
 recognize ()
 {
     SXINT			p;
-    SXBOOLEAN		is_in_LG;
+    bool		is_in_LG;
     SXBA		index_set;
 
     /* A AJOUTER DS LALC1 */
@@ -1756,7 +1756,7 @@ ARN_sem_final (size)
 }
 
 
-static SXBOOLEAN
+static bool
 ARN_constraint (prdct_no, A, i, j)
     SXINT A, prdct_no, i, j;
 {
@@ -1784,7 +1784,7 @@ RL_mreduction_item (item_j, I, j)
     struct recognize_item	*RTj;
     struct parse_item		*PTj;
     struct PT2_item		*PT2j;
-    SXBOOLEAN			is_new;
+    bool			is_new;
 
     SXBA			ids, nbis;
     SXINT				*top_ptr, *bot_ptr;
@@ -1915,7 +1915,7 @@ RL_mreduction ()
     SXINT				*PT2j_backward_shift_stack, x, item, prod, X;
     SXBA			*PT2j_index_set, *PT2j_backward_index_set, I, B;
     SXBA			index_set, new_index_set, red_order_set, wis;
-    SXBOOLEAN			is_good, is_rr, is_modif;
+    bool			is_good, is_rr, is_modif;
 
     RL_nt_set = sxba_calloc (ntmax+1);
     prod_order_set = sxba_calloc (prodmax+1);
@@ -1954,7 +1954,7 @@ RL_mreduction ()
 	red_order_set = red_order_sets [j];
 
 	/* prod_order_set est positionne par RL_mreduction_item par le traitement des shifts. */
-	is_rr = SXFALSE;
+	is_rr = false;
 	order = 0;
 
 #if 0
@@ -1966,14 +1966,14 @@ RL_mreduction ()
 	    A = lhs [prod];
 	    ap_set = ap_sets [A];
 
-	    is_good = SXFALSE;
+	    is_good = false;
 				
 #if is_epsilon
 	    if (item == prolon [prod])
 	    {
 		/* item = A -> . */
 		if (SXBA_bit_is_set (ap_set, j))
-		    is_good = SXTRUE;
+		    is_good = true;
 	    }
 	    else
 #endif
@@ -1993,10 +1993,10 @@ RL_mreduction ()
 
 		    /* MODIF: c'est wis qui decide l'arret des boucles */
 		    if (is_rr)
-			is_modif = SXTRUE;
+			is_modif = true;
 
 		    RL_mreduction_item (item, wis, j);
-		    is_good = SXTRUE;
+		    is_good = true;
 		}
 
 		new_order = prod_order2next [order];
@@ -2005,18 +2005,18 @@ RL_mreduction ()
 		    /* Recursivite droite => boucle */
 		    if (!is_rr) {
 			/* 1ere detection de la fin de la boucle */
-			is_rr = SXTRUE;
-			is_modif = SXFALSE;
+			is_rr = true;
+			is_modif = false;
 			order = new_order; /* On reboucle */
 		    }
 		    else {
 			/* Fin du 2eme, 3eme, ... parcourt */
 			if (is_modif) {
-			    is_modif = SXFALSE;
+			    is_modif = false;
 			    order = new_order; /* On reboucle */
 			}
 			else
-			    is_rr = SXFALSE; /* On continue en sequence */
+			    is_rr = false; /* On continue en sequence */
 		    }
 		}
 	    }
@@ -2079,7 +2079,7 @@ RL_mreduction ()
     SXINT				*PT2j_backward_shift_stack, x, item, prod, X;
     SXBA			*PT2j_index_set, *PT2j_backward_index_set, I, B;
     SXBA			index_set, new_index_set, red_order_set, wis;
-    SXBOOLEAN			is_good;
+    bool			is_good;
 #if is_right_recursive
     SXINT				max_order, maxo;
 #endif
@@ -2132,14 +2132,14 @@ RL_mreduction ()
 		A = lhs [prod];
 		ap_set = ap_sets [A];
 
-		is_good = SXFALSE;
+		is_good = false;
 				
 #if is_epsilon
 		if (item == prolon [prod])
 		{
 		    /* item = A -> . */
 		    if (SXBA_bit_is_set (ap_set, j))
-			is_good = SXTRUE;
+			is_good = true;
 		}
 		else
 #endif
@@ -2158,7 +2158,7 @@ RL_mreduction ()
 			/* Il y a du nouveau */
 			/* MODIF: c'est wis qui decide l'arret des boucles */
 			RL_mreduction_item (item, wis, j);
-			is_good = SXTRUE;
+			is_good = true;
 		    }
 		}
 
@@ -2343,7 +2343,7 @@ ARN_ksem_final (size)
 }
 
 static SXUINT	ksem_vector;
-static SXBOOLEAN
+static bool
 ksem_incr (nbnt, rhs_stack)
     SXINT nbnt, *rhs_stack;
 {
@@ -2361,11 +2361,11 @@ ksem_incr (nbnt, rhs_stack)
 	if (i < max_tree_nb && ARN_disp_ksem [rhs_stack [x+1]][i].val != -1)
 	{
 	    ksem_vector |= (i << shift);
-	    return SXTRUE;
+	    return true;
 	}
     }
 
-    return SXFALSE;
+    return false;
 }
 
 static SXINT
@@ -2458,7 +2458,7 @@ ARN_keval (Aij, i, j, rhs_stack)
 }
 
 
-static SXBOOLEAN
+static bool
 ARN_ksemact (i, j, prod_core, rhs_stack)
     SXINT 	i, j;
     ushort	*prod_core;
@@ -2533,10 +2533,10 @@ ARN_ksemact (i, j, prod_core, rhs_stack)
 	    }
 	}
 
-	return SXTRUE;
+	return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
@@ -2683,7 +2683,7 @@ ksem_bu_extract ()
 }
 
 
-static SXBOOLEAN
+static bool
 ARN_eval (prod, i, j, rhs_stack, val)
     SXINT 	prod, i, j, *rhs_stack;
     float	*val;
@@ -2706,12 +2706,12 @@ ARN_eval (prod, i, j, rhs_stack, val)
 
     *val = proba;
 
-    return SXTRUE;
+    return true;
 }
 
 
 
-static SXBOOLEAN
+static bool
 ARN_semact (i, j, prod_core, rhs_stack)
     SXINT 	i, j;
     ushort	*prod_core;
@@ -2747,10 +2747,10 @@ ARN_semact (i, j, prod_core, rhs_stack)
 	    } while (p >= prod_core);
 	}
 
-	return SXTRUE;
+	return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 #endif
 
@@ -2766,7 +2766,7 @@ parse_item (A0k, item, I, i_left, j, k, nbnt)
     /* Si I == NULL, i_left est positionne */
        
     SXINT		i, new_i, B, Z, B0j, Bij, Aik, prod, prdct_no;
-    SXBOOLEAN     is_ok, is_local_prdct;
+    bool     is_ok, is_local_prdct;
     SXBA        backward_J, ap_set, index_set;
 
     backward_J = PT2 [j].backward_index_sets [item+1];
@@ -2779,7 +2779,7 @@ parse_item (A0k, item, I, i_left, j, k, nbnt)
 #if is_prdct
 	is_prdct_fun && (prdct_no = prdct [item]) != -1
 #else
-	    SXFALSE
+	    false
 #endif
 		;
 
@@ -2860,7 +2860,7 @@ parse_item (A0k, item, I, i_left, j, k, nbnt)
 		    is_ok = (*for_semact.semact) (new_i, k, prod_core, rhs_stack);
 		}
 		else
-		    is_ok = SXTRUE;
+		    is_ok = true;
 	    
 		if (is_ok)
 		    SXBA_1_bit (ap_set, new_i);
@@ -2933,7 +2933,7 @@ static SXINT	tbp_stack [prodmax+1], citem2nb [itemmax+1],
     SXINT 		item, citem, cur_item, right_item, prod, cur_prod,
                         A, A0j, Aij, B, B0j, Bkj, x, nbnt, l, m, prdct_no, max, cycle_nb;
     SXINT			*p, *q;
-    SXBOOLEAN		is_high_level, should_loop, is_local_prdct;
+    bool		is_high_level, should_loop, is_local_prdct;
 
     max = 0;
 
@@ -3094,7 +3094,7 @@ static SXINT	tbp_stack [prodmax+1], citem2nb [itemmax+1],
 #if is_prdct
 		is_prdct_fun && (prdct_no = prdct [cur_item-1]) != -1
 #else
-		    SXFALSE
+		    false
 #endif
 			;
 	    if (is_semact_fun || is_local_prdct)
@@ -3148,7 +3148,7 @@ static SXINT	tbp_stack [prodmax+1], citem2nb [itemmax+1],
 	   precedent ont pu faire echouer le calcul! */
 	do
 	{
-	    should_loop = SXFALSE;
+	    should_loop = false;
 
 	    for (x = 1; x <= tbp_stack [0]; x++)
 	    {
@@ -3162,7 +3162,7 @@ static SXINT	tbp_stack [prodmax+1], citem2nb [itemmax+1],
 		    cur_rhs_stack = &(rhs_stacks [prod][0]);
 
 		    if ((*for_semact.semact) (k, j, cur_prod_core, cur_rhs_stack))
-			should_loop = SXTRUE;
+			should_loop = true;
 		    else
 			/* point fixe atteint, on l'enleve */
 			tbp_stack [x] = 0;
@@ -3187,7 +3187,7 @@ rr_generate (i, h, j, item)
     /* item = Aij -> \alphaih Bhj . \betajj */
     /* Bhj \betajj sont evalues */
     SXINT 	X, prod, A, A0j, Aij, cur_item, prod_lgth, k, B, B0j, Bkj, prdct_no;
-    SXBOOLEAN	is_local_prdct;
+    bool	is_local_prdct;
 
 #if is_epsilon
     if (h == j && lispro [item-2] > 0)
@@ -3233,7 +3233,7 @@ rr_generate (i, h, j, item)
 #if is_prdct
 	    is_prdct_fun && (prdct_no = prdct [cur_item]) != -1
 #else
-		SXFALSE
+		false
 #endif
 		    ;
 	
@@ -3300,7 +3300,7 @@ right_recursive (j, init_prod_order)
     SXINT			*i_prod_stack;
     struct PT2_item	*PT2j;
     SXBA 		index_set, backward_index_set;
-    SXBOOLEAN 		nothing_has_changed, is_ok;
+    bool 		nothing_has_changed, is_ok;
 
     prod_order = init_prod_order;
     min_prod_order = prod_order2min [prod_order];
@@ -3343,7 +3343,7 @@ right_recursive (j, init_prod_order)
 
 	while (!IS_EMPTY (tbp_item_stack))
 	{
-	    nothing_has_changed = SXTRUE;
+	    nothing_has_changed = true;
 
 	    do
 	    {
@@ -3365,7 +3365,7 @@ right_recursive (j, init_prod_order)
 		    {
 			/* Bij est calcule */
 			rr_generate (i, i, j, item);
-			nothing_has_changed = SXFALSE;
+			nothing_has_changed = false;
 		    }
 		}
 		else
@@ -3396,7 +3396,7 @@ right_recursive (j, init_prod_order)
 				/* Bkj est calcule */
 				/* Si k == j, peut empiler ds tbp_item_stack */
 				rr_generate (i, k, j, item);
-				nothing_has_changed = SXFALSE;
+				nothing_has_changed = false;
 			    }
 			    else
 			    {
@@ -3408,7 +3408,7 @@ right_recursive (j, init_prod_order)
 				{
 				    /* Bij est calcule */
 				    rr_generate (i, i, j, item);
-				    nothing_has_changed = SXFALSE;
+				    nothing_has_changed = false;
 				}
 			    }
 			}
@@ -3459,7 +3459,7 @@ parse ()
     SXINT                 *PT2j_backward_shift_stack;
     SXBA	        backward_index_set, index_set;
     SXINT		        item, new_item, new_j, j, prod_order, A, A0j, Aij, B, prod, prod_lgth, x;
-    SXBOOLEAN             is_ok;
+    bool             is_ok;
     SXBA		lhs_nt_set;
 
     /* On genere toutes les reductions finissant en j */
@@ -3534,7 +3534,7 @@ parse ()
 		    is_ok = (*for_semact.semact) (new_j, j, prod_core, rhs_stack);
 		}
 		else
-		    is_ok = SXTRUE;
+		    is_ok = true;
 
 		if (is_ok)
 		    SXBA_1_bit (ap_sets [A], new_j);
@@ -3796,7 +3796,7 @@ spf_count_final (size)
 }
 
 
-static SXBOOLEAN
+static bool
 spf_count_semact (i, j, prod_core, rhs_stack)
     SXINT 	i, j;
     ushort	*prod_core;
@@ -3816,7 +3816,7 @@ spf_count_semact (i, j, prod_core, rhs_stack)
     {
 	/* implique' ds un cycle et 2eme passage */
 	spf_count [pAij] = HUGE_VAL; /* Produces IEEE Infinity. */
-	return SXFALSE;
+	return false;
     }
     else
     {
@@ -3834,12 +3834,12 @@ spf_count_semact (i, j, prod_core, rhs_stack)
 
 	spf_count [pAij] += val;
 
-	return SXTRUE;
+	return true;
     }
 }
 
 
-static SXBOOLEAN
+static bool
 spf_count_sem_pass (S0n)
     SXINT	S0n;
 {
@@ -3850,7 +3850,7 @@ spf_count_sem_pass (S0n)
     else
 	printf ("Nombre d'arbres de la foret partagee : %e\n", val);
 
-    return SXTRUE;
+    return true;
 }
 
 static void
@@ -3927,11 +3927,11 @@ set_A2A0j ()
 
 
 
-static SXBOOLEAN
+static bool
 sxparse_it ()
 {
     SXINT 	t, nt, size, S0n;
-    SXBOOLEAN	ret_val;
+    bool	ret_val;
 
     /* delta_n est un #define donne a la compilation qui donne le nombre maximal
        d'accroissement possible (par correction d'erreurs) de la chaine source. */
@@ -3963,8 +3963,8 @@ sxparse_it ()
 	for_semact.prdct = NULL;
 	for_semact.constraint = NULL;
 	for_semact.sem_pass = NULL;
-	for_semact.need_Aij2A_i_j = SXFALSE;
-	for_semact.need_pack_unpack = SXFALSE;
+	for_semact.need_Aij2A_i_j = false;
+	for_semact.need_pack_unpack = false;
     }
     else
     {
@@ -3977,8 +3977,8 @@ sxparse_it ()
 	    for_semact.prdct = NULL;
 	    for_semact.constraint = NULL;
 	    for_semact.sem_pass = spf_count_sem_pass;
-	    for_semact.need_Aij2A_i_j = SXFALSE;
-	    for_semact.need_pack_unpack = SXTRUE;
+	    for_semact.need_Aij2A_i_j = false;
+	    for_semact.need_pack_unpack = true;
 	}
     }
 #endif
@@ -4270,14 +4270,14 @@ fill_inputG ()
 }
 
 
-SXBOOLEAN
+bool
 sxearley_parser (what_to_do, arg)
     SXINT			what_to_do;
     struct sxtables	*arg;
 {
     switch (what_to_do) {
     case SXBEGIN:
-	return SXTRUE;
+	return true;
 
     case SXOPEN:
 
@@ -4287,7 +4287,7 @@ sxearley_parser (what_to_do, arg)
 #if is_rcvr
 	(*sxplocals.SXP_tables.recovery) (SXOPEN);
 #endif
-	return SXTRUE;
+	return true;
 
     case SXINIT:
 #if 0
@@ -4313,18 +4313,18 @@ sxearley_parser (what_to_do, arg)
 	sxplocals.mode.kind = SXWITH_RECOVERY | SXWITH_CORRECTION;
 	sxplocals.mode.local_errors_nb = 0;
 	sxplocals.mode.global_errors_nb = 0;
-	sxplocals.mode.is_prefixe = SXFALSE;
-	sxplocals.mode.is_silent = SXFALSE;
-	sxplocals.mode.with_semact = SXTRUE;
-	sxplocals.mode.with_parsact = SXTRUE;
-	sxplocals.mode.with_parsprdct = SXTRUE;
-	sxplocals.mode.with_do_undo = SXFALSE;
-	return SXTRUE;
+	sxplocals.mode.is_prefixe = false;
+	sxplocals.mode.is_silent = false;
+	sxplocals.mode.with_semact = true;
+	sxplocals.mode.with_parsact = true;
+	sxplocals.mode.with_parsprdct = true;
+	sxplocals.mode.with_do_undo = false;
+	return true;
 
     case SXACTION:
     {
 	SXINT	v;
-	SXBOOLEAN	ret_val;
+	bool	ret_val;
 
 	if (is_print_time)
 	    sxtime (TIME_INIT);
@@ -4373,7 +4373,7 @@ sxearley_parser (what_to_do, arg)
 	   3 ->U 4
 	   4 ->DOL 5
 	   */
-	is_FSA_loop = SXFALSE;
+	is_FSA_loop = false;
 	n = FSA_final_state = 4;
 
 	XxY_set (&FSA_pXq_hd, 0, 1, &v);
@@ -4405,7 +4405,7 @@ sxearley_parser (what_to_do, arg)
 	   1 ->any 1
 	   1 ->DOL 2
 	   */
-	is_FSA_loop = SXTRUE;
+	is_FSA_loop = true;
 	n = FSA_final_state = 1;
 
 	XxY_set (&FSA_pXq_hd, 0, 1, &v);
@@ -4438,7 +4438,7 @@ sxearley_parser (what_to_do, arg)
 
     case SXFINAL:
 	sxtkn_mngr (SXFINAL, 0);
-	return SXTRUE;
+	return true;
 
     case SXCLOSE:
 	/* end of language: free the local arrays */
@@ -4447,11 +4447,11 @@ sxearley_parser (what_to_do, arg)
 	(*sxplocals.SXP_tables.recovery) (SXCLOSE);
 #endif
 
-	return SXTRUE;
+	return true;
 
     case SXEND:
 	/* free everything */
-	return SXTRUE;
+	return true;
 
     default:
 	fprintf (sxstderr, "The function \"sxearley_parser\" is out of date with respect to its specification.\n");

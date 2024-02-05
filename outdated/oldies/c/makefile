@@ -16,9 +16,11 @@ INCL=$(C)/incl
 
 CC=cc -I$(SXINCL) -I$(NDETCINCL) -I$(INCL) $(CFLAGS)
 
-all:	$(C)/c.out			\
+ALL=	$(C)/c.out			\
 	$(C)/dc.out			\
 	$(C)/ndc.out
+
+all: $(ALL)
 
 C_NEEDS=$(LIB)/sxmain.o			\
 	$(LIB)/c_desambig.o		\
@@ -107,5 +109,5 @@ $(LIB)/ndc_parsact.o:	$(SXINCL)/sxunix.h		\
 	$(CC) -o $@ -c $(SRC)/ndc_parsact.c
 
 clean:
-	@echo "clean target for c should be provided"
+	rm -f $(ALL) $(C_NEEDS) $(DC_NEEDS) $(NDC_NEEDS)
 

@@ -19,13 +19,13 @@
 
 #include "sxunix.h"
 
-char WHAT_PPCSACT[] = "@(#)SYNTAX - $Id: ppc_sact.c 3349 2023-06-12 11:00:11Z garavel $";
+char WHAT_PPCSACT[] = "@(#)SYNTAX - $Id: ppc_sact.c 3633 2023-12-20 18:41:19Z garavel $";
 
 extern struct sxtables	ppc_args_tables, *ppc_tables;
 extern SXINT	ppc_TYPE;
 
 
-static SXVOID	gripe (struct sxtables *sxtables, SXINT act_no)
+static void	gripe (struct sxtables *sxtables, SXINT act_no)
 {
     sxuse (act_no);
     sxerror (sxsvar.sxlv.terminal_token.source_index,
@@ -37,16 +37,16 @@ static SXVOID	gripe (struct sxtables *sxtables, SXINT act_no)
 
 
 
-static SXBOOLEAN	*user_types;
+static bool	*user_types;
 static SXINT	typ_lgth;
 
 
-SXVOID
+void
 ppc_scan_act (SXINT code, SXINT act_no)
 {
     switch (code) {
     case SXBEGIN:
-	user_types = (SXBOOLEAN*) sxcalloc (typ_lgth = sxstrmngr.tablength, sizeof (SXBOOLEAN));
+	user_types = (bool*) sxcalloc (typ_lgth = sxstrmngr.tablength, sizeof (bool));
 	return;
 
     case SXEND:
@@ -65,17 +65,17 @@ ppc_scan_act (SXINT code, SXINT act_no)
 	if (typ_lgth < sxstrmngr.top) {
 	    SXINT	i = typ_lgth;
 
-	    user_types = (SXBOOLEAN*) sxrealloc (user_types, typ_lgth = sxstrmngr.tablength, sizeof (SXBOOLEAN));
+	    user_types = (bool*) sxrealloc (user_types, typ_lgth = sxstrmngr.tablength, sizeof (bool));
 
 	    while (i < typ_lgth) {
-		user_types [i++] = SXFALSE;
+		user_types [i++] = false;
 	    }
 	}
 
 	switch (act_no) {
 	case 0:
 	    /* -TYPE */
-	    user_types [SXSTACKtoken (SXSTACKtop ()).string_table_entry] = SXTRUE;
+	    user_types [SXSTACKtoken (SXSTACKtop ()).string_table_entry] = true;
 	    break;
 
 	case 1:
@@ -104,7 +104,7 @@ ppc_scan_act (SXINT code, SXINT act_no)
 }
 
 
-SXVOID
+void
 ppc_args_scan_act (SXINT code, SXINT act_no)
 {
     switch (code) {

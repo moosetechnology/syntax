@@ -99,7 +99,7 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_CYKPARSER[] = "@(#)SYNTAX - $Id: CYK_parser.c 2428 2023-01-18 12:54:10Z garavel $" WHAT_DEBUG;
+char WHAT_CYKPARSER[] = "@(#)SYNTAX - $Id: CYK_parser.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 static char	ME [] = "CYK_parser";
 
@@ -313,7 +313,7 @@ static void
 put_empty_prod_in_spf (SXINT prod, SXINT i)
 {
   SXINT     bot, top, lgth, Aii, X, Xii;
-  SXBOOLEAN is_new_Xii;
+  bool is_new_Xii;
 
   bot = prolon [prod];
   top = prolon [prod+1]-1;
@@ -369,7 +369,7 @@ static void
 spf_td_extraction (SXINT i, SXINT j, SXINT item)
 {
   SXINT     ij, reduce_item, X, prod, triple, triple2, k, kj, Aij; 
-  SXBOOLEAN is_new_Aij;
+  bool is_new_Aij;
 
   /* On s'occupe du prefixe */
   X = LISPRO (item-1);
@@ -625,7 +625,7 @@ CYK_tshift (SXBA Tij, SXBA Tik, SXBA kj_t_set, SXBA new_reduce_Tij
 #endif /* is_parser */
 
 #if LLOG
-  SXBOOLEAN is_new;
+  bool is_new;
 
   printf ("\n\
 *********** CYK_tshift (T[%i][%i] = T[%i][%i] + t[%i][%i]) = {\n", i, j, i, k, k, j);
@@ -697,12 +697,12 @@ CYK_tshift (SXBA Tij, SXBA Tik, SXBA kj_t_set, SXBA new_reduce_Tij
       if (!XxYxZ_set (&CYK_item_hd, next_item, ij, k, &CYK_item)) {
 	ret_val |= 1;
 #if LLOG
-	is_new = SXTRUE;
+	is_new = true;
 #endif /* LLOG */
       }
 #if LLOG
       else
-	is_new = SXFALSE;
+	is_new = false;
 
       print_xitem (next_item, i, j, k, "parse\t", is_new ? " (new)\n" : "\n");
 #endif /* LLOG */
@@ -717,12 +717,12 @@ CYK_tshift (SXBA Tij, SXBA Tik, SXBA kj_t_set, SXBA new_reduce_Tij
 	  if (!XxYxZ_set (&CYK_item_hd, it, ij, j, &CYK_item)) {
 	    ret_val |= 1;
 #if LLOG
-	    is_new = SXTRUE;
+	    is_new = true;
 #endif /* LLOG */
 	  }
 #if LLOG
 	  else
-	    is_new = SXFALSE;
+	    is_new = false;
 
 	  print_xitem (next_item, i, j, j, "parse\t", is_new ? " (new)\n" : "\n");
 #ifdef MAKE_INSIDEG
@@ -762,7 +762,7 @@ CYK_ntshift (SXBA Tij, SXBA Tik, SXBA Tkj, SXBA new_reduce_Tij
 #endif /* is_parser */
 #if LLOG
   SXINT     bot, top;
-  SXBOOLEAN is_new;
+  bool is_new;
 
   printf ("\n\
 *********** CYK_ntshift (T[%i][%i] = T[%i][%i] + T[%i][%i]) = {\n", i, j, i, k, k, j);
@@ -884,12 +884,12 @@ CYK_ntshift (SXBA Tij, SXBA Tik, SXBA Tkj, SXBA new_reduce_Tij
 	if (!XxYxZ_set (&CYK_item_hd, next_item, ij, k, &CYK_item)) {
 	  ret_val |= 1;
 #if LLOG
-	  is_new = SXTRUE;
+	  is_new = true;
 #endif /* LLOG */
 	}
 #if LLOG
 	else
-	  is_new = SXFALSE;
+	  is_new = false;
 
 	print_xitem (next_item, next_item <= 3 ? 0 : i, j, k, "parse\t", is_new ? " (new)\n" : "\n");
 	printf ("\t<%s> [%i..%i] = {\n", ntstring [old_B], k, j);
@@ -922,12 +922,12 @@ CYK_ntshift (SXBA Tij, SXBA Tik, SXBA Tkj, SXBA new_reduce_Tij
 	  if (!XxYxZ_set (&CYK_item_hd, it, ij, j, &CYK_item)) {
 	    ret_val |= 1;
 #if LLOG
-	    is_new = SXTRUE;
+	    is_new = true;
 #endif /* LLOG */
 	  }
 #if LLOG
 	  else
-	    is_new = SXFALSE;
+	    is_new = false;
 
 	  print_xitem (next_item, i, j, j, "parse\t", is_new ? " (new)\n" : "\n");
 #ifdef MAKE_INSIDEG
@@ -1001,27 +1001,27 @@ fill_CYK_ij ()
 extern SXBA basic_item_set, basic_nt_set; 
 
 #if is_lex
-extern SXBOOLEAN lexicalizer2basic_item_set (SXBOOLEAN is_mlstn2lex_la_tset, SXBOOLEAN is_mlstn2la_tset);
+extern bool lexicalizer2basic_item_set (bool is_mlstn2lex_la_tset, bool is_mlstn2la_tset);
 static SXBA *mlstn2lexicalized_look_ahead_t_set; /* contiendra, pour chaque mlstn du source l'ensemble des
 						    terminaux valides (au sens de la lexicalisation) qui ont une transition depuis ce mlstn */
 #endif /* is_lex */
 
 /* On alloue les structures */
-SXBOOLEAN
+bool
 sxearley_parse_it ()
 {
   SXINT     size, t_size, i, j, k, ii, jj, nn, ij, ik, kj, max_span, max_i, span, CYK_ij_t_top, nt, CYK_ij_top, val;
   SXBA    Tij, Tik, Tkj, T11, T22, Tnn, Tii, Tjj, swap, new_reduce_Tij_1, new_reduce_Tij_2;
-  SXBOOLEAN is_empty, is_in_L, R1, R2;
+  bool is_empty, is_in_L, R1, R2;
 #if is_lex2 || is_set_automaton
   SXBA *indexed_item_sets;
 #endif /* is_lex2 || is_set_automaton */
 
   /* Traitement de la lexicalisation */
 #  if is_lex
-    is_in_L = lexicalizer2basic_item_set (SXFALSE, SXFALSE);
+    is_in_L = lexicalizer2basic_item_set (false, false);
 #  else /* !is_lex */
-    is_in_L = SXTRUE;
+    is_in_L = true;
 #  endif /* !is_lex */
 
     if (is_in_L) {
@@ -1154,7 +1154,7 @@ sxearley_parse_it ()
 	    CYK_ij [i] [j] = ij = ++CYK_ij_top;
 
 	  Tij = CYK_Tij [ij];
-	  is_empty = SXTRUE;
+	  is_empty = true;
 
 	  /* On traite Tij = Tij-1 Tj-1j
 	     puis Tij = Tij-2 Tj-2j
@@ -1162,7 +1162,7 @@ sxearley_parse_it ()
 	     puis Tij = Tii+1 Ti+1j
 	     et enfin Tij = Tii + Tij */
 	  new_reduce_Tij_1 = working_Tij_set_1;
-	  R1 = SXFALSE;
+	  R1 = false;
 
 	  for (k = j-1; i <= k; k--) {
 	    if ((ik = CYK_ij [i] [k]) && (kj = CYK_ij [k] [j])) {
@@ -1178,12 +1178,12 @@ sxearley_parse_it ()
 				       , i, j, k
 #endif /* is_parser || LLOG */
 				       ))) {
-		  is_empty = SXFALSE;
+		  is_empty = false;
 
 		  if (i == k && (val & 2)) {
 		    /* Tij = Tii + tij 
 		       a donne de nouveaux reduces ds new_reduce_Tij_1 */
-		    R1 = SXTRUE;
+		    R1 = true;
 		    ii = ik;
 		    Tii = Tik;
 		  }
@@ -1196,12 +1196,12 @@ sxearley_parse_it ()
 					  , i, j, k
 #endif /* is_parser || LLOG */
 					  ))) {
-		    is_empty = SXFALSE;
+		    is_empty = false;
 
 		    if (i == k && (val & 2)) {
 		      /* Tij = Tii + Tij 
 			 a donne de nouveaux reduces ds new_reduce_Tij_1 */
-		      R1 = SXTRUE;
+		      R1 = true;
 		      ii = ik;
 		      Tii = Tik;
 		    }
@@ -1248,9 +1248,9 @@ sxearley_parse_it ()
 
       if (is_print_time) {
 	if (is_in_L)
-	  sxtime (TIME_FINAL, "\tCYK Recognizer (SXTRUE)");
+	  sxtime (TIME_FINAL, "\tCYK Recognizer (true)");
 	else
-	  sxtime (TIME_FINAL, "\tCYK Recognizer (SXFALSE)");
+	  sxtime (TIME_FINAL, "\tCYK Recognizer (false)");
       }
 
 
@@ -1312,9 +1312,9 @@ sxearley_parse_it ()
 
   if (is_print_time) {
     if (is_in_L)
-      sxtime (TIME_FINAL, "\tCYK Parser (SXTRUE)");
+      sxtime (TIME_FINAL, "\tCYK Parser (true)");
     else
-      sxtime (TIME_FINAL, "\tCYK Parser (SXFALSE)");
+      sxtime (TIME_FINAL, "\tCYK Parser (false)");
   }
 
   return is_in_L;

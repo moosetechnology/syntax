@@ -30,7 +30,7 @@
 #include "semc_vars.h"
 #include "put_edit.h"
 
-char WHAT_SEMC_MAIN[] = "@(#)SYNTAX - $Id: semc_main.c 3599 2023-09-18 12:57:19Z garavel $" WHAT_DEBUG;
+char WHAT_SEMC_MAIN[] = "@(#)SYNTAX - $Id: semc_main.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 /* These include files for date/time manipulation: */
 #include <sys/types.h>
@@ -40,18 +40,18 @@ char	by_mess [] = "the SYNTAX attribute processor SEMC";
 
 SXINT     (*more_scan_act) (SXINT code, SXINT act_no);
 
-extern SXVOID	no_tables (void);
-extern SXVOID	bnf_lo (void);
-extern SXBOOLEAN	tab_sem (void);
-extern SXVOID	semc_lo (void);
-extern SXVOID	semc_free (void);
+extern void	no_tables (void);
+extern void	bnf_lo (void);
+extern bool	tab_sem (void);
+extern void	semc_lo (void);
+extern void	semc_free (void);
 extern struct sxtables	bnf_tables;
 
 /*---------------*/
 /*    options    */
 /*---------------*/
 
-SXBOOLEAN		is_check;
+bool		is_check;
 static char	ME [] = "semc";
 static char	Usage [] = "\
 Usage:\t%s [options] [files]\n\
@@ -130,7 +130,7 @@ static char	*option_get_text (SXINT kind)
 
 /*-------------------------------------------------------------------*/
 
-static SXVOID	extract_language_name (char *path_name)
+static void	extract_language_name (char *path_name)
 {
     char	*p;
 
@@ -153,7 +153,7 @@ static SXVOID	extract_language_name (char *path_name)
 
 /*-------------------------------------------------------------------*/
 
-static SXVOID	bnf_run (char *pathname)
+static void	bnf_run (char *pathname)
 {
     FILE	*infile;
 
@@ -240,8 +240,8 @@ int main (int argc, char *argv[])
   /* valeurs par defaut */
 
   options_set = OPTION (SOURCE) | OPTION (VERBOSE) | OPTION (LIST);
-  is_source = is_list = is_default = SXTRUE;
-  is_check = is_sem_out = SXFALSE;
+  is_source = is_list = is_default = true;
+  is_check = is_sem_out = false;
   tbl_lgth = 100;
   max_RHS = 10;
 
@@ -251,43 +251,43 @@ int main (int argc, char *argv[])
   for (argnum = 1; argnum < argc; argnum++) {
     switch (option_get_kind (argv [argnum])) {
     case SOURCE:
-      is_source = SXTRUE, options_set |= OPTION (SOURCE);
+      is_source = true, options_set |= OPTION (SOURCE);
       break;
 
     case -SOURCE:
-      is_source = SXFALSE, options_set &= noOPTION (SOURCE);
+      is_source = false, options_set &= noOPTION (SOURCE);
       break;
 
     case VERBOSE:
-      sxverbosep = SXTRUE, options_set |= OPTION (VERBOSE);
+      sxverbosep = true, options_set |= OPTION (VERBOSE);
       break;
 
     case -VERBOSE:
-      sxverbosep = SXFALSE, options_set &= noOPTION (VERBOSE);
+      sxverbosep = false, options_set &= noOPTION (VERBOSE);
       break;
 
     case LIST:
-      is_list = SXTRUE, options_set |= OPTION (LIST);
+      is_list = true, options_set |= OPTION (LIST);
       break;
 
     case -LIST:
-      is_list = SXFALSE, options_set &= noOPTION (LIST);
+      is_list = false, options_set &= noOPTION (LIST);
       break;
 
     case SEM_OUT:
-      is_sem_out = SXTRUE, options_set |= OPTION (SEM_OUT);
+      is_sem_out = true, options_set |= OPTION (SEM_OUT);
       break;
 
     case -SEM_OUT:
-      is_sem_out = SXFALSE, options_set &= noOPTION (SEM_OUT);
+      is_sem_out = false, options_set &= noOPTION (SEM_OUT);
       break;
 
     case DEFAULT:
-      is_default = SXTRUE, options_set |= OPTION (DEFAULT);
+      is_default = true, options_set |= OPTION (DEFAULT);
       break;
 
     case -DEFAULT:
-      is_default = SXFALSE, options_set &= noOPTION (DEFAULT);
+      is_default = false, options_set &= noOPTION (DEFAULT);
       break;
 
     case TABLE_LENGTH:
@@ -310,7 +310,7 @@ int main (int argc, char *argv[])
       break;
 
     case CHECK:
-      is_check = SXTRUE, options_set |= OPTION (CHECK);
+      is_check = true, options_set |= OPTION (CHECK);
       break;
 
     case LANGUAGE_NAME:
@@ -353,7 +353,7 @@ int main (int argc, char *argv[])
     fprintf (sxtty, "\n%s\n", release_mess);
   }
 
-  syntax (SXINIT, &bnf_tables, SXFALSE /* no includes */);
+  syntax (SXINIT, &bnf_tables, false /* no includes */);
 
   if (options_set & OPTION (LANGUAGE_NAME)) {
     bnf_run ((char*)NULL);
@@ -369,7 +369,7 @@ int main (int argc, char *argv[])
     } while (argnum < argc);
   }
 
-  syntax (SXFINAL, &bnf_tables, SXTRUE);
+  syntax (SXFINAL, &bnf_tables, true);
 
   sxexit (sxerr_max_severity ());
   return EXIT_SUCCESS; /* Jamais atteint !! pour les compilo susceptibles ... */
@@ -380,14 +380,14 @@ int main (int argc, char *argv[])
 char	*options_text (char *line)
 {
     SXINT	i;
-    SXBOOLEAN	is_first = SXTRUE;
+    bool	is_first = true;
 
     *line = SXNUL;
 
     for (i = 1; i <= LAST_OPTION; i++)
 	if (options_set & OPTION (i)) {
 	    if (is_first)
-		is_first = SXFALSE;
+		is_first = false;
 	    else
 		strcat (line, ", ");
 

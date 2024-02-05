@@ -85,7 +85,7 @@ fifo_oflw (struct FIFO *fifo_ptr)
     *++old_cur_ptr = *cur_ptr;
 }
 
-static SXBOOLEAN
+static bool
 fifo_is_empty (struct FIFO *fifo_ptr)
 {
   return (fifo_ptr->left_ptr == fifo_ptr->right_ptr);
@@ -97,11 +97,11 @@ fifo_clear (struct FIFO *fifo_ptr)
   fifo_ptr->left_ptr = fifo_ptr->right_ptr = fifo_ptr->bot_ptr;
 }
 
-static SXBOOLEAN
+static bool
 fifo_pop (struct FIFO *fifo_ptr, SXINT *elem_ptr)
 {
   if (fifo_ptr->left_ptr == fifo_ptr->right_ptr)
-    return SXFALSE; /* vide */
+    return false; /* vide */
 
   *elem_ptr = *fifo_ptr->right_ptr;
 
@@ -110,7 +110,7 @@ fifo_pop (struct FIFO *fifo_ptr, SXINT *elem_ptr)
   else
     fifo_ptr->right_ptr--;
 
-  return SXTRUE;
+  return true;
 }
 
 static void

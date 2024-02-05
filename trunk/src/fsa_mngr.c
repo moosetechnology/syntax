@@ -20,7 +20,7 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXDAG_MNGR[] = "@(#)SYNTAX - $Id: fsa_mngr.c 2982 2023-04-04 12:57:22Z serwe $" WHAT_DEBUG;
+char WHAT_SXDAG_MNGR[] = "@(#)SYNTAX - $Id: fsa_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 static char	ME [] = "fsa_mngr";
 
@@ -37,7 +37,7 @@ static SXINT     *old_state2max_path_lgth, *old_state2new_state /*, normalized_f
 static SXBA      state_set;
 static void      (*normalized_fsa_fill_trans)(SXINT , SXINT, SXINT);
 static void      (*normalized_fsa_forward_trans) (SXINT , void (*fill_old_state2max_path_lgth)(SXINT, SXINT, SXINT) );
-static SXBOOLEAN   normalized_is_cyclic;
+static bool   normalized_is_cyclic;
 
 static void
 fill_old_state2max_path_lgth (SXINT prev_old_state, SXINT t, SXINT next_old_state)
@@ -68,7 +68,7 @@ fill_old_state2max_path_lgth (SXINT prev_old_state, SXINT t, SXINT next_old_stat
       Detection d'un cycle ds l'automate
       On ne touche pas a old_state2max_path_lgth [next_old_state]
     */
-    normalized_is_cyclic = SXTRUE;
+    normalized_is_cyclic = true;
   }
 }
 
@@ -214,7 +214,7 @@ fsa_normalize (SXINT init_state,
   old_state2max_path_lgth [init_state] = 1; /* pour reserver 0 a non encore traite' */
 
   /* On calcule la longueur maximale des chemins qui conduisent depuis l'etat initial a chaque etat de l'automate ... */
-  normalized_is_cyclic = SXFALSE;
+  normalized_is_cyclic = false;
   (*normalized_fsa_forward_trans)(init_state, fill_old_state2max_path_lgth);
 
   /* Attention, si l'automate en entree contient des cycles (c'est pas un DAG), l'algo precedent n'assure pas
@@ -313,7 +313,7 @@ fsa_normalize (SXINT init_state,
 
 /* ******************************************* nfa2dfa ******************************************* */
 static SXINT        dfa_init_state, dfa_final_state;
-static SXBOOLEAN    (*nfa_empty_trans) (SXINT, SXBA);
+static bool    (*nfa_empty_trans) (SXINT, SXBA);
 static SXINT        last_partition, dfa_state_nb;
 static SXINT        *nfa_ec_stack, *nfa_t_stack, *nfa_state_stack;
 static SXBA       nfa_wstate_set, t_set;
@@ -403,11 +403,11 @@ init_set (SXINT state, SXINT part)
 /* On passe en arg un ensembles d'etats, on complete cet ensemble avec les etats accessibles par transition vide
    l'ensemble des etats atteint par transition vide depuis l'etat p est donne' par (*empty_trans)(p, reached_set) */
 /* Retourne vrai ssi cur_state_set a change' */
-static SXBOOLEAN
+static bool
 epsilon_closure (SXBA cur_state_set)
 {
   SXINT     state, next_state;
-  SXBOOLEAN ret_val = SXFALSE;
+  bool ret_val = false;
 
   state = 0; /* et non nfa_init_state-1, car dans certains cas (DAG) on n'a pas la garantie qu'une transition i -t-> j verifie i<j */
 
@@ -423,7 +423,7 @@ epsilon_closure (SXBA cur_state_set)
 
       while ((next_state = sxba_scan_reset (nfa_wstate_set, next_state)) >= 0) {
 	if (SXBA_bit_is_reset_set (cur_state_set, next_state)) {
-	  ret_val = SXTRUE;
+	  ret_val = true;
 	  PUSH (nfa_ec_stack, next_state);
 	}
       }
@@ -611,7 +611,7 @@ dfa_minimize (SXINT cur_dfa_init_state,
 										   SXINT t, 
 										   SXINT next_dfa_state)), 
 	      void (*mindfa_fill_trans)(SXINT, SXINT, SXINT), 
-	      SXBOOLEAN to_be_normalized
+	      bool to_be_normalized
 #ifdef ESSAI_INVERSE_MAPPING
 	      , struct inverse_mapping *inverse_mapping
 #endif /* ESSAI_INVERSE_MAPPING */
@@ -1247,8 +1247,8 @@ dfa_minimize (SXINT cur_dfa_init_state,
 
 
 /* calcule new_state et ... */
-/* ... retourne SXTRUE ssi new_state existait deja */
-static SXBOOLEAN
+/* ... retourne true ssi new_state existait deja */
+static bool
 get_state (SXBA old_state_set, SXINT *new_state)
 {
   SXINT state = -1;
@@ -1288,11 +1288,11 @@ nfa2dfa (SXINT init_state,
 			      final_state != max_state, et on a le droit d'avoir des transitions
 			      vers final_state qui ne sont pas sur eof_ste */
 	 SXINT eof_ste, 
-	 SXBOOLEAN (*empty_trans)(SXINT, SXBA), 
+	 bool (*empty_trans)(SXINT, SXBA), 
 	 void (*nfa_extract_trans)(SXINT, void (*nfa_fill_trans)(SXINT, SXINT, SXINT) ), 
-	 void (*dfa_fill_trans)(SXINT, SXINT, SXINT, SXBOOLEAN), 
+	 void (*dfa_fill_trans)(SXINT, SXINT, SXINT, bool), 
 	 void (*mindfa_fill_trans)(SXINT, SXINT, SXINT), 
-	 SXBOOLEAN to_be_normalized
+	 bool to_be_normalized
 #ifdef ESSAI_INVERSE_MAPPING
 	 , struct inverse_mapping *inverse_mapping
 #endif /* ESSAI_INVERSE_MAPPING */
@@ -1301,7 +1301,7 @@ nfa2dfa (SXINT init_state,
   SXINT     dfa_state, new_dfa_state, bot, top, nfa_state, t, id, nfa_max_state;
   SXINT     *final_dfa_state_stack;
   SXBA      cur_state_set;
-  SXBOOLEAN dfa_state_is_final;
+  bool dfa_state_is_final;
 
   nfa_max_state = max_state == 0 ? final_state : max_state;
   nfa_empty_trans = empty_trans; /* Appels multiples */
@@ -1340,7 +1340,7 @@ nfa2dfa (SXINT init_state,
 
   while (!IS_EMPTY (nfa_state_stack)) {
     dfa_state = DPOP (nfa_state_stack);
-    dfa_state_is_final = SXFALSE;
+    dfa_state_is_final = false;
 
     bot = XH_X (XH_dfa_states, dfa_state);
     top = XH_X (XH_dfa_states, dfa_state+1);
@@ -1349,7 +1349,7 @@ nfa2dfa (SXINT init_state,
       nfa_state = XH_list_elem (XH_dfa_states, bot);
 
       if (nfa_state == final_state && max_state > 0) {
-	dfa_state_is_final = SXTRUE;
+	dfa_state_is_final = true;
 	DPUSH (final_dfa_state_stack, dfa_state);
       }
 
@@ -1380,7 +1380,7 @@ nfa2dfa (SXINT init_state,
 	/* Ici on a une transition dfa_state ->t new_dfa_state */
 	/* C'est l'appelant qui se charge de stocker l'automate deterministe */
 	if (dfa_fill_trans)
-	  (*dfa_fill_trans) (dfa_state, t, new_dfa_state, SXFALSE /* !is_final */);
+	  (*dfa_fill_trans) (dfa_state, t, new_dfa_state, false /* !is_final */);
 
 	if (mindfa_fill_trans) {
 	  XxY_set (&XxY_out_trans, dfa_state, t, &id);
@@ -1398,7 +1398,7 @@ nfa2dfa (SXINT init_state,
     dfa_state = DPOP (final_dfa_state_stack);
 
     if (dfa_fill_trans)
-      (*dfa_fill_trans) (dfa_state, eof_ste, dfa_final_state, SXTRUE /* is_final */);
+      (*dfa_fill_trans) (dfa_state, eof_ste, dfa_final_state, true /* is_final */);
 
     if (mindfa_fill_trans) {
       XxY_set (&XxY_out_trans, dfa_state, eof_ste, &id);
@@ -1536,7 +1536,7 @@ nfa2dfa (SXINT init_state,
 
 
 
-char WHAT_FSA_TO_RE[] = "@(#)SYNTAX - $Id: fsa_mngr.c 2982 2023-04-04 12:57:22Z serwe $" WHAT_DEBUG;
+char WHAT_FSA_TO_RE[] = "@(#)SYNTAX - $Id: fsa_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 #define leaf (SXINT)1
 #define concat (SXINT)2
@@ -1658,7 +1658,7 @@ static struct node **tete_open (SXINT size)
     return atete->T;
 }
 
-static SXVOID tete_free (void)
+static void tete_free (void)
 {
     if (tete != NULL) {
 	struct tete	*atete = tete + top_of_tete;
@@ -1701,7 +1701,7 @@ static SXINT *ints_open (SXINT size)
     return aints->T;
 }
 
-static SXVOID ints_free (void)
+static void ints_free (void)
 {
     if (ints != NULL) {
 	struct ints	*aints = ints + top_of_ints;
@@ -1748,7 +1748,7 @@ static SXBA sets_open (SXINT size)
     return asets->set;
 }
 
-static SXVOID sets_free (void)
+static void sets_free (void)
 {
     if (sets != NULL) {
 	struct sets	*asets = sets + top_of_sets;
@@ -1777,7 +1777,7 @@ static struct node	*alloc_a_node (void)
 
 
 
-static SXVOID	free_tree_areas (void)
+static void	free_tree_areas (void)
 {
     struct tree_area	*p;
 
@@ -1852,13 +1852,13 @@ static struct node	*create_list (struct node **p_s, SXINT m, SXINT create_list_M
 
 
 
-static SXBOOLEAN	is_tail (struct node *p1, struct node *p2)
+static bool	is_tail (struct node *p1, struct node *p2)
 {
     /* Si p2 est une concatenation, regarde si le dernier composant est p1 */
     struct node	*p;
 
     if (p2->name != concat)
-	return (SXFALSE);
+	return (false);
 
     for (p = p2; p->name == concat; p = p->body.brother.right) {
     }
@@ -1878,7 +1878,7 @@ static SXINT	nb_op_sons (struct node *p, SXINT op)
 
 
 
-static SXVOID	gather_op_sons (struct node **p_s, SXINT *xp, struct node *p, SXINT op)
+static void	gather_op_sons (struct node **p_s, SXINT *xp, struct node *p, SXINT op)
 {
     if (p->name != op) {
 	p_s [++*xp] = p;
@@ -1890,7 +1890,7 @@ static SXVOID	gather_op_sons (struct node **p_s, SXINT *xp, struct node *p, SXIN
 }
 
 
-static SXVOID	process_substr (struct node **p_s, SXINT xstar, SXINT xconc, SXINT process_substr_M)
+static void	process_substr (struct node **p_s, SXINT xstar, SXINT xconc, SXINT process_substr_M)
 {
     struct node		*star_son_ptr;
     SXINT		d, y;
@@ -1965,13 +1965,13 @@ static SXVOID	process_substr (struct node **p_s, SXINT xstar, SXINT xconc, SXINT
 
 
 
-static SXBOOLEAN	is_an_element (struct node *head_ptr, struct node *elem_ptr, SXINT oper)
+static bool	is_an_element (struct node *head_ptr, struct node *elem_ptr, SXINT oper)
 {
     struct node	*p;
 
     for (p = head_ptr; p->name == oper; p = p->body.brother.right) {
 	if (p->body.brother.left == elem_ptr)
-	    return (SXTRUE);
+	    return (true);
     }
 
     return (p == elem_ptr);
@@ -1979,7 +1979,7 @@ static SXBOOLEAN	is_an_element (struct node *head_ptr, struct node *elem_ptr, SX
 
 
 
-static SXBOOLEAN	is_a_subset (struct node **p_s, SXINT m1, SXINT M1, struct node **q_s, SXINT m2, SXINT M2)
+static bool	is_a_subset (struct node **p_s, SXINT m1, SXINT M1, struct node **q_s, SXINT m2, SXINT M2)
 {
     SXINT		x1, x2;
     struct node	*p2;
@@ -1994,16 +1994,16 @@ static SXBOOLEAN	is_a_subset (struct node **p_s, SXINT m1, SXINT M1, struct node
 	    }
 
 	    if (x1 > M1)
-		return SXFALSE;
+		return false;
 	}
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
 
-static SXBOOLEAN	is_a_member (struct node *p1, struct node *p2)
+static bool	is_a_member (struct node *p1, struct node *p2)
 {
     /* Check if the left son of p1 is
 	 - the left son of p2
@@ -2012,21 +2012,21 @@ static SXBOOLEAN	is_a_member (struct node *p1, struct node *p2)
     SXINT		xp1, xp2;
 
     if ((p1_son = p1->body.brother.left) == (p2_son = p2->body.brother.left))
-	return (SXTRUE);
+	return (true);
 
     if (p2_son->name != or)
-	return (SXFALSE);
+	return (false);
 
     if (p1_son->name != or)
 	return (is_an_element (p2_son, p1_son, or));
 
     if ((xp1 = nb_op_sons (p1_son, or)) > (xp2 = nb_op_sons (p2_son, or)))
-	return (SXFALSE);
+	return (false);
     
     {
 	struct node	**p1_s /* 1:xp1 */ , **p2_s /* 1:xp2 */ ;
 	SXINT		x;
-	SXBOOLEAN	subsetp;
+	bool	subsetp;
 	
 	p1_s = tete_open (xp1);
 	p2_s = tete_open (xp2);
@@ -2042,14 +2042,14 @@ static SXBOOLEAN	is_a_member (struct node *p1, struct node *p2)
 
 
 
-static SXBOOLEAN	is_a_staror_elem (struct node *node_ptr, struct node **result_ptr)
+static bool	is_a_staror_elem (struct node *node_ptr, struct node **result_ptr)
 {
     SXINT			concat_no;
 
     *result_ptr = NULL;
 
     if (node_ptr->name != concat)
-	return SXFALSE;
+	return false;
 
     concat_no = nb_op_sons (node_ptr, concat);
 
@@ -2064,14 +2064,14 @@ static SXBOOLEAN	is_a_staror_elem (struct node *node_ptr, struct node **result_p
 
 	if (p->name != star) {
 	    tete_pop (1);
-	    return (SXFALSE);
+	    return (false);
 	}
 
 	or_ptr = p->body.brother.left;
 
 	if (or_ptr->name != or) {
 	    tete_pop (1);
-	    return (SXFALSE);
+	    return (false);
 	}
 
 	p = create_list (p_s, (SXINT)1, concat_no - 1, concat);
@@ -2092,18 +2092,18 @@ static SXBOOLEAN	is_a_staror_elem (struct node *node_ptr, struct node **result_p
 	    }
 
 	    tete_pop (2);
-	    return (SXFALSE);
+	    return (false);
 
 next:	    *result_ptr = create_op (concat, p, canon (star, create_list (q_s, (SXINT)1, or_no, or), NULL));
 	    tete_pop (2);
-	    return (SXTRUE);
+	    return (true);
 	}
     }
 }
 
 
 
-static SXBOOLEAN	is_a_sublanguage (struct node *left, struct node *right)
+static bool	is_a_sublanguage (struct node *left, struct node *right)
 {
     struct node	*left_son, *right_son;
     SXINT				or_no, concat_no;
@@ -2112,7 +2112,7 @@ static SXBOOLEAN	is_a_sublanguage (struct node *left, struct node *right)
     right_son = right->body.brother.left;
 
     if (left_son->name != or || right_son->name != concat)
-	return (SXFALSE);
+	return (false);
 
     or_no = nb_op_sons (left_son, or);
     concat_no = nb_op_sons (right_son, concat);
@@ -2121,7 +2121,7 @@ static SXBOOLEAN	is_a_sublanguage (struct node *left, struct node *right)
 	struct node		**or_son_ptrs, **concat_son_ptrs;
 	struct node	*p;
 	SXINT	x, cn;
-	SXBOOLEAN		elementp;
+	bool		elementp;
 
 	or_son_ptrs = tete_open (or_no);
 	concat_son_ptrs = tete_open (concat_no);
@@ -2139,12 +2139,12 @@ static SXBOOLEAN	is_a_sublanguage (struct node *left, struct node *right)
 
 	if (x == concat_no) {
 	    tete_pop (2);
-	    return (SXFALSE);
+	    return (false);
 	}
 
 	if (x == 0) {
 	    tete_pop (2);
-	    return (SXTRUE);
+	    return (true);
 	}
 
 	if (x == 1) {
@@ -2156,7 +2156,7 @@ static SXBOOLEAN	is_a_sublanguage (struct node *left, struct node *right)
 		{
 		    struct node		**c_s /* 1:cn */ ;
 		    SXINT		y;
-		    SXBOOLEAN	subsetp;
+		    bool	subsetp;
 
 		    c_s = tete_open (cn);
 		    y = 0;
@@ -2183,7 +2183,7 @@ static SXBOOLEAN	is_a_sublanguage (struct node *left, struct node *right)
 
 
 
-static SXVOID	transform (struct node **left, struct node **right)
+static void	transform (struct node **left, struct node **right)
 {
     struct node	*left_son, *right_son;
     SXINT				cn1, cn2;
@@ -2270,7 +2270,7 @@ static SXVOID	transform (struct node **left, struct node **right)
 
 
 
-static SXBOOLEAN	less (SXINT i, SXINT j)
+static bool	less (SXINT i, SXINT j)
 {
     return (intptr_t) (P_S [i]) < (intptr_t) (P_S [j]);
 }
@@ -2484,17 +2484,17 @@ static struct node	*canon (SXINT oper, struct node *left, struct node *right)
 	    struct node	**p_s /* 1:or_no */ ;
 	    struct node		*l_ptr;
 	    SXINT		x;
-	    SXBOOLEAN is_option = SXFALSE;
+	    bool is_option = false;
 
 	    /* [X]|Y or X|[Y] or [X]|[Y] => [X|Y] */
 	    if (left->name == option) {
 		left = left->body.brother.left;
-		is_option = SXTRUE;
+		is_option = true;
 	    }
 
 	    if (right->name == option) {
 		right = right->body.brother.left;
-		is_option = SXTRUE;
+		is_option = true;
 	    }
 
 	    or_no = nb_op_sons (left, or) + nb_op_sons (right, or);
@@ -2558,7 +2558,7 @@ static SXBA_INDEX	get_a_pred (SXBA_INDEX n)
 
 
 
-static SXVOID	gen_a_loop (SXBA_INDEX pred, SXBA_INDEX next, SXBA_INDEX loop)
+static void	gen_a_loop (SXBA_INDEX pred, SXBA_INDEX next, SXBA_INDEX loop)
 {
     /* Il y a une boucle elementaire sur l'etat loop
 soit t=trans(pred,next) et l=trans(loop,loop)
@@ -2585,7 +2585,7 @@ sinon si next=loop alors trans(pred,next)=t {l}
 }
 
 
-static SXVOID	gen_splits (SXBA_INDEX pred, SXBA_INDEX next)
+static void	gen_splits (SXBA_INDEX pred, SXBA_INDEX next)
 {
     /* Calcule les chemins entre pred et succ(next)*/
     SXBA_INDEX		succ;
@@ -2628,7 +2628,7 @@ static SXVOID	gen_splits (SXBA_INDEX pred, SXBA_INDEX next)
 
 
 
-static SXVOID	erase (SXBA_INDEX pred, SXBA_INDEX next)
+static void	erase (SXBA_INDEX pred, SXBA_INDEX next)
 {
     /* Supprime la transition entre pred et next */
     SXBA_0_bit (M [pred], next);
@@ -2843,36 +2843,36 @@ static struct node	*gen_prefixe (struct node ***p_s, SXBA set, struct node *node
 {
     SXBA_INDEX         i;
     SXINT		j;
-    SXBOOLEAN	is_option, are_the_same;
+    bool	is_option, are_the_same;
     struct node		*c_ptr, *ret_ptr;
     SXBA	/* or_no */ c_set;
 
     c_set = sets_open (or_no);
-    is_option = SXFALSE;
+    is_option = false;
     sxba_copy (c_set, set);
     i = sxba_scan (set, 0); /* Element 0 non utilise. */
     j = ++(min_s [i]);
 
     if (j > MAX_s [i]) {
-	is_option = SXTRUE;
+	is_option = true;
 	SXBA_0_bit (c_set, i);
 	c_ptr = NULL;
     }
     else
 	c_ptr = p_s [i] [j];
 
-    are_the_same = SXTRUE;
+    are_the_same = true;
 
     while ((i = sxba_scan (c_set, i)) >= 0) {
 	j = ++(min_s [i]);
 
 	if (j > MAX_s [i]) {
-	    is_option = SXTRUE;
+	    is_option = true;
 	    SXBA_0_bit (c_set, i);
 	}
 
 	if (c_ptr != p_s [i] [j])
-	    are_the_same = SXFALSE;
+	    are_the_same = false;
     }
 
     if (is_option) {
@@ -2896,36 +2896,36 @@ static struct node	*gen_suffixe (struct node ***p_s, SXBA set, struct node *node
 {
     SXBA_INDEX i;
     SXINT	j;
-    SXBOOLEAN	is_option, are_the_same;
+    bool	is_option, are_the_same;
     struct node		*c_ptr, *ret_ptr;
     SXBA	/* or_no */ c_set;
 
     c_set = sets_open (or_no);
-    is_option = SXFALSE;
+    is_option = false;
     sxba_copy (c_set, set);
     i = sxba_scan (set, -1);
     j = --(MAX_s [i]);
 
     if (j < min_s [i]) {
-	is_option = SXTRUE;
+	is_option = true;
 	SXBA_0_bit (c_set, i);
 	c_ptr = NULL;
     }
     else
 	c_ptr = p_s [i] [j];
 
-    are_the_same = SXTRUE;
+    are_the_same = true;
 
     while ((i = sxba_scan (c_set, i)) >= 0) {
 	j = --(MAX_s [i]);
 
 	if (j < min_s [i]) {
-	    is_option = SXTRUE;
+	    is_option = true;
 	    SXBA_0_bit (c_set, i);
 	}
 
 	if (c_ptr != p_s [i] [j])
-	    are_the_same = SXFALSE;
+	    are_the_same = false;
     }
 
     if (is_option) {
@@ -3284,7 +3284,7 @@ static VARSTR
 print_code (VARSTR vstr, SXUINT code)
 {
   SXINT   trans_kind, id, bot, top, cur, trans1_kind;
-  SXBOOLEAN atomic;
+  bool atomic;
   char    *trans_name;
   SXUINT code1;
 
@@ -3406,11 +3406,11 @@ trees_oflw (SXINT old_size, SXINT new_size)
   tree2occur_nb = (SXINT *) sxrecalloc (tree2occur_nb, old_size+1, new_size+1, sizeof (SXINT));
 }
 
-static SXBOOLEAN
+static bool
 set_code (SXUINT *id)
 {
   SXINT   size, bot, cur, top, code;
-  SXBOOLEAN ret_val;
+  bool ret_val;
 
   ret_val = XH_set (&code_hd, (SXINT*) id);
 
@@ -3468,7 +3468,7 @@ gen_tree (SXINT tree, SXINT path, SXBA set, SXBA final_set)
 {
   SXUINT  code, code2;
   SXINT   bot, cur, top, branch, top_tree_pos, branch_pos, nb, lgth, prev_lgth;
-  SXBOOLEAN is_leaf;
+  bool is_leaf;
 
   sxinitialise (prev_lgth);
 
@@ -3477,15 +3477,15 @@ gen_tree (SXINT tree, SXINT path, SXBA set, SXBA final_set)
   if (tree) {
     bot = XH_X (trees, tree);
     top = XH_X (trees, tree+1);
-    is_leaf = SXFALSE;
+    is_leaf = false;
 
     if (final_set && SXBA_bit_is_set (final_set, path))
-      is_leaf = SXTRUE;
+      is_leaf = true;
 
     branch = XH_list_elem (trees, bot);
 
     if (branch == 0) {
-      is_leaf = SXTRUE;
+      is_leaf = true;
       bot++;
     }
   
@@ -3707,7 +3707,7 @@ static SXINT
 make_tree (SXINT path)
 {
   SXINT   size, next_path, next_tree, next_branch, path_branch, tree, path_tree, code, bot, top;
-  SXBOOLEAN is_leaf = SXFALSE;
+  bool is_leaf = false;
 
   size = 0;
   bot = DTOP (code_stack);
@@ -3729,7 +3729,7 @@ make_tree (SXINT path)
       XxY_set (&pathXbranch, path, next_branch, &path_branch);
     }
     else
-      is_leaf = SXTRUE;
+      is_leaf = true;
   }
 
   if (size) {
@@ -3781,30 +3781,30 @@ erase_paths (SXBA cur_paths_set)
 }
 
 /* On a supprime' des maillons ds paths, On note tout ce qui reste accessible */
-static SXBOOLEAN
+static bool
 valid_paths (SXINT path)
 {
   SXINT   next_path;
-  SXBOOLEAN ret_val = SXFALSE;
+  bool ret_val = false;
 
   XxY_Xforeach (paths, path, next_path) {
     if (SXBA_bit_is_reset_set (paths_set, next_path)) {
       valid_paths (next_path);
-      ret_val = SXTRUE;
+      ret_val = true;
     }
   }
 
   return ret_val;
 }
 
-static SXBOOLEAN
+static bool
 remake_structures (void)
 {
   sxba_empty (paths_set);
 
   if (!valid_paths (0))
     /* Tout a disparu */
-    return SXFALSE;
+    return false;
 
   /* paths_set est l'ensemble des paths accessibles */
   erase_paths (paths_set);
@@ -3816,7 +3816,7 @@ remake_structures (void)
 
   make_tree (0 /* racine */);
 
-  return SXTRUE;
+  return true;
 }
 
 /* Supprime le maillon strategique */
@@ -3848,14 +3848,14 @@ clear_path (SXINT path)
 }
 
 /* Supprime "tree" des structures et les met a jour
-   Retourne SXTRUE ssi elles sont non vides */
-static SXBOOLEAN
+   Retourne true ssi elles sont non vides */
+static bool
 clear_tree (SXINT tree)
 {
   SXINT   path_tree, path;
-  SXBOOLEAN ret_val;
+  bool ret_val;
 
-  ret_val = SXTRUE;
+  ret_val = true;
 
   if (tree) {
     XxY_Yforeach (pathXtree, tree, path_tree) {
@@ -3873,14 +3873,14 @@ clear_tree (SXINT tree)
 
 
 /* Supprime "branch" des structures et les met a jour
-   Retourne SXTRUE ssi elles sont non vides */
-static SXBOOLEAN
+   Retourne true ssi elles sont non vides */
+static bool
 clear_branch (SXINT branch)
 {
   SXINT   path_branch, prev_path, next_path, code;
-  SXBOOLEAN ret_val;
+  bool ret_val;
 
-  ret_val = SXTRUE;
+  ret_val = true;
 
   if (branch) {
     XxY_Yforeach (pathXbranch, branch, path_branch) {
@@ -3901,8 +3901,8 @@ clear_branch (SXINT branch)
 
 
 
-/* Realise la meilleure factorisation, la supprime des structures et retourne SXTRUE
-   sinon (structure vide ou plus de factorisation) retourne SXFALSE
+/* Realise la meilleure factorisation, la supprime des structures et retourne true
+   sinon (structure vide ou plus de factorisation) retourne false
 */
 static void
 extract_factor (void)
@@ -4098,7 +4098,7 @@ static SXUINT
 factorize_OR (SXINT or_code)
 {
   SXINT id, bot, cur, top, cur_trans_kind, path, cur_id, bot1, cur1, top1, lgth;
-  SXBOOLEAN has_common;
+  bool has_common;
   SXUINT code, code1, cur_code;
 
   /* On commence par fabriquer dans paths une factorisation gauche (arbre des prefixes) */
@@ -4107,7 +4107,7 @@ factorize_OR (SXINT or_code)
   id = code2id (or_code);
   bot = XH_X (code_hd, id);
   top = XH_X (code_hd, id+1);
-  has_common = SXFALSE;
+  has_common = false;
 
   for (cur = bot; cur < top; cur++) {
     cur_code = (SXUINT) XH_list_elem (code_hd, cur);
@@ -4115,7 +4115,7 @@ factorize_OR (SXINT or_code)
 
     if (cur_trans_kind == ATOMIC_TRANS || cur_trans_kind == OPTION_TRANS) {
       if (XxY_set (&paths, 0, (SXINT) cur_code, &path))
-	has_common = SXTRUE;
+	has_common = true;
 
       XxY_set (&paths, path, 0, &path); /* "etat" final */
     }
@@ -4133,7 +4133,7 @@ factorize_OR (SXINT or_code)
 	if (!XxY_set (&paths, path, (SXINT) code1, &path))
 	  path2lgth [path] = lgth;
 	else
-	  has_common = SXTRUE;
+	  has_common = true;
       }
 	
       XxY_set (&paths, path, 0, &path); /* "etat" final */
@@ -4432,7 +4432,7 @@ static void
 fill_dag_hd (SXINT p, SXINT t, SXINT q)
 {
   SXINT           dag_id;
-  SXBOOLEAN         first_time;
+  bool         first_time;
   struct dag_attr *attr_ptr;
 
   first_time = !XxY_set (&dag_hd, p, q, &dag_id);
@@ -4471,7 +4471,7 @@ make_a_new_trans (SXINT dag1_id, SXINT dag2_id)
 {
   SXINT           p, q, dag_id, code, code1, code2;
   struct dag_attr *attr_ptr;
-  SXBOOLEAN         first_time;
+  bool         first_time;
 
 #if EBUG
   if (XxY_Y (dag_hd, dag1_id) != XxY_X (dag_hd, dag2_id))
@@ -4687,7 +4687,7 @@ word_tree_oflw (struct word_tree_struct *word_tree_ptr, SXINT old_size, SXINT ne
 }
 
 
-/* Si to_be_mininized est SXTRUE, dico2 subira ulterieurement une phase de minimisation
+/* Si to_be_mininized est true, dico2 subira ulterieurement une phase de minimisation
    pour ce faire on a besoin d'une structure supplementaire (dico2_lgth2top_path_hd et dico2_lgth2path) */
 void
 word_tree_alloc (struct word_tree_struct *word_tree_ptr, 
@@ -4696,8 +4696,8 @@ word_tree_alloc (struct word_tree_struct *word_tree_ptr,
 		 SXINT word_lgth,
 		 SXINT Xforeach, 
 		 SXINT Yforeach, 
-		 SXBOOLEAN from_left_to_right, 
-		 SXBOOLEAN with_path2id, 
+		 bool from_left_to_right, 
+		 bool with_path2id, 
 		 void (*oflw) (SXINT, SXINT), 
 		 FILE *stats)
 {
@@ -4706,7 +4706,7 @@ word_tree_alloc (struct word_tree_struct *word_tree_ptr,
   word_tree_ptr->name = name;
   word_tree_ptr->stats = stats;
   word_tree_ptr->private.from_left_to_right = from_left_to_right; /* Les mots sont lus de gauche a droite */
-  word_tree_ptr->is_static = SXFALSE;
+  word_tree_ptr->is_static = false;
 
   size = word_nb*word_lgth;
 
@@ -4714,7 +4714,7 @@ word_tree_alloc (struct word_tree_struct *word_tree_ptr,
   XxY_set (&word_tree_ptr->paths, 0, -1, &word_tree_ptr->root); /* word_tree_ptr->root == 1 */
 
   /* Il y a 2 facons de designer les etats finals */
-  /* word_tree_ptr->path2id ne peut etre utilise' que si to_be_mininized == SXFALSE */
+  /* word_tree_ptr->path2id ne peut etre utilise' que si to_be_mininized == false */
 
   /* Attention, les 2 qui suivent peuvent etre utilises ds une struct word_tree_ptr->struct
      Ils ne doivent donc pas etre liberes sans precaution */
@@ -4904,7 +4904,7 @@ sxdfa_lgth_free (void)
 /* Tous les appels a dico2_add_a_word sont termines
    On remplit la sxdfa_struct */
 void
-word_tree2sxdfa (struct word_tree_struct *word_tree_ptr, struct sxdfa_struct *sxdfa_ptr, char *name, FILE *stats, SXBOOLEAN to_be_minimized)
+word_tree2sxdfa (struct word_tree_struct *word_tree_ptr, struct sxdfa_struct *sxdfa_ptr, char *name, FILE *stats, bool to_be_minimized)
 {
   SXINT     number_of_trans, max_trans_nb, arity, max_arity, last_path, path, next_path, t, trans_id, new_lgth, max_path_lgth, id;
   SXINT     where, last_new_path, new_path, next_new_path;
@@ -5185,8 +5185,8 @@ word_tree2sxdfa (struct word_tree_struct *word_tree_ptr, struct sxdfa_struct *sx
   sxdfa_ptr->max_arity = max_arity;
   sxdfa_ptr->max_t_val = word_tree_ptr->max_trans;
 
-  sxdfa_ptr->is_static = SXFALSE;
-  sxdfa_ptr->is_a_dag = SXTRUE;
+  sxdfa_ptr->is_static = false;
+  sxdfa_ptr->is_a_dag = true;
   sxdfa_ptr->private.from_left_to_right = word_tree_ptr->private.from_left_to_right;
 
   sxfree (cur_t_set);
@@ -5214,7 +5214,7 @@ void
 sxdfa_alloc (struct sxdfa_struct *sxdfa_ptr, SXINT state_nb, SXINT trans_nb, char *name, FILE *stats)
 {
   /* Ces tailles sont des majorants, on ne remplit donc pas les valeurs scalaires definitives */
-  sxdfa_ptr->is_static = SXFALSE;
+  sxdfa_ptr->is_static = false;
 
   if (name) sxdfa_ptr->name = name;
   if (stats) sxdfa_ptr->stats = stats;
@@ -5395,7 +5395,7 @@ sxdfa_tree2min_dag (struct sxdfa_struct *sxdfa_ptr)
   sxdfa_ptr->number_of_out_trans = sxdfa_ptr->next_state_list [0] - sxdfa_ptr->last_state - 1;
   /* sxdfa_ptr->final_state_nb conserve sa valeur */
   /* sxdfa_ptr->max_path_lgth conserve sa valeur */
-  /* sxdfa_ptr->is_static conserve sa valeur (SXFALSE) */
+  /* sxdfa_ptr->is_static conserve sa valeur (false) */
   /* sxdfa_ptr->is_a_dag conserve sa valeur */
 
   sxfree (cur_path2tree), cur_path2tree = NULL;
@@ -5424,15 +5424,15 @@ nfa2sxdfa (SXINT init_state,
 	   SXINT cur_max_state, 
 	   SXINT eof_ste, 
 	   SXINT trans_nb, 
-	   SXBOOLEAN (*empty_trans)(SXINT, SXBA), 
+	   bool (*empty_trans)(SXINT, SXBA), 
 	   void (*nfa_extract_trans)(SXINT, void (*sxnfa_fill_trans) (SXINT nfa_state, SXINT t, SXINT next_nfa_state)), 
 	   struct sxdfa_struct *sxdfa_ptr, 
-	   SXBOOLEAN to_be_minimized, 
-	   SXBOOLEAN to_be_normalized)
+	   bool to_be_minimized, 
+	   bool to_be_normalized)
 {
   SXINT     dfa_state, new_dfa_state, bot, top, nfa_state, t, max_trans_value, nb, prev_t, t_trans, nfa_max_state;
   SXBA      cur_state_set;
-  SXBOOLEAN   dfa_state_is_final;
+  bool   dfa_state_is_final;
   XH_header trans_list_hd;
 
   sxinitialise (prev_t);
@@ -5476,7 +5476,7 @@ nfa2sxdfa (SXINT init_state,
 
   while (!IS_EMPTY (nfa_state_stack)) {
     dfa_state = DPOP (nfa_state_stack);
-    dfa_state_is_final = SXFALSE;
+    dfa_state_is_final = false;
 
     bot = XH_X (XH_dfa_states, dfa_state);
     top = XH_X (XH_dfa_states, dfa_state+1);
@@ -5485,7 +5485,7 @@ nfa2sxdfa (SXINT init_state,
       nfa_state = XH_list_elem (XH_dfa_states, bot);
 
       if (nfa_state == cur_final_state && cur_max_state > 0)
-	dfa_state_is_final = SXTRUE;
+	dfa_state_is_final = true;
 
       (*nfa_extract_trans) (nfa_state, sxnfa_fill_trans);
       bot++;
@@ -5496,7 +5496,7 @@ nfa2sxdfa (SXINT init_state,
 
     while ((t = sxba_scan (t_set, t)) >= 0) {
       if (t == eof_ste || dfa_state_is_final) { /* transition arrivant sur un etat final */
-	dfa_state_is_final = SXTRUE;
+	dfa_state_is_final = true;
 	SXBA_0_bit (t_set, t);
 	sxdfa_ptr->final_state_nb++; /* C'est la 1ere fois que dfa_state est examine' */
       }
@@ -5553,8 +5553,8 @@ nfa2sxdfa (SXINT init_state,
 
   sxdfa_ptr->max_t_val = max_trans_value;
 
-  sxdfa_ptr->private.from_left_to_right = SXTRUE;
-  sxdfa_ptr->is_a_dag = SXFALSE; /* En fait on sait pas */
+  sxdfa_ptr->private.from_left_to_right = true;
+  sxdfa_ptr->is_a_dag = false; /* En fait on sait pas */
   sxdfa_ptr->max_path_lgth = 0;/* sans objet si pas DAG et si DAG sera calcule' + tard !! */ 
 
 
@@ -5580,7 +5580,7 @@ nfa2sxdfa (SXINT init_state,
 
 
 void
-sxdfa_minimize (struct sxdfa_struct *sxdfa_ptr, SXBOOLEAN to_be_normalized)
+sxdfa_minimize (struct sxdfa_struct *sxdfa_ptr, bool to_be_normalized)
 {
   SXINT                 state, next_state, partition, next_partition, bot, top, part_set_id, cur_part, t_trans, trans_list_id, new_part;
   SXINT                 size, pred_state, cur_state, next_part, cur_part_card, nb_max, id, nb, id_max, last_part_set_id, old_last_partition, trans_nb, is_final_state;
@@ -6138,7 +6138,7 @@ sxdfa_minimize (struct sxdfa_struct *sxdfa_ptr, SXBOOLEAN to_be_normalized)
      sxdfa_ptr->max_arity;
      sxdfa_ptr->max_t_val;
      sxdfa_ptr->private.from_left_to_right;
-     sxdfa_ptr->is_a_dag = SXFALSE;
+     sxdfa_ptr->is_a_dag = false;
   */
 
   sxfree (new_part_final_set);
@@ -6197,7 +6197,7 @@ sxdfa_fill_old_state2max_path_lgth (struct sxdfa_struct *sxdfa_ptr, SXINT state)
       Detection d'un cycle ds l'automate
       On ne touche pas a old_state2max_path_lgth [state]
     */
-    normalized_is_cyclic = SXTRUE;
+    normalized_is_cyclic = true;
   }
 }
 
@@ -6215,7 +6215,7 @@ sxdfa_normalize (struct sxdfa_struct *sxdfa_ptr)
   old_state2max_path_lgth [sxdfa_ptr->init_state] = 1; /* pour reserver 0 a non encore traite' */
 
   /* On calcule la longueur maximale des chemins qui conduisent depuis l'etat initial a chaque etat de l'automate ... */
-  normalized_is_cyclic = SXFALSE;
+  normalized_is_cyclic = false;
 
   sxdfa_fill_old_state2max_path_lgth (sxdfa_ptr, sxdfa_ptr->init_state);
 
@@ -6289,11 +6289,11 @@ sxdfa_normalize (struct sxdfa_struct *sxdfa_ptr)
 }
 
 
-static SXBOOLEAN
+static bool
 sxdfa_fill_dag_hd (struct sxdfa_struct *sxdfa_ptr, SXINT p, SXINT t, SXINT q)
 {
   SXINT           dag_id;
-  SXBOOLEAN         first_time;
+  bool         first_time;
   struct dag_attr *attr_ptr;
 
   first_time = !XxY_set (&dag_hd, p, q, &dag_id);
@@ -6326,16 +6326,16 @@ sxdfa_fill_dag_hd (struct sxdfa_struct *sxdfa_ptr, SXINT p, SXINT t, SXINT q)
     }
   }
 
-  return SXTRUE;
+  return true;
 }
 
 
 
 /* appelle la fonction f sur toutes les transitions issues de state
-   Si f retourne SXFALSE, arret
+   Si f retourne false, arret
 */
 void
-sxdfa_extract_trans (struct sxdfa_struct *sxdfa_ptr, SXINT state, SXBOOLEAN (*f)(struct sxdfa_struct *, SXINT, SXINT, SXINT))
+sxdfa_extract_trans (struct sxdfa_struct *sxdfa_ptr, SXINT state, bool (*f)(struct sxdfa_struct *, SXINT, SXINT, SXINT))
 {
   SXINT trans_nb, bot, top, bot_trans, is_final;
   SXINT *state_ptr, *next_states_ptr, *bot_trans_list_ptr, *top_trans_list_ptr;
@@ -6496,7 +6496,7 @@ sxdfadag2re (VARSTR varstr_ptr, struct sxdfa_struct *sxdfa_ptr, char *(*get_tran
 
 
 void
-sxdfa2c (struct sxdfa_struct *sxdfa_ptr, FILE *file, char *name, SXBOOLEAN is_static)
+sxdfa2c (struct sxdfa_struct *sxdfa_ptr, FILE *file, char *name, bool is_static)
 {
   SXINT  i;
 
@@ -6538,7 +6538,7 @@ sxdfa2c (struct sxdfa_struct *sxdfa_ptr, FILE *file, char *name, SXBOOLEAN is_st
 %s_states,\n\
 %s_next_state_list,\n\
 %s_trans_list,\n\
-/* is_static */ SXTRUE,\n\
+/* is_static */ true,\n\
 /* is_a_dag */ %s,\n\
  {\n\
  /* from_left_to_right */ %s,\
@@ -6554,8 +6554,8 @@ sxdfa2c (struct sxdfa_struct *sxdfa_ptr, FILE *file, char *name, SXBOOLEAN is_st
 	   name,
 	   name,
 	   name,
-	   sxdfa_ptr->is_a_dag ? "SXTRUE" : "SXFALSE",
-	   sxdfa_ptr->private.from_left_to_right ? "SXTRUE" : "SXFALSE"
+	   sxdfa_ptr->is_a_dag ? "true" : "false",
+	   sxdfa_ptr->private.from_left_to_right ? "true" : "false"
 	   );
 
   fprintf (file, "};\n");
@@ -6967,7 +6967,7 @@ sxdfa2comb_vector (struct sxdfa_struct *sxdfa_ptr, SXINT optim_kind, SXINT comb_
   SXUINT        *comb_vector_ptr, base_shift;
   unsigned char *char2class;
   SXBA          comb, comb_vector, char_comb, base_pos_set;
-  SXBOOLEAN     is_generate_char_stack_list = (optim_kind == 2);
+  bool     is_generate_char_stack_list = (optim_kind == 2);
 
   if (sxdfa_ptr->max_t_val >= 256)
     sxtrap (ME, "sxdfa2comb_vector");
@@ -7017,7 +7017,7 @@ sxdfa2comb_vector (struct sxdfa_struct *sxdfa_ptr, SXINT optim_kind, SXINT comb_
     sxdfa_comb_ptr->class_mask = stop_mask-1;
   }
 
-  sxdfa_comb_ptr->is_static = SXFALSE;
+  sxdfa_comb_ptr->is_static = false;
   sxdfa_comb_ptr->is_a_dag = sxdfa_ptr->is_a_dag ;
   sxdfa_comb_ptr->private.from_left_to_right = sxdfa_ptr->private.from_left_to_right ;
   sxdfa_comb_ptr->char2class = char2class;
@@ -7252,7 +7252,7 @@ sxdfa2comb_vector (struct sxdfa_struct *sxdfa_ptr, SXINT optim_kind, SXINT comb_
       struct class_attr {
 	SXINT *state2nb;
       }                 *class2attr, *attr_ptr, *common_class2attr;
-      SXBOOLEAN           now;
+      bool           now;
       struct {
 	SXINT nb, next_state, class;
       } popular, second_popular, void_popular;
@@ -7676,7 +7676,7 @@ sxdfa2comb_vector (struct sxdfa_struct *sxdfa_ptr, SXINT optim_kind, SXINT comb_
 		if (next_state >= 0) {
 		  if (SXBA_bit_is_set (common_comb, class) && common_class2next_state [class] == next_state)
 		    /* Ds la partie commune */
-		    now = SXTRUE;
+		    now = true;
 		  else {
 		    /* en propre */
 		    SXBA_1_bit (comb, class);
@@ -7863,7 +7863,7 @@ sxdfa2comb_vector (struct sxdfa_struct *sxdfa_ptr, SXINT optim_kind, SXINT comb_
 
 
 void
-sxdfa_comb2c (struct sxdfa_comb *sxdfa_comb_ptr, FILE *file, char *dico_name, SXBOOLEAN is_static)
+sxdfa_comb2c (struct sxdfa_comb *sxdfa_comb_ptr, FILE *file, char *dico_name, bool is_static)
 {
   unsigned char	class;
   SXUINT i;
@@ -8160,7 +8160,7 @@ sxdfa2sxdfa_packed (struct sxdfa_struct *sxdfa_ptr, struct sxdfa_packed_struct *
   sxdfa_packed_ptr->name = name;
   sxdfa_packed_ptr->stats = stats;
 
-  sxdfa_packed_ptr->is_static = SXFALSE;
+  sxdfa_packed_ptr->is_static = false;
   sxdfa_packed_ptr->is_a_dag = sxdfa_ptr->is_a_dag;
   sxdfa_packed_ptr->private.from_left_to_right = sxdfa_ptr->private.from_left_to_right;
 
@@ -8297,7 +8297,7 @@ sxdfa_packed_seek (struct sxdfa_packed_struct *sxdfa_packed_ptr, SXUINT (*get_ne
   tooth = *delta_ptr++;
 
   while (lgth > 0) {
-    is_final = tooth & stop_mask; /* si SXTRUE : forcement interne */
+    is_final = tooth & stop_mask; /* si true : forcement interne */
 
     if (tooth & id_mask) {
       if (is_final) {
@@ -8417,7 +8417,7 @@ sxdfa_packed_seek (struct sxdfa_packed_struct *sxdfa_packed_ptr, SXUINT (*get_ne
 
 
 void
-sxdfa_packed2c (struct sxdfa_packed_struct *sxdfa_packed_ptr, FILE *file, char *name, SXBOOLEAN is_static)
+sxdfa_packed2c (struct sxdfa_packed_struct *sxdfa_packed_ptr, FILE *file, char *name, bool is_static)
 {
   SXUINT  i;
 
@@ -8444,7 +8444,7 @@ sxdfa_packed2c (struct sxdfa_packed_struct *sxdfa_packed_ptr, FILE *file, char *
 /* t_mask */ %ld,\n\
 /* id_mask */ %ld,\n\
 %s_delta,\n\
-/* is_static */ SXTRUE,\n\
+/* is_static */ true,\n\
 /* is_a_dag */ %s,\n\
  {\n\
  /* from_left_to_right */ %s,\
@@ -8462,8 +8462,8 @@ sxdfa_packed2c (struct sxdfa_packed_struct *sxdfa_packed_ptr, FILE *file, char *
 	   sxdfa_packed_ptr->t_mask,
 	   sxdfa_packed_ptr->id_mask,
 	   name,
-	   sxdfa_packed_ptr->is_a_dag ? "SXTRUE" : "SXFALSE",
-	   sxdfa_packed_ptr->private.from_left_to_right ? "SXTRUE" : "SXFALSE"
+	   sxdfa_packed_ptr->is_a_dag ? "true" : "false",
+	   sxdfa_packed_ptr->private.from_left_to_right ? "true" : "false"
 	   );
 
   fprintf (file, "};\n");
@@ -8558,11 +8558,11 @@ nfa_intersection_fill_non_eps_trans (SXINT nfa_list,
    et on retourne l'id ds cet XH */
 static SXINT
 nfa_intersection_make_eps_closure (SXINT t,
-				   SXBOOLEAN (*nfa_extract_empty_trans) (SXINT, SXBA),
-				   SXBOOLEAN  *contains_the_final_state)
+				   bool (*nfa_extract_empty_trans) (SXINT, SXBA),
+				   bool  *contains_the_final_state)
 {
   SXINT     p, q, q_list, next;
-  SXBOOLEAN is_the_final_state;
+  bool is_the_final_state;
 
   is_the_final_state = (t == nfa_intersection_struct_ptr->eof_ste);
 
@@ -8611,7 +8611,7 @@ nfa_intersection_make_eps_closure (SXINT t,
 
   while ((q = sxba_scan_reset (nfa_intersection_struct_ptr->p_set, q)) > 0) {
     if (q == nfa_intersection_struct_ptr->final_state)
-      is_the_final_state = SXTRUE;
+      is_the_final_state = true;
 
     XH_push (XH_intersection_state_list_hd, q);
   }
@@ -8678,7 +8678,7 @@ XxY_nfa_intersection_states_oflw (SXINT old_size, SXINT new_size)
 }
 
 /* Realise l'intersection de 2 automates qcq */
-SXBOOLEAN
+bool
 nfa_intersection (SXINT nfa1_init_state, 
 		  SXINT nfa1_final_state, 
 		  SXINT nfa1_max_state,  /* en general, == 0 ; si > 0, on est dans le cas DAG (pas de trans
@@ -8690,11 +8690,11 @@ nfa_intersection (SXINT nfa1_init_state,
 		  SXINT nfa2_final_state, 
 		  SXINT nfa2_max_state,
 		  SXINT nfa2_eof_ste, 
-		  SXBOOLEAN (*nfa1_empty_trans)(SXINT, SXBA),  
-		  SXBOOLEAN (*nfa2_empty_trans)(SXINT, SXBA), 
+		  bool (*nfa1_empty_trans)(SXINT, SXBA),  
+		  bool (*nfa2_empty_trans)(SXINT, SXBA), 
 		  void (*nfa1_extract_non_eps_trans)(SXINT, void (*)(SXINT, SXINT, SXINT)),
 		  void (*nfa2_extract_non_eps_trans)(SXINT, void (*)(SXINT, SXINT, SXINT)), 
-		  void (*nfa_intersection_fill_trans)(SXINT, SXINT, SXINT, SXBOOLEAN)
+		  void (*nfa_intersection_fill_trans)(SXINT, SXINT, SXINT, bool)
 #ifdef ESSAI_INVERSE_MAPPING
 		  , struct inverse_mapping *inverse_mapping
 #endif /* ESSAI_INVERSE_MAPPING */
@@ -8707,7 +8707,7 @@ nfa_intersection (SXINT nfa1_init_state,
   XxY_header            XxY_nfa_intersection_states_hd;
   XxYxZ_header          XxYxZ_work_hd;
   static SXINT          XxYxZ_work_foreach [6] = {1, 0, 1, 0, 0, 0};
-  SXBOOLEAN             nfa1_list_contains_the_final_state, nfa2_list_contains_the_final_state, result_is_empty;
+  bool             nfa1_list_contains_the_final_state, nfa2_list_contains_the_final_state, result_is_empty;
 
   /* chaque etat du intersection_nfa est un couple (liste1, liste2) stocke' ds
      XxY_nfa_intersection_states_hd.
@@ -8771,7 +8771,7 @@ nfa_intersection (SXINT nfa1_init_state,
 
   PUSH (nfa_intersection_tbp_stack, nfa_intersection_init_state);
 
-  result_is_empty = SXTRUE;
+  result_is_empty = true;
 
   while (!IS_EMPTY (nfa_intersection_tbp_stack)) {
     nfa_intersection_state = DPOP (nfa_intersection_tbp_stack);
@@ -8797,7 +8797,7 @@ nfa_intersection (SXINT nfa1_init_state,
 	  /* Nouvel etat */
 	  if (nfa1_list_contains_the_final_state && nfa2_list_contains_the_final_state) {
 	    /* next_nfa_intersection_state est un etat final */
-	    result_is_empty = SXFALSE;
+	    result_is_empty = false;
 	    SXBA_1_bit (nfa_intersection_final_state_set, next_nfa_intersection_state);
 
 	    if (nfa1_max_state == 0)

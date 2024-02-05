@@ -107,7 +107,7 @@ static SXINT XxY_layer_put (header, X, Y)
 {
     struct XxY_elem	*eptr;
     SXINT			index;
-    SXBOOLEAN		is_new;
+    bool		is_new;
 
     _LAYER_HEADER_PTR = header;
     is_new = !XxY_set (&(header->local), X, Y, &index);
@@ -171,9 +171,9 @@ typedef struct {
 #define sxmilstn_seek(h)	sxindex_seek(&((h).indexes))
 #define sxmilstn_access(h,x)	(h).buf [sxindex_i((h).indexes,x)][sxindex_j((h).indexes,x)]
 
-extern SXVOID sxmilstn_oflw (sxindex_header *index_header_ptr, SXINT old_line_nb, SXINT old_size);
-extern SXVOID sxmilstn_alloc (sxmilstn_header *header, SXINT size);
-extern SXVOID sxmilstn_free (sxmilstn_header *header);
+extern void sxmilstn_oflw (sxindex_header *index_header_ptr, SXINT old_line_nb, SXINT old_size);
+extern void sxmilstn_alloc (sxmilstn_header *header, SXINT size);
+extern void sxmilstn_free (sxmilstn_header *header);
 
 /* fin INCLUDE	sxmilstn.h	*/
 
@@ -237,7 +237,7 @@ struct ndrcvr {
 
     SXINT			index_0X;
 
-    SXBOOLEAN		is_up,
+    bool		is_up,
 	                with_parsprdct,
 	                is_warning,
 	                dont_delete;
@@ -249,7 +249,7 @@ struct ndrcvr {
 	SXBA		vt_set;
 	SXINT		model_no,
 	                single_la;
-	SXBOOLEAN		a_la_rigueur;
+	bool		a_la_rigueur;
     } best;
 
     struct nd2 {
@@ -261,7 +261,7 @@ struct ndrcvr {
 struct  parsers_attr {
     SXINT		son, level, symbol, milestone, next_for_scanner;
     SXINT		rhs_i [2];
-    SXBOOLEAN	is_already_processed, for_do_limited, dum1, dum2;
+    bool	is_already_processed, for_do_limited, dum1, dum2;
 };
 
 
@@ -324,7 +324,7 @@ struct parse_stack {
 
     struct G			G;
 
-    SXBOOLEAN			is_new_links,
+    bool			is_new_links,
                                 parsact_seen,
                                 parsprdct_seen,
                                 is_ambiguous,
@@ -347,9 +347,9 @@ struct sxndtw {
     SXINT		(*pass_inherited) (),
                 (*pass_derived) ();
 
-    SXBOOLEAN     (*cycle_processing) ();
+    bool     (*cycle_processing) ();
 
-    SXVOID	(*open_hook) (),
+    void	(*open_hook) (),
                 (*close_hook) (),
                 (*nodes_oflw) ();
 
@@ -433,17 +433,17 @@ SXINT	SXNDTW_;
 
 
 SXINT	sxndtw_is_cycle (/* node */);
-SXVOID	sxndtw_open (/* SXINT (*pass_inherited) (), SXINT (*pass_derived) (),
-			SXBOOLEAN (*cycle_processing) (),
-			SXVOID (*open_hook) (), SXVOID (*close_hook) (), SXVOID (*nodes_oflw) () */);
-SXVOID	sxndtw_init ();
-SXVOID	sxndtw_walk ();
-SXBOOLEAN sxndrtw_walk ();
-SXVOID	sxndtw_final ();
-SXVOID	sxndtw_close ();
-SXVOID	sxndtw_node_erase (/* node */);
-SXVOID	sxndtw_check_grammar ();
-SXBOOLEAN sxndtw_sem_calls ();
+void	sxndtw_open (/* SXINT (*pass_inherited) (), SXINT (*pass_derived) (),
+			bool (*cycle_processing) (),
+			void (*open_hook) (), void (*close_hook) (), void (*nodes_oflw) () */);
+void	sxndtw_init ();
+void	sxndtw_walk ();
+bool sxndrtw_walk ();
+void	sxndtw_final ();
+void	sxndtw_close ();
+void	sxndtw_node_erase (/* node */);
+void	sxndtw_check_grammar ();
+bool sxndtw_sem_calls ();
 
 
 
@@ -458,7 +458,7 @@ struct ndincl_elem {
 struct ndsrcvr_probe {
     SXINT 	*model;
     SXINT		model_no;
-    SXSHORT	*string;
+    short	*string;
 };
 
 struct ndsrcvr {
@@ -466,13 +466,13 @@ struct ndsrcvr {
                         state_set;
     X_header		stmt_set;
     XxYxZ_header	paths;
-    SXSHORT		*source_char,
+    short		*source_char,
 	                *class_to_insert;
     SXINT			*source_classes;
     struct ndsrcvr_probe
 	                current,
 	                may_be;
-    SXBOOLEAN		is_done,
+    bool		is_done,
                         is_may_be;
 };
 
@@ -500,7 +500,7 @@ struct sxndlv {
     SXINT		current_state_no /*		etat courant du scanner			*/ ;
     SXINT		milestone /*			noeud du tokens_dag			*/ ;
     struct sxtoken	terminal_token /*	structure passee au parser		*/ ;
-    SXSHORT	previous_char /*		precedent le token courant		*/ ;
+    short	previous_char /*		precedent le token courant		*/ ;
     struct mark mark /* 			pour l'action @mark			*/ ;
     SXSTMI	stmt /*				0 ou next stmt				*/ ;
 };
@@ -530,6 +530,6 @@ struct sxndtkn {
 #define MS_COMPLETE	16
 #define MS_EXHAUSTED	32
 
-extern SXVOID 	ndlv_clear ();
-extern SXVOID	sxndscan_it ();
+extern void 	ndlv_clear ();
+extern void	sxndscan_it ();
 

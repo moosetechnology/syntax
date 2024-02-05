@@ -25,7 +25,7 @@
 #include "B_tables.h"
 #include "bnf_vars.h"
 
-char WHAT_BNFFOLCON[] = "@(#)SYNTAX - $Id: bnf_folcon.c 3605 2023-09-24 05:36:48Z garavel $" WHAT_DEBUG;
+char WHAT_BNFFOLCON[] = "@(#)SYNTAX - $Id: bnf_folcon.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 #if 0
 #define INFINI 0x7FFFFFFF
@@ -45,7 +45,7 @@ static SXINT	nt_debutant (nt, set, level)
     SXINT	l, i, x, item;
     SXINT	*cur_level;
     SXINT		min_level, lim;
-    SXBOOLEAN	is_computed;
+    bool	is_computed;
 
     cur_level = d_levels + nt;
 
@@ -62,7 +62,7 @@ static SXINT	nt_debutant (nt, set, level)
     }
 
     *cur_level = level /* on lance le calcul de debutant (nt) au niveau level */ ;
-    is_computed = SXTRUE;
+    is_computed = true;
     min_level = INFINI;
     lim = WX [nt + 1].npg;
 
@@ -74,7 +74,7 @@ static SXINT	nt_debutant (nt, set, level)
 	    i = nt_debutant (item = XNT_TO_NT (item), line, level + 1);
 
 	    if (i > 0) {
-		is_computed = SXFALSE;
+		is_computed = false;
 
 		if (i < min_level)
 		    min_level = i;
@@ -110,7 +110,7 @@ static SXINT	nt_suivant (nt, set, level)
     SXINT	l, i;
     SXINT	*cur_level;
     SXINT		min_level, lim;
-    SXBOOLEAN	is_computed;
+    bool	is_computed;
 
     cur_level = s_levels + nt;
 
@@ -127,7 +127,7 @@ static SXINT	nt_suivant (nt, set, level)
     }
 
     *cur_level = level /* on lance le calcul de follow (nt) au niveau level (>0) */ ;
-    is_computed = SXTRUE;
+    is_computed = true;
     min_level = INFINI;
     lim = WX [nt + 1].npd;
 
@@ -135,7 +135,7 @@ static SXINT	nt_suivant (nt, set, level)
 	i = suivant (numpd [l], line, level + 1);
 
 	if (i > 0) {
-	    is_computed = SXFALSE;
+	    is_computed = false;
 
 	    if (i < min_level)
 		min_level = i;
@@ -208,7 +208,7 @@ bmm (SXBA *P, SXBA *Q, SXBA *R, SXINT l)
     return P;
 }
 
-SXVOID
+void
 follow_construction (void)
 {
 

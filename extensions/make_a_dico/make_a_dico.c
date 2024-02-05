@@ -125,7 +125,7 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXMAIN[] = "@(#)SYNTAX - $Id: make_a_dico.c 3361 2023-06-16 16:13:55Z garavel $" WHAT_DEBUG;
+char WHAT_SXMAIN[] = "@(#)SYNTAX - $Id: make_a_dico.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 static char ME [] = "make_a_dico.c";
 
@@ -140,7 +140,7 @@ static char ME [] = "make_a_dico.c";
 extern struct sxtables  sxtables;
 
 static SXINT      word_nb, word_lgth;
-static SXBOOLEAN    make_a_min_dag, with_id, with_word_tree, seek, with_sxword, from_right_to_left, with_comb, is_packed, output_in_C, is_static, is_probabilized, is_probabilized_forced;
+static bool    make_a_min_dag, with_id, with_word_tree, seek, with_sxword, from_right_to_left, with_comb, is_packed, output_in_C, is_static, is_probabilized, is_probabilized_forced;
 static SXINT      comb_kind, comb_vector_threshold;
 static char       *define_terminals_file_name;
 static FILE       *define_terminals_file;
@@ -284,7 +284,7 @@ static char  *dico_name;
 
 #define TO_BE_NORMALIZED 1
 
-static SXBOOLEAN                 case1, case4, case5, case52, case53;
+static bool                 case1, case4, case5, case52, case53;
 static FILE	               *infile;
 static struct word_tree_struct dico_word_tree, *cur_word_tree_ptr;
 static struct sxdfa_struct     dico_sxdfa;
@@ -302,7 +302,7 @@ static SXINT                   t_code, terminal_ste2code_size, inflected_form_st
 static SXINT                   ift_code2proba_size;
 static SXINT                   *terminal_ste2code, *ift_ste2code, *ift_code2terminal;
 static double                  *ift_code2proba;
-static SXBOOLEAN               is_error;
+static bool               is_error;
 static SXBA                    inflected_form_ste_set;
 
 static VARSTR                  vstr, wvstr;
@@ -388,28 +388,28 @@ make_a_dico_run (char *pathname)
 
     int nb_tab;
     nb_tab = 0;
-    SXBOOLEAN begin_count_tab, tabulation_met;
-    begin_count_tab = SXFALSE;
-    tabulation_met = SXFALSE;
+    bool begin_count_tab, tabulation_met;
+    begin_count_tab = false;
+    tabulation_met = false;
 
     while ((c = getchar ()) != EOF) {
       if (!is_probabilized_forced && !is_probabilized) {
 	if (c == '\n') {
-	  if (nb_tab == 2) is_probabilized = SXTRUE;
+	  if (nb_tab == 2) is_probabilized = true;
 	  nb_tab = 0;
-	  begin_count_tab = SXFALSE;
-	  tabulation_met = SXFALSE;
+	  begin_count_tab = false;
+	  tabulation_met = false;
 	} 
 	else {
 	  if (c == '\t') {
 	    if (begin_count_tab && !tabulation_met)
-	      tabulation_met = SXTRUE;
+	      tabulation_met = true;
 	  } 
 	  else {
-	    if (!begin_count_tab) begin_count_tab = SXTRUE;
+	    if (!begin_count_tab) begin_count_tab = true;
 	    if (tabulation_met) {
 	      nb_tab++;
-	      tabulation_met = SXFALSE;
+	      tabulation_met = false;
 	    }
 	  }
 	}
@@ -452,23 +452,23 @@ main (int argc, char *argv[])
     /* Valeurs par defaut */
     word_nb = 100;
     word_lgth = 16;
-    with_word_tree = seek = with_sxword = from_right_to_left = is_packed = SXFALSE;
-    with_id = with_comb = make_a_min_dag = is_static = output_in_C = SXTRUE;
+    with_word_tree = seek = with_sxword = from_right_to_left = is_packed = false;
+    with_id = with_comb = make_a_min_dag = is_static = output_in_C = true;
     comb_kind = 0;
     comb_vector_threshold = 10000;
     dico_name = "sxdfa_comb_inflected_form";
 
     define_terminals_file = NULL;
     define_terminals_file_name = NULL;
-    is_probabilized = SXFALSE;
-    is_probabilized_forced = SXFALSE;
+    is_probabilized = false;
+    is_probabilized_forced = false;
 
-    syntax (SXINIT, &sxtables, SXTRUE /* has includes */ );
+    syntax (SXINIT, &sxtables, true /* has includes */ );
 
     {
       /* Tous les arguments sont des noms de fichiers, "-" signifiant stdin */
       int	argnum;
-      SXBOOLEAN   has_unknown_arg = SXFALSE;
+      bool   has_unknown_arg = false;
 
       for (argnum = 1; argnum < argc; argnum++) {
 	switch (option_get_kind (argv [argnum])) {
@@ -488,37 +488,37 @@ main (int argc, char *argv[])
 	  break;
 
 	case MIN_DAG:
-	  make_a_min_dag = SXTRUE;
+	  make_a_min_dag = true;
 	  
 	  break;
 
 	case -MIN_DAG:
-	  make_a_min_dag = SXFALSE;
+	  make_a_min_dag = false;
 	  
 	  break;
 
 	case WITH_ID:
-	  with_id = SXTRUE;
+	  with_id = true;
 
 	  break;
 
 	case -WITH_ID:
-	  with_id = SXFALSE;
+	  with_id = false;
 
 	  break;
 
 	case WORD_TREE:
-	  with_word_tree = SXTRUE;
-	  with_sxword = with_comb = SXFALSE;
+	  with_word_tree = true;
+	  with_sxword = with_comb = false;
 	  break;
 
 	case SEEK:
-	  seek = SXTRUE;
+	  seek = true;
 	  break;
 
 	case SXWORD :
-	  with_sxword = SXTRUE;
-	  with_word_tree = with_comb = SXFALSE;
+	  with_sxword = true;
+	  with_word_tree = with_comb = false;
 	  break;
 	  
 	case DICO_NAME:
@@ -530,7 +530,7 @@ main (int argc, char *argv[])
 	  break;
 
 	case FROM_RIGHT_TO_LEFT:
-	  from_right_to_left = SXTRUE;
+	  from_right_to_left = true;
 	  break;
 
 	case COMB_VECTOR:
@@ -539,8 +539,8 @@ main (int argc, char *argv[])
 	    fprintf (sxstderr, "%s: an optimization kind number 0, 1 or 2 must follow the \"%s\" option;\n\tvalue %ld is retained.\n", ME
 		     , option_get_text (COMB_VECTOR), comb_kind);
 	  }
-	  with_comb = SXTRUE;
-	  with_word_tree = with_sxword = SXFALSE;
+	  with_comb = true;
+	  with_word_tree = with_sxword = false;
 	  break;
 
 	case COMB_VECTOR_THRESHOLD:
@@ -550,19 +550,19 @@ main (int argc, char *argv[])
 	  break;
 
 	case PACKED:
-	  is_packed = SXTRUE;
+	  is_packed = true;
 	  break;
 
 	case IN_C:
-	  output_in_C = SXTRUE;
+	  output_in_C = true;
 	  break;
 
 	case -IN_C:
-	  output_in_C = SXFALSE;
+	  output_in_C = false;
 	  break;
 
 	case EXTERN:
-	  is_static = SXFALSE;
+	  is_static = false;
 	  break;
 
 	case DEFINE_TERMINALS:
@@ -580,13 +580,13 @@ main (int argc, char *argv[])
 	  break;
 
 	case IS_PROBA:
-	  is_probabilized = SXTRUE;
-	  is_probabilized_forced = SXTRUE;
+	  is_probabilized = true;
+	  is_probabilized_forced = true;
 	  break;
 
 	case -IS_PROBA:
-	  is_probabilized = SXFALSE;
-	  is_probabilized_forced = SXTRUE;
+	  is_probabilized = false;
+	  is_probabilized_forced = true;
 	  break;
 
 	case HELP:
@@ -594,7 +594,7 @@ main (int argc, char *argv[])
 	  return EXIT_SUCCESS;	  
 
 	case UNKNOWN_ARG:
-	  has_unknown_arg = SXTRUE;
+	  has_unknown_arg = true;
 
 	  if (argnum+1 == argc && argv [argnum] [0] == '-' && argv [argnum] [1] == '\0') {
 	    make_a_dico_run (NULL);
@@ -618,7 +618,7 @@ main (int argc, char *argv[])
 	make_a_dico_run (NULL);
     }
 
-    syntax (SXFINAL, &sxtables, SXTRUE);
+    syntax (SXFINAL, &sxtables, true);
 
     if (define_terminals_file)
       fclose (define_terminals_file);
@@ -675,10 +675,10 @@ make_a_dico_scanact (SXINT entry, SXINT act_no)
   }
 }
 
-static SXVOID
+static void
 init (void)
 {
-  is_error = SXFALSE;
+  is_error = false;
   t_code = 0;
 
   max_ste_t_code = 0;
@@ -731,7 +731,7 @@ init (void)
 }
 
 
-static SXVOID
+static void
 action (SXINT action_no)
 {
   SXINT	         path, ste, len, top, ift_ste, ift_code;
@@ -766,7 +766,7 @@ action (SXINT action_no)
     }
 
     if (terminal_ste2code [ste] == 0) {
-      case1 = SXTRUE;
+      case1 = true;
       terminal_ste2code [ste] = ++t_code;
       max_ste_t_code = ste;
 
@@ -799,7 +799,7 @@ action (SXINT action_no)
     /* <inflected_forme_code>	= <terminal>					; 2 */
     /* Utilisation d'un terminal */
     if (ste2id) {
-      case52 = SXTRUE;
+      case52 = true;
       token_ptr = &(SXSTACKtoken (SXSTACKtop ()));
       terminal_ste = ste = token_ptr->string_table_entry;
 
@@ -843,7 +843,7 @@ action (SXINT action_no)
   case 3:
     /* <inflected_forme_code>	= %ENTIER					; 3 */
     if (ste2id) {
-      case53 = SXTRUE;
+      case53 = true;
       token_ptr = &(SXSTACKtoken (SXSTACKtop ()));
       ste = token_ptr->string_table_entry;
       id = atoi (sxstrget (ste));
@@ -879,7 +879,7 @@ action (SXINT action_no)
 	       );
     }
     else {
-      case4 = SXTRUE;
+      case4 = true;
 
       while (ste > inflected_form_ste_set_size) {
 	inflected_form_ste_set_size *= 2;
@@ -1035,7 +1035,7 @@ action (SXINT action_no)
 	       );
     }
     else {
-      case5 = SXTRUE;
+      case5 = true;
 
       while (ste > inflected_form_ste_set_size) {
 	inflected_form_ste_set_size *= 2;
@@ -1103,7 +1103,7 @@ action (SXINT action_no)
 }
 
 
-static SXVOID
+static void
 final (void)
 {
   SXINT     lgth, ste, id, top, bot;
@@ -1139,7 +1139,7 @@ final (void)
 		  );
   }
   else {
-    word_tree_alloc (&dico_word_tree, "dico_word_tree", inflected_form_nb, inflected_form_total_char_nb/inflected_form_nb + 2, Xforeach, Yforeach, (SXBOOLEAN) (!from_right_to_left) /* from_left_to_right */, with_id, oflw,
+    word_tree_alloc (&dico_word_tree, "dico_word_tree", inflected_form_nb, inflected_form_total_char_nb/inflected_form_nb + 2, Xforeach, Yforeach, (bool) (!from_right_to_left) /* from_left_to_right */, with_id, oflw,
 #if EBUG
 		     stdout
 #else
@@ -1307,7 +1307,7 @@ final (void)
 
       /* Les terminaux ont ete mis ds un sxword car on a eu besoin, a partir du code de retrouver la chaine */
       word_tree_alloc (&word_tree_struct_terminal2code, "word_tree_struct_terminal2code", t_code /* word_nb */, 16 /* word_lgth */, 1 /* Xforeach */, 0 /* Yforeach */,
-		       SXTRUE /* from_left_to_right */, SXTRUE /* with_path2id */, oflw /* BS: était "NULL" */ /* void (*oflw) () */, NULL /* FILE *stats */);
+		       true /* from_left_to_right */, true /* with_path2id */, oflw /* BS: était "NULL" */ /* void (*oflw) () */, NULL /* FILE *stats */);
       cur_word_tree_ptr = &word_tree_struct_terminal2code;
 
       /* On sort un dico des terminaux */
@@ -1319,11 +1319,11 @@ final (void)
 	}
       }
 
-      word_tree2sxdfa (&word_tree_struct_terminal2code, &sxdfa_struct_terminal2code, "sxdfa_struct_terminal2code", NULL /* FILE *stats */, SXTRUE /* to_be_minimized */);
+      word_tree2sxdfa (&word_tree_struct_terminal2code, &sxdfa_struct_terminal2code, "sxdfa_struct_terminal2code", NULL /* FILE *stats */, true /* to_be_minimized */);
       sxdfa2comb_vector (&sxdfa_struct_terminal2code, 0 /* optim_kind (comb simple) */, 10000 /* comb_vector_threshold */, &sxdfa_comb_terminal2code);
       
       fputs ("\n\n#ifdef def_sxdfa_comb_terminal2code", stdout);
-      sxdfa_comb2c (&sxdfa_comb_terminal2code, stdout, "sxdfa_comb_terminal2code", SXTRUE /* is_static */);
+      sxdfa_comb2c (&sxdfa_comb_terminal2code, stdout, "sxdfa_comb_terminal2code", true /* is_static */);
       fputs ("#endif /* def_sxdfa_comb_terminal2code */\n", stdout);
       
       sxdfa_comb_free (&sxdfa_comb_terminal2code);
@@ -1515,7 +1515,7 @@ make_a_dico_action (SXINT what, struct sxtables *arg)
     break;
 
   case SXERROR:
-    is_error = SXTRUE;
+    is_error = true;
     break;
 
   case SXFINAL:

@@ -24,7 +24,7 @@ static char	ME [] = "Watson_Crick.c";
 #include "sxunix.h"
 #include "rcg_glbl.h"
 
-char WHAT_RCGTESTWATSON[] = "@(#)SYNTAX - $Id: Watson_Crick.c 3235 2023-05-15 17:35:39Z garavel $" WHAT_DEBUG;
+char WHAT_RCGTESTWATSON[] = "@(#)SYNTAX - $Id: Watson_Crick.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 static SXINT Watson_Crick [5][5]= {
     /*	0	A	C	G	U	*/	         
@@ -36,7 +36,7 @@ static SXINT Watson_Crick [5][5]= {
 };
 
 
-SXBOOLEAN
+bool
 _wc (rho0, ilb, iub)
     SXINT *rho0, *ilb, *iub;
 {

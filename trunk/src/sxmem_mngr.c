@@ -21,22 +21,22 @@
 #include "sxunix.h"
 #include "X.h"
 
-char WHAT_SXMEM_MNGR[] = "@(#)SYNTAX - $Id: sxmem_mngr.c 3234 2023-05-15 16:52:27Z garavel $" WHAT_DEBUG;
+char WHAT_SXMEM_MNGR[] = "@(#)SYNTAX - $Id: sxmem_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 #if EBUG_ALLOC
-static SXBOOLEAN debug_initiated = {SXFALSE};
+static bool debug_initiated = {false};
 #if defined ( linux ) || defined ( __sun  )
-#define MALLOC_DEBUG()	(debug_initiated || (setenv ("MALLOC_CHECK_", "2", 1), debug_initiated = SXTRUE))
+#define MALLOC_DEBUG()	(debug_initiated || (setenv ("MALLOC_CHECK_", "2", 1), debug_initiated = true))
 #else
 #ifdef __alpha
 SXUINT __sbrk_override;
 SXUINT __taso_mode;
-#define MALLOC_DEBUG()	(debug_initiated || (__sbrk_override = 1, __taso_mode = 0, debug_initiated = SXTRUE))
+#define MALLOC_DEBUG()	(debug_initiated || (__sbrk_override = 1, __taso_mode = 0, debug_initiated = true))
 #else
 #ifdef __sgi
 #include <ulocks.h>
 #include <malloc.h>
-#define MALLOC_DEBUG()	(debug_initiated || (usconfig (CONF_ARENATYPE, US_SHAREDONLY), usmallopt (M_DEBUG, 1, manche = usinit ("/tmp/sxphdmalX")), debug_initiated = SXTRUE))
+#define MALLOC_DEBUG()	(debug_initiated || (usconfig (CONF_ARENATYPE, US_SHAREDONLY), usmallopt (M_DEBUG, 1, manche = usinit ("/tmp/sxphdmalX")), debug_initiated = true))
 static usptr_t *manche;
 #define malloc(size)			usmalloc (size, manche)
 #define free(ptr)				usfree (ptr, manche)
@@ -48,7 +48,7 @@ static usptr_t *manche;
 #define  MALLOC_DEBUG()  ( sxuse(debug_initiated) )
 #else
 extern SXINT 	malloc_debug (size_t size);
-#define MALLOC_DEBUG()	(debug_initiated || (malloc_debug (2), debug_initiated = SXTRUE))
+#define MALLOC_DEBUG()	(debug_initiated || (malloc_debug (2), debug_initiated = true))
 #endif
 #endif
 #endif
@@ -58,29 +58,29 @@ extern SXINT 	malloc_debug (size_t size);
 #endif
 
 
-extern SXVOID	sxgc (void) /* exit when no more allocation is possible */ ;
+extern void	sxgc (void) /* exit when no more allocation is possible */ ;
 
-static void freeing_null (SXBOOLEAN bypass) {
+static void freeing_null (bool bypass) {
   fprintf (sxstderr, "\tInternal error%s: freeing NULL...%c\n", bypass ? " (bypassed)" : "", sxbell);
 }
 
 
 static void mem_signature_oflw (struct mem_signature *ms_ptr)
 {
-  mem_signature_mode = SXFALSE;
+  mem_signature_mode = false;
 
   ms_ptr->ptr_stack = (void **) sxrealloc (ms_ptr->ptr_stack, (ms_ptr->size *= 2) + 1, sizeof (void*));
 
-  mem_signature_mode = SXTRUE;
+  mem_signature_mode = true;
 }
 
 static void mem_sizes_oflw (size_t **s_ptr, SXINT old_size)
 {
-  mem_signature_mode = SXFALSE;
+  mem_signature_mode = false;
 
   *s_ptr = (size_t *) sxrealloc (*s_ptr, old_size * 2 + 1, sizeof (size_t));
 
-  mem_signature_mode = SXTRUE;
+  mem_signature_mode = true;
 }
 
 void	*sxcont_malloc (size_t size)
@@ -96,7 +96,7 @@ void	*sxcont_malloc (size_t size)
     fprintf (stdout, "mallocating %lu:", (SXUINT) size);
 #endif
 
-    SYNTAX_is_in_critical_zone = SXTRUE;
+    SYNTAX_is_in_critical_zone = true;
 
     while ((result = malloc (size)) == NULL)
 	sxgc ();
@@ -107,7 +107,7 @@ void	*sxcont_malloc (size_t size)
       mem_signatures->alloc_signature.ptr_stack [mem_signatures->alloc_signature.top] = result;
     }
       
-    SYNTAX_is_in_critical_zone = SXFALSE;
+    SYNTAX_is_in_critical_zone = false;
 
 #if BUG
     fprintf (stdout, "\t0x%lX allocated\n", (SXUINT) result);
@@ -131,7 +131,7 @@ void	*sxcont_alloc (size_t n, size_t size)
     fprintf (stdout, "allocating (%lu == %lu*%lu):", (SXUINT) n*size, (SXUINT) n, (SXUINT) size);
 #endif
 
-    SYNTAX_is_in_critical_zone = SXTRUE;
+    SYNTAX_is_in_critical_zone = true;
 
     while ((result = calloc (n, size)) == NULL)
 	sxgc ();
@@ -142,7 +142,7 @@ void	*sxcont_alloc (size_t n, size_t size)
       mem_signatures->alloc_signature.ptr_stack [mem_signatures->alloc_signature.top] = result;
     }
 
-    SYNTAX_is_in_critical_zone = SXFALSE;
+    SYNTAX_is_in_critical_zone = false;
 
 #if BUG
     fprintf (stdout, "\t0x%lX allocated\n", (SXUINT) result);
@@ -166,7 +166,7 @@ void	*sxcont_realloc (void *table, size_t size)
     fprintf (stdout, "\nreallocating 0x%lX (%lu):", (SXUINT) table, (SXUINT) size);
 #endif
 
-    SYNTAX_is_in_critical_zone = SXTRUE;
+    SYNTAX_is_in_critical_zone = true;
 
     while ((result = realloc (table, size)) == NULL)
 	sxgc ();
@@ -180,7 +180,7 @@ void	*sxcont_realloc (void *table, size_t size)
       mem_signatures->free_signature.ptr_stack [mem_signatures->free_signature.top] = table;
     }
       
-    SYNTAX_is_in_critical_zone = SXFALSE;
+    SYNTAX_is_in_critical_zone = false;
 
 #if BUG
     fprintf (stdout, "\t0x%lX reallocated\n", (SXUINT) result);
@@ -204,7 +204,7 @@ void	*sxcont_recalloc (void *table, size_t old_size, size_t new_size)
     fprintf (stdout, "\nrecallocating %lX (%lu):", (SXUINT) table, (SXUINT) new_size);
 #endif
 
-    SYNTAX_is_in_critical_zone = SXTRUE;
+    SYNTAX_is_in_critical_zone = true;
 
 #ifdef recalloc
     while ((result = recalloc (table, 1, new_size)) == NULL)
@@ -225,7 +225,7 @@ void	*sxcont_recalloc (void *table, size_t old_size, size_t new_size)
       mem_signatures->free_signature.ptr_stack [mem_signatures->free_signature.top] = table;
     }
       
-    SYNTAX_is_in_critical_zone = SXFALSE;
+    SYNTAX_is_in_critical_zone = false;
 
 #if BUG
     fprintf (stdout, "\t%lX recallocated\n", (SXUINT) result);
@@ -236,18 +236,18 @@ void	*sxcont_recalloc (void *table, size_t old_size, size_t new_size)
 
 
 
-SXVOID	sxcont_free (void *zone)
+void	sxcont_free (void *zone)
 
 /* Frees the area "zone" */
 
 {
     MALLOC_DEBUG ();
 
-    SYNTAX_is_in_critical_zone = SXTRUE;
+    SYNTAX_is_in_critical_zone = true;
 
 #if BUG
     if (zone == NULL) {
-        freeing_null (SXFALSE);
+        freeing_null (false);
 	sxexit (SXSEVERITIES);
     }
     else {
@@ -257,7 +257,7 @@ SXVOID	sxcont_free (void *zone)
     }
 #else
     if (zone == NULL)
-        freeing_null (SXTRUE);
+        freeing_null (true);
     else
 	free (zone);
 #endif
@@ -268,12 +268,12 @@ SXVOID	sxcont_free (void *zone)
       mem_signatures->free_signature.ptr_stack [mem_signatures->free_signature.top] = zone;
     }
       
-    SYNTAX_is_in_critical_zone = SXFALSE;
+    SYNTAX_is_in_critical_zone = false;
 }
 
-SXBOOLEAN sxpush_in_tobereset_signature (void *zone, size_t size)
+bool sxpush_in_tobereset_signature (void *zone, size_t size)
 {
-  SYNTAX_is_in_critical_zone = SXTRUE;
+  SYNTAX_is_in_critical_zone = true;
 
   if (++mem_signatures->tobereset_signature.top >= mem_signatures->tobereset_signature.size) {
     mem_sizes_oflw (&(mem_signatures->tobereset_sizes), mem_signatures->tobereset_signature.size);
@@ -282,16 +282,16 @@ SXBOOLEAN sxpush_in_tobereset_signature (void *zone, size_t size)
   mem_signatures->tobereset_signature.ptr_stack [mem_signatures->tobereset_signature.top] = zone;
   mem_signatures->tobereset_sizes [mem_signatures->tobereset_signature.top] = size;
 
-  SYNTAX_is_in_critical_zone = SXFALSE;
+  SYNTAX_is_in_critical_zone = false;
 
-  return SXTRUE;
+  return true;
 }
 
 void sxmem_signatures_allocate (SXINT size)
 {
-  SXBOOLEAN is_in_mem_signature_mode;
+  bool is_in_mem_signature_mode;
 
-  SYNTAX_is_in_critical_zone = SXTRUE;
+  SYNTAX_is_in_critical_zone = true;
 
   is_in_mem_signature_mode = mem_signature_mode;
 
@@ -301,7 +301,7 @@ void sxmem_signatures_allocate (SXINT size)
   mem_signatures->alloc_signature.size = mem_signatures->free_signature.size = size;
   mem_signatures->tobereset_signature.size = size;
 
-  mem_signature_mode = SXFALSE;
+  mem_signature_mode = false;
 
   mem_signatures->alloc_signature.ptr_stack = (void**) sxalloc (size + 1, sizeof (void *));
   mem_signatures->free_signature.ptr_stack = (void**) sxalloc (size + 1, sizeof (void *));
@@ -310,24 +310,24 @@ void sxmem_signatures_allocate (SXINT size)
 
   mem_signature_mode = is_in_mem_signature_mode;
 
-  SYNTAX_is_in_critical_zone = SXFALSE;
+  SYNTAX_is_in_critical_zone = false;
 }
 
 void sxmem_signatures_raz (void)
 {
-  SYNTAX_is_in_critical_zone = SXTRUE;
+  SYNTAX_is_in_critical_zone = true;
 
   mem_signatures->alloc_signature.top = mem_signatures->free_signature.top = 0;
   mem_signatures->tobereset_signature.top = 0;
 
-  SYNTAX_is_in_critical_zone = SXFALSE;
+  SYNTAX_is_in_critical_zone = false;
 }
 
 void sxmem_signatures_free (void)
 {
-  SXBOOLEAN is_in_mem_signature_mode;
+  bool is_in_mem_signature_mode;
 
-  SYNTAX_is_in_critical_zone = SXTRUE;
+  SYNTAX_is_in_critical_zone = true;
 
   is_in_mem_signature_mode = mem_signature_mode;
 
@@ -337,7 +337,7 @@ void sxmem_signatures_free (void)
   mem_signatures->alloc_signature.size = mem_signatures->free_signature.size = 0;
   mem_signatures->tobereset_signature.size = 0;
 
-  mem_signature_mode = SXFALSE;
+  mem_signature_mode = false;
 
   sxfree (mem_signatures->alloc_signature.ptr_stack);
   sxfree (mem_signatures->free_signature.ptr_stack);
@@ -350,7 +350,7 @@ void sxmem_signatures_free (void)
 
   mem_signature_mode = is_in_mem_signature_mode;
 
-  SYNTAX_is_in_critical_zone = SXFALSE;
+  SYNTAX_is_in_critical_zone = false;
 }
 
 static SXINT *ptr_id_in_X_hd2free_nb;
@@ -360,21 +360,21 @@ static void X_oflw (SXINT old_size, SXINT new_size) {
   ptr_id_in_X_hd2free_nb = (SXINT*) sxrealloc (ptr_id_in_X_hd2free_nb, new_size + 1, sizeof (SXINT));
 }
 
-SXBOOLEAN  sxfree_mem_signatures_content (void)
+bool  sxfree_mem_signatures_content (void)
 {
   void* ptr;
   X_header X_hd;
   SXINT i, addr;
-  SXBOOLEAN ret_val = SXTRUE;
+  bool ret_val = true;
 
-  SYNTAX_is_in_critical_zone = SXTRUE;
+  SYNTAX_is_in_critical_zone = true;
 
 #if BUG
     fprintf (stdout, "*** Entering sxfree_mem_signatures_content\n");
 #endif
 
   if (mem_signature_mode) {
-    mem_signature_mode = SXFALSE;
+    mem_signature_mode = false;
 
     if (mem_signatures->alloc_signature.top != mem_signatures->free_signature.top) {
     
@@ -393,7 +393,7 @@ SXBOOLEAN  sxfree_mem_signatures_content (void)
 	addr = X_is_set (&X_hd, (SXINT) (intptr_t) (ptr));
 	if (addr == 0 || ptr_id_in_X_hd2free_nb [addr]-- == 0) {
 	  sxfree (ptr);
-	  ret_val = SXFALSE;
+	  ret_val = false;
 	}
       }
       
@@ -414,14 +414,14 @@ SXBOOLEAN  sxfree_mem_signatures_content (void)
     mem_signatures->free_signature.top = 0;
     mem_signatures->tobereset_signature.top = 0;
 
-    mem_signature_mode = SXTRUE;
+    mem_signature_mode = true;
   }
 
 #if BUG
     fprintf (stdout, "*** Leaving sxfree_mem_signatures_content\n");
 #endif
 
-  SYNTAX_is_in_critical_zone = SXFALSE;
+  SYNTAX_is_in_critical_zone = false;
 
   return ret_val;
 }

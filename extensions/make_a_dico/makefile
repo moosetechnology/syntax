@@ -7,13 +7,13 @@ LIB=$(MAKE_A_DICO)/lib
 
 CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
-all: $(SX)/bin/make_a_dico.out	\
-     $(SX)/bin/amlgm_cmpd.out
+all: $(SXBIN)/make_a_dico.out	\
+     $(SXBIN)/amlgm_cmpd.out
 
-$(SX)/bin/make_a_dico.out:	$(MAKE_A_DICO)/make_a_dico.out
+$(SXBIN)/make_a_dico.out:	$(MAKE_A_DICO)/make_a_dico.out
 	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
-$(SX)/bin/amlgm_cmpd.out:	$(MAKE_A_DICO)/amlgm_cmpd.out
+$(SXBIN)/amlgm_cmpd.out:	$(MAKE_A_DICO)/amlgm_cmpd.out
 	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
 NEEDS=	$(LIB)/make_a_dico.o	\

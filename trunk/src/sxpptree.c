@@ -38,7 +38,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-char WHAT_SXPPTREE[] = "@(#)SYNTAX - $Id: sxpptree.c 3078 2023-04-29 09:34:00Z garavel $" WHAT_DEBUG;
+char WHAT_SXPPTREE[] = "@(#)SYNTAX - $Id: sxpptree.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 #define USER_PTR	void*		/* Any pointer */
 
@@ -82,19 +82,19 @@ static struct {
 	   USER_PTR	(*get_left_son) (USER_PTR);
 	   USER_PTR	(*get_right_brother) (USER_PTR);
 	   SXINT		(*get_sons_number) (USER_PTR);
-	   SXVOID		(*print_from_arrows) (char *);
-	   SXVOID		(*print_horizontal_bar) (char *);
-	   SXVOID		(*print_key) (USER_PTR, SXINT, SXINT);
-	   SXVOID		(*print_to_arrows) (char *);
-	   SXVOID		(*put_blanks) (SXINT);
-	   SXVOID		(*put_page) (void);
-	   SXVOID		(*put_skip) (void);
-	   SXBOOLEAN	abbrev_mode /* on if the tree may be abbreviated */ ;
+	   void		(*print_from_arrows) (char *);
+	   void		(*print_horizontal_bar) (char *);
+	   void		(*print_key) (USER_PTR, SXINT, SXINT);
+	   void		(*print_to_arrows) (char *);
+	   void		(*put_blanks) (SXINT);
+	   void		(*put_page) (void);
+	   void		(*put_skip) (void);
+	   bool	abbrev_mode /* on if the tree may be abbreviated */ ;
        }	args;
 
 
 
-static SXVOID	shift_subtree (struct node *node, SXINT s)
+static void	shift_subtree (struct node *node, SXINT s)
 {
     struct node	*son;
     SXINT	count;
@@ -112,7 +112,7 @@ static SXVOID	shift_subtree (struct node *node, SXINT s)
 
 
 
-static SXVOID	init_h_bar_ovfl (void)
+static void	init_h_bar_ovfl (void)
 {
     struct line	*line;
 
@@ -123,7 +123,7 @@ static SXVOID	init_h_bar_ovfl (void)
 
 
 
-static SXVOID	min_max_pos (void)
+static void	min_max_pos (void)
 {
     struct line	*line;
     SXINT	min, max;
@@ -165,7 +165,7 @@ static void	*allocate (size)
     void	*result;
 
     if ((result = malloc (size)) == NULL)
-	longjmp (no_space, SXTRUE);
+	longjmp (no_space, true);
 
     return result;
 }
@@ -176,7 +176,7 @@ static void	*allocate (size)
 #define	node_dispose(node)	free (node)
 #define	line_dispose(line)	free (line)
 
-static SXVOID	lines_destroy (first_line)
+static void	lines_destroy (first_line)
     struct line		*first_line;
 {
     struct node	*node, *next_node;
@@ -262,7 +262,7 @@ static void	*allocate (SXUINT size)
 	    void	*result;
 
 	    if ((result = malloc (size)) == NULL)
-		longjmp (no_space, SXTRUE);
+		longjmp (no_space, true);
 
 	    return result;
 	}
@@ -277,7 +277,7 @@ static void	*allocate (SXUINT size)
 #define	lines_destroy(line)	
 
 
-static SXVOID	deallocate_areas (void)
+static void	deallocate_areas (void)
 {
     struct line_area	*line_area;
     struct node_area	*node_area;
@@ -300,7 +300,7 @@ static SXVOID	deallocate_areas (void)
 
 
 
-static SXVOID	trim_nodes (struct node *node)
+static void	trim_nodes (struct node *node)
 {
     while (node != NULL) {
 	node->l_son_node = NULL;
@@ -310,7 +310,7 @@ static SXVOID	trim_nodes (struct node *node)
 
 
 
-static SXVOID	trim_lines (struct line *line, SXINT level)
+static void	trim_lines (struct line *line, SXINT level)
 {
     while (level < max_level && line != NULL) {
 	line = line->next;
@@ -326,13 +326,13 @@ static SXVOID	trim_lines (struct line *line, SXINT level)
 
 
 
-static SXVOID	place (USER_PTR user_ptr, struct line **line_ptr, SXINT level, SXBOOLEAN is_left_son)
+static void	place (USER_PTR user_ptr, struct line **line_ptr, SXINT level, bool is_left_son)
 {
     struct line	*line;
     struct node	*node;
     SXINT	left_pos;
     SXINT		current_size, cursize, half_size;
-    SXBOOLEAN	first_node_on_this_line_p;
+    bool	first_node_on_this_line_p;
 
     half_size = (cursize = (current_size = args.get_key_length (user_ptr)) - 1) >> 1;
 
@@ -381,7 +381,7 @@ static SXVOID	place (USER_PTR user_ptr, struct line **line_ptr, SXINT level, SXB
 	node->pos.middle = node->pos.l_son_middle = node->pos.r_son_middle = left_pos + half_size;
     }
     else {
-	SXBOOLEAN		left_son_first_on_his_line_p = line->next == NULL;
+	bool		left_son_first_on_his_line_p = line->next == NULL;
 
 	level++;
 
@@ -389,11 +389,11 @@ static SXVOID	place (USER_PTR user_ptr, struct line **line_ptr, SXINT level, SXB
 	    USER_PTR	son;
 	    SXINT	count;
 
-	    place (son = args.get_left_son (user_ptr), &(line->next), level, SXTRUE);
+	    place (son = args.get_left_son (user_ptr), &(line->next), level, true);
 	    node->l_son_node = line->next->last;
 
 	    for (count = node->info.sons_number; --count > 0; )
-		place (son = args.get_right_brother (son), &(line->next), level, SXFALSE);
+		place (son = args.get_right_brother (son), &(line->next), level, false);
 	}
 
 
@@ -417,13 +417,13 @@ static SXVOID	place (USER_PTR user_ptr, struct line **line_ptr, SXINT level, SXB
 
 
 
-static SXVOID	replace (struct line *line, SXINT level, SXBOOLEAN is_left_son, SXBOOLEAN first_time_on_this_level)
+static void	replace (struct line *line, SXINT level, bool is_left_son, bool first_time_on_this_level)
 {
     struct node		*node;
     SXINT	left_pos;
     SXINT		sons_nb;
     SXINT		cursize, half_size;
-    SXBOOLEAN	first_node_on_this_line_p;
+    bool	first_node_on_this_line_p;
 
     first_node_on_this_line_p = line->last == NULL;
 
@@ -455,17 +455,17 @@ static SXVOID	replace (struct line *line, SXINT level, SXBOOLEAN is_left_son, SX
 	node->pos.middle = node->pos.l_son_middle = node->pos.r_son_middle = left_pos + half_size;
     }
     else {
-	SXBOOLEAN		left_son_first_on_his_line_p = line->next->last == NULL;
+	bool		left_son_first_on_his_line_p = line->next->last == NULL;
 
 	level++;
 
 	{
 	    SXINT	count;
 
-	    replace (line->next, level, SXTRUE, first_time_on_this_level);
+	    replace (line->next, level, true, first_time_on_this_level);
 
 	    for (count = sons_nb; --count > 0; )
-		replace (line->next, level, SXFALSE, first_time_on_this_level);
+		replace (line->next, level, false, first_time_on_this_level);
 	}
 
 
@@ -492,11 +492,11 @@ static SXVOID	replace (struct line *line, SXINT level, SXBOOLEAN is_left_son, SX
 
 
 
-static SXVOID	abbreviate_tree (void)
+static void	abbreviate_tree (void)
 {
-    SXBOOLEAN	done;
+    bool	done;
     /* is the tree abbreviated enough */
-    SXBOOLEAN	first_time_on_this_level;
+    bool	first_time_on_this_level;
 
     /* we recompute each level
 						   twice if necessary */
@@ -506,11 +506,11 @@ static SXVOID	abbreviate_tree (void)
     min_max_pos ();
     args.put_page ();
     /* from now on, get abbreviations */
-    first_time_on_this_level = SXTRUE;
+    first_time_on_this_level = true;
     done = max_level <= 1 || maxpos - minpos < args.page_width;
 
     while (!done) {
-	replace (lines, (SXINT)1, SXTRUE, first_time_on_this_level);
+	replace (lines, (SXINT)1, true, first_time_on_this_level);
 	trim_lines (lines, (SXINT)1);
 	min_max_pos ();
 
@@ -539,7 +539,7 @@ static struct string {
 
 
 
-static SXVOID	catenate_copy (struct string *string, char character, SXINT number)
+static void	catenate_copy (struct string *string, char character, SXINT number)
 {
     char	*str;
 
@@ -552,7 +552,7 @@ static SXVOID	catenate_copy (struct string *string, char character, SXINT number
 
 
 
-static SXVOID	rateau (void)
+static void	rateau (void)
 {
     SXINT	pos;
     /* from_arrows.length =
@@ -614,7 +614,7 @@ static SXVOID	rateau (void)
 
 
 
-static SXVOID	print_one_node (struct node *node)
+static void	print_one_node (struct node *node)
                	      
 
 /* Si la cle tient sur la ligne, on l'imprime; */
@@ -644,7 +644,7 @@ static SXVOID	print_one_node (struct node *node)
 
 
 
-static SXVOID	print_one_line (void)
+static void	print_one_line (void)
 {
     struct node	*node;
 
@@ -685,7 +685,7 @@ static SXVOID	print_one_line (void)
 
 
 
-static SXVOID	tree_print (void)
+static void	tree_print (void)
 {
     line_no = 0;
 
@@ -710,7 +710,7 @@ static char	*strings = {NULL};
 
 
 
-SXVOID	sxpptree (USER_PTR tree,
+void	sxpptree (USER_PTR tree,
 		  SXINT min_dist,
 		  SXINT min_dist_on_subtrees,
 		  SXINT page_width,
@@ -718,13 +718,13 @@ SXVOID	sxpptree (USER_PTR tree,
 		  USER_PTR (*get_left_son) (USER_PTR),
 		  USER_PTR (*get_right_brother) (USER_PTR),
 		  SXINT (*get_sons_number) (USER_PTR),
-		  SXVOID (*print_from_arrows) (char *),
-		  SXVOID (*print_horizontal_bar) (char *),
-		  SXVOID (*print_key) (USER_PTR, SXINT, SXINT),
-		  SXVOID (*print_to_arrows) (char *),
-		  SXVOID (*put_blanks) (SXINT),
-		  SXVOID (*put_page) (void),
-		  SXVOID (*put_skip) (void),
+		  void (*print_from_arrows) (char *),
+		  void (*print_horizontal_bar) (char *),
+		  void (*print_key) (USER_PTR, SXINT, SXINT),
+		  void (*print_to_arrows) (char *),
+		  void (*put_blanks) (SXINT),
+		  void (*put_page) (void),
+		  void (*put_skip) (void),
 		  SXINT switches)
 {
     args.min_dist = min_dist < 1 ? 3 : min_dist;
@@ -759,7 +759,7 @@ SXVOID	sxpptree (USER_PTR tree,
 	    to_arrows.text = (from_arrows.text = (horizontal_bar.text = strings) + strlength) + strlength;
 	}
 
-	place (tree, &lines, (SXINT)1, SXTRUE);
+	place (tree, &lines, (SXINT)1, true);
 	init_h_bar_ovfl ();
 
 	if (args.abbrev_mode)

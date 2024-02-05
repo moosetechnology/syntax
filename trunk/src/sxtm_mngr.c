@@ -23,7 +23,7 @@
 #define _WIN32_WINNT 0x0500  /* voodoo magic */
 #include <windows.h>
 #undef ERROR                 /* these 2 undefs are needed to avoid name */
-#undef SXVOID                  /* conflicts between windows.h and sxunix.h */
+#undef void                  /* conflicts between windows.h and sxunix.h */
 
 HANDLE hTimerQueue = NULL;
 static int nb_running_timers = 0; /* this static variable counts the number of */
@@ -34,7 +34,7 @@ static int nb_running_timers = 0; /* this static variable counts the number of *
 #include "sxunix.h"
 
 
-char WHAT_SXTM_MNGR[] = "@(#)SYNTAX - $Id: sxtm_mngr.c 3234 2023-05-15 16:52:27Z garavel $" WHAT_DEBUG;
+char WHAT_SXTM_MNGR[] = "@(#)SYNTAX - $Id: sxtm_mngr.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
 #ifndef WINNT
 #include <sys/resource.h>
@@ -75,7 +75,7 @@ sxtimediff (SXINT INIT_ou_ACTION)
 }
 
 
-SXVOID
+void
 sxtimestamp (SXINT INIT_ou_ACTION, char *format)
 {
   if (INIT_ou_ACTION == SXINIT)
@@ -85,7 +85,7 @@ sxtimestamp (SXINT INIT_ou_ACTION, char *format)
 }
 
 
-SXVOID
+void
 sxtime (SXINT INIT_ou_ACTION, char *str)
 {
   if (INIT_ou_ACTION == SXINIT) {
@@ -107,9 +107,9 @@ sxtime (SXINT INIT_ou_ACTION, char *str)
 /* this is a wrapper which calls the actual callback (param #1 lpParam) */
 /* and then does some cleanup if all the timers are finished */
 
-SXVOID CALLBACK sxtm_callback_wrapper(PVOID lpParam, /* Windows' */ BOOLEAN TimerOrWaitFired)
+void CALLBACK sxtm_callback_wrapper(PVOID lpParam, /* Windows' */ BOOLEAN TimerOrWaitFired)
 {
-  SXVOID (*callback)(void);
+  void (*callback)(void);
   callback =  lpParam;
   sxuse(TimerOrWaitFired);
 
@@ -169,7 +169,7 @@ sxcaught_timeout (int delay, void (*sxtimeout_handler) (int))
   }
 }
 
-SXVOID
+void
 sxtimeout (int delay)
 {
   sxcaught_timeout (delay, sxexit_timeout);
@@ -184,7 +184,7 @@ sxtimeout (int delay)
 
 
 /* sxvirtual_timeout_handler est appele' au bout de seconds secondes et useconds microsecondes */
-SXVOID
+void
 sxcaught_virtual_timeout (SXINT seconds, SXINT useconds, void (*sxvirtual_timeout_handler) (int))
 {
   if (sxvirtual_timeout_handler) {
@@ -204,7 +204,7 @@ sxcaught_virtual_timeout (SXINT seconds, SXINT useconds, void (*sxvirtual_timeou
   }
 }
 
-SXVOID
+void
 sxvirtual_timeout (SXINT seconds, SXINT useconds)
 {
   sxcaught_virtual_timeout (seconds, useconds, sxexit_timeout);

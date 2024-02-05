@@ -22,14 +22,14 @@
 #include "SXante.h"
 
 /* Le handleur positionne cette variable s'il est active' */
-SX_GLOBAL_VAR SXBOOLEAN is_virtual_timeout_signal_raised;
+SX_GLOBAL_VAR bool is_virtual_timeout_signal_raised;
 
 /* EARLEY.h */
 /* Le 11/08/2003, changement de nom de semact.h en earley.h */
 /* Interface entre les analyseurs a la Earley et les actions semantiques. */
 
 extern void             sxearley_set_for_semact (void);
-extern SXBOOLEAN          sxearley_parse_it (SXINT what);
+extern bool          sxearley_parse_it (SXINT what);
 extern void             print_symb (FILE *out_file, SXINT symb, SXINT i, SXINT j);
 /* permet ds tous les cas a la semantique d'acceder au token associe' a un Tpq */
 /* extern struct sxtoken   *parser_Tpq2tok (SXINT Tpq);
@@ -43,12 +43,12 @@ extern void             print_symb (FILE *out_file, SXINT symb, SXINT i, SXINT j
 
 SX_GLOBAL_VAR SXINT	      n /* nb de token du source */;
 
-SX_GLOBAL_VAR SXBOOLEAN	      is_print_prod, is_parse_forest, is_tagged_dag, is_tagged_sdag, IS_DYNAMIC_SET_AUTOMATON;
+SX_GLOBAL_VAR bool	      is_print_prod, is_parse_forest, is_tagged_dag, is_tagged_sdag, IS_DYNAMIC_SET_AUTOMATON;
 SX_GLOBAL_VAR SXINT	      IS_CHECK_RHS_SEQUENCES;
 SX_GLOBAL_VAR int             time_out;
 SX_GLOBAL_VAR SXINT           vtime_out_s, vtime_out_us;
 SX_GLOBAL_VAR double          beam_value;
-SX_GLOBAL_VAR SXBOOLEAN	      beam_value_is_set;
+SX_GLOBAL_VAR bool	      beam_value_is_set;
 
 SX_GLOBAL_VAR struct mem_signatures   parser_mem_signatures;
 
@@ -104,7 +104,7 @@ SX_GLOBAL_VAR struct rcvr_spec {
   SXINT repair_kind; /* GEN_ALL_REPAIR_STRING ou nb */
   SXINT repair_parse_kind; /* GEN_ALL_REPAIR_PARSE ou nb */
   SXINT try_kind; /* [TRY_MIN..TRY_MAX] */
-  SXBOOLEAN perform_repair, perform_repair_parse;
+  bool perform_repair, perform_repair_parse;
 } rcvr_spec;
 
 #if defined(WINNT) && !defined(ushort)
@@ -142,7 +142,7 @@ SX_GLOBAL_VAR struct for_semact {
   char        *(*string_args) (void), /* Le 18/01/06 retourne l'utilisation des args de la semantique */
     *(*ME) (void); /* nom de la semantique */
 
-  SXBOOLEAN     (*process_args) (int*, int, char **); /* Le 18/01/06 pour traiter les args de la semantique */
+  bool     (*process_args) (int*, int, char **); /* Le 18/01/06 pour traiter les args de la semantique */
 
   SXINT         pass_nb;
 

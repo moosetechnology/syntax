@@ -31,7 +31,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-char WHAT_SXINDEX_MNGR[] = "@(#)SYNTAX - $Id: sxindex_mngr.c 2947 2023-03-29 17:06:41Z garavel $" WHAT_DEBUG;
+char WHAT_SXINDEX_MNGR[] = "@(#)SYNTAX - $Id: sxindex_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 void sxindex_alloc (sxindex_header *header,
 		    SXINT line_nb,
@@ -105,7 +105,7 @@ SXINT sxindex_seek (sxindex_header *header)
 static SXINT	bytes;
 
 
-SXBOOLEAN sxindex_write (sxindex_header *header, sxfiledesc_t file_descr)
+bool sxindex_write (sxindex_header *header, sxfiledesc_t file_descr)
 {
     return
 	WRITE (&header->size, sizeof (SXINT))
@@ -119,11 +119,11 @@ SXBOOLEAN sxindex_write (sxindex_header *header, sxfiledesc_t file_descr)
 	;
 }
 
-SXBOOLEAN sxindex_read (sxindex_header *header,
+bool sxindex_read (sxindex_header *header,
 		      sxfiledesc_t file_descr,
 		      void (*user_oflw) (sxindex_header *header, SXINT old_line_nb, SXINT old_size))
 {
-  SXBOOLEAN b_ret = 
+  bool b_ret = 
 	READ (&header->size, sizeof (SXINT))
 	&& READ (&header->index, sizeof (SXINT))
 	&& READ (&header->free, sizeof (SXINT))
@@ -177,7 +177,7 @@ void sxindex_header_to_c (sxindex_header *header, FILE *file, char *name)
 
 
 
-void sxindex_to_c (sxindex_header *header, FILE *file, char *name, SXBOOLEAN is_static)
+void sxindex_to_c (sxindex_header *header, FILE *file, char *name, bool is_static)
 {
     sxindex_array_to_c (header, file, name);
     fprintf (file, "\n\n%ssxindex_header %s =\n", is_static ? "static " : "", name);

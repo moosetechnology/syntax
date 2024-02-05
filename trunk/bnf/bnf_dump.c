@@ -22,9 +22,9 @@
 #include "B_tables.h"
 #include "bnf_vars.h"
 
-char WHAT_BNFDUMP[] = "@(#)SYNTAX - $Id: bnf_dump.c 3605 2023-09-24 05:36:48Z garavel $" WHAT_DEBUG;
+char WHAT_BNFDUMP[] = "@(#)SYNTAX - $Id: bnf_dump.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
-SXVOID
+void
 bnf_dump (void)
 {
     SXINT		i;

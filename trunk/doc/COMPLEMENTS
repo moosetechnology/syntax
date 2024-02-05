@@ -1,4 +1,6 @@
 
+------------------------------------------------------------------------------
+
 Pierre Boullier - sept 2023
 
 Ne pas appeler des fonctions comme sxcurrent_scanned_token_string() etc. 
@@ -38,7 +40,7 @@ Pour avoir la chaîne de caractères de ce token il faut appeler
    sxstrget (pt->string_table_entry)
 ou` pt est le pointeur vers le token d’intérêt.
 
----
+------------------------------------------------------------------------------
 
 Pierre Boullier - sept 2023
 
@@ -110,5 +112,279 @@ Et il suffit d'écrire
 		    return (1);
 	       else
 		    return (0);
+
+------------------------------------------------------------------------------
+
+Regles concernant les symboles terminaux lexicaux
+-------------------------------------------------
+
+En LECL, tous les terminaux du niveau syntaxique (definis dans la BNF, ou 
+assimilee) peuvent être definis au niveau lexical (dans le fichier .lecl
+correspondant).
+
+Seuls les terminaux generiques (ceux commençant par un ‘%’) doivent 
+obligatoirement y etre definis. 
+
+Si un terminal (non generique) n’est pas défini dans le fichier .lecl, il 
+est suppose' apparaitre dans un texte source exactement sous la meme forme 
+(LECL genere automatiquement l’expression regulière correspondante).
+
+Si le langage ne contient pas de terminaux generiques, le fichier .lecl 
+correspondant peut tres bien être vide (mais il faut quand même lancer le 
+constructeur LECL sur ce fichier vide!).  
+
+			-o-o-o-o-
+
+Il y a une exception aux regles precedentes : le terminal note' EOF ("fin de
+fichier"). Dans aucune BNF, on ne trouve explicitement ce terminal EOF, qui 
+est cependant cense' terminer chaque chaine du langage. 
+
+Dans le cas usuel, il est cense' correspondre au caractère fin-de-fichier
+(code -1) retourne' par la fonction getc() de la bibliotheque C. 
+
+Cas 1 : S’il n’y a pas de definition de l’unite' lexicale EOF dans un fichier
+.lecl, le constructeur LECL fait comme s’il y avait eu la definition de token :
+
+	EOF = -Eof ; -- Le terminal EOF est defini par le caractere Eof 
+                     -- qui est non conserve (d’où le signe "-" devant Eof)
+
+Cas 2 : Cependant, le concepteur du langage peut fournir sa propre definition 
+du terminal EOF (presque comme pour tous les autres terminaux - voir 
+ci-dessous pour comprendre le sens de "presque"). Ce peut etre, par exemple,
+le cas s’il veut associer une post-action lexicale à la reconnaissance de EOF 
+ou s'il veut donner une autre définition à la fin de fichier (par exemple,
+en definissant EOF = -NUL si le texte source a analyser est lu dans une 
+chaine de caracteres du langage C).
+
+Le mot "presque" ci-dessus signifie que, meme si l’utilisateur specifie le
+non-terminal EOF, le constructeur LECL ajoute à cette specification une 
+alternative de la forme "-Eof" : autrement dit, LECL force, dans tous les cas, 
+la reconnaissance du caractere Eof comme étant le terminal EOF (en plus des 
+autres possibilités specifiees par l'utilisateur dans le fichier .lecl).
+
+Noter que EOF (comme COMMENTS ou INCLUDE) est un mot-cle reserve' de LECL
+utilisable comme <LEXICAL_UNIT_NAME> (voir "lecl.at").
+
+-------------------------------------------------------------------------------
+
+Puissance des post-actions lexicales
+------------------------------------
+
+Une post-action lexicale (notee @1, @2, etc.) a la possibilite' d’influer sur 
+le comportement du scanner. Voici en effet le bout de code du scanner :
+
+    switch (CODOP (stmt)) {
+    case HashReducePost:
+    case ReducePost:
+	ts_null ();
+	if (sxsvar.sxlv.mode.with_user_act)
+	    (void) (*sxsvar.SXS_tables.scanact) (SXACTION, action_or_prdct_code->action_or_prdct_no);
+	if (sxsvar.sxlv.terminal_token.lahead == 0) {
+	    /* Dans tous les cas, la post-action s'est occupee des commentaires eventuels. */
+	    if (sxsvar.sxlv.terminal_token.string_table_entry  == SXERROR_STE)
+		/* La post-action a decide' de retourner a l'appelant sans rien faire... */
+		return;
+
+	    /* La post-action a decide' de reboucler... */
+	    goto ccnewlextok;
+	}
+    default:
+	break;
+    }
+    sxput_token(sxsvar.sxlv.terminal_token);
+
+La post-action est appelée à la ligne SXACTION. Si elle n’a pas modifie'
+sxsvar.sxlv.terminal_token.lahead, le token courant reconnu par le scanner 
+est range' tel quel dans le flot des tokens par l'appel a 
+sxput_token(sxsvar.sxlv.terminal_token);
+
+Mais la post-action peut vouloir un comportement différent (l'exemple f77
+en use et en abuse - voir f77_analyse.c).
+
+Si l’utilisateur, dans cette post_action met sxsvar.sxlv.terminal_token.lahead  
+a 0, le token courant est ignore', et on reboucle ou on quitte sxscan_it() 
+suivant la valeur donnee à sxsvar.sxlv.terminal_token.string_table_entry.  
+
+-------------------------------------------------------------------------------
+
+Comment associer une action lexicale à EOF ?
+--------------------------------------------
+
+Motivation:
+
+On a un langage LNT qu'on veut traduire en LOTOS. Une spec LNT
+a la syntaxe suivante :
+
+    module M is
+    ...
+    end module
+
+A la fin de fichier, on veut inclure un fichier auxiliaire (donnant
+des instructions de configuration). Le contenu de ce fichier auxiliaire
+est généré dynamiquement en fonction de la ligne de commande. Il
+faut ouvrir ce fichier et aller analyser son contenu selon une règle
+BNF qui dit à peu près :
+
+    "end" "module" <contenu-auxiliaire-inclus>
+
+Idéalement, on voudrait pouvoir attacher une action lexicale spéciale
+à EOF pour pouvoir lire ce fichier auxiliaire et dérouter le parser
+vers son contenu (comme un #include sans retour). 
+
+Approche 1 :
+
+Pour executer uniquement une post-action lors de la fin de fichier, on 
+aimerait pouvoir écrire dans le .lecl :
+    EOF = ; @1;
+mais c'est interdit car la definition d'un token ne peut pas etre vide.
+Il faut necessairement une définition explicite de EOF si on veut lui 
+associer une post-action lexicale.
+
+Approche 2 :
+
+On ecrit donc plutot :
+    EOF = -NUL; @1;
+en esperant que le source a analyser ne contient pas de caracteres NUL,
+ou le signe "-" indique qu'on ne veut pas conserver le caractere NUL, et
+ou l'action lexicale @1 ferait un push_incl() du fichier auxiliaire
+si on est dans le fichier principal. 
+
+Dans ce cas, la post-action lexicale @1 est bien appelee. Mais ça ne marche 
+pas : le probleme est que l'appel "sxpush_incl (input)" contenu dans la 
+post-action @1 ne declenche pas une analyse du fichier "input". 
+
+Il semble (mais peut-etre est-ce faux) que le traitement de l'unité lexicale 
+EOF met fin a l'analyse syntaxique. Les fichiers restant sur la pile (ajoutes 
+"manuellement" dans notre cas) ne sont pas traites, alors qu'il faudrait
+continuer a les traiter.
+
+Toutefois, on peut "tromper" SYNTAX pour que la reconnaissance du token EOF 
+ne provoque pas l'arret de l'analyse syntaxique, meme si on a ajoute un fichier
+inclus manuellement avec sxpush_incl().
+
+Ceci se fait en mettant a zero la variable sxsvar.sxlv.terminal_token.lahead 
+dans l'action lexicale @1 associee a EOF. Il faut cependant sauvegarder la 
+valeur courante de cette variable, pour pouvoir la restaurer a la toute fin 
+de l'analyse (par exemple quand on atteint la fin du fichier inclus).
+
+Par exemple, le traducteur Lnt2Lotos de CADP comporte une option -root "XXX" 
+dont l'effet est, apres l'analyse du fichier principal, d'aller analyser un 
+fichier temporaire contenant le fragment de code "XXX" donne' par l'option 
+-root. Dans ce traducteur, l'action lexicale @1 associee a EOF est executee 
+deux fois :
+
+	- A la fin du fichier principal : on sauvegarde alors la variable,
+	  on la met a 0 et on appelle sxpush_incl().
+
+	- A la fin du fichier inclus (toute fin de l'analyse) : an restaure
+	  alors la variable.
+
+Concretement, c'est implante dans la fonction scanner_act() avec une 
+variable "static" :
+
+     static SXINT saved_lahead = 0;
+
+     switch (ENTRY) {
+	  ...
+	  case SXACTION:
+	       switch (ACTION_NUMBER) {
+	       case 1: /* action lexicale @1 associee a EOF */
+		    if (saved_lahead != 0) {
+			 /*
+			  * 2e appel a l'action lexicale: toute fin de
+			  * l'analyse
+			  */
+			 sxsvar.sxlv.terminal_token.lahead = saved_lahead;
+			 return;
+		    }
+		    ...
+		    /*
+		     * 1er appel a l'action lexicale: inclusion du fichier
+		     * temporaire
+		     */
+		    saved_lahead = sxsvar.sxlv.terminal_token.lahead;
+		    sxsvar.sxlv.terminal_token.lahead = 0;
+		    sxpush_incl (...);
+		    break;
+	       ...
+	  }
+     }
+
+
+Approche 3 :
+
+Dans un premier temps, on a implante' le bricolage suivant : ayant ecrit
+la regle :
+    EOF = -NUL; @1;
+Dans le cas SXACTION de la fonction scanner_act(), on surveille tous les
+tokens qui passent, et dès qu'on a lu "end" suivi de "module",
+on exécute le push_incl().
+
+Malheureusement, on ne peut pas faire pop_incl() sur la fin EOF
+du fichier auxiliaire. Donc, si le fichier initial contenait
+du code après "end module", celui-ci ne sera pas analysé, alors
+qu'on devrait avoir un message d'erreur disant qu'il ne doit
+plus avoir de lexèmes après "end module".
+
+Approche 4 (qui fonctionne, suggeree par Pierre Boullier) :
+
+Il faut definit dans le fichier .lecl :
+   EOF		= -NUL &False ; @1 ;
+
+Noter qu'on trouve une telle definition dans le fichier examples/f77/f77.lecl,
+avec le code C correspondant a cette action dans f77_analyse.c ("case 7").
+
+Le predicat &False (qui retour toujours "faux") indique que l'expression
+reguliere NUL ne sera jamais reconnue. Sa presence ici fait empeche la
+reconnaissance de cette expression reguliere : ainsi, meme si le fichier
+source a analyser contenait des caracteres NUL "en dur", ceux-ci ne seraient
+jamais reconnus comme etant le lexeme EOF. 
+
+On aurait meme pu prendre :
+	EOF = "A" &False ; @1 ;
+
+Mais la fin de fichier sera reconnue comme le lexeme EOF, malgre le predicat
+&False, car celui-ci ne s'applique qu'au caractere NUL.
+
+------------------------------------------------------------------------------
+
+Explications concernant les repertoires boot/
+---------------------------------------------
+
+La distribution SYNTAX (versions de 2023) introduit des repertoires boot:
+
+	trunk/bnf/boot
+	trunk/lecl/boot
+	trunk/paradis/boot
+	trunk/prio/boot
+	trunk/recor/boot
+	trunk/semact/boot
+	trunk/semat/boot
+	trunk/semc/boot
+	trunk/tdef/boot
+
+qui contiennent des fichiers *_t.c et *.skeleton.
+
+Les fichiers *_t.c sont des fichiers generes par le processeur TABLES_C.
+Normalement, la compilation par bootstrap refabrique ces fichiers *_t.c.
+Mais leur presence dans les repertoires boot sert a l'amorcage : cela
+ca permet par compilation sur la machine hôte de reconstruire les processeurs
+sous forme binaire.
+
+Eventuellement (si on modifie les fichiers .lecl, .bnf, etc.), le bootstrap
+va produire des fichiers *_t.f differents de ceux qui sont stockes dans les
+repertoires boot. Dans ce cas, "sxmake", qui compare les fichiers de boot
+avec les fichiers generes, se rendra compte qu'il y a eu un changement et
+lancera une phase de compilation supplementaire.
+
+Pour faciliter cette comparaison, Hubert a supprime' le code de SYNTAX qui
+ecrivait la date de generation "en dur" dans les fichiers *_t.c. Ainsi, la
+comparaison peut se faire simplement avec la commande "cmp" ou "diff" d'Unix.
+
+------------------------------------------------------------------------------
+
+
+
+
 
 

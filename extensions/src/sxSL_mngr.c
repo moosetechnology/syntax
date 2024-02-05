@@ -24,9 +24,9 @@ typedef SXINT	sxSL_elems; /* Bidon */
 
 #include	"sxSL.h"
 
-char WHAT_SXSL_MNGR[] = "@(#)SYNTAX - $Id: sxSL_mngr.c 3312 2023-05-28 06:06:26Z garavel $" WHAT_DEBUG;
+char WHAT_SXSL_MNGR[] = "@(#)SYNTAX - $Id: sxSL_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
-SXBOOLEAN	sxSL_GC (sxSL_header *header)
+bool	sxSL_GC (sxSL_header *header)
 {
     /* Cette procedure tasse les listes "erased" sans changer l'identifiant des autres.
        Si "swap_ft" est non NULL, elle est appelee a chaque deplacement. */
@@ -56,17 +56,17 @@ SXBOOLEAN	sxSL_GC (sxSL_header *header)
 	    }
 	}
 
-	header->has_erased = SXFALSE;
+	header->has_erased = false;
 
 	if (deltax != 0) {
 	    header->sorted_top -= deltax;
 	    sxSL_elems_top (*header) -= deltalist;
 
-	    return SXTRUE;
+	    return true;
 	}
     }
 
-    return SXFALSE;
+    return false;
 }
 
 void sxSL_stat (sxSL_header *header, FILE *file, SXINT sizeof_elem)

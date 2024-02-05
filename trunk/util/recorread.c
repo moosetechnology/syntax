@@ -21,7 +21,7 @@
 #include "sxunix.h"
 #include "R_tables.h"
 
-char WHAT_RECORREAD[] = "@(#)SYNTAX - $Id: recorread.c 3146 2023-05-02 12:21:39Z garavel $" WHAT_DEBUG;
+char WHAT_RECORREAD[] = "@(#)SYNTAX - $Id: recorread.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 
 #define READ(f,p,l)		\
@@ -32,7 +32,7 @@ char WHAT_RECORREAD[] = "@(#)SYNTAX - $Id: recorread.c 3146 2023-05-02 12:21:39Z
 		goto read_error; }
 
 
-SXBOOLEAN		recor_read (struct R_tables_s *R_tables, char *langname)
+bool		recor_read (struct R_tables_s *R_tables, char *langname)
 {
     SXINT	bytes;
     SXINT	i;
@@ -53,7 +53,7 @@ SXBOOLEAN		recor_read (struct R_tables_s *R_tables, char *langname)
 
     if (rt_version != rt_num_version) {
 	fprintf (sxstderr, "tables format has changed: please use the new recor\n");
-	return SXFALSE;
+	return false;
     }
 
     READ (F_rt, (char*) &R_tables->bnf_modif_time, sizeof (SXINT));
@@ -133,11 +133,11 @@ SXBOOLEAN		recor_read (struct R_tables_s *R_tables, char *langname)
 	R_tables->E_abstract = NULL;
 
     close (F_rt);
-    return SXTRUE;
+    return true;
 
 read_error:
     fprintf (sxstderr, "%s: read error on ", ME);
 file_error:
     sxperror (ent_name);
-    return SXFALSE;
+    return false;
 }

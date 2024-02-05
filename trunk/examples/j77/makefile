@@ -68,8 +68,8 @@ $(LIB)/f77_main.o:	$(SXINCL)/sxunix.h		\
 
 $(LIB)/sxscanner.o:	$(SXINCL)/sxunix.h		\
 			$(SXINCL)/sxsstmt.h		\
-			$(SX)/src/sxscanner.c
-	$(CC) -o $@ $(SX)/src/sxscanner.c			\
+			$(SXSRC)/sxscanner.c
+	$(CC) -o $@ $(SXSRC)/sxscanner.c			\
 			-Dsxnextchar=f77_next_char	\
 			-Dsxnext_char=f77_next_char	\
 			-Dsxlanext_char=f77_lanext_char	\
@@ -80,8 +80,8 @@ $(LIB)/sxscanner.o:	$(SXINCL)/sxunix.h		\
 			$(CFLAGS_SXSCANNER_DEBUG)
 
 $(LIB)/sxs_rcvr.o:	$(SXINCL)/sxunix.h		\
-			$(SX)/src/sxs_rcvr.c
-	$(CC) -o $@ $(SX)/src/sxs_rcvr.c			\
+			$(SXSRC)/sxs_rcvr.c
+	$(CC) -o $@ $(SXSRC)/sxs_rcvr.c			\
 			-Dsxnextchar=f77_next_char	\
 			-Dsxnext_char=f77_next_char	\
 			-Dsxlanext_char=f77_lanext_char	\
@@ -91,13 +91,13 @@ $(LIB)/sxs_rcvr.o:	$(SXINCL)/sxunix.h		\
 			-Dsxsrcpush=f77_srcpush
 
 $(LIB)/sxparser.o:	$(SXINCL)/sxunix.h		\
-			$(SX)/src/sxparser.c
-	$(CC) -o $@ $(SX)/src/sxparser.c			\
+			$(SXSRC)/sxparser.c
+	$(CC) -o $@ $(SXSRC)/sxparser.c			\
 			$(CFLAGS_SXPARSER_DEBUG)
 
 $(LIB)/sxp_rcvr.o:	$(SXINCL)/sxunix.h		\
-			$(SX)/src/sxp_rcvr.c
-	$(CC) -o $@ $(SX)/src/sxp_rcvr.c
+			$(SXSRC)/sxp_rcvr.c
+	$(CC) -o $@ $(SXSRC)/sxp_rcvr.c
 
 $(LIB)/f77_analyse.o:	$(SXINCL)/sxunix.h		\
 			f77_td.h		\
@@ -125,14 +125,14 @@ $(LIB)/ppf77_main.o:	$(SXINCL)/sxunix.h		\
 			$(CFLAGS_PPF77_DEBUG)
 
 $(LIB)/sxppp.o:		$(SXINCL)/sxunix.h		\
-			$(SX)/src/sxppp.c
-	$(CC) -o $@ $(SX)/src/sxppp.c				\
+			$(SXSRC)/sxppp.c
+	$(CC) -o $@ $(SXSRC)/sxppp.c				\
 			-DUSERS_COMMENTS=1		\
 			$(CFLAGS_SXPPP_DEBUG)
 
 $(LIB)/sxatcpp.o:	$(SXINCL)/sxunix.h		\
-			$(SX)/src/sxatcpp.c
-	$(CC) -o $@ $(SX)/src/sxatcpp.c			\
+			$(SXSRC)/sxatcpp.c
+	$(CC) -o $@ $(SXSRC)/sxatcpp.c			\
 			-DBEFORE_PPTREE_WALK=f77_process_postponed_comments \
 			$(CFLAGS_SXATCPP_DEBUG)
 

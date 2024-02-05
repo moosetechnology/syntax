@@ -20,7 +20,7 @@
 
 struct recor_node {
    SXNODE_HEADER_S SXVOID_NAME;
-   SXBOOLEAN not_is_first_visit;
+   bool not_is_first_visit;
    };
 
 /*   END  RECOR_NODE.H   */

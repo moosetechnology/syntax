@@ -21,7 +21,7 @@
 #include "sxunix.h"
 #include "S_tables.h"
 
-char WHAT_LECLREAD[] = "@(#)SYNTAX - $Id: leclread.c 3146 2023-05-02 12:21:39Z garavel $" WHAT_DEBUG;
+char WHAT_LECLREAD[] = "@(#)SYNTAX - $Id: leclread.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 
 #define READ(f,p,l)		\
@@ -31,7 +31,7 @@ char WHAT_LECLREAD[] = "@(#)SYNTAX - $Id: leclread.c 3146 2023-05-02 12:21:39Z g
 	if (!sxba_read (f,b))					\
 		goto read_error
 
-SXBOOLEAN		lecl_read (struct lecl_tables_s *lecl_tables_ptr, char *langname)
+bool		lecl_read (struct lecl_tables_s *lecl_tables_ptr, char *langname)
 {
     SXINT	bytes;
     SXINT	i;
@@ -52,7 +52,7 @@ SXBOOLEAN		lecl_read (struct lecl_tables_s *lecl_tables_ptr, char *langname)
 
     if (st_version != st_num_version) {
 	fprintf (sxstderr, "tables format has changed : please use the new lecl\n");
-	return SXFALSE;
+	return false;
     }
 
     READ (F_st, &(lecl_tables_ptr->bnf_modif_time), sizeof (SXINT));
@@ -88,11 +88,11 @@ SXBOOLEAN		lecl_read (struct lecl_tables_s *lecl_tables_ptr, char *langname)
     BA_READ (F_st, lecl_tables_ptr->S_is_a_generic_terminal = sxba_calloc (lecl_tables_ptr->S_tbl_size.S_termax + 1));
     BA_READ (F_st, lecl_tables_ptr->S_is_a_keyword = sxba_calloc (lecl_tables_ptr->S_tbl_size.S_termax + 1));
     close (F_st);
-    return SXTRUE;
+    return true;
 
 read_error:
     fprintf (sxstderr, "%s: read error on ", ME);
 file_error:
     sxperror (ent_name);
-    return SXFALSE;
+    return false;
 }

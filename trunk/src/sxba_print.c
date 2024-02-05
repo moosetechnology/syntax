@@ -20,9 +20,9 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXBAPRINT[] = "@(#)SYNTAX - $Id: sxba_print.c 2428 2023-01-18 12:54:10Z garavel $" WHAT_DEBUG;
+char WHAT_SXBAPRINT[] = "@(#)SYNTAX - $Id: sxba_print.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
-SXVOID	sxba_print (SXBA s)
+void	sxba_print (SXBA s)
         	  
 
 /* affiche sur la sortie standard la chaine de bits s; procedure de service */

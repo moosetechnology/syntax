@@ -29,17 +29,17 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-char WHAT_PPF77MAIN[] = "@(#)SYNTAX - $Id: ppf77_main.c 3565 2023-09-04 19:04:31Z garavel $";
+char WHAT_PPF77MAIN[] = "@(#)SYNTAX - $Id: ppf77_main.c 3633 2023-12-20 18:41:19Z garavel $";
 
 extern struct sxtables	ppf77_tables;
 
-extern SXVOID f77_src_mngr (SXINT what, FILE *infile, char *file_name);
+extern void f77_src_mngr (SXINT what, FILE *infile, char *file_name);
 
 /*---------------*/
 /*    options    */
 /*---------------*/
 
-SXBOOLEAN		is_ansi, is_json, is_pretty_printer, is_input_free_fortran, is_output_free_fortran;
+bool		is_ansi, is_json, is_pretty_printer, is_input_free_fortran, is_output_free_fortran;
 
 static char	ME [] = "ppf77_main";
 static char	Usage [] = "\
@@ -289,7 +289,7 @@ static SXINT my_write_with_format_suffix (char *str, SXINT l, SXINT with_nl)
     return my_write (card+1, 80, with_nl);
 }
 
-static SXBOOLEAN	file_copy (char *in, char *out)
+static bool	file_copy (char *in, char *out)
 {
 #define read_a_char(i,n)	(i==n) ?				\
     (((n = read (fin, buffer, BUFSIZ)) == 0) ? EOF : (i = 1, (SXINT)buffer [0])) : \
@@ -303,7 +303,7 @@ static SXBOOLEAN	file_copy (char *in, char *out)
     if ((fin = open (in, 0+O_BINARY)) == -1 || fstat (fin, &stat_buf) != 0) {
       fprintf (sxstderr, "%s: Unable to open (read) ", ME);
       sxperror (in);
-      return SXFALSE;
+      return false;
     }
 
     if (stat_buf.st_size != (off_t) sxppvariables.char_count) {
@@ -314,7 +314,7 @@ static SXBOOLEAN	file_copy (char *in, char *out)
 	       (SXINT) sxppvariables.char_count);
 
       close (fin);
-      return SXFALSE;
+      return false;
     }
 
     if (out != NULL) {
@@ -322,7 +322,7 @@ static SXBOOLEAN	file_copy (char *in, char *out)
 	fprintf (sxstderr, "%s: Unable to open (create) ", out);
 	sxperror (out);
 	close (fin);
-	return SXFALSE;
+	return false;
       }
     }
     else
@@ -493,11 +493,11 @@ static SXBOOLEAN	file_copy (char *in, char *out)
   }
 }
 
-static	SXVOID ppf77_run (char *pathname) {
+static	void ppf77_run (char *pathname) {
   FILE	*infile, *old_sxstdout;
   char	*fn;
   char	out_file_name [20];
-  SXBOOLEAN success;
+  bool success;
 
   sxinitialise (infile); /* pour faire taire gcc -Wuninitialized */
   old_sxstdout = sxstdout; /* pour remettre en état, au cas où... */
@@ -653,19 +653,19 @@ int main (int argc, char *argv[])
 
 /* valeurs par defaut */
 
-    is_json = SXFALSE; /* always false for ppf77 */
-    is_pretty_printer = SXTRUE; /* always true for ppf77 */
-    sxverbosep = SXFALSE;
-    is_ansi = SXFALSE;
-    is_input_free_fortran = SXFALSE;
-    is_output_free_fortran = SXFALSE;
+    is_json = false; /* always false for ppf77 */
+    is_pretty_printer = true; /* always true for ppf77 */
+    sxverbosep = false;
+    is_ansi = false;
+    is_input_free_fortran = false;
+    is_output_free_fortran = false;
 
     sxppvariables.kw_case = SXUPPER_CASE /* How should keywords be written */ ;
     sxppvariables.terminal_case = (SXCASE *) sxcalloc (sxeof_code (&ppf77_tables)+1, sizeof (SXCASE));
-    sxppvariables.kw_dark = SXFALSE /* keywords are not artificially darkened */ ;
+    sxppvariables.kw_dark = false /* keywords are not artificially darkened */ ;
     sxppvariables.terminal_dark = NULL /* Same as kw_dark, but for each type of terminal */ ;
-    sxppvariables.no_tabs = SXTRUE /* do not optimize spaces into tabs */ ;
-    sxppvariables.block_margin = SXTRUE /* do not structure when deeply nested */ ;
+    sxppvariables.no_tabs = true /* do not optimize spaces into tabs */ ;
+    sxppvariables.block_margin = true /* do not structure when deeply nested */ ;
     sxppvariables.line_length = 0x7fff /* What it says */ ;
     sxppvariables.max_margin = 30 /* Do not indent lines further than that */ ;
     sxppvariables.tabs_interval = 1 /* number of columns between two tab positions */ ;
@@ -678,19 +678,19 @@ int main (int argc, char *argv[])
     for (argnum = 1; argnum < argc; argnum++) {
 	switch (option_get_kind (argv [argnum])) {
 	case VERBOSE:
-	    sxverbosep = SXTRUE;
+	    sxverbosep = true;
 	    break;
 
 	case -VERBOSE:
-	    sxverbosep = SXFALSE;
+	    sxverbosep = false;
 	    break;
 
 	case ANSI:
-	    is_ansi = SXTRUE;
+	    is_ansi = true;
 	    break;
 
 	case -ANSI:
-	    is_ansi = SXFALSE;
+	    is_ansi = false;
 	    break;
 
 	case FORMAT_SUFFIX:
@@ -715,19 +715,19 @@ int main (int argc, char *argv[])
 	    break;
 
 	case INPUT_FREE_FORTRAN:
-	    is_input_free_fortran = SXTRUE;
+	    is_input_free_fortran = true;
 	    break;
 
 	case -INPUT_FREE_FORTRAN:
-	    is_input_free_fortran = SXFALSE;
+	    is_input_free_fortran = false;
 	    break;
 
 	case OUTPUT_FREE_FORTRAN:
-	    is_output_free_fortran = SXTRUE;
+	    is_output_free_fortran = true;
 	    break;
 
 	case -OUTPUT_FREE_FORTRAN:
-	    is_output_free_fortran = SXFALSE;
+	    is_output_free_fortran = false;
 	    break;
 
 	case UNKNOWN_ARG:
@@ -753,16 +753,16 @@ run:
 
     vstr = varstr_alloc (256);
 
-    syntax (SXINIT, &ppf77_tables, SXFALSE /* no includes */);
+    syntax (SXINIT, &ppf77_tables, false /* no includes */);
 
-    ascii(' ') = SXTRUE;
-    ascii('(') = SXTRUE;
-    ascii(')') = SXTRUE;
-    ascii('+') = SXTRUE;
-    ascii('-') = SXTRUE;
-    ascii(',') = SXTRUE;
-    ascii(':') = SXTRUE;
-    ascii('=') = SXTRUE;
+    ascii(' ') = true;
+    ascii('(') = true;
+    ascii(')') = true;
+    ascii('+') = true;
+    ascii('-') = true;
+    ascii(',') = true;
+    ascii(':') = true;
+    ascii('=') = true;
 
     if (argnum == argc) {
 	ppf77_run (NULL);
@@ -779,7 +779,7 @@ run:
 	} while (argnum < argc);
     }
 
-    syntax (SXFINAL, &ppf77_tables, SXTRUE);
+    syntax (SXFINAL, &ppf77_tables, true);
 
     varstr_free (vstr);
     sxfree (sxppvariables.terminal_case), sxppvariables.terminal_case = NULL;

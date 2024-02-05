@@ -98,7 +98,7 @@ extern void		sxset_pack_elems (sxset_header *header);
 
 extern SXUINT	sxset_new_set_id (sxset_header *header);
 
-extern SXBOOLEAN		sxset_member (sxset_header *header, SXUINT set_id, SXUINT elem);
+extern bool		sxset_member (sxset_header *header, SXUINT set_id, SXUINT elem);
 
 extern void		sxset_free (sxset_header *header);
 
@@ -108,7 +108,7 @@ extern void		sxset_stat (sxset_header *header, FILE *stat_file);
 extern void		sxset_copy (sxset_header *header, SXUINT set_id);
 
 /* header_ptr->current_set_id == set_id */
-extern SXBOOLEAN		sxset_compare (sxset_header *header, SXUINT set_id);
+extern bool		sxset_compare (sxset_header *header, SXUINT set_id);
 
 /* (h).current_set_id U= s */
 #define sxset_or(h,s)	sxset_copy(h,s)

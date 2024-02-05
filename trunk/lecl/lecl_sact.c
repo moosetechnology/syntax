@@ -20,9 +20,9 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_LECLSACT[] = "@(#)SYNTAX - $Id: lecl_sact.c 3603 2023-09-23 20:02:36Z garavel $" WHAT_DEBUG;
+char WHAT_LECLSACT[] = "@(#)SYNTAX - $Id: lecl_sact.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
-SXVOID	lecl_scan_act (SXINT what, SXINT act_no)
+void	lecl_scan_act (SXINT what, SXINT act_no)
 {
     switch (what) {
     case SXOPEN:

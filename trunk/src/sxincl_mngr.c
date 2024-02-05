@@ -21,17 +21,17 @@
 #include "sxunix.h"
 #include <stdarg.h>
 
-char WHAT_SXINCL_MNGR[] = "@(#)SYNTAX - $Id: sxincl_mngr.c 2428 2023-01-18 12:54:10Z garavel $" WHAT_DEBUG;
+char WHAT_SXINCL_MNGR[] = "@(#)SYNTAX - $Id: sxincl_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 /*---------------------------------------------------------------------------*/
 
-static SXBOOLEAN   sxname_separation = SXFALSE;
+static bool   sxname_separation = false;
 
 /*
- * mettre sxname_separation a SXTRUE permet de ranger les pathnames des
+ * mettre sxname_separation a true permet de ranger les pathnames des
  * fichiers inclus dans une table differente de sxstrmngr, ce qui permet
  * de donner aux fichiers inclus des numeros contigus a partir de zero, 
- * valeur qui designe le fichier principal; si sxname_separation vaut SXFALSE
+ * valeur qui designe le fichier principal; si sxname_separation vaut false
  * on n'a aucune garantie sur ces numeros
  */
 
@@ -45,8 +45,8 @@ struct incl {
     SXINT ste;
     /* ste est l'indice de la chaine contenant le pathname du fichier ;
      * cette chaine est contenue soit dans la table sxstrmngr si
-     * sxname_separation vaut SXFALSE, soit dans la table incl_pathnames
-     * si sxname_separation vaut SXTRUE ; dans ce dernier cas, les valeurs
+     * sxname_separation vaut false, soit dans la table incl_pathnames
+     * si sxname_separation vaut true ; dans ce dernier cas, les valeurs
      * de ste sont contigues car incl_pathnames ne contient que des noms
      * de fichiers (plus SXERROR_STE et SXEMPTY_STE) mais pas de lexemes
      */
@@ -59,21 +59,21 @@ static SXINT    incls_size;
 
 /*
  * table stockant tous les fichiers inclus ou qui l'ont ete; seulement
- * definie si sxname_separation vaut SXTRUE
+ * definie si sxname_separation vaut true
  */
 static sxstrmngr_t *incl_pathnames = NULL; /* par precaution */
 
 /*
- * sxown_incl_pathnames vaut SXTRUE si incl_pathnames est allouee a
- * l'interieur de ce module et SXFALSE si incl_pathnames vaut l'adresse
+ * sxown_incl_pathnames vaut true si incl_pathnames est allouee a
+ * l'interieur de ce module et false si incl_pathnames vaut l'adresse
  * d'une table fournie par l'appelant et allouee a l'exterieur de ce module
  */
-static SXBOOLEAN sxown_incl_pathnames;
+static bool sxown_incl_pathnames;
 
 /*
  * nombre d'elements inseres par defaut dans incl_pathnames, vraisemblablement
  * deux (SXERROR_STE et SXEMPTY_STE); seulement defini si sxname_separation
- * vaut SXTRUE
+ * vaut true
  */
 static SXINT incl_pathnames_initial_size;
 
@@ -83,7 +83,7 @@ static SXINT incl_pathnames_initial_size;
  * table stockant le niveau de profondeur d'inclusion pour les fichiers inclus ;
  * comme indice, on reutilise celui de la table des noms des fichiers ; pour
  * avoir un tableau de taille limite au nombre de fichiers, ce tableau est
- * seulement defini si sxname_separation vaut SXTRUE
+ * seulement defini si sxname_separation vaut true
  */
 static SXINT *incl_depths = NULL;
 
@@ -92,9 +92,9 @@ static SXINT incl_depths_size = 0;
 
 /*---------------------------------------------------------------------------*/
 
-static SXBOOLEAN my_push_incl (char *pathname,
-                               SXBOOLEAN disallow_multiple_inclusions,
-                               SXBOOLEAN disallow_recursive_inclusions)
+static bool my_push_incl (char *pathname,
+                               bool disallow_multiple_inclusions,
+                               bool disallow_recursive_inclusions)
 {
     FILE	*file;
     SXINT	x;
@@ -102,11 +102,11 @@ static SXBOOLEAN my_push_incl (char *pathname,
     SXINT	nb_includes, ste;
 
     if ((file = sxfopen (pathname, "r")) == NULL) {
-        return SXFALSE;
+        return false;
     }
 
     nb_includes = 0; /* to avoid Gcc "-Wmaybe-uninitialized" warnings */ 
-    if (sxname_separation == SXFALSE) {
+    if (sxname_separation == false) {
       ste = sxstrsave (pathname);
     } else {
       nb_includes = sxstr_size (incl_pathnames);
@@ -119,20 +119,20 @@ static SXBOOLEAN my_push_incl (char *pathname,
       for (x = incl_depth - 1; x >= 0; x--) {
 	 if (incls [x].ste == ste) {
 	    fclose (file);
-	    return SXFALSE; /* appel recursif */
+	    return false; /* appel recursif */
 	 }
       }
     }
 
     if (disallow_multiple_inclusions) {
-      if (sxname_separation == SXFALSE) {
+      if (sxname_separation == false) {
         fprintf (sxstderr, "sxincl_mngr: sxpush_uniqincl() requires SXSEPARATE\n");
         sxexit (1);
       } else {
         if (sxstr_size (incl_pathnames) == nb_includes) {
           /* le nom de fichier pathname etait deja present dans la table avant
            * l'appel de my_push_incl() : on ne fait pas l'inclusion */
-	  return SXTRUE; /* fichier pathname deja inclus auparavant */
+	  return true; /* fichier pathname deja inclus auparavant */
         }
       } 
     }
@@ -144,7 +144,7 @@ static SXBOOLEAN my_push_incl (char *pathname,
     ai->srcmngr = sxsrcmngr;
     ai->infile = file;
     ai->ste = ste;
-    if (sxname_separation == SXFALSE) {
+    if (sxname_separation == false) {
       sxsrc_mngr (SXINIT, ai->infile, sxstrget (ste));
     } else {
 	sxsrc_mngr (SXINIT, ai->infile, sxstr_get (incl_pathnames, ste));
@@ -164,45 +164,45 @@ static SXBOOLEAN my_push_incl (char *pathname,
     }
 
     sxnext_char () /* Lecture du premier caractere de l'include */;
-    return SXTRUE;
+    return true;
 }
 
 /*---------------------------------------------------------------------------*/
 
-SXBOOLEAN		sxpush_incl (char *pathname)
+bool		sxpush_incl (char *pathname)
 {
-    return my_push_incl (pathname, SXFALSE, SXTRUE);
+    return my_push_incl (pathname, false, true);
 }
 
 /*---------------------------------------------------------------------------*/
 
-SXBOOLEAN		sxpush_recincl (char *pathname)
+bool		sxpush_recincl (char *pathname)
 {
-    return my_push_incl (pathname, SXFALSE, SXFALSE);
+    return my_push_incl (pathname, false, false);
 }
 
 /*---------------------------------------------------------------------------*/
 
-SXBOOLEAN		sxpush_uniqincl (char *pathname)
+bool		sxpush_uniqincl (char *pathname)
 {
-    return my_push_incl (pathname, SXTRUE, SXTRUE);
+    return my_push_incl (pathname, true, true);
 }
 
 /*---------------------------------------------------------------------------*/
 
-SXBOOLEAN		sxpop_incl (void)
+bool		sxpop_incl (void)
 {
     struct incl	*ai;
 
     if (incl_depth <= 0)
-	return SXFALSE;
+	return false;
 
     ai = incls + --incl_depth;
     sxsrc_mngr (SXFINAL);
     sxsrcmngr = ai->srcmngr;
     sxfclose (ai->infile);
 
-    return SXTRUE;
+    return true;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -216,7 +216,7 @@ SXINT sxincl_depth (void)
 
 SXINT sxincl_size (void)
 {
-    if (sxname_separation == SXFALSE)
+    if (sxname_separation == false)
         return 0; /* resultat non defini */ 
     else {
         /* on renvoie une valeur numerotee a partir de zero */
@@ -228,7 +228,7 @@ SXINT sxincl_size (void)
 
 char *sxincl_get (SXINT incl_index)
 {
-    if (sxname_separation == SXFALSE)
+    if (sxname_separation == false)
         return sxstrget (incl_index);
     else {
         /* on recoit une valeur incl_index numerotee a partir de zero */
@@ -242,7 +242,7 @@ SXINT sxincl_retrieve (char *pathname)
 {
     SXINT ste;
 
-    if (sxname_separation == SXFALSE) {
+    if (sxname_separation == false) {
         ste = sxstrretrieve (pathname);
         if (ste == SXERROR_STE)
            return -1;
@@ -293,7 +293,7 @@ SXINT sxincl_get_depth (SXINT incl_index)
 
 /*---------------------------------------------------------------------------*/
 
-SXVOID sxincl_depend_but (FILE *f, SXINT order, SXINT excluded_index)
+void sxincl_depend_but (FILE *f, SXINT order, SXINT excluded_index)
 {
     SXINT size, i, max_depth, depth;
     
@@ -319,7 +319,7 @@ SXVOID sxincl_depend_but (FILE *f, SXINT order, SXINT excluded_index)
 	break;
 
     case sxincl_order_increasing_depth:
-	if (sxname_separation == SXFALSE) {
+	if (sxname_separation == false) {
 	    fprintf (sxstderr, "sxincl_mngr: unsupported printing order\n");
 	    break;
 	}
@@ -335,7 +335,7 @@ SXVOID sxincl_depend_but (FILE *f, SXINT order, SXINT excluded_index)
 	break;
 
     case sxincl_order_decreasing_depth:
-	if (sxname_separation == SXFALSE) {
+	if (sxname_separation == false) {
 	    fprintf (sxstderr, "sxincl_mngr: unsupported printing order\n");
 	    break;
 	}
@@ -357,7 +357,7 @@ SXVOID sxincl_depend_but (FILE *f, SXINT order, SXINT excluded_index)
 
 /*---------------------------------------------------------------------------*/
 
-SXVOID sxincl_depend (FILE *f, SXINT order)
+void sxincl_depend (FILE *f, SXINT order)
 {
     /* appel de sxincl_depend_but avec un index invalide */
     sxincl_depend_but (f, order, -1);
@@ -365,7 +365,7 @@ SXVOID sxincl_depend (FILE *f, SXINT order)
 
 /*---------------------------------------------------------------------------*/
 
-SXVOID	sxincl_mngr (SXINT sxincl_mngr_what, ...)
+void	sxincl_mngr (SXINT sxincl_mngr_what, ...)
 {
     va_list ap;
     char *principal_pathname;
@@ -378,7 +378,7 @@ SXVOID	sxincl_mngr (SXINT sxincl_mngr_what, ...)
 
     case SXINIT:
 	incl_depth = 0;
-	sxname_separation = SXFALSE;
+	sxname_separation = false;
 	break;
 
     case SXSEPARATE:
@@ -390,12 +390,12 @@ SXVOID	sxincl_mngr (SXINT sxincl_mngr_what, ...)
 	 * (y compris le nom du fichier principal) dans la table separee
 	 * incl_pathnames, au lieu de les melanger avec les lexemes
 	 */
-        sxname_separation = SXTRUE;
+        sxname_separation = true;
 	va_start (ap, sxincl_mngr_what);
         incl_pathnames = va_arg (ap, sxstrmngr_t*);
         if (incl_pathnames != NULL) {
 	    /* l'utilisateur a fourni l'adresse d'une table allouee par lui */
-	    sxown_incl_pathnames = SXFALSE;
+	    sxown_incl_pathnames = false;
 	} else {
 	    /* creation de la table incl_pathnames */
 	    incl_pathnames = (sxstrmngr_t *) sxalloc (1, sizeof (sxstrmngr_t));
@@ -408,7 +408,7 @@ SXVOID	sxincl_mngr (SXINT sxincl_mngr_what, ...)
 	    incl_pathnames->head = NULL;
 	    incl_pathnames->top = 1; /* n'importe quelle valeur non nulle */
             sxstr_mngr (SXOPEN, incl_pathnames);
-	    sxown_incl_pathnames = SXTRUE;
+	    sxown_incl_pathnames = true;
 	}
 	/* on mesure la taille initiale de cette table, que l'on definit
 	 * comme le nombre de valeurs inutiles stockees par defaut dans
@@ -447,7 +447,7 @@ SXVOID	sxincl_mngr (SXINT sxincl_mngr_what, ...)
 
     case SXCLOSE:
 	sxfree (incls);
-	if ((sxname_separation == SXTRUE) && (sxown_incl_pathnames == SXTRUE)) {
+	if ((sxname_separation == true) && (sxown_incl_pathnames == true)) {
 	    /* on ne purge et detruit la table incl_pathnames que si celle-
 	     * ci n'a pas ete allouee directement par l'utilisateur
 	     */

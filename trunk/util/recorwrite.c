@@ -21,7 +21,7 @@
 #include "sxunix.h"
 #include "R_tables.h"
 
-char WHAT_RECORWRITE[] = "@(#)SYNTAX - $Id: recorwrite.c 3146 2023-05-02 12:21:39Z garavel $" WHAT_DEBUG;
+char WHAT_RECORWRITE[] = "@(#)SYNTAX - $Id: recorwrite.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 #define WRITE(f,p,l)		\
 	if (bytes = (l), (write (f, p, bytes) != bytes))	\
@@ -31,7 +31,7 @@ char WHAT_RECORWRITE[] = "@(#)SYNTAX - $Id: recorwrite.c 3146 2023-05-02 12:21:3
 		goto write_error
 
 
-SXBOOLEAN		recor_write (struct R_tables_s *R_tables, char *langname)
+bool		recor_write (struct R_tables_s *R_tables, char *langname)
 {
     SXINT	bytes;
     SXINT	i;
@@ -105,11 +105,11 @@ SXBOOLEAN		recor_write (struct R_tables_s *R_tables, char *langname)
 	WRITE (F_rt, R_tables->E_abstract, R_tables->R_tbl_size.E_labstract * sizeof (char));
 
     close (F_rt);
-    return SXTRUE;
+    return true;
 
 write_error:
     fprintf (sxstderr, "%s: write error on ", ME);
 file_error:
     sxperror (ent_name);
-    return SXFALSE;
+    return false;
 }

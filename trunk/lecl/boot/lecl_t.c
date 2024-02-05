@@ -667,7 +667,7 @@ static char abstract []= "%ld warnings and %ld errors are reported.";
 #ifdef PARSACT
 extern SXINT PARSACT(SXINT what, SXINT action_no);
 #endif /* PARSACT */
-extern SXBOOLEAN sxprecovery (SXINT what_to_do, SXINT *at_state, SXINT latok_no);
+extern bool sxprecovery (SXINT what_to_do, SXINT *at_state, SXINT latok_no);
 
 static unsigned char S_char_to_simple_class[]={
 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
@@ -1057,7 +1057,7 @@ static char *S_global_mess[]={0,
 extern SXINT SCANACT(SXINT what, SXINT act_no);
 #endif /* SCANACT */
 extern SXINT sxscan_it(void);
-extern SXBOOLEAN sxsrecovery (SXINT sxsrecovery_what, SXINT state_no, unsigned char *class);
+extern bool sxsrecovery (SXINT sxsrecovery_what, SXINT state_no, unsigned char *class);
 static SXINT check_keyword(char *init_string, SXINT init_length);
 static struct SXT_node_info SXT_node_info[]={{0,0},
 {67,1},{93,7},{0,7},{0,8},{12,10},{10,11},{11,13},{58,14},{52,16},{0,18},{0,19},{0,20},

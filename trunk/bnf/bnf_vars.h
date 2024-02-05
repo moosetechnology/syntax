@@ -51,7 +51,7 @@ typedef SXBA *SXBM;
 
 SX_GLOBAL_VAR_BNF	struct bnf_ag_item	bnf_ag;
 SX_GLOBAL_VAR_BNF	SXINT options_set;
-SX_GLOBAL_VAR_BNF	SXBOOLEAN		is_list, is_source, is_proper, is_predicate, is_huge, is_terminal, is_col_1;
+SX_GLOBAL_VAR_BNF	bool		is_list, is_source, is_proper, is_predicate, is_huge, is_terminal, is_col_1;
 SX_GLOBAL_VAR_BNF	SXINT	max_RHS;
 SX_GLOBAL_VAR_BNF	SXINT	EOF_ste, M_t, M_nt, indpro_size;
 SX_GLOBAL_VAR_BNF	char	*prgentname;

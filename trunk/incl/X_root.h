@@ -83,23 +83,23 @@ extern SXINT			X_root_is_set (X_root_header *header_ptr, SXUINT X);
 /* If the element "X" is already stored it returns its index (a strictly positive
    integer) else it returns 0. */
 
-extern SXBOOLEAN			X_root_set (X_root_header *header, 
+extern bool			X_root_set (X_root_header *header, 
 					    SXUINT scramble, 
 					    SXINT *ref);
 /* Put the element "X" in the structure and returns its index (a strictly positive
-   integer). Moreover it returns SXTRUE if the element "X" is already stored else
-   it returns SXFALSE. */
+   integer). Moreover it returns true if the element "X" is already stored else
+   it returns false. */
 
-extern SXBOOLEAN			X_root_write (X_root_header *header, sxfiledesc_t F_X_root /* file descriptor */);
+extern bool			X_root_write (X_root_header *header, sxfiledesc_t F_X_root /* file descriptor */);
 /* Write on "file" the structure "*header_ptr" */
 
-extern SXBOOLEAN			X_root_read (X_root_header *header, sxfiledesc_t F_X_root /* file descriptor */);
+extern bool			X_root_read (X_root_header *header, sxfiledesc_t F_X_root /* file descriptor */);
 /* Read from "file" the structure "*header_ptr" */
 
 extern void			X_root_to_c (X_root_header *header_ptr,
 					     FILE *F_X,
 					     char *name,
-					     SXBOOLEAN is_static);
+					     bool is_static);
 
 /* Print on "F_X" the C text for the structure "header_ptr" */
 

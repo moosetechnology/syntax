@@ -36,19 +36,19 @@ static char	ME [] = "rcg_1rcg_2var";
 #include <stdlib.h>
 #include "sxmatrix2vector.h"
 
-char WHAT_RCG1RCG2VAR[] = "@(#)SYNTAX - $Id: rcg_1rcg_2var.c 3354 2023-06-12 12:12:32Z garavel $" WHAT_DEBUG;
+char WHAT_RCG1RCG2VAR[] = "@(#)SYNTAX - $Id: rcg_1rcg_2var.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 extern SXINT is_arg_in_Tstar (SXINT param);
 
 /* commun a -lbnf et -lfsa */
-static SXINT *nt2lhs_nb, *nt2rhs_nb; /* Cas is_print == SXFALSE */
+static SXINT *nt2lhs_nb, *nt2rhs_nb; /* Cas is_print == false */
 
 static char	lst_name [131];
 static FILE	*out_file;
 
 static SXINT	*clause2disp, *new_clause2disp, *new_clauses_body, *nt2clause_disp, *clause_disp2clause;
 static SXINT	new_max_rhs_prdct, new_prdct_nb, new_clauses_body_top, new_axiom, init_clause_nb;
-static SXBOOLEAN	to_be_memorized;
+static bool	to_be_memorized;
 static SXINT	*clause2clause2var_form;
 static SXINT	*clause2new_clause, *new_clause2rhs_disp, *new_clause2rhs_list, new_clause2rhs_list_top;
 
@@ -501,7 +501,7 @@ out_clause_nb (SXINT clause, SXINT nb)
 	fprintf (out_file, " %% %ld\n", (SXINT) nb);
 }
 
-static SXBOOLEAN
+static bool
 less_nt (SXINT nt1, SXINT nt2)
 {
     /* Ordre : predicat de l'utilisateur puis StrEq puis les predefinis */
@@ -510,13 +510,13 @@ less_nt (SXINT nt1, SXINT nt2)
 	    if (nt1 != STREQ_ic && nt2 != STREQ_ic)
 		return nt1 < nt2;
 
-	    return nt1 == STREQ_ic ? SXTRUE : SXFALSE;
+	    return nt1 == STREQ_ic ? true : false;
 	}
 
-	return SXFALSE;
+	return false;
     }
 
-    return (nt2 < 0) ? SXTRUE : (nt1 < nt2);
+    return (nt2 < 0) ? true : (nt1 < nt2);
 }
 
 static int
@@ -598,7 +598,7 @@ one_rcg (void)
   XH_header	XH_1rcg_clauses; /* INUTILE ds la version courante !! */
   SXBA	local_Ak_set, t_set, strlen_set;
   SXINT		*to_be_sorted, *var2new, *local_rhs_param, *call_pos;
-  SXBOOLEAN	rhs_ok, comment_clause, pushed, is_arg1, is_arg2, has_t;
+  bool	rhs_ok, comment_clause, pushed, is_arg1, is_arg2, has_t;
   SXINT		rhs_pos2lhs_pos_top, rhs_pos2disp_top, rhs_arg_pos, rhs_pos_1rcg;
   SXINT		lhs_cur2, lhs_param2, lhs_cur3, lhs_bot3, lhs_top3, list_elem, size, rhs_top3, rhs_cur3;
   SXINT		*guide_A2guide_Aclause, guide_lhs_nt, guide_rhs_nt;
@@ -610,7 +610,7 @@ one_rcg (void)
   SXBA          *left2right_prod_set, *right2left_prod_set;
   XH_header     prod_hd;
   SXINT           lognt, left_prod, right_prod, bot2, top2, xcur;
-  SXBOOLEAN       is_skipped;
+  bool       is_skipped;
 
   sxinitialise(right2left_prod_set); /* pour faire taire gcc -Wuninitialized */
   sxinitialise(left2right_prod_set); /* pour faire taire gcc -Wuninitialized */
@@ -621,7 +621,7 @@ one_rcg (void)
   if (max_garity == 1) {
     if (sxverbosep) {
       fputs ("This grammar is already a 1-RCG.\n", sxtty);
-      sxttycol1p = SXTRUE;
+      sxttycol1p = true;
     }
 
     return;
@@ -637,7 +637,7 @@ one_rcg (void)
        associee a e'te' reconnue. */
     if (sxverbosep) {
       fputs ("WARNING: Only simple k-RCGs, k > 1 can generate an lrprod file.\n", sxtty);
-      sxttycol1p = SXTRUE;
+      sxttycol1p = true;
     }
 
     return;
@@ -649,7 +649,7 @@ one_rcg (void)
     else
       fputs ("\t1-RCG .... ", sxtty);
 
-    sxttycol1p = SXFALSE;
+    sxttycol1p = false;
   }
 
   if (is_full_lex)
@@ -810,7 +810,7 @@ one_rcg (void)
       lhs_bot = XH_X (rcg_predicates, lhs_prdct);
       lhs_nt = XH_list_elem (rcg_predicates, lhs_bot+1);
 
-      has_t = SXFALSE;
+      has_t = false;
 
       rhs = XxY_Y (rcg_clauses, clause);
 
@@ -818,7 +818,7 @@ one_rcg (void)
 	   lhs_cur < lhs_top;
 	   lhs_pos++, lhs_cur++) {
 	lhs_param = XH_list_elem (rcg_predicates, lhs_cur);
-	rhs_ok = SXTRUE;
+	rhs_ok = true;
 	xcall = 0;
 
 	if (lhs_param > 0 && rhs > 0) {
@@ -849,18 +849,18 @@ one_rcg (void)
 		  else {
 		    /* Si l'un est neg et l'autre pos, on supprime la clause */
 		    if (call_kinds [x] != is_pos_call) {
-		      rhs_ok = SXFALSE;
+		      rhs_ok = false;
 		      break;
 		    }
 		  }
 		}
 	      }
 
-	      if (rhs_ok == SXFALSE)
+	      if (rhs_ok == false)
 		break;
 	    }
 	    else {
-	      pushed = SXFALSE;
+	      pushed = false;
 
 	      if (rhs_nt == STREQ_ic || rhs_nt == STREQLEN_ic) {
 		is_arg2 = is_sub_arg (lhs_param, rhs_param = XH_list_elem (rcg_predicates, rhs_bot2+3)) >= 0;
@@ -879,7 +879,7 @@ one_rcg (void)
 		    XH_push (local_prdct_calls, is_arg1 ? rhs_param1 : rhs_param);
 		  }
 
-		  pushed = SXTRUE;
+		  pushed = true;
 		}
 	      }
 	      else {
@@ -896,20 +896,20 @@ one_rcg (void)
 		      XH_push (local_prdct_calls, rhs_param1);
 
 		    XH_push (local_prdct_calls, rhs_param);
-		    pushed = SXTRUE;
+		    pushed = true;
 		  }
 		}
 		else {
 		  if (rhs_nt == FALSE_ic) {
 		    XH_push (local_prdct_calls, rhs_nt);
-		    pushed = SXTRUE;
+		    pushed = true;
 		  }
 		  else {
 		    if (rhs_nt == TRUE_ic) {
 		      if (is_sub_arg (lhs_param, rhs_param1 = XH_list_elem (rcg_predicates, rhs_bot2+2)) >= 0) {
 			XH_push (local_prdct_calls, rhs_nt);
 			XH_push (local_prdct_calls, rhs_param1);
-			pushed = SXTRUE;
+			pushed = true;
 		      }
 		    }
 		    else {
@@ -919,7 +919,7 @@ one_rcg (void)
 
 			for (rhs_cur3 = XH_X (rcg_parameters, rhs_param); rhs_cur3 < rhs_top3; rhs_cur3++) {
 			  symb = -XH_list_elem (rcg_parameters, rhs_cur3);
-			  has_t = SXTRUE;
+			  has_t = true;
 			  SXBA_1_bit (t_set, symb);
 			}
 		      }
@@ -938,7 +938,7 @@ one_rcg (void)
 		else {
 		  /* Si l'un est neg et l'autre pos, on supprime la clause */
 		  if (call_kinds [x] != is_pos_call) {
-		    rhs_ok = SXFALSE;
+		    rhs_ok = false;
 		    break;
 		  }
 		}
@@ -1069,7 +1069,7 @@ one_rcg (void)
 	  /* On peut generer 2 clauses identiques */
 	  /* On ne fait pas le test pour que le mapping inverse clause du guide -> (clause,k) du parser guide'
 	     soit une fonction */
-	  comment_clause = SXFALSE;
+	  comment_clause = false;
 
 	  if (comment_clause)
 	    fputs ("% ", out_file);
@@ -1084,7 +1084,7 @@ one_rcg (void)
 	  }
 
 	  if (lrprod_file) {
-	    is_skipped = SXFALSE;
+	    is_skipped = false;
 	    XH_push (prod_hd, guide_lhs_nt);
 
 	    if (lhs_param != 0) {
@@ -1137,7 +1137,7 @@ one_rcg (void)
 	      if (top2-bot2==1 && symb>0 && guide_lhs_nt == guide_rhs_nt) {
 		/* Loop */
 		/* La prod ne sera pas generee... */
-		is_skipped = SXTRUE;
+		is_skipped = true;
 		XH_pop (prod_hd, guide_rhs_nt);
 		XH_pop (prod_hd, guide_lhs_nt);
 	      }
@@ -1375,7 +1375,7 @@ one_rcg (void)
 
 		    if (symb > 0) {
 		      SXBA_1_bit (t_set, symb);
-		      has_t = SXTRUE;
+		      has_t = true;
 		    }
 		  }
 		}
@@ -1384,7 +1384,7 @@ one_rcg (void)
 	  }
 
 	  if (has_t) {
-	    has_t = SXFALSE;
+	    has_t = false;
 	    fputs ("&Lex(", out_file);
 	    symb = sxba_scan_reset (t_set, 0);
 
@@ -1582,14 +1582,14 @@ Chacune de ces productions peut etre gauche ou droite, la liste est terminee par
 
   if (sxverbosep) {
     fputs ("done\n", sxtty);
-    sxttycol1p = SXTRUE;
+    sxttycol1p = true;
   }
 }
 
 /* ******************************************************************************************************* */
 static SXINT	min_degree, cover_size;
 static SXBA	t_set, local_t_set, var_set, known_lgth_var_set;
-static SXBOOLEAN	is_t_set, is_local_t_set, has_known_lgth_var, block_extraction, previous_block_extraction;
+static bool	is_t_set, is_local_t_set, has_known_lgth_var, block_extraction, previous_block_extraction;
 
 static SXINT	arg2bot_top_top, arg2bot_top_size, new_var_nb;
 static SXINT	*pos2symb, *slice2disp, *slice2new_clause, *var2eq, *var2lgth, *var_stack, *equal_pair_stack, *streqlen_pair_stack;
@@ -1610,7 +1610,7 @@ static struct arg2bot_top {
 
 
 static void
-gen_symb (SXINT symb, SXBOOLEAN *is_first)
+gen_symb (SXINT symb, bool *is_first)
 {
     if (!to_be_memorized && !*is_first)
 	fputs (" ", out_file);
@@ -1624,15 +1624,15 @@ gen_symb (SXINT symb, SXBOOLEAN *is_first)
 	out_t_text (symb);
 
 	SXBA_1_bit (local_t_set, symb);
-	is_local_t_set = SXTRUE;
+	is_local_t_set = true;
     }
 
-    *is_first = SXFALSE;
+    *is_first = false;
 }
 
 
 static void
-gen_arg (SXINT bot, SXINT top, SXBOOLEAN *is_first)
+gen_arg (SXINT bot, SXINT top, bool *is_first)
 {
     SXINT pos;
 
@@ -1672,10 +1672,10 @@ get_super_var (SXINT lpos, SXINT rpos)
 
 
 static SXINT
-lhs_gen_or_degree (struct arg2bot_top *p, SXINT arity, SXBOOLEAN is_gen/* , is_main */)
+lhs_gen_or_degree (struct arg2bot_top *p, SXINT arity, bool is_gen/* , is_main */)
 {
     SXINT		degree, arg, pos, top, bot, cur, lpos, rpos, symb, eq, super_var_nb, eq_len;
-    SXBOOLEAN	is_first;
+    bool	is_first;
 	
     /* Le Mar  5 Dec 2000 13:45:09 */
     /* Les variables d'une eq dont toutes les tailles sont connues ne sont pas principales.
@@ -1697,7 +1697,7 @@ lhs_gen_or_degree (struct arg2bot_top *p, SXINT arity, SXBOOLEAN is_gen/* , is_m
     degree = 0;
 
     if (is_gen)
-	is_first = SXTRUE;
+	is_first = true;
     else
 	sxba_empty (eq_len_set);
 
@@ -1780,7 +1780,7 @@ lhs_gen_or_degree (struct arg2bot_top *p, SXINT arity, SXBOOLEAN is_gen/* , is_m
 				    fputs (" ", out_file);
 
 				out_var_text (super_var_nb);
-				is_first = SXFALSE;
+				is_first = false;
 			    }
 
 			    cur = rpos;
@@ -1887,7 +1887,7 @@ lhs_gen_or_degree (struct arg2bot_top *p, SXINT arity, SXBOOLEAN is_gen/* , is_m
 				fputs (" ", out_file);
 
 			    out_var_text (super_var_nb);
-			    is_first = SXFALSE;
+			    is_first = false;
 			}
 
 			pos = rpos+1;
@@ -2020,7 +2020,7 @@ clause_in_2var_form (SXINT clause)
     SXINT			symb, cur_eq, best_eq, pos, lpos, rhs, cur;
     SXINT			rhs_prdct, rhs_bot2, rhs_nt, rhs_top2, rhs_param, rhs_cur2, rhs_bot3, x, X, Y, rhs_pos; 
     struct arg2bot_top	*p;
-    SXBOOLEAN		is_main, OK, done, is_first, before, after;
+    bool		is_main, OK, done, is_first, before, after;
 
     for (cur_slice = 0, slice = 1; cur_slice < slice; cur_slice++) {
 	bot = slice2disp [cur_slice];
@@ -2074,21 +2074,21 @@ clause_in_2var_form (SXINT clause)
 	    if (eq2nb [eq]) {
 		/* Si toutes ses var ne sont pas connues */
 		SXBA_1_bit (best_eq_set, eq);
-		block_extraction = SXFALSE;
+		block_extraction = false;
 		best_eq = eq;
 		fill_local_eq_set (p, arity);
 
 		/* On calcule le degree pour eq */
-		degree = lhs_gen_or_degree (p, arity, SXFALSE/* , is_main */);
+		degree = lhs_gen_or_degree (p, arity, false/* , is_main */);
 
 		if (degree < min_degree) {
 		    min_degree = degree;
 		    sxba_copy (previous_best_eq_set, best_eq_set);
-		    previous_block_extraction = SXFALSE;
+		    previous_block_extraction = false;
 		}
 
 		/* On regarde s'il n'est pas plus avantageux d'extraire best_eq par supervar */
-		before = after = SXFALSE;
+		before = after = false;
 
 		for (arg = 0; arg < arity; arg++) {
 		    pos = p [arg].bot;
@@ -2115,7 +2115,7 @@ clause_in_2var_form (SXINT clause)
 					if (cur_eq == best_eq)
 					    break;
 
-					after = SXTRUE;
+					after = true;
 				    }
 				}
 
@@ -2132,7 +2132,7 @@ clause_in_2var_form (SXINT clause)
 				break;
 			    }
 
-			    before = SXTRUE;
+			    before = true;
 			}
 
 			pos++;
@@ -2143,11 +2143,11 @@ clause_in_2var_form (SXINT clause)
 		    /* Le Jeu  7 Jun 2001 11:47:02 */
 		    /* Au moins un bloc ds un arg va etre precede ou suivi d'une supervar */
 		    /* On remplit d'abord local_eq_set avec les eq des var qui seront des composants des supervar */
-		    block_extraction = SXTRUE;
+		    block_extraction = true;
 		    fill_local_eq_set (p, arity);
 
 		    /* On calcule le degree pour best_eq_set */
-		    degree = lhs_gen_or_degree (p, arity, SXFALSE/* , is_main */);
+		    degree = lhs_gen_or_degree (p, arity, false/* , is_main */);
 
 		}
 		else
@@ -2156,7 +2156,7 @@ clause_in_2var_form (SXINT clause)
 		if (degree < min_degree) {
 		    min_degree = degree;
 		    sxba_copy (previous_best_eq_set, best_eq_set);
-		    previous_block_extraction = SXTRUE;
+		    previous_block_extraction = true;
 		}
 
 		sxba_empty (best_eq_set);
@@ -2177,7 +2177,7 @@ clause_in_2var_form (SXINT clause)
 
 	fill_local_eq_set (p, arity);
 
-	lhs_gen_or_degree (p, arity, SXTRUE/* , is_main */);
+	lhs_gen_or_degree (p, arity, true/* , is_main */);
 
 	if (!to_be_memorized)
 	    fputs (") --> ", out_file);
@@ -2342,14 +2342,14 @@ clause_in_2var_form (SXINT clause)
 	   peut etre remonte' au niveau de A et servir a choisir entre les A_clauses */
 	/* Le 22/10/01, la generation des lex est gouvernee par l'option -is_full_lex */
 	if ((is_main || is_full_lex) && is_t_set) {
-	    is_first = SXTRUE;
+	    is_first = true;
 	    symb = 0;
 
 	    while ((symb = sxba_scan (t_set, symb)) > 0) {
 		if (is_full_lex || !SXBA_bit_is_set (local_t_set, symb)) {
 		    /* On genere du &Lex */
 		    if (is_first) {
-			is_first = SXFALSE;
+			is_first = false;
 
 			if (to_be_memorized)
 			    add_item (0);
@@ -2394,7 +2394,7 @@ clause_in_2var_form (SXINT clause)
 	    p = arg2bot_top + arg2bot_top_top - (cover_size);
 	    
 	    while (sxba_scan (cover_set, 0) > 0) {
-		done = SXFALSE;
+		done = false;
 		new_clause_nb++;
 		from2var2clause_list [++from2var2clause_list_top] = clause;
 		from2var2clause_disp [new_clause_nb+1] = from2var2clause_list_top+1;
@@ -2422,16 +2422,16 @@ clause_in_2var_form (SXINT clause)
 		sxba_empty (local_eq_set);
 
 		while (!done) {
-		    done = SXTRUE;
+		    done = true;
 		    x = 0;
 
 		    while ((x = sxba_scan (cover_set, x)) > 0) {
 			bot = cover [x].bot;
 			top = cover [x].top;
-			OK = SXFALSE;
+			OK = false;
 
 			if (arity == 0) {
-			    OK = SXTRUE;
+			    OK = true;
 			}
 			else {
 			    for (cur = bot; cur < top; cur++) {
@@ -2441,7 +2441,7 @@ clause_in_2var_form (SXINT clause)
 				    eq = var2eq [symb];
 
 				    if (SXBA_bit_is_set (local_eq_set, eq)) {
-					OK = SXTRUE;
+					OK = true;
 					break;
 				    }
 				}
@@ -2449,7 +2449,7 @@ clause_in_2var_form (SXINT clause)
 			}
 
 			if (OK) {
-			    done = SXFALSE;
+			    done = false;
 
 			    for (cur = bot; cur < top; cur++) {
 				symb = pos2symb [cur];
@@ -2503,7 +2503,7 @@ clause_in_2var_form (SXINT clause)
 	new_clause2rhs_disp [slice2new_clause [cur_slice]+1] = new_clause2rhs_list_top;
 
 	if (is_local_t_set) {
-	    is_local_t_set = SXFALSE;
+	    is_local_t_set = false;
 	    sxba_empty (local_t_set);
 	}
     }
@@ -2595,13 +2595,13 @@ process_equal_pair_stack (void)
     /* equal_pair_stack contient des couples de variables de taille egale */
     /* Ca permet de completer known_lgth_var_set */
     SXINT		top, X, Y;
-    SXBOOLEAN 	done;
+    bool 	done;
 
 
-    done = SXFALSE;
+    done = false;
 
     while (!done) {
-	done = SXTRUE;
+	done = true;
 
 	top = equal_pair_stack [0];
 
@@ -2614,15 +2614,15 @@ process_equal_pair_stack (void)
 		X = -X;
 
 	    if (SXBA_bit_is_set (known_lgth_var_set, X) && SXBA_bit_is_reset_set (known_lgth_var_set, Y)) {
-		has_known_lgth_var = SXTRUE;
+		has_known_lgth_var = true;
 		var2lgth [Y] = var2lgth [X];
-		done = SXFALSE;
+		done = false;
 	    }
 
 	    if (SXBA_bit_is_set (known_lgth_var_set, Y) && SXBA_bit_is_reset_set (known_lgth_var_set, X)) {
-		has_known_lgth_var = SXTRUE;
+		has_known_lgth_var = true;
 		var2lgth [X] = var2lgth [Y];
-		done = SXFALSE;
+		done = false;
 	    }
 	}
     }
@@ -2656,12 +2656,12 @@ two_var_form (void)
     SXINT		lhs_top2, lhs_arity, lhs_pos, lhs_arg, lhs_cur2, lhs_bot3, lhs_top3, lhs_cur3, rhs_top, rhs_cur;
     SXINT		rhs_top2, k, rhs_cur2, lgth, high, low, I, J, IJ, top, size;
     SXINT		new_clause;
-    SXBOOLEAN	is_pos_call;
+    bool	is_pos_call;
 
     if (max_gvar <= 2) {
 	if (sxverbosep) {
 	    fputs ("This grammar is already in 2-var form.\n", sxtty);
-	    sxttycol1p = SXTRUE;
+	    sxttycol1p = true;
 	}
 
 	/* Il faudrait faire qqchose ds gen_parser pour accepter ici "return;" */
@@ -2670,7 +2670,7 @@ two_var_form (void)
 
     if (sxverbosep) {
 	fputs ("\t2var_form .... ", sxtty);
-	sxttycol1p = SXFALSE;
+	sxttycol1p = false;
     }
 
     if (is_full_lex)
@@ -2755,7 +2755,7 @@ two_var_form (void)
 	clause2disp [1] = new_clause_nb+1;
 	new_clause2disp [new_clause_nb+1] = 1;
 
-	to_be_memorized = SXTRUE;
+	to_be_memorized = true;
     }
 
     MAX_DEGREE = sv_weight*(max_gvar+1);
@@ -2799,7 +2799,7 @@ two_var_form (void)
 			else {
 			    symb = -symb;
 			    SXBA_1_bit (t_set, symb);
-			    is_t_set = SXTRUE;
+			    is_t_set = true;
 			}
 		    }
 		}
@@ -2808,14 +2808,14 @@ two_var_form (void)
 		arg2bot_top [lhs_arg].top = lhs_pos;
 	    }
 
-	    is_combinatorial = SXFALSE;
+	    is_combinatorial = false;
 
 	    /* On va chercher en RHS toutes les variables dont on connait la longueur : il n'est pas necessaire
 	       de les decompter */
 	    rhs = XxY_Y (rcg_clauses, clause);
 	    rhs_top = XH_X (rcg_rhs, rhs+1);
 	    rhs_cur = XH_X (rcg_rhs, rhs);
-	    has_known_lgth_var = SXFALSE;
+	    has_known_lgth_var = false;
 
 	    while (!is_combinatorial && (rhs_cur < rhs_top)) {
 		rhs_prdct = XH_list_elem (rcg_rhs, rhs_cur);
@@ -2835,12 +2835,12 @@ two_var_form (void)
 			    Ak = A_k2Ak (rhs_nt, k);
 
 			    if ((lgth = Ak2len [Ak]) != -1 && SXBA_bit_is_reset_set (known_lgth_var_set, symb)) {
-				has_known_lgth_var = SXTRUE;
+				has_known_lgth_var = true;
 				var2lgth [symb] = lgth;
 			    }
 			}
 			else
-			    is_combinatorial = SXTRUE;
+			    is_combinatorial = true;
 		    }
 
 		    if (k > 1 && !is_combinatorial) {
@@ -2886,7 +2886,7 @@ two_var_form (void)
 			    if (is_pos_call) {
 				if (rhs_nt == STRLEN_ic) {
 				    if (SXBA_bit_is_reset_set (known_lgth_var_set, symb)) {
-					has_known_lgth_var = SXTRUE;
+					has_known_lgth_var = true;
 					var2lgth [symb] = XH_list_elem (rcg_parameters,
 									XH_X (rcg_parameters,
 									      XH_list_elem (rcg_predicates, rhs_bot2+2)));
@@ -2900,7 +2900,7 @@ two_var_form (void)
 			    }
 			}
 			else
-			    is_combinatorial = SXTRUE;
+			    is_combinatorial = true;
 
 			if (!is_combinatorial && (rhs_nt == STREQ_ic || rhs_nt == STREQLEN_ic)) {
 			    rhs_param = XH_list_elem (rcg_predicates, rhs_bot2+2);
@@ -2922,14 +2922,14 @@ two_var_form (void)
 				    PUSH (equal_pair_stack, symb);
 			    }
 			    else
-				is_combinatorial = SXTRUE;
+				is_combinatorial = true;
 			}
 		    }
 		    else {
 			if (rhs_nt == LEX_ic) {
 			    /* On complete t_set */
 			    /* A FAIRE : le completer aussi pour les &First, &Last et &StrEq spe'ciaux */
-			    is_t_set = SXTRUE;
+			    is_t_set = true;
 			    rhs_param = XH_list_elem (rcg_predicates, rhs_bot2+2);
 			    rhs_bot3 = XH_X (rcg_parameters, rhs_param);
 			    rhs_top3 = XH_X (rcg_parameters, rhs_param+1);
@@ -2941,7 +2941,7 @@ two_var_form (void)
 			}
 			else {
 			    if (rhs_nt == FALSE_ic)
-				is_combinatorial = SXTRUE; /* inutile de la passer a la moulinette */
+				is_combinatorial = true; /* inutile de la passer a la moulinette */
 			}
 		    }
 		}
@@ -2967,10 +2967,10 @@ two_var_form (void)
 		    symb2 = streqlen_pair_stack [top-1];
 
 		    if (symb2 > 0)
-			is_pos_call = SXTRUE;
+			is_pos_call = true;
 		    else {
 			symb2 = -symb2;
-			is_pos_call = SXFALSE;
+			is_pos_call = false;
 		    }
 
 		    if (!SXBA_bit_is_set (known_lgth_var_set, symb1)) {
@@ -3024,7 +3024,7 @@ two_var_form (void)
 	    equal_pair_stack [0] = 0;
 
 	    if (is_t_set) {
-		is_t_set = SXFALSE;
+		is_t_set = false;
 		sxba_empty (t_set);
 	    }
 
@@ -3074,16 +3074,16 @@ two_var_form (void)
     
     if (sxverbosep) {
 	fputs ("done\n", sxtty);
-	sxttycol1p = SXTRUE;
+	sxttycol1p = true;
     }
 
     if (is_factorize) {
 	if (sxverbosep) {
 	    fputs ("\t\tfactorize .... ", sxtty);
-	    sxttycol1p = SXFALSE;
+	    sxttycol1p = false;
 	}
 
-	to_be_memorized = SXFALSE;
+	to_be_memorized = false;
 
 	process_clause_equiv ();
 
@@ -3100,7 +3100,7 @@ two_var_form (void)
 
 	if (sxverbosep) {
 	    fputs ("done\n", sxtty);
-	    sxttycol1p = SXTRUE;
+	    sxttycol1p = true;
 	}
     }
 
@@ -3180,7 +3180,7 @@ two_var_form (void)
 
     if (sxverbosep && last_clause == new_clause_nb) {
 	fprintf (sxtty, "WARNING: The input RCG is already in 2-var form; \"%s\", the generated RCG is useless.\n", lst_name);
-	sxttycol1p = SXTRUE;
+	sxttycol1p = true;
     }
 }
 
@@ -3347,7 +3347,7 @@ normal_form (void)
 }
 
 
-static SXBOOLEAN
+static bool
 is_pseudo_equiv (void)
 {
     SXINT		new_clause, nf_clause, prev_clause, l, lhs;
@@ -3398,7 +3398,7 @@ is_pseudo_equiv (void)
     return nf_clause < new_clause_nb;
 }
 
-static SXBOOLEAN
+static bool
 is_clause1_eq_clause2 (SXINT clause1, SXINT clause2)
 {
     /* 2 clauses sont equivalentes ssi elles sont pseudo equivalentes et si tous les noms des predicats
@@ -3416,11 +3416,11 @@ is_clause1_eq_clause2 (SXINT clause1, SXINT clause2)
 	    nt2 = new_clause_rhs_nts [cur2]; /* nt2 > 0 */
 
 	    if (nt1 != nt2 && nt2ident [nt1] != nt2ident [nt2])
-		return SXFALSE;
+		return false;
 	}
     }
 
-    return SXTRUE;
+    return true;
 }
 
 static void
@@ -3458,11 +3458,11 @@ put_in_eq (SXINT *eq, SXINT *eq_list, SXINT it1, SXINT it2)
     } while (it2 > prev_x1);
 }
 
-static SXBOOLEAN
+static bool
 is_nt1_eq_nt2 (SXINT nt1, SXINT nt2)
 {
     SXINT		bot1, cur1, top1, bot2, cur2, top2, clause1, clause2, nb1, nb2;
-    SXBOOLEAN	ret_val;
+    bool	ret_val;
 
     /* Toutes les nt1-clauses et les nt2-clauses ont des equivalents */
     /* Sont-ce les memes ? */
@@ -3526,7 +3526,7 @@ process_clause_equiv (void)
     /* "suppression" des noms de predicats internes utilisateur ou construits par la mise en forme 2var */
     SXINT		nt, clause, lhs_nt, next, clause1, clause2, nt1, nt2, nb1, top, next1, next2;
     SXINT		*clause_stack;
-    SXBOOLEAN	done, has_eq;
+    bool	done, has_eq;
 
     nf_clause2lhs = (SXINT *) sxalloc (new_clause_nb+1, sizeof (SXINT));
     nf_clause2rhs = (SXINT *) sxalloc (new_clause_nb+1, sizeof (SXINT));
@@ -3580,10 +3580,10 @@ process_clause_equiv (void)
 		clause_disp2clause [nt2clause_disp [lhs_nt+1]++] = clause;
 	}
 
-	done = SXFALSE;
+	done = false;
 
 	while (!done) {
-	    done = SXTRUE;
+	    done = true;
 	    clause = 0;
 
 	    while ((clause = sxba_scan (pseudo_equiv_hd_set, clause)) > 0) {
@@ -3591,7 +3591,7 @@ process_clause_equiv (void)
 
 		for (clause1 = clause; next > 0; clause1 = next, next = clause2next [next]) {
 		    if (clause2eq [clause1] == clause1) {
-			has_eq = SXFALSE;
+			has_eq = false;
 			
 			for (clause2 = next; clause2 > 0; clause2 = clause2next [clause2]) {
 			    if (clause2eq [clause2] == clause2) {
@@ -3600,7 +3600,7 @@ process_clause_equiv (void)
 				if (is_clause1_eq_clause2 (clause1, clause2)) {
 				    /* On enregistre que clause2eq [clause1] et clause2eq [clause2] sont 2 clauses equivalentes
 				       (ayant meme partie droite et des LHS args compatibles) */
-				    has_eq = SXTRUE;
+				    has_eq = true;
 				    nt1 = clause2lhs_nt [clause1];
 				    nt2 = clause2lhs_nt [clause2];
 
@@ -3650,7 +3650,7 @@ process_clause_equiv (void)
 				if (nt1 == nt2) {
 				    /* Ici, les A-clauses clause1 et clause2 sont egales */
 #if 0
-				    has_identical_clauses = SXTRUE;
+				    has_identical_clauses = true;
 
 				    if (check_set) {
 					sxerror (clause2visited [clause2]->token.source_index,
@@ -3679,8 +3679,8 @@ process_clause_equiv (void)
 					if (is_nt1_eq_nt2 (nt1, nt2)) {
 					    /* nt1 et nt2 sont equivalents */
 #if 0
-					    has_identical_clauses = SXTRUE;
-					    has_identical_nts = SXTRUE;
+					    has_identical_clauses = true;
+					    has_identical_nts = true;
 
 					    if (nt1 > max_nt) {
 						fprintf (out_file, "clause_%ld_%ld",
@@ -3701,7 +3701,7 @@ process_clause_equiv (void)
 					    fprintf (out_file, "(nt2 = %ld) are equivalent.\n", nt2);
 #endif
 
-					    done = SXFALSE;
+					    done = false;
 					    put_in_eq (nt2ident, nt2ident_list, nt1, nt2);
 					}
 
@@ -3741,10 +3741,10 @@ process_clause_equiv (void)
 }
 
 static SXINT
-print_new_prdct (SXBOOLEAN is_lhs, SXINT cur)
+print_new_prdct (bool is_lhs, SXINT cur)
 {
     SXINT 	call_kind, nt, symb;
-    SXBOOLEAN 	is_strlen;
+    bool 	is_strlen;
 
     call_kind = new_clauses_body [cur++];
     fprintf (out_file, "%s", (call_kind == 0) ? "" : "!");
@@ -3772,7 +3772,7 @@ print_new_prdct (SXBOOLEAN is_lhs, SXINT cur)
 	if (symb != EOA) {
 	    if (symb >= 0) {
 		if (is_strlen) {
-		    is_strlen = SXFALSE;
+		    is_strlen = false;
 		    fprintf (out_file, "%ld", (SXINT) symb);
 		}
 		else
@@ -3801,11 +3801,11 @@ print_new_clause (SXINT bot, SXINT top)
 {
     SXINT cur;
 
-    cur = print_new_prdct (SXTRUE, bot);
+    cur = print_new_prdct (true, bot);
     fputs ("--> ", out_file);
 
     while (cur < top) {
-	cur = print_new_prdct (SXFALSE, cur);
+	cur = print_new_prdct (false, cur);
     }
 
     fprintf (out_file, ". %% %ld\n", (SXINT) new_clause_nb);
@@ -3817,7 +3817,7 @@ static void
 print_new_clauses (void)
 {
     SXINT		clause, new_clause_top, new_clause, bot, lhs_nt, top;
-    SXBOOLEAN	is_first;
+    bool	is_first;
     SXINT		*new_clause2lnk, *lnk2clause, *lnk2lnk, lnk, lnk_top, clo;
 
     new_clause2lnk = (SXINT*) sxalloc (new_clause_nb+1, sizeof (SXINT));
@@ -3853,7 +3853,7 @@ print_new_clauses (void)
 	fprintf (out_file, "\n%% %ld: ", (SXINT) clause);
 	out_clause (clause);
 	new_clause_top = clause2disp [clause+1];
-	is_first = SXTRUE;
+	is_first = true;
 
 	for (new_clause = clause2disp [clause]; new_clause < new_clause_top; new_clause++) {
 	    bot = new_clause2disp [new_clause];
@@ -3866,7 +3866,7 @@ print_new_clauses (void)
 		print_new_clause (bot, top);
 
 		if (is_first) {
-		    is_first = SXFALSE;
+		    is_first = false;
 		    clause2clause2var_form [clause] = new_clause_nb;
 		}
 
@@ -4080,11 +4080,11 @@ do_reduction (void)
 
 /* ********************************************************************************** */
 /* LRFSA */
-#define is_fsa2rcg SXFALSE
+#define is_fsa2rcg false
 
 /* Les essais ont montre que ca marchait mieux ... */
-#define process_single_transition SXFALSE
-#define is_early_cycle_erasing SXTRUE
+#define process_single_transition false
+#define is_early_cycle_erasing true
 
 /* h_value : hauteur de la pile pour construire un fsa a partir d'une simulation du pda */
 /* lfsa_file : l'automate lira le source de la gauche vers la droite et notera les bornes sup des reductions */
@@ -4101,13 +4101,13 @@ do_reduction (void)
 /* S'il reste des transitions sur 0, lors du passage fsa->RCG, elles ne generent aucun "shift" */
 
 
-static SXBOOLEAN is_bnf_in_reverse, fsa_has_reduction;
+static bool is_bnf_in_reverse, fsa_has_reduction;
 
 static SXBA    useless_clause_set, shallow_set, eps_clause_set;
 static SXBA    *clause2lex_set;
 static SXBA    clause_has_lex;
 static SXBA    *state2look_ahead_set;
-static SXBOOLEAN has_null_trans, is_deterministic;
+static bool has_null_trans, is_deterministic;
 static SXINT     tmax, ntmax, last_prod;
 
 static struct bnf {
@@ -4145,11 +4145,11 @@ static XH_header mtrans_hd;
 static  SXBA lex_set, prod_set;
 
 
-static SXBOOLEAN
+static bool
 fill_lex_set (SXINT clause, SXBA fill_lex_set_lex_set)
 {
   SXINT prdct, bot2, param, cur3, top3, symb, rhs, cur, top;
-  SXBOOLEAN result = SXFALSE;
+  bool result = false;
 
   if (clause) {
     prdct = XxY_X (rcg_clauses, clause) & lhs_prdct_filter;
@@ -4165,7 +4165,7 @@ fill_lex_set (SXINT clause, SXBA fill_lex_set_lex_set)
 	if (symb < 0) {
 	  symb = -symb;
 	  SXBA_1_bit (fill_lex_set_lex_set, symb);
-	  result = SXTRUE;
+	  result = true;
 	}
       }
     }
@@ -4189,7 +4189,7 @@ fill_lex_set (SXINT clause, SXBA fill_lex_set_lex_set)
 	  for (cur3 = XH_X (rcg_parameters, param); cur3 < top3; cur3++) {
 	    symb = -XH_list_elem (rcg_parameters, cur3);
 	    SXBA_1_bit (fill_lex_set_lex_set, symb);
-	    result = SXTRUE;
+	    result = true;
 	  }
 	}
       }
@@ -4238,7 +4238,7 @@ free_bnf (struct bnf free_bnf_bnf)
   sxfree (free_bnf_bnf.action), free_bnf_bnf.action = NULL;
 }
 
-static void rcg2bnf (SXBOOLEAN is_print);
+static void rcg2bnf (bool is_print);
 
 /* Cette procedure transforme une 1_RCG simple en une CFG a la SYNTAX */
 static void 
@@ -4291,7 +4291,7 @@ simple1_rcg2cfg (void)
   bnf.nbpro = 0;
 
   /* Il faut "calculer" la meme bnf que ds le cas -lbnf -rbnf */
-  rcg2bnf (SXFALSE /* On met ds bnf */);
+  rcg2bnf (false /* On met ds bnf */);
 
 #if 0
   {
@@ -4528,7 +4528,7 @@ reduce (SXINT s, SXINT pi, SXINT delta, SXINT prod)
 	X = A;
 
 	if (shallow_set != NULL && !SXBA_bit_is_set (shallow_set, A)) {
-	  has_null_trans = SXTRUE;
+	  has_null_trans = true;
 	  X = 0;
 	}
       }
@@ -4538,7 +4538,7 @@ reduce (SXINT s, SXINT pi, SXINT delta, SXINT prod)
 	/* Transition entre pi et piq sur la prod X */
 
 	if (useless_clause_set && SXBA_bit_is_set (useless_clause_set, X)) {
-	  has_null_trans = SXTRUE;
+	  has_null_trans = true;
 	  X = 0;
 	}
 	else {
@@ -4584,7 +4584,7 @@ reduce (SXINT s, SXINT pi, SXINT delta, SXINT prod)
 	X = A;
 
 	if (shallow_set != NULL && !SXBA_bit_is_set (shallow_set, A)) {
-	  has_null_trans = SXTRUE;
+	  has_null_trans = true;
 	  X = 0;
 	}
       }
@@ -4593,7 +4593,7 @@ reduce (SXINT s, SXINT pi, SXINT delta, SXINT prod)
 	/* Transition entre pi et piq sur la prod X */
 
 	if (useless_clause_set && SXBA_bit_is_set (useless_clause_set, X)) {
-	  has_null_trans = SXTRUE;
+	  has_null_trans = true;
 	  X = 0;
 	}
 	else {
@@ -4855,7 +4855,7 @@ LC0_automaton (void)
 static SXINT	limitem, limt, limnt;
 static SXINT	*tsymb1, *items_list, *nt_stack;
 static SXBA	nt_set;
-static SXBOOLEAN	is_t_trans, is_nt_trans;
+static bool	is_t_trans, is_nt_trans;
 
 static	void
 mettre (SXINT item)
@@ -4870,13 +4870,13 @@ mettre (SXINT item)
       /* Nouvelle sous_liste */
       if (tnt > 0) {
 	if (SXBA_bit_is_reset_set (nt_set, tnt)) {
-	  is_nt_trans = SXTRUE;
+	  is_nt_trans = true;
 	  nt_stack [(*nt_stack)++] = tnt;
 	}
       }
       else {
 	SXBA_1_bit (t_set, -tnt);
-	is_t_trans = SXTRUE;
+	is_t_trans = true;
       }
     }
   }
@@ -4918,7 +4918,7 @@ LR0_automaton (void)
   XH_set (&nucleus_hd, &pda_init_state);
 
   for (xac1 = 1; xac1 < XH_top (nucleus_hd); xac1++) {
-    is_t_trans = is_nt_trans = SXFALSE;
+    is_t_trans = is_nt_trans = false;
 	    
     /* Fermeture. */
     for (lim = XH_X (nucleus_hd, xac1 + 1), x = XH_X (nucleus_hd, xac1); x < lim; x++) {
@@ -5017,7 +5017,7 @@ LR0_automaton (void)
 /* Nouvelle version de fermer dans laquelle la relation est d'abord partitionnee en morceaux connexes */
 static SXBA *R, *F, R_deja_traite, *C, used_p2c, used_c;
 static SXINT *p2kind, *p2c, *c2p, *c2kind;
-static SXBOOLEAN R_is_cyclic, appel_a_fermer;
+static bool R_is_cyclic, appel_a_fermer;
 
 /* Si c n'est pas deja un cycle, on cree un nouveau cycle de representant p */
 static SXINT
@@ -5130,7 +5130,7 @@ is_cyclic (SXINT p)
 
     if (qkind == 1) {
       /* detection d'un cycle sur q qui contient p -> q */
-      R_is_cyclic = SXTRUE;
+      R_is_cyclic = true;
 
       *pqkind = 2; /* On depilera jusqu'a q */
       cq = create_new_cycle (q, cq); /* Ne cree un nouvel identifiant de cycle que si cq==0 
@@ -5185,7 +5185,7 @@ is_cyclic (SXINT p)
 /* M [0..size-1, 0..size-1] */
 /* Si cycle_nb > 0 F [0..cycle_nb-1, 0..size-1] */
 /* F [i, j] <=> il y a un cycle passant par i et j */
-/* Si appel_a_fermer est SXTRUE, retourne ds F la fermeture transitive de M */
+/* Si appel_a_fermer est true, retourne ds F la fermeture transitive de M */
 /* Attention si i et j sont ds un cycle, les lignes F[i] et F[j] sont partagees */
 static SXBA*
 R_cycle (SXBA *M, SXINT size, SXINT *nb_de_cycles)
@@ -5211,7 +5211,7 @@ R_cycle (SXBA *M, SXINT size, SXINT *nb_de_cycles)
   c2kind = (SXINT*) sxcalloc (size, sizeof (SXINT));
   
   R = M;
-  R_is_cyclic = SXFALSE;
+  R_is_cyclic = false;
 
   i = -1;
 
@@ -5341,7 +5341,7 @@ static void
 ndfsa2nfndfsa (void)
 {
   SXINT             nfstate, state, p, X, nfq, q, triple, foo, nfndfsa_state_nb, nfndfsa_init_state;
-  SXBOOLEAN         is_first;
+  bool         is_first;
   SXINT             *nfstate2state, *state2nfstate;
   SXBA            closure, nfndfsa_final_state_set;
   XxYxZ_header    nfndfsa_hd;
@@ -5357,7 +5357,7 @@ ndfsa2nfndfsa (void)
 
   for (nfstate = 1; nfstate <= nfndfsa_state_nb; nfstate++) {
     state = nfstate2state [nfstate];
-    is_first = SXTRUE;
+    is_first = true;
     p = state;
 
     do {
@@ -5381,7 +5381,7 @@ ndfsa2nfndfsa (void)
       }
 
       if (is_first) {
-	is_first = SXFALSE;
+	is_first = false;
 	closure = NULL_RED [p];
 	p = 0;
       }
@@ -5516,14 +5516,14 @@ ndfsa2dfsa (void)
 
 static SXINT *pt2p2, *pred2p2;
 
-static SXBOOLEAN
+static bool
 k_equiv (void)
 {
   /* Les k-1 equivalences sont ds marked et dfsa2eq */
   /* remplit les k equivalences ds marked et dfsa2eq */
   /* Retourne true si k \neq k-1 */
   SXINT p, triple, X, p2, q, q2, prevp, prevq, new_repr, new_prevq, nextp, nextq;
-  SXBOOLEAN has_changed = SXFALSE, is_first, p_kequiv;
+  bool has_changed = false, is_first, p_kequiv;
 
   sxinitialise(new_prevq); /* pour faire taire gcc -Wuninitialized */
   nextp = marked [prevp = 0].glbl;
@@ -5532,7 +5532,7 @@ k_equiv (void)
     nextp = marked [p = nextp].glbl;
 
     new_repr = 0;
-    p_kequiv = SXFALSE;
+    p_kequiv = false;
 
     do {
       XxYxZ_Xforeach (dfsa_hd, p, triple) {
@@ -5555,10 +5555,10 @@ k_equiv (void)
 
 	/* On regarde si p et q sont k-equivalents */
 	/* On commence par regarder s'ils ont les memes transitions */
-	is_first = SXTRUE;
+	is_first = true;
 
 	XxYxZ_Xforeach (dfsa_hd, q, triple) {
-	  is_first = SXFALSE;
+	  is_first = false;
 	  X = XxYxZ_Y (dfsa_hd, triple);
 	  q2 = dfsa2eq [XxYxZ_Z (dfsa_hd, triple)];
 
@@ -5572,7 +5572,7 @@ k_equiv (void)
 	  /* dfsa2eq [q] = p; deja fait */
 	  marked [prevq].local = q;
 	  prevq = q;
-	  p_kequiv = SXTRUE;
+	  p_kequiv = true;
 	}
 	else {
 	  if (new_repr) {
@@ -5593,7 +5593,7 @@ k_equiv (void)
       if (new_repr) {
 	/* Il y a des k-1_equiv qui ne sont pas k_equiv */
 	/* la liste est ds new_repr */
-	has_changed = SXTRUE;
+	has_changed = true;
 
 	q = new_repr;
 
@@ -5621,7 +5621,7 @@ static void
 dfsa2min_fsa (void)
 {
   SXINT p, triple, X, i, pt, dfsa2min_fsa_pred, q, p2, q2, foo, prevp, prevq;
-  SXBOOLEAN p_0equiv;
+  bool p_0equiv;
   SXINT *dfsa_state2t_trans, *dfsa_state2red_trans, *dfsa2fsa;
   SXBA wset, xprod_set;
   XH_header dfsa_trans;
@@ -5697,7 +5697,7 @@ dfsa2min_fsa (void)
     p = 0;
 
     while ((p = sxba_scan_reset (wset, p)) > 0) {
-      p_0equiv = SXFALSE;
+      p_0equiv = false;
       pt = dfsa_state2t_trans [p];
       dfsa2min_fsa_pred = dfsa_state2red_trans [p];
 
@@ -5713,7 +5713,7 @@ dfsa2min_fsa (void)
 	  marked [q].glbl = marked [q].local = 0;
 	  marked [prevq].local = q;
 	  prevq = q;
-	  p_0equiv = SXTRUE;
+	  p_0equiv = true;
 	}
       }
 
@@ -5746,7 +5746,7 @@ dfsa2min_fsa (void)
 
   fsa_init_state = dfsa_init_state;
   fsa_state_nb = 0;
-  fsa_has_reduction = SXFALSE;
+  fsa_has_reduction = false;
 
   for (p = 1; p <= dfsa_state_nb; p++) {
     if (dfsa2eq [p] == p) {
@@ -5758,7 +5758,7 @@ dfsa2min_fsa (void)
 
       XxYxZ_Xforeach (dfsa_hd, p, triple) {
 	X = XxYxZ_Y (dfsa_hd, triple);
-	if (X >= 0) fsa_has_reduction = SXTRUE;
+	if (X >= 0) fsa_has_reduction = true;
 	q = dfsa2eq [XxYxZ_Z (dfsa_hd, triple)];
 
 	if ((q2 = dfsa2fsa [q]) == 0)
@@ -5775,7 +5775,7 @@ dfsa2min_fsa (void)
 
 
 /* Elimine les cycles de reductions du fsa, que ces red produisent ou non le vide */
-static SXBOOLEAN
+static bool
 cycle_erasing (SXINT *state_nb, SXINT *init_state, SXBA *final_state_set, XxYxZ_header *automaton, SXINT *assoc_list)
 {
   /* Il faut calculer le nb de cycles et la taille cumulee des cycles pour connaitre
@@ -5789,7 +5789,7 @@ cycle_erasing (SXINT *state_nb, SXINT *init_state, SXBA *final_state_set, XxYxZ_
   fill_CRED (*state_nb, *automaton);
 
   /* L'automate non cyclique est deterministe a priori */
-  is_deterministic = SXTRUE;
+  is_deterministic = true;
 
   if (R_nb_de_cycles) {
     /* On refabrique un fsa sans cycle sur les reduces */
@@ -5884,7 +5884,7 @@ cycle_erasing (SXINT *state_nb, SXINT *init_state, SXBA *final_state_set, XxYxZ_
 		  X = -X;
 
 		  if (!SXBA_bit_is_reset_set (cycle_erasing_t_set, X))
-		    is_deterministic = SXFALSE;
+		    is_deterministic = false;
 		}
 		else {
 #if EBUG
@@ -5893,7 +5893,7 @@ cycle_erasing (SXINT *state_nb, SXINT *init_state, SXBA *final_state_set, XxYxZ_
 #endif
 
 		  if (!SXBA_bit_is_reset_set (prod2_set, X))
-		    is_deterministic = SXFALSE;
+		    is_deterministic = false;
 		}
 	      }
 	    }
@@ -5949,7 +5949,7 @@ cycle_erasing (SXINT *state_nb, SXINT *init_state, SXBA *final_state_set, XxYxZ_
 #if EBUG
     if (sxverbosep) {
       fprintf (sxtty, " %ld cycles over %ld states ", R_nb_de_cycles, cycle_sizes);
-      sxttycol1p = SXFALSE;
+      sxttycol1p = false;
     }
 
     if (ncfsa_state_nb != size)
@@ -5992,7 +5992,7 @@ reduce_fsa (void)
   SXINT *q2trans_nb;
   SXBA state_set, state_set2, xprod_set, *mtrans2xprod_set, *S_RED = NULL, lower_set, upper_set;
   XxYxZ_header    ncfsa_hd;
-  SXBOOLEAN is_multiple, must_shrink = SXFALSE, is_final;
+  bool is_multiple, must_shrink = false, is_final;
 
   sxinitialise(sq); /* pour faire taire gcc -Wuninitialized */
   sxinitialise(upper_set); /* pour faire taire gcc -Wuninitialized */
@@ -6036,7 +6036,7 @@ reduce_fsa (void)
       }
     }
 
-    is_multiple = SXFALSE;
+    is_multiple = false;
     trans_nb = 0;
 
     XxYxZ_Xforeach (fsa_hd, p, triple) {
@@ -6051,7 +6051,7 @@ reduce_fsa (void)
 	SXBA_0_bit (state_set, q);
 
 	if (SXBA_bit_is_set (state_set2, q)) {
-	  is_multiple = SXTRUE;
+	  is_multiple = true;
 	  xprod_set = mtrans2xprod_set [q2trans_nb [q]];
 	  SXBA_1_bit (xprod_set, X);
 	}
@@ -6109,7 +6109,7 @@ reduce_fsa (void)
       if (!must_shrink) {
 	if (SXBA_bit_is_set (upper_set, p) || SXBA_bit_is_set (lower_set, sq))
 	  /* Il existe au moins un chemin de longueur 2 */
-	  must_shrink = SXTRUE;
+	  must_shrink = true;
 
 	SXBA_1_bit (lower_set, p);
 	SXBA_1_bit (upper_set, sq);
@@ -6156,11 +6156,11 @@ reduce_fsa (void)
 	/* Les transitions depuis p doivent etre factorisees */
 	/* On cherche le bout de la chaine en cumulant les reduces (attention
 	   elles peuvent deja etre multiples) */
-	is_final = SXFALSE;
+	is_final = false;
 
 	do {
 	  if (SXBA_bit_is_set (fsa_final_state_set, p))
-	    is_final = SXTRUE;
+	    is_final = true;
 
 	  XxYxZ_Xforeach (fsa_hd, p, triple) {
 	    q = XxYxZ_Z (fsa_hd, triple);
@@ -6285,7 +6285,7 @@ look_ahead (SXINT p)
 
 #if 0
 
-static SXBOOLEAN has_lex;
+static bool has_lex;
 static VARSTR varstr;
 
 
@@ -6293,7 +6293,7 @@ static void
 gen_Lex (SXBA lex_set)
 {
   SXINT symb;
-  SXBOOLEAN is_first = SXTRUE;
+  bool is_first = true;
 
   if ((symb = sxba_scan (lex_set, 0)) > 0) {
     print_nt (LEX_ic);
@@ -6301,7 +6301,7 @@ gen_Lex (SXBA lex_set)
 
     do {
       if (is_first)
-	is_first = SXFALSE;
+	is_first = false;
       else
 	fputs (" ", out_file);
 
@@ -6314,12 +6314,12 @@ gen_Lex (SXBA lex_set)
 
 
 static VARSTR
-get_UBs (SXINT t, SXBOOLEAN *has_UBs)
+get_UBs (SXINT t, bool *has_UBs)
 {
   SXINT clause, cur, bot, top;
   char string [16];
 	  
-  *has_UBs = SXFALSE;
+  *has_UBs = false;
 
   if (t > last_clause) {
     /* trans multiple de clauses */
@@ -6330,7 +6330,7 @@ get_UBs (SXINT t, SXBOOLEAN *has_UBs)
       clause = XH_list_elem (mtrans_hd, cur);
     
       if (clause > 0) {
-	*has_UBs = SXTRUE;
+	*has_UBs = true;
 	
 	if (SXBA_bit_is_reset_set (clause_set, clause)) {
 	  sprintf (string, "UB%ld(T0) ", clause);
@@ -6343,7 +6343,7 @@ get_UBs (SXINT t, SXBOOLEAN *has_UBs)
   }
   else {
     if (t > 0) {
-      *has_UBs = SXTRUE;
+      *has_UBs = true;
 	
       if (SXBA_bit_is_reset_set (clause_set, t)) {
 	sprintf (string, "UB%ld(T0) ", t);
@@ -6352,7 +6352,7 @@ get_UBs (SXINT t, SXBOOLEAN *has_UBs)
     
       /* On ajoute des &Lex */
       if (SXBA_bit_is_set (clause_has_lex, t)) {
-	has_lex = SXTRUE;
+	has_lex = true;
 	sxba_or (lex_set, clause2lex_set [t]);
       }
     }
@@ -6361,28 +6361,28 @@ get_UBs (SXINT t, SXBOOLEAN *has_UBs)
   return varstr;
 }
 
-static SXBOOLEAN
+static bool
 single_trans (SXINT q, SXINT *X, SXINT *r)
 {
-  /* retourne SXTRUE ssi il y a une unique transition depuis q (elle est mise ds X et r) */
+  /* retourne true ssi il y a une unique transition depuis q (elle est mise ds X et r) */
   SXINT foo, t, s;
-  SXBOOLEAN is_first = SXTRUE;
+  bool is_first = true;
 
   XxYxZ_Xforeach (fsa_hd, q, foo) {
-    if (!is_first) return SXFALSE;
+    if (!is_first) return false;
 
-    is_first = SXFALSE;
+    is_first = false;
     t = XxYxZ_Y (fsa_hd, foo);
     s = XxYxZ_Z (fsa_hd, foo); 
   }
 
   if (is_first || t > last_clause)
     /* On ne factorize pas les cycles car ils peuvent etre trop gros! */
-    return SXFALSE;
+    return false;
 
   *X = t;
   *r = s;
-  return SXTRUE;
+  return true;
 }
 
 
@@ -6390,7 +6390,7 @@ static void
 gen_First (SXINT q)
 {
   SXINT symb;
-  SXBOOLEAN is_first;
+  bool is_first;
 
   look_ahead (q);
 
@@ -6400,12 +6400,12 @@ gen_First (SXINT q)
   if (symb > 0) {
     /* non complet */
     fputs ("&First(", out_file);
-    is_first = SXTRUE;
+    is_first = true;
     symb = 0;
 
     while ((symb = sxba_scan_reset (t_set, symb)) > 0) {
       if (is_first)
-	is_first = SXFALSE;
+	is_first = false;
       else
 	fputs (" ", out_file);
 
@@ -6423,7 +6423,7 @@ fsa2rcg (void)
   SXINT clause, prdct, bot2, nt, param, p, triple, foo, r, t, q, red, symb, cur, bot, top;
   SXBA fsa_state_set, line;
   SXINT *state_stack;
-  SXBOOLEAN is_first, has_xtrans, has_null, has_UBs, T0;
+  bool is_first, has_xtrans, has_null, has_UBs, T0;
 
   /* Generer une clause bidon pour avoir les memes codes de terminaux */
   fputs ("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n", out_file);
@@ -6485,7 +6485,7 @@ fsa2rcg (void)
     XxYxZ_Xforeach (fsa_hd, p, triple) {
       q = XxYxZ_Z (fsa_hd, triple);
       fsa_clause++;
-      has_lex = SXFALSE;
+      has_lex = false;
       
       if (SXBA_bit_is_set (fsa_final_state_set, q)) {
 	/* Etat final */
@@ -6530,7 +6530,7 @@ fsa2rcg (void)
 		varstr = get_UBs (t, &T0);
 
 		if (T0)
-		  has_UBs = SXTRUE;
+		  has_UBs = true;
 	      }
 
 	      if (has_UBs)
@@ -6563,9 +6563,9 @@ fsa2rcg (void)
 	    t -= last_clause;
 	    bot = XH_X (mtrans_hd, t);
 	    top = XH_X (mtrans_hd, t+1);
-	    is_first = SXTRUE;
-	    has_xtrans = SXFALSE;
-	    has_null = SXFALSE;
+	    is_first = true;
+	    has_xtrans = false;
+	    has_null = false;
 
 	    for (cur = bot; cur < top; cur++) {
 	      clause = XH_list_elem (mtrans_hd, cur);
@@ -6579,7 +6579,7 @@ fsa2rcg (void)
 		  gen_First (q);
 
 		if (is_first)
-		  is_first = SXFALSE;
+		  is_first = false;
 		else
 		  fsa_clause++;
 
@@ -6590,9 +6590,9 @@ fsa2rcg (void)
 	      }
 	      else {
 		if (clause == 0)
-		  has_null = SXTRUE;
+		  has_null = true;
 		else
-		  has_xtrans = SXTRUE;
+		  has_xtrans = true;
 	      }
 	    }
 
@@ -6641,7 +6641,7 @@ fsa2rcg (void)
 	    }
 	    else {
 	      /* transition "vide" entre p et q */
-	      is_first = SXTRUE;
+	      is_first = true;
 
 	      while (single_trans (q, &t, &r)) {
 		/* On capture [T|red vide]* red [red|red vide]* */
@@ -6798,11 +6798,11 @@ static SXINT final_state = %ld, prev_final_state = %ld;\n", (SXINT) final_state,
 
 #if 0
   /* inutile */
-  sxba_to_c (fsa_final_state_set, out_file, "fsa_final_state_set", "", SXTRUE /* static */);
+  sxba_to_c (fsa_final_state_set, out_file, "fsa_final_state_set", "", true /* static */);
 #endif
 
   matrix2vector (&fsa_shift, &vector, 25);
-  vector2c (&vector, out_file, "fsa_shift", SXTRUE /* static */);
+  vector2c (&vector, out_file, "fsa_shift", true /* static */);
   fsa_shift_nb = vector.last_index;
 
   if (fsa_red_top == 1) {
@@ -6871,7 +6871,7 @@ static SXINT final_state = %ld, prev_final_state = %ld;\n", (SXINT) final_state,
     while ((q = sxba_scan (for_look_ahead, q)) > 0) {
       look_ahead (q); /* t_set contient les look_ahead */
       sprintf (string, "_%ld", (SXINT) q);
-      sxba_to_c (t_set, out_file, "look_ahead", string, SXTRUE /* static */);
+      sxba_to_c (t_set, out_file, "look_ahead", string, true /* static */);
       sxba_empty (t_set);
     }
 
@@ -6931,7 +6931,7 @@ static SXINT final_state = %ld, prev_final_state = %ld;\n", (SXINT) final_state,
 #endif /* 0 */
 
     fputs ("#if is_lex\n", out_file);
-    sxbm3_to_c (out_file, t2prod_set, max_t+1, "t2prod_set", "", SXTRUE /* is_static */);
+    sxbm3_to_c (out_file, t2prod_set, max_t+1, "t2prod_set", "", true /* is_static */);
     fputs ("#endif /* is_lex */\n", out_file);
 
     sxbm_free (t2prod_set);
@@ -6976,7 +6976,7 @@ fsa (void)
 #if EBUG
   if (sxverbosep) {
     fputs ("CFG = ", sxtty);
-    sxttycol1p = SXTRUE;
+    sxttycol1p = true;
   }
 #endif
 
@@ -6986,7 +6986,7 @@ fsa (void)
 #if EBUG
   if (sxverbosep) {
     fprintf (sxtty, "%ld/%ld, ", bnf.nbpro, bnf.indpro);
-    sxttycol1p = SXTRUE;
+    sxttycol1p = true;
   }
 #endif
 
@@ -7001,7 +7001,7 @@ fsa (void)
 #if EBUG
     if (sxverbosep) {
       fputs ("LC = ", sxtty);
-      sxttycol1p = SXTRUE;
+      sxttycol1p = true;
     }
 #endif
 
@@ -7021,7 +7021,7 @@ fsa (void)
 #if EBUG
     if (sxverbosep) {
       fputs ("LR(0) = ", sxtty);
-      sxttycol1p = SXTRUE;
+      sxttycol1p = true;
     }
 #endif
 
@@ -7031,7 +7031,7 @@ fsa (void)
 #if EBUG
   if (sxverbosep) {
     fprintf (sxtty, "%ld/%ld, NDFSA = ", pda_state_nb, XxYxZ_top (pda_hd));
-    sxttycol1p = SXTRUE;
+    sxttycol1p = true;
   }
 #endif
 
@@ -7042,7 +7042,7 @@ fsa (void)
 #if EBUG
   if (sxverbosep) {
     fprintf (sxtty, "%ld/%ld", ndfsa_state_nb, XxYxZ_top (ndfsa_hd));
-    sxttycol1p = SXTRUE;
+    sxttycol1p = true;
   }
 #endif
 
@@ -7055,7 +7055,7 @@ fsa (void)
 #if EBUG
     if (sxverbosep) {
       fprintf (sxtty, " -- cf[%ld/%ld]", ndfsa_state_nb, XxYxZ_top (ndfsa_hd));
-      sxttycol1p = SXTRUE;
+      sxttycol1p = true;
     }
 #endif
   }
@@ -7087,14 +7087,14 @@ fsa (void)
 
     ndfsa2nfndfsa ();
 
-    has_null_trans = SXFALSE;
+    has_null_trans = false;
 
     sxbm_free (NULL_RED),  NULL_RED = NULL;
 
 #if EBUG
     if (sxverbosep) {
       fprintf (sxtty, " -- nf[%ld/%ld]", ndfsa_state_nb, XxYxZ_top (ndfsa_hd));
-      sxttycol1p = SXTRUE;
+      sxttycol1p = true;
     }
 #endif
   }
@@ -7103,7 +7103,7 @@ fsa (void)
 #if EBUG
   if (sxverbosep) {
     fputs (", DFSA = ", sxtty);
-    sxttycol1p = SXTRUE;
+    sxttycol1p = true;
   }
 #endif 
 
@@ -7112,7 +7112,7 @@ fsa (void)
 #if EBUG
   if (sxverbosep) {
     fprintf (sxtty, "%ld/%ld, FSA = ", dfsa_state_nb, XxYxZ_top (dfsa_hd));
-    sxttycol1p = SXTRUE;
+    sxttycol1p = true;
   }
 #endif
 
@@ -7126,7 +7126,7 @@ fsa (void)
 #if EBUG
   if (sxverbosep) {
     fprintf (sxtty, "%ld/%ld", fsa_state_nb, XxYxZ_top (fsa_hd));
-    sxttycol1p = SXTRUE;
+    sxttycol1p = true;
   }
 #endif
 
@@ -7136,7 +7136,7 @@ fsa (void)
 #if EBUG
     if (sxverbosep) {
       fprintf (sxtty, " -- %ld/%ld", fsa_state_nb, XxYxZ_top (fsa_hd));
-      sxttycol1p = SXTRUE;
+      sxttycol1p = true;
     }
 #endif
 
@@ -7147,7 +7147,7 @@ fsa (void)
 #if EBUG
       if (sxverbosep) {
 	fputs (", DFSA = ", sxtty);
-	sxttycol1p = SXTRUE;
+	sxttycol1p = true;
       }
 #endif 
       ndfsa_hd = fsa_hd; /* FAUX ndfsa_hd a du XxYxZ_XYforeach!! */
@@ -7159,7 +7159,7 @@ fsa (void)
 #if EBUG
       if (sxverbosep) {
 	fprintf (sxtty, "%ld/%ld, FSA = ", dfsa_state_nb, XxYxZ_top (dfsa_hd));
-	sxttycol1p = SXTRUE;
+	sxttycol1p = true;
       }
 #endif
 
@@ -7173,7 +7173,7 @@ fsa (void)
 #if EBUG
       if (sxverbosep) {
 	fprintf (sxtty, "%ld/%ld", fsa_state_nb, XxYxZ_top (fsa_hd));
-	sxttycol1p = SXTRUE;
+	sxttycol1p = true;
       }
 #endif
     }
@@ -7186,7 +7186,7 @@ fsa (void)
 #if EBUG
     if (sxverbosep) {
       fprintf (sxtty, " -- %ld/%ld", fsa_state_nb, XxYxZ_top (fsa_hd));
-      sxttycol1p = SXTRUE;
+      sxttycol1p = true;
     }
 #endif
   }
@@ -7205,7 +7205,7 @@ fsa (void)
 #if EBUG
     if (sxverbosep) {
       fputs (", RCG = ", sxtty);
-      sxttycol1p = SXTRUE;
+      sxttycol1p = true;
     }
 #endif
 
@@ -7219,7 +7219,7 @@ fsa (void)
 #if EBUG
     if (sxverbosep) {
       fprintf (sxtty, "%ld, ", fsa_prod);
-      sxttycol1p = SXTRUE;
+      sxttycol1p = true;
     }
 #endif
   }
@@ -7229,7 +7229,7 @@ fsa (void)
 #if EBUG
     if (sxverbosep) {
       fputs (", GEN_C", sxtty);
-      sxttycol1p = SXTRUE;
+      sxttycol1p = true;
     }
 #endif
 
@@ -7251,7 +7251,7 @@ fsa (void)
 #if EBUG
     if (sxverbosep) {
       fprintf (sxtty, "[%ld/%ld] ", last_index, last_red);
-      sxttycol1p = SXTRUE;
+      sxttycol1p = true;
     }
 #endif
   }
@@ -7275,7 +7275,7 @@ fsa (void)
 
   if (sxverbosep) {
     fputs ("done\n", sxtty);
-    sxttycol1p = SXTRUE;
+    sxttycol1p = true;
   }
 }
 
@@ -7287,7 +7287,7 @@ lrfsa (void)
       is_top_down_erasing_grammar || is_bottom_up_erasing_grammar) {
     if (sxverbosep) {
       fputs ("WARNING: Only simple 1-RCGs can generate linear time guides.\n", sxtty);
-      sxttycol1p = SXTRUE;
+      sxttycol1p = true;
     }
 
     return;
@@ -7304,7 +7304,7 @@ lrfsa (void)
        Cependant, le langage du FSA peut etre reduit si on conserve (et utilise) les transitions
        reduce A-> \alpha associees a des Lex non vide.  Cette possibilite est gouvernee par l'option
        is_keep_lex. 
-       L'experience a montre que si is_keep_lex est SXFALSE, l'analyse est + rapide
+       L'experience a montre que si is_keep_lex est false, l'analyse est + rapide
     */
     useless_clause_set = sxba_calloc (last_clause+1);
 
@@ -7376,11 +7376,11 @@ lrfsa (void)
   if (lfsa_file) {
     if (sxverbosep) {
       fputs ("\tlfsa_form .... ", sxtty);
-      sxttycol1p = SXFALSE;
+      sxttycol1p = false;
     }
 
     out_file = lfsa_file;
-    is_bnf_in_reverse = SXFALSE;
+    is_bnf_in_reverse = false;
 
     fsa ();
   }
@@ -7388,11 +7388,11 @@ lrfsa (void)
   if (rfsa_file) {
     if (sxverbosep) {
       fputs ("\trfsa_form .... ", sxtty);
-      sxttycol1p = SXFALSE;
+      sxttycol1p = false;
     }
 
     out_file = rfsa_file;
-    is_bnf_in_reverse = SXTRUE;
+    is_bnf_in_reverse = true;
 
     fsa ();
   }
@@ -7415,7 +7415,7 @@ lrfsa (void)
 /* A conserver au cas ou */
 /* "Traitement" des productions vides */
 static SXBA bvide, bnonvide, prod_vide, prod_nonvide, clause_vide, clause_nonvide;
-static SXBOOLEAN has_eps_rules, has_eps_trans, eps_rules_are_null;
+static bool has_eps_rules, has_eps_trans, eps_rules_are_null;
 
 static SXINT *eps_trans_stack;
 static SXBA *EPS_RED;
@@ -7470,11 +7470,11 @@ fill_bnonvide ()
   /* which can generate a non empty terminal string              */
   /* We assume that the grammar is proper                        */
   SXINT	rule, top, item, X, nt;
-  SXBOOLEAN has_changed = SXTRUE;
+  bool has_changed = true;
   SXBA rule_set = sxba_calloc (bnf.nbpro+1);
 
   while (has_changed) {
-    has_changed = SXFALSE;
+    has_changed = false;
     rule = 0;
 
     while ((rule = sxba_0_lrscan (rule_set, rule)) > 0) {
@@ -7487,7 +7487,7 @@ fill_bnonvide ()
 	  if (X < 0 || SXBA_bit_is_set (bnonvide, X)) {
 	    SXBA_1_bit (bnonvide, nt);
 	    SXBA_1_bit (rule_set, rule);
-	    has_changed = SXTRUE;
+	    has_changed = true;
 	    break;
 	  }
 	}
@@ -7688,10 +7688,10 @@ cfg2efcfg ()
       efbnf.prolis [efbnf.indpro] = efbnf.nbpro;
 
       efbnf.prolon [efbnf.nbpro+1] = efbnf.indpro+1;
-      has_eps_rules = SXTRUE;
+      has_eps_rules = true;
   }
   else
-      has_eps_rules = SXFALSE;
+      has_eps_rules = false;
 
   efbnf.numpd = (SXINT*) sxalloc (efbnf.maxnpd + 1, sizeof (SXINT));
 
@@ -7746,7 +7746,7 @@ cfg2efcfg ()
 #if EBUG
     if (sxverbosep) {
       fprintf (sxtty, "%ld/%ld -- ", bnf.nbpro, bnf.indpro);
-      sxttycol1p = SXTRUE;
+      sxttycol1p = true;
     }
 #endif
 
@@ -7949,7 +7949,7 @@ print_bnf_t (SXINT t)
 
 
 static void
-rcg2bnf (SXBOOLEAN is_print)
+rcg2bnf (bool is_print)
 {
   SXINT clause, lhs_prdct, bot2, lhs_nt, lhs_param, rhs, top, bot, cur, rhs_prdct, rhs_nt, rhs_param, l;
   SXINT symb, top3, bot3, cur3, prod_no, len, lognt;
@@ -8141,7 +8141,7 @@ rcg2Lex_file (void)
   SXBA *rcg2Lex_file_clause2lex_set, *Lex2prod_item_set, *prod2multiple_Lex_set, multiple_Lex_item_set, must_check_identical_prod_set;
   SXBA has_Lex;
   SXBA identical_clause_has_non_identical_Lex, rcg2Lex_file_loop_clause_set;
-  SXBOOLEAN has_lex, has_identical_Lex, is_map_needed, has_strlen, has_streq;
+  bool has_lex, has_identical_Lex, is_map_needed, has_strlen, has_streq;
 
   SXINT *clause2idem_disp, *clause2idem, *idem2next, itop;
 
@@ -8183,7 +8183,7 @@ rcg2Lex_file (void)
 
   clause2streq = (SXINT*) sxcalloc (last_clause+1, sizeof (SXINT));
   S1_alloc (streq_list, last_clause+1);
-  has_strlen = has_streq = SXFALSE;
+  has_strlen = has_streq = false;
 
   itop = 1;
 
@@ -8229,11 +8229,11 @@ rcg2Lex_file (void)
 	    }
 	    else {
 	      if (rhs_nt == STREQLEN_ic || rhs_nt == STREQ_ic) {
-		has_streq = SXTRUE;
+		has_streq = true;
 	      }
 	      else {
 		if (rhs_nt == STRLEN_ic) {
-		  has_strlen = SXTRUE;
+		  has_strlen = true;
 		  /* la grammaire etant simple, on est sur que X est l'arg d'un A */
 		  len = XH_list_elem (rcg_parameters, XH_X (rcg_parameters, XH_list_elem (rcg_predicates, bot2+2)));
 		  symb = XH_list_elem (rcg_parameters, XH_X (rcg_parameters, XH_list_elem (rcg_predicates, bot2+3)));
@@ -8245,7 +8245,7 @@ rcg2Lex_file (void)
 	}
 
 	if (has_streq) {
-	  has_streq = SXFALSE;
+	  has_streq = false;
 	  clause2streq [clause] = S1_top (streq_list)+1;
 
 	  for (cur = bot; cur < top; cur++) {
@@ -8312,7 +8312,7 @@ rcg2Lex_file (void)
 	  if (lhs_param > 0) {
 	    prod2rhs_stack_map [prod_no] = rcg2Lex_file_rhs_stack_map_top;
 	    pos = 0;
-	    is_map_needed = SXFALSE;
+	    is_map_needed = false;
 
 	    for (cur3 = bot3;
 		 cur3 < top3;
@@ -8323,7 +8323,7 @@ rcg2Lex_file (void)
 		rcg2Lex_file_rhs_stack_map [rcg2Lex_file_rhs_stack_map_top++] = var2pos [symb];
 
 		if (var2pos [symb] != ++pos)
-		  is_map_needed = SXTRUE;
+		  is_map_needed = true;
 	      }
 	    }
 
@@ -8430,7 +8430,7 @@ rcg2Lex_file (void)
   for (clause = 1; clause <= last_clause; clause++) {
     if ((prod_no = clause2prod [clause]) != 0) {
       /* clause est le representant (peut etre trivial) de la classe d'equivalence des clauses identiques */
-      has_identical_Lex = SXTRUE; /* A priori */
+      has_identical_Lex = true; /* A priori */
 
       if ((cur = clause2idem_disp [clause])) {
 	/* classe multiple */
@@ -8443,7 +8443,7 @@ rcg2Lex_file (void)
 
 	  if (has_lex != SXBA_bit_is_set (has_Lex, mclause)
 	      || sxba_first_difference (lex_set, rcg2Lex_file_clause2lex_set [mclause]) != -1) {
-	    has_identical_Lex = SXFALSE;
+	    has_identical_Lex = false;
 	    break;
 	  }
 	} while ((cur = idem2next [cur]) > 0);
@@ -8464,10 +8464,10 @@ rcg2Lex_file (void)
 	if (!has_identical_Lex) {
 	  /* Pour l'analyse "normale" tout se passe comme si les prod n'avaient pas de Lex,
 	     leur verif eventuelle sera faite lors de la reconnaissance du representant */
-	  SXBOOLEAN	must_check_identical_prod = SXTRUE;
+	  bool	must_check_identical_prod = true;
 
 	  if (!SXBA_bit_is_set (has_Lex, clause))
-	    must_check_identical_prod = SXFALSE;
+	    must_check_identical_prod = false;
 
 	  SXBA_1_bit (identical_clause_has_non_identical_Lex, clause);
 
@@ -8477,7 +8477,7 @@ rcg2Lex_file (void)
 	    mclause = clause2idem [cur];
 
 	    if (!SXBA_bit_is_set (has_Lex, mclause))
-	      must_check_identical_prod = SXFALSE;
+	      must_check_identical_prod = false;
 
 	    SXBA_1_bit (identical_clause_has_non_identical_Lex, mclause);
 	  } while ((cur = idem2next [cur]) > 0);
@@ -8557,24 +8557,24 @@ rcg2Lex_file (void)
   sxfree (prolon);
 
   fputs ("\n#if has_Lex\n", out_file);
-  sxbm3_to_c (out_file, Lex2prod_item_set, max_t+1, "Lex2prod_item_set", "", SXTRUE /* is_static */);
-  sxbm3_to_c (out_file, prod2multiple_Lex_set, nbpro, "prod2multiple_Lex_set", "", SXTRUE /* is_static */);
-  sxba_to_c (multiple_Lex_item_set, out_file, "multiple_Lex_item_set", "", SXTRUE /* static */);
-  sxba_to_c (must_check_identical_prod_set, out_file, "must_check_identical_prod_set", "", SXTRUE /* static */);
+  sxbm3_to_c (out_file, Lex2prod_item_set, max_t+1, "Lex2prod_item_set", "", true /* is_static */);
+  sxbm3_to_c (out_file, prod2multiple_Lex_set, nbpro, "prod2multiple_Lex_set", "", true /* is_static */);
+  sxba_to_c (multiple_Lex_item_set, out_file, "multiple_Lex_item_set", "", true /* static */);
+  sxba_to_c (must_check_identical_prod_set, out_file, "must_check_identical_prod_set", "", true /* static */);
 
   fprintf (out_file, "#define last_clause\t%ld\n\n", (SXINT) last_clause);
-  /* Ici has_Lex[clause]==SXTRUE <==> clause est le representant non trivial de clauses equivalentes ayant des Lex
+  /* Ici has_Lex[clause]==true <==> clause est le representant non trivial de clauses equivalentes ayant des Lex
      non identiques */
-  sxba_to_c (has_Lex, out_file, "clause_has_Lex", "", SXTRUE /* static */);
+  sxba_to_c (has_Lex, out_file, "clause_has_Lex", "", true /* static */);
   fputs ("#endif /* has_Lex */\n", out_file);
   
   if (sxba_is_empty (rcg2Lex_file_loop_clause_set))
     fputs ("static SXBA rcg2Lex_file_loop_clause_set\n", out_file);
   else
-    sxba_to_c (rcg2Lex_file_loop_clause_set, out_file, "rcg2Lex_file_loop_clause_set", "", SXTRUE /* static */);
+    sxba_to_c (rcg2Lex_file_loop_clause_set, out_file, "rcg2Lex_file_loop_clause_set", "", true /* static */);
 
   fputs ("\n#if has_Lex\n", out_file);
-  sxbm3_to_c (out_file, rcg2Lex_file_clause2lex_set, last_clause+1, "rcg2Lex_file_clause2lex_set", "", SXTRUE /* is_static */);
+  sxbm3_to_c (out_file, rcg2Lex_file_clause2lex_set, last_clause+1, "rcg2Lex_file_clause2lex_set", "", true /* is_static */);
   fputs ("#endif /* has_Lex */\n", out_file);
 
   fputs ("\n#if is_full_guide\n", out_file);
@@ -8662,7 +8662,7 @@ lrbnf (void)
   if (max_garity != 1 || !is_simple_grammar) {
     if (sxverbosep) {
       fputs ("WARNING: Only simple 1-RCGs can generate BNF grammars.\n", sxtty);
-      sxttycol1p = SXTRUE;
+      sxttycol1p = true;
     }
 
     return;
@@ -8671,42 +8671,42 @@ lrbnf (void)
   if (lbnf_file) {
     if (sxverbosep) {
       fputs ("\tlbnf_form .... ", sxtty);
-      sxttycol1p = SXFALSE;
+      sxttycol1p = false;
     }
 
     out_file = lbnf_file;
-    is_bnf_in_reverse = SXFALSE;
+    is_bnf_in_reverse = false;
 
     out_header (bnf_header, lbnf_file_name, "in direct BNF form");
 
-    rcg2bnf (SXTRUE);
+    rcg2bnf (true);
 
     fclose (out_file);
 
     if (sxverbosep) {
       fputs ("done\n", sxtty);
-      sxttycol1p = SXTRUE;
+      sxttycol1p = true;
     }
   }
 
   if (rbnf_file) {
     if (sxverbosep) {
       fputs ("\trbnf_form .... ", sxtty);
-      sxttycol1p = SXFALSE;
+      sxttycol1p = false;
     }
 
     out_file = rbnf_file;
-    is_bnf_in_reverse = SXTRUE;
+    is_bnf_in_reverse = true;
 
     out_header (bnf_header, rbnf_file_name, "in reverse BNF form");
 
-    rcg2bnf (SXTRUE);
+    rcg2bnf (true);
 
     fclose (out_file);
 
     if (sxverbosep) {
       fputs ("done\n", sxtty);
-      sxttycol1p = SXTRUE;
+      sxttycol1p = true;
     }
   }
 
@@ -8716,7 +8716,7 @@ lrbnf (void)
        par un analyseur a la Earley */
     if (sxverbosep) {
       fputs ("\tLex_file .... ", sxtty);
-      sxttycol1p = SXFALSE;
+      sxttycol1p = false;
     }
 
     out_file = Lex_file;
@@ -8729,7 +8729,7 @@ lrbnf (void)
 
     if (sxverbosep) {
       fputs ("done\n", sxtty);
-      sxttycol1p = SXTRUE;
+      sxttycol1p = true;
     }
   }
 }
@@ -8746,7 +8746,7 @@ tag2tig (void)
   SXINT clause, lhs_prdct, lhs_bot2, lhs_nt, lhs_arity, lhs_top2, lhs_arg, lhs_cur2, lhs_param, lhs_bot3, lhs_top3, lhs_cur3, symb;
   SXINT rhs, rhs_top, rhs_bot, rhs_cur, rhs_prdct, rhs_bot2, rhs_nt, rhs_arity, left_symb, right_symb;
   SXINT  strong_left_A_nb, strong_right_A_nb, A, left_clause_nb, right_clause_nb, left_var, right_var, modified_clause_nb; 
-  SXBOOLEAN is_strong_left_clause, is_strong_right_clause, is_strong_left, is_strong_right, done, is_first, has_changed; 
+  bool is_strong_left_clause, is_strong_right_clause, is_strong_left, is_strong_right, done, is_first, has_changed; 
   SXBA *clause2lvar_set, lvar_set, strong_left_clause_set, strong_right_clause_set, A_clause_set, strong_left_A_set, strong_right_A_set;
 
   modified_clause_nb = 0; /* A priori, aucune transformation possible! */
@@ -8768,7 +8768,7 @@ tag2tig (void)
       if (lhs_arity == 2) {
 	/* On ne s'occupe que des arbres auxiliaires */
 	lhs_top2 = XH_X (rcg_predicates, lhs_prdct+1);
-	is_strong_left_clause = is_strong_right_clause = SXTRUE;
+	is_strong_left_clause = is_strong_right_clause = true;
 
 	for (lhs_arg = 0, lhs_cur2 = lhs_bot2+2; lhs_cur2 < lhs_top2; lhs_arg++, lhs_cur2++) {
 	  lhs_param = XH_list_elem (rcg_predicates, lhs_cur2);
@@ -8786,10 +8786,10 @@ tag2tig (void)
 	      }
 	      else {
 		if (lhs_arg == 0) {
-		  is_strong_right_clause = SXFALSE;
+		  is_strong_right_clause = false;
 		}
 		else {
-		  is_strong_left_clause = SXFALSE;
+		  is_strong_left_clause = false;
 		}
 	      }
 	    }
@@ -8815,10 +8815,10 @@ tag2tig (void)
 		/* Substitution... */
 		if (SXBA_bit_is_set (lvar_set, left_symb)) {
 		  /* ... a gauche */
-		  is_strong_right_clause = SXFALSE;
+		  is_strong_right_clause = false;
 		}
 		else
-		  is_strong_left_clause = SXFALSE; 
+		  is_strong_left_clause = false; 
 	      }
 	      else {
 		/* Adjonction ... */
@@ -8826,12 +8826,12 @@ tag2tig (void)
 
 		if (SXBA_bit_is_set (lvar_set, left_symb) && SXBA_bit_is_set (lvar_set, right_symb)) {
 		  /* ... dans l'arbre gauche */
-		  is_strong_right_clause = SXFALSE;
+		  is_strong_right_clause = false;
 		}
 		else {
 		  if (!SXBA_bit_is_set (lvar_set, left_symb) && !SXBA_bit_is_set (lvar_set, right_symb)) {
 		    /* ... dans l'arbre droit */
-		    is_strong_left_clause = SXFALSE;
+		    is_strong_left_clause = false;
 		  }
 		  /*
 		  else {
@@ -8888,7 +8888,7 @@ tag2tig (void)
       /* Attention A peut etre a la fois left et right ex: la seule A-clause est vide */
       A_clause_set = lhsnt2clause [A];
 
-      is_strong_left = is_strong_right = SXTRUE;
+      is_strong_left = is_strong_right = true;
       left_clause_nb = right_clause_nb = 0;
       clause = 0;
 
@@ -8897,13 +8897,13 @@ tag2tig (void)
 #if is_case2
 	  /* Si une A-clause est wrapping => A est wrapping */
 	  if (!SXBA_bit_is_set (strong_left_clause_set, clause) && !SXBA_bit_is_set (strong_right_clause_set, clause))
-	    is_strong_left = is_strong_right = SXFALSE;
+	    is_strong_left = is_strong_right = false;
 #else /* !is_case2 */
 	  if (!SXBA_bit_is_set (strong_left_clause_set, clause))
-	    is_strong_left = SXFALSE;
+	    is_strong_left = false;
 	  
 	  if (!SXBA_bit_is_set (strong_right_clause_set, clause))
-	    is_strong_right = SXFALSE;
+	    is_strong_right = false;
 #endif /* !is_case2 */
 
 	  if (SXBA_bit_is_set (strong_left_clause_set, clause))
@@ -8933,7 +8933,7 @@ tag2tig (void)
        - droites pour les strong_right_clause */
     /* Ds le cas is_case2, cette verif ne s'applique pas a la racine si elle n'est pas wrapping */
     do {
-      done = SXTRUE;
+      done = true;
 
       if (strong_left_A_nb) {
 	clause = 0;
@@ -8987,7 +8987,7 @@ tag2tig (void)
 
 		    if (SXBA_bit_is_set_reset (strong_left_A_set, lhs_nt)) {
 		      strong_left_A_nb--;
-		      done = SXFALSE;
+		      done = false;
 		    }
 
 		    break;
@@ -9053,7 +9053,7 @@ tag2tig (void)
 
 		    if (SXBA_bit_is_set_reset (strong_right_A_set, lhs_nt)) {
 		      strong_right_A_nb--;
-		      done = SXFALSE;
+		      done = false;
 		    }
 
 		    break;
@@ -9140,11 +9140,11 @@ tag2tig (void)
 	  rhs_cur++;
 	}
 
-	has_changed = SXFALSE;
+	has_changed = false;
 
 	if (lhs_arity == 2 && SXBA_bit_is_set (strong_left_A_set, lhs_nt) && SXBA_bit_is_set (strong_right_A_set, lhs_nt)) {
 	  /* c'est la seule A-clause a la forme "A(, ) --> ;", elle disparait */
-	  has_changed = SXTRUE;
+	  has_changed = true;
 	}
 	else {
 	  out_nt_text (lhs_nt);
@@ -9174,21 +9174,21 @@ tag2tig (void)
 	  if (lhs_param > 0) {
 	    lhs_bot3 = XH_X (rcg_parameters, lhs_param);
 	    lhs_top3 = XH_X (rcg_parameters, lhs_param+1);
-	    is_first = SXTRUE;
+	    is_first = true;
 
 	    for (lhs_cur3 = lhs_bot3; lhs_cur3 < lhs_top3; lhs_cur3++) {
 	      symb = XH_list_elem (rcg_parameters, lhs_cur3);
 
 	      if (symb > 0) {
 		if (SXBA_bit_is_set (lvar_set, symb)) {
-		  if (is_first) is_first = SXFALSE; else fputs (" ", out_file);
+		  if (is_first) is_first = false; else fputs (" ", out_file);
 		  fprintf (out_file, "X%ld", symb-1);
 		}
 		else
-		  has_changed = SXTRUE;
+		  has_changed = true;
 	      }
 	      else {
-		if (is_first) is_first = SXFALSE; else fputs (" ", out_file);
+		if (is_first) is_first = false; else fputs (" ", out_file);
 		out_t_text (-symb);
 	      }	
 	    }
@@ -9201,21 +9201,21 @@ tag2tig (void)
 	    if (lhs_param > 0) {
 	      lhs_bot3 = XH_X (rcg_parameters, lhs_param);
 	      lhs_top3 = XH_X (rcg_parameters, lhs_param+1);
-	      is_first = SXTRUE;
+	      is_first = true;
 
 	      for (lhs_cur3 = lhs_bot3; lhs_cur3 < lhs_top3; lhs_cur3++) {
 		symb = XH_list_elem (rcg_parameters, lhs_cur3);
 
 		if (symb > 0) {
 		  if (SXBA_bit_is_set (lvar_set, symb)) {
-		    if (is_first) is_first = SXFALSE; else fputs (" ", out_file);
+		    if (is_first) is_first = false; else fputs (" ", out_file);
 		    fprintf (out_file, "X%ld", symb-1);
 		  }
 		  else
-		    has_changed = SXTRUE;
+		    has_changed = true;
 		}
 		else {
-		  if (is_first) is_first = SXFALSE; else fputs (" ", out_file);
+		  if (is_first) is_first = false; else fputs (" ", out_file);
 		  out_t_text (-symb);	
 		}
 	      }
@@ -9347,7 +9347,7 @@ tag2tig (void)
 {
   SXINT modified_clause_nb, A, arity, clause, lhs_prdct, lhs_bot2, lhs_top2, lhs_cur2, lhs_nt, k, lhs_param, lhs_bot3, lhs_top3, lhs_cur3;
   SXINT rhs_param, rhs_top, rhs_bot, rhs_cur, rhs_bot3, rhs_top3, rhs_cur3, symb, rhs_prdct, rhs_bot2, rhs_top2, rhs_cur2, rhs_nt, left_symb, right_symb, rhs; 
-  SXBOOLEAN is_vanished, has_changed, is_first_arg, is_first_symb; 
+  bool is_vanished, has_changed, is_first_arg, is_first_symb; 
   SXBA lvar_set;
 
   sxinitialise(rhs_bot); /* pour faire taire gcc -Wuninitialized */
@@ -9384,12 +9384,12 @@ tag2tig (void)
       lhs_top2 = XH_X (rcg_predicates, lhs_prdct+1);
       lhs_nt = XH_list_elem (rcg_predicates, lhs_bot2+1);
 
-      is_vanished = SXTRUE;
+      is_vanished = true;
       sxba_empty (lvar_set);
 	
       for (k = 0, lhs_cur2 = lhs_bot2+2; lhs_cur2 < lhs_top2; k++, lhs_cur2++) {
 	if (Ak2len [A_k2Ak (lhs_nt, k)] != 0) {
-	  is_vanished = SXFALSE;
+	  is_vanished = false;
 	  break;
 	}
       }
@@ -9441,15 +9441,15 @@ tag2tig (void)
 	modified_clause_nb++;
       }
       else {
-	has_changed = SXFALSE;
-	is_first_arg = SXTRUE;
+	has_changed = false;
+	is_first_arg = true;
 	out_nt_text (lhs_nt);
 	fputs ("(", out_file);
 	
 	for (k = 0, lhs_cur2 = lhs_bot2+2; lhs_cur2 < lhs_top2; k++, lhs_cur2++) {
 	  if (Ak2len [A_k2Ak (lhs_nt, k)] != 0) {
 	    if (is_first_arg)
-	      is_first_arg = SXFALSE;
+	      is_first_arg = false;
 	    else
 	      fputs (", ", out_file);
 
@@ -9458,21 +9458,21 @@ tag2tig (void)
 	    if (lhs_param > 0) {
 	      lhs_bot3 = XH_X (rcg_parameters, lhs_param);
 	      lhs_top3 = XH_X (rcg_parameters, lhs_param+1);
-	      is_first_symb = SXTRUE;
+	      is_first_symb = true;
 
 	      for (lhs_cur3 = lhs_bot3; lhs_cur3 < lhs_top3; lhs_cur3++) {
 		symb = XH_list_elem (rcg_parameters, lhs_cur3);
 
 		if (symb > 0) {
 		  if (SXBA_bit_is_set (lvar_set, symb)) {
-		    if (is_first_symb) is_first_symb = SXFALSE; else fputs (" ", out_file);
+		    if (is_first_symb) is_first_symb = false; else fputs (" ", out_file);
 		    fprintf (out_file, "X%ld", (SXINT) symb-1);
 		  }
 		  else
-		    has_changed = SXTRUE;
+		    has_changed = true;
 		}
 		else {
-		  if (is_first_symb) is_first_symb = SXFALSE; else fputs (" ", out_file);
+		  if (is_first_symb) is_first_symb = false; else fputs (" ", out_file);
 		  out_t_text (-symb);
 		}
 	      }
@@ -9491,29 +9491,29 @@ tag2tig (void)
 	  rhs_nt = XH_list_elem (rcg_predicates, rhs_bot2+1);
 
 	  if (rhs_nt > 0) {
-	    is_vanished = SXTRUE;
+	    is_vanished = true;
 	
 	    for (k = 0, rhs_cur2 = rhs_bot2+2; rhs_cur2 < rhs_top2; k++, rhs_cur2++) {
 	      if (Ak2len [A_k2Ak (rhs_nt, k)] != 0) {
-		is_vanished = SXFALSE;
+		is_vanished = false;
 		break;
 	      }
 	    }
 
 	    if (!is_vanished) {
 	      /* l'appel du predicat utilisateur n'a pas completement disparu */
-	      is_first_arg = SXTRUE;
+	      is_first_arg = true;
 	      out_nt_text (rhs_nt);
 	      fputs ("(", out_file);
 
 	      for (k = 0, rhs_cur2 = rhs_bot2+2; rhs_cur2 < rhs_top2; k++, rhs_cur2++) {
 		if (Ak2len [A_k2Ak (rhs_nt, k)] != 0) {
 		  if (is_first_arg)
-		    is_first_arg = SXFALSE;
+		    is_first_arg = false;
 		  else
 		    fputs (", ", out_file);
 
-		  is_first_symb = SXTRUE;
+		  is_first_symb = true;
 		  rhs_param = XH_list_elem (rcg_predicates, rhs_cur2);
 
 		  if (rhs_param > 0) {
@@ -9523,7 +9523,7 @@ tag2tig (void)
 		    for (rhs_cur3 = rhs_bot3; rhs_cur3 < rhs_top3; rhs_cur3++) {
 		      symb = XH_list_elem (rcg_parameters, rhs_cur3);
 
-		      if (is_first_symb) is_first_symb = SXFALSE; else fputs (" ", out_file);
+		      if (is_first_symb) is_first_symb = false; else fputs (" ", out_file);
 
 		      if (symb > 0) {
 			fprintf (out_file, "X%ld", (SXINT) symb-1);
@@ -9535,7 +9535,7 @@ tag2tig (void)
 		  }
 		}
 		else
-		  has_changed = SXTRUE;
+		  has_changed = true;
 	      }
 
 	      fputs (") ", out_file);
@@ -9629,7 +9629,7 @@ tig_form (void)
     /* Ce n'est pas une TAG */
     if (sxverbosep) {
       fputs ("WARNING: the option \"-tig\" only applies to TAGs.\n", sxtty);
-      sxttycol1p = SXTRUE;
+      sxttycol1p = true;
     }
 
     return;
@@ -9638,7 +9638,7 @@ tig_form (void)
     
   if (sxverbosep) {
     fputs ("\ttig form .... ", sxtty);
-    sxttycol1p = SXFALSE;
+    sxttycol1p = false;
   }
 
   modified_clause_nb = tag2tig ();
@@ -9649,7 +9649,7 @@ tig_form (void)
     else
       fputs ("failure\n", sxtty);
 
-    sxttycol1p = SXTRUE;
+    sxttycol1p = true;
   }
 }
 

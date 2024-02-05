@@ -23,7 +23,7 @@
 
 #include "sxunix.h"
 
-char WHAT_PPLECLMAIN[] = "@(#)SYNTAX - $Id: pplecl_main.c 3328 2023-06-04 15:32:22Z garavel $" WHAT_DEBUG;
+char WHAT_PPLECLMAIN[] = "@(#)SYNTAX - $Id: pplecl_main.c 3632 2023-12-20 17:58:08Z garavel $" WHAT_DEBUG;
 
 extern struct sxtables	pp_lecl_tables;
 
@@ -73,7 +73,7 @@ static SXINT	option_get_kind (char *arg)
 
 
 
-static SXVOID	pplecl_run (char *pathname)
+static void	pplecl_run (char *pathname)
 {
     FILE	*infile;
     char	un_nom [20];
@@ -146,10 +146,10 @@ int main(int argc, char *argv[])
 
   sxppvariables.kw_case = SXCAPITALISED_INITIAL /* How should keywords be written */ ;
   sxppvariables.terminal_case = NULL /* Same as kw_case, but for each type of terminal */ ;
-  sxppvariables.kw_dark = SXFALSE /* keywords are not artificially darkened */ ;
+  sxppvariables.kw_dark = false /* keywords are not artificially darkened */ ;
   sxppvariables.terminal_dark = NULL /* Same as kw_dark, but for each type of terminal */ ;
-  sxppvariables.no_tabs = SXFALSE /* optimize spaces into tabs */ ;
-  sxppvariables.block_margin = SXFALSE /* preserve structure when deeply nested */ ;
+  sxppvariables.no_tabs = false /* optimize spaces into tabs */ ;
+  sxppvariables.block_margin = false /* preserve structure when deeply nested */ ;
   sxppvariables.line_length = 79 /* What it says */ ;
   sxppvariables.max_margin = 60 /* Do not indent lines further than that */ ;
   sxppvariables.tabs_interval = 8 /* number of columns between two tab positions */ ;
@@ -172,19 +172,19 @@ int main(int argc, char *argv[])
       break;
 
     case KWDK:
-      sxppvariables.kw_dark = SXTRUE;
+      sxppvariables.kw_dark = true;
       break;
 
     case -KWDK:
-      sxppvariables.kw_dark = SXFALSE;
+      sxppvariables.kw_dark = false;
       break;
 
     case VERBOSE:
-      sxverbosep = SXTRUE;
+      sxverbosep = true;
       break;
 
     case -VERBOSE:
-      sxverbosep = SXFALSE;
+      sxverbosep = false;
       break;
 
     case LINE_LENGTH:
@@ -198,11 +198,11 @@ int main(int argc, char *argv[])
       break;
 
     case TABS:
-      sxppvariables.no_tabs = SXFALSE;
+      sxppvariables.no_tabs = false;
       break;
 
     case -TABS:
-      sxppvariables.no_tabs = SXTRUE;
+      sxppvariables.no_tabs = true;
       break;
 
     case EVERY:
@@ -229,7 +229,7 @@ int main(int argc, char *argv[])
     setbuf (stdout, NULL);
   }
 
-  syntax (SXINIT, &pp_lecl_tables, SXFALSE /* no includes */);
+  syntax (SXINIT, &pp_lecl_tables, false /* no includes */);
 
   if (argnum == argc) {
     pplecl_run ((char*)NULL);
@@ -244,7 +244,7 @@ int main(int argc, char *argv[])
     } while (argnum < argc);
   }
 
-  syntax (SXFINAL, &pp_lecl_tables, SXTRUE);
+  syntax (SXFINAL, &pp_lecl_tables, true);
 
   sxexit (sxerr_max_severity ());
 

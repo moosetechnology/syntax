@@ -32,7 +32,7 @@ static char	ME [] = "DRCG_sem_fun.c";
 
 #include <stdlib.h>  /* pour random() */
 
-char WHAT_RCGTESTDRCG[] = "@(#)SYNTAX - $Id: DRCG_sem_fun.c 3235 2023-05-15 17:35:39Z garavel $" WHAT_DEBUG;
+char WHAT_RCGTESTDRCG[] = "@(#)SYNTAX - $Id: DRCG_sem_fun.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 typedef struct {
     struct bag_disp_hd {
@@ -66,7 +66,7 @@ OR (lhs_bits_array, rhs_bits_array)
     }
 }
 
-static SXBOOLEAN
+static bool
 IS_AND (lhs_bits_array, rhs_bits_array)
     SXBA	lhs_bits_array, rhs_bits_array;
 {
@@ -82,10 +82,10 @@ IS_AND (lhs_bits_array, rhs_bits_array)
     while (slices_number-- > 0)
     {
 	if (*lhs_bits_ptr-- & *rhs_bits_ptr--)
-	    return SXTRUE;
+	    return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
@@ -248,7 +248,7 @@ static SXINT	max_var, has_prolog, is_dynam_atom, max_atom, rhs_maxnt, max_term, 
 static SXINT	glob_tree_top, tree_size, Aij2tree_size;
 
 #if DRCG_is_cyclic==1
-static SXBOOLEAN		is_cyclic_prod;	
+static bool		is_cyclic_prod;	
 static struct cyclic_tree {
     SXINT		loop_nb;
 } *cyclic_tree;
@@ -278,7 +278,7 @@ static SXINT		*Frhs_stack, *Fsons;
 
 static SXINT		*undo_stack, undo_stack_top, undo_stack_size;
 
-static SXBOOLEAN		is_unified;
+static bool		is_unified;
 
 #include "XxY.h"
 
@@ -466,13 +466,13 @@ DRCGsubstitute (sub_tree, var_ref)
     *sub_tree = y;
 }
 
-static SXBOOLEAN
+static bool
 integer_val (tree_id, ref, val)
     SXINT *tree_id, *ref, *val;
 {
     /* On calcule la valeur de l'expression dont la racine est (tree_id, exp_ref) */
-    /* Si SXTRUE, tree_id et ref sont non significatifs */
-    /* Si SXFALSE, tree_id et ref designe la racine de l'echec */
+    /* Si true, tree_id et ref sont non significatifs */
+    /* Si false, tree_id et ref designe la racine de l'echec */
     SXINT kind, val1, val2, bot, int_op, op_ref, op1_tree, op1_ref, op2_tree, op2_ref;
     struct drcg_struct	*pdrcg;
 
@@ -485,13 +485,13 @@ integer_val (tree_id, ref, val)
 	kind = REF2KIND (*ref);
     }
 
-    if (kind == VARIABLE) return SXFALSE;
+    if (kind == VARIABLE) return false;
 
     val1 = REF2VAL (*ref);
 
     if (kind == INTEGER_CONSTANT) {
 	*val = val1;
-	return SXTRUE;
+	return true;
     }
 
     if (kind == DYNAM_ATOM) {
@@ -504,10 +504,10 @@ integer_val (tree_id, ref, val)
 	return ptr != str; /* Si #, c'est un entier */
     }
 
-    if (kind != INTEGER_OP) return SXFALSE;
+    if (kind != INTEGER_OP) return false;
 
     if (max_term==0)
-	return SXFALSE;
+	return false;
 
     pdrcg = drcg+drcg_tree2attr[*tree_id].pid;
     bot = pdrcg->term_disp [val1];
@@ -517,20 +517,20 @@ integer_val (tree_id, ref, val)
     op1_tree = *tree_id;
     op1_ref = pdrcg->term_list [bot+1];
 
-    if (!integer_val (&op1_tree, &op1_ref, &val1)) return SXFALSE;
+    if (!integer_val (&op1_tree, &op1_ref, &val1)) return false;
 
     int_op = REF2VAL (op_ref);
 
     if (int_op == UMINUS) {
 	*val = -val1;
-	return SXTRUE;
+	return true;
     }
 
     /* On prend le 2eme operande */
     op2_tree = *tree_id;
     op2_ref = pdrcg->term_list [bot+2];
 
-    if (!integer_val (&op2_tree, &op2_ref, &val2)) return SXFALSE;
+    if (!integer_val (&op2_tree, &op2_ref, &val2)) return false;
 
     switch (int_op) {
     case DIVIDE:
@@ -559,14 +559,14 @@ integer_val (tree_id, ref, val)
 #endif
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
 #if occur_check==1
-static SXBOOLEAN occur ();
+static bool occur ();
 
-static SXBOOLEAN
+static bool
 occur_body (tree_var, X, tree_t1, t1)
     SXINT tree_var, X, tree_t1, t1;
 {
@@ -585,22 +585,22 @@ occur_body (tree_var, X, tree_t1, t1)
 	    /* variable libre */
 	    if (tree_var == tree_t1 && X == t1)
 		/* C'est X */
-		return SXTRUE;	/* Le test d'occurrence a echoue */
+		return true;	/* Le test d'occurrence a echoue */
 	}
     }
 
     if (kind != VARIABLE) {
 	if (occur (tree_var, X, tree_t1, t1))
-	    return SXTRUE;
+	    return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
 
 
-static SXBOOLEAN
+static bool
 occur (tree_var, X, tree_term, t)
     SXINT tree_var, X, tree_term, t;
 {
@@ -617,7 +617,7 @@ occur (tree_var, X, tree_term, t)
     
     if (kind == ATOM || kind == INTEGER_CONSTANT || kind == DYNAM_ATOM)
 	/* clos */
-	return SXFALSE;
+	return false;
 
     t = REF2VAL (t);
     pdrcg = drcg+drcg_tree2attr [tree_term].pid;
@@ -631,7 +631,7 @@ occur (tree_var, X, tree_term, t)
 	    /* On saute le foncteur */
 	    while (++bot < top) {
 		if (occur_body (tree_var, X, tree_term, pdrcg->term_list [bot]))
-		    return SXTRUE;
+		    return true;
 	    }
 
 	}
@@ -639,18 +639,18 @@ occur (tree_var, X, tree_term, t)
     else {
 	/* t est une liste non close */
 	if (occur_body (tree_var, X, tree_term, pdrcg->list_list [t]))
-	    return SXTRUE;
+	    return true;
 
 	if (occur_body (tree_var, X, tree_term, pdrcg->list_list [t+1]))
-	    return SXTRUE;
+	    return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 #endif
 
 
-static SXBOOLEAN
+static bool
 unify_int_expr (val, tree, expr)
     SXINT val, tree, expr;
 {
@@ -661,7 +661,7 @@ unify_int_expr (val, tree, expr)
 
     if (kind == VARIABLE) {
 	create_substitution (tree, expr, tree, KV2REF (INTEGER_CONSTANT, val));
-	return SXTRUE;
+	return true;
     }
 
 #if EBUG
@@ -669,7 +669,7 @@ unify_int_expr (val, tree, expr)
 	sxtrap (ME, "unify_int_expr");
 #endif
 
-    if (kind != INTEGER_OP) return SXFALSE;
+    if (kind != INTEGER_OP) return false;
 
     pdrcg = drcg+drcg_tree2attr [tree].pid;
     bot = pdrcg->term_disp [REF2VAL (expr)];
@@ -694,7 +694,7 @@ unify_int_expr (val, tree, expr)
     op2_ref = pdrcg->term_list [bot+2];
     op2_kind = integer_val (&op2_tree, &op2_ref, &val2);
 
-    if (!op1_kind && !op2_kind) return SXFALSE;
+    if (!op1_kind && !op2_kind) return false;
 
     if (op2_kind) {
 	val1 = val2;
@@ -718,7 +718,7 @@ unify_int_expr (val, tree, expr)
 	    return unify_int_expr (val+val1, op2_tree, op2_ref);
 
     case MODULO:
-	return SXFALSE; /* pas unique */
+	return false; /* pas unique */
 
     case MULTIPLY:
 	return unify_int_expr (val/val1, op2_tree, op2_ref);
@@ -735,14 +735,14 @@ unify_int_expr (val, tree, expr)
 
 
 
-static SXBOOLEAN
+static bool
 unify (sub_tree1, t1, sub_tree2, t2)
     SXINT sub_tree1, t1, sub_tree2, t2;
 {
     SXINT		x, t, bot1, bot2, top1, sub_tree_var, sub_tree_term, what;
     SXINT 	t1_kind, t2_kind, t1_val, t2_val, val, t1_ref, t2_ref;
     char 	*str, *ptr;
-    SXBOOLEAN	is_t1_var, is_t2_var, is_t_var;
+    bool	is_t1_var, is_t2_var, is_t_var;
     struct drcg_struct	*pdrcg1, *pdrcg2;
     SXINT			pid1, pid2;
 
@@ -754,7 +754,7 @@ unify (sub_tree1, t1, sub_tree2, t2)
 	is_t1_var = (REF2KIND (t1) == VARIABLE);
     }
     else
-	is_t1_var = SXFALSE;
+	is_t1_var = false;
 
     if (REF2KIND (t2) == VARIABLE) {
 	/* variable */
@@ -763,11 +763,11 @@ unify (sub_tree1, t1, sub_tree2, t2)
 	is_t2_var = (REF2KIND (t2) == VARIABLE);
     }
     else
-	is_t2_var = SXFALSE;
+	is_t2_var = false;
 
     if (sub_tree1 == sub_tree2 && t1 == t2)
 	/* Variables ou termes identiques => substitution vide, unification reussie */
-	return SXTRUE;
+	return true;
 	
     if (is_t1_var || is_t2_var) {
 	/* L'un des 2 termes (au moins) est une variable libre */
@@ -789,12 +789,12 @@ unify (sub_tree1, t1, sub_tree2, t2)
 #if occur_check==1
 	if (!is_t_var && occur (sub_tree_var, x, sub_tree_term, t)) {
 	    /* La variable (sub_tree_var,x) occure ds t qui n'est pas une variable */
-	    return SXFALSE;
+	    return false;
 	}
 #endif
 
 	create_substitution (sub_tree_var, x, sub_tree_term, t);
-	return SXTRUE;
+	return true;
     }
 
     /* t1 et t2 ne sont pas des variables */
@@ -804,7 +804,7 @@ unify (sub_tree1, t1, sub_tree2, t2)
     what = what2do [t1_kind] [t2_kind];
 
     if (what >= 0)
-	return what == 0 ? SXFALSE : t1 == t2 /* ATOM/ATOM ou INTEGER_CONSTANT/INTEGER_CONSTANT */;
+	return what == 0 ? false : t1 == t2 /* ATOM/ATOM ou INTEGER_CONSTANT/INTEGER_CONSTANT */;
 
     t1_val = REF2VAL (t1);
     t2_val = REF2VAL (t2);
@@ -837,7 +837,7 @@ unify (sub_tree1, t1, sub_tree2, t2)
 	    t2_ref = (t2_kind == DYNAM_LIST) ? XxY_X (dynam_list, t2_val) : pdrcg2->list_list [t2_val];
 	
 	    if (!unify (sub_tree1, t1_ref, sub_tree2, t2_ref))
-		return SXFALSE;
+		return false;
 
 	    t1_ref = (t1_kind == DYNAM_LIST) ? XxY_Y (dynam_list, t1_val) : pdrcg1->list_list [t1_val+1];
 	    t2_ref = (t2_kind == DYNAM_LIST) ? XxY_Y (dynam_list, t2_val) : pdrcg2->list_list [t2_val+1];
@@ -848,13 +848,13 @@ unify (sub_tree1, t1, sub_tree2, t2)
 	/* Les 2 listes sont obligatoirement statiques */
 	if (t1_val == 0 || t2_val == 0)
 	    /* l'un est la liste vide et pas l'autre */
-	    return SXFALSE;
+	    return false;
 
 	t1_ref = pdrcg1->list_list [t1_val];
 	t2_ref = pdrcg2->list_list [t2_val];
 	
 	if (!unify (sub_tree1, t1_ref, sub_tree2, t2_ref))
-	    return SXFALSE;
+	    return false;
 
 	t1_ref = pdrcg1->list_list [t1_val+1];
 	t2_ref = pdrcg2->list_list [t2_val+1];
@@ -872,23 +872,23 @@ unify (sub_tree1, t1, sub_tree2, t2)
 	else {
 	    if (pdrcg1->term_list [bot1] != pdrcg2->term_list [bot2])
 		/* foncteurs differents */
-		return SXFALSE;
+		return false;
 
 	    top1 = pdrcg1->term_disp [t1_val+1];
 
 	    if (top1-bot1 != pdrcg2->term_disp [t2_val+1]-bot2)
 		/* arites differentes */
-		return SXFALSE;
+		return false;
 	}
 
 	while (++bot1 < top1) {
 	    bot2++;
 
 	    if (!unify (sub_tree1, pdrcg1->term_list [bot1], sub_tree2, pdrcg2->term_list [bot2]))
-		return SXFALSE;
+		return false;
 	}
 
-	return SXTRUE;
+	return true;
 
     case II: /* INT/INT (au moins un INTEGER_OP) */
 	if (t1_kind == INTEGER_OP) {
@@ -907,7 +907,7 @@ unify (sub_tree1, t1, sub_tree2, t2)
 	if (t1_kind == INTEGER_OP && t2_kind == INTEGER_OP)
 	    /* On pourrait repondre vrai si les expr entieres etaient traitees comme
 	       des contraintes! */
-	    return SXFALSE;
+	    return false;
 
 	/* Si l'echec du calcul de la valeur est du a la presence d'une seule variable
 	   libre, on peut (peut etre) l'instancier :
@@ -933,7 +933,7 @@ unify (sub_tree1, t1, sub_tree2, t2)
 	t1_val = (SXINT) strtol (str, &ptr, 10);
 
 	if (ptr == str)
-	    return SXFALSE; /* L'atome dynamique n'est pas un entier */
+	    return false; /* L'atome dynamique n'est pas un entier */
 	
 	if (has_integer_op==1) {
 	    if (t2_kind == INTEGER_OP) {
@@ -956,7 +956,7 @@ unify (sub_tree1, t1, sub_tree2, t2)
 
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -985,12 +985,12 @@ tree_oflw ()
 
 /* ********************************** PREDEFINED PROLOG PREDICATES ********************************** */
 
-static SXBOOLEAN
+static bool
 list2stack (tree_id, list_ref)
     SXINT tree_id, list_ref;
 {
     SXINT			kind, list_val, elem_ref;
-    SXBOOLEAN		end_reached = SXFALSE;
+    bool		end_reached = false;
 
     do {
 	if ((kind = REF2KIND (list_ref)) == VARIABLE) {
@@ -1004,7 +1004,7 @@ list2stack (tree_id, list_ref)
 	    || kind == TERM
 	    || kind == INTEGER_OP
 	    )
-	    return SXFALSE;
+	    return false;
 
 	if (kind != VARIABLE && list_ref != EMPTY_LIST) {
 	    list_val = REF2VAL (list_ref);
@@ -1017,7 +1017,7 @@ list2stack (tree_id, list_ref)
 	}
 	else {
 	    elem_ref = 0;
-	    end_reached = SXTRUE;
+	    end_reached = true;
 	}
 
 	if (++list_stack_top >= list_stack_size) {
@@ -1042,10 +1042,10 @@ list2stack (tree_id, list_ref)
 	}
     } while (!end_reached);
 
-    return SXTRUE;
+    return true;
 }
 
-static SXBOOLEAN
+static bool
 unify_list (list_ptr1, list_ptr2, lgth)
     struct list_struct *list_ptr1, *list_ptr2;
     SXINT 		lgth;
@@ -1053,16 +1053,16 @@ unify_list (list_ptr1, list_ptr2, lgth)
     while (lgth-- > 0) {
 	if (!unify (list_ptr1->tree_id, list_ptr1->elem_ref,
 		    list_ptr2->tree_id, list_ptr2->elem_ref))
-	    return SXFALSE;
+	    return false;
 
 	list_ptr1++, list_ptr2++;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
-static SXBOOLEAN
+static bool
 unify_reverse_list (list_ptr1, list_ptr2, lgth)
     struct list_struct *list_ptr1, *list_ptr2;
     SXINT 		lgth;
@@ -1070,12 +1070,12 @@ unify_reverse_list (list_ptr1, list_ptr2, lgth)
     while (lgth-- > 0) {
 	if (!unify (list_ptr1->tree_id, list_ptr1->elem_ref,
 		    list_ptr2->tree_id, list_ptr2->elem_ref))
-	    return SXFALSE;
+	    return false;
 
 	list_ptr1++, list_ptr2--;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -1150,7 +1150,7 @@ dum_dynam_list (lgth)
     return DL;
 }
 
-static SXBOOLEAN
+static bool
 is (tree_id, /* sub_tree_id, */ param_ptr)
     SXINT tree_id, /* sub_tree_id, */ *param_ptr;
 {
@@ -1160,7 +1160,7 @@ is (tree_id, /* sub_tree_id, */ param_ptr)
 }
 
 
-static SXBOOLEAN
+static bool
 random_ppp (tree_id, /* sub_tree_id, */ param_ptr)
     SXINT tree_id, /* sub_tree_id, */ *param_ptr;
 {
@@ -1173,7 +1173,7 @@ random_ppp (tree_id, /* sub_tree_id, */ param_ptr)
     ref2 = param_ptr [1];
     tree2 = tree_id;
     /* Max non connu, on differe la decision (traitement des contraintes) */
-    if (!integer_val (&tree2, &ref2, &Max)) return SXTRUE;
+    if (!integer_val (&tree2, &ref2, &Max)) return true;
 
     ref1 = param_ptr [0];
     tree1 = tree_id;
@@ -1187,15 +1187,15 @@ random_ppp (tree_id, /* sub_tree_id, */ param_ptr)
     if (REF2KIND (ref1) == VARIABLE) {
 	N = (random ()%Max) + 1;
 	create_substitution (tree1, ref1, tree1, KV2REF(INTEGER_CONSTANT,N));
-	return SXTRUE;
+	return true;
     }
 
     /* N est inconnu et ce n'est pas une variable libre */
     /* random n'est pas un test de bornes, je rends faux! */
-    return SXFALSE;
+    return false;
 }
 
-static SXBOOLEAN
+static bool
 compare (tree_id, /* sub_tree_id, */ param_ptr)
     SXINT tree_id, /* sub_tree_id, */ *param_ptr;
 {
@@ -1207,13 +1207,13 @@ compare (tree_id, /* sub_tree_id, */ param_ptr)
     tree1 = tree_id;
 
     /* 1er operande non connu, on differe la decision (traitement des contraintes) */
-    if (!integer_val (&tree1, &ref1, &val1)) return SXTRUE;
+    if (!integer_val (&tree1, &ref1, &val1)) return true;
 
     ref2 = param_ptr [1];
     tree2 = tree_id;
 
     /* 2eme operande non connu, on differe la decision (traitement des contraintes) */
-    if (!integer_val (&tree2, &ref2, &val2)) return SXTRUE;
+    if (!integer_val (&tree2, &ref2, &val2)) return true;
 
     switch(ppp) {
     case LESS:
@@ -1234,7 +1234,7 @@ compare (tree_id, /* sub_tree_id, */ param_ptr)
 }
 
 
-static SXBOOLEAN
+static bool
 is_closed (tree_id, ref)
     SXINT tree_id, ref;
 {
@@ -1254,11 +1254,11 @@ is_closed (tree_id, ref)
 
     switch (kind) {
     case VARIABLE:
-	return SXFALSE;
+	return false;
     case ATOM:
     case DYNAM_ATOM:
     case INTEGER_CONSTANT:
-	return SXTRUE;
+	return true;
 
         case TERM:
 	bot = pdrcg->term_disp [val];
@@ -1266,10 +1266,10 @@ is_closed (tree_id, ref)
 
 	while (++bot < top) {
 	    if (!is_closed (tree_id, pdrcg->term_list [bot]))
-		return SXFALSE;
+		return false;
 	}
 
-	return SXTRUE;
+	return true;
 
         case INTEGER_OP:
 	bot = pdrcg->term_disp [val];
@@ -1277,20 +1277,20 @@ is_closed (tree_id, ref)
 
 	if (op != UMINUS) {
 	    if (!is_closed (tree_id, pdrcg->term_list [++bot]))
-		return SXFALSE;
+		return false;
 	}
 
 	return is_closed (tree_id, pdrcg->term_list [++bot]);
 
     case STATIC_LIST:
 	if (!is_closed (tree_id, pdrcg->list_list [val]))
-	    return SXFALSE;
+	    return false;
 
 	return is_closed (tree_id, pdrcg->list_list [val+1]);
 
     case DYNAM_LIST:
 	if (!is_closed (tree_id, XxY_X (dynam_list, val)))
-	    return SXFALSE;
+	    return false;
 
 	return is_closed (tree_id, XxY_Y (dynam_list, val));
 
@@ -1302,7 +1302,7 @@ is_closed (tree_id, ref)
 }
 
 
-static SXBOOLEAN
+static bool
 reverse (tree_id, /* sub_tree_id, */ param_ptr)
     SXINT tree_id, /* sub_tree_id, */ *param_ptr;
 {
@@ -1311,12 +1311,12 @@ reverse (tree_id, /* sub_tree_id, */ param_ptr)
     SXINT		kind, l1, l2, l3, DL;
 
     list_stack_ptr = list_stack = list_stack1, list_stack_top = 0, list_stack_size = list_stack1_size;
-    if (!list2stack (tree_id, param_ptr [0])) return SXFALSE;
+    if (!list2stack (tree_id, param_ptr [0])) return false;
     list_stack1 = list_stack, list_stack1_ptr = list_stack_ptr, l1 = list_stack_top-1,
     list_stack1_size = list_stack_size;
 
     list_stack_ptr = list_stack = list_stack2, list_stack_top = 0, list_stack_size = list_stack2_size;
-    if (!list2stack (tree_id, param_ptr [1])) return SXFALSE;
+    if (!list2stack (tree_id, param_ptr [1])) return false;
     list_stack2 = list_stack, list_stack2_ptr = list_stack_ptr, l2 = list_stack_top-1,
     list_stack2_size = list_stack_size;
 
@@ -1326,55 +1326,55 @@ reverse (tree_id, /* sub_tree_id, */ param_ptr)
     switch (kind) {
     case 3:
 	/* close/close */
-	if (l1 != l2) return SXFALSE;
+	if (l1 != l2) return false;
 
 	return unify_reverse_list (list_stack1+1, list_stack2_ptr-1, l1);
 
     case 2:
 	/* close/open */
-	if (l2 > l1) return SXFALSE;
+	if (l2 > l1) return false;
 
 	if (!unify_reverse_list (list_stack1+l1-l2+1, list_stack2_ptr-1, l2))
-	    return SXFALSE;
+	    return false;
 
 	/* On cree la liste de longueur l1-l2, inverse du prefixe de L1 */
 	DL = set_dynam_reverse_list (list_stack1, l1-l2, EMPTY_LIST);
 	/* L2_tail = dynam_list */
 	create_substitution (list_stack2_ptr->tree_id, list_stack2_ptr->list_ref,
 			     glob_tree_top, DL);
-	return SXTRUE;
+	return true;
 
     case 1:
 	/* close/open */
-	if (l1 > l2) return SXFALSE;
+	if (l1 > l2) return false;
 
 	if (!unify_reverse_list (list_stack1+1, list_stack2_ptr-1, l1))
-	    return SXFALSE;
+	    return false;
 
 	/* On cree la liste de longueur l2-l1, inverse du prefixe de L2 */
 	DL = set_dynam_reverse_list (list_stack2, l2-l1, EMPTY_LIST);
 	/* L1_tail = dynam_list */
 	create_substitution (list_stack1_ptr->tree_id, list_stack1_ptr->list_ref,
 			     glob_tree_top, DL);
-	return SXTRUE;
+	return true;
 
     case 0:
 	/* open/open */
-	return SXTRUE; /* Contrainte verifiee + tard */
+	return true; /* Contrainte verifiee + tard */
     }
 }
 
-static SXBOOLEAN
+static bool
 nth (tree_id, /* sub_tree_id, */ param_ptr)
     SXINT tree_id, /* sub_tree_id, */ *param_ptr;
 {
     /* nth (L1, N, Elem) */
     /* (subtree_id, sub_tree_ptr) est une reserve de 0 variables libres */
     SXINT		l1, Lgth_ref, Lgth_tree, Lgth_kind, val, kind, la1;
-    SXBOOLEAN	done;
+    bool	done;
 
     list_stack_ptr = list_stack = list_stack1, list_stack_top = 0, list_stack_size = list_stack1_size;
-    if (!list2stack (tree_id, param_ptr [0])) return SXFALSE;
+    if (!list2stack (tree_id, param_ptr [0])) return false;
     list_stack1 = list_stack, list_stack1_ptr = list_stack_ptr, l1 = list_stack_top-1,
     list_stack1_size = list_stack_size;
 
@@ -1391,36 +1391,36 @@ nth (tree_id, /* sub_tree_id, */ param_ptr)
     switch (kind) {
     case 3:
 	/* close/val/? */
-	if (val > l1) return SXFALSE;
+	if (val > l1) return false;
 
 	list_stack1_ptr = list_stack1 + val;
 	return unify (tree_id, param_ptr [2], list_stack1_ptr->tree_id, list_stack1_ptr->elem_ref);
 
     case 1:
 	/* open/val/? */
-	if (val > l1) return SXTRUE; /* contrainte verifiee = tard */
+	if (val > l1) return true; /* contrainte verifiee = tard */
 
 	list_stack1_ptr = list_stack1 + val;
 	return unify (tree_id, param_ptr [2], list_stack1_ptr->tree_id, list_stack1_ptr->elem_ref);
 
     case 2:
 	/* close/?/? */
-	if (l1 == 0) return SXFALSE;
+	if (l1 == 0) return false;
 
 	/* On ne pourrait repondre de facon sure que si au plus un couple (N, Elem) marchait
-	   Echec => return SXFALSE
-	   1 couple marche => return SXTRUE
+	   Echec => return false
+	   1 couple marche => return true
 	   plus d'un couple marche => Quelle unif choisir (il en faut une et une seule) ? */
 
-	return SXTRUE;
+	return true;
 
     case 0:
 	/* open/?/? */
-	return SXTRUE; /* contrainte verifiee + tard */
+	return true; /* contrainte verifiee + tard */
     }
 }
 
-static SXBOOLEAN
+static bool
 size (tree_id, /* sub_tree_id, */ param_ptr)
     SXINT tree_id, /* sub_tree_id, */ *param_ptr;
 {
@@ -1429,7 +1429,7 @@ size (tree_id, /* sub_tree_id, */ param_ptr)
     SXINT		l1, Lgth_ref, Lgth_tree, Lgth_kind, val, DL;
 
     list_stack_ptr = list_stack = list_stack1, list_stack_top = 0, list_stack_size = list_stack1_size;
-    if (!list2stack (tree_id, param_ptr [0])) return SXFALSE;
+    if (!list2stack (tree_id, param_ptr [0])) return false;
     list_stack1 = list_stack, list_stack1_ptr = list_stack_ptr, l1 = list_stack_top-1,
     list_stack1_size = list_stack_size;
 
@@ -1451,52 +1451,52 @@ size (tree_id, /* sub_tree_id, */ param_ptr)
 	if (has_integer_op==1)
 	    return unify_int_expr (l1, Lgth_tree, Lgth_ref);
 
-	if (Lgth_kind != VARIABLE) return SXFALSE;
+	if (Lgth_kind != VARIABLE) return false;
 
 	create_substitution (Lgth_tree, Lgth_ref, Lgth_tree, KV2REF (INTEGER_CONSTANT, l1));
-	return SXTRUE;
+	return true;
     }
 
     /* L1 est ouvert */
     if (Lgth_kind != 0)
 	/* et Lgth n'est pas calcule */
-	return SXTRUE; /* Contrainte verifiee + tard */
+	return true; /* Contrainte verifiee + tard */
 
     /* Lgth == val */
-    if (val < l1) return SXFALSE;
+    if (val < l1) return false;
 
     /* On cree une liste bidon de longueur val-l1 */
     DL = dum_dynam_list (val-l1);
     create_substitution (list_stack1_ptr->tree_id, list_stack1_ptr->list_ref,
 			 list_stack1_ptr->tree_id, DL);
-    return SXTRUE;
+    return true;
 }
 
 
-static SXBOOLEAN
+static bool
 member (tree_id, /* sub_tree_id, */ param_ptr)
     SXINT tree_id, /* sub_tree_id, */ *param_ptr;
 {
     /* member (E, L1) */
     /* (subtree_id, sub_tree_ptr) est une reserve de 0 variables libres */
     SXINT		l1, la1;
-    SXBOOLEAN	done;
+    bool	done;
 
     list_stack_ptr = list_stack = list_stack1, list_stack_top = 0, list_stack_size = list_stack1_size;
-    if (!list2stack (tree_id, param_ptr [1])) return SXFALSE;
+    if (!list2stack (tree_id, param_ptr [1])) return false;
     list_stack1 = list_stack, l1 = list_stack_top-1, list_stack1_size = list_stack_size;
 
     /* Si open on retourne vrai (la contrainte sera verifiee + tard) ! */
-    if (list_stack_ptr->list_ref != EMPTY_LIST) return SXTRUE;
+    if (list_stack_ptr->list_ref != EMPTY_LIST) return true;
 
-    if (l1 == 0) return SXFALSE;
+    if (l1 == 0) return false;
 
     if (!is_closed (tree_id, param_ptr [0]))
-	return SXTRUE; /* on manque d'infos */
+	return true; /* on manque d'infos */
 
     la1 = 0;
     list_stack1_ptr = list_stack1;
-    done = SXFALSE;
+    done = false;
 
     do {
 	list_stack1_ptr++;
@@ -1507,7 +1507,7 @@ member (tree_id, /* sub_tree_id, */ param_ptr)
 }
 
 
-static SXBOOLEAN
+static bool
 concat (tree_id, /* sub_tree_id, */ param_ptr)
     SXINT tree_id, /* sub_tree_id, */ *param_ptr;
 {
@@ -1515,20 +1515,20 @@ concat (tree_id, /* sub_tree_id, */ param_ptr)
        (tree_id, param_ptr) = L1/L2/L3 */
     /* subtree_id est l'arbre concat   */
     SXINT		kind, l1, l2, l3, DL, DV, la3, lb3;
-    SXBOOLEAN	done;
+    bool	done;
 
     list_stack_ptr = list_stack = list_stack1, list_stack_top = 0, list_stack_size = list_stack1_size;
-    if (!list2stack (tree_id, param_ptr [0])) return SXFALSE;
+    if (!list2stack (tree_id, param_ptr [0])) return false;
     list_stack1 = list_stack, list_stack1_ptr = list_stack_ptr, l1 = list_stack_top-1,
     list_stack1_size = list_stack_size;
 
     list_stack_ptr = list_stack = list_stack2, list_stack_top = 0, list_stack_size = list_stack2_size;
-    if (!list2stack (tree_id, param_ptr [1])) return SXFALSE;
+    if (!list2stack (tree_id, param_ptr [1])) return false;
     list_stack2 = list_stack, list_stack2_ptr = list_stack_ptr, l2 = list_stack_top-1,
     list_stack2_size = list_stack_size;
 
     list_stack_ptr = list_stack = list_stack3, list_stack_top = 0, list_stack_size = list_stack3_size;
-    if (!list2stack (tree_id, param_ptr [2])) return SXFALSE;
+    if (!list2stack (tree_id, param_ptr [2])) return false;
     list_stack3 = list_stack, list_stack3_ptr = list_stack_ptr, l3 = list_stack_top-1,
     list_stack3_size = list_stack_size;
 
@@ -1539,34 +1539,34 @@ concat (tree_id, /* sub_tree_id, */ param_ptr)
     switch (kind) {
     case 7:
 	/* clos/clos/clos */
-	if (l1+l2 != l3) return SXFALSE;
+	if (l1+l2 != l3) return false;
 
 	if (!unify_list (list_stack1+1, list_stack3+1, l1))
-	    return SXFALSE;
+	    return false;
 
 	return unify_list (list_stack2+1, list_stack3+l1+1, l2);
 
 
     case 6:
 	/* clos/clos/open */
-	if (l3 > l1+l2) return SXFALSE;
+	if (l3 > l1+l2) return false;
 
 	if (l3 >= l1) {
 	    if (!unify_list (list_stack1+1, list_stack3+1, l1))
-		return SXFALSE;
+		return false;
 
 	    if (!unify_list (list_stack2+1, list_stack3+l1+1, l3-l1))
-		return SXFALSE;
+		return false;
 
 	    /* L3-tail = L2_middle */
 	    list_stack2_ptr = list_stack2 + l3-l1+1;
 	    create_substitution (list_stack3_ptr->tree_id, list_stack3_ptr->list_ref,
 				 list_stack2_ptr->tree_id, list_stack2_ptr->list_ref);
-	    return SXTRUE;
+	    return true;
 	}
 	/* l3 < l1 */
 	if (!unify_list (list_stack1+1, list_stack3+1, l3))
-	    return SXFALSE;
+	    return false;
 
 	/* DV = L2 */
 	DV = set_dynam_var ();
@@ -1578,29 +1578,29 @@ concat (tree_id, /* sub_tree_id, */ param_ptr)
 	create_substitution (list_stack3_ptr->tree_id, list_stack3_ptr->list_ref,
 			     glob_tree_top, DL);
 
-	return SXTRUE;
+	return true;
 
     case 5:
 	/* clos/open/clos */
-	if (l1+l2 > l3) return SXFALSE;
+	if (l1+l2 > l3) return false;
 
 	if (!unify_list (list_stack1+1, list_stack3+1, l1))
-	    return SXFALSE;
+	    return false;
 
 	if (!unify_list (list_stack2+1, list_stack3+l1+1, l2))
-	    return SXFALSE;
+	    return false;
 
 	/* L2_tail = L3_middle */
 	list_stack3_ptr = list_stack3 + l1+l2+1;
 	create_substitution (list_stack2_ptr->tree_id, list_stack2_ptr->list_ref,
 			     list_stack3_ptr->tree_id, list_stack3_ptr->list_ref);
-	return SXTRUE;
+	return true;
 	
     case 4:
 	/* clos/open/open */
 	if (l3 < l1) {
 	    if (!unify_list (list_stack1+1, list_stack3+1, l3))
-		return SXFALSE;
+		return false;
 
 	    
 	    /* DV = L2 */
@@ -1612,46 +1612,46 @@ concat (tree_id, /* sub_tree_id, */ param_ptr)
 	    /* L3_tail = DV */
 	    create_substitution (list_stack3_ptr->tree_id, list_stack3_ptr->list_ref,
 				 glob_tree_top, DL);
-	    return SXTRUE;
+	    return true;
 	}
 
 	if (l3 < l1+l2) {
 	    if (!unify_list (list_stack1+1, list_stack3+1, l1))
-		return SXFALSE;
+		return false;
 
 	    if (!unify_list (list_stack2+1, list_stack3+l1+1, l3-l1))
-		return SXFALSE;
+		return false;
 
 	    /* L3_tail = L2_middle */
 	    list_stack2_ptr = list_stack2 + l3-l1+1;
 	    create_substitution (list_stack3_ptr->tree_id, list_stack3_ptr->list_ref,
 				 list_stack2_ptr->tree_id, list_stack2_ptr->list_ref);
-	    return SXTRUE;
+	    return true;
 
 	}
 
 	/* l3 >= l1+l2 */
 	if (!unify_list (list_stack1+1, list_stack3+1, l1))
-	    return SXFALSE;
+	    return false;
 
 	if (!unify_list (list_stack2+1, list_stack3+l1+1, l2))
-	    return SXFALSE;
+	    return false;
 
 	/* L2_tail = L3_middle */
 	list_stack3_ptr = list_stack3 + l1+l2+1;
 	create_substitution (list_stack2_ptr->tree_id, list_stack2_ptr->list_ref,
 			     list_stack3_ptr->tree_id, list_stack3_ptr->list_ref);
-	return SXTRUE;
+	return true;
 
     case 3:
 	/* open/clos/clos */
-	if (l1+l2 > l3) return SXFALSE;
+	if (l1+l2 > l3) return false;
 	
 	if (!unify_list (list_stack1+1, list_stack3+1, l1))
-	    return SXFALSE;
+	    return false;
 
 	if (!unify_list (list_stack2+1, list_stack3+l3-l2+1, l2))
-	    return SXFALSE;
+	    return false;
 
 	/* On cree une liste dynamique, copie du milieu de la liste L3 */
 	/* dont la queue (liste non vide) est remplacee par la liste vide */
@@ -1659,18 +1659,18 @@ concat (tree_id, /* sub_tree_id, */ param_ptr)
 	/* L1_tail = X */
 	create_substitution (list_stack1_ptr->tree_id, list_stack1_ptr->list_ref,
 			     glob_tree_top, DL);
-	return SXTRUE;
+	return true;
 
     case 2:
 	/* open/clos/open */
-	/* return SXFALSE; */
-	return SXTRUE; /* contrainte verifiee + tard */
+	/* return false; */
+	return true; /* contrainte verifiee + tard */
 
     case 1:
 	/* open/open/clos */
-	if (l1+l2 > l3) return SXFALSE;
+	if (l1+l2 > l3) return false;
 
-	if (!unify_list (list_stack1+1, list_stack3+1, l1)) return SXFALSE;
+	if (!unify_list (list_stack1+1, list_stack3+1, l1)) return false;
 
 	/* Les ppp peuvent se [re]executer de facon non synchrone : sub_tree_id peut ne pas
 	   etre un fils direct de tree_id. Le clonage du sous-arbre de racine ppp et surtout
@@ -1680,24 +1680,24 @@ concat (tree_id, /* sub_tree_id, */ param_ptr)
 	   plus tard. De plus quand l'arbre est totalement construit, s'il reste des variables
 	   libres (a la racine!), on peut les affecter au cours d'une derniere phase, comme avec des
 	   contraintes, en parcourant leur domaine de definition (ce n'est pas fait) */
-	return SXTRUE;
+	return true;
 
     case 0:
 	/* open/open/open */
-	/* return SXFALSE; */
-	return SXTRUE; /* contrainte verifiee + tard */
+	/* return false; */
+	return true; /* contrainte verifiee + tard */
     }
 }
 
-static SXBOOLEAN
+static bool
 ffalse ()
 {
-    return SXFALSE;
+    return false;
 }
 
 
 static struct {
-    SXBOOLEAN (*call) ();
+    bool (*call) ();
 } execute_prolog [] = {
     {ffalse},
     {concat},
@@ -1858,7 +1858,7 @@ print_term (t, sub_tree)
 
     case INTEGER_OP:
     {
-	SXBOOLEAN	is_val1, is_val2;
+	bool	is_val1, is_val2;
 	SXINT	op_tree, op_ref, val1, val2;
 
 	bot = pdrcg->term_disp [t];
@@ -1976,7 +1976,7 @@ print_rule (tree)
 {
     SXINT			prod, Aij, A, param_nb, pos, j, k, item, node, X, Blk, ste, ppp, son_tree;
     SXINT			*param_ptr, *node_ptr, *top_node_ptr;
-    SXBOOLEAN		is_first;
+    bool		is_first;
     struct Aij_struct	*Aij_struct_ptr;
     SXINT			param, *item_ptr;
     SXINT			local_pid;
@@ -2026,14 +2026,14 @@ print_rule (tree)
     item_ptr = &(pdrcg->param_nb [prod][1]);
     node_ptr = &(node_list [ptree->node_list]);
     top_node_ptr = &(node_list [drcg_tree2attr [tree+1].node_list]);
-    is_first = SXTRUE;
+    is_first = true;
 
     while (node_ptr < top_node_ptr) {
 	son_tree = *node_ptr++;
 
 	if (son_tree < 0) {
 	    if (is_first)
-		is_first = SXFALSE;
+		is_first = false;
 	    else
 		fputs (", ", stdout);
 
@@ -2061,11 +2061,11 @@ print_rule (tree)
 	    else
 		putchar ('{');
 
-	    is_first = SXTRUE;
+	    is_first = true;
 
 	    do {
 		if (is_first)
-		    is_first = SXFALSE;
+		    is_first = false;
 		else
 		    fputs (", ", stdout);
 
@@ -2206,7 +2206,7 @@ DRCGsem_eval (prod, nbnt)
     SXINT 		sub_tree, sub_prod, param_nb, j, t1, t2, Aij, var_nb, failed_pos, indx, nb, son_nb;
     SXINT			*node_ptr, *var_ptr, *t1_ptr, *t2_ptr;
     struct drcg_tree2attr	*tree_ptr, *sub_tree_ptr, *next_tree_ptr;
-    SXBOOLEAN		done;
+    bool		done;
     SXINT			pos, sub_tree1, node, x, y;
     SXINT			old_glob_tree_top, old_node_list_top, old_var_hd_top;
     SXBA		old_tree_bag_top;
@@ -2226,7 +2226,7 @@ DRCGsem_eval (prod, nbnt)
     struct drcg_struct	*pdrcg, *pdrcg2;
     SXINT			lhs_pid;
 #if EBUG
-    SXBOOLEAN		current_ppp_failed = SXFALSE;
+    bool		current_ppp_failed = false;
 #endif
 
     old_glob_tree_top = glob_tree_top;
@@ -2420,7 +2420,7 @@ DRCGsem_eval (prod, nbnt)
     if (has_prolog==1) {
 	SXINT 	ppp_item, ppp_item_nb;
 	SXINT		*ppp_prolon, *pbot, *ptop;
-	SXBOOLEAN 	done;
+	bool 	done;
 	SXINT		x, sub_prod, cur_root, cur_ppp_item;
 	SXINT		*param_ptr;
 
@@ -2457,12 +2457,12 @@ DRCGsem_eval (prod, nbnt)
 		/* l'unification du reste a marche et il y a des contraintes a verifier */
 		/* Tous les ppp de la production courante seront stockes ds pppredo */
 		do {
-		    done = SXTRUE;
+		    done = true;
 
 		    for (x = 1; failed_pos > nbnt && x <= XxY_top (pppredo); x++) {
 			if (!XxY_is_erased (pppredo, x)) {
 			    /* Attention, le corps de la boucle peut rajouter des elements... */
-			    done = SXFALSE;
+			    done = false;
 
 			    do {
 				cur_root = XxY_X (pppredo, x);
@@ -2486,7 +2486,7 @@ DRCGsem_eval (prod, nbnt)
 				    if (cur_root == glob_tree_top) {
 					failed_pos = nbnt;
 #if EBUG
-					current_ppp_failed = SXTRUE;
+					current_ppp_failed = true;
 #endif
 				    }
 				    else {
@@ -2555,7 +2555,7 @@ DRCGsem_eval (prod, nbnt)
 	next_tree_ptr->node_list = node_list_top;
 	next_tree_ptr->var_hd = var_hd_top;
 
-	is_unified = SXTRUE;	/* DRCGsem_fun a marche (au moins) une fois */
+	is_unified = true;	/* DRCGsem_fun a marche (au moins) une fois */
 
 #if EBUG
 	if (debug_level & (8)) {
@@ -2796,7 +2796,7 @@ DRCGsem_fun_init (size)
 }
 
 
-SXBOOLEAN
+bool
 DRCGsem_fun (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
     /* rho est un tableau de taille son_nb+2
@@ -2812,7 +2812,7 @@ DRCGsem_fun (rho, son_nb, sons, is_first)
        Si clause = A0 --> A1 ... Ap, sons[i] est l'identifiant du module ds lequel est defini Ai */
 
     /* Si is_first, c'est la premiere fois qu'on fait une reduc vers (A, rho[0]), clause est une A_clause */
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     SXINT		prod = rho [0];
 
@@ -2824,7 +2824,7 @@ DRCGsem_fun (rho, son_nb, sons, is_first)
     Frhs_stack = rho+1;
     Fsons = sons;
 
-    is_unified = SXFALSE;
+    is_unified = false;
 
     unfold (prod, 1, son_nb);
 
@@ -2833,10 +2833,10 @@ DRCGsem_fun (rho, son_nb, sons, is_first)
 
 
 
-SXBOOLEAN
+bool
 DRCGsem_fun_post (S0n, start_symbol_pid, ret_val)
     SXINT 	S0n, start_symbol_pid;
-    SXBOOLEAN	ret_val;
+    bool	ret_val;
 {
     SXINT 	root, Aij, tree_nb;
 

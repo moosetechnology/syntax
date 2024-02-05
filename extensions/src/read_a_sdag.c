@@ -41,7 +41,7 @@ static char ME [] = "read_a_sdag";
 #include <stdarg.h>
 #include <setjmp.h>
 
-char WHAT_READASDAG[] = "@(#)SYNTAX - $Id: read_a_sdag.c 2955 2023-03-30 14:20:45Z garavel $" WHAT_DEBUG;
+char WHAT_READASDAG[] = "@(#)SYNTAX - $Id: read_a_sdag.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 extern void (*main_parser)(SXINT what);
 
@@ -258,7 +258,7 @@ sdag_get_t_tok_no_stack (SXINT id)
 SXINT
 sxparser_sdag_tcut  (SXINT what_to_do, struct sxtables *arg )
 {
-  SXBOOLEAN ret_val;
+  bool ret_val;
   SXINT   lahead = 0, store_print_time;
   struct  sxtoken *ptoken;
   SXINT   tmax = -arg->SXP_tables.P_tmax;
@@ -269,9 +269,9 @@ sxparser_sdag_tcut  (SXINT what_to_do, struct sxtables *arg )
   switch (what_to_do) {
   case SXACTION:
     /* on fait un "TCUT" sur les fins-de-chaque "phrase" */
-    ret_val = SXTRUE;
+    ret_val = true;
     store_print_time = is_print_time;
-    //    is_print_time = SXFALSE;
+    //    is_print_time = false;
 
     do { /* do pour chaque phrase */
       jmp_buf_ret_val = setjmp (environment_before_current_sentence);
@@ -302,7 +302,7 @@ sxparser_sdag_tcut  (SXINT what_to_do, struct sxtables *arg )
 	}
 
 	sxplocals.Mtok_no = sxplocals.atok_no = sxplocals.ptok_no = 0;
-	mem_signature_mode = SXFALSE;
+	mem_signature_mode = false;
 	continue;
       }
 
@@ -327,7 +327,7 @@ sxparser_sdag_tcut  (SXINT what_to_do, struct sxtables *arg )
 	  fprintf (sxstderr, "\n### Sentence %ld starting line %ld ###\n", (SXINT)  ++call_nb, (SXINT) SXGET_TOKEN (1).source_index.line);
 
 	if (free_after_long_jmp)
-	  mem_signature_mode = SXTRUE; /* on active le mécanisme permettant de libérer ce qu'il faut après un longjump */
+	  mem_signature_mode = true; /* on active le mécanisme permettant de libérer ce qu'il faut après un longjump */
 
 	if (time_out)
 	  sxcaught_timeout (time_out, for_semact.timeout_mngr);
@@ -359,7 +359,7 @@ sxparser_sdag_tcut  (SXINT what_to_do, struct sxtables *arg )
 	  (*main_parser) (SXACTION); // earley, ou un autre...
 
 	if (free_after_long_jmp)
-	  mem_signature_mode = SXFALSE;
+	  mem_signature_mode = false;
 
 	if (time_out)
 	  sxcaught_timeout (0, for_semact.timeout_mngr);
@@ -395,7 +395,7 @@ sxparser_sdag_tcut  (SXINT what_to_do, struct sxtables *arg )
     arg->SXP_tables.semact = (SXINT(*)(SXINT, ...))sxivoid; // pour ne pas faire 2 fois semact (i.e. dag_smp) sur le dernier dag
 
     if (store_print_time) {
-      is_print_time = SXTRUE;
+      is_print_time = true;
       sxtime (SXACTION, "\tTotal parse time");
     }
       
@@ -428,5 +428,5 @@ sxparser_sdag_tcut  (SXINT what_to_do, struct sxtables *arg )
     break;
   }
 
-  return SXTRUE;
+  return true;
 }

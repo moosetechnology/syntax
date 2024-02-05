@@ -3,11 +3,9 @@ include $(SX)/etc/make/gccoptions
 
 LECL=$(SX)/../extensions/st_to_c
 
-SRC=$(LECL)/src
 LIB=$(LECL)/lib
-INCL=$(LECL)/incl
 
-CC=$(COMPILER) -I$(INCL) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
+CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
 all: $(SXAUX)/st_to_c.out
 
@@ -24,8 +22,8 @@ $(LIB)/st_to_c.o:	$(SXINCL)/sxunix.h		\
 			$(SXINCL)/put_edit.h		\
 			$(SXINCL)/varstr.h		\
 			$(SXINCL)/util/S_tables.h	\
-			$(SRC)/st_to_c.c
-	$(CC) -o $@ -c $(SRC)/st_to_c.c
+			st_to_c.c
+	$(CC) -o $@ -c st_to_c.c
 
 $(LIB)/leclread.o: 	$(SXINCL)/sxunix.h		\
 			$(SXINCL)/util/S_tables.h	\

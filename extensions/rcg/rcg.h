@@ -58,13 +58,13 @@
 #endif
 
 
-extern SXBOOLEAN	IS_AND (SXBA lhs_bits_array, SXBA rhs_bits_array);
+extern bool	IS_AND (SXBA lhs_bits_array, SXBA rhs_bits_array);
 
 SX_GLOBAL_VAR_RCG SXINT	options_set;
-SX_GLOBAL_VAR_RCG SXBOOLEAN		is_listing_output, check_self_definition, is_CF_parser, check_set, is_OLTAG, is_1_RCG, is_gen_bnf;
-SX_GLOBAL_VAR_RCG SXBOOLEAN		decrease_order, is_simple, is_proper, is_2var_form, is_factorize, is_combinatorial, is_full_lex;
-SX_GLOBAL_VAR_RCG SXBOOLEAN		is_left_corner, used_nfndfsa, is_first_last, is_look_ahead, is_tagger, is_shift_reduce, is_shallow;
-SX_GLOBAL_VAR_RCG SXBOOLEAN             is_keep_lex, is_keep_epsilon_rules, check_instantiable_clause, is_col1;
+SX_GLOBAL_VAR_RCG bool		is_listing_output, check_self_definition, is_CF_parser, check_set, is_OLTAG, is_1_RCG, is_gen_bnf;
+SX_GLOBAL_VAR_RCG bool		decrease_order, is_simple, is_proper, is_2var_form, is_factorize, is_combinatorial, is_full_lex;
+SX_GLOBAL_VAR_RCG bool		is_left_corner, used_nfndfsa, is_first_last, is_look_ahead, is_tagger, is_shift_reduce, is_shallow;
+SX_GLOBAL_VAR_RCG bool             is_keep_lex, is_keep_epsilon_rules, check_instantiable_clause, is_col1;
 SX_GLOBAL_VAR_RCG SXINT                 h_value;
 SX_GLOBAL_VAR_RCG char		        *prgentname, *suffixname, *lfsa_file_name, *rfsa_file_name, *shallow_file_name, *lbnf_file_name, *rbnf_file_name, *Lex_file_name, *lrprod_file_name, *tig_file_name, *terminal_file_name;
 SX_GLOBAL_VAR_RCG char	                *by_mess;
@@ -118,15 +118,15 @@ your attribute declarations...
 
 #define clause_k2clausek(clause,k)	(clause2clause0[clause]+k)
 
-SX_GLOBAL_VAR_RCG SXBOOLEAN		is_drcg;
+SX_GLOBAL_VAR_RCG bool		is_drcg;
 
 SX_GLOBAL_VAR_RCG SXINT		lhs_prdct_filter; /* si check_set filtre la valeur du lhs_prdct des rcg_clauses */
 SX_GLOBAL_VAR_RCG SXINT		max_gvar, max_var, component_nb, max_lhs_adr, max_Ak, max_garity, max_nt, max_t, last_clause; 
 SX_GLOBAL_VAR_RCG SXINT		max_clause_arg_nb, max_rhs_arg_nb, max_arg_size, max_rhs_prdct, max_gcomponent_nb, max_clausek, gsize;
 SX_GLOBAL_VAR_RCG SXINT		max_prdct_nb, rule_nb;
-SX_GLOBAL_VAR_RCG SXBOOLEAN	sxttycol1p, is_start_symbol_in_rhs, has_first_last_pp, has_sem_act;
-SX_GLOBAL_VAR_RCG SXBOOLEAN	is_bottom_up_erasing_grammar, is_top_down_erasing_grammar, is_left_linear_grammar, is_right_linear_grammar, is_loop_grammar, is_combinatorial_grammar;
-SX_GLOBAL_VAR_RCG SXBOOLEAN     is_proper_grammar, is_simple_grammar, is_overlapping_grammar, is_a_complete_terminal_grammar;
+SX_GLOBAL_VAR_RCG bool	sxttycol1p, is_start_symbol_in_rhs, has_first_last_pp, has_sem_act;
+SX_GLOBAL_VAR_RCG bool	is_bottom_up_erasing_grammar, is_top_down_erasing_grammar, is_left_linear_grammar, is_right_linear_grammar, is_loop_grammar, is_combinatorial_grammar;
+SX_GLOBAL_VAR_RCG bool     is_proper_grammar, is_simple_grammar, is_overlapping_grammar, is_a_complete_terminal_grammar;
 
 SX_GLOBAL_VAR_RCG SXINT		*A2A0, *A02A, *clause2clause0, *clause2Aclause, *clausek2guide_Aclause, *clausek2guide_clause;
 SX_GLOBAL_VAR_RCG SXINT		*ste2nt, *nt2ste, *nt2arity, *ste2t, *t2ste, *ste2var, *var2ste;
@@ -144,14 +144,14 @@ SX_GLOBAL_VAR_RCG SXINT		guide_clause, *guide_clause2clause, *guide_clause2arg_p
 SX_GLOBAL_VAR_RCG SXINT		guide_lognt, guide_max_clause_id;
 SX_GLOBAL_VAR_RCG SXBA		has_an_identical_clause_set, has_an_identical_nt_set;
 SX_GLOBAL_VAR_RCG SXINT		*clause2identical, *nt2identical;
-SX_GLOBAL_VAR_RCG SXBOOLEAN	has_identical_clauses, has_identical_nts;
+SX_GLOBAL_VAR_RCG bool	has_identical_clauses, has_identical_nts;
 SX_GLOBAL_VAR_RCG SXINT		*clause2rhs_pos, *rhs_pos2disp, *rhs_pos2lhs_pos, *rhs_pos2lhs_arg_no, *rhs_pos2rhs_nt, *rhs_pos2rhs_pos_1rcg;
 SX_GLOBAL_VAR_RCG SXINT		*Ak2guide_nt;
 SX_GLOBAL_VAR_RCG SXINT		*from2var2clause, *from2var2clause_disp, *from2var2clause_list, from2var2clause_list_top;
 SX_GLOBAL_VAR_RCG SXINT		new_clause_nb, new_max_nt;
 SX_GLOBAL_VAR_RCG SXINT		*clause2rhs_stack_map, *rhs_stack_map, rhs_stack_map_top;
 
-SX_GLOBAL_VAR_RCG SXBOOLEAN     is_negative;
+SX_GLOBAL_VAR_RCG bool     is_negative;
 SX_GLOBAL_VAR_RCG SXBA          negative_nt_set;
   
 SX_GLOBAL_VAR_RCG SXBA          **clause2attr_disp;

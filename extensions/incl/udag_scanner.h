@@ -48,7 +48,7 @@ extern void   fill_idag_q2pq_stack    (void);
 /* obsolete, remplace' par range2p */
 extern void   fill_idag_pq2p          (void);
 #endif /* 0 */
-extern void   fill_more_idag_infos    (SXBOOLEAN is_qstack_needed, SXBOOLEAN is_pstack_needed, SXBOOLEAN is_inside_t_needed/* A COMPLETER : , SXBOOLEAN is_StrLen_needed */);
+extern void   fill_more_idag_infos    (bool is_qstack_needed, bool is_pstack_needed, bool is_inside_t_needed/* A COMPLETER : , bool is_StrLen_needed */);
 /* nombre de tokens dans le source */
 /*extern SXINT  get_toks_buf_size       (void); NON: on y accède désormais par idag.repair_toks_buf_top)*/
 extern char   **idag_get_t2string     (void); /* Retourne le pointeur vers t2string */

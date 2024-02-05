@@ -21,16 +21,16 @@
 #include "sxversion.h"
 #include "sxcommon.h"
 
-char WHAT_SXBA_OPS4[] = "@(#)SYNTAX - $Id: sxba_ops4.c 2428 2023-01-18 12:54:10Z garavel $" WHAT_DEBUG;
+char WHAT_SXBA_OPS4[] = "@(#)SYNTAX - $Id: sxba_ops4.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 #include "sxba.h"
 
 
-SXBOOLEAN
+bool
 sxba_bit_is_reset_set (SXBA bits_array, SXBA_INDEX bit)
 /*
- * "sxba_bit_is_reset_set" returns "SXFALSE" if the bit numbered "bit" is set
- * in "bits_array", sets it and returns "SXTRUE" otherwise.
+ * "sxba_bit_is_reset_set" returns "false" if the bit numbered "bit" is set
+ * in "bits_array", sets it and returns "true" otherwise.
  */
 {
     SXBA	bits_ptr = bits_array + DIV (bit) + 1 ;
@@ -44,11 +44,11 @@ sxba_bit_is_reset_set (SXBA bits_array, SXBA_INDEX bit)
 
 
 
-SXBOOLEAN
+bool
 sxba_bit_is_set_reset (SXBA bits_array, SXBA_INDEX bit)
 /*
- * "sxba_bit_is_set_reset" returns "SXFALSE" if the bit numbered "bit" is reset
- * in "bits_array", resets it and returns "SXTRUE" otherwise.
+ * "sxba_bit_is_set_reset" returns "false" if the bit numbered "bit" is reset
+ * in "bits_array", resets it and returns "true" otherwise.
  */
 {
     SXBA	bits_ptr = bits_array + DIV (bit) + 1 ;

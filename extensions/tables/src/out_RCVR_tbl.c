@@ -1,1 +1,0 @@
-../../../trunk/tables/src/out_RCVR_tbl.c

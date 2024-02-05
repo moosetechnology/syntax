@@ -82,7 +82,7 @@ _rnatag_semact_final (init_size)
 #define CROSS_LEFT_RIGHT_BULGE	9
 
 
-static SXBOOLEAN
+static bool
 _wc (rho0, ilb, iub)
     SXINT *rho0, *ilb, *iub;
 {
@@ -103,10 +103,10 @@ _wc (rho0, ilb, iub)
 
 /* Si is_first, c'est la premiere fois qu'on fait une reduc vers (A, rho[0]), clause est une A_clause */
 
-static SXBOOLEAN
+static bool
 empty_single_strand (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
 #include <values.h>
     SXINT	cur_top;
@@ -126,15 +126,15 @@ empty_single_strand (rho, son_nb, sons, is_first)
 	free_energy_hd [cur_top] = MAXFLOAT;
     }
 
-    return SXTRUE;
+    return true;
 }  
 
 static char single_strand_type []= {UNKNOWN,SINGLE_STRAND,LEFT_BULGE,LEFT_BULGE,LEFT_RIGHT_BULGE,LEFT_RIGHT_BULGE};
 
-static SXBOOLEAN
+static bool
 single_strand (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     SXINT 	X_top;
     float	X_energy;
@@ -155,20 +155,20 @@ single_strand (rho, son_nb, sons, is_first)
 	
 	if (X_energy >= free_energy_hd [cur_top])
 	    /* On suppose que l'energie est additive */
-	    return SXFALSE;
+	    return false;
     }
    
     type_area_hd [cur_top] = single_strand_type [type_area_hd [X_top]];
     lgth_area_hd [cur_top]++;
     free_energy_hd [cur_top] = X_energy;
 
-    return SXTRUE;
+    return true;
 }  
 
-static SXBOOLEAN
+static bool
 pairing (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     SXINT 	X_top, X_lgth, lsi, rsi, WC1, WC2;
     float	X_energy;
@@ -187,7 +187,7 @@ pairing (rho, son_nb, sons, is_first)
     case SINGLE_STRAND: /* hairpin loop */
 	X_lgth = lgth_area_hd [X_top];
 
-	if (X_lgth > 18) return SXFALSE;
+	if (X_lgth > 18) return false;
 
 	X_energy += Hairpin [X_lgth];
 	break;
@@ -206,7 +206,7 @@ pairing (rho, son_nb, sons, is_first)
     case RIGHT_BULGE:
 	X_lgth = lgth_area_hd [X_top];
 
-	if (X_lgth > 18) return SXFALSE;
+	if (X_lgth > 18) return false;
 
 	X_energy += Bulge [X_lgth];
 	break;
@@ -215,7 +215,7 @@ pairing (rho, son_nb, sons, is_first)
     case LEFT_RIGHT_BULGE:
 	X_lgth = lgth_area_hd [X_top];
 
-	if (X_lgth > 18) return SXFALSE;
+	if (X_lgth > 18) return false;
 
 	X_energy += Internal [X_lgth];
 	break;
@@ -232,20 +232,20 @@ pairing (rho, son_nb, sons, is_first)
 	
 	if (X_energy >= free_energy_hd [cur_top])
 	    /* On suppose que l'energie est additive */
-	    return SXFALSE;
+	    return false;
     }
    
     type_area_hd [cur_top] = WATSON_CRICK_PAIR;
     lgth_area_hd [cur_top] = 0;
     free_energy_hd [cur_top] = X_energy;
 
-    return SXTRUE;
+    return true;
 }  
 
-static SXBOOLEAN
+static bool
 catenate (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     SXINT 	X_top, X_lgth, ls1, rsi, WC1, WC2;
     float	X_energy;
@@ -265,7 +265,7 @@ catenate (rho, son_nb, sons, is_first)
     case SINGLE_STRAND: /* hairpin loop */
 	X_lgth = lgth_area_hd [X_top];
 
-	if (X_lgth > 18) return SXFALSE;
+	if (X_lgth > 18) return false;
 
 	X_energy += Hairpin [X_lgth];
 	break;
@@ -284,7 +284,7 @@ catenate (rho, son_nb, sons, is_first)
     case RIGHT_BULGE:
 	X_lgth = lgth_area_hd [X_top];
 
-	if (X_lgth > 18) return SXFALSE;
+	if (X_lgth > 18) return false;
 
 	energy = X_energy + Bulge [X_lgth];
 	break;
@@ -293,7 +293,7 @@ catenate (rho, son_nb, sons, is_first)
     case LEFT_RIGHT_BULGE:
 	X_lgth = lgth_area_hd [X_top];
 
-	if (X_lgth > 18) return SXFALSE;
+	if (X_lgth > 18) return false;
 
 	X_energy += Internal [X_lgth];
 	break;
@@ -312,7 +312,7 @@ catenate (rho, son_nb, sons, is_first)
 	
 	if (X_energy >= free_energy_hd [cur_top])
 	    /* On suppose que l'energie est additive */
-	    return SXFALSE;
+	    return false;
     }
    
     if (type_area_hd [X_top+1] == SINGLE_STRAND) {
@@ -326,14 +326,14 @@ catenate (rho, son_nb, sons, is_first)
 
     free_energy_hd [cur_top] = X_energy;
 
-    return SXTRUE;
+    return true;
 }  
 
 
-static SXBOOLEAN
+static bool
 copyXY (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     /* sss(X, Y) --> ss(X, Y) . @copyXY
        sss(X, Y) --> rnatag(X) rnatag(Y) .  @copyXY */
@@ -358,7 +358,7 @@ copyXY (rho, son_nb, sons, is_first)
 	
 	if (X_energy+Y_energy >= free_energy_hd [cur_top]+free_energy_hd [cur_top+1])
 	    /* On suppose que l'energie est additive */
-	    return SXFALSE;
+	    return false;
     }
 
     type_area_hd [cur_top] = type_area_hd [X_top];
@@ -372,13 +372,13 @@ copyXY (rho, son_nb, sons, is_first)
     lgth_area_hd [cur_top] = lgth_area_hd [Y_top];
 
 
-    return SXTRUE;
+    return true;
 }
 
-static SXBOOLEAN
+static bool
 left_single_strand (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     /* ss(T X, Y) --> &StrLen(1, T) !&StrLen(0, X) ss(X,Y) . @left_single_strand
        ssok(T X, Y)--> &StrLen(1, T) !&StrLen(0, X) ssok(X,Y) . @left_single_strand */
@@ -404,7 +404,7 @@ left_single_strand (rho, son_nb, sons, is_first)
 	
 	if (X_energy+Y_energie >= free_energy_hd [cur_top]+free_energy_hd [cur_top+1])
 	    /* On suppose que l'energie est additive */
-	    return SXFALSE;
+	    return false;
     }
    
     type_area_hd [cur_top] = single_strand_type [type_area_hd [X_top]];
@@ -417,13 +417,13 @@ left_single_strand (rho, son_nb, sons, is_first)
     free_energy_hd [cur_top] = Y_energy;
     lgth_area_hd [cur_top] = lgth_area_hd [Y_top];
 
-    return SXTRUE;
+    return true;
 }
 
-static SXBOOLEAN
+static bool
 right_single_strand (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     /* ss(X, Y T) --> &StrLen(1, T) !&StrLen(0, Y) ss(X,Y) . @right_single_strand
        ssok(X, Y T) --> &StrLen(1, T) !&StrLen(0, Y) ssok(X,Y) . @right_single_strand */
@@ -449,7 +449,7 @@ right_single_strand (rho, son_nb, sons, is_first)
 	
 	if (X_energy+Y_energie >= free_energy_hd [cur_top]+free_energy_hd [cur_top+1])
 	    /* On suppose que l'energie est additive */
-	    return SXFALSE;
+	    return false;
     }
    
     type_area_hd [cur_top] = type_area_hd [X_top];
@@ -462,13 +462,13 @@ right_single_strand (rho, son_nb, sons, is_first)
     lgth_area_hd [cur_top]++;
     free_energy_hd [cur_top] = Y_energy;
     
-    return SXTRUE;
+    return true;
 }
 
-static SXBOOLEAN
+static bool
 left_pairing (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     SXINT 	X_top, Y_top, X_lgth, lsi, rsi, WC1, WC2;
     float	X_energy, Y_energy;
@@ -490,7 +490,7 @@ left_pairing (rho, son_nb, sons, is_first)
     case SINGLE_STRAND: /* hairpin loop */
 	X_lgth = lgth_area_hd [X_top];
 
-	if (X_lgth > 18) return SXFALSE;
+	if (X_lgth > 18) return false;
 
 	X_energy += Hairpin [X_lgth];
 	break;
@@ -509,7 +509,7 @@ left_pairing (rho, son_nb, sons, is_first)
     case RIGHT_BULGE:
 	X_lgth = lgth_area_hd [X_top];
 
-	if (X_lgth > 18) return SXFALSE;
+	if (X_lgth > 18) return false;
 
 	X_energy += Bulge [X_lgth];
 	break;
@@ -518,7 +518,7 @@ left_pairing (rho, son_nb, sons, is_first)
     case LEFT_RIGHT_BULGE:
 	X_lgth = lgth_area_hd [X_top];
 
-	if (X_lgth > 18) return SXFALSE;
+	if (X_lgth > 18) return false;
 
 	X_energy += Internal [X_lgth];
 	break;
@@ -536,7 +536,7 @@ left_pairing (rho, son_nb, sons, is_first)
 	
 	if (X_energy + Y_energie >= free_energy_hd [cur_top]+free_energy_hd [cur_top+1])
 	    /* On suppose que l'energie est additive */
-	    return SXFALSE;
+	    return false;
     }
    
     type_area_hd [cur_top] = WATSON_CRICK_PAIR;
@@ -549,13 +549,13 @@ left_pairing (rho, son_nb, sons, is_first)
     lgth_area_hd [cur_top] = lgth_area_hd [Y_top];
     free_energy_hd [cur_top] = Y_energy;
 
-    return SXTRUE;
+    return true;
 }
 
-static SXBOOLEAN
+static bool
 right_pairing (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     SXINT 	X_top, Y_top, Y_lgth, Y_type, lsi, rsi, WC1, WC2;
     float	X_energy, Y_energy;
@@ -577,7 +577,7 @@ right_pairing (rho, son_nb, sons, is_first)
     case SINGLE_STRAND: /* hairpin loop */
 	Y_lgth = lgth_area_hd [Y_top];
 
-	if (Y_lgth > 18) return SXFALSE;
+	if (Y_lgth > 18) return false;
 
 	Y_energy += Hairpin [Y_lgth];
 	break;
@@ -596,7 +596,7 @@ right_pairing (rho, son_nb, sons, is_first)
     case RIGHT_BULGE:
 	Y_lgth = lgth_area_hd [Y_top];
 
-	if (Y_lgth > 18) return SXFALSE;
+	if (Y_lgth > 18) return false;
 
 	Y_energy += Bulge [Y_lgth];
 	break;
@@ -605,7 +605,7 @@ right_pairing (rho, son_nb, sons, is_first)
     case LEFT_RIGHT_BULGE:
 	Y_lgth = lgth_area_hd [Y_top];
 
-	if (Y_lgth > 18) return SXFALSE;
+	if (Y_lgth > 18) return false;
 
 	Y_energy += Internal [Y_lgth];
 	break;
@@ -623,7 +623,7 @@ right_pairing (rho, son_nb, sons, is_first)
 	
 	if (X_energy + Y_energie >= free_energy_hd [cur_top]+free_energy_hd [cur_top+1])
 	    /* On suppose que l'energie est additive */
-	    return SXFALSE;
+	    return false;
     }
    
     type_area_hd [cur_top] = type_area_hd [X_top];
@@ -636,14 +636,14 @@ right_pairing (rho, son_nb, sons, is_first)
     lgth_area_hd [cur_top] = 0;
     free_energy_hd [cur_top] = Y_energy;
 
-    return SXTRUE;
+    return true;
 }
 
 
-static SXBOOLEAN
+static bool
 left_catenate (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     SXINT 	X_top, Y_top, X_lgth, ls1, rsi, WC1, WC2;
     float	X_energy, Y_energy;
@@ -667,7 +667,7 @@ left_catenate (rho, son_nb, sons, is_first)
     case SINGLE_STRAND: /* hairpin loop */
 	X_lgth = lgth_area_hd [X_top];
 
-	if (X_lgth > 18) return SXFALSE;
+	if (X_lgth > 18) return false;
 
 	X_energy += Hairpin [X_lgth];
 	break;
@@ -686,7 +686,7 @@ left_catenate (rho, son_nb, sons, is_first)
     case RIGHT_BULGE:
 	X_lgth = lgth_area_hd [X_top];
 
-	if (X_lgth > 18) return SXFALSE;
+	if (X_lgth > 18) return false;
 
 	energy = X_energy + Bulge [X_lgth];
 	break;
@@ -695,7 +695,7 @@ left_catenate (rho, son_nb, sons, is_first)
     case LEFT_RIGHT_BULGE:
 	X_lgth = lgth_area_hd [X_top];
 
-	if (X_lgth > 18) return SXFALSE;
+	if (X_lgth > 18) return false;
 
 	X_energy += Internal [X_lgth];
 	break;
@@ -715,7 +715,7 @@ left_catenate (rho, son_nb, sons, is_first)
 	
 	if (X_energy + Y_energy >= free_energy_hd [cur_top] + free_energy_hd [cur_top+1])
 	    /* On suppose que l'energie est additive */
-	    return SXFALSE;
+	    return false;
     }
    
     if (type_area_hd [X_top+1] == SINGLE_STRAND) {
@@ -735,16 +735,16 @@ left_catenate (rho, son_nb, sons, is_first)
     lgth_area_hd [cur_top] = lgth_area_hd [Y_top];
     free_energy_hd [cur_top] = Y_energy;
 
-    return SXTRUE;
+    return true;
 }
 
 
 
 
-static SXBOOLEAN
+static bool
 right_catenate (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     SXINT 	X_top, Y_top, X_lgth, ls1, rsi, WC1, WC2;
     float	X_energy, Y_energy;
@@ -769,7 +769,7 @@ right_catenate (rho, son_nb, sons, is_first)
     case SINGLE_STRAND: /* hairpin loop */
 	Y_lgth = lgth_area_hd [Y_top];
 
-	if (Y_lgth > 18) return SXFALSE;
+	if (Y_lgth > 18) return false;
 
 	Y_energy += Hairpin [Y_lgth];
 	break;
@@ -788,7 +788,7 @@ right_catenate (rho, son_nb, sons, is_first)
     case RIGHT_BULGE:
 	Y_lgth = lgth_area_hd [Y_top];
 
-	if (Y_lgth > 18) return SXFALSE;
+	if (Y_lgth > 18) return false;
 
 	energy = Y_energy + Bulge [Y_lgth];
 	break;
@@ -797,7 +797,7 @@ right_catenate (rho, son_nb, sons, is_first)
     case LEFT_RIGHT_BULGE:
 	Y_lgth = lgth_area_hd [Y_top];
 
-	if (Y_lgth > 18) return SXFALSE;
+	if (Y_lgth > 18) return false;
 
 	Y_energy += Internal [Y_lgth];
 	break;
@@ -817,7 +817,7 @@ right_catenate (rho, son_nb, sons, is_first)
 	
 	if (X_energy + Y_energy >= free_energy_hd [cur_top] + free_energy_hd [cur_top+1])
 	    /* On suppose que l'energie est additive */
-	    return SXFALSE;
+	    return false;
     }
    
     type_area_hd [cur_top] = type_area_hd [X_top];
@@ -837,14 +837,14 @@ right_catenate (rho, son_nb, sons, is_first)
 
     free_energy_hd [cur_top] = Y_energy;
 
-    return SXTRUE;
+    return true;
 }
 
 
-static SXBOOLEAN
+static bool
 cross_pairing (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     SXINT 	X_top, Y_top, X_lgth, lsi, rsi, WC1, WC2;
     float	X_energy, Y_energy;
@@ -886,7 +886,7 @@ cross_pairing (rho, son_nb, sons, is_first)
     case CROSS_RIGHT_BULGE:
 	X_lgth = lgth_area_hd [X_top];
 
-	if (X_lgth > 18) return SXFALSE;
+	if (X_lgth > 18) return false;
 
 	X_energy += Bulge [X_lgth];
 	break;
@@ -895,7 +895,7 @@ cross_pairing (rho, son_nb, sons, is_first)
     case CROSS_LEFT_RIGHT_BULGE:
 	X_lgth = lgth_area_hd [X_top];
 
-	if (X_lgth > 18) return SXFALSE;
+	if (X_lgth > 18) return false;
 
 	X_energy += Internal [X_lgth];
 	break;
@@ -916,7 +916,7 @@ cross_pairing (rho, son_nb, sons, is_first)
 	
 	if (X_energy >= free_energy_hd [cur_top]+free_energy_hd [cur_top+1])
 	    /* On suppose que l'energie est additive */
-	    return SXFALSE;
+	    return false;
     }
    
     type_area_hd [cur_top] = CROSS_WATSON_CRICK_PAIR;
@@ -928,14 +928,14 @@ cross_pairing (rho, son_nb, sons, is_first)
     lgth_area_hd [cur_top] = 0;
     free_energy_hd [cur_top] = 0.;
 
-    return SXTRUE;
+    return true;
 }
 
 
-static SXBOOLEAN
+static bool
 cross_pairing_right_catenate (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     SXINT 	X_top, Y_top, X_lgth, lsi, rsi, WC1, WC2;
     float	X_energy, Y_energy;
@@ -981,7 +981,7 @@ cross_pairing_right_catenate (rho, son_nb, sons, is_first)
     case CROSS_RIGHT_BULGE:
 	X_lgth = lgth_area_hd [X_top];
 
-	if (X_lgth > 18) return SXFALSE;
+	if (X_lgth > 18) return false;
 
 	X_energy += Bulge [X_lgth];
 	break;
@@ -990,7 +990,7 @@ cross_pairing_right_catenate (rho, son_nb, sons, is_first)
     case CROSS_LEFT_RIGHT_BULGE:
 	X_lgth = lgth_area_hd [X_top];
 
-	if (X_lgth > 18) return SXFALSE;
+	if (X_lgth > 18) return false;
 
 	X_energy += Internal [X_lgth];
 	break;
@@ -1011,7 +1011,7 @@ cross_pairing_right_catenate (rho, son_nb, sons, is_first)
 	
 	if (X_energy + Y_energie >= free_energy_hd [cur_top] + free_energy_hd [cur_top+1])
 	    /* On suppose que l'energie est additive */
-	    return SXFALSE;
+	    return false;
     }
    
     if (Y_type == SINGLE_STRAND) {
@@ -1037,7 +1037,7 @@ cross_pairing_right_catenate (rho, son_nb, sons, is_first)
 	free_energy_hd [cur_top] = Y_energy;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 

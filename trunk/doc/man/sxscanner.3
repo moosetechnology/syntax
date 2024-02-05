@@ -26,25 +26,25 @@ sxsvar
 
 struct sxtables  sxtables\|;
 
-SXVOID sxscanner (what, tables)
+void sxscanner (what, tables)
 .ta \w'SXVOI'u +\w'struct sxtables 'u
 	int	what\|;
 	struct sxtables	*sxtables\|;
 
-SXVOID sxscan_it ()
+void sxscan_it ()
 
 int sxcheck_keyword (string, length)
 .ta \w'int'u +\w'char 'u
 	char	*string\|;
 	int	length\|;
 
-SXBOOLEAN sxsrecovery (what, state_no, class)
+bool sxsrecovery (what, state_no, class)
 .ta \w'SXBOO'u +\w'unsigned char 'u
 	int	what,
 		state_no\|;
 	unsigned char	*class\|;
 
-SXBOOLEAN sxssrecovery (what, state_no, class)
+bool sxssrecovery (what, state_no, class)
 .ta \w'SXBOO'u +\w'unsigned char 'u
 	int	what,
 		state_no\|;
@@ -156,14 +156,14 @@ the beginning of the current scanner call.
 	\fBstruct\fP sxtoken	terminal_token	/* terminal token structure	*/\|;
 	\fBunsigned\fP \fBchar\fP	source_class	/* current source class	*/\|;
 	\fBint\fP	include_action	/* include post action	*/\|;
-	\fBSXSHORT\fP	previous_char	/* before the current token	*/\|;
+	\fBshort\fP	previous_char	/* before the current token	*/\|;
 .ta \w'\fBstr\fP'u +\w'\fBstr\fP'u +\w'\fBstruct\fP sxsource_coord 'u +\w'/* before the marked character 'u
 	\fBstruct\fP mark {	/* "@Mark" processing		*/
 		\fBstruct\fP sxsource_coord	source_coord
 			/* source coordinates	*/\|;
 		\fBint\fP	index
 			/* token string index	*/\|;
-		\fBSXSHORT\fP	previous_char
+		\fBshort\fP	previous_char
 			/* before the marked character	*/\|;
 		} mark\|;
 	}\|;
@@ -252,7 +252,7 @@ are the lexical level error processing modules\|; the first is the standard one
 version which only deletes the erroneous character.
 .TP
 .I SXSCAN_LA_P
-is a (SXBOOLEAN) macro which may be used in the code of a user's predicate
+is a (bool) macro which may be used in the code of a user's predicate
 to know if the current character (i.e. the character of the source text whose
 class is associated with the predicate being processed) has been read in look
 ahead.
@@ -284,20 +284,20 @@ in the language whose tables are
 .IR sxtables.
 .TP
 .IR sxkeywordp \|( sxtables , \|look_ahead )
-is a macro which expands into a SXBOOLEAN value\|:
-SXTRUE if
+is a macro which expands into a bool value\|:
+true if
 .I look_ahead
 is the code of a keyword in the language whose tables are
 .I sxtables
-else SXFALSE.
+else false.
 .TP
 .IR sxgenericp \|( sxtables , \|look_ahead )
-is a macro which expands into a SXBOOLEAN value\|:
-SXTRUE if
+is a macro which expands into a bool value\|:
+true if
 .I look_ahead
 is the code of a generic terminal in the language whose tables are
 .I sxtables
-else SXFALSE.
+else false.
 .SH "SEE ALSO"
 \fBlecl\fP\|(1),
 \fBtdef\fP\|(1),

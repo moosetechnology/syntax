@@ -24,7 +24,7 @@ static char	ME [] = "XH_mngr";
 #include	"XH.h"
 #include        "sxcommon.h"
 
-char WHAT_XH_MNGR[] = "@(#)SYNTAX - $Id: XH_mngr.c 2947 2023-03-29 17:06:41Z garavel $" WHAT_DEBUG;
+char WHAT_XH_MNGR[] = "@(#)SYNTAX - $Id: XH_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 extern void sxtrap (char *caller, char *message);
 extern SXINT  sxnext_prime (SXINT germe);
@@ -54,10 +54,10 @@ void	XH_alloc (XH_header *header,
     header->list = (SXINT*) sxalloc ((header->list_size = average_list_size * init_elem_nb) + 1, sizeof (SXINT));
     header->list [0] = 1;
     header->scrmbl = 0;
-    header->is_locked = SXFALSE;
+    header->is_locked = false;
     header->oflw = oflw;
     header->stat_file = stat_file;
-    header->is_allocated = SXTRUE;
+    header->is_allocated = true;
 }
 
 /* Les structures sont "statiques", on les alloue/copie en dynamique */ 
@@ -88,7 +88,7 @@ XH_oflw_copy (XH_header *header)
     *list++ = *old_list++;
 }
 
-SXBOOLEAN	XH_oflw (XH_header *header)
+bool	XH_oflw (XH_header *header)
 {
     SXINT old_size;
 
@@ -106,12 +106,12 @@ SXBOOLEAN	XH_oflw (XH_header *header)
 	 et sur lesquelles on retravaille ... */
       /* Il faut aussi allouer hash_display et display */
       XH_oflw_copy (header);
-      header->is_allocated = SXTRUE;
+      header->is_allocated = true;
     }
     else
       header->list = (SXINT*) sxrealloc (header->list, header->list_size + 1, sizeof (SXINT));
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -128,7 +128,7 @@ void	XH_clear (XH_header *header)
 	header->display->lnk = 1;
 	header->display [1].X = 1;
 	header->list [0] = 1;
-	header->is_locked = SXFALSE;
+	header->is_locked = false;
     }
 }
 
@@ -196,7 +196,7 @@ void	XH_free (XH_header *header)
     sxfree (header->list), header->list = NULL;
     sxfree (header->display), header->display = NULL;
     sxfree (header->hash_display), header->hash_display = NULL;
-    header->is_allocated = SXFALSE;
+    header->is_allocated = false;
 }
 
 
@@ -262,7 +262,7 @@ SXINT	XH_is_set (XH_header *header)
     return x;
 }
 
-SXBOOLEAN	XH_set (XH_header *header, SXINT *result)
+bool	XH_set (XH_header *header, SXINT *result)
 {
     /* Recherche si la liste
            header->list[header->display[header->display->lnk].X .. *(header->list)]
@@ -273,7 +273,7 @@ SXBOOLEAN	XH_set (XH_header *header, SXINT *result)
     struct XH_elem	*aelem, *prev = NULL, *display = header->display;
     SXINT		*hash_display = header->hash_display;
     SXINT	old_size;
-    SXBOOLEAN			overflow;
+    bool			overflow;
 
     sxinitialise(old_size); /* pour faire taire gcc -Wuninitialized */
     if (header->is_locked)
@@ -306,10 +306,10 @@ SXBOOLEAN	XH_set (XH_header *header, SXINT *result)
 				*result = x;
 
 				if ((aelem->lnk & XH_80) == 0) /* real item */
-				    return SXTRUE;
+				    return true;
 				else /* erased */ {
 				    aelem->lnk &= XH_7F;
-				    return SXFALSE;
+				    return false;
 				}
 			    }
 
@@ -343,7 +343,7 @@ SXBOOLEAN	XH_set (XH_header *header, SXINT *result)
 	     et sur lesquelles on retravaille ... */
 	  /* Il faut aussi allouer hash_display et display */
 	  XH_oflw_copy (header);
-	  header->is_allocated = SXTRUE;
+	  header->is_allocated = true;
 	  display = header->display;
 	  hash_display = header->hash_display;
 	}
@@ -359,7 +359,7 @@ SXBOOLEAN	XH_set (XH_header *header, SXINT *result)
 	   On modifie la taille de la table de hash. */
 	/* La multiplication par 2 assure que si s%h != s'%h => s%2h != s'%2h */
 	SXINT	*low, *high;
-	SXBOOLEAN		is_low;
+	bool		is_low;
 
 	header->hash_size = 2 * (z = header->hash_size);
 
@@ -374,14 +374,14 @@ SXBOOLEAN	XH_set (XH_header *header, SXINT *result)
 	    *(high = (low = hash_display + hash_value_counter) + z) = 0;
 
 	    if ((x = *low) != 0) {
-		is_low = SXTRUE;
+		is_low = true;
 
 		do {
 		    if (((aelem = display + x)->scrmbl) % header->hash_size == (SXUINT)hash_value_counter) {
 			if (!is_low) {
 			    *low &= XH_80;
 			    *low += x;
-			    is_low = SXTRUE;
+			    is_low = true;
 			}
 
 			x = *(low = &(aelem->lnk));
@@ -390,7 +390,7 @@ SXBOOLEAN	XH_set (XH_header *header, SXINT *result)
 			if (is_low) {
 			    *high &= XH_80;
 			    *high += x;
-			    is_low = SXFALSE;
+			    is_low = false;
 			}
 
 			x = *(high = &(aelem->lnk));
@@ -408,7 +408,7 @@ SXBOOLEAN	XH_set (XH_header *header, SXINT *result)
 	    (*(header->oflw))(old_size, display->X);
     }
 
-    return SXFALSE;
+    return false;
 }
 
 void	XH_lock (XH_header *header)
@@ -422,7 +422,7 @@ void	XH_lock (XH_header *header)
     if (header->is_locked)
 	return;
 
-    header->is_locked = SXTRUE;
+    header->is_locked = true;
     header->list = (SXINT*) sxrealloc (header->list,  (header->list_size = XH_list_top (*header)) + 1, sizeof (SXINT));
     old_size = XH_size (*header);
     header->display = (struct XH_elem*) sxrealloc (header->display, (new_size = header->display->lnk) + 1, sizeof (struct XH_elem));
@@ -503,7 +503,7 @@ void	XH_pack (XH_header *header, SXINT n, void (*swap_ft) (SXINT, SXINT))
 }
 
 
-void XH2c (XH_header *header, FILE *F_XH /* named output stream */, char *name, SXBOOLEAN is_static)
+void XH2c (XH_header *header, FILE *F_XH /* named output stream */, char *name, bool is_static)
 {
   SXINT hash_size, size, top, list_size, list_top, x, y, z;
 
@@ -558,8 +558,8 @@ void XH2c (XH_header *header, FILE *F_XH /* named output stream */, char *name, 
   fprintf (F_XH, "/* scrmbl */ %i,\n", 0);
   fprintf (F_XH, "/* (*oflw)() */ %s,\n", "NULL");
   fprintf (F_XH, "/* stat_file */ %s,\n", "NULL");
-  fprintf (F_XH, "/* is_locked */ %s,\n", "SXTRUE");
-  fprintf (F_XH, "/* is_allocated */ %s,\n", "SXFALSE"); /* On ne peut pas faire de free !! */
+  fprintf (F_XH, "/* is_locked */ %s,\n", "true");
+  fprintf (F_XH, "/* is_allocated */ %s,\n", "false"); /* On ne peut pas faire de free !! */
   fprintf (F_XH, "} /* End %s */;\n", name);
 
   fprintf (F_XH, "/* End XH_header %s */;\n", name);

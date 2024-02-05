@@ -25,7 +25,7 @@
 #include "sxcommon.h"
 #include "sxdynam_scanner.h"
 
-char WHAT_SXDYNAM_SCANNER[] = "@(#)SYNTAX - $Id: sxdynam_scanner.c 3305 2023-05-26 09:00:36Z garavel $" WHAT_DEBUG;
+char WHAT_SXDYNAM_SCANNER[] = "@(#)SYNTAX - $Id: sxdynam_scanner.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 
 #define ts_put(i,c)						\
@@ -52,11 +52,11 @@ static char *err_titles[]={
 "\002Error:\t",
 };
 
-static SXBOOLEAN
+static bool
 process_predicate (SXINT lvno, SXINT state)
 {
     SXINT		prdct;
-    SXBOOLEAN	is_prdct_satisfied;
+    bool	is_prdct_satisfied;
 
     sxinitialise(is_prdct_satisfied); /* pour faire taire "gcc -Wuninitialized" */
     prdct = SXDS->item_to_attr [state].val;
@@ -66,8 +66,8 @@ process_predicate (SXINT lvno, SXINT state)
 	/* Predicat utilisateur */
 	ts_null (lvno);
 	    
-	is_prdct_satisfied = SXDS->scanact == NULL ? SXTRUE : (SXDS->mode.with_user_prdct
-	    ? (*SXDS->scanact) (SXPREDICATE, lvno, prdct) : SXFALSE);
+	is_prdct_satisfied = SXDS->scanact == NULL ? true : (SXDS->mode.with_user_prdct
+	    ? (*SXDS->scanact) (SXPREDICATE, lvno, prdct) : false);
     }
     else
     {
@@ -75,11 +75,11 @@ process_predicate (SXINT lvno, SXINT state)
 	switch (prdct)
 	{
 	case IsFalse:
-	    is_prdct_satisfied = SXFALSE;
+	    is_prdct_satisfied = false;
 	    break;
 
 	case IsTrue:
-	    is_prdct_satisfied = SXTRUE;
+	    is_prdct_satisfied = true;
 	    break;
 
 	case IsFirstCol:
@@ -98,7 +98,7 @@ process_predicate (SXINT lvno, SXINT state)
 
 	case IsLastCol:
 	    {
-		SXSHORT		sxchar;
+		short		sxchar;
 		
 		if (SXDS->mode.mode == SXNORMAL_SCAN)
 		    sxchar = sxlafirst_char ();
@@ -244,7 +244,7 @@ process_action (SXINT lvno, SXINT action, SXINT param)
 	ts_null (lvno);
 	
 	if (SXDS->scanact != NULL && SXDS->mode.with_user_act)
-	    (SXVOID) (*SXDS->scanact) (SXACTION, lvno, action);
+	    (void) (*SXDS->scanact) (SXACTION, lvno, action);
 	
 	/* cas tordu :
 	   
@@ -261,7 +261,7 @@ process_action (SXINT lvno, SXINT action, SXINT param)
 }
 
 static void
-sxds_lvcpy (SXINT j, SXINT i, SXBOOLEAN all)
+sxds_lvcpy (SXINT j, SXINT i, bool all)
 {
     struct sxdslv	*plv_j, *plv_i;
     SXINT			cs;
@@ -307,9 +307,9 @@ sxds_lvcpy (SXINT j, SXINT i, SXBOOLEAN all)
 
 
 static SXINT
-sxds_clone (SXINT old, SXINT current_state, SXBOOLEAN all)
+sxds_clone (SXINT old, SXINT current_state, bool all)
 {
-    /* Si all == SXFALSE, token_string est initialise' a vide. */
+    /* Si all == false, token_string est initialise' a vide. */
     SXINT			i;
     struct sxdslv	*plv_top;
 
@@ -369,7 +369,7 @@ fill_ctxt_set (SXINT re)
                                 SXDS->reg_exp_to_attr[SXDS->item_to_attr[s].reg_exp_no].reduce_id
 
 
-static SXBOOLEAN
+static bool
 check_action_path (SXINT lvno1, SXINT lvno2)
 {
     /* lvno1 > 0 et lvno2 > 0 et lvno1 != lvno2 et leur "state" reference des actions.
@@ -383,13 +383,13 @@ check_action_path (SXINT lvno1, SXINT lvno2)
     {
 	if (SXDS->item_to_attr [plv1->state].val != SXDS->item_to_attr [plv2->state].val ||
 	    SXDS->item_to_attr [plv1->state].param != SXDS->item_to_attr [plv2->state].param)
-	    return SXFALSE;
+	    return false;
 
 	lvno1 = plv1->prev_lvno;
 	lvno2 = plv2->prev_lvno;
 
 	if (lvno1 == lvno2)
-	    return SXTRUE;
+	    return true;
 
 	plv1 = lvno1 > 0 ? SXDS->dslv + lvno1 : NULL;
 
@@ -426,7 +426,7 @@ Push (struct configs *pconfigs, SXINT init_state, SXINT init_lvno, SXINT prev_st
     SXINT			prdct_nb, is_true_nb;
     char		conflict_kind;
     char		priority_kind;
-    SXBOOLEAN		is_true, has_prdct, current_is_true, current_has_prdct,
+    bool		is_true, has_prdct, current_is_true, current_has_prdct,
                         current_has_action;
 
     sxinitialise(first_lvno); /* pour faire taire "gcc -Wuninitialized" */
@@ -595,7 +595,7 @@ Push (struct configs *pconfigs, SXINT init_state, SXINT init_lvno, SXINT prev_st
 
 
 static void
-SetConflict (struct configs *pconfigs, SXBOOLEAN check_ambiguity)
+SetConflict (struct configs *pconfigs, bool check_ambiguity)
 {
     struct config	*pconfig, *pconfig2;
     SXINT			current_action_id, action_id, current_state, first_reduce_id, first_lvno;
@@ -698,7 +698,7 @@ test_0la (struct configs *pconfigs, SXINT current_state, SXINT current_lvno)
 	break;
 
     case KACTION:
-	new_lvno = sxds_clone (current_lvno, current_state, SXTRUE);
+	new_lvno = sxds_clone (current_lvno, current_state, true);
 
 	process_action (new_lvno, pattr->val, pattr->param);
 
@@ -751,7 +751,7 @@ test_1la (struct configs *pconfigs, SXINT init_state, SXINT init_lvno, SXINT cur
 	break;
 
     case KACTION:
-	new_lvno = sxds_clone (current_lvno, current_state, SXTRUE);
+	new_lvno = sxds_clone (current_lvno, current_state, true);
 
 	process_action (new_lvno, pattr->val, pattr->param);
 
@@ -816,7 +816,7 @@ test_unbounded (struct configs *pconfigs, SXINT init_state, SXINT init_lvno, SXI
 	break;
 
     case KACTION:
-	new_lvno = sxds_clone (current_lvno, current_state, SXTRUE);
+	new_lvno = sxds_clone (current_lvno, current_state, true);
 
 	process_action (new_lvno, pattr->val, pattr->param);
 
@@ -835,7 +835,7 @@ test_unbounded (struct configs *pconfigs, SXINT init_state, SXINT init_lvno, SXI
 	    /* Unbounded : on conserve */
 	    fill_ctxt_set (re);
 	    sxba_and (SXDS->ctxt_set, SXDS->filter);
-	    new_lvno = sxds_clone (current_lvno, current_state, SXFALSE);
+	    new_lvno = sxds_clone (current_lvno, current_state, false);
 
 	    re = -1;
 	    while ((re = sxba_scan (SXDS->ctxt_set, re)) >= 0)
@@ -909,7 +909,7 @@ process_shift (struct configs	*pconfigs)
 	    {
 		if (pattr->is_erased)
 		{
-		    new_lvno = sxds_clone (pelem->lvno, pelem->state, SXTRUE);
+		    new_lvno = sxds_clone (pelem->lvno, pelem->state, true);
 		    /* Clone apres "ts_put", on enleve le caractere. */
 		    SXDS->dslv [new_lvno].ts_lgth--;
 		    SXDS->lvno_clones [pelem->lvno] = -(new_lvno + 1);
@@ -921,7 +921,7 @@ process_shift (struct configs	*pconfigs)
 	    {
 		if (!pattr->is_erased)
 		{
-		    new_lvno = sxds_clone (pelem->lvno, pelem->state, SXTRUE);
+		    new_lvno = sxds_clone (pelem->lvno, pelem->state, true);
 		    ts_put (new_lvno, SXDS->current_char);
 		    SXDS->lvno_clones [pelem->lvno] = new_lvno + 1;
 		}
@@ -953,9 +953,9 @@ sxds_read_a_tok (void)
     struct config_elem		*pelem;
     struct config		*pconfig;
     struct item_to_attr		*pattr;
-    SXBOOLEAN			first_time, is_conflict, is_la_conflict;
+    bool			first_time, is_conflict, is_la_conflict;
     char			priority_kind, pk, conflict_kind, la_conflict_kind;
-    SXSHORT			current_char, previous_char;
+    short			current_char, previous_char;
 
     SXDS->lv_top = 0;
     SXDS->dslv [0].ts_lgth = 0;
@@ -1059,7 +1059,7 @@ sxds_read_a_tok (void)
 		    }
 		}
 	
-		SetConflict (SXDS->source_configs, SXFALSE /* sans test d'ambiguite' */);
+		SetConflict (SXDS->source_configs, false /* sans test d'ambiguite' */);
 		conflict_kind = GetConflictKind (SXDS->source_configs);
 		pconfig = SXDS->source_configs->last;
 
@@ -1068,7 +1068,7 @@ sxds_read_a_tok (void)
 				conflict_kind & NextReduce /* ou du Reduce */));
 	    }
 	    else
-		is_conflict = SXTRUE;
+		is_conflict = true;
 
 	    if (is_conflict)
 	    {
@@ -1087,7 +1087,7 @@ sxds_read_a_tok (void)
 			    SXDS->lvno_clones [pconfig->init.lvno] =
 				new_lvno = sxds_clone (pconfig->init.lvno,
 						       pconfig->init.state,
-						       SXFALSE);
+						       false);
 			}
 			else
 			    new_lvno = SXDS->lvno_clones [pconfig->init.lvno];
@@ -1103,7 +1103,7 @@ sxds_read_a_tok (void)
 		           On ne touche pas aux shifts */
 		}
 
-		SetConflict (SXDS->source_configs, SXFALSE /* sans test d'ambiguite' */);
+		SetConflict (SXDS->source_configs, false /* sans test d'ambiguite' */);
 
 		conflict_kind = GetConflictKind (SXDS->source_configs);
 		pconfig = SXDS->source_configs->last;
@@ -1129,7 +1129,7 @@ sxds_read_a_tok (void)
 			}
 		    }
 
-		    first_time = SXTRUE;
+		    first_time = true;
 		    previous_char = SXDS->previous_char;
 		    current_char = SXDS->current_char;
 		    current_char_no = SXDS->current_char_no;
@@ -1153,7 +1153,7 @@ sxds_read_a_tok (void)
 			    if (la_conflict_kind != 0 && SXDS->desambig != NULL)
 			    {
 				(*SXDS->desambig) (SXDS->source_configs, SXDS->target_configs);
-				SetConflict (SXDS->source_configs, SXFALSE);
+				SetConflict (SXDS->source_configs, false);
 				conflict_kind = GetConflictKind (SXDS->source_configs);
 				pconfig = SXDS->target_configs->last;
 			    }
@@ -1198,7 +1198,7 @@ sxds_read_a_tok (void)
 					    SXDS->lvno_clones [pconfig->prev.lvno] =
 						new_lvno = sxds_clone (pconfig->prev.lvno,
 								       pconfig->prev.state,
-								       SXTRUE);
+								       true);
 					else
 					    new_lvno = SXDS->lvno_clones [pconfig->prev.lvno];
 
@@ -1214,7 +1214,7 @@ sxds_read_a_tok (void)
 			    SXDS->previous_char = SXDS->current_char;
 
 			    SXDS->current_char = first_time ?
-				(first_time = SXFALSE, sxlafirst_char ()) :
+				(first_time = false, sxlafirst_char ()) :
 				    sxlanext_char ();
 
 			    ForeachConfig (SXDS->target_configs, pconfig)
@@ -1362,10 +1362,10 @@ sxds_scanit (void)
 	fill_ctxt_set (re);
 
 	if (lvno != 0)
-	    sxds_lvcpy ((SXINT)0, lvno, SXTRUE);
+	    sxds_lvcpy ((SXINT)0, lvno, true);
 
 	if (pattr->post_action >= 0 && SXDS->scanact != NULL && SXDS->mode.with_user_act)
-	    (SXVOID) (*SXDS->scanact) (SXACTION, 0, pattr->post_action);
+	    (void) (*SXDS->scanact) (SXACTION, 0, pattr->post_action);
     }
 }
 
@@ -1414,11 +1414,11 @@ sxdynam_scanner (SXINT	what_to_do)
 
 	SXDS->mode.errors_nb = 0;
 	SXDS->mode.mode = SXNORMAL_SCAN;
-	SXDS->mode.is_silent = SXFALSE;
-	SXDS->mode.with_system_act = SXTRUE;
-	SXDS->mode.with_user_act = SXTRUE;
-	SXDS->mode.with_system_prdct = SXTRUE;
-	SXDS->mode.with_user_prdct = SXTRUE;
+	SXDS->mode.is_silent = false;
+	SXDS->mode.with_system_act = true;
+	SXDS->mode.with_user_act = true;
+	SXDS->mode.with_system_prdct = true;
+	SXDS->mode.with_user_prdct = true;
 	
 	SXDS->terminal_token.lahead = 0;
 	SXDS->terminal_token.comment = NULL;
@@ -1478,7 +1478,7 @@ sxdynam_scanner (SXINT	what_to_do)
 }
 
 struct configs*
-sxds_string_to_token (char *string, SXBOOLEAN is_set)
+sxds_string_to_token (char *string, bool is_set)
 {
     /* On suppose que le scanner a deja ete initialise' par ailleurs
        Si "is_set", SXDS->ctxt_set a deja ete positionne'. */

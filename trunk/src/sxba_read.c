@@ -24,10 +24,10 @@
 #include "sxba.h"
 #include <unistd.h>
 
-char WHAT_SXBA_READ[] = "@(#)SYNTAX - $Id: sxba_read.c 2428 2023-01-18 12:54:10Z garavel $" WHAT_DEBUG;
+char WHAT_SXBA_READ[] = "@(#)SYNTAX - $Id: sxba_read.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 
-SXBOOLEAN
+bool
 sxba_read (sxfiledesc_t file, SXBA bits_array)
 
 /*
@@ -39,7 +39,7 @@ sxba_read (sxfiledesc_t file, SXBA bits_array)
     SXBA_ELT	bits_number, bytes_number;
 
     if (read (file, &bits_number, sizeof (SXBA_ELT)) != sizeof (SXBA_ELT) || bits_number != SXBASIZE (bits_array)) {
-	return SXFALSE;
+	return false;
     }
 
     bytes_number = SXNBLONGS (bits_number) * sizeof (SXBA_ELT);

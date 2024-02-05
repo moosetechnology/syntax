@@ -31,7 +31,7 @@ static char	ME [] = "make_proper_main";
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_MAKE_PROPER_MAIN[] = "@(#)SYNTAX - $Id: make_proper_main.c 3492 2023-08-20 15:43:18Z garavel $" WHAT_DEBUG;
+char WHAT_MAKE_PROPER_MAIN[] = "@(#)SYNTAX - $Id: make_proper_main.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 //#ifdef LC_TABLES_H
 /* On compile les tables "left_corner" ... */
@@ -64,7 +64,7 @@ char WHAT_MAKE_PROPER_MAIN[] = "@(#)SYNTAX - $Id: make_proper_main.c 3492 2023-0
 #include "udag_scanner.h"
 
 SXINT n;
-SXBOOLEAN is_print_time;
+bool is_print_time;
 
 VARSTR   concat_ff_tstr (VARSTR vstr, char* ff, int Tpq) {return NULL;}
 struct sxtoken *tok_no2tok (int tok_no) {return NULL;}
@@ -82,7 +82,7 @@ static VARSTR	       vstr;
 /*---------------*/
 
 
-static SXBOOLEAN	is_help, is_exclude, is_prod_mapping, is_terminal_mapping, is_non_terminal_mapping;
+static bool	is_help, is_exclude, is_prod_mapping, is_terminal_mapping, is_non_terminal_mapping;
 
 #define SXEOF   (-tmax)
 
@@ -226,7 +226,7 @@ make_proper_run (pathname)
 int main(int argc, char *argv[])
 {
   SXINT		argnum;
-  SXBOOLEAN	is_source_file, is_stdin;
+  bool	is_source_file, is_stdin;
   char          *source_file;
 
   n = 0;
@@ -234,48 +234,48 @@ int main(int argc, char *argv[])
   sxopentty ();
 
   /* valeurs par defaut */
-  is_help = SXFALSE;
-  is_exclude = SXFALSE;
-  is_prod_mapping = SXFALSE;
-  is_terminal_mapping = SXFALSE;
-  is_non_terminal_mapping = SXFALSE;
-  is_stdin = SXTRUE;
-  is_source_file = SXFALSE;
+  is_help = false;
+  is_exclude = false;
+  is_prod_mapping = false;
+  is_terminal_mapping = false;
+  is_non_terminal_mapping = false;
+  is_stdin = true;
+  is_source_file = false;
   
   argnum = 0;
 
   while (++argnum < argc) {
     switch (option_get_kind (argv [argnum])) {
     case HELP:
-      is_help = SXTRUE;
+      is_help = true;
       break;
 
     case VERBOSE:
-      sxverbosep = SXTRUE;
+      sxverbosep = true;
       break;
 
     case EXCLUDE:
-      is_exclude = SXTRUE;
+      is_exclude = true;
 
     case PROD_MAPPING:
-      is_prod_mapping = SXTRUE;
+      is_prod_mapping = true;
       break;
 
     case TERMINAL_MAPPING:
-      is_terminal_mapping = SXTRUE;
+      is_terminal_mapping = true;
       break;
 
     case NON_TERMINAL_MAPPING:
-      is_non_terminal_mapping = SXTRUE;
+      is_non_terminal_mapping = true;
       break;
 
     case STDIN:
-      is_stdin = SXTRUE;
+      is_stdin = true;
       break;
 
     case SOURCE_FILE:
-      is_stdin = SXFALSE;
-      is_source_file = SXTRUE;
+      is_stdin = false;
+      is_source_file = true;
       source_file = argv [argnum];
       break;
 
@@ -292,11 +292,11 @@ int main(int argc, char *argv[])
   }
 
 
-  syntax (SXINIT, &sxtables, SXFALSE /* no includes */);
+  syntax (SXINIT, &sxtables, false /* no includes */);
 
   make_proper_run (is_stdin ? NULL : source_file);
 
-  syntax (SXFINAL, &sxtables, SXTRUE);
+  syntax (SXFINAL, &sxtables, true);
 
   sxexit (sxerr_max_severity ());
   return EXIT_SUCCESS; /* Jamais atteint !! pour les compilo susceptibles ... */
@@ -342,7 +342,7 @@ output_prod (SXINT prod)
 }
 
 /* "Semantique" de make_proper */
-SXVOID
+void
 make_proper_semact (what, arg)
     SXINT		what, arg;
 {
@@ -443,7 +443,7 @@ make_proper_semact (what, arg)
     vstr = varstr_alloc (32); /* Pour output_t () !! */
       
     /* Attention, lexicalizer_mngr doit etre compile' avec l'option -DMAKE_PROPER */
-    if (lexicalizer2basic_item_set (SXFALSE, SXFALSE)) {
+    if (lexicalizer2basic_item_set (false, false)) {
       /* On sort la grammaire reduite contenue ds spf.insideG */
       SXINT               new_prod, prod, i, X;
     
@@ -502,7 +502,7 @@ make_proper_semact (what, arg)
 
 #if 0
     /* Attention, lexicalizer_mngr doit etre compile' avec l'option -DMAKE_PROPER */
-    if (lexicalizer2basic_item_set (SXFALSE, SXFALSE)) {
+    if (lexicalizer2basic_item_set (false, false)) {
       /* On sort la grammaire reduite */
       SXINT               item, prod, i, X, id;
       extern char	*ctime ();
@@ -647,7 +647,7 @@ make_proper_semact (what, arg)
 }
 
 
-SXVOID
+void
 make_proper_scanact (code, act_no)
     SXINT		code;
     SXINT		act_no;
@@ -661,7 +661,7 @@ make_proper_scanact (code, act_no)
 
   case SXACTION:
     switch (act_no) {
-      SXSHORT	c;
+      short	c;
 
     case 1: /* \nnn => char */
       {

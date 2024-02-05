@@ -29,7 +29,7 @@
 #include "lecl_pcn.h"
 #include "lecl_node.h"
 
-char WHAT_LECLST[] = "@(#)SYNTAX - $Id: lecl_st.c 3603 2023-09-23 20:02:36Z garavel $" WHAT_DEBUG;
+char WHAT_LECLST[] = "@(#)SYNTAX - $Id: lecl_st.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 extern void	lecl_pi (void);
 extern void	lecl_pd (void);
@@ -51,7 +51,7 @@ static SXINT	*sub_s /* 1:ers_size */ ;
 
 
 
-static SXVOID	st_retrieve_re_name (SXINT name, 
+static void	st_retrieve_re_name (SXINT name, 
 				     SXINT component, 
 				     struct sxsource_coord source_index, 
 				     SXBA ctxt_set)
@@ -145,7 +145,7 @@ static SXVOID	st_retrieve_re_name (SXINT name,
 
 
 
-static SXVOID	st_set_lispro (SXINT re_no, SXINT item_code, SXINT item_no)
+static void	st_set_lispro (SXINT re_no, SXINT item_code, SXINT item_no)
 {
     struct ers_item	*erse_ptr;
 
@@ -156,14 +156,14 @@ static SXVOID	st_set_lispro (SXINT re_no, SXINT item_code, SXINT item_no)
     erse_ptr->liserindx.file_name = NULL;
     erse_ptr->liserindx.line = 0;
     erse_ptr->liserindx.column = 0;
-    erse_ptr->is_erased = SXTRUE;
+    erse_ptr->is_erased = true;
     item_no++;
     SXBA_1_bit (suivant [xlis++], item_no);
 }
 
 
 
-static SXVOID	st_initialize_lispro (SXINT re_no, SXINT ate, SXINT t_code)
+static void	st_initialize_lispro (SXINT re_no, SXINT ate, SXINT t_code)
 {
     struct ers_item	*erse_ptr;
     struct ers_disp_item	*erse_disp_ptr;
@@ -175,9 +175,9 @@ static SXVOID	st_initialize_lispro (SXINT re_no, SXINT ate, SXINT t_code)
 	erse_disp_ptr->lex_name_source_index.line = 0;
 	erse_disp_ptr->lex_name_source_index.column = 0;
 	erse_disp_ptr->subtree_ptr = NULL;
-	erse_disp_ptr->is_a_user_defined_context = SXFALSE;
-	erse_disp_ptr->restricted_context = SXFALSE;
-	erse_disp_ptr->is_unbounded_context = SXFALSE;
+	erse_disp_ptr->is_a_user_defined_context = false;
+	erse_disp_ptr->restricted_context = false;
+	erse_disp_ptr->is_unbounded_context = false;
 	erse_disp_ptr->priority_kind = 0 /* "000" b */ ;
 	erse_disp_ptr->master_token = re_no;
 	erse_disp_ptr->post_action = 0;
@@ -193,13 +193,13 @@ static SXVOID	st_initialize_lispro (SXINT re_no, SXINT ate, SXINT t_code)
     erse_ptr->liserindx.file_name = NULL;
     erse_ptr->liserindx.line = 0;
     erse_ptr->liserindx.column = 0;
-    erse_ptr->is_erased = SXFALSE;
+    erse_ptr->is_erased = false;
     SXBA_1_bit (suivant [xlis++], 1);
 }
 
 
 
-static SXVOID	st_finalize_lispro (void)
+static void	st_finalize_lispro (void)
 {
     ers [xlis].lispro = -1;
     ers_disp [++current_re_no].prolon = xlis;
@@ -207,13 +207,13 @@ static SXVOID	st_finalize_lispro (void)
     ers_disp [current_re_no].pkw = xkw;
 }
 
-static SXVOID	NEXT (char *string, SXINT ate, SXINT t_code)
+static void	NEXT (char *string, SXINT ate, SXINT t_code)
 {
     SXINT	NEXT_i, NEXT_j, k, xs1;
     SXINT		q, NEXT_r, ner, codofcar, xs2, NEXT_x, t, l, prdct_no, lim, NEXT_origine;
     SXBA	/* max_re_lgth */ NEXT_follow;
     char	*NEXT_s;
-    SXBOOLEAN	is_true_found, is_in_list, mandatory_kw = SXFALSE;
+    bool	is_true_found, is_in_list, mandatory_kw = false;
 
     /* cette procedure remplit titem avec les suivants de
    substate(1 .. xsubstate-1).index .
@@ -249,21 +249,21 @@ static SXVOID	NEXT (char *string, SXINT ate, SXINT t_code)
 	    else {
 		if (ers_disp [NEXT_j].kw_kind & KW_NOT_) {
 		    /* Ne reconnait aucun mot_cle */
-		    is_in_list = SXFALSE;
+		    is_in_list = false;
 		}
 		else if (ers_disp [NEXT_j].kw_kind & KW_LIST_) {
-		    is_in_list = SXFALSE;
+		    is_in_list = false;
 
 		    for (k = ers_disp [NEXT_j + 1].pkw - 1 ; k >= ers_disp [NEXT_j].pkw; k--) {
 			if (keyword [k] == t_code) {
-			    is_in_list = SXTRUE;
+			    is_in_list = true;
 			    break;
 			}
 		    }
 		}
 		else
 		    /* Pas de liste represente l'ensemble des terminaux non specifies. */
-		    is_in_list = SXTRUE;
+		    is_in_list = true;
 
 		if (ers_disp [NEXT_j].kw_kind & KW_EXCLUDE_)
 		    is_in_list = !is_in_list;
@@ -279,7 +279,7 @@ static SXVOID	NEXT (char *string, SXINT ate, SXINT t_code)
 		       - on met -2 dans le descripteur de NEXT_j => recherche en table hash
 		       a l'execution */
 		    ers [NEXT_i].lispro = -2;
-		    mandatory_kw = SXTRUE;
+		    mandatory_kw = true;
 		}
 	    }
 	}
@@ -288,12 +288,12 @@ static SXVOID	NEXT (char *string, SXINT ate, SXINT t_code)
     sxba_empty (item_set);
 
     for (NEXT_s = string + 1; *NEXT_s; NEXT_s++) {
-	is_true_found = SXFALSE;
+	is_true_found = false;
 	lim = xs2 - 1;
 
 	for (xs1 = 1; xs1 <= lim && !is_true_found; xs1++) {
 	    if (ers [sub_s [xs1]].prdct_no == prdct_true_code)
-		is_true_found = SXTRUE;
+		is_true_found = true;
 	}
 
 	sxba_empty (already_processed);
@@ -420,7 +420,7 @@ static SXINT	define_class_by_char (SXINT car)
 
 
 
-static SXVOID	filerset (SXBA erset, SXINT re_no)
+static void	filerset (SXBA erset, SXINT re_no)
 {
     /* cette procedure emplit erset, ensemble des E.R. pouvant suivre le terminal t */
     SXINT	filerset_i, filerset_j;
@@ -461,13 +461,13 @@ static SXVOID	filerset (SXBA erset, SXINT re_no)
     }
 }
 
-SXVOID	lecl_st (void)
+void	lecl_st (void)
 {
     /* I N I T I A L I Z A T I O N S */
     if (sxverbosep) {
 	if (!sxttycol1p) {
 	    fputc ('\n', sxtty);
-	    sxttycol1p = SXTRUE;
+	    sxttycol1p = true;
 	}
 
 	fputs ("Symbol Table\n", sxtty);
@@ -486,7 +486,7 @@ SXVOID	lecl_st (void)
     xkw = 1;
     xnd = 0;
     abbrev [-1].pront = 1;
-    abbrev [-1].is_used = SXFALSE;
+    abbrev [-1].is_used = false;
     xactmax = xactmin;
     action_or_prdct_to_ate [prdct_true_code] = true_ate;
     action_or_prdct_to_ate [prdct_false_code] = false_ate;

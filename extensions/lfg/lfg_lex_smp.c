@@ -36,10 +36,10 @@ static char     ME [] = "lfg_lex_smp";
 #include "sxversion.h"
 #include "varstr.h"
 #include "sxunix.h"
-char WHAT_LFGLEXSMP[] = "@(#)SYNTAX - $Id: lfg_lex_smp.c 3492 2023-08-20 15:43:18Z garavel $" WHAT_DEBUG;
+char WHAT_LFGLEXSMP[] = "@(#)SYNTAX - $Id: lfg_lex_smp.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
-extern SXBOOLEAN  use_a_dico; /* SXTRUE => sxdico, SXFALSE => sxword */
-extern SXBOOLEAN  make_proper_will_be_used;
+extern bool  use_a_dico; /* true => sxdico, false => sxword */
+extern bool  make_proper_will_be_used;
 
 struct lfg_lex_node {
   SXNODE_HEADER_S SXVOID_NAME;
@@ -168,7 +168,7 @@ static SXINT             **fieldXatom2local_id, **fieldXlocal2atom_id, *local_id
 static sxword_header   macro_names;
 static SXUINT    *macro_id2structure;
 static SXNODE            **macro_id2visited;
-static SXBOOLEAN         has_named_structure_inside_macro;
+static bool         has_named_structure_inside_macro;
 
 static struct pred_value {
   SXINT graphie, sous_cat1, sous_cat2;
@@ -309,7 +309,7 @@ static SXBA       struct_index_set, struct_index_set2, cyclic_index_set;
 static SXINT        *struct_index2struct_id, *struct_index2field_id;
 
 
-static SXBOOLEAN
+static bool
 less_equal_struct (SXINT i, SXINT j)
 {
   SXINT topi, topj, li, lj, xi, xj, d;
@@ -334,13 +334,13 @@ less_equal_struct (SXINT i, SXINT j)
 }
 
 
-static SXVOID
+static void
 out_ifdef (char *name)
 {
   printf ("\n\n#ifdef def_%s\n", name);
 }
 
-static SXVOID
+static void
 
 out_endif (char *name)
 {
@@ -597,7 +597,7 @@ print_structure (SXNODE *visited, SXINT struct_id, SXINT lexeme_id)
   SXINT           local_atom_id;
   SXINT           *local2atom_id;
 #endif /* ESSAI */
-  SXBOOLEAN       is_optional, is_first;
+  bool       is_optional, is_first;
   unsigned char static_field_kind;
 
 
@@ -608,7 +608,7 @@ print_structure (SXNODE *visited, SXINT struct_id, SXINT lexeme_id)
 
   fputs ("[", stdout);
 
-  is_first = SXTRUE;
+  is_first = true;
 
   for (bot = XH_X (structure_hd, struct_id), top = XH_X (structure_hd, struct_id+1);
        bot < top;
@@ -623,7 +623,7 @@ print_structure (SXNODE *visited, SXINT struct_id, SXINT lexeme_id)
       break;
 
     if (is_first)
-      is_first = SXFALSE;
+      is_first = false;
     else
       fputs (", ", stdout);
 
@@ -631,7 +631,7 @@ print_structure (SXNODE *visited, SXINT struct_id, SXINT lexeme_id)
 
     if (field_id == pred_id) {
       SXINT x, id;
-      SXBOOLEAN print_structure_is_first;
+      bool print_structure_is_first;
 
       if (static_field_kind != ATOM_KIND)
 	sxtrap (ME, "print_structure");
@@ -659,7 +659,7 @@ print_structure (SXNODE *visited, SXINT struct_id, SXINT lexeme_id)
       }
 
       sous_cat_id = XH_list_elem (pred_val_hd, x++);
-      print_structure_is_first = SXTRUE;
+      print_structure_is_first = true;
 
       while (sous_cat_id) {
 	fputs (" ", stdout);
@@ -679,10 +679,10 @@ print_structure (SXNODE *visited, SXINT struct_id, SXINT lexeme_id)
 	  if (field_id < 0) {
 	    fputs ("(", stdout);
 	    field_id = -field_id;
-	    is_optional = SXTRUE;
+	    is_optional = true;
 	  }
 	  else
-	    is_optional = SXFALSE;
+	    is_optional = false;
 
 	  if (field_id > max_field_id) {
 	    field_id -= max_field_id;
@@ -703,7 +703,7 @@ print_structure (SXNODE *visited, SXINT struct_id, SXINT lexeme_id)
 	}
 
 	if (print_structure_is_first) {
-	  print_structure_is_first = SXFALSE;
+	  print_structure_is_first = false;
 	  sous_cat_id = XH_list_elem (pred_val_hd, x);
 	  fputs (">", stdout);
 	}
@@ -756,7 +756,7 @@ print_structure (SXNODE *visited, SXINT struct_id, SXINT lexeme_id)
 	      else {
 		local2atom_id = fieldXlocal2atom_id [field_id];
 		local_atom_id = 0;
-		is_first2 = SXTRUE;
+		is_first2 = true;
 
 		while ((struct_id >>= 1) != 0) {
 		  local_atom_id++;
@@ -765,7 +765,7 @@ print_structure (SXNODE *visited, SXINT struct_id, SXINT lexeme_id)
 		    atom_id = local2atom_id [local_atom_id];
 
 		    if (is_first2)
-		      is_first2 = SXFALSE;
+		      is_first2 = false;
 		    else
 		      fputs ("|", stdout);
 
@@ -826,7 +826,7 @@ print_structure (SXNODE *visited, SXINT struct_id, SXINT lexeme_id)
 		if (cur2 != bot2)
 		  fputs (", ", stdout);
 		  
-		print_structure (SXFALSE, XH_list_elem (adjunct_hd, cur2), 0);
+		print_structure (false, XH_list_elem (adjunct_hd, cur2), 0);
 		
 		cur2++;
 	      }
@@ -865,7 +865,7 @@ print_structure (SXNODE *visited, SXINT struct_id, SXINT lexeme_id)
 #endif /* EBUG */
 
 
-static SXBOOLEAN
+static bool
 check_structure_hd (SXINT struct_id)
 {
   SXINT           bot, top, bot2, top2, cur2, field_id, check_structure_hd_index, old_struct_id;
@@ -900,14 +900,14 @@ check_structure_hd (SXINT struct_id)
 	      struct_index2struct_id [check_structure_hd_index] = struct_id;
 	    else {
 	      if (old_struct_id < 0) {
-		return SXFALSE;
+		return false;
 	      }
 
 	      if (top2-bot2 > 3) {
 		/* struct_id est non vide ... */
 		if (XH_X (structure_hd, old_struct_id+1) - XH_X (structure_hd, old_struct_id) > 3)
 		  /* ... et old_struct_id aussi */
-		  return SXFALSE;
+		  return false;
 
 		struct_index2struct_id [check_structure_hd_index] = struct_id; /* On met le non vide */
 	      }
@@ -924,7 +924,7 @@ check_structure_hd (SXINT struct_id)
 	    if (struct_index2struct_id [check_structure_hd_index] & X80) {
 	      /* Pour l'instant !!, on interdit les adjuncts cycliques car il semble qu'on ne sache pas le faire
 		 avec des equations ?? */
-	      return SXFALSE;
+	      return false;
 	    }
 
 	    SXBA_1_bit (cyclic_index_set, check_structure_hd_index);
@@ -934,7 +934,7 @@ check_structure_hd (SXINT struct_id)
 
 	if ((check_structure_hd_index == 0 || top2-bot2 > 3) /* On examine la structure non vide struct_id */
 	    && !check_structure_hd (struct_id))
-	  return SXFALSE;
+	  return false;
 
 	if (check_structure_hd_index && ! SXBA_bit_is_set (cyclic_index_set, check_structure_hd_index))
 	  SXBA_0_bit (struct_index_set2, check_structure_hd_index);
@@ -969,7 +969,7 @@ check_structure_hd (SXINT struct_id)
 		  || (static_field_kind == STRUCT_KIND+UNBOUNDED_KIND && (old_struct_id & X40) != 0)
 		  || (static_field_kind != STRUCT_KIND+UNBOUNDED_KIND && (old_struct_id & X40) == 0)) {
 		/* pas le bon type */
-		return SXFALSE;
+		return false;
 	      }
 
 	      if (top2 > bot2) {
@@ -979,13 +979,13 @@ check_structure_hd (SXINT struct_id)
 		if (static_field_kind == STRUCT_KIND+UNBOUNDED_KIND && XH_X (adjunct_hd, old_struct_id+1) - XH_X (adjunct_hd, old_struct_id) > 1) {
 		  /* Il est aussi non standard */
 		  /* ... et old_struct_id aussi */
-		  return SXFALSE;
+		  return false;
 		}
 
 		if (static_field_kind != STRUCT_KIND+UNBOUNDED_KIND && XH_X (atom_hd, old_struct_id+1) - XH_X (atom_hd, old_struct_id) > 1) {
 		  /* Il est aussi non standard */
 		  /* ... et old_struct_id aussi */
-		  return SXFALSE;
+		  return false;
 		}
 
 		struct_index2struct_id [check_structure_hd_index] = X80+struct_id
@@ -1007,7 +1007,7 @@ check_structure_hd (SXINT struct_id)
 	    for (cur2 = bot2; cur2 < top2; cur2++) {
 	      /* On verifie chaque structure de l'adjunct */
 	      if (!check_structure_hd (XH_list_elem (adjunct_hd, cur2))) {
-		return SXFALSE;
+		return false;
 	      }
 	    }
 	  }
@@ -1019,7 +1019,7 @@ check_structure_hd (SXINT struct_id)
     }
   }
 
-  return SXTRUE;
+  return true;
 }
 
 static void
@@ -1059,11 +1059,11 @@ static SXINT  *named_structure2occur_nb, *named_structure2id;
 
 /* visited->name == ATTR_VAL_S_n */
 static SXINT
-fill_structure_hd (SXNODE *visited, SXINT *lexeme, SXBOOLEAN *is_main_structure)
+fill_structure_hd (SXNODE *visited, SXINT *lexeme, bool *is_main_structure)
 {
   SXINT           field_id, field_kind, field_nb, sous_cat_id, fill_structure_hd_index, struct_id, old_struct_id, named_structure, flag, cur2;
   SXINT           bot, top, bot2, top2;
-  SXBOOLEAN       is_closed;
+  bool       is_closed;
   SXNODE        *father;
   unsigned char static_field_kind;
 
@@ -1073,7 +1073,7 @@ fill_structure_hd (SXNODE *visited, SXINT *lexeme, SXBOOLEAN *is_main_structure)
   if (glbl_id2not_closed)
     is_closed = !SXBA_bit_is_set (glbl_id2not_closed, visited->id);
   else
-    is_closed = SXTRUE;
+    is_closed = true;
 
   if (father->name == NAMED_STRUCTURE_n) {
     named_structure = atoi (sxstrget (visited->brother->token.string_table_entry)); /* > 0 */
@@ -1085,7 +1085,7 @@ fill_structure_hd (SXNODE *visited, SXINT *lexeme, SXBOOLEAN *is_main_structure)
   else {
     named_structure = 0;
 #if 0
-    is_closed = SXTRUE; /* a priori */
+    is_closed = true; /* a priori */
 #endif /* 0 */
     /* On va regarder ses fils */
   }
@@ -1130,7 +1130,7 @@ fill_structure_hd (SXNODE *visited, SXINT *lexeme, SXBOOLEAN *is_main_structure)
 	    /* is_closed est positionne en utilisant glbl_id2not_closed.  Une sous-structure peut etre non close
 	     et la structure la contenant close */
 	    if (named_structure == 0 && (fill_structure_hd_index & X10))
-	      is_closed = SXFALSE;
+	      is_closed = false;
 #endif /* 0 */
 
 	    if (fill_structure_hd_index & X20) {
@@ -1285,7 +1285,7 @@ fill_structure_hd (SXNODE *visited, SXINT *lexeme, SXBOOLEAN *is_main_structure)
 
 		  if (bot < top && (XH_list_elem (structure_hd, top-1) & (X80+X10)) == (X80+X10)) {
 		    /* non clos */
-		    is_closed = SXFALSE;
+		    is_closed = false;
 		  }
 		}
 #endif /* 0 */
@@ -1299,10 +1299,10 @@ fill_structure_hd (SXNODE *visited, SXINT *lexeme, SXBOOLEAN *is_main_structure)
       }
     }
 
-    *is_main_structure = SXTRUE;
+    *is_main_structure = true;
   }
   else
-    *is_main_structure = SXFALSE;
+    *is_main_structure = false;
 
   if (pred_value_ptr->graphie) {
     /* Y'a un pred */
@@ -2133,7 +2133,7 @@ fill_is_closed (SXNODE *visited, SXINT *unique)
   if (son->name == STRUCTURE_S_n) {
     /* Attention, on utilise visited->id en temporaire */
     visited->id = *unique = unique_visited = ++T_unique;
-    is_closed = SXTRUE;
+    is_closed = true;
 
     for (son = son->son; son != NULL; son = son->brother) {
       named_structure = fill_is_closed (son, &unique_son);
@@ -2141,7 +2141,7 @@ fill_is_closed (SXNODE *visited, SXINT *unique)
 
       if (unique_son) {
 	if (T [unique_son] [0])
-	  is_closed = SXFALSE;
+	  is_closed = false;
 
 	merge_is_closed (unique_visited, unique_son);
       }
@@ -2204,7 +2204,7 @@ fill_is_closed (SXNODE *visited, SXINT *unique)
 #endif /* 0 */
 
 /* visited->name = {ATTR_VAL_S_n, NAMED_STRUCTURE_n} */
-static SXBOOLEAN
+static bool
 call_process_named_structure (SXNODE *visited)
 {
   SXINT  named_structure, id;
@@ -2732,7 +2732,7 @@ static void lfg_lex_pi (void) {
       break;
 
     case 2 :/* SXVISITED->name = {ATTR_VAL_S_n, EMPTY_NAMED_STRUCT_n, EMPTY_STRUCT_n, NAMED_STRUCTURE_n} */
-      has_named_structure_inside_macro = SXFALSE;
+      has_named_structure_inside_macro = false;
 
       if (SXVISITED->name != ATTR_VAL_S_n && SXVISITED->name != EMPTY_STRUCT_n) {
 	/* On ne permet que des vraies structures non nommees ... */
@@ -3056,7 +3056,7 @@ static void lfg_lex_pd (void) {
   SXINT           *int_ptr, *atom2local_id, *local2atom_id;
 #endif /* ESSAI */
   SXNODE        *brother, *son, *father;
-  SXBOOLEAN       is_main_structure;
+  bool       is_main_structure;
   unsigned char static_field_kind;
 
   sxinitialise(is_main_structure); /* pour faire taire gcc -Wuninitialized */
@@ -3580,7 +3580,7 @@ static void lfg_lex_pd (void) {
 	  /* structure */
 	  if (static_field_kind == (UNBOUNDED_KIND+STRUCT_KIND)) {
 	    SXINT     top2, bot2, flag;
-	    SXBOOLEAN is_closed;
+	    bool is_closed;
 
 	    if (brother->name == NAMED_ADJUNCT_n || brother->name == EMPTY_NAMED_ADJUNCT_n) {
 	      if (brother->name == NAMED_ADJUNCT_n) {
@@ -3604,7 +3604,7 @@ static void lfg_lex_pd (void) {
 	      name_id = 0;
 	    }
 
-	    is_closed = SXTRUE;
+	    is_closed = true;
 
 	    if (brother->name == STRUCTURE_S_n) {
 	      /* On range les id ds adjunct_hd */
@@ -3616,7 +3616,7 @@ static void lfg_lex_pd (void) {
 
 		if (bot2 < top2 && (XH_list_elem (structure_hd, top2-1) & (X20+X10))) {
 		  /* partage' ou non-clos */
-		  is_closed = SXFALSE;
+		  is_closed = false;
 		}
 	      }
 	    }
@@ -3782,7 +3782,7 @@ case EMPTY_NAMED_ATOM_n :
 break;
 
   case EMPTY_NAMED_STRUCT_n :
-    has_named_structure_inside_macro = SXTRUE; /* au cas ou ... */
+    has_named_structure_inside_macro = true; /* au cas ou ... */
 
     if (SXVISITED->father->father->name == RULES_S_n) {
       /* top level */
@@ -3934,7 +3934,7 @@ break;
     break;
 
   case NAMED_STRUCTURE_n :
-    has_named_structure_inside_macro = SXTRUE; /* au cas ou ... */
+    has_named_structure_inside_macro = true; /* au cas ou ... */
     break;
 
   case OPT_DISJONCTION_n :
@@ -4646,7 +4646,7 @@ smppass (void)
       SXINT       *ac_id2amlgm_list, *cc2cmpnd_list;
       XH_header XH_cc_list;
       SXINT       *amlgm_component_stack, amalgam_component_nb;
-      SXBOOLEAN   dico_OK = SXTRUE;
+      bool   dico_OK = true;
 
 #define PUSH(s,x)	(s)[++*(s)]=(x)
 
@@ -4658,7 +4658,7 @@ smppass (void)
       cc2cmpnd_list = NULL;
       initial_compound_component_id_set = NULL;
       final_compound_component_id_set = NULL;
-      XH_is_allocated (XH_cc_list) = SXFALSE;
+      XH_is_allocated (XH_cc_list) = false;
 
       size = SXWORD_top (amalgam_or_compound_component_names);
 
@@ -4704,7 +4704,7 @@ smppass (void)
 	mot2.optim_kind = SPACE; /* Priorite a l'espace sur le temps */
 	mot2.process_kind = TOTAL; /* La chaine totale est prise en compte et pas seulement les prefixe et suffixe
 				      discriminants minimaux de chaque chaine sont entres ds l'automate */
-	mot2.print_on_sxtty = SXFALSE; /* on travaille ds le silence */
+	mot2.print_on_sxtty = false; /* on travaille ds le silence */
 	mot2.min = (SXINT*) sxalloc (mot2.size, sizeof (SXINT));
 	mot2.max = (SXINT*) sxalloc (mot2.size, sizeof (SXINT));
 
@@ -4725,7 +4725,7 @@ smppass (void)
 	  sxtmsg (SXGET_TOKEN (0).source_index.file_name,
 		  "%sToo many amalgam definitions, dictionary not produced\n",
 		  sxtab_ptr->err_titles [2]+1);
-	  dico_OK = SXFALSE;
+	  dico_OK = false;
 	}
       }
 
@@ -4737,12 +4737,12 @@ smppass (void)
 
 	if (use_a_dico) {
 	  out_ifdef ("dico_cmpnd");
-	  sxdico2c (&dico, stdout, "dico_cmpnd", SXTRUE);
+	  sxdico2c (&dico, stdout, "dico_cmpnd", true);
 	  out_endif ("dico_cmpnd");
 	}
 	else {
 	  out_ifdef ("amalgam_or_compound_component_names");
-	  sxword_to_c (&amalgam_or_compound_component_names, stdout, "amalgam_or_compound_component_names", SXTRUE);
+	  sxword_to_c (&amalgam_or_compound_component_names, stdout, "amalgam_or_compound_component_names", true);
 	  out_endif ("amalgam_or_compound_component_names");
 	}
 
@@ -4873,23 +4873,23 @@ smppass (void)
 
 	/* et on les sort */
 	out_ifdef ("amalgam_id_set");
-	sxba2c (amalgam_id_set, stdout, "amalgam_id_set", "", SXTRUE, vstr);
+	sxba2c (amalgam_id_set, stdout, "amalgam_id_set", "", true, vstr);
 	out_endif ("amalgam_id_set");
 	out_ifdef ("compound_component_id_set");
-	sxba2c (compound_component_id_set, stdout, "compound_component_id_set", "", SXTRUE, vstr);
+	sxba2c (compound_component_id_set, stdout, "compound_component_id_set", "", true, vstr);
 	out_endif ("compound_component_id_set");
 	out_ifdef ("if_id_set");
-	sxba2c (if_id_set, stdout, "if_id_set", "", SXTRUE, vstr);
+	sxba2c (if_id_set, stdout, "if_id_set", "", true, vstr);
 	out_endif ("if_id_set");
 	out_ifdef ("initial_compound_component_id_set");
-	sxba2c (initial_compound_component_id_set, stdout, "initial_compound_component_id_set", "", SXTRUE, vstr);
+	sxba2c (initial_compound_component_id_set, stdout, "initial_compound_component_id_set", "", true, vstr);
 	out_endif ("initial_compound_component_id_set");
 	out_ifdef ("final_compound_component_id_set");
-	sxba2c (final_compound_component_id_set, stdout, "final_compound_component_id_set", "", SXTRUE, vstr);
+	sxba2c (final_compound_component_id_set, stdout, "final_compound_component_id_set", "", true, vstr);
 	out_endif ("final_compound_component_id_set");
 
 	out_ifdef ("XH_cc_list");
-	XH2c (&XH_cc_list, stdout, "XH_cc_list", SXTRUE /* static */);
+	XH2c (&XH_cc_list, stdout, "XH_cc_list", true /* static */);
 	out_endif ("XH_cc_list");
 
 #if 0 // parti dans lex_lfg.h
@@ -5031,7 +5031,7 @@ SXINT hd, next;\n\
       fputs ("#ifdef EASY\n", stdout);
 #endif /* 0 */
       out_ifdef ("amalgam_list");
-      XH2c (&amalgam_list, stdout, "amalgam_list", SXTRUE /* static */);
+      XH2c (&amalgam_list, stdout, "amalgam_list", true /* static */);
       out_endif ("amalgam_list");
 
       top = XH_top (amalgam_list)-1;
@@ -5047,7 +5047,7 @@ SXINT hd, next;\n\
       out_endif ("amalgam_names");
 
       out_ifdef ("X_amalgam_if_id_hd");
-      X_to_c (&X_if_hd, stdout, "X_amalgam_if_id_hd", SXTRUE);
+      X_to_c (&X_if_hd, stdout, "X_amalgam_if_id_hd", true);
       out_endif ("X_amalgam_if_id_hd");
 
 #if 0
@@ -5092,26 +5092,26 @@ SXINT hd, next;\n\
 
       /* Les terminaux ont ete mis ds un sxword car on a eu besoin, a partir du code de retrouver la chaine */
       word_tree_alloc (&word_tree_struct_terminal2code, "word_tree_struct_terminal2code", tmax /* word_nb */, 16 /* word_lgth */, 1 /* Xforeach */, 0 /* Yforeach */,
-		       SXTRUE /* from_left_to_right */, SXTRUE /* with_path2id */, NULL /* void (*oflw) () */, NULL /* FILE *stats */);
+		       true /* from_left_to_right */, true /* with_path2id */, NULL /* void (*oflw) () */, NULL /* FILE *stats */);
 
       for (id = 1; id <= tmax; id++) {
 	word_tree_add_a_string (&word_tree_struct_terminal2code, SXWORD_get (t_names, id+1), SXWORD_len (t_names, id+1), id);
       }
 
-      word_tree2sxdfa (&word_tree_struct_terminal2code, &sxdfa_struct_terminal2code, "sxdfa_struct_terminal2code", NULL /* FILE *stats */, SXTRUE /* to_be_minimized */);
+      word_tree2sxdfa (&word_tree_struct_terminal2code, &sxdfa_struct_terminal2code, "sxdfa_struct_terminal2code", NULL /* FILE *stats */, true /* to_be_minimized */);
       sxdfa2comb_vector (&sxdfa_struct_terminal2code, 0 /* optim_kind (comb simple) */, 10000 /* comb_vector_threshold */, &sxdfa_comb_terminal2code);
 
       printf ("\n\n#define EOF_CODE %ld\n\n", (SXINT) (tmax+1));
 
       out_ifdef ("sxdfa_comb_terminal2code");
-      sxdfa_comb2c (&sxdfa_comb_terminal2code, stdout, "sxdfa_comb_terminal2code", SXTRUE /* is_static */);
+      sxdfa_comb2c (&sxdfa_comb_terminal2code, stdout, "sxdfa_comb_terminal2code", true /* is_static */);
       out_endif ("sxdfa_comb_terminal2code");
 
       sxdfa_comb_free (&sxdfa_comb_terminal2code);
 
 #if 0
       SXINT       id;
-      SXBOOLEAN   dico_OK = SXTRUE;
+      bool   dico_OK = true;
 
       if (use_a_dico) {
 	mot2.size = tmax+1;
@@ -5124,7 +5124,7 @@ SXINT hd, next;\n\
 	mot2.optim_kind = SPACE; /* Priorite a l'espace sur le temps */
 	mot2.process_kind = TOTAL; /* La chaine totale est prise en compte et pas seulement les prefixe et suffixe
 				      discriminants minimaux de chaque chaine sont entres ds l'automate */
-	mot2.print_on_sxtty = SXFALSE; /* on travaille ds le silence */
+	mot2.print_on_sxtty = false; /* on travaille ds le silence */
 	mot2.min = (SXINT*) sxalloc (mot2.size, sizeof (SXINT));
 	mot2.max = (SXINT*) sxalloc (mot2.size, sizeof (SXINT));
 
@@ -5142,7 +5142,7 @@ SXINT hd, next;\n\
 	  sxtmsg (SXGET_TOKEN (0).source_index.file_name,
 		  "%sToo many terminal definitions, dictionary not produced\n",
 		  sxtab_ptr->err_titles [2]+1);
-	  dico_OK = SXFALSE;
+	  dico_OK = false;
 	}
       }
 
@@ -5154,12 +5154,12 @@ SXINT hd, next;\n\
 
 	if (use_a_dico) {
 	  out_ifdef ("dico_t");
-	  sxdico2c (&dico, stdout, "dico_t", SXTRUE);
+	  sxdico2c (&dico, stdout, "dico_t", true);
 	  out_endif ("dico_t");
 	}
 	else {
 	  out_ifdef ("t_names");
-	  sxword_to_c (&t_names, stdout, "t_names", SXTRUE);
+	  sxword_to_c (&t_names, stdout, "t_names", true);
 	  out_endif ("t_names");
 	}
 
@@ -5196,7 +5196,7 @@ SXINT hd, next;\n\
       SXINT       syno, t, struct_id;
       SXINT       *t2lexeme_nb;
       SXBA        lexical_rule_set, t_set;
-      SXBOOLEAN     dico_OK = SXTRUE;
+      bool     dico_OK = true;
       
       struct word_tree_struct word_tree_struct_inflected_form;
       struct sxdfa_struct     sxdfa_struct_inflected_form;
@@ -5216,7 +5216,7 @@ SXINT hd, next;\n\
       structure_args_list [0].lexeme = structure_args_list [0].struct_id = structure_args_list [0].priority = 0;
 
       word_tree_alloc (&word_tree_struct_inflected_form, "word_tree_struct_inflected_form", SXWORD_top (inflected_form_names) /* word_nb */, 16 /* word_lgth */, 1 /* Xforeach */, 0 /* Yforeach */,
-		       SXTRUE /* from_left_to_right */, SXTRUE /* with_path2id */, NULL /* void (*oflw) () */, NULL /* FILE *stats */);
+		       true /* from_left_to_right */, true /* with_path2id */, NULL /* void (*oflw) () */, NULL /* FILE *stats */);
 
       id = 0;
       for (lr_id = 1; lr_id <= lexical_rule_nb; lr_id++) {
@@ -5281,7 +5281,7 @@ SXINT hd, next;\n\
 	mot2.optim_kind = SPACE; /* Priorite a l'espace sur le temps */
 	mot2.process_kind = TOTAL; /* La chaine totale est prise en compte et pas seulement les prefixe et suffixe
 				      discriminants minimaux de chaque chaine sont entres ds l'automate */
-	mot2.print_on_sxtty = SXFALSE; /* on travaille ds le silence */
+	mot2.print_on_sxtty = false; /* on travaille ds le silence */
 	mot2.min = (SXINT*) sxalloc (inflected_form_nb+1, sizeof (SXINT));
 	mot2.max = (SXINT*) sxalloc (inflected_form_nb+1, sizeof (SXINT));
 
@@ -5345,7 +5345,7 @@ SXINT hd, next;\n\
 	  sxtmsg (SXGET_TOKEN (0).source_index.file_name,
 		  "%sToo many lexical definitions, dictionary not produced\n",
 		  sxtab_ptr->err_titles [2]+1);
-	  dico_OK = SXFALSE;
+	  dico_OK = false;
 	}
       }
       else {
@@ -5390,22 +5390,22 @@ SXINT hd, next;\n\
 	XH_header stack;
 	SXINT cur, smppass_bot, smppass_top, smppass_if_id, smppass_t, t_list_id, lim, i, lgth, smppass_x;
 
-	word_tree2sxdfa (&word_tree_struct_inflected_form, &sxdfa_struct_inflected_form, "sxdfa_struct_inflected_form", NULL /* FILE *stats */, SXTRUE /* to_be_minimized */);
+	word_tree2sxdfa (&word_tree_struct_inflected_form, &sxdfa_struct_inflected_form, "sxdfa_struct_inflected_form", NULL /* FILE *stats */, true /* to_be_minimized */);
 	sxdfa2comb_vector (&sxdfa_struct_inflected_form, 0 /* optim_kind (comb simple) */, 10000 /* comb_vector_threshold */, &sxdfa_comb_inflected_form);
 
 	out_ifdef ("sxdfa_comb_inflected_form");
-	sxdfa_comb2c (&sxdfa_comb_inflected_form, stdout, "sxdfa_comb_inflected_form", SXTRUE /* is_static */);
+	sxdfa_comb2c (&sxdfa_comb_inflected_form, stdout, "sxdfa_comb_inflected_form", true /* is_static */);
 	out_endif ("sxdfa_comb_inflected_form");
 
 #if 0
 	if (use_a_dico) {
 	  out_ifdef ("dico_if");
-	  sxdico2c (&dico, stdout, "dico_if", SXTRUE);
+	  sxdico2c (&dico, stdout, "dico_if", true);
 	  out_endif ("dico_if");
 	}
 	else {
 	  out_ifdef ("inflected_form_names");
-	  sxword_to_c (&inflected_form_names, stdout, "inflected_form_names", SXTRUE);
+	  sxword_to_c (&inflected_form_names, stdout, "inflected_form_names", true);
 	  out_endif ("inflected_form_names");
 	}
 #endif /* 0 */
@@ -5681,7 +5681,7 @@ SXINT lexeme, sous_cat1, sous_cat2;\n\
 	out_endif ("priority_list");
 
 	out_ifdef ("argument_set");
-	sxba2c (argument_set, stdout, "argument_set", "", SXTRUE, vstr);
+	sxba2c (argument_set, stdout, "argument_set", "", true, vstr);
 	out_endif ("argument_set");
 
 	out_ifdef ("inflected_form2display");
@@ -5933,7 +5933,7 @@ SXINT lexeme, struct_id, priority;\n\
 	  
 	  /* On en aura besoin si IS_OPERATOR_LEXEME_REF */
 	  out_ifdef ("atom_names");
-	  sxword_to_c (&atom_names, stdout, "atom_names", SXTRUE);
+	  sxword_to_c (&atom_names, stdout, "atom_names", true);
 	  out_endif ("atom_names");
 
 
@@ -5942,7 +5942,7 @@ SXINT lexeme, struct_id, priority;\n\
 	    field_kind = field_id2kind [field_id];
 
 	    if (field_kind & ATOM_KIND) {
-	      sxba2c (field_id2atom_set [field_id], stdout, "atom_id_set_for_", SXWORD_get (field_names, field_id), SXTRUE, vstr);
+	      sxba2c (field_id2atom_set [field_id], stdout, "atom_id_set_for_", SXWORD_get (field_names, field_id), true, vstr);
 	    }
 	  }
     
@@ -6045,7 +6045,7 @@ static SXBA_ELT field_id2atom_id_set [%ld] = {\n\
       mot2.optim_kind = SPACE; /* Priorite a l'espace sur le temps */
       mot2.process_kind = TOTAL; /* La chaine totale est prise en compte et pas seulement les prefixe et suffixe
 				    discriminants minimaux de chaque chaine sont entres ds l'automate */
-      mot2.print_on_sxtty = SXFALSE; /* on travaille ds le silence */
+      mot2.print_on_sxtty = false; /* on travaille ds le silence */
       mot2.min = (SXINT*) sxalloc (lexeme_nb+1, sizeof (SXINT));
       mot2.max = (SXINT*) sxalloc (lexeme_nb+1, sizeof (SXINT));
 

@@ -28,12 +28,12 @@
 #define SX_DFN_EXT_VAR2
 #include "udag_scanner.h"
 
-char WHAT_RCG_MAIN[] = "@(#)SYNTAX - $Id: RCG_main.c 3234 2023-05-15 16:52:27Z garavel $" WHAT_DEBUG;
+char WHAT_RCG_MAIN[] = "@(#)SYNTAX - $Id: RCG_main.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 #include "rcg_sglbl.h"
 
 SXUINT          maximum_input_size; /* Pour udag_scanner */
-SXBOOLEAN       tmp_file_for_stdin; /* Pour read_a_re */
+bool       tmp_file_for_stdin; /* Pour read_a_re */
 
 #ifndef NO_SX
 /* On utilise udag_scanner pour lire le source */
@@ -46,8 +46,8 @@ static struct sxtables	*dummy_tables_ptr = {NULL};
 #endif /* dummy_tables */
 #endif /* !NO_SX */
 
-extern SXBOOLEAN call_rcg_parse_it (void);
-SXBOOLEAN        (*main_parser)(void) = call_rcg_parse_it;
+extern bool call_rcg_parse_it (void);
+bool        (*main_parser)(void) = call_rcg_parse_it;
 
 /*---------------*/
 /*    options    */
@@ -180,8 +180,8 @@ option_get_text (SXINT kind)
 #ifdef NO_SX
 #include "sxword.h"
 
-extern SXBOOLEAN call_rcgparse_it ();
-/* extern SXVOID    sxtime (); */
+extern bool call_rcgparse_it ();
+/* extern void    sxtime (); */
 static FILE	*infile;
 static char     *source_file_name;
 
@@ -195,7 +195,7 @@ static char     *source_file_name;
 
 #define ts_null()	(sxsvar.sxlv_s.token_string [sxsvar.sxlv.ts_lgth] = SXNUL)
 
-SXBOOLEAN
+bool
 rcgscan_it (sxword_header *t_names_ptr)
 {
   /* Appele' depuis RCG_parser pour simuler un scanner, les terminaux sont recherches ds le sxword_header t_names_ptr */
@@ -281,14 +281,14 @@ rcgscan_it (sxword_header *t_names_ptr)
     sxtime (SXACTION, mess);
   }
 
-  return SXTRUE; /* inutile */
+  return true; /* inutile */
 }
 
-static	SXBOOLEAN
+static	bool
 RCG_run (char *pathname)
 {
   SXINT	c;
-  SXBOOLEAN ret_val;
+  bool ret_val;
 
   if (pathname == NULL) {
     if (sxverbosep) {
@@ -298,7 +298,7 @@ RCG_run (char *pathname)
     if ((infile = sxtmpfile ()) == NULL) {
       fprintf (sxstderr, "%s: Unable to create ", ME);
       sxperror ("temp file");
-      return SXFALSE;
+      return false;
     }
 
     while ((c = getchar ()) != EOF) {
@@ -312,7 +312,7 @@ RCG_run (char *pathname)
     if ((infile = sxfopen (pathname, "r")) == NULL) {
       fprintf (sxstderr, "%s: Cannot open (read) ", ME);
       sxperror (pathname);
-      return SXFALSE;
+      return false;
     }
     else {
       if (sxverbosep) {
@@ -386,7 +386,7 @@ RCG_run (char *pathname)
   source_file = infile;
     
   {
-    SXSHORT c;
+    short c;
 
     /* si le dag_kind n'est pas spécifié par -dag ou -udag, on tente une détection automatique */
     if (dag_kind == 0) {
@@ -424,7 +424,7 @@ int
 main (int argc, char *argv[])
 {
   SXINT		argnum;
-  SXBOOLEAN	in_options, is_source_file, is_stdin, is_generator_length;
+  bool	in_options, is_source_file, is_stdin, is_generator_length;
   char	*str;
 
   sxopentty ();
@@ -435,21 +435,21 @@ main (int argc, char *argv[])
   }
 
   /* valeurs par defaut */
-  is_print_time = SXTRUE;
-  is_no_semantics = SXFALSE;
-  is_parse_tree_number = SXFALSE;
-  is_default_semantics = SXTRUE; /* Semantique specifiee avec la grammaire */
+  is_print_time = true;
+  is_no_semantics = false;
+  is_parse_tree_number = false;
+  is_default_semantics = true; /* Semantique specifiee avec la grammaire */
   debug_level = 0;
   forest_level = 0; /* Ca permet d'utiliser un RCG_parser compile avec -DPARSE_FOREST avec un parser qcq */
 
-  is_guiding = is_full_guiding = SXFALSE;
+  is_guiding = is_full_guiding = false;
   best_tree_number = 1;
   maximum_input_size = ~0; /* unbounded */
 
-  is_generator_length = SXFALSE;
-  in_options = SXTRUE;
-  is_source_file = SXFALSE;
-  is_stdin = SXFALSE;
+  is_generator_length = false;
+  in_options = true;
+  is_source_file = false;
+  is_stdin = false;
   dag_yield_file_name = NULL;
   dag_yield_file = NULL;
 
@@ -459,37 +459,37 @@ main (int argc, char *argv[])
   while (in_options && ++argnum < argc) {
     switch (option_get_kind (argv [argnum])) {
     case VERBOSE:
-      sxverbosep = SXTRUE;
+      sxverbosep = true;
       break;
 
     case -VERBOSE:
-      sxverbosep = SXFALSE;
+      sxverbosep = false;
       break;
 
     case NO_SEM:
-      is_no_semantics = SXTRUE;
-      is_default_semantics = SXFALSE;
-      is_parse_tree_number = SXFALSE;
+      is_no_semantics = true;
+      is_default_semantics = false;
+      is_parse_tree_number = false;
       break;
 
     case DEFAULT_SEM:
-      is_no_semantics = SXFALSE;
-      is_default_semantics = SXTRUE;
-      is_parse_tree_number = SXFALSE;
+      is_no_semantics = false;
+      is_default_semantics = true;
+      is_parse_tree_number = false;
       break;
 
     case PARSE_TREE_NUMBER:
-      is_no_semantics = SXFALSE;
-      is_default_semantics = SXFALSE;
-      is_parse_tree_number = SXTRUE;
+      is_no_semantics = false;
+      is_default_semantics = false;
+      is_parse_tree_number = true;
       break;
 
     case TIME:
-      is_print_time = SXTRUE;
+      is_print_time = true;
       break;
 
     case -TIME:
-      is_print_time = SXFALSE;
+      is_print_time = false;
       break;
 
     case FOREST_LEVEL:
@@ -509,16 +509,16 @@ main (int argc, char *argv[])
 
     case GUIDING:
       forest_level = FL_n | FL_clause | FL_lhs_prdct | FL_lhs_clause;
-      is_guiding = SXTRUE;
+      is_guiding = true;
       break;
 
     case FULL_GUIDING:
       forest_level = FL_n | FL_clause | FL_rhs | FL_lhs_prdct | FL_lhs_clause;
-      is_full_guiding = SXTRUE;
+      is_full_guiding = true;
       break;
 
     case STDIN:
-      is_stdin = SXTRUE;
+      is_stdin = true;
       break;
 
     case DEBUG_LEVEL:
@@ -538,10 +538,10 @@ main (int argc, char *argv[])
 
     case SOURCE_FILE:
       if (is_stdin) {
-	is_stdin = SXFALSE;
+	is_stdin = false;
       }
-      is_source_file = SXTRUE;
-      in_options = SXFALSE;
+      is_source_file = true;
+      in_options = false;
       break;
 
     case BEST_TREE_NUMBER:

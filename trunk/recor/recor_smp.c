@@ -29,7 +29,7 @@
 
 #include "recor_node.h"
 
-char WHAT_RECORSMP[] = "@(#)SYNTAX - $Id: recor_smp.c 3601 2023-09-23 19:44:39Z garavel $" WHAT_DEBUG;
+char WHAT_RECORSMP[] = "@(#)SYNTAX - $Id: recor_smp.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 /*  N O D E   N A M E S  */
 #define ERROR_n 1
@@ -67,11 +67,11 @@ char WHAT_RECORSMP[] = "@(#)SYNTAX - $Id: recor_smp.c 3601 2023-09-23 19:44:39Z 
 
 /*   E X T E R N S   */
 
-extern SXBOOLEAN	recor_write (struct R_tables_s *R_tables, char *langname);
-extern SXVOID	recor_free (struct R_tables_s *R_tables);
-extern SXVOID     lecl_free (struct lecl_tables_s *lecl_tables_ptr);
-extern SXBOOLEAN  lecl_read (struct lecl_tables_s *lecl_tables_ptr, char *langname);
-extern SXBOOLEAN	is_source;
+extern bool	recor_write (struct R_tables_s *R_tables, char *langname);
+extern void	recor_free (struct R_tables_s *R_tables);
+extern void     lecl_free (struct lecl_tables_s *lecl_tables_ptr);
+extern bool  lecl_read (struct lecl_tables_s *lecl_tables_ptr, char *langname);
+extern bool	is_source;
 extern char	by_mess [], *prgentname;
 
 /*   L O C A L    D A T A   */
@@ -81,7 +81,7 @@ static struct bnf_ag_item	bnf_ag;
 static struct lecl_tables_s	lecl_tables;
 static struct R_tables_s	R_tables;
 static SXINT	maxlregle, xstring_mess, nbcart, lstring_mess, maxparam, maxglobal_mess, xparam, nmax, xregle;
-static SXBOOLEAN	is_scanner;
+static bool	is_scanner;
 static SXINT	**lregle;
 static char	*string_mess /* lstring_mess */ ;
 static struct local_mess	*local_mess;
@@ -92,7 +92,7 @@ static struct global_mess	*global_mess;
 
 /*   P R O C E D U R E S   */
 
-static SXVOID	header (void)
+static void	header (void)
 {
     put_edit_nnl (9, "Listing of:");
     put_edit_nnl (25, sxsrcmngr.source_coord.file_name);
@@ -122,7 +122,7 @@ static SXVOID	header (void)
 
 #include "varstr.h"
 
-static SXVOID	listing_output (void)
+static void	listing_output (void)
 {
     FILE	*listing;
     VARSTR      vstr;
@@ -153,7 +153,7 @@ static SXVOID	listing_output (void)
 
 
 
-static SXVOID	get_t_code (struct recor_node *node_ptr, SXBA no)
+static void	get_t_code (struct recor_node *node_ptr, SXBA no)
 {
     /* Positionne dans "no" le terminal repere par ate s'il existe */
     SXINT	t, x, sl, tl;
@@ -195,7 +195,7 @@ static SXVOID	get_t_code (struct recor_node *node_ptr, SXBA no)
 
 
 
-static SXVOID	set_code (SXBA no, SXINT ic, struct sxsource_coord designator)
+static void	set_code (SXBA no, SXINT ic, struct sxsource_coord designator)
 {
     if (lecl_tables.S_char_to_simple_class [ic] == 1)
 	sxerror (designator,
@@ -209,7 +209,7 @@ static SXVOID	set_code (SXBA no, SXINT ic, struct sxsource_coord designator)
 
 
 
-static SXVOID	process (SXBA no, struct recor_node *node_ptr, SXINT *bi, SXINT *bs)
+static void	process (SXBA no, struct recor_node *node_ptr, SXINT *bi, SXINT *bs)
 {
     SXINT	sl, i;
     struct sxsource_coord	designator;
@@ -267,7 +267,7 @@ static SXVOID	process (SXBA no, struct recor_node *node_ptr, SXINT *bi, SXINT *b
 
 
 
-static SXVOID	set_classes (struct recor_node *node_ptr, SXBA no)
+static void	set_classes (struct recor_node *node_ptr, SXBA no)
 {
     /* Remplit "no" avec les classes de caracteres reperes par ate */
     struct recor_node	*son;
@@ -303,7 +303,7 @@ static SXVOID	set_classes (struct recor_node *node_ptr, SXBA no)
 
 
 
-static SXVOID	pass_inherited (void)
+static void	pass_inherited (void)
 {
     struct recor_node	*visited = SXVISITED;
     struct recor_node	*node_ptr;
@@ -570,7 +570,7 @@ I N H E R I T E D
 	switch (visited->position) {
 	case 1:
 	    /* SXVISITED->name = {LOCAL_PARSER_n, VOID_n} */
-	    is_scanner = SXFALSE;
+	    is_scanner = false;
 
 	    if (!visited->not_is_first_visit) {
 		nbcart = 0;
@@ -637,7 +637,7 @@ I N H E R I T E D
     case SCANNER_n:
 	switch (SXVISITED->position) {
 	case 1 :/* SXVISITED->name = {LOCAL_SCANNER_n, VOID_n} */
-	    is_scanner = SXTRUE;
+	    is_scanner = true;
 
 	    if (!visited->not_is_first_visit) {
 		nbcart = 0;
@@ -688,7 +688,7 @@ Z Z Z Z
 
 
 
-static SXVOID	pass_derived (void)
+static void	pass_derived (void)
 {
     struct recor_node	*visited = SXVISITED;
 
@@ -911,12 +911,12 @@ Z Z Z Z
 	break;
     }
 
-    visited->not_is_first_visit = SXTRUE;
+    visited->not_is_first_visit = true;
 }
 
 
 
-static SXVOID	smpopen (struct sxtables *sxtables_ptr)
+static void	smpopen (struct sxtables *sxtables_ptr)
 {
     err_titles = sxtables_ptr->err_titles;
     sxatcvar.atc_lv.node_size = sizeof (struct recor_node);
@@ -924,7 +924,7 @@ static SXVOID	smpopen (struct sxtables *sxtables_ptr)
 
 
 
-static SXVOID	smppass (void)
+static void	smppass (void)
 {
     /*   I N I T I A L I S A T I O N S   */
     R_tables.E_abstract = NULL;
@@ -1008,7 +1008,7 @@ static SXVOID	smppass (void)
 
 
 
-SXVOID	recor_smp (SXINT what, struct sxtables *sxtables_ptr)
+void	recor_smp (SXINT what, struct sxtables *sxtables_ptr)
 {
     switch (what) {
     case SXOPEN:

@@ -34,13 +34,13 @@ static char	ME [] = "lfg_semact";
 
 #include "sxunix.h"
 #include "earley.h"
-char WHAT_LFGSEMACT[] = "@(#)SYNTAX - $Id: lfg_semact.c 3491 2023-08-20 14:56:17Z garavel $" WHAT_DEBUG;
+char WHAT_LFGSEMACT[] = "@(#)SYNTAX - $Id: lfg_semact.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 #if 0
 /* A voir + tard... */
 #include "lfg.h"
 #endif /* 0 */
-SXBOOLEAN is_print_f_structure, is_unfold_parse_forest, is_forest_filtering, is_sum_priority;
+bool is_print_f_structure, is_unfold_parse_forest, is_forest_filtering, is_sum_priority;
 SXINT     sentence_id, rank [6];
 FILE    *xml_file;
 char    *xml_file_name, *input_sentence_string, *input_dag_string;
@@ -200,8 +200,8 @@ static SXINT        *dl_id2fs_id;
 static SXBA_ELT   index_set [SXNBLONGS (MAX_SHARED_F_STRUCTURE_ID+1)+1] = {MAX_SHARED_F_STRUCTURE_ID+1};
 static SXINT        index2struct_id [MAX_SHARED_F_STRUCTURE_ID+1];
 
-static SXBOOLEAN    is_consistent; /* !is_consistent <=> toutes les f_struct sont incoherentes */
-static SXBOOLEAN    is_rcvr_done; /* SXTRUE <=> Aucune f_structure a la racine, on a recupere ce qu'on a pu ... */
+static bool    is_consistent; /* !is_consistent <=> toutes les f_struct sont incoherentes */
+static bool    is_rcvr_done; /* true <=> Aucune f_structure a la racine, on a recupere ce qu'on a pu ... */
 static SXBA       head_set;
 static SXINT        *head_stack;
 static SXINT        ranking_kind;
@@ -210,12 +210,12 @@ static SXINT        ranking_kind;
 static SXINT     *Pij2disp, *fs_id_Pij_dstack, Pij_cur_bot;
 static SXINT     doldol;
 static SXBA    unconsistent_heads_set;
-static SXBOOLEAN is_locally_unconsistent;
+static bool is_locally_unconsistent;
 
 /* Pour dag_td_walk */
 static SXBA    valid_heads_set;
 
-static SXBOOLEAN is_relaxed_run; /* positionne si le 1er passage a echoue'.  On en refait un sans la verif de la coherence */
+static bool is_relaxed_run; /* positionne si le 1er passage a echoue'.  On en refait un sans la verif de la coherence */
 
 static SXINT              *Tij2tok_no;
 
@@ -594,10 +594,10 @@ clear_wfs ()
 static SXINT
 uwfs2ufs_id (top, store_ste)
      SXINT top;
-     SXBOOLEAN store_ste;
+     bool store_ste;
 {
   SXINT     id, ufs_id;
-  SXBOOLEAN is_empty;
+  bool is_empty;
 
   if (top <= 0)
     return 0;
@@ -616,7 +616,7 @@ uwfs2ufs_id (top, store_ste)
   }
 #endif /* ATOM_Aij || ATOM_Pij */
 
-  is_empty = SXTRUE;
+  is_empty = true;
 
   do {
     id = wfs_id_pred_list [top].wfs_id;
@@ -632,7 +632,7 @@ uwfs2ufs_id (top, store_ste)
       }
 	
       SXBA_1_bit (ufs_id_set, id);
-      is_empty = SXFALSE;
+      is_empty = false;
     }
 
   } while ((top = wfs_id_pred_list [top].next) != 0);
@@ -889,7 +889,7 @@ close_store_wfs_level (i)
 }
 
 /* On travaille ds fs */
-static SXBOOLEAN
+static bool
 fs_is_set (fs_id, field_id, ret_val)
      SXINT fs_id, field_id, **ret_val;
 {
@@ -911,7 +911,7 @@ fs_is_set (fs_id, field_id, ret_val)
 
     if (cur_field_id == field_id) {
       *ret_val = cur_val_ptr;
-      return SXTRUE;
+      return true;
     }
 
     if (field_id < cur_field_id)
@@ -920,7 +920,7 @@ fs_is_set (fs_id, field_id, ret_val)
       bot = cur+1;
   }
 
-  return SXFALSE;
+  return false;
 }
 
 
@@ -933,25 +933,25 @@ fs_is_set (fs_id, field_id, ret_val)
    car bien qu'on ne puisse pas "toucher" une f_structure element d'un ensemble, cet ensemble peut tres bien
    ne pas faire partie du resultat final a la racine
 */
-static SXBOOLEAN
+static bool
 coherence (Xpq)
      SXINT     Xpq;
 {
   SXINT                    cur_wfs_id, page_nb, delta_nb, i, sous_cat_id, cur2, top2, cur3, bot3, top3, field_id, nb;
   SXINT                    *attr_ptr0;
   SXBA                   field_set;
-  SXBOOLEAN                is_root, is_optional, ret_val;
+  bool                is_root, is_optional, ret_val;
   SXINT                    *dpv_ptr, *cur_val_ptr;
   SXINT                    val, fs_id, top, bot, cur, ufs_id;
   unsigned char          static_field_kind;
 
-  is_locally_unconsistent = SXFALSE;
+  is_locally_unconsistent = false;
 
   if (is_relaxed_run)
-    return SXTRUE;
+    return true;
 
   is_root = Xpq == spf.outputG.start_symbol;
-  ret_val = SXTRUE;
+  ret_val = true;
 
   for (cur_wfs_id = 0; cur_wfs_id <= wfs_id; cur_wfs_id++) {
     if (cur_wfs_id == wfs_id2equiv [cur_wfs_id]) {
@@ -976,10 +976,10 @@ coherence (Xpq)
 	
 	      if (field_id < 0) {
 		field_id = -field_id;
-		is_optional = SXTRUE;
+		is_optional = true;
 	      }
 	      else
-		is_optional = SXFALSE;
+		is_optional = false;
 
 	      if (field_id > MAX_FIELD_ID) {
 		field_id -= MAX_FIELD_ID;
@@ -1002,7 +1002,7 @@ coherence (Xpq)
 
 		if (is_root && (nb > 1 || nb == 0 && !is_optional)) {
 		  /* Le 28/05/04 S'il y a incoherence sur la racine, on se contente de le signaler */
-		  is_locally_unconsistent = SXTRUE;
+		  is_locally_unconsistent = true;
 		}
 	      }
 	      else {
@@ -1016,7 +1016,7 @@ coherence (Xpq)
 		  if (!SXBA_bit_is_set (field_set, field_id) /* non utilise' ... */
 		      || (attr_ptr0 [field_id]>>FS_ID_SHIFT) == 0 /* ... ou vide */) {
 		    /* Le 28/05/04 S'il y a incoherence sur la racine, on se contente de le signaler */
-		    is_locally_unconsistent = SXTRUE;
+		    is_locally_unconsistent = true;
 		  }
 		}
 	      }
@@ -1031,7 +1031,7 @@ coherence (Xpq)
       
 	/* warg_set doit etre un sous-ensemble de pred_arg_set */
 	if (!sxba_is_subset (warg_set, pred_arg_set)) {
-	  ret_val = SXFALSE;
+	  ret_val = false;
 	  break;
 	}
       }
@@ -1039,7 +1039,7 @@ coherence (Xpq)
 	if (is_root) {
 	  /* Il doit y avoir un pred */
 	  /* Le 28/05/04 S'il y a incoherence sur la racine, on se contente de le signaler */
-	  is_locally_unconsistent = SXTRUE;
+	  is_locally_unconsistent = true;
 	}
       }
 
@@ -1050,7 +1050,7 @@ coherence (Xpq)
 	while ((field_id = sxba_scan (field_set, field_id)) >= 0) {
 	  if ((val = attr_ptr0 [field_id]) & CONSTRAINT_VAL) {
 	  /* Le 28/05/04 S'il y a incoherence sur la racine, on se contente de le signaler */
-	    is_locally_unconsistent = SXTRUE;
+	    is_locally_unconsistent = true;
 	  }
 	  else {
 	    /* On stocke aussi les elements des ensembles de f_structures (qui ne sont pas ds wfs) pour une verif
@@ -1092,7 +1092,7 @@ coherence (Xpq)
 
 	  if (bot == top) {
 	    /* vide et donc pas de PRED */
-	    is_locally_unconsistent = SXTRUE;
+	    is_locally_unconsistent = true;
 	    break;
 	  }
 
@@ -1115,10 +1115,10 @@ coherence (Xpq)
 	
 		      if (field_id < 0) {
 			field_id = -field_id;
-			is_optional = SXTRUE;
+			is_optional = true;
 		      }
 		      else
-			is_optional = SXFALSE;
+			is_optional = false;
 
 		      if (field_id > MAX_FIELD_ID) {
 			field_id -= MAX_FIELD_ID;
@@ -1133,18 +1133,18 @@ coherence (Xpq)
 			    nb++;
 			}
 
-			/* Ici is_root==SXTRUE */
+			/* Ici is_root==true */
 			/* is_optional => nb == 0 || nb == 1 */
 			/* !is_optional => nb == 1 */
 
 			if (nb > 1 || nb == 0 && !is_optional) {
 			  /* Le 28/05/04 S'il y a incoherence sur la racine, on se contente de le signaler */
-			  is_locally_unconsistent = SXTRUE;
+			  is_locally_unconsistent = true;
 			  break;
 			}
 		      }
 		      else {
-			/* Ici is_root==SXTRUE */
+			/* Ici is_root==true */
 			/* is_optional => nb == 0 || nb == 1 */
 			/* !is_optional => nb == 1 */
 
@@ -1152,7 +1152,7 @@ coherence (Xpq)
 			  if (!fs_is_set (fs_id, field_id, &cur_val_ptr) /* non utilise' ... */
 			      || ((*cur_val_ptr)>>FS_ID_SHIFT) == 0 /* ... ou vide */) {
 			    /* Le 28/05/04 S'il y a incoherence sur la racine, on se contente de le signaler */
-			    is_locally_unconsistent = SXTRUE;
+			    is_locally_unconsistent = true;
 			    break;
 			  }
 			}
@@ -1164,14 +1164,14 @@ coherence (Xpq)
 	      else {
 		/* Il doit y avoir un pred */
 		/* Le 28/05/04 S'il y a incoherence sur la racine, on se contente de le signaler */
-		is_locally_unconsistent = SXTRUE;
+		is_locally_unconsistent = true;
 		break;
 	      }
 	    }
 	    else {
 	      if (val & CONSTRAINT_VAL) {
 		/* Le 28/05/04 S'il y a incoherence sur la racine, on se contente de le signaler */
-		is_locally_unconsistent = SXTRUE;
+		is_locally_unconsistent = true;
 		break;
 	      }
 		  
@@ -1230,7 +1230,7 @@ fill_fs ()
 {
   SXINT             val, x, y, page_nb, delta_nb, field_id, fs_id, pair, bot, top, id, simulated_fs_id, son_nb;
   SXBA            field_set;
-  SXBOOLEAN         done, is_shared;
+  bool         done, is_shared;
   SXINT             *attr_ptr, *attr_ptr0;
   unsigned char   static_field_kind;
 
@@ -1248,10 +1248,10 @@ fill_fs ()
     }
   }
 
-  done = SXFALSE;
+  done = false;
 
   while (!done) {
-    done = SXTRUE;
+    done = true;
 
     while (!IS_EMPTY (wfs_id_stack) ) {
       x = POP (wfs_id_stack);
@@ -1280,7 +1280,7 @@ fill_fs ()
 	  }
 	  else {
 	    if (static_field_kind == STRUCT_KIND+UNBOUNDED_KIND) {
-	      val = uwfs2ufs_id (val, SXFALSE);
+	      val = uwfs2ufs_id (val, false);
 	    }
 #if ATOM_Aij || ATOM_Pij
 	    else {
@@ -1288,7 +1288,7 @@ fill_fs ()
 		/* val reference une liste ds wfs_id_pred_list */
 		/* On stocke les ensembles de Aij/Pij ds XH_ufs_hd */
 		/* C'est une bonne ref a un ensemble non vide */
-		val = uwfs2ufs_id (val, SXTRUE);
+		val = uwfs2ufs_id (val, true);
 		/* val est l'identifiant d'une liste de ste ds XH_ufs_hd */
 	      }
 	    }
@@ -1340,7 +1340,7 @@ fill_fs ()
     if ((x = sxba_scan (cyclic_wfs_id_set, 0)) > 0) {
       /* Il y a des structures cycliques nommees */
       /* On simule les calculs pour donner les bons fs_id */
-      done = SXFALSE;
+      done = false;
       simulated_fs_id = XH_top (XH_fs_hd);
 
       for (y = 1; y <= wfs_id; y++) {
@@ -1532,12 +1532,12 @@ get_priority (fs_id)
 static void
 print_f_structure (Xpq, fs_id, is_unconsistent)
      SXINT     Xpq, fs_id;
-     SXBOOLEAN is_unconsistent;
+     bool is_unconsistent;
 {
   SXINT             bot, top, bot2, cur2, top2, bot3, cur3, top3, max_priority, priority;
   SXINT             val, field_id, field_kind, sous_cat_id, atom_id, local_atom_id, x, Tpq, T, p, q, id;
   SXINT             *local2atom_id;
-  SXBOOLEAN         is_optional, is_first, is_first2, is_first3, is_main_struct;
+  bool         is_optional, is_first, is_first2, is_first3, is_main_struct;
   struct pred_val *ptr2;
   unsigned char   static_field_kind;
 
@@ -1564,7 +1564,7 @@ print_f_structure (Xpq, fs_id, is_unconsistent)
 
     /* Pour l'instant la priorite' d'une f_structure est le max des priorites de ses sous-structures */
     max_priority = 0;
-    is_main_struct = SXTRUE;
+    is_main_struct = true;
     x = 0; /* indice ds fs_id_stack */
 
     do {
@@ -1572,7 +1572,7 @@ print_f_structure (Xpq, fs_id, is_unconsistent)
       top = XH_X (XH_fs_hd, fs_id+1);
 
       if (is_main_struct) {
-	is_main_struct = SXFALSE;
+	is_main_struct = false;
 	printf ("F%i/", fs_id);
 
 	if (Xpq > spf.outputG.maxxnt) {
@@ -1596,7 +1596,7 @@ print_f_structure (Xpq, fs_id, is_unconsistent)
 	  printf ("F%i = [", fs_id);
       }
 
-      is_first = SXTRUE;
+      is_first = true;
 
       while (bot < top) {
 	val = XH_list_elem (XH_fs_hd, bot);
@@ -1608,7 +1608,7 @@ print_f_structure (Xpq, fs_id, is_unconsistent)
 	val >>= STRUCTURE_NAME_shift;
 
 	if (is_first)
-	  is_first = SXFALSE;
+	  is_first = false;
 	else
 	  fputs (", ", stdout);
 
@@ -1625,7 +1625,7 @@ print_f_structure (Xpq, fs_id, is_unconsistent)
 
 	  printf (" \"%s", lexeme_id2string [dpv_ptr [0] /* lexeme_id */]);
 
-	  is_first3 = SXTRUE;
+	  is_first3 = true;
 	  sous_cat_id = dpv_ptr [1] /* sous_cat1 */;
 
 	  while (sous_cat_id) {
@@ -1646,10 +1646,10 @@ print_f_structure (Xpq, fs_id, is_unconsistent)
 	      if (field_id < 0) {
 		fputs ("(", stdout);
 		field_id = -field_id;
-		is_optional = SXTRUE;
+		is_optional = true;
 	      }
 	      else
-		is_optional = SXFALSE;
+		is_optional = false;
 
 	      if (field_id > MAX_FIELD_ID) {
 		field_id -= MAX_FIELD_ID;
@@ -1670,7 +1670,7 @@ print_f_structure (Xpq, fs_id, is_unconsistent)
 	    }
 
 	    if (is_first3) {
-	      is_first3 = SXFALSE;
+	      is_first3 = false;
 	      sous_cat_id = dpv_ptr [2] /* sous_cat2 */;
 	      fputs (">", stdout);
 	    }
@@ -1740,7 +1740,7 @@ print_f_structure (Xpq, fs_id, is_unconsistent)
 	    else {
 	      local2atom_id = field_id2atom_field_id [field_id];
 	      local_atom_id = 0;
-	      is_first2 = SXTRUE;
+	      is_first2 = true;
 
 	      while ((val >>= 1) != 0) {
 		local_atom_id++;
@@ -1749,7 +1749,7 @@ print_f_structure (Xpq, fs_id, is_unconsistent)
 		  atom_id = local2atom_id [local_atom_id];
 
 		  if (is_first2)
-		    is_first2 = SXFALSE;
+		    is_first2 = false;
 		  else
 		    fputs ("|", stdout);
 
@@ -1842,8 +1842,8 @@ print_f_structure (Xpq, fs_id, is_unconsistent)
 
 /* on travaille ds wfs */
 /* positionne le champ field_id au niveau cur_wfs_id de wfs */
-/* retourne SXTRUE ssi field_id existe deja */
-static SXBOOLEAN
+/* retourne true ssi field_id existe deja */
+static bool
 wfs_set (cur_wfs_id, field_id, ret_val)
      SXINT cur_wfs_id, field_id, **ret_val;
 {
@@ -1866,14 +1866,14 @@ wfs_set (cur_wfs_id, field_id, ret_val)
 
     **ret_val = (val<<FS_ID_SHIFT)+field_id;
 
-    return SXFALSE;
+    return false;
   }
 
-  return SXTRUE;
+  return true;
 }
 
 /* Comme wfs_set, excepte' qu'on ne cree pas de nouveau champ */
-static SXBOOLEAN
+static bool
 re_wfs_set (cur_wfs_id, field_id, ret_val)
      SXINT             cur_wfs_id, field_id, **ret_val;
 {
@@ -1885,11 +1885,11 @@ re_wfs_set (cur_wfs_id, field_id, ret_val)
   delta_nb = AREA_DELTA (cur_wfs_id);
 
   if (!SXBA_bit_is_set (wfs_field_set [page_nb] [delta_nb], field_id))
-    return SXFALSE;
+    return false;
 
   *ret_val = wfs2attr [page_nb] [delta_nb] + field_id;
 
-  return SXTRUE;
+  return true;
 }
 
 #if EBUG
@@ -1902,7 +1902,7 @@ code2vstr (vstr)
   SXINT     oper, suffix_id, field_id, val, local_atom_id, atom_id;
   SXINT     *local2atom_id;
   char    string [12];
-  SXBOOLEAN is_first;
+  bool is_first;
 
   oper = *(--ppcs);
 
@@ -1966,7 +1966,7 @@ code2vstr (vstr)
       /* ATOM_KIND */
       local2atom_id = field_id2atom_field_id [field_id];
       local_atom_id = 0;
-      is_first = SXTRUE;
+      is_first = true;
 
       while ((val >>= 1) != 0) {
 	local_atom_id++;
@@ -1975,7 +1975,7 @@ code2vstr (vstr)
 	  atom_id = local2atom_id [local_atom_id];
 
 	  if (is_first)
-	    is_first = SXFALSE;
+	    is_first = false;
 	  else
 	    vstr = varstr_catenate (vstr, "|");
 
@@ -2090,8 +2090,8 @@ print_equation_code (xcode)
 
 /*
   -1 : skip the current equation
-   0 : SXFALSE
-   1 : SXTRUE
+   0 : false
+   1 : true
  */
 static SXINT
 eval (local_ptr, local_kind)
@@ -2373,7 +2373,7 @@ re_concat (left_top, right_top)
 /*
   valeur retournee :
   -1 : skip the current equation
-   0 : SXFALSE
+   0 : false
    >0 : indice ds re_results
  */
 /*
@@ -2551,11 +2551,11 @@ re_eval (input)
 
 
 
-static SXBOOLEAN is_constrained_unification;
-static SXBOOLEAN unify ();
+static bool is_constrained_unification;
+static bool unify ();
 
 /* On unifie les ensembles de f_structures reperes par left_val_ptr et right_val_ptr */
-static SXBOOLEAN
+static bool
 unbounded_structure_unification (left_val_ptr, right_val_ptr, right_dol)
      SXINT *left_val_ptr, *right_val_ptr, right_dol;
 {
@@ -2647,16 +2647,16 @@ unbounded_structure_unification (left_val_ptr, right_val_ptr, right_dol)
     }
   }
 
-  return SXTRUE;
+  return true;
 }
 
 /* On unifie les structures left_wfs_id et right_wfs_id dans left_wfs_id */
 /* left_wfs_id est le representant de la classe d'equivalence.
    Il en est de meme de right_wfs_id si right_dol==0 */
-static SXBOOLEAN
+static bool
 structure_unification (left_wfs_id, right_wfs_id, right_dol, checking)
      SXINT     left_wfs_id, right_wfs_id, right_dol;
-     SXBOOLEAN checking;
+     bool checking;
 {
   SXINT     field_id, field_kind, bot, cur, top, static_field_kind;
   SXINT     left_page_nb, left_delta_nb, *left_attr_ptr0, *left_attr_ptr;
@@ -2664,7 +2664,7 @@ structure_unification (left_wfs_id, right_wfs_id, right_dol, checking)
   SXINT     right_id, new_wfs_id, bot2, top2, page_nb;
   SXINT     *ptr;
   SXBA    left_field_set, right_field_set;
-  SXBOOLEAN ret_val, has_right_field, is_shared, is_new_wfs_id;
+  bool ret_val, has_right_field, is_shared, is_new_wfs_id;
 
 #if EBUG
   if (left_wfs_id != wfs_id2equiv [left_wfs_id])
@@ -2679,7 +2679,7 @@ structure_unification (left_wfs_id, right_wfs_id, right_dol, checking)
 #endif /* EBUG */
 
   if (right_dol == 0 && left_wfs_id == right_wfs_id)
-    return SXTRUE;
+    return true;
 
   /* Attention : je suppose (ds un premier temps !!) que l'unification ds left_wfs_id n'est pas cyclique */
   if (!SXBA_bit_is_reset_set (wfs_id_set, left_wfs_id))
@@ -2689,7 +2689,7 @@ structure_unification (left_wfs_id, right_wfs_id, right_dol, checking)
   left_delta_nb = AREA_DELTA (left_wfs_id);
   left_field_set = wfs_field_set [left_page_nb] [left_delta_nb];
   left_attr_ptr0 = wfs2attr [left_page_nb] [left_delta_nb];
-  ret_val = SXTRUE;
+  ret_val = true;
 
   if (right_dol == 0) {
     /* right_wfs_id est ds wfs */
@@ -2742,7 +2742,7 @@ structure_unification (left_wfs_id, right_wfs_id, right_dol, checking)
 		      : ATOM_FIELD) + (right_dol << REF_SHIFT) + OLD_FIELD;
 
 	if (!unify (left_attr_ptr, field_kind, right_attr_ptr, field_kind, checking)) {
-	  ret_val = SXFALSE;
+	  ret_val = false;
 	  break;
 	}
       }
@@ -2793,7 +2793,7 @@ structure_unification (left_wfs_id, right_wfs_id, right_dol, checking)
 	      new_wfs_id = get_a_new_wfs_id ();
 
 	      if (!structure_unification (new_wfs_id, right_id, right_dol, checking)) {
-		ret_val = SXFALSE;
+		ret_val = false;
 		break;
 	      }
 	    }
@@ -2824,7 +2824,7 @@ structure_unification (left_wfs_id, right_wfs_id, right_dol, checking)
 			      right_attr_ptr,
 			      UNBOUNDED_STRUCT_FIELD+OLD_FIELD+(right_dol<<REF_SHIFT),
 			      checking)) {
-		    ret_val = SXFALSE;
+		    ret_val = false;
 		    break;
 		  }
 		}
@@ -2854,7 +2854,7 @@ structure_unification (left_wfs_id, right_wfs_id, right_dol, checking)
 		      : ATOM_FIELD) + OLD_FIELD;
 
 	if (!unify (left_attr_ptr, field_kind, right_attr_ptr, field_kind + (right_dol << REF_SHIFT), checking)) {
-	  ret_val = SXFALSE;
+	  ret_val = false;
 	  break;
 	}
       }
@@ -2896,7 +2896,7 @@ structure_unification (left_wfs_id, right_wfs_id, right_dol, checking)
 
 
 /* Cas $i X* < $$ Y+ */
-static SXBOOLEAN
+static bool
 unify_in (left_val_ptr, left_kind, right_val_ptr, right_kind)
      SXINT     *left_val_ptr, left_kind, *right_val_ptr, right_kind;
 {
@@ -2932,15 +2932,15 @@ unify_in (left_val_ptr, left_kind, right_val_ptr, right_kind)
   wfs_id_pred_list [top].wfs_id = (*left_val_ptr >> FS_ID_SHIFT) + ((left_kind>>REF_SHIFT) == 0 ? X80 : 0);
   *right_val_ptr = (top << FS_ID_SHIFT) + (*right_val_ptr & FS_ID_AND);
   
-  return SXTRUE;
+  return true;
 }
 
 
 
-static SXBOOLEAN
+static bool
 unify (left_val_ptr, left_kind, right_val_ptr, right_kind, checking)
      SXINT *left_val_ptr, left_kind, *right_val_ptr, right_kind;
-     SXBOOLEAN checking;
+     bool checking;
 {
   SXINT             right_dol, main_head, val, left_id, right_id, new_wfs_id, top;
   SXINT             *dpv_lptr, *dpv_rptr;
@@ -2986,7 +2986,7 @@ unify (left_val_ptr, left_kind, right_val_ptr, right_kind, checking)
 	*left_val_ptr = (top << FS_ID_SHIFT) + (*left_val_ptr & FS_ID_AND);
       }
 
-      return SXTRUE;
+      return true;
     }
 #endif /* ATOM_Aij || ATOM_Pij */
 
@@ -3001,7 +3001,7 @@ unify (left_val_ptr, left_kind, right_val_ptr, right_kind, checking)
 	  *left_val_ptr |= CONSTRAINT_VAL;
       }
 
-      return SXTRUE;
+      return true;
     }
 
     /* L'unification est l'intersection des valeurs atomiques */
@@ -3047,7 +3047,7 @@ unify (left_val_ptr, left_kind, right_val_ptr, right_kind, checking)
 	unbounded_structure_unification (left_val_ptr, right_val_ptr, right_dol);
 
       /* On suppose pas de contraintes (=c) sur les Aij */
-      return SXTRUE;
+      return true;
     }
 #endif /* ATOM_Aij || ATOM_Pij */
 
@@ -3141,7 +3141,7 @@ unify (left_val_ptr, left_kind, right_val_ptr, right_kind, checking)
 	    + (*right_val_ptr & (/* OPTIONAL_VAL+ */FIELD_AND));
       }
 
-      return SXTRUE;
+      return true;
     }
 
     /* La valeur de Y2 est inconnue et $i == $$ */
@@ -3159,7 +3159,7 @@ unify (left_val_ptr, left_kind, right_val_ptr, right_kind, checking)
 	  + (*right_val_ptr & (/* OPTIONAL_VAL+ */FIELD_AND));
       }
 
-      return SXTRUE;
+      return true;
     }
 	
     /* Ici ni Y1 ni Y2 ne sont connus, il faut donc partager les champs */
@@ -3170,23 +3170,23 @@ unify (left_val_ptr, left_kind, right_val_ptr, right_kind, checking)
 #if EBUG
       printf ("$%i ... %s is not set", right_dol, field_id2string [(*right_val_ptr) & FIELD_AND]);
 #endif /* EBUG */ 
-      return SXFALSE;
+      return false;
     }
   }
 
   /* Ici on a des f_structures a gauche et a droite */
   if ((left_kind & DOL_REF) && (right_kind & DOL_REF) && right_dol == 0)
     /* $$ = $$  !! */
-    return SXTRUE;
+    return true;
 
   if (left_kind & UNBOUNDED_STRUCT_FIELD) {
     /* Unification sur des ensembles de f_structures : le resultat est l'union */
     if (checking)
       /* unbounded_structure_unification () marche toujours */
-      return SXTRUE;
+      return true;
 
     if (!unbounded_structure_unification (left_val_ptr, right_val_ptr, right_dol))
-      return SXFALSE;
+      return false;
   }
   else {
     if (right_kind & EMPTY_STRUCT) {
@@ -3194,7 +3194,7 @@ unify (left_val_ptr, left_kind, right_val_ptr, right_kind, checking)
       /* C,a marche toujours :
        Soit X* a ete cree vide
        Soit X* est non vide (et l'unif avec le vide marche */
-      return SXTRUE;
+      return true;
     }
 
     /* $$ X* = $i Y* */
@@ -3224,7 +3224,7 @@ unify (left_val_ptr, left_kind, right_val_ptr, right_kind, checking)
     }
 
     if (!structure_unification (left_id, right_id, right_dol, checking))
-      return SXFALSE;
+      return false;
   }
   
   if (!checking) {
@@ -3272,19 +3272,19 @@ unify (left_val_ptr, left_kind, right_val_ptr, right_kind, checking)
     }
   }
 
-  return SXTRUE;
+  return true;
 }
 
 
 
-static SXBOOLEAN
+static bool
 call_unify (operator, left_val_ptr, left_kind, right_val_ptr, right_kind, checking)
      SXINT     operator, *left_val_ptr, left_kind, *right_val_ptr, right_kind;
-     SXBOOLEAN checking;
+     bool checking;
 {
   SXINT              dum_kind, x, id;
   SXINT              *dum_val_ptr; 
-  SXBOOLEAN          ret_val;
+  bool          ret_val;
 
   switch (operator) {
   case OPERATOR_UNIFY:
@@ -3299,8 +3299,8 @@ call_unify (operator, left_val_ptr, left_kind, right_val_ptr, right_kind, checki
 	sxtrap (ME, "call_unify");
 #endif /* EBUG */
 
-      is_constrained_unification = SXTRUE;
-      ret_val = unify (left_val_ptr, left_kind, right_val_ptr, right_kind, SXTRUE); /* checking */
+      is_constrained_unification = true;
+      ret_val = unify (left_val_ptr, left_kind, right_val_ptr, right_kind, true); /* checking */
 
       break;
     }
@@ -3340,7 +3340,7 @@ call_unify (operator, left_val_ptr, left_kind, right_val_ptr, right_kind, checki
 #endif /* EBUG */
 
     ret_val = unify_in (left_val_ptr, left_kind, right_val_ptr, right_kind);
-    /* ret_val == SXTRUE : unify_in marche toujours */
+    /* ret_val == true : unify_in marche toujours */
 
     break;
 
@@ -3355,7 +3355,7 @@ call_unify (operator, left_val_ptr, left_kind, right_val_ptr, right_kind, checki
 static SXINT call_tfs_instantiation ();
 
 /* On essaie d'evaluer l'equation dont le code est repere par xcode sur "prod" */
-static SXBOOLEAN
+static bool
 evaluate (xcode)
      SXINT xcode;
 {
@@ -3364,10 +3364,10 @@ evaluate (xcode)
   SXINT              *store_left_pcs, *store_right_pcs;
   SXINT              left_eval_result, right_eval_result, x, y, l;
   SXINT              prev_post_stack_top, nb, post_stack_kind;
-  SXBOOLEAN          ret_val, is_left_re, is_right_re, is_operator_possible, is_skip, done;
+  bool          ret_val, is_left_re, is_right_re, is_operator_possible, is_skip, done;
   struct re_result *re_result_left_ptr, *re_result_right_ptr;
 
-  is_skip = SXFALSE;
+  is_skip = false;
 #if EBUG
   print_equation_code (xcode);
 #endif /* EBUG */
@@ -3382,7 +3382,7 @@ evaluate (xcode)
 #if EBUG
       printf (" ... $%i is empty : skip\n", left_kind>>REF_SHIFT);
 #endif /* EBUG */
-      return SXTRUE;
+      return true;
     }
 
     /* eval_result > 0 */
@@ -3393,11 +3393,11 @@ evaluate (xcode)
   }
     
   if (operator == OPERATOR_POSSIBLE) {
-    is_operator_possible = SXTRUE;
+    is_operator_possible = true;
     operator = *(--pcs);
   }
   else
-    is_operator_possible = SXFALSE;
+    is_operator_possible = false;
 
   switch (operator) {
   case OPERATOR_UNIFY:
@@ -3420,7 +3420,7 @@ evaluate (xcode)
     left_eval_result = re_eval (0);
 
     if (left_eval_result == -1) {
-      is_skip = ret_val = SXTRUE;
+      is_skip = ret_val = true;
       break;
     }
 
@@ -3437,13 +3437,13 @@ evaluate (xcode)
     right_eval_result = re_eval (0);
 
     if (right_eval_result == -1) {
-      is_skip = ret_val = SXTRUE;
+      is_skip = ret_val = true;
       break;
     }
 
     if (is_left_re) {
       if (left_eval_result == 0) {
-	is_skip = ret_val = SXFALSE;
+	is_skip = ret_val = false;
 	break;
       }
 
@@ -3486,7 +3486,7 @@ evaluate (xcode)
       x = left_eval_result = 0;
 
     prev_post_stack_top = DTOP (post_stack);
-    done = SXFALSE;
+    done = false;
       
 #if IS_OPERATOR_LEX_REF
     /* L'operateur OPERATOR_LEX_REF est ds le code genere pour la LFG */
@@ -3528,7 +3528,7 @@ evaluate (xcode)
 
       if (field_id != PRED_ID) {
 	/* Il n'y a pas de champ pred => echec de l'unification */
-	is_skip = ret_val = SXFALSE;
+	is_skip = ret_val = false;
 	break;
       }
 
@@ -3552,7 +3552,7 @@ evaluate (xcode)
 	/* Appel avec Tpq == 0 => les fs_id trouves sont nouveaux ... */
 	fs_id =  call_tfs_instantiation (args_ref_list [bot], 0 /* Tpq */);
 #if EBUG
-	print_f_structure (0 /* pas de Xpq !! */, fs_id, SXFALSE);
+	print_f_structure (0 /* pas de Xpq !! */, fs_id, false);
 #endif /* EBUG */
 
 	right_val = fs_id <<FS_ID_SHIFT;
@@ -3560,7 +3560,7 @@ evaluate (xcode)
 	if (left_eval_result == 0) {
 	  /* Une reference unique en LHS */
 	  /* On cherche les fs_id pour lesquels l'unif marche */
-	  if (call_unify (operator, left_val_ptr, left_kind, &right_val, right_kind, SXTRUE) ) {
+	  if (call_unify (operator, left_val_ptr, left_kind, &right_val, right_kind, true) ) {
 	    /* unifiable */
 	    DCHECK (post_stack, 5);
 	    DSPUSH (post_stack, right_kind);
@@ -3592,7 +3592,7 @@ evaluate (xcode)
 	    left_kind = re_result_left_ptr->kind;
 
 	    /* Sur le dernier couple x y, on ne fait pas le test avant d'unifier */
-	    if (call_unify (operator, left_val_ptr, left_kind, &right_val, right_kind, SXTRUE) ) {
+	    if (call_unify (operator, left_val_ptr, left_kind, &right_val, right_kind, true) ) {
 	      /* Pour l'instant, on conserve le 1er qui marche ... */
 	      DCHECK (post_stack, 4);
 	      DSPUSH (post_stack, right_val);
@@ -3611,7 +3611,7 @@ evaluate (xcode)
       {
       if (is_right_re) {
 	if (right_eval_result == 0) {
-	  is_skip = ret_val = SXFALSE;
+	  is_skip = ret_val = false;
 	  break;
 	}
 
@@ -3654,8 +3654,8 @@ evaluate (xcode)
 
       if (left_eval_result == 0 && right_eval_result == 0) {
 	/* On ne verifie pas que l'unif marche avant de la faire */
-	ret_val = call_unify (operator, left_val_ptr, left_kind, right_val_ptr, right_kind, SXFALSE);
-	done = SXTRUE;
+	ret_val = call_unify (operator, left_val_ptr, left_kind, right_val_ptr, right_kind, false);
+	done = true;
       }
       else {
 	for (x = left_eval_result; x != 0; x = re_results [x].next) {
@@ -3668,7 +3668,7 @@ evaluate (xcode)
 	    right_val_ptr = re_result_right_ptr->ptr;
 	    right_kind = re_result_right_ptr->kind;
 
-	    if (call_unify (operator, left_val_ptr, left_kind, right_val_ptr, right_kind, SXTRUE)) {
+	    if (call_unify (operator, left_val_ptr, left_kind, right_val_ptr, right_kind, true)) {
 	      DCHECK (post_stack, 4);
 	      DSPUSH (post_stack, x);
 	      DSPUSH (post_stack, y);
@@ -3698,7 +3698,7 @@ evaluate (xcode)
 	    left_val_ptr = re_result_left_ptr->ptr;
 	    left_kind = re_result_left_ptr->kind;
 		
-	    if (!call_unify (operator, left_val_ptr, left_kind, right_val_ptr, right_kind, SXFALSE))
+	    if (!call_unify (operator, left_val_ptr, left_kind, right_val_ptr, right_kind, false))
 	      /* Il doit marcher ... */
 	      sxtrap (ME, "evaluate");
 	  }
@@ -3712,7 +3712,7 @@ evaluate (xcode)
 	    right_val = DPOP (post_stack);
 	    right_kind = DPOP (post_stack);
 
-	    if (!call_unify (operator, left_val_ptr, left_kind, &right_val, right_kind, SXFALSE))
+	    if (!call_unify (operator, left_val_ptr, left_kind, &right_val, right_kind, false))
 	      /* ... elle doit marcher */
 	      sxtrap (ME, "evaluate");
 	  }
@@ -3722,11 +3722,11 @@ evaluate (xcode)
 	  DPUSH (post_display, prev_post_stack_top);
 	}
 	    
-	ret_val = SXTRUE;
+	ret_val = true;
       }
       else {
 	/* Echec de l'operateur lex */
-	is_skip = ret_val = SXFALSE;
+	is_skip = ret_val = false;
       }
     }
 
@@ -3755,10 +3755,10 @@ evaluate (xcode)
 
   if (is_operator_possible)
     /* On execute quand meme l'equation suivante */
-    ret_val = SXTRUE;
+    ret_val = true;
 
-  /* ret_val == SXTRUE => executer l'equation suivante */
-  /* ret_val == SXFALSE => Echec total */
+  /* ret_val == true => executer l'equation suivante */
+  /* ret_val == false => Echec total */
 #if EBUG
   printf (" ... %s\n", ret_val ? (is_skip ? "skip" : "true") : "false");
 #endif /* EBUG */
@@ -3770,7 +3770,7 @@ evaluate (xcode)
    mais certaines equations correspondent a des disjonctions multiples (expressions regulieres, operateur lex)
    n'ont pas ete instanciees, on le fait */
 /* On traite le "niveau" cur_post */
-static SXBOOLEAN
+static bool
 post_evaluate (Aij, cur_post)
      SXINT Aij, cur_post;
 {
@@ -3779,7 +3779,7 @@ post_evaluate (Aij, cur_post)
   SXINT              top_post, cur, top;
   SXINT              *right_val_ptr, *left_val_ptr;
   struct re_result *re_result_left_ptr, *re_result_right_ptr;
-  SXBOOLEAN          done, local_call, ret_val;
+  bool          done, local_call, ret_val;
 
   if (cur_post > (top_post = DTOP (post_display))) {
     /* fin d'un spine */
@@ -3828,7 +3828,7 @@ post_evaluate (Aij, cur_post)
 	left_val_ptr = re_result_left_ptr->ptr;
 	left_kind = re_result_left_ptr->kind;
 		
-	local_call = call_unify (operator, left_val_ptr, left_kind, right_val_ptr, right_kind, SXFALSE);
+	local_call = call_unify (operator, left_val_ptr, left_kind, right_val_ptr, right_kind, false);
       }
       else {
 	/* References multiples en LHS */
@@ -3840,12 +3840,12 @@ post_evaluate (Aij, cur_post)
 	right_val = post_stack [top--];
 	right_kind = post_stack [top--];
 
-	local_call = call_unify (operator, left_val_ptr, left_kind, &right_val, right_kind, SXFALSE);
+	local_call = call_unify (operator, left_val_ptr, left_kind, &right_val, right_kind, false);
       }
 
       if (local_call) {
 	if (post_evaluate (Aij, cur_post+1)) {
-	  ret_val = SXTRUE;
+	  ret_val = true;
 	}
       }
 
@@ -3861,11 +3861,11 @@ post_evaluate (Aij, cur_post)
 }
 
 
-static SXBOOLEAN
+static bool
 call_post_evaluate (Aij)
      SXINT Aij;
 {
-  SXBOOLEAN ret_val;
+  bool ret_val;
   ret_val = post_evaluate (Aij, 1);
 
 #if EBUG
@@ -3971,19 +3971,19 @@ clear_for_relaxed_run ()
                       **************
  */
 /* A priori ca ne peut se produire que sur des productions vides (dont on suppose la semantique vide) */
-static SXBOOLEAN
+static bool
 tree_walk (prod)
      SXINT prod;
 {
   SXINT        rule, equation_block, xcode, struct_nb, rhs_pos, pos, q, d, Xpq, init_prod, head, x, fs_id, mod, cur_bot;
   SXINT        *ptr, *base_ptr, *bot_ptr;
-  SXBOOLEAN    ret_val;
+  bool    ret_val;
   struct lhs *plhs;
   struct rhs *p;
 
 #if EBUG
   /* On imprime cette production... */
-  spf_print_prod (stdout, prod, SXTRUE /* with nl */);
+  spf_print_prod (stdout, prod, true /* with nl */);
 #endif /* EBUG */
 
   /* Aij et prhs sont statiques... */ 
@@ -4009,10 +4009,10 @@ tree_walk (prod)
     }
 
 #if EBUG
-    print_f_structure (Aij, 0, SXFALSE);
+    print_f_structure (Aij, 0, false);
 #endif /* EBUG */
 
-    return SXTRUE;
+    return true;
   }
 
   init_prod = plhs->init_prod;
@@ -4040,7 +4040,7 @@ tree_walk (prod)
     struct_nb *= fs_id_dstack [x];
   }
 
-  ret_val = SXFALSE;
+  ret_val = false;
 
   if (struct_nb) {
     if (is_forest_filtering || xml_file) {
@@ -4085,7 +4085,7 @@ tree_walk (prod)
 	  fs_id_dstack [x]++; /* et un fs_id de plus ... */
 
 #if EBUG
-	  print_f_structure (Aij, 0, SXFALSE);
+	  print_f_structure (Aij, 0, false);
 #endif /* EBUG */
 	}
 
@@ -4143,12 +4143,12 @@ tree_walk (prod)
 	    if ((xcode = *ptr++) > 0 && code_stack [xcode] == OPERATOR_IDENTITY) {
 	      /* On est ds le cas particulier ou la seule equation du bloc est $$ = $1.
 		 On se contente donc de recopier le fs_id de la RHS */
-	      ret_val = SXTRUE;
+	      ret_val = true;
 	      fs_id = XxY_Y (heads, rhs_pos2fs [1]);
 	      head = fill_heads (Aij, fs_id);
 	      SXBA_1_bit (Xpq_set, Aij);
 #if EBUG
-	      print_f_structure (Aij, fs_id, SXFALSE);
+	      print_f_structure (Aij, fs_id, false);
 #endif /* EBUG */
 
 	      if (is_forest_filtering || xml_file) {
@@ -4189,13 +4189,13 @@ tree_walk (prod)
 		/* On regarde s'il y a des post traitements */
 		if (post_display [0]) {
 		  if (head = call_post_evaluate (Aij)) {
-		    ret_val = SXTRUE;
+		    ret_val = true;
 		  }
 		}
 		else {
 		  /* la lhs $$ est calculee ds wfs */
 		  if (coherence (Aij)) {
-		    ret_val = SXTRUE;
+		    ret_val = true;
 		    fs_id = fill_fs ();
 		    head = fill_heads (Aij, fs_id);
 
@@ -4281,20 +4281,20 @@ tree_walk (prod)
 #if EBUG
 static void
 print_static_structure (root_call, struct_id, lexeme_id)
-     SXBOOLEAN root_call;
+     bool root_call;
      SXINT     struct_id, lexeme_id;
 {
   SXINT             bot2, cur2, top2, bot3, cur3, top3;
   SXINT             field_id, field_kind, sous_cat_id, atom_id, local_atom_id;
   SXINT             *local2atom_id;
-  SXBOOLEAN         is_optional, is_first, is_first2, is_first3;
+  bool         is_optional, is_first, is_first2, is_first3;
   struct attr_val *ptr;
   struct pred_val *ptr2;
   unsigned char   static_field_kind;
 
   fputs ("[", stdout);
 
-  is_first = SXTRUE;
+  is_first = true;
 
   while (struct_id) {
     ptr = attr_vals+struct_id;
@@ -4308,7 +4308,7 @@ print_static_structure (root_call, struct_id, lexeme_id)
       break;
 
     if (is_first)
-      is_first = SXFALSE;
+      is_first = false;
     else
       fputs (", ", stdout);
 
@@ -4334,7 +4334,7 @@ print_static_structure (root_call, struct_id, lexeme_id)
 	printf (" \"%s", lexeme_id2string [ptr2->lexeme]);
       }
 
-      is_first3 = SXTRUE;
+      is_first3 = true;
       sous_cat_id = ptr2->sous_cat1;
 
       while (sous_cat_id) {
@@ -4355,10 +4355,10 @@ print_static_structure (root_call, struct_id, lexeme_id)
 	  if (field_id < 0) {
 	    fputs ("(", stdout);
 	    field_id = -field_id;
-	    is_optional = SXTRUE;
+	    is_optional = true;
 	  }
 	  else
-	    is_optional = SXFALSE;
+	    is_optional = false;
 
 	  if (field_id > MAX_FIELD_ID) {
 	    field_id -= MAX_FIELD_ID;
@@ -4379,7 +4379,7 @@ print_static_structure (root_call, struct_id, lexeme_id)
 	}
 
 	if (is_first3) {
-	  is_first3 = SXFALSE;
+	  is_first3 = false;
 	  sous_cat_id = ptr2->sous_cat2;
 	  fputs (">", stdout);
 	}
@@ -4407,7 +4407,7 @@ print_static_structure (root_call, struct_id, lexeme_id)
 	else {
 	  local2atom_id = field_id2atom_field_id [field_id];
 	  local_atom_id = 0;
-	  is_first2 = SXTRUE;
+	  is_first2 = true;
 
 	  while ((struct_id >>= 1) != 0) {
 	    local_atom_id++;
@@ -4416,7 +4416,7 @@ print_static_structure (root_call, struct_id, lexeme_id)
 	      atom_id = local2atom_id [local_atom_id];
 
 	      if (is_first2)
-		is_first2 = SXFALSE;
+		is_first2 = false;
 	      else
 		fputs ("|", stdout);
 
@@ -4427,7 +4427,7 @@ print_static_structure (root_call, struct_id, lexeme_id)
       }
       else {
 	if (static_field_kind == STRUCT_KIND) {
-	  print_static_structure (SXFALSE, struct_id, 0);
+	  print_static_structure (false, struct_id, 0);
 	}
       }
 
@@ -4666,7 +4666,7 @@ call_tfs_instantiation (x, Tpq)
   priority = ptr2->priority;
 
 #if EBUG
-  print_static_structure (SXTRUE, struct_id, lexeme_id);
+  print_static_structure (true, struct_id, lexeme_id);
 #endif /* EBUG */
 
   if (priority) {
@@ -4760,7 +4760,7 @@ terminal_instantiation (Xpq, X, if_id/* , terminal_string */)
 	head = fill_heads (Xpq, fs_id);
 
 #if EBUG
-	print_f_structure (Xpq, fs_id, SXFALSE);
+	print_f_structure (Xpq, fs_id, false);
 #endif /* EBUG */
 
 	bot2++;
@@ -4823,7 +4823,7 @@ set_terminal_leaves ()
       fill_heads (spf.outputG.maxxnt+Tpq, 0);
 
 #if EBUG
-      print_f_structure (spf.outputG.maxxnt+Tpq, 0, SXFALSE);
+      print_f_structure (spf.outputG.maxxnt+Tpq, 0, false);
 #endif /* EBUG */
     } 
   }
@@ -4840,22 +4840,22 @@ set_non_terminal_error ()
     fill_heads (Xpq, 0);
 
 #if EBUG
-    print_f_structure (Xpq, 0, SXFALSE);
+    print_f_structure (Xpq, 0, false);
 #endif /* EBUG */
   }
 }
 
-static SXBOOLEAN
+static bool
 complete_Tij (i, j)
      SXINT i, j;
 {
   SXINT     p, q, trans, k, triple, Tij, t;
-  SXBOOLEAN ret_val;
+  bool ret_val;
   SXBA    glbl_source_i;
 
-  if (i == j) return SXTRUE;
+  if (i == j) return true;
 
-  ret_val = SXFALSE;
+  ret_val = false;
   p = mlstn2dag_state [i];
   q = mlstn2dag_state [j];
   /* En "standard" on dispose de X et Zforeach sur dag_hd (voir sxearley_main.c) */
@@ -4865,7 +4865,7 @@ complete_Tij (i, j)
     k = dag_state2mlstn [q];
 
     if (k <= j && complete_Tij (k, j)) {
-      ret_val = SXTRUE;
+      ret_val = true;
       glbl_source_i = glbl_source [XxYxZ_Y (dag_hd, trans)];
       t = 0;
 
@@ -4902,7 +4902,7 @@ tree_sem_pass ()
 {
   SXUINT tree_count;
   SXINT               x, leaves_top, nb, unconsistent_nb, f_struct_nb;
-  SXBOOLEAN           is_OK;
+  bool           is_OK;
 
   is_OK = spf_tree_count (&tree_count);
     
@@ -4946,7 +4946,7 @@ tree_sem_pass ()
       }
       else {
 	nb = 0;
-	is_consistent = SXTRUE; /* !! */
+	is_consistent = true; /* !! */
       }
 
 #if EBUG
@@ -5010,12 +5010,12 @@ tree_sem_pass ()
 
 
 /* On est ds le cas ou la foret partagee n'est pas depliee en arbres elementaires mais traitee comme un tout */
-static SXBOOLEAN
+static bool
 dag_bu_walk (prod)
      SXINT prod;
 {
   tree_walk (prod);
-  return SXTRUE; /* On ne touche pas a la foret partagee */
+  return true; /* On ne touche pas a la foret partagee */
 }
 
 #if EBUG
@@ -5639,29 +5639,29 @@ ranking_by_special_atomic_field ()
 
 /* La ou les f_structures vien[nen]t d'etre calculee[s] sur la foret partagee */
 /* On la parcourt top-down pour eliminer les noeuds et les f_structures inutiles */
-static SXBOOLEAN
+static bool
 dag_td_walk (Aij_or_prod)
      SXINT Aij_or_prod;
 {
   SXINT        prod, i, x, rule, fs_id, head, Xpq, pos, d;
   SXINT        *local_head_stack, *base_ptr;
-  SXBOOLEAN    is_valid, is_root;
+  bool    is_valid, is_root;
   struct lhs *plhs;
   struct rhs *p;
 
   if (Aij_or_prod > 0)
     /* Aij */
-    return SXTRUE;
+    return true;
 
   /* prod */
   prod = -Aij_or_prod;
 
   if ((x = Pij2disp [prod]) == 0) {
     /* Echec */
-    return SXFALSE;
+    return false;
   }
 
-  is_valid = SXFALSE;
+  is_valid = false;
   local_head_stack = fs_id_Pij_dstack+x;
   plhs = spf.outputG.lhs+prod;
   Aij = plhs->lhs /* static */;
@@ -5683,7 +5683,7 @@ dag_td_walk (Aij_or_prod)
 	  doldol = local_head_stack [i];
 	  fs_id = XxY_Y (heads, head);
 
-	  is_valid = SXTRUE;
+	  is_valid = true;
 
 #if EBUG
 	  SXBA_1_bit (valid_fs_id_set, fs_id);
@@ -5720,7 +5720,7 @@ dag_td_walk (Aij_or_prod)
   /* valid_fs_id_set contient l'ensemble des fs_id valides pour (toutes les rules de) prod */
   if (is_valid) {
     fputs ("\n", stdout);
-    spf_print_prod (stdout, prod, SXTRUE /* with nl */);
+    spf_print_prod (stdout, prod, true /* with nl */);
 
     x = sxba_cardinal (valid_fs_id_set);
     i = 0;
@@ -5911,7 +5911,7 @@ xml_print_forest ()
     Aij = spf.outputG.lhs [prod].lhs;
 
     fputs ("  <!-- ", xml_file);
-    spf_print_prod (xml_file, prod, SXFALSE /* no nl */);
+    spf_print_prod (xml_file, prod, false /* no nl */);
     fputs (" -->\n", xml_file);
 
     fprintf (xml_file,
@@ -5972,7 +5972,7 @@ xml_print_f_structure ()
   SXINT             fs_id, bot, top, bot2, cur2, top2, bot3, cur3, top3, max_priority, priority;
   SXINT             val, field_id, field_kind, sous_cat_id, atom_id, local_atom_id, x, i, Tpq, id;
   SXINT             *local2atom_id;
-  SXBOOLEAN         is_optional, is_first2;
+  bool         is_optional, is_first2;
   struct pred_val *ptr2;
   unsigned char   static_field_kind;
 
@@ -6026,10 +6026,10 @@ xml_print_f_structure ()
 	
 	      if (field_id < 0) {
 		field_id = -field_id;
-		is_optional = SXTRUE;
+		is_optional = true;
 	      }
 	      else
-		is_optional = SXFALSE;
+		is_optional = false;
 
 	      if (field_id > MAX_FIELD_ID) {
 		field_id -= MAX_FIELD_ID;
@@ -6121,7 +6121,7 @@ xml_print_f_structure ()
 	  else {
 	    local2atom_id = field_id2atom_field_id [field_id];
 	    local_atom_id = 0;
-	    is_first2 = SXTRUE;
+	    is_first2 = true;
 
 	    while ((val >>= 1) != 0) {
 	      local_atom_id++;
@@ -6130,7 +6130,7 @@ xml_print_f_structure ()
 		atom_id = local2atom_id [local_atom_id];
 
 		if (is_first2)
-		  is_first2 = SXFALSE;
+		  is_first2 = false;
 		else
 		  fputs ("|", xml_file);
 
@@ -6190,7 +6190,7 @@ xml_print_f_structure ()
 static SXINT
 fill_head_stack (Xpq, f)
      SXINT Xpq;
-     SXBOOLEAN (*f)();
+     bool (*f)();
 {
   SXINT x, d, head, fs_id;
   SXINT *base_ptr;
@@ -6243,30 +6243,30 @@ fill_fs_id_stack (Xpq)
 }
 #endif /* 0 */
 
-static SXBOOLEAN
+static bool
 filter_root (head)
      SXINT head;
 {
   return (!is_consistent || !SXBA_bit_is_set (unconsistent_heads_set, head));
 }
 
-static SXBOOLEAN
+static bool
 filter_true (head)
      SXINT head;
 {
-  return SXTRUE;
+  return true;
 }
 
 
 /* Aucune f_structure a la racine ... */
 /* ... on essaie de sauver les meubles */
 /* On va noter ds head_stack toutes les head de + haut niveau que l'on va trouver, pas de contrainte sur la coherence  */
-static SXBOOLEAN
+static bool
 rcvr_bu_walk (prod)
      SXINT prod;
 {
   SXINT     item, Xpq;
-  SXBOOLEAN has_f_structures;
+  bool has_f_structures;
 
   has_f_structures = (Xpq2disp [spf.outputG.lhs [prod].lhs] > 0);
   item = spf.outputG.lhs [prod].prolon;
@@ -6285,11 +6285,11 @@ rcvr_bu_walk (prod)
     item++;
   }
 
-  return SXTRUE; /* On ne touche pas a la foret partagee */
+  return true; /* On ne touche pas a la foret partagee */
 }
 #if 0
 /* Le 22/07/04 on traite par une passe bu */
-static SXBOOLEAN
+static bool
 rcvr_td_walk (Aij_or_prod)
      SXINT Aij_or_prod;
 {
@@ -6310,7 +6310,7 @@ rcvr_td_walk (Aij_or_prod)
       }
     }
 
-    return SXTRUE;
+    return true;
   }
 
   /* Aij */
@@ -6329,7 +6329,7 @@ xml_print_f_structures ()
   SXINT        *local_head_stack;
   struct lhs *plhs;
 #if EBUG
-  SXBOOLEAN    found;
+  bool    found;
 #endif /* EBUG */
 
   fputs ("<!-- ************************* F_STRUCTURES ************************* -->\n", xml_file); 
@@ -6355,7 +6355,7 @@ xml_print_f_structures ()
 
   /* Le 16/06/04 On associe la production (ou le terminal) qui a produit la f_structure */
 #if EBUG
-  found = SXFALSE;
+  found = false;
 #endif /* EBUG */
 
   for (y = 1; y <= head_stack [0]; y++) {
@@ -6392,7 +6392,7 @@ xml_print_f_structures ()
 		  /* C'est une bonne */
 		  fprintf (xml_file, "  <fs_ref fs_id=\"FS%i\" rule_id=\"R_%i_%i\"/>\n", fs_id, prod, plhs->init_prod);
 #if EBUG
-		  found = SXTRUE;;
+		  found = true;;
 #endif /* EBUG */
 		  break;
 		}	      
@@ -6413,7 +6413,7 @@ xml_print_f_structures ()
 	/* head doit etre trouve' */
 	sxtrap (ME, "xml_print_f_structures");
       else
-	found = SXFALSE;
+	found = false;
 #endif /* EBUG */
     }
   }
@@ -6574,22 +6574,22 @@ single_f_structure_filtering ()
 }
 
 
-static SXBOOLEAN
+static bool
 tpath2easy (i, j)
      SXINT i, j;
 {
   SXINT     trans, k, triple, Tij;
-  SXBOOLEAN ret_val;
+  bool ret_val;
 
-  if (i == j) return SXTRUE;
+  if (i == j) return true;
 
-  ret_val = SXFALSE;
+  ret_val = false;
 
   Tij_iforeach (i, Tij) {
     k = Tij2j (Tij); /* k > i */
 
     if (k <= j && tpath2easy (k, j)) {
-      ret_val = SXTRUE;
+      ret_val = true;
       XxYxZ_set (&easy_Tij_hd, i, Tij, k, &triple);
     }
   }
@@ -6600,19 +6600,19 @@ tpath2easy (i, j)
 /* Sert ds easy_td_walk pour reperer si on est ds un constituant max */
 static SXBA max_constituent_set;
 
-static SXBOOLEAN
+static bool
 is_a_maximal_constituent (i, j)
      SXINT i, j;
 {
   SXINT k;
 
-  if (j <= i) return SXFALSE;
+  if (j <= i) return false;
 
   k = i;
 
   while (k < j) {
     if (SXBA_bit_is_set (max_constituent_set, k))
-      return SXFALSE;
+      return false;
 
     k++;
   }
@@ -6622,10 +6622,10 @@ is_a_maximal_constituent (i, j)
     i++;
   }
 
-  return SXTRUE;
+  return true;
 }
 
-static SXBOOLEAN
+static bool
 easy_td_walk (Aij)
      SXINT Aij;
 {
@@ -6673,7 +6673,7 @@ easy_td_walk (Aij)
 	}
       }
     }
-    return SXTRUE;
+    return true;
   }
   else {
     /* Aij */
@@ -6693,7 +6693,7 @@ easy_td_walk (Aij)
     }
   }
     
-  return SXTRUE;
+  return true;
 }
 
 /* Il faut reconstituer les AMALGAM et les COMPOUND */
@@ -7271,7 +7271,7 @@ static SXINT
 seek_t (Aij, tstr, is_prefix)
      SXINT     Aij;
      char    *tstr;
-     SXBOOLEAN is_prefix;
+     bool is_prefix;
 {
   SXINT  hook, prod, item, Xpq, ret_val, lstr, ltstr;
   char *str;
@@ -7315,7 +7315,7 @@ seek_VERB_v (Pij)
   str = spf.inputG.ntstring [Aij2A (Aij)];
 
   if (strlen (str) == 4 && strncmp (str, "VERB", 4) == 0) {
-    if (href_verbe = seek_t (Aij, "v", SXFALSE /* Le terminal "v" */))
+    if (href_verbe = seek_t (Aij, "v", false /* Le terminal "v" */))
       return href_verbe;
   }
   
@@ -7334,7 +7334,7 @@ seek_N_nc (Pij)
   str = spf.inputG.ntstring [Aij2A (Aij)];
 
   if (strlen (str) == 1 && strncmp (str, "N", 1) == 0) {
-    if (href_verbe = seek_t (Aij, "nc", SXFALSE /* Le terminal "v" */))
+    if (href_verbe = seek_t (Aij, "nc", false /* Le terminal "v" */))
       return href_verbe;
   }
   
@@ -7353,7 +7353,7 @@ seek_WS_csu (Pij)
   str = spf.inputG.ntstring [Aij2A (Aij)];
 
   if (strlen (str) == 2 && strncmp (str, "WS", 2) == 0) {
-    if (href = seek_t (Aij, "csu", SXFALSE /* Le terminal "csu" */))
+    if (href = seek_t (Aij, "csu", false /* Le terminal "csu" */))
       return href;
   }
   
@@ -7372,7 +7372,7 @@ seek_Easy_PV_prep (Pij)
   str = spf.inputG.ntstring [Aij2A (Aij)];
 
   if (strlen (str) >= 7 && strncmp (str, "Easy_PV", 7) == 0) {
-    if (href = seek_t (Aij, "prep", SXFALSE /* Le terminal "prep" */))
+    if (href = seek_t (Aij, "prep", false /* Le terminal "prep" */))
       return href;
   }
   
@@ -7391,7 +7391,7 @@ seek_Easy_GA_adj (Pij)
   str = spf.inputG.ntstring [Aij2A (Aij)];
 
   if (strlen (str) >= 7 && strncmp (str, "Easy_GA", 7) == 0) {
-    if (href = seek_t (Aij, "adj", SXFALSE /* Le terminal "adj" */))
+    if (href = seek_t (Aij, "adj", false /* Le terminal "adj" */))
       return href;
   }
   
@@ -7410,7 +7410,7 @@ seek_Easy_GR_adv (Pij)
   str = spf.inputG.ntstring [Aij2A (Aij)];
 
   if (strlen (str) >= 7 && strncmp (str, "Easy_GR", 7) == 0) {
-    if (href = seek_t (Aij, "adv", SXFALSE /* Le terminal "adv" */))
+    if (href = seek_t (Aij, "adv", false /* Le terminal "adv" */))
       return href;
   }
   
@@ -7429,7 +7429,7 @@ seek_Easy_PP_prep (Pij)
   str = spf.inputG.ntstring [Aij2A (Aij)];
 
   if (strlen (str) >= 7 && strncmp (str, "Easy_PP", 7) == 0) {
-    if (href = seek_t (Aij, "prep", SXFALSE /* Le terminal "prep" */))
+    if (href = seek_t (Aij, "prep", false /* Le terminal "prep" */))
       return href;
   }
   
@@ -7735,7 +7735,7 @@ get_v_href (Aij)
 <verbe xmlns:xlink="locator" href="E1F9"/> 
 </relation> 
 */
-static SXBOOLEAN
+static bool
 easy_td_Auxiliaire_Verbe (Aij)
      SXINT Aij;
 {
@@ -7916,7 +7916,7 @@ easy_td_Auxiliaire_Verbe (Aij)
     }
   }
 
-  return SXTRUE;
+  return true;
 }
 
 static void
@@ -8976,7 +8976,7 @@ easy_walk (i)
      SXINT i;
 {
   SXINT     triple, Aij, j, Tij;
-  SXBOOLEAN is_constituent_trans;
+  bool is_constituent_trans;
 
   if (i == final_mlstn) {
     /* easy_constituent_stack contient un chemin complet (constituants et terminaux de liaison) */
@@ -9004,10 +9004,10 @@ easy_walk (i)
     return;
   } 
 
-  is_constituent_trans = SXFALSE;
+  is_constituent_trans = false;
 
   XxYxZ_Xforeach (easy_hd, i, triple) {
-    is_constituent_trans = SXTRUE;
+    is_constituent_trans = true;
     Aij =  XxYxZ_Y (easy_hd, triple);
     PUSH (easy_constituent_stack, Aij);
     j = XxYxZ_Z (easy_hd, triple);
@@ -9020,7 +9020,7 @@ easy_walk (i)
   if (!is_constituent_trans) {
     /* On fait une transition terminale ... */
     XxYxZ_Xforeach (easy_Tij_hd, i, triple) {
-      is_constituent_trans = SXTRUE;
+      is_constituent_trans = true;
       Tij =  XxYxZ_Y (easy_Tij_hd, triple);
       PUSH (easy_constituent_stack, spf.outputG.maxxnt+Tij);
       j = XxYxZ_Z (easy_Tij_hd, triple);
@@ -9238,7 +9238,7 @@ forest_sem_pass ()
   SXUINT tree_count;
   SXINT               x, cur_nb;
   SXINT               f_struct_nb, unconsistent_f_struct_nb, total_f_struct_nb;
-  SXBOOLEAN           is_OK;
+  bool           is_OK;
 
   if (LFG_TIME > spf.inputG.modif_time) {
     fputs ("\nThe Earley parser tables are older than the current LFG tables,\n\
@@ -9298,8 +9298,8 @@ run \"bnf\" and \"csynt_lc\" on the CF skeleton generated by the SXLFG construct
       else {
 	/* Echec de la 1ere passe */
 	/* On reessaie sans faire les tests de coherence ... */
-	is_relaxed_run = SXTRUE;
-	is_locally_unconsistent = SXFALSE;
+	is_relaxed_run = true;
+	is_locally_unconsistent = false;
 	clear_for_relaxed_run ();
 
 #if EBUG      
@@ -9332,7 +9332,7 @@ run \"bnf\" and \"csynt_lc\" on the CF skeleton generated by the SXLFG construct
 	  /* if (spf.outputG.start_symbol == 0 || spf.inputG.has_cycles) on sort les f_structures des terminaux */
 	  spf.dag.pass_derived = rcvr_bu_walk;
 	  spf_topological_bottom_up_walk ();
-	  is_rcvr_done = SXTRUE;
+	  is_rcvr_done = true;
 	}
       }
 

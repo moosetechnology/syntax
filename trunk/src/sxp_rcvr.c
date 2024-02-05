@@ -22,7 +22,7 @@
 #include "SS.h"
 
 #ifndef VARIANT_32
-char WHAT_SXP_RECOVERY[] = "@(#)SYNTAX - $Id: sxp_rcvr.c 3461 2023-07-24 14:23:17Z garavel $" WHAT_DEBUG;
+char WHAT_SXP_RECOVERY[] = "@(#)SYNTAX - $Id: sxp_rcvr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 #endif
 
 #define Commun 1
@@ -89,7 +89,7 @@ static char	*ttext (struct sxtables *tables, SXINT tcode)
 
 
 
-static SXVOID	oflow (void)
+static void	oflow (void)
 
 /* overflow of stack */
 
@@ -100,7 +100,7 @@ static SXVOID	oflow (void)
     sxplocals.rcvr.stack = (SXP_SHORT*) sxrealloc (sxplocals.rcvr.stack, lgt1 + 1, sizeof (SXP_SHORT));
 }
 
-static SXBOOLEAN	set_next_item (
+static bool	set_next_item (
 			       struct SXP_item *vector,
 			       SXP_SHORT *check, 
 			       SXP_SHORT *action,
@@ -118,15 +118,15 @@ static SXBOOLEAN	set_next_item (
     for (aitem = vector + ++*check; *check <= Max; aitem++, ++*check)
 	if (aitem->check == *check) {
 	    *action = aitem->action;
-	    return SXTRUE;
+	    return true;
 	}
 
-    return SXFALSE;
+    return false;
 }
 
 
 
-static SXVOID	set_first_trans (
+static void	set_first_trans (
 				 struct SXP_bases *abase,
 				 SXP_SHORT *check, 
 				 SXP_SHORT *action,
@@ -154,7 +154,7 @@ static SXVOID	set_first_trans (
 
 
 
-static SXBOOLEAN	set_next_trans (
+static bool	set_next_trans (
 				struct SXP_bases *abase,
 				SXP_SHORT *check, 
 				SXP_SHORT *action,
@@ -164,7 +164,7 @@ static SXBOOLEAN	set_next_trans (
   switch (*next_action_kind) {
   case Commun:
     if (set_next_item (sxplocals.SXP_tables.vector + abase->commun, check, action, Max))
-      return SXTRUE;
+      return true;
 
     if (abase->propre != 0 /* partie propre non vide */ ) {
       *next_action_kind = Propre;
@@ -174,7 +174,7 @@ static SXBOOLEAN	set_next_trans (
     case Propre:
        /* !!! ce "case" se trouve au milieu du "if" : c'est voulu */
       if (set_next_item (sxplocals.SXP_tables.vector + abase->propre, check, action, Max))
-	return SXTRUE;
+	return true;
     }
     /* !!! pas de break ici : c'est voulu */
 #if defined (__GNUC__) && (__GNUC__ - 0 >= 7)
@@ -185,21 +185,21 @@ static SXBOOLEAN	set_next_trans (
     *check = 0;
     *action = abase->defaut;
     *next_action_kind = Done;
-    return SXTRUE;
+    return true;
 
   case Done:
-    return SXFALSE;
+    return false;
 
   default:
     sxtrap ("sxp_rcvr", "set_next_trans");
     /*NOTREACHED*/
   }
 
-  return SXFALSE; /*NOTREACHED*/
+  return false; /*NOTREACHED*/
 }
 
 
-static SXBOOLEAN	reduce_already_seen (struct SXP_bases *abase, SXP_SHORT check, SXP_SHORT action)
+static bool	reduce_already_seen (struct SXP_bases *abase, SXP_SHORT check, SXP_SHORT action)
 {
     /* action ( >0) reference une action reduce qui n'est pas l'action par defaut
        du abase courant. On regarde si cette action n'a pas deja ete traitee. */
@@ -211,13 +211,13 @@ static SXBOOLEAN	reduce_already_seen (struct SXP_bases *abase, SXP_SHORT check, 
 
 	do {
 	    if (test == check)
-		return SXFALSE;
+		return false;
 
 	    if (ref == -action)
-		return SXTRUE;
+		return true;
 	} while (set_next_trans (abase, &test, &ref, sxplocals.SXP_tables.P_tmax, &next_action_kind));
 
-	return SXFALSE; /* garde-fou */
+	return false; /* garde-fou */
 }
 
 static SXINT	get_tail (SXINT binf, SXINT bsup)
@@ -241,7 +241,7 @@ static SXINT	get_tail (SXINT binf, SXINT bsup)
 
 
 
-static SXVOID	restaure_stack (SXINT m, SXINT M)
+static void	restaure_stack (SXINT m, SXINT M)
 {
     SXINT	i;
 
@@ -253,11 +253,11 @@ static SXVOID	restaure_stack (SXINT m, SXINT M)
 
 
 
-static SXBOOLEAN	ARC_is_a_right_ctxt (SXINT *head, SXINT tail, SXP_SHORT *ref)
+static bool	ARC_is_a_right_ctxt (SXINT *head, SXINT tail, SXP_SHORT *ref)
 
 /* Check if tokens contained in tokens[head..tail] are a valid right context of
    *ref. Assume that tail takes into account the occurrences of key-terminals.
-   Predicates are supposed to return SXFALSE */
+   Predicates are supposed to return false */
 
 
 {
@@ -272,10 +272,10 @@ static SXBOOLEAN	ARC_is_a_right_ctxt (SXINT *head, SXINT tail, SXP_SHORT *ref)
 	if (next == 0 ||
 	    (next < -sxplocals.SXP_tables.Mred && next >= -sxplocals.SXP_tables.Mprdct))
 	    /* Error or Predicate */
-	    return SXFALSE;
+	    return false;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -317,15 +317,15 @@ static void undo (void)
 
 
 
-static SXBOOLEAN	REF_is_a_right_ctxt (SXBOOLEAN bscan, 
-				     SXBOOLEAN bshift, 
+static bool	REF_is_a_right_ctxt (bool bscan, 
+				     bool bshift, 
 				     SXINT head, 
 				     SXINT tail, 
 				     SXINT *pxs, 
 				     SXP_SHORT *pstate, 
 				     SXP_SHORT ref, 
 				     SXP_SHORT look_ahead,
-				     SXBOOLEAN keep_stack)
+				     bool keep_stack)
 
 /* Check if tokens contained in tokens[head..tail] are a valid right context of
    stack. Assume that tail takes into account the occurrences of key-terminals.
@@ -337,9 +337,9 @@ static SXBOOLEAN	REF_is_a_right_ctxt (SXBOOLEAN bscan,
     SXINT				xs = *pxs;
     struct SXP_reductions	*ared;
     SXP_SHORT			state = *pstate;
-    SXBOOLEAN			is_rc = SXTRUE;
+    bool			is_rc = true;
 #if CYCLE_DETECTION >= 1
-    SXBOOLEAN			cycle_detected = SXFALSE;
+    bool			cycle_detected = false;
 #if CYCLE_DETECTION == 2
     SXP_SHORT			backup_ref, backup_ref_orig;
 #endif
@@ -359,7 +359,7 @@ static SXBOOLEAN	REF_is_a_right_ctxt (SXBOOLEAN bscan,
 		SXP_SHORT ARC_ref = ref;
 
 		if (ARC_head <= tail && !ARC_is_a_right_ctxt (&ARC_head, tail, &ARC_ref)) {
-		    return SXFALSE;
+		    return false;
 		}
 				   
 		ref = ARC_ref;
@@ -375,7 +375,7 @@ static SXBOOLEAN	REF_is_a_right_ctxt (SXBOOLEAN bscan,
 
 	    if (ref == 0) {
 		/* Error */ 
-		return SXFALSE;
+		return false;
 	    }
 
 #if CYCLE_DETECTION >= 1
@@ -410,9 +410,9 @@ static SXBOOLEAN	REF_is_a_right_ctxt (SXBOOLEAN bscan,
                    * une boucle infinie dont on force l'interruption ; mais
                    * idealement, il faudrait traiter le probleme a la racine
                    */
-                  return SXFALSE;
+                  return false;
                } else {
-                  cycle_detected = SXTRUE;
+                  cycle_detected = true;
                }
 	    }
 #if CYCLE_DETECTION == 2
@@ -425,7 +425,7 @@ static SXBOOLEAN	REF_is_a_right_ctxt (SXBOOLEAN bscan,
 
 	    if (ref > 0)
 		/* Scan */ 
-		bscan = SXTRUE;
+		bscan = true;
 	    else
 		ref = -ref;
 
@@ -443,7 +443,7 @@ static SXBOOLEAN	REF_is_a_right_ctxt (SXBOOLEAN bscan,
 		if (!bscan)
 		    ref = sxP_access (sxplocals.SXP_tables.t_bases + state, look_ahead);
 		else
-		    bshift = SXTRUE; /* bscan && bshift == SXTRUE */
+		    bshift = true; /* bscan && bshift == true */
 	    }
 	    else if (ref > sxplocals.SXP_tables.Mred) {
 		/* Predicates */
@@ -469,7 +469,7 @@ static SXBOOLEAN	REF_is_a_right_ctxt (SXBOOLEAN bscan,
 		}
 		else
 		{
-		    return SXFALSE;
+		    return false;
 		}
 	    }
 	    else {
@@ -479,10 +479,10 @@ static SXBOOLEAN	REF_is_a_right_ctxt (SXBOOLEAN bscan,
 		if (ared->reduce == 0 /* Halt */ ) {
 		    if (look_ahead == sxplocals.SXP_tables.P_tmax) {
 			*pxs = xs, *pstate = state;
-			return SXTRUE;
+			return true;
 		    }
 
-		    return SXFALSE;
+		    return false;
 		}
 
 		if ((ared->reduce > sxplocals.SXP_tables.P_nbpro || sxis_syntactic_action (ared->action)) &&
@@ -550,10 +550,10 @@ static SXBOOLEAN	REF_is_a_right_ctxt (SXBOOLEAN bscan,
 
 		    if (is_rc) {
 			*pxs = xs, *pstate = state;
-			return SXTRUE;
+			return true;
 		    }
 
-		    return SXFALSE;
+		    return false;
 		}
 
 		xs -= ared->lgth;
@@ -572,7 +572,7 @@ static SXBOOLEAN	REF_is_a_right_ctxt (SXBOOLEAN bscan,
 	/* bscan && bshift */
 
 	if (++head <= tail) {
-	    bscan = SXFALSE;
+	    bscan = false;
 	    sxplocals.rcvr.TOK_i = sxplocals.rcvr.TOK_0 + head;
 	    look_ahead = SXGET_TOKEN (sxplocals.rcvr.TOK_i).lahead;
 	    ref = sxP_access (sxplocals.SXP_tables.t_bases + state, look_ahead);
@@ -581,15 +581,15 @@ static SXBOOLEAN	REF_is_a_right_ctxt (SXBOOLEAN bscan,
 
     if (is_rc) {
 	*pxs = xs, *pstate = state;
-	return SXTRUE;
+	return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
 
-static SXBOOLEAN	is_a_right_ctxt (SXINT head, SXINT tail, SXINT *pxs, SXP_SHORT *pstate, SXBOOLEAN keep_stack)
+static bool	is_a_right_ctxt (SXINT head, SXINT tail, SXINT *pxs, SXP_SHORT *pstate, bool keep_stack)
 
 /* Check if tokens contained in tokens[head..tail] are a valid right context of
    stack. Assume that tail takes into account the occurrences of key-terminals.
@@ -599,10 +599,10 @@ static SXBOOLEAN	is_a_right_ctxt (SXINT head, SXINT tail, SXINT *pxs, SXP_SHORT 
 {
     SXP_SHORT			ref, state, look_ahead;
     SXINT				xs;
-    SXBOOLEAN			is_rc;
+    bool			is_rc;
 
     if (head > tail)
-	return SXTRUE;
+	return true;
 
     xs = *pxs;
     state = *pstate;
@@ -614,7 +614,7 @@ static SXBOOLEAN	is_a_right_ctxt (SXINT head, SXINT tail, SXINT *pxs, SXP_SHORT 
     look_ahead = SXGET_TOKEN (sxplocals.rcvr.TOK_i).lahead;
     ref = sxP_access (sxplocals.SXP_tables.t_bases + state, look_ahead);
 
-    is_rc = REF_is_a_right_ctxt (SXFALSE, SXFALSE, head, tail, &xs, &state, ref, look_ahead,
+    is_rc = REF_is_a_right_ctxt (false, false, head, tail, &xs, &state, ref, look_ahead,
 				 keep_stack);
 
     if (keep_stack) {
@@ -655,7 +655,7 @@ static SXBOOLEAN	is_a_right_ctxt (SXINT head, SXINT tail, SXINT *pxs, SXP_SHORT 
    On essaye la 3b)
 */
 
-static SXBOOLEAN	check_ctxt (SXINT head, SXINT tail, SXINT *x, SXP_SHORT ref, SXBA trans_set, SXINT n)
+static bool	check_ctxt (SXINT head, SXINT tail, SXINT *x, SXP_SHORT ref, SXBA trans_set, SXINT n)
 {
     /* ref est une action valide depuis l'etat stack [x]
        On cherche une sequence de shifts qcq {T|NT}* suivie de t[head..tail]. */
@@ -666,7 +666,7 @@ static SXBOOLEAN	check_ctxt (SXINT head, SXINT tail, SXINT *x, SXP_SHORT ref, SX
     SXP_SHORT		check, state, prev_state;
     SXINT			next_action_kind;
     struct SXP_bases	*abase;
-    SXBOOLEAN		ret_val;
+    bool		ret_val;
 
 #define MAX_PATH_LGTH	0
 
@@ -677,7 +677,7 @@ static SXBOOLEAN	check_ctxt (SXINT head, SXINT tail, SXINT *x, SXP_SHORT ref, SX
 	/* On ne suit pas les chaines de reductions. Ces nouvelles reductions seront
 	   examinees plus tard quand on sera au bon niveau de pile */
 	/* User's predicate or &Else (assume always returning false) */
-	    return SXFALSE;
+	    return false;
 
     if ((--n + MAX_PATH_LGTH) >= 0 && SXBA_bit_is_set_reset (trans_set, state)) {
 	/* Shift */
@@ -691,17 +691,17 @@ static SXBOOLEAN	check_ctxt (SXINT head, SXINT tail, SXINT *x, SXP_SHORT ref, SX
 
 	if (sxP_access (abase, SXGET_TOKEN (sxplocals.rcvr.TOK_0).lahead) > 0
 	    /* scan sur le terminal cle */
-	    && is_a_right_ctxt (head, tail, x, &state, SXTRUE))
-	    ret_val = SXTRUE;
+	    && is_a_right_ctxt (head, tail, x, &state, true))
+	    ret_val = true;
 	else {
-	    ret_val = SXFALSE;
+	    ret_val = false;
 
 	    set_first_trans (abase, &check, &ref,
 			     sxplocals.SXP_tables.P_tmax, &next_action_kind);
 
 	    do {
 		if (check_ctxt (head, tail, x, ref, trans_set, n)) {
-		    ret_val =  SXTRUE;
+		    ret_val =  true;
 		    break;
 		}
 	    } while (set_next_trans (abase, &check, &ref,
@@ -716,7 +716,7 @@ static SXBOOLEAN	check_ctxt (SXINT head, SXINT tail, SXINT *x, SXP_SHORT ref, SX
 
 		do {
 		    if (check_ctxt (head, tail, x, ref, trans_set, n)) {
-			ret_val =  SXTRUE;
+			ret_val =  true;
 			break;
 		    }
 		} while (set_next_trans (abase, &check, &ref,
@@ -734,10 +734,10 @@ static SXBOOLEAN	check_ctxt (SXINT head, SXINT tail, SXINT *x, SXP_SHORT ref, SX
 	return ret_val;
     }
 
-    return SXFALSE;
+    return false;
 }
 
-static SXBOOLEAN	morgan (char *c1, char *c2)
+static bool	morgan (char *c1, char *c2)
 
 /* rend vrai si c1 = c2 a une faute d'orthographe pres */
 
@@ -749,7 +749,7 @@ static SXBOOLEAN	morgan (char *c1, char *c2)
     switch ((l1 = strlen (c1)) - (l2 = strlen (c2))) {
     default:
 	/* longueurs trop differentes */
-	return SXFALSE;
+	return false;
 
     case 0:
 	/* longueurs egales: on autorise un remplacement ou une interversion
@@ -761,7 +761,7 @@ static SXBOOLEAN	morgan (char *c1, char *c2)
 
 	if (t1 == tmax)
 	    /* egalite */
-	    return SXTRUE;
+	    return true;
 
 	d1 = *t1++, d2 = *t2++ /* caracteres courants, differents */ ;
 	e1 = *t1++, e2 = *t2++ /* caracteres suivants */ ;
@@ -769,7 +769,7 @@ static SXBOOLEAN	morgan (char *c1, char *c2)
 	if (e1 != e2 /* caracteres suivants differents */
 		     && (d1 != e2 || e1 != d2))
 	    /* caracteres pas inverses */
-	    return SXFALSE;
+	    return false;
 
 
 /* les restes des chaines doivent etre egaux */
@@ -798,7 +798,7 @@ static SXBOOLEAN	morgan (char *c1, char *c2)
 
     if (*t2 == SXNUL)
 	/* egalite au dernier caractere pres */
-	return SXTRUE;
+	return true;
 
     t1++ /* on saute un caractere dans la chaine la plus longue */ ;
 
@@ -813,7 +813,7 @@ static SXBOOLEAN	morgan (char *c1, char *c2)
 
 
 
-static SXBOOLEAN match_a_tok (SXINT cur_mod, SXINT n, SXINT tok)
+static bool match_a_tok (SXINT cur_mod, SXINT n, SXINT tok)
 {
     /* Cette fonction regarde si le token "tok" match le nieme element de modele cur_mod */
     SXINT	*regle;
@@ -822,7 +822,7 @@ static SXBOOLEAN match_a_tok (SXINT cur_mod, SXINT n, SXINT tok)
     regle = sxplocals.SXP_tables.P_lregle [cur_mod];
 
     if (n > regle [0] || (j = regle [n]) == -1)
-	return SXTRUE;
+	return true;
 
     if (j >= 0) {
 	sxplocals.rcvr.TOK_i = sxplocals.rcvr.TOK_0 + j;
@@ -836,13 +836,13 @@ static SXBOOLEAN match_a_tok (SXINT cur_mod, SXINT n, SXINT tok)
 	|| sxstrlen (j = SXGET_TOKEN (sxplocals.rcvr.TOK_i).string_table_entry) <= 2
 	|| !sxkeywordp (sxplocals.sxtables, tok)
 	|| !morgan (sxstrget (j), sxttext (sxplocals.sxtables, tok)))
-	return SXFALSE;
+	return false;
 
-    return SXTRUE;
+    return true;
 }
 
 
-static SXBOOLEAN search_a_rule (SXINT *cur_mod, SXINT n, SXINT best_mod, SXINT *ster)
+static bool search_a_rule (SXINT *cur_mod, SXINT n, SXINT best_mod, SXINT *ster)
 {
     /* Recherche un modele de priorite inferieure a cur_mod dont le prefixe verifie ster */
 
@@ -873,7 +873,7 @@ static SXBOOLEAN search_a_rule (SXINT *cur_mod, SXINT n, SXINT best_mod, SXINT *
 }
 
 
-static SXBOOLEAN is_valid (SXINT cur_mod, SXINT n, SXINT *ster)
+static bool is_valid (SXINT cur_mod, SXINT n, SXINT *ster)
 {
     /* Regarde si la regle de correction d'erreur cur_mod est valide par rapport
        aux don't delete et don't insert */
@@ -896,7 +896,7 @@ static SXBOOLEAN is_valid (SXINT cur_mod, SXINT n, SXINT *ster)
 	    sxba_0_bit (sxplocals.rcvr.to_be_checked, j);
 	}
 	else if (sxgetbit (sxplocals.SXP_tables.P_no_insert, ster [k]))
-	    return SXFALSE;
+	    return false;
     }
 
     j = -1;
@@ -905,14 +905,14 @@ static SXBOOLEAN is_valid (SXINT cur_mod, SXINT n, SXINT *ster)
 	sxplocals.rcvr.TOK_i = sxplocals.rcvr.TOK_0 + j;
 
 	if (sxgetbit (sxplocals.SXP_tables.P_no_delete, SXGET_TOKEN (sxplocals.rcvr.TOK_i).lahead))
-	    return SXFALSE;
+	    return false;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
-static SXVOID ARC_deriv (SXINT n, SXINT t_state, SXINT cur_mod)
+static void ARC_deriv (SXINT n, SXINT t_state, SXINT cur_mod)
 {
     /* Les n tokens de ster valident cur_mod (et il n'existe pas de regle plus
        prioritaire que cur_mod qui les valident). On est dans l'etat t_state
@@ -999,20 +999,20 @@ static SXVOID ARC_deriv (SXINT n, SXINT t_state, SXINT cur_mod)
 }
 
 
-static SXVOID	deriv (SXBOOLEAN string_has_grown, SXINT n, SXINT xstd, SXP_SHORT t_state, SXINT rule_no);
+static void	deriv (bool string_has_grown, SXINT n, SXINT xstd, SXP_SHORT t_state, SXINT rule_no);
 
-static SXVOID new_ref (SXINT k, SXINT n, SXINT xstd, SXP_SHORT ref, SXP_SHORT test, SXP_SHORT t_state, SXINT rule_no)
+static void new_ref (SXINT k, SXINT n, SXINT xstd, SXP_SHORT ref, SXP_SHORT test, SXP_SHORT t_state, SXINT rule_no)
 {
     struct SXP_reductions	*ared;
     SXP_SHORT			state, ref_orig;
     struct SXP_bases		*abase;
     SXINT                       j;
     SXP_SHORT			prev_state;
-    SXBOOLEAN			scan, never_scanned;
+    bool			scan, never_scanned;
 
     abase = sxplocals.SXP_tables.t_bases + t_state;
     j = xstd;
-    never_scanned = SXTRUE;
+    never_scanned = true;
 
   for (;;) {
     if (ref < -sxplocals.SXP_tables.Mref) {
@@ -1022,7 +1022,7 @@ static SXVOID new_ref (SXINT k, SXINT n, SXINT xstd, SXP_SHORT ref, SXP_SHORT te
 	   qui sera elle meme utilisee pour une vraie validation */
 
 	SXINT	i, cur_mod;
-	SXBOOLEAN	store_is_correction_on_error_token;
+	bool	store_is_correction_on_error_token;
 
 	for (i = 1; i <= n; i++)
 	    sxplocals.rcvr.ARC_ster [i] = sxplocals.rcvr.ster [i];
@@ -1032,7 +1032,7 @@ static SXVOID new_ref (SXINT k, SXINT n, SXINT xstd, SXP_SHORT ref, SXP_SHORT te
 	    sxplocals.rcvr.ARC_best.modele_no = sxplocals.SXP_tables.P_min_prio_0 + 1;
 	sxplocals.rcvr.ARC_a_la_rigueur.checked_lgth = 0;
 	store_is_correction_on_error_token = sxplocals.rcvr.is_correction_on_error_token;
-	sxplocals.rcvr.is_correction_on_error_token = SXTRUE;
+	sxplocals.rcvr.is_correction_on_error_token = true;
 	cur_mod = rule_no;
 
 	if (!match_a_tok (cur_mod, i, (SXINT)test) &&
@@ -1067,7 +1067,7 @@ static SXVOID new_ref (SXINT k, SXINT n, SXINT xstd, SXP_SHORT ref, SXP_SHORT te
     ref_orig = ref;
 
     if ( (scan = (ref > 0))	/* scan */ ) {
-      never_scanned = SXFALSE;
+      never_scanned = false;
 
       if (n == 1 && sxplocals.rcvr.is_correction_on_error_token)
 	sxba_1_bit (sxplocals.rcvr.vt_set, test);
@@ -1091,7 +1091,7 @@ static SXVOID new_ref (SXINT k, SXINT n, SXINT xstd, SXP_SHORT ref, SXP_SHORT te
 	  new_ref (k, n, (SXINT)j, sxP_access (sxplocals.SXP_tables.t_bases + state, test), test, t_state, rule_no);
 	}
 	else {
-	  deriv ((SXBOOLEAN) (k > n), k, j, state, rule_no);
+	  deriv ((bool) (k > n), k, j, state, rule_no);
 	}
 	/* Le 10/07/07 */
 
@@ -1123,7 +1123,7 @@ static SXVOID new_ref (SXINT k, SXINT n, SXINT xstd, SXP_SHORT ref, SXP_SHORT te
 	else
 	    if (n == 1 && sxplocals.rcvr.is_correction_on_error_token)
 		/* On ne valide pas les terminaux etendus */
-		sxplocals.rcvr.has_prdct = SXTRUE;
+		sxplocals.rcvr.has_prdct = true;
     }
     else if (ref > 0		/* Reduce or Halt */ ) {
 	ared = sxplocals.SXP_tables.reductions + ref;
@@ -1144,7 +1144,7 @@ static SXVOID new_ref (SXINT k, SXINT n, SXINT xstd, SXP_SHORT ref, SXP_SHORT te
 
 	    if (search_a_rule (&cur_mod, sxplocals.SXP_tables.P_maxlregle,
 			       sxplocals.rcvr.nomod, sxplocals.rcvr.ster))
-		deriv (SXTRUE, sxplocals.SXP_tables.P_maxlregle, j - ared->lgth, 0, cur_mod);
+		deriv (true, sxplocals.SXP_tables.P_maxlregle, j - ared->lgth, 0, cur_mod);
 	}
 	else			/* Reduce */
 	    if (test == 0 || scan || !reduce_already_seen (abase, test, ref)) {
@@ -1223,7 +1223,7 @@ static SXVOID new_ref (SXINT k, SXINT n, SXINT xstd, SXP_SHORT ref, SXP_SHORT te
 
 
 
-static SXVOID	deriv (SXBOOLEAN string_has_grown, SXINT n, SXINT xstd, SXP_SHORT t_state, SXINT rule_no)
+static void	deriv (bool string_has_grown, SXINT n, SXINT xstd, SXP_SHORT t_state, SXINT rule_no)
 
 /* fabrique les corrections locales; place ses resultats dans "nomod" (numero
    du modele) et "lter" (nouveau flot de tokens) */
@@ -1231,7 +1231,7 @@ static SXVOID	deriv (SXBOOLEAN string_has_grown, SXINT n, SXINT xstd, SXP_SHORT 
 
 {
     if (string_has_grown) {
-	SXBOOLEAN must_return = SXTRUE;
+	bool must_return = true;
 
 	if (match_a_tok (rule_no, n, sxplocals.rcvr.ster [n]) ||
 	    search_a_rule (&rule_no, n, sxplocals.rcvr.nomod, sxplocals.rcvr.ster))
@@ -1243,11 +1243,11 @@ static SXVOID	deriv (SXBOOLEAN string_has_grown, SXINT n, SXINT xstd, SXP_SHORT 
 	    if (n < (lmod = regle [0])) {
 		if ((head = regle [n + 1]) >= sxplocals.SXP_tables.P_right_ctxt_head [rule_no]) {
 		    if (!is_a_right_ctxt (head, get_tail (head, regle [lmod]),
-					  &xstd, &t_state, SXTRUE))
+					  &xstd, &t_state, true))
 			continue;
 		}
 		else {
-		    must_return = SXFALSE;
+		    must_return = false;
 		    break;
 		}
 	    }
@@ -1296,7 +1296,7 @@ static SXVOID	deriv (SXBOOLEAN string_has_grown, SXINT n, SXINT xstd, SXP_SHORT 
 }
 
 
-static SXBOOLEAN	ARC_is_a_correction (SXINT t_state)
+static bool	ARC_is_a_correction (SXINT t_state)
 
 /* rend vrai si on peut trouver une correction locale */
 
@@ -1304,24 +1304,24 @@ static SXBOOLEAN	ARC_is_a_correction (SXINT t_state)
     sxplocals.rcvr.ARC_ster [1] = (SXGET_TOKEN (sxplocals.rcvr.TOK_0)).lahead;
     sxplocals.rcvr.ARC_a_la_rigueur.modele_no = sxplocals.rcvr.ARC_best.modele_no = sxplocals.SXP_tables.P_min_prio_0 + 1;
     sxplocals.rcvr.ARC_a_la_rigueur.checked_lgth = 0;
-    sxplocals.rcvr.is_correction_on_error_token = SXTRUE;
+    sxplocals.rcvr.is_correction_on_error_token = true;
     ARC_deriv ((SXINT)1, t_state, (SXINT)1);
 
     if (sxplocals.rcvr.ARC_best.modele_no > sxplocals.SXP_tables.P_min_prio_0) {
 	if (sxplocals.rcvr.ARC_a_la_rigueur.modele_no > sxplocals.SXP_tables.P_min_prio_0)
-	    return SXFALSE;
+	    return false;
 
 	sxplocals.rcvr.ARC_best.modele_no = sxplocals.rcvr.ARC_a_la_rigueur.modele_no;
 	sxplocals.rcvr.ARC_best.ref = sxplocals.rcvr.ARC_a_la_rigueur.ref;
 	sxplocals.rcvr.ARC_best.lgth = sxplocals.rcvr.ARC_a_la_rigueur.lgth;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
 
-static SXBOOLEAN	is_a_correction (SXBOOLEAN no_correction_on_previous_token, SXINT xs, SXP_SHORT state)
+static bool	is_a_correction (bool no_correction_on_previous_token, SXINT xs, SXP_SHORT state)
 
 /* rend vrai si on peut trouver une correction locale */
 /* state est un t_state */
@@ -1333,19 +1333,19 @@ static SXBOOLEAN	is_a_correction (SXBOOLEAN no_correction_on_previous_token, SXI
 
     sxplocals.rcvr.a_la_rigueur.modele_no = sxplocals.SXP_tables.P_nbcart + 1;
     sxba_empty (sxplocals.rcvr.vt_set);
-    sxplocals.rcvr.has_prdct = SXFALSE;
+    sxplocals.rcvr.has_prdct = false;
 
-    if (!no_correction_on_previous_token && !is_a_right_ctxt ((SXINT)0, (SXINT)0, &xs2, &state2, SXFALSE))
+    if (!no_correction_on_previous_token && !is_a_right_ctxt ((SXINT)0, (SXINT)0, &xs2, &state2, false))
     {
 	/* Prdct on previous token */
 	undo ();
-	return SXFALSE;
+	return false;
     }
 
     sxplocals.rcvr.ster [1] = (SXGET_TOKEN (sxplocals.rcvr.TOK_0)).lahead;
     sxplocals.rcvr.nomod = sxplocals.SXP_tables.P_min_prio_0 + 1;
-    sxplocals.rcvr.is_correction_on_error_token = SXTRUE;
-    deriv (SXTRUE, (SXINT)1, xs2, state2, (SXINT)1);
+    sxplocals.rcvr.is_correction_on_error_token = true;
+    deriv (true, (SXINT)1, xs2, state2, (SXINT)1);
 
     if (sxplocals.rcvr.nomod > sxplocals.SXP_tables.P_min_prio_0)
 	sxplocals.rcvr.nomod = sxplocals.SXP_tables.P_nbcart + 1;
@@ -1361,13 +1361,13 @@ static SXBOOLEAN	is_a_correction (SXBOOLEAN no_correction_on_previous_token, SXI
 
     if (!no_correction_on_previous_token &&
 	sxplocals.SXP_tables.P_max_prio_X < sxplocals.rcvr.nomod) {
-	sxplocals.rcvr.is_correction_on_error_token = SXFALSE;
-	deriv (SXFALSE, (SXINT)0, xs, state, sxplocals.SXP_tables.P_max_prio_X);
+	sxplocals.rcvr.is_correction_on_error_token = false;
+	deriv (false, (SXINT)0, xs, state, sxplocals.SXP_tables.P_max_prio_X);
     }
 
     if (sxplocals.rcvr.nomod > sxplocals.SXP_tables.P_nbcart) {
 	if (sxplocals.rcvr.a_la_rigueur.modele_no > sxplocals.SXP_tables.P_nbcart)
-	    return SXFALSE;
+	    return false;
 
 	l = sxplocals.SXP_tables.P_lregle [sxplocals.rcvr.nomod = sxplocals.rcvr.a_la_rigueur.modele_no] [0];
 
@@ -1377,14 +1377,14 @@ static SXBOOLEAN	is_a_correction (SXBOOLEAN no_correction_on_previous_token, SXI
 
     undo ();
 
-    return SXTRUE;
+    return true;
 }
 
 
 
 /* E R R O R   R E C O V E R Y */
 
-static SXBOOLEAN	ARC_recovery (SXINT *at_state, SXINT latok_no)
+static bool	ARC_recovery (SXINT *at_state, SXINT latok_no)
 {
     /* Recuperation d'erreur en LookAhead
        - Pas de message
@@ -1414,13 +1414,13 @@ static SXBOOLEAN	ARC_recovery (SXINT *at_state, SXINT latok_no)
 
 	if (sxplocals.mode.kind == SXWITH_CORRECTION)
 	    /* Seule une tentative de correction a ete demandee. */
-	    return SXFALSE;
+	    return false;
     }
 
-    return SXTRUE;
+    return true;
 }
 
-static SXBOOLEAN	recovery (void)
+static bool	recovery (void)
 {
     char				*msg_params [5];
     SXINT			i, j, x, l;
@@ -1428,7 +1428,7 @@ static SXBOOLEAN	recovery (void)
     struct SXP_local_mess	*local_mess;
     SXINT					head, tail, im, k, ll, vt_set_card, x1, y, y1, xps, next_action_kind, xs2;
     SXP_SHORT				check, state, ref;
-    SXBOOLEAN				is_warning, no_correction_on_previous_token;
+    bool				is_warning, no_correction_on_previous_token;
     struct sxtoken			*p;
     struct sxsource_coord		source_index;
     SXBA                        trans;
@@ -1447,7 +1447,7 @@ static SXBOOLEAN	recovery (void)
 
 /* L'erreur sera marquee (listing) a l'endroit de la detection */
     source_index = SXGET_TOKEN (sxplocals.ptok_no).source_index;
-    is_warning = SXTRUE;
+    is_warning = true;
     sxplocals.rcvr.TOK_0 = sxplocals.atok_no;
     state = (SXP_SHORT) sxplocals.state;
     xps = sxpglobals.xps;
@@ -1461,7 +1461,7 @@ static SXBOOLEAN	recovery (void)
 	/* correction a echouee */
 	if (sxplocals.mode.kind == SXWITH_CORRECTION)
 	    /* Seule une tentative de correction a ete demandee. */
-	    return SXFALSE;
+	    return false;
 
 	goto riennevaplus;
     }
@@ -1577,7 +1577,7 @@ static SXBOOLEAN	recovery (void)
 	    p->source_index = SXGET_TOKEN (sxplocals.rcvr.TOK_i).source_index;
 
 	    if (sxgenericp (sxplocals.sxtables, sxplocals.rcvr.lter [l]))
-		is_warning = SXFALSE;
+		is_warning = false;
 	}
 	else {
 	    *p = (sxplocals.rcvr.TOK_i = sxplocals.rcvr.TOK_0 + i, SXGET_TOKEN (sxplocals.rcvr.TOK_i));
@@ -1609,7 +1609,7 @@ exit_of_er_re:
 		 msg_params [3],
 		 msg_params [4]);
 
-    return SXTRUE;
+    return true;
 
 
 /* la correction locale a echoue */
@@ -1650,7 +1650,7 @@ riennevaplus:
 	l = 3, j = 1;
 
 	if (sxgenericp (sxplocals.sxtables, k))
-	    is_warning = SXFALSE;
+	    is_warning = false;
 
 	goto exit_of_er_re;
     }
@@ -1667,7 +1667,7 @@ riennevaplus:
 	       sxplocals.sxtables->err_titles [2][0],
 	       "error: impossible recovery from syntax error",
 	       sxplocals.sxtables->err_titles [2]+1);
-      return SXFALSE;
+      return false;
     }
 
 /* message sur les suivants attendus */
@@ -1731,7 +1731,7 @@ riennevaplus:
 	    sxpglobals.pspl = sxpglobals.xps - sxpglobals.stack_bot - 1 /* pour STACKnew_top */ ;
 	    (*(sxplocals.SXP_tables.semact)) (SXERROR, 1);
 	    sxplocals.ptok_no = sxplocals.atok_no;
-	    return SXFALSE;
+	    return false;
 	}
 
 	if ((i = sxgetbit (sxplocals.SXP_tables.PER_tset, p->lahead)) > 0) {
@@ -1751,13 +1751,13 @@ riennevaplus:
 	    for (xps = sxpglobals.xps; xps > sxpglobals.stack_bot; xps--) {
 		/* pop the stack and check the right context */
 		struct SXP_bases	*abase;
-		SXBOOLEAN			is_checked;
+		bool			is_checked;
 
 		ref = state = sxpglobals.parse_stack [xs2 = xps].state;
 		abase = sxplocals.SXP_tables.t_bases + state;
 
 		if (sxP_access (abase, p->lahead) > 0 /* scan sur le terminal cle */
-		    && is_a_right_ctxt (head, tail, &xs2, &ref, SXTRUE))
+		    && is_a_right_ctxt (head, tail, &xs2, &ref, true))
 		    break;
 
 		if (trans != NULL && SXBA_bit_is_set (trans, state)) {
@@ -1857,12 +1857,12 @@ riennevaplus:
     }
 
     sxplocals.ptok_no = sxplocals.atok_no;
-    return SXTRUE;
+    return true;
 }
 
 
 
-SXBOOLEAN		sxprecovery (SXINT what_to_do, SXINT *at_state, SXINT latok_no)
+bool		sxprecovery (SXINT what_to_do, SXINT *at_state, SXINT latok_no)
 {
     SXINT i;
 
@@ -1873,7 +1873,7 @@ SXBOOLEAN		sxprecovery (SXINT what_to_do, SXINT *at_state, SXINT latok_no)
 
     case SXACTION:
     case SXERROR:
-	sxplocals.rcvr.truncate_context = SXTRUE;
+	sxplocals.rcvr.truncate_context = true;
 
 	if (sxplocals.rcvr.stack == NULL) {
 	    SXINT   sizofpts = sxplocals.SXP_tables.P_sizofpts;
@@ -1932,5 +1932,5 @@ SXBOOLEAN		sxprecovery (SXINT what_to_do, SXINT *at_state, SXINT latok_no)
 	sxexit(1);
     }
 
-    return SXTRUE;
+    return true;
 }

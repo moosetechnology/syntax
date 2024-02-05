@@ -6,7 +6,9 @@ LIB=$(TRICO)/lib
 
 CC=cc -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
-all: $(SX)/bin/trico.out	
+ALL=$(SX)/bin/trico.out	
+
+all: $(ALL)
 
 $(SX)/bin/trico.out:	$(TRICO)/trico.out
 	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
@@ -57,5 +59,7 @@ trico.rt: trico.bt trico.st trico.recor
 # fin de code produit par "make-makefile trico"
 
 clean:
-	@echo "clean target for trico should be provided"
+	rm -f $(ALL) $(NEEDED)
+	rm -f $(TRICO)/trico.out
+	rm -f trico_t.c trico.bt trico.st trico.pt trico.rt
 

@@ -21,13 +21,13 @@
 #include "sxunix.h"
 #include "B_tables.h"
 
-char WHAT_SEMC_LO[] = "@(#)SYNTAX - $Id: semc_lo.c 3599 2023-09-18 12:57:19Z garavel $" WHAT_DEBUG;
+char WHAT_SEMC_LO[] = "@(#)SYNTAX - $Id: semc_lo.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 #include "semc_vars.h"
 #include "varstr.h"
 #include "put_edit.h"
 
-extern SXVOID       bnf_lo (void);
+extern void       bnf_lo (void);
 
 
 extern FILE	*listing;
@@ -45,7 +45,7 @@ static VARSTR	vstr_ptr;
 | L I S T I N G   O U T P U T |
 |-----------------------------|*/
 
-static SXBOOLEAN	less_nt (SXINT i, SXINT j)
+static bool	less_nt (SXINT i, SXINT j)
 {
     char	*k1, *k2;
 
@@ -69,7 +69,7 @@ static SXBOOLEAN	less_nt (SXINT i, SXINT j)
 
 /* --------------------------------------------------------- */
 
-static SXBOOLEAN	less_at (SXINT i, SXINT j)
+static bool	less_at (SXINT i, SXINT j)
 {
     char	*k1, *k2;
 
@@ -92,7 +92,7 @@ static SXBOOLEAN	less_at (SXINT i, SXINT j)
 
 /* --------------------------------------------------------- */
 
-static SXINT	*sort (SXBOOLEAN (*compare)(SXINT, SXINT), SXINT n)
+static SXINT	*sort (bool (*compare)(SXINT, SXINT), SXINT n)
 {
     SXINT	i;
     SXINT	*code /* 1:n */ ;
@@ -141,7 +141,7 @@ static char	*strrevcpy (char *destination, char *source, SXINT size)
 
 /* --------------------------------------------------------- */
 
-static SXVOID	print_nt_at (void)
+static void	print_nt_at (void)
 {
     SXINT	i, j, k;
     SXINT		table_slice_size, max_slice_no, slice_no, bi, bs;
@@ -240,7 +240,7 @@ static SXVOID	print_nt_at (void)
 
 /* --------------------------------------------------------- */
 
-SXVOID	semc_lo (void)
+void	semc_lo (void)
 {
 
     if (is_source && is_list) {

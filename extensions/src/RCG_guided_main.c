@@ -26,12 +26,12 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_RCG_GUIDED[] = "@(#)SYNTAX - $Id: RCG_guided_main.c 3234 2023-05-15 16:52:27Z garavel $" WHAT_DEBUG;
+char WHAT_RCG_GUIDED[] = "@(#)SYNTAX - $Id: RCG_guided_main.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 #include "rcg_sglbl.h"
 #include "sxversion.h"
 
-/* SXVOID sxtime (); */
+/* void sxtime (); */
 
 /* On lit a priori sur stdin, et cetera */
 
@@ -236,7 +236,7 @@ lost:	    sxperror (pathname);
 int main(int argc, char *argv[])
 {
     SXINT		argnum;
-    SXBOOLEAN	in_options, is_source_file, is_stdin, is_generator_length;
+    bool	in_options, is_source_file, is_stdin, is_generator_length;
     char	*str;
 
     sxopentty ();
@@ -247,60 +247,60 @@ int main(int argc, char *argv[])
     }
 
 /* valeurs par defaut */
-    sxverbosep = SXFALSE;
-    is_print_time = SXTRUE;
-    is_no_semantics = SXFALSE;
-    is_parse_tree_number = SXFALSE;
-    is_default_semantics = SXTRUE; /* Semantique specifiee avec la grammaire */
+    sxverbosep = false;
+    is_print_time = true;
+    is_no_semantics = false;
+    is_parse_tree_number = false;
+    is_default_semantics = true; /* Semantique specifiee avec la grammaire */
     debug_level = 0;
     forest_level = 0; /* Ca permet d'utiliser un RCG_parser compile avec -DPARSE_FOREST avec un parser qcq */
 #if 0
     forest_level = FL_n | FL_source | FL_clause | FL_rhs | FL_lhs_prdct | FL_lhs_clause; /* complet */
 #endif
-    is_guiding = is_full_guiding = SXFALSE;
+    is_guiding = is_full_guiding = false;
     best_tree_number = 1;
 
 /* Decodage des options */
-    is_generator_length = SXFALSE;
-    in_options = SXTRUE;
-    is_source_file = SXFALSE;
-    is_stdin = SXFALSE;
+    is_generator_length = false;
+    in_options = true;
+    is_source_file = false;
+    is_stdin = false;
     argnum = 0;
 
     while (in_options && ++argnum < argc) {
 	switch (option_get_kind (argv [argnum])) {
 	case VERBOSE:
-	    sxverbosep = SXTRUE;
+	    sxverbosep = true;
 	    break;
 
 	case -VERBOSE:
-	    sxverbosep = SXFALSE;
+	    sxverbosep = false;
 	    break;
 
 	case NO_SEM:
-	    is_no_semantics = SXTRUE;
-	    is_default_semantics = SXFALSE;
-	    is_parse_tree_number = SXFALSE;
+	    is_no_semantics = true;
+	    is_default_semantics = false;
+	    is_parse_tree_number = false;
 	    break;
 
 	case DEFAULT_SEM:
-	    is_no_semantics = SXFALSE;
-	    is_default_semantics = SXTRUE;
-	    is_parse_tree_number = SXFALSE;
+	    is_no_semantics = false;
+	    is_default_semantics = true;
+	    is_parse_tree_number = false;
 	    break;
 
 	case PARSE_TREE_NUMBER:
-	    is_no_semantics = SXFALSE;
-	    is_default_semantics = SXFALSE;
-	    is_parse_tree_number = SXTRUE;
+	    is_no_semantics = false;
+	    is_default_semantics = false;
+	    is_parse_tree_number = true;
 	    break;
 
 	case TIME:
-	    is_print_time = SXTRUE;
+	    is_print_time = true;
 	    break;
 
 	case -TIME:
-	    is_print_time = SXFALSE;
+	    is_print_time = false;
 	    break;
 
 	case FOREST_LEVEL:
@@ -320,16 +320,16 @@ int main(int argc, char *argv[])
 
 	case GUIDING:
 	    forest_level = FL_n | FL_clause | FL_lhs_prdct | FL_lhs_clause;
-	    is_guiding = SXTRUE;
+	    is_guiding = true;
 	    break;
 
 	case FULL_GUIDING:
 	    forest_level = FL_n | FL_clause | FL_rhs | FL_lhs_prdct | FL_lhs_clause;
-	    is_full_guiding = SXTRUE;
+	    is_full_guiding = true;
 	    break;
 
 	case STDIN:
-	    is_stdin = SXTRUE;
+	    is_stdin = true;
 	    break;
 
 	case DEBUG_LEVEL:
@@ -349,11 +349,11 @@ int main(int argc, char *argv[])
 
 	case SOURCE_FILE:
 	    if (is_stdin) {
-		is_stdin = SXFALSE;
+		is_stdin = false;
 	    }
 
-	    is_source_file = SXTRUE;
-	    in_options = SXFALSE;
+	    is_source_file = true;
+	    in_options = false;
 	    break;
 
 	case BEST_TREE_NUMBER:
@@ -390,7 +390,7 @@ int main(int argc, char *argv[])
     RCG.sxsvar = sxsvar;
     RCG.sxplocals = sxplocals;
 
-    syntax (SXINIT, &guide_tables, SXFALSE /* no includes */);
+    syntax (SXINIT, &guide_tables, false /* no includes */);
 
     if (is_stdin) {
 	RCG_run (NULL);
@@ -412,7 +412,7 @@ int main(int argc, char *argv[])
 	}
     }
 
-    syntax (SXFINAL, &guide_tables, SXFALSE); /* sxstr_mngr (SXEND) called later */
+    syntax (SXFINAL, &guide_tables, false); /* sxstr_mngr (SXEND) called later */
 
     sxsvar = RCG.sxsvar;
     sxplocals = RCG.sxplocals;

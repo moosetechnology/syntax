@@ -22,11 +22,11 @@
 #include "B_tables.h"
 #include "semc_vars.h"
 
-char WHAT_SEMC_PUT[] = "@(#)SYNTAX - $Id: semc_put.c 3599 2023-09-18 12:57:19Z garavel $" WHAT_DEBUG;
+char WHAT_SEMC_PUT[] = "@(#)SYNTAX - $Id: semc_put.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 /* --------------------------------------------------------- */
 
-static SXVOID put_term_attr (void)
+static void put_term_attr (void)
 {
 fputs("\n#define skx(x) (x)",sxstdout);
 fputs("\n#define pcode(x) (SXSTACKtoken(x).lahead)",sxstdout);
@@ -39,10 +39,10 @@ fputs("\n#define pcomment(x) (SXSTACKtoken(x).comment)",sxstdout);
 
 /* --------------------------------------------------------- */
 
-static SXVOID put_actact (void)
+static void put_actact (void)
 {
 fputs("\n\n/* A C T I O N */", sxstdout);
-fputs("\nSXVOID ", sxstdout);
+fputs("\nvoid ", sxstdout);
 fputs(prgentname, sxstdout);
 fputs("_act(SXINT code, SXINT numact)", sxstdout);
 fputs("\n{", sxstdout);
@@ -54,7 +54,7 @@ fputs("\ncase SXOPEN:", sxstdout);
 
 /* --------------------------------------------------------- */
 
-static SXVOID put_open (void)
+static void put_open (void)
 {
     SXINT  nat;
 
@@ -75,7 +75,7 @@ static SXVOID put_open (void)
 
 /* --------------------------------------------------------- */
 
-static SXVOID put_free (void)
+static void put_free (void)
 {
     SXINT  nat;
 
@@ -91,14 +91,14 @@ static SXVOID put_free (void)
 
 /* --------------------------------------------------------- */
 
-SXVOID put_copyright (void)
+void put_copyright (void)
 {
    fputs(SXCOPYRIGHT, sxstdout);
 } /* end put_copyright */
 
 /* --------------------------------------------------------- */
 
-SXVOID put_avant_decl (void)
+void put_avant_decl (void)
 {
    fputs("\n#include \"sxversion.h\"", sxstdout);
    fputs("\n#include \"sxunix.h\"", sxstdout);
@@ -107,11 +107,11 @@ SXVOID put_avant_decl (void)
 
 /* --------------------------------------------------------- */
 
-SXVOID put_entre_decl_open (void)
+void put_entre_decl_open (void)
 {
     SXINT  nat;
 
-    fputs ("\nstatic SXBOOLEAN is_error;\n", sxstdout);
+    fputs ("\nstatic bool is_error;\n", sxstdout);
 
     for (nat = 1; nat <= (SXINT)max_attr; nat++) {
 	if (type_attr[nat] != 0) {
@@ -129,7 +129,7 @@ SXVOID put_entre_decl_open (void)
 
 /* --------------------------------------------------------- */
 
-SXVOID put_entre_open_close (void)
+void put_entre_open_close (void)
 {
     fputs ("\ncase SXCLOSE:", sxstdout);
     put_free ();
@@ -137,13 +137,13 @@ SXVOID put_entre_open_close (void)
 
 /* --------------------------------------------------------- */
 
-SXVOID put_apres_close (void)
+void put_apres_close (void)
 {
     SXINT  nat;
 
     fputs ("\n\
-case SXERROR:is_error=SXTRUE;break;\n\
-case SXINIT:is_error=SXFALSE;break;\n\
+case SXERROR:is_error=true;break;\n\
+case SXINIT:is_error=false;break;\n\
 case SXFINAL:break;\n\
 case SXACTION:\n\
 if(is_error)return;\n\
@@ -169,7 +169,7 @@ case 0:break;\n\
 
 /* --------------------------------------------------------- */
 
-SXVOID put_postlude (void)
+void put_postlude (void)
 {
     SXINT  nat;
 
@@ -192,13 +192,13 @@ SXVOID put_postlude (void)
 
 /* --------------------------------------------------------- */
 
-SXVOID put_case (void)
+void put_case (void)
 {
 /* production du case action (xprod)
    et des identites memorisees jusqu'alors */
 
     if (is_empty) {
-	is_empty = SXFALSE;
+	is_empty = false;
 	fprintf (sxstdout, "case %ld:\n", (SXINT) xprod);
     }
 
@@ -206,7 +206,7 @@ SXVOID put_case (void)
 
 /* --------------------------------------------------------- */
 
-SXVOID put_identite (SXINT nat1, SXINT nat2, SXINT pos)
+void put_identite (SXINT nat1, SXINT nat2, SXINT pos)
 {char *p=modele;
 
 nb_identities ++ ;

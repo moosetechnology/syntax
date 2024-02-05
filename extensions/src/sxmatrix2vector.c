@@ -21,7 +21,7 @@
 #include "sxunix.h"
 #include "sxmatrix2vector.h"
 
-char WHAT_SXMATRIX2VECTOR[] = "@(#)SYNTAX - $Id: sxmatrix2vector.c 2941 2023-03-29 12:23:11Z garavel $" WHAT_DEBUG;
+char WHAT_SXMATRIX2VECTOR[] = "@(#)SYNTAX - $Id: sxmatrix2vector.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 /* Transforme une matrice creuse en un vecteur */
 /* 2 lignes peuvent commencer au meme indice ds vecteur */
@@ -38,7 +38,7 @@ static struct comb {
 
 static SXINT max_vval, min_vval, max_check, min_check, max_mval, min_mval;
 
-static SXBOOLEAN	
+static bool	
 state_by_lgth (SXINT i, SXINT j)
 {
     return state2trans_nb [i] > state2trans_nb [j];
@@ -148,7 +148,7 @@ put_in_comb (SXINT state, struct matrix *matrix)
 }
 
 
-SXVOID
+void
 vector_free (struct vector *vector)
 {
   if (vector->disp)
@@ -397,7 +397,7 @@ void
 vector2c (struct vector *vector,
 	  FILE   *cfile,
 	  char   *name,
-	  SXBOOLEAN is_static)
+	  bool is_static)
 {
   SXINT i, min, max, val, check;
   char *vector_error, *check_error;

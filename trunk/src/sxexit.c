@@ -23,9 +23,9 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXEXIT[] = "@(#)SYNTAX - $Id: sxexit.c 2428 2023-01-18 12:54:10Z garavel $" WHAT_DEBUG;
+char WHAT_SXEXIT[] = "@(#)SYNTAX - $Id: sxexit.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
-SXVOID	sxexit (int sevlev)
+void	sxexit (int sevlev)
 /* Must never return to its caller */
 {
     exit (sevlev);

@@ -21,14 +21,14 @@
 #include "sxunix.h"
 
 #ifndef VARIANT_32
-char WHAT_SXS_SRECOVERY[] = "@(#)SYNTAX - $Id: sxs_srcvr.c 2489 2023-01-21 20:46:41Z garavel $" WHAT_DEBUG;
+char WHAT_SXS_SRECOVERY[] = "@(#)SYNTAX - $Id: sxs_srcvr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 #endif
 
 #define char_to_class(c) (sxsvar.SXS_tables.S_char_to_simple_class[c])
 
-static SXBOOLEAN	recovery (SXINT state_no, unsigned char *class)
+static bool	recovery (SXINT state_no, unsigned char *class)
 {
-    SXBOOLEAN	is_error_in_la;
+    bool	is_error_in_la;
 
     if (!(is_error_in_la = sxsvar.SXS_tables.S_transition_matrix [state_no] [1]) &&
 	!sxsvar.sxlv.mode.is_silent) {
@@ -58,17 +58,17 @@ static SXBOOLEAN	recovery (SXINT state_no, unsigned char *class)
     if (sxsrcmngr.current_char == EOF) {
 	sxsvar.sxlv.terminal_token.lahead = sxsvar.SXS_tables.S_termax /* End Of File */ ;
 	*class = 2;
-	return SXFALSE;
+	return false;
     }
     else {
 	*class = char_to_class (is_error_in_la ? sxlanext_char () : sxnext_char ());
-	return SXTRUE;
+	return true;
     }
 }
 
 
 
-SXBOOLEAN		sxssrecovery (SXINT sxssrecovery_what, SXINT state_no, unsigned char *class)
+bool		sxssrecovery (SXINT sxssrecovery_what, SXINT state_no, unsigned char *class)
 {
     switch (sxssrecovery_what) {
     case SXACTION:
@@ -82,5 +82,5 @@ SXBOOLEAN		sxssrecovery (SXINT sxssrecovery_what, SXINT state_no, unsigned char 
 	sxexit(1);
     }
 
-    return SXTRUE;
+    return true;
 }

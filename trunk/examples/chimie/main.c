@@ -17,7 +17,7 @@
  *   can be found at, e.g., http://www.cecill.info
  *****************************************************************************/
 
-char WHAT_CHIMIEMAIN[] = "@(#)SYNTAX - $Id: main.c 3234 2023-05-15 16:52:27Z garavel $";
+char WHAT_CHIMIEMAIN[] = "@(#)SYNTAX - $Id: main.c 3632 2023-12-20 17:58:08Z garavel $";
 
 /* Exemple simple d'utilisation de SYNTAX */
 
@@ -29,7 +29,7 @@ extern struct sxtables	sxtables;
 
 int main (int argc, char *argv[])
 {
-    syntax (SXINIT, &sxtables, SXFALSE);
+    syntax (SXINIT, &sxtables, false);
 
     if (argc == 1) {
 	/* Pas d'argument: on lit sur stdin */
@@ -73,7 +73,7 @@ int main (int argc, char *argv[])
 	    }
     }
 
-    syntax (SXFINAL, &sxtables, SXTRUE);
+    syntax (SXFINAL, &sxtables, true);
 
     sxexit (sxerr_max_severity ());
     return 0;

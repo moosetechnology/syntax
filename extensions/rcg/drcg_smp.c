@@ -36,7 +36,7 @@
 static char	ME [] = "drcg";
 #endif
 
-char WHAT_DRCGSMP[] = "@(#)SYNTAX - $Id: drcg_smp.c 3354 2023-06-12 12:12:32Z garavel $" WHAT_DEBUG;
+char WHAT_DRCGSMP[] = "@(#)SYNTAX - $Id: drcg_smp.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 struct drcg_node {
     SXNODE_HEADER_S SXVOID_NAME;
@@ -124,13 +124,13 @@ static XH_header	SXDRCGvar_names;
 static SXBA		*prod2gvar_set;
 
 /* On a des expression arithmetiques, elles sont stockees comme des termes */
-static SXBOOLEAN		has_integer_op;
+static bool		has_integer_op;
 
 /* Le prolog accepte */
-static SXBOOLEAN		is_prolog, has_prolog, is_prolog_tree;
+static bool		is_prolog, has_prolog, is_prolog_tree;
 /* static SXINT		Dcg_constant_ste; unused */
 #if 0
-static SXBOOLEAN		is_dynam_constant;
+static bool		is_dynam_constant;
 static SXINT		*t2kind;
 static SXINT		*DRCGprod2dynam_constant;
 #endif
@@ -334,20 +334,20 @@ where_is (SXINT **seq_ptr, SXINT maxl)
     return start;
 }
 
-static SXBOOLEAN
+static bool
 less_equal (SXINT l, SXINT r)
 {
     return clause2prdct_nb [l] <= clause2prdct_nb [r];
 }
 
-static SXBOOLEAN
+static bool
 leq_param_nb (SXINT l, SXINT r)
 {
     return x2param_nb [l] <= x2param_nb [r];
 }
 
 
-static SXBOOLEAN
+static bool
 drcg_write (void)
 {
     static char		drcg_write_ME [] = "drcg_write";
@@ -379,12 +379,12 @@ drcg_write (void)
     if ((F_drcg = fopen (strcat (strcpy (file_name, prgentname), "_drcgt.c"), "w")) == NULL) {
 	if (sxverbosep && !sxttycol1p) {
 	    fputc ('\n', sxtty);
-	    sxttycol1p = SXTRUE;
+	    sxttycol1p = true;
 	}
 
 	fprintf (sxstderr, "%s: cannot open (create) ", drcg_write_ME);
 	sxperror (file_name);
-	return SXFALSE;
+	return false;
     }
 
     vstr = varstr_alloc (64);
@@ -956,7 +956,7 @@ case %ld:\\\n\
 	for (bot = 1; bot <= SXDRCGmax_varppp; bot++) {
 	    if (line2main [bot] == bot) {
 		sprintf (istr, "%ld", (SXINT) bot);
-		sxba_to_c (var2pppitem_set [bot], F_drcg, "line_", istr, SXTRUE /* static */);
+		sxba_to_c (var2pppitem_set [bot], F_drcg, "line_", istr, true /* static */);
 	    }
 	}
 
@@ -972,7 +972,7 @@ case %ld:\\\n\
 
 	fputs ("#if 0\n", F_drcg);
 	sxbm2c (F_drcg, var2pppitem_set, SXDRCGmax_varppp+1, "SXDRCGvar2ppp_item_set", "",
-		SXTRUE		/* is_static */, vstr);
+		true		/* is_static */, vstr);
 	fputs ("#endif\n", F_drcg);
     }
 
@@ -1093,7 +1093,7 @@ case %ld:\\\n\
 
     fclose (F_drcg);
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -1164,7 +1164,7 @@ drcg_pass (void)
 
 
 static void
-process_nt (SXINT process_nt_ste, SXBOOLEAN is_nt)
+process_nt (SXINT process_nt_ste, bool is_nt)
 {
     if (is_nt && lhs_or_rhs == 1) 
 	rhs_symb_nb++;
@@ -1425,7 +1425,7 @@ drcg_pi (void)
 
     case PROLOG_S_n :		/* SXVISITED->name = {IS_n, LESS_n, LESS_EQUAL_n, SUP_n, SUP_EQUAL_n, TERM_n} */
 	tss = 0;
-	is_prolog_tree = SXTRUE;
+	is_prolog_tree = true;
 	break;
 
     case SUP_n :
@@ -1547,15 +1547,15 @@ drcg_pd (void)
 	break;
 
     case IS_n :
-	process_nt (is_ste, SXFALSE);
+	process_nt (is_ste, false);
 	break;
 
     case LESS_n :
-	process_nt (less_ste, SXFALSE);
+	process_nt (less_ste, false);
 	break;
 
     case LESS_EQUAL_n :
-	process_nt (less_equal_ste, SXFALSE);
+	process_nt (less_equal_ste, false);
 	break;
 
     case LIST_BODY_n :
@@ -1598,7 +1598,7 @@ drcg_pd (void)
 	break;
 
     case PREDICATE_n :
-	process_nt (SXVISITED->son->token.string_table_entry, SXTRUE);
+	process_nt (SXVISITED->son->token.string_table_entry, true);
 	break;
 
     case PREDICATE_S_n :
@@ -1617,17 +1617,17 @@ drcg_pd (void)
 	break;
 
     case PROLOG_S_n :
-	is_prolog = SXTRUE;
-	is_prolog_tree = SXFALSE;
+	is_prolog = true;
+	is_prolog_tree = false;
 	ppp_symb_nb += SXVISITED->degree;
 	break;
 
     case SUP_n :
-	process_nt (sup_ste, SXFALSE);
+	process_nt (sup_ste, false);
 	break;
 
     case SUP_EQUAL_n :
-	process_nt (sup_equal_ste, SXFALSE);
+	process_nt (sup_equal_ste, false);
 	break;
 
     case TERM_n :
@@ -1641,7 +1641,7 @@ drcg_pd (void)
 			 "%sThis prolog predicate is not (yet?) implemented.",
 			 sxtab_ptr->err_titles [2]+1);
 	    else {
-		process_nt (ste, SXFALSE);
+		process_nt (ste, false);
 	    }
 	}
 	else {
@@ -1782,7 +1782,7 @@ integer_op (SXINT op, SXINT param_nb)
 {
     SXINT 	bot, x, term, ref;
 
-    has_integer_op = SXTRUE;
+    has_integer_op = true;
 
     ref = KV2REF (INTEGER_OP, op);
     XH_push (term_hd, ref);
@@ -1804,7 +1804,7 @@ integer_op (SXINT op, SXINT param_nb)
     term_stack_top = bot;
 }
 
-static SXBOOLEAN
+static bool
 is_streq_spcl (SXINT clause, SXINT is_streq_spcl_son_nb)
 {
     /* Regarde si le predicat de la rhs en position is_streq_spcl_son_nb ds clause est un StrEq("a", X) */
@@ -1812,10 +1812,10 @@ is_streq_spcl (SXINT clause, SXINT is_streq_spcl_son_nb)
 
     for (top = clause2da_disp [clause+1], bot = clause2da_disp [clause]; bot < top; bot += 2) {
 	if (clause2da [bot] == is_streq_spcl_son_nb)
-	    return SXTRUE;
+	    return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 static void
@@ -2068,7 +2068,7 @@ drcg_pi2 (void)
 
     case PROLOG_S_n :		/* SXVISITED->name = {IS_n, LESS_n, LESS_EQUAL_n, SUP_n, SUP_EQUAL_n, TERM_n} */
     {
-	is_prolog_tree = SXTRUE;
+	is_prolog_tree = true;
 
 	if (SXVISITED->name == IS_n)
 	    ste = is_ste;
@@ -2333,7 +2333,7 @@ drcg_pd2 (void)
 	break;
 
     case PROLOG_S_n :
-	is_prolog_tree = SXFALSE;
+	is_prolog_tree = false;
 	break;
 
     case SUP_n :
@@ -2492,7 +2492,7 @@ smppass (void)
 
     if (sxverbosep) {
 	fputs ("\tSemantic Pass .... ", sxtty);
-	sxttycol1p = SXFALSE;
+	sxttycol1p = false;
     }
 
     /*   I N I T I A L I S A T I O N S   */
@@ -2626,19 +2626,19 @@ smppass (void)
 
     if (sxverbosep) {
 	fputs ("done\n", sxtty);
-	sxttycol1p = SXTRUE;
+	sxttycol1p = true;
     }
 
     if (sxverbosep) {
 	fprintf (sxtty, "\t%s_drcgt.c file output ... ", prgentname);
-	sxttycol1p = SXFALSE;
+	sxttycol1p = false;
     }
 
     drcg_write ();
 
     if (sxverbosep) {
 	fputs ("done\n", sxtty);
-	sxttycol1p = SXTRUE;
+	sxttycol1p = true;
     }
 
     if (is_prolog) {
@@ -2693,7 +2693,7 @@ smppass (void)
 
 }
 
-SXVOID
+void
 drcg_smp (SXINT what, struct sxtables *drcg_smp_drcg_tables)
 {
     sxuse(drcg_smp_drcg_tables); /* pour faire taire gcc -Wunused */

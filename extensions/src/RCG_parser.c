@@ -25,7 +25,7 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_RCG_PARSER[] = "@(#)SYNTAX - $Id: RCG_parser.c 3234 2023-05-15 16:52:27Z garavel $" WHAT_DEBUG;
+char WHAT_RCG_PARSER[] = "@(#)SYNTAX - $Id: RCG_parser.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 static char	ME [] = "RCG_parser.c";
 
@@ -166,7 +166,7 @@ fill_guide (SXINT gA_ij, SXINT gclause)
 {
     /* gpid et node_ptr sont static */
     SXINT 	lhs;
-    SXBOOLEAN	old_lhs;
+    bool	old_lhs;
 
     old_lhs = XxY_set (&(XxY_lhs_guide [gpid]), gA_ij, gclause, &lhs);
 
@@ -179,17 +179,17 @@ fill_guide (SXINT gA_ij, SXINT gclause)
 
 #if is_dag
 /* tous les modules de la grammaire sont lineaires, un au moins est overlapping */
-static SXBOOLEAN       is_a_linear_grammar, is_an_overlapping_grammar;
+static bool       is_a_linear_grammar, is_an_overlapping_grammar;
 #endif /* is_dag */
 
 
 #if is_semantics
-static SXBOOLEAN
+static bool
 semact_gen_loop (struct G *G, SXINT *rho, ifun semact_action)
 {
   /* Simulation des cycles triviaux A --> A */
   SXINT 	        A, x, *p, bot, top, clause, clause_id, lrho [3];
-  SXBOOLEAN	ret_val = SXFALSE;
+  bool	ret_val = false;
 
   A = G->clause2lhs_nt [rho [0]];
 
@@ -216,7 +216,7 @@ semact_gen_loop (struct G *G, SXINT *rho, ifun semact_action)
 #endif
 
 	if ((semact_action == NULL) || (*semact_action)(G, lrho))
-	  ret_val = SXTRUE;
+	  ret_val = true;
       }
     }
   }
@@ -332,7 +332,7 @@ process_loop (struct G *G, SXINT *rho, ifun semact_action, SXINT cycle_kind)
 
     sprintf (string, "WARNING: %s detected around", cycle_kind == LOOP+CYCLE ? "loop & cycle" : (cycle_kind == CYCLE ? "cycle" : "loop"));
     printf ("%s ", string);
-    rcg_spf_print_partial_instantiated_clause (stdout, G, rho, SXFALSE, SXFALSE, SXTRUE, SXFALSE, "");
+    rcg_spf_print_partial_instantiated_clause (stdout, G, rho, false, false, true, false, "");
   }
 #endif
 }
@@ -702,7 +702,7 @@ build_coupled_guide (struct G *G)
 #endif /* is_coupled */
 
 #if is_rav2 || is_rav22
-static SXBOOLEAN		is_rav2_coupled_and_not_FL_rhs, main_clause_nb;
+static bool		is_rav2_coupled_and_not_FL_rhs, main_clause_nb;
 
 static SXINT from2var_mngr ();
 static void from2var_alloc_mngr ();
@@ -911,7 +911,7 @@ gstreq (SXINT *result, SXINT local_id, SXINT lb0, SXINT ub0, SXINT lb1, SXINT ub
 
 
 
-static SXBOOLEAN
+static bool
 streq (SXINT lb0, SXINT ub0, SXINT lb1, SXINT ub1)
 {
     SXINT triple0, q0, tok0, triple1, q1;
@@ -933,7 +933,7 @@ streq (SXINT lb0, SXINT ub0, SXINT lb1, SXINT ub1)
 
 		    if (SXBA_bit_is_set(glbl_idag.delta[q1], ub1)) {
 			if (streq (q0, ub0, q1, ub1))
-			    return SXTRUE;
+			    return true;
 		    }
 		}
 	    }
@@ -944,7 +944,7 @@ streq (SXINT lb0, SXINT ub0, SXINT lb1, SXINT ub1)
 
 		    if (SXBA_bit_is_set(glbl_idag.delta[q1], ub1)) {
 			if (streq (q0, ub0, q1, ub1))
-			    return SXTRUE;
+			    return true;
 		    }
 		}
 #if is_generator
@@ -953,7 +953,7 @@ streq (SXINT lb0, SXINT ub0, SXINT lb1, SXINT ub1)
 
 		    if (SXBA_bit_is_set(glbl_idag.delta[q1], ub1)) {
 			if (streq (q0, ub0, q1, ub1))
-			    return SXTRUE;
+			    return true;
 		    }
 		}
 	    }
@@ -961,7 +961,7 @@ streq (SXINT lb0, SXINT ub0, SXINT lb1, SXINT ub1)
 	}
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
@@ -1041,7 +1041,7 @@ gstreqlen (SXINT *result, SXINT local_id, SXINT lb0, SXINT ub0, SXINT lb1, SXINT
 }
 
 
-static SXBOOLEAN
+static bool
 streqlen (SXINT lb0, SXINT ub0, SXINT lb1, SXINT ub1)
 {
     SXINT triple0, q0, triple1, q1;
@@ -1060,13 +1060,13 @@ streqlen (SXINT lb0, SXINT ub0, SXINT lb1, SXINT ub1)
 
 		if (SXBA_bit_is_set(glbl_idag.delta[q1], ub1)) {
 		    if (streqlen (q0, ub0, q1, ub1))
-			return SXTRUE;
+			return true;
 		}
 	    }
 	}
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
@@ -1125,7 +1125,7 @@ gstrlen (SXINT *result, SXINT local_id, SXINT l, SXINT lb, SXINT ub)
     }
 }
 
-static SXBOOLEAN
+static bool
 strlen (SXINT l, SXINT lb, SXINT ub)
 {
     /* Predicat predefini qui verifie l'existence de chaines de longueur l entre les etats
@@ -1140,11 +1140,11 @@ strlen (SXINT l, SXINT lb, SXINT ub)
 
 	if (SXBA_bit_is_set(glbl_idag.delta[q], ub)) {
 	    if (strlen (l-1, q, ub))
-		return SXTRUE;
+		return true;
 	}
     }
 
-    return SXFALSE;
+    return false;
 }
 
 SXINT
@@ -1211,7 +1211,7 @@ store_frere (SXINT xlist, SXINT xstack, SXINT xlist_frere)
 #endif /* is_generator */
 
 
-static SXBOOLEAN
+static bool
 non_linearity (SXINT bot, SXINT lb, SXINT ub, SXINT fils, SXINT arg_pos)
 {
     SXINT xlist, arg, elem, top, x, symb1, symb2, sep, i, orig1, orig2, xlist_frere;
@@ -1415,7 +1415,7 @@ static SXINT
 from_Xoccur (SXINT lb)
 {
     SXINT		symb, *ptr, ub, fils, echec;
-    SXBOOLEAN 	ret_val;
+    bool 	ret_val;
 
     while (Xoccur < Xoccur_lim) {
 	PUSH (stack, lb);
@@ -1521,7 +1521,7 @@ generator (SXINT SON_NB, SXINT *RET_VALS, SXINT *XOCCUR, SXINT *INDEXES, SXINT *
 }
 #else /* !AG */
 #if is_generator
-static SXBOOLEAN
+static bool
 check_neg_calls ()
 {
     /* Il y a eu des appels negatifs en RHS dont on n'en a pas encore tenu compte, on les regarde */
@@ -1623,12 +1623,12 @@ check_neg_calls ()
 	    if (bot > top) {
 		/* Ici, chaque symb1 est -general (ou egal) au symb2 correspondant, le resultat
 		   de la difference est donc vide */
-		return SXFALSE;
+		return false;
 	    }
 	}
     }
 
-    return SXTRUE;
+    return true;
 }
 
 static void
@@ -1806,7 +1806,7 @@ set_path (SXINT *result)
     /* freres contient les doublets des egalites */
     SXINT		x, top_freres, top_args_id, top_stack, list_id, symb1, symb2, xs1, xs2, d, arg_pos, elem, arg_id, eq_id;
     SXINT		cstrnt, cstrnt1, cstrnt2, neg_calls_top, top_eq_ids, top, bot, si1, si2, bsi1, bsi2;
-    SXBOOLEAN	has_changed;
+    bool	has_changed;
     
     RAZ (freres);
 
@@ -1822,10 +1822,10 @@ set_path (SXINT *result)
 	    }
 	}
 
-	has_changed = SXTRUE;
+	has_changed = true;
 	
 	while ((top_freres = TOP (freres)) > 0 && has_changed) {
-	    has_changed = SXFALSE;
+	    has_changed = false;
 	    RAZ (freres);
 
 	    for (x = 1; x <= top_freres; x += 2) {
@@ -1854,7 +1854,7 @@ set_path (SXINT *result)
 			if (symb1 != symb2) {
 			    if (symb1 == ANY) {
 				stack [xs1] = symb2;
-				has_changed = SXTRUE;
+				has_changed = true;
 
 				if (cstrnt2) {
 				    /* On maintient la contrainte d'egalite */
@@ -1865,7 +1865,7 @@ set_path (SXINT *result)
 			    else {
 				if (symb2 == ANY) {
 				    stack [xs2] = symb1;
-				    has_changed = SXTRUE;
+				    has_changed = true;
 
 				    if (cstrnt1) {
 					/* On maintient la contrainte d'egalite */
@@ -1888,7 +1888,7 @@ set_path (SXINT *result)
 					    if (cstrnt2 == 0) {
 						/* !b et a => on met a */
 						stack [xs1] = symb2;
-						has_changed = SXTRUE;
+						has_changed = true;
 					    }
 					}
 					else
@@ -1911,12 +1911,12 @@ set_path (SXINT *result)
 			if (symb1 == ANY) {
 			    /* On met !symb2 */
 			    stack [xs1] = symb2^NOT;
-			    has_changed = SXTRUE;
+			    has_changed = true;
 			}
 			else {
 			    if (symb2 == ANY) {
 				stack [xs2] = symb1^NOT;
-				has_changed = SXTRUE;
+				has_changed = true;
 			    }
 			    else {
 				if (cstrnt1 && cstrnt2) {
@@ -1974,7 +1974,7 @@ set_path (SXINT *result)
 }
 
 
-static SXBOOLEAN
+static bool
 is_compatible (SXINT x, SXINT xlist)
 {
     SXINT symb1, symb2, cstrnt1, cstrnt2;
@@ -1999,22 +1999,22 @@ is_compatible (SXINT x, SXINT xlist)
 		if (cstrnt1 || cstrnt2) {
 		    if (symb1&BPART == symb2&BPART)
 			/* a et !a ou b et !b */
-			return SXFALSE;
+			return false;
 
 		    if (cstrnt2 == 0)
 			stack [x] = symb2;
 		}
 		else
 		    /* a et b */
-		    return SXFALSE;
+		    return false;
 	    }
 	}
     }
 
-    return SXTRUE;
+    return true;
 }
 
-static SXBOOLEAN
+static bool
 non_linearity (SXINT bot, (SXINT lb_any_nb, (SXINT ub_any_nb, (SXINT arg_pos)
 {
     SXINT xlist, x, symb1, symb2, i, xlist_frere, cstrnt1, cstrnt2, nb;
@@ -2338,7 +2338,7 @@ neg_merge (SXINT next, SXINT nt, SXINT rhs_arg_nb, SXINT son, SXINT arg_pos)
     }
 }
 
-static SXBOOLEAN
+static bool
 is_pure (SXINT next)
 {
     /* On verifie si chaque chaine de l'ensemble multiple commencant en next est pur */
@@ -2351,15 +2351,15 @@ is_pure (SXINT next)
 	top = XH_X (paths, prdct_id+1)-1;
 	    
 	if (XH_list_elem (paths, top) & (NEG|EQ))
-	    return SXFALSE;
+	    return false;
 
     } while ((next = path_refs [next].next) > 0);
 
-    return SXTRUE;
+    return true;
 }
 
 
-static SXBOOLEAN
+static bool
 is_NEG (SXINT next)
 {
     SXINT prdct_id, top;
@@ -2677,7 +2677,7 @@ generator (struct G *pG, SXINT CLAUSE, SXINT *RET_VALS, SXINT *INDEXES, SXINT *I
        ds ILB, IUB. */
 {
     SXINT 	lb, ub, arg, bot, top, lhs, rhs;
-    SXBOOLEAN	has_any;
+    bool	has_any;
 	
     if (ANY_nb == 0) return 1;
 
@@ -2690,7 +2690,7 @@ generator (struct G *pG, SXINT CLAUSE, SXINT *RET_VALS, SXINT *INDEXES, SXINT *I
 
     ilb = ILB;
     iub = IUB;
-    has_any = SXFALSE;
+    has_any = false;
     sxba_empty (ws_set);
 
     for (arg = 1; arg <= lhs_arg_nb; arg++) {
@@ -2699,7 +2699,7 @@ generator (struct G *pG, SXINT CLAUSE, SXINT *RET_VALS, SXINT *INDEXES, SXINT *I
 
 	if ((bot = si2any_nb [lb]) < (top = si2any_nb [ub])) {
 	    /* Un ANY ds ce range */
-	    has_any = SXTRUE;
+	    has_any = true;
 
 	    while (++bot <= top) {
 		/* C,a permet la verification qu'on ne traite pas les grammaires dont les arg en LHS
@@ -2743,7 +2743,7 @@ _GStrEq (SXINT *lb, SXINT *ub)
   */
   SXINT		result, x, x1, x2, orig0, orig1, symb, arg1, arg2, list_id, top, eq_id, temp;
   SXINT		bot1, top1, bot2, top2;
-  SXBOOLEAN	arg1_has_any, arg2_has_any;
+  bool	arg1_has_any, arg2_has_any;
 
   if (ANY_nb == 0) return 1;
 
@@ -2846,7 +2846,7 @@ _StrReverse (SXINT *rho0, SXINT *lb, SXINT *ub)
   */
   SXINT	*src1 = glbl_source + lb [0], *src2 = glbl_source + lb [1], *lim1 = glbl_source + ub [0], *lim2 = glbl_source + ub [1];
 
-  if (lim1-src1 != lim2-src2) return SXFALSE;
+  if (lim1-src1 != lim2-src2) return false;
 
   *rho0 = 0;
     
@@ -2874,19 +2874,19 @@ _StrReverse (SXINT *rho0, SXINT *lb, SXINT *ub)
 /* C'est donc un candidat a devenir un (externe) predefini */
 SXINT	Permute_arity = 2;
 
-static SXBOOLEAN
+static bool
 less_equal (SXINT i, SXINT j)
 {
 #if is_generator
-  if (i == ANY) return SXTRUE;
-  if (j == ANY) return SXFALSE;
+  if (i == ANY) return true;
+  if (j == ANY) return false;
 #endif
   return i <= j;
 }
 
 #if 0
 /* A [re]faire avec idag */
-SXBOOLEAN
+bool
 _Permute (SXINT *rho0, SXINT *lb, SXINT *ub)
 {
   /* Just for fun ! Je ne sais pas le faire avec des RCG */
@@ -2947,7 +2947,7 @@ static SXBA	source_set, source_top;
 #endif /* !is_earley_guide */
 
 #if 0
-static SXBOOLEAN
+static bool
 is_source_subset (SXBA t_set)
 {
     /* t_set est l'ensemble des terminaux des args de la LHS d'une clause */
@@ -2984,16 +2984,16 @@ is_source_subset (SXBA t_set)
 
 	    if (nb < 0)
 #endif
-	    return SXFALSE;  
+	    return false;  
 
 	}
     }
 
-    return SXTRUE;
+    return true;
 }
 
 #if PID>1
-static SXBOOLEAN
+static bool
 is_local_source_subset (SXBA local_t_set, SXINT local_pid)
 {
   SXINT local_t, t, *l2g_ptr;
@@ -3005,10 +3005,10 @@ is_local_source_subset (SXBA local_t_set, SXINT local_pid)
     t = l2g_ptr [local_t];
 
     if (!SXBA_bit_is_set (source_set, t))
-      return SXFALSE;
+      return false;
     }
   
-  return SXTRUE;
+  return true;
 }
 #endif /* PID>1 */
 #endif /* 0 */
@@ -3295,7 +3295,7 @@ lexicalization (struct G *G)
   SXINT		x, lclause, *p;
   SXINT           *nt2nb = (SXINT*) sxcalloc (G->ntmax+1, sizeof (SXINT));
   SXBA 	        lhs_nt_set, fsa_lex;
-  SXBOOLEAN	done;
+  bool	done;
 #endif
 
 #if EBUG
@@ -3455,7 +3455,7 @@ lexicalization (struct G *G)
 	SXBA_0_bit (G->invalid_lex_loop_clause, clause);
 
       /* if (G->loop_lex) SXBA_1_bit (G->loop_lex, clause); */
-      /* G->is_Lex [clause] = SXTRUE; */
+      /* G->is_Lex [clause] = true; */
 
       if (SXBA_bit_is_set (G->main_clause_set, clause)) {
 	/* La reconnaissance de "clause" est generee */
@@ -3482,10 +3482,10 @@ lexicalization (struct G *G)
   }
 
 #if is_lex3
-  done = SXFALSE;
+  done = false;
 
   while (!done) {
-    done = SXTRUE;
+    done = true;
     clause = -1;
 
     while ((clause = sxba_scan (set, clause)) >= 0) {
@@ -3500,12 +3500,12 @@ lexicalization (struct G *G)
 	  SXBA_1_bit (G->invalid_lex_loop_clause, clause);
 
 	/* if (G->loop_lex) SXBA_0_bit (G->loop_lex, clause); */
-	/* G->is_Lex [clause] = SXFALSE; */
+	/* G->is_Lex [clause] = false; */
 	nt = G->clause2lhs_nt [clause];
 
 	if (--nt2nb [nt] == 0) {
 	  SXBA_0_bit (lhs_nt_set, nt);
-	  done = SXFALSE;
+	  done = false;
 	}
       }
     }
@@ -3542,14 +3542,14 @@ lexicalization (struct G *G)
 #endif /* is_lex && !is_earley_guide */
 #endif /* 0 */
 
-SXBOOLEAN
+bool
 dynam_lex (SXINT lb, SXINT ub, SXINT nb, SXINT *t_list)
 {
-  return SXTRUE;
+  return true;
 }
 #if 0
 /* A [re]faire avec idag */
-SXBOOLEAN
+bool
 dynam_lex (SXINT lb, SXINT ub, SXINT nb, SXINT *t_list)
 {
     /* nb > 0.  Verifie dynamiquement que la liste des terminaux t_list [0], ..., t_list [nb-1] se trouve
@@ -3571,7 +3571,7 @@ dynam_lex (SXINT lb, SXINT ub, SXINT nb, SXINT *t_list)
 		glbl_source [lb] == t
 #endif
 		) {
-		if (--nb == 0) return SXTRUE;
+		if (--nb == 0) return true;
 	  
 		t = *t_list++;
 	    }
@@ -3582,7 +3582,7 @@ dynam_lex (SXINT lb, SXINT ub, SXINT nb, SXINT *t_list)
     dynam_lex_false_call_nb++;
 #endif
 
-    return SXFALSE;
+    return false;
 }
 #endif /* 0 */
 
@@ -3590,10 +3590,10 @@ dynam_lex (SXINT lb, SXINT ub, SXINT nb, SXINT *t_list)
 
 
 #if is_sdag
-SXBOOLEAN
+bool
 is_AND (SXBA lhs_bits_array, SXBA rhs_bits_array)
 /*
- * "is_AND" returns SXTRUE iff the result of the bitwise
+ * "is_AND" returns true iff the result of the bitwise
  * "AND" of its two arguments is not nul.
  */
 {
@@ -3602,10 +3602,10 @@ is_AND (SXBA lhs_bits_array, SXBA rhs_bits_array)
 
     while (slices_number-- > 0) {
 	if ((*lhs_bits_ptr-- & *rhs_bits_ptr--) != 0)
-	    return SXTRUE;
+	    return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 #endif /* is_sdag */
 
@@ -3794,7 +3794,7 @@ static SXINT	S0n, zero;
 
 
 #if is_rcvr
-static SXBOOLEAN
+static bool
 sxrcg_error_recovery (SXINT top)
 {
   /* Traitement d'erreur */
@@ -3806,9 +3806,9 @@ sxrcg_error_recovery (SXINT top)
      non-predefini &distance) */
   SXINT			*rcvr_source, *store_glbl_source, i, next_tree, dist, last, rcvr_rho0, pid;
   SXINT			insert, again, delta;
-  SXBOOLEAN		ret_val = SXFALSE;
+  bool		ret_val = false;
 
-  static SXBOOLEAN	is_in_error_recovery;
+  static bool	is_in_error_recovery;
   static SXINT		rcvr_ilb [3], rcvr_iub [3];
   static SXINT		w_global_pid;
   static bfun		w_first_pass, w_second_pass, w_last_pass;
@@ -3820,12 +3820,12 @@ sxrcg_error_recovery (SXINT top)
   static SEM_TYPE	*gsem_disp;
   static pfun		gAij2struct, distance_Aij2struct;
 
-  if (is_in_error_recovery) return SXFALSE; /* Appel recursif */
+  if (is_in_error_recovery) return false; /* Appel recursif */
 
   if (is_print_time)
     fputs ("\t\tError recovery (start)\n", sxtty);
 
-  is_in_error_recovery = SXTRUE;
+  is_in_error_recovery = true;
     
 
   w_global_pid = global_pid;
@@ -3917,15 +3917,15 @@ sxrcg_error_recovery (SXINT top)
 	    /* Y */
 	    rcvr_iub [2] = rcvr_n+last;
 
-	    /* is_second_pass == SXFALSE, on ne sort pas les messages d'erreur */
+	    /* is_second_pass == false, on ne sort pas les messages d'erreur */
 
 	    (*distance_first_pass_init) ();
 	    ret_val = _distance (&rcvr_rho0, rcvr_ilb, rcvr_iub); /* On ne rentre pas par l'axiome */
 
 	    if (ret_val) {
-	      is_second_pass = SXTRUE; /* On sort les messages d'erreur */
+	      is_second_pass = true; /* On sort les messages d'erreur */
 	      _walk_distance (rcvr_rho0);	/* On ne rentre pas par l'axiome */
-	      is_second_pass = SXFALSE;
+	      is_second_pass = false;
 	    }
 
 	    (*distance_first_pass_final) (); /* On termine distance */
@@ -3988,7 +3988,7 @@ sxrcg_error_recovery (SXINT top)
     /* Aij2struct [i] = w_Aij2struct [i]; */
   }
 
-  is_in_error_recovery = SXFALSE;
+  is_in_error_recovery = false;
 
   n = top; /* provisoire */
   logn = sxlast_bit (n);
@@ -4216,23 +4216,23 @@ fill_which_str (SXINT kind)
   }
 }
 
-static SXBOOLEAN
+static bool
 perform_robust_pass (SXINT kind)
 {
-  SXBOOLEAN ret_val = SXFALSE;
+  bool ret_val = false;
 
   switch (kind) {
   case 1:
 #if is_coupled
-    ret_val = SXFALSE;
+    ret_val = false;
 #else
 #if is_guided
-    ret_val = SXTRUE;
+    ret_val = true;
 #else
 #if is_parser
-    ret_val = SXTRUE;
+    ret_val = true;
 #else
-    ret_val = SXTRUE;
+    ret_val = true;
 #endif /* is_parser */
 #endif /* is_guided */
 #endif /* is coupled */
@@ -4243,9 +4243,9 @@ perform_robust_pass (SXINT kind)
 
   case 3:
 #if is_fully_coupled
-    ret_val = SXFALSE;
+    ret_val = false;
 #else
-    ret_val = SXTRUE;
+    ret_val = true;
 #endif
     break;
   }
@@ -4295,12 +4295,12 @@ glbl_ranges_free ()
 }
 
 
-static SXBOOLEAN
+static bool
 rcgparse_it (SXINT top, SXINT kind)
 {
     SXINT	ret_val;
     SXINT	pid;
-    SXBOOLEAN	is_second_pass;
+    bool	is_second_pass;
     char	str [164];
 
 #if PID>1
@@ -4398,7 +4398,7 @@ rcgparse_it (SXINT top, SXINT kind)
 
       /* Laisse-t-on "Lex" tel quel pour la passe robuste ? */
 
-      is_robust_run = SXTRUE;
+      is_robust_run = true;
 
       ret_val = (*(Gs [0]->parse.first_pass)) (&S0n, &idag.init_state /* &zero */, &top, &axiom_0_n);
 
@@ -4463,7 +4463,7 @@ rcgparse_it (SXINT top, SXINT kind)
 	  sxtrap (ME, "rcgparse_it (spf construction is mandatory for a non-linear grammar with an input dag)");
 
 	/* on fait les alloc supplementaires */
-	rcg_spf_dag_yield_alloc (SXTRUE /* is_spf_already_built */, SXTRUE /* is_td_pass_needed */);
+	rcg_spf_dag_yield_alloc (true /* is_spf_already_built */, true /* is_td_pass_needed */);
 
 	/* On construit bottom-up pour chaque arg (range) de chaque predicat instancie le vrais sous-dag du dag d'entree qui lui est associe' */
 	if (rcg_spf_nl_pass_bu_do_it ()) {
@@ -4530,7 +4530,7 @@ rcgparse_it (SXINT top, SXINT kind)
 	    sxtime (TIME_FINAL, "\t\tLast pass (FALSE)");
     }
 
-    return ret_val==-1 ? SXFALSE : SXTRUE;
+    return ret_val==-1 ? false : true;
 }
 
 
@@ -4545,7 +4545,7 @@ out_sdag (struct G **Gs, SXBA *source, SXBA **ff2clause_set, SXINT init_pos /* 0
   SXINT      pos, ste, t, pid, clause, nb, bot, top, eq_clause;
   SXBA     t_set, line, clause_set, t_line;
   char     *str;
-  SXBOOLEAN  is_first, unknown_word;
+  bool  is_first, unknown_word;
   struct G *G;
   SXINT      *lex_pidXindex2clause_nb [PID];
   SXINT      nbs, old_nb, old_nbs, uw_nb;
@@ -4560,7 +4560,7 @@ out_sdag (struct G **Gs, SXBA *source, SXBA **ff2clause_set, SXINT init_pos /* 0
 
       printf ("%s {", str);
 
-      is_first = SXTRUE;
+      is_first = true;
       t_set = source [pos];
       t = sxba_0_lrscan (t_set, 0);
 
@@ -4570,7 +4570,7 @@ out_sdag (struct G **Gs, SXBA *source, SXBA **ff2clause_set, SXINT init_pos /* 0
       
 	while ((t = sxba_scan (t_set, t)) > 0) {
 	  if (is_first)
-	    is_first = SXFALSE;
+	    is_first = false;
 	  else
 	    fputs (" ", stdout);
 
@@ -4753,13 +4753,13 @@ out_sdag (struct G **Gs, SXBA *source, SXBA **ff2clause_set, SXINT init_pos /* 0
 	  printf ("%ld.", (SXINT) pid);
 
 	fputs ("{", stdout);
-	is_first = SXTRUE;
+	is_first = true;
 	nb = 0;
 	clause = 0;
 
 	while ((clause = sxba_scan (line, clause)) > 0) {
 	  if (is_first)
-	    is_first = SXFALSE;
+	    is_first = false;
 	  else
 	    fputs (" ", stdout);
 
@@ -4804,7 +4804,7 @@ print_used_clause (struct G **Gs)
 {
     SXINT		clause, pid, nb;
     SXBA	clause_set;
-    SXBOOLEAN	is_first;
+    bool	is_first;
 
     /* On sort les clauses utilisees */
     fputs ("%% ", stdout);
@@ -4818,12 +4818,12 @@ print_used_clause (struct G **Gs)
 	fputs ("{", stdout);
 		
 	clause = 0;
-	is_first = SXTRUE;
+	is_first = true;
 	nb = 0;
 
 	while ((clause = sxba_scan (clause_set, clause)) > 0) {
 	    if (is_first)
-		is_first = SXFALSE;
+		is_first = false;
 	    else
 		fputs (" ", stdout);
 
@@ -4890,7 +4890,7 @@ print_source_text (struct G **Gs, SXINT S0n, SXINT ret_val)
     /* S0n est l'identifiant du couple axiome, (vecteur de) range [0..n] */
     SXINT		tok, ste, t, pid, clause, nb, i;
     char	*str;
-    SXBOOLEAN	is_first;
+    bool	is_first;
     SXBA	line, set;
     struct G	*G;
 
@@ -4924,11 +4924,11 @@ print_source_text (struct G **Gs, SXINT S0n, SXINT ret_val)
 			printf ("%s {", str);
 			line = glbl_source [tok];
 			t = 0;
-			is_first = SXTRUE;
+			is_first = true;
 
 			while ((t = sxba_scan (line, t)) > 0) {
 			    if (is_first)
-				is_first = SXFALSE;
+				is_first = false;
 			    else
 				fputs (" ", stdout);
 
@@ -5049,12 +5049,12 @@ static SXINT	*concat_area1, concat_area_size1, *concat_area2, concat_area_size2;
 
 /* Le 21/03/08 Nelle version qui marche avec udag_scanner */
 /* Appele' par udag_scanner par (*main_parser)(), l'affectation
-   SXBOOLEAN        (*main_parser)(void) = call_rcg_parse_it;
+   bool        (*main_parser)(void) = call_rcg_parse_it;
    a ete faite par RCG_main.c */
-SXBOOLEAN
+bool
 call_rcg_parse_it (SXINT what_to_do)
 {
-  SXBOOLEAN	ret_val = SXTRUE, is_GET_PSTACK, is_GET_QSTACK;
+  bool	ret_val = true, is_GET_PSTACK, is_GET_QSTACK;
   SXINT	tok, pid, top, size;
 
   switch (what_to_do) {
@@ -5070,7 +5070,7 @@ call_rcg_parse_it (SXINT what_to_do)
     /* Ce parseur n'est pas compile' pour savoir taiter des DAGs en entree */
     if (input_is_a_dag) {
       fputs ("Your RCG parsers are not able to process your input as a DAG, you must recompile them with the option \"-Dis_dag=1\", see you later anyway.\n", stderr);
-      return SXFALSE;
+      return false;
     }
 #endif /* !is_dag */
 
@@ -5078,7 +5078,7 @@ call_rcg_parse_it (SXINT what_to_do)
       fill_idag_path (); /* Pour savoir si q peut suivre p */
 
 #ifdef NO_SX
-    extern SXBOOLEAN rcgscan_it ();
+    extern bool rcgscan_it ();
 #endif /* !NO_SX */
     
     /* Ce programme doit etre compile avec l'option
@@ -5157,17 +5157,17 @@ call_rcg_parse_it (SXINT what_to_do)
 #if PID>1
     for (pid = 1; pid < PID; pid++) {
       if (!Gs [pid]->is_linear)
-	is_a_linear_grammar = SXFALSE;
+	is_a_linear_grammar = false;
 
       if (Gs [pid]->is_overlapping)
-	is_an_overlapping_grammar = SXTRUE;
+	is_an_overlapping_grammar = true;
 
       is_GET_PSTACK |= Gs [pid]->is_GET_PSTACK;
       is_GET_QSTACK |= Gs [pid]->is_GET_QSTACK;
     }
 #endif /* PID>1 */
 #else
-    is_GET_PSTACK = is_GET_QSTACK = SXFALSE;
+    is_GET_PSTACK = is_GET_QSTACK = false;
 #endif /* is_dag */
 
 
@@ -5180,14 +5180,14 @@ call_rcg_parse_it (SXINT what_to_do)
 
     fill_more_idag_infos (is_GET_QSTACK, is_GET_PSTACK
 #if is_dynamic_lexicalization
-			  , SXTRUE
+			  , true
 #else
-			  , SXFALSE
+			  , false
 #endif /* is_dynamic_lexicalization */
 #if is_dag
-			  , SXTRUE /* Pour le calcul des StrLen, on pourrait etre + fin */
+			  , true /* Pour le calcul des StrLen, on pourrait etre + fin */
 #else
-			  , SXFALSE
+			  , false
 #endif /* is_dag */
 			  );
 
@@ -5214,7 +5214,7 @@ call_rcg_parse_it (SXINT what_to_do)
     logn = idag.logn;
     ANDj = (1<<idag.logn)-1;
 
-    is_robust_run = SXFALSE; /* Le 1er essai est non robuste */
+    is_robust_run = false; /* Le 1er essai est non robuste */
 
     global_arity = Gs [0]->arity;
     global_max_arg_nb_per_clause = Gs [0]->rhs_args_nb;
@@ -5303,7 +5303,7 @@ call_rcg_parse_it (SXINT what_to_do)
 #endif /* PID>1 */
       /* Ici on a Gs == Guided_Gs */
  	
-      is_robust_run = SXFALSE;
+      is_robust_run = false;
       ret_val = rcgparse_it (n, 3);
     }
 #endif /* is_coupled */
@@ -5363,20 +5363,20 @@ arg_nb_put_error (char *prdct_name, SXINT def_nb, SXINT decl_nb)
 
 #if is_sdag
 SXINT *
-StrConcat (SXBOOLEAN is_first_arg, SXINT *arg, SXINT *Xlb, SXINT *Xub)
+StrConcat (bool is_first_arg, SXINT *arg, SXINT *Xlb, SXINT *Xub)
 {
     /* A FAIRE */
 }
 #else
 SXINT *
-StrConcat (SXBOOLEAN is_first_arg, SXINT *arg, SXINT *Xlb, SXINT *Xub)
+StrConcat (bool is_first_arg, SXINT *arg, SXINT *Xlb, SXINT *Xub)
 {
     /* A FAIRE */
 }
 #if 0
 /* A [re]faire avec idag */
 SXINT *
-StrConcat (SXBOOLEAN is_first_arg, SXINT *arg, SXINT *Xlb, SXINT *Xub)
+StrConcat (bool is_first_arg, SXINT *arg, SXINT *Xlb, SXINT *Xub)
 {
   /* On a au + 2 args a _StrEq2 => implantes ds des structures separees */
   /* On concatene arg_size = arg[0] chaines reperees par le contenu de arg[1]...arg[arg_size] */
@@ -5668,7 +5668,7 @@ free_idag (SXINT local_pid, struct idag	*pidag)
 #if is_lfsa
 
 static void
-add_loop_clauses (struct G *G, SXBOOLEAN is_full)
+add_loop_clauses (struct G *G, bool is_full)
 {
   SXINT pid, clause, A, x, arity, pos, d, cur, *clause2clause0, *p;
   SXBA t_set, valid_nt_set, valid_clause_set, *clause02lb, *clause02ub, *ub_lines, *ul_lines;
@@ -5740,7 +5740,7 @@ add_loop_clauses (struct G *G, SXBOOLEAN is_full)
 
 
 static void
-add_identical_clauses (struct G *G, SXBOOLEAN is_full)
+add_identical_clauses (struct G *G, bool is_full)
 {
   SXINT pid, clause, bot, top, eq_clause, arity, d, cur, pos, *clause2clause0;
   SXBA eq_clause_set, valid_clause_set, *clause02lb, *clause02ub, *ub_lines, *ul_lines;
@@ -6026,11 +6026,11 @@ MEASURE_time (SXINT what)
 }
 #endif /* MEASURES */
 
-static SXBOOLEAN
+static bool
 call_lfsa ()
 {
   SXINT         i, tnb, tok;
-  SXBOOLEAN     ret_val, pid;
+  bool     ret_val, pid;
   char	      str [164];
   struct fsaG *fsaG;
 
@@ -6126,11 +6126,11 @@ rfsa_lexicalize (struct fsaG *G)
 }
 
 
-static SXBOOLEAN
+static bool
 call_rfsa ()
 {
   SXINT     i, tnb, pid;
-  SXBOOLEAN ret_val;
+  bool ret_val;
   char	  str [164];
   SXBA    set;
   struct fsaG *fsaG;
@@ -6246,10 +6246,10 @@ lub_washer ()
 */
 
 
-extern SXBOOLEAN sxearley_parse_it ();
+extern bool sxearley_parse_it ();
 
 static SXINT Apq; /* Ds le cas fully_coupled, l'appelant earley2full_guide doit recuperer cette valeur... */
-static SXBOOLEAN is_new_Apq; /* ... et il doit savoir si c'est la 1ere fois */
+static bool is_new_Apq; /* ... et il doit savoir si c'est la 1ere fois */
 
 static X_header earley_rhoA_hd;
 static SXBA *Aij2clause_id_set;
@@ -6312,7 +6312,7 @@ supertagger (SXINT guiding_clause, SXINT i)
 {
   SXINT guided_clause, arity, *p, bot, top, x, j, k, guided_idem_clause, guided_A, *gp, guided_loop_clause, guided_idem_loop_clause;
   SXINT guiding_A, guiding_loop_clause;
-  SXBOOLEAN is_new_guiding_clause;
+  bool is_new_guiding_clause;
   SXBA i_set;
 
   is_new_guiding_clause = SXBA_bit_is_reset_set (supertagger_guiding_clause_set, guiding_clause);
@@ -7128,7 +7128,7 @@ void
 earley2full_guide (SXINT clause, SXINT son_nb, SXINT *lb, SXINT *ub, SXINT t_nb)
 {
   SXINT             *pto, son, lhs, A, x, *p, pq, loop_clause, bot, top, node_nb, identical_clause, identical_lhs;
-  SXBOOLEAN	  old_lhs;
+  bool	  old_lhs;
   struct spf_node *node_ptr;
 
   /* L'arg t_nb a ete ajoute' le 28/05/2003.  Pour chaque terminal de la production (le plus a gauche
@@ -7213,11 +7213,11 @@ earley2full_guide (SXINT clause, SXINT son_nb, SXINT *lb, SXINT *ub, SXINT t_nb)
 
 
 
-static SXBOOLEAN
+static bool
 call_earley_guide ()
 {
   SXINT clause, A, ij, l;
-  SXBOOLEAN ret_val;
+  bool ret_val;
 
 #if PID>1
   sxtrap (ME, "call_earley_guide");
@@ -7364,7 +7364,7 @@ call_earley_guide ()
     Gs [0]->parse.first_pass_init = sxvoid;
 
     /* l'analyse earley a marche, on lance donc une analyse non robuste */
-    is_robust_run = SXFALSE;
+    is_robust_run = false;
 
     ij = MAKE_ij (0, n);
 #if is_large
@@ -7394,7 +7394,7 @@ call_earley_guide ()
     if ((Gs [0])->robust && perform_robust_pass (1)) {
       /* Cette analyse est non guidee */
       /* On fait la lexicalization normale */
-      is_robust_run = SXTRUE;
+      is_robust_run = true;
       ret_val = rcgparse_it (n, 1);
     }
   }
@@ -7474,7 +7474,7 @@ call_earley_guide ()
 }
 #endif /* is_earley_guide */
 
-static SXVOID	gripe ()
+static void	gripe ()
 {
     fputs ("\nA function of \"sdag\" is out of date with respect to its specification.\n", sxstderr);
     sxexit(1);
@@ -7485,7 +7485,7 @@ SXINT sdag_semact (SXINT code, SXINT numact)
   static SXINT	tok_no, tmax, t_nb;
   SXINT		lahead, tok, pid, ste, t, size;
   SXINT           *p, i, top;
-  SXBOOLEAN	ret_val, needs_lub;
+  bool	ret_val, needs_lub;
   char		*str, mess [32];
   SXBA		line;
   SXBA		valid_clause_set, new_valid_clause_set;
@@ -8049,18 +8049,18 @@ SXINT sdag_semact (SXINT code, SXINT numact)
       }
 
       /* l'analyse (l|r)fsa a marche, on lance donc une analyse non robuste */
-      is_robust_run = SXFALSE;
+      is_robust_run = false;
       ret_val = rcgparse_it (n, 1);
     }
     else {
       /* Ici, le source est obligatoirement errone', on lance directement une analyse robuste (si elle existe) */
       if ((Gs [0])->robust && perform_robust_pass (1)) {
-	is_robust_run = SXTRUE;
+	is_robust_run = true;
 	ret_val = rcgparse_it (n, 1);
       }
     }
 #else /* !is_lfsa */
-    is_robust_run = SXFALSE;
+    is_robust_run = false;
     ret_val = rcgparse_it (n, 1);
 #endif /* !is_lfsa */
 
@@ -8111,7 +8111,7 @@ SXINT sdag_semact (SXINT code, SXINT numact)
 #endif /* PID>1 */
       /* Ici on a Gs == Guided_Gs */
 
-      is_robust_run = SXFALSE;
+      is_robust_run = false;
       ret_val = rcgparse_it (n, 3);
     }
 #endif /* is_coupled */
@@ -8399,7 +8399,7 @@ coupled_action (struct G *gG, SXINT *rho)
     struct Aij_struct	*Aij_struct_son_ptr;
     SXINT			pid = gG->pid;
     struct G		*G, *sonG;
-    SXBOOLEAN		has_identical;
+    bool		has_identical;
 
     rcg_spf.max_instantiated_clause_nb++;
 #if EBUG2
@@ -8510,7 +8510,7 @@ parse_forest_action (struct G *G, SXINT *rho)
        Si clause = A0 --> A1 ... Ap, sons[i] est l'identifiant du module ds lequel est defini Ai */
 {
     SXINT		clause, rho0, son_nb, bot, top, cur, item, eq_clause;	
-    SXBOOLEAN		is_set, is_lhs_clause, already_seen, is_lhs, is_rhs;
+    bool		is_set, is_lhs_clause, already_seen, is_lhs, is_rhs;
     SXBA		*bm;
     SXINT		pid = G->pid;
 
@@ -8567,14 +8567,14 @@ parse_forest_action (struct G *G, SXINT *rho)
 	}
     }
 
-    is_lhs_clause = SXFALSE;
+    is_lhs_clause = false;
 
     if ((forest_level & FL_rhs) == FL_rhs) {
-	is_lhs_clause = (forest_level & FL_lhs_prdct) ? SXTRUE : SXFALSE;
-	is_lhs = is_rhs = SXTRUE;
+	is_lhs_clause = (forest_level & FL_lhs_prdct) ? true : false;
+	is_lhs = is_rhs = true;
     }
     else {
-	is_rhs = SXFALSE;
+	is_rhs = false;
 
 	if ((forest_level & FL_lhs_clause) && (forest_level & FL_lhs_prdct)) {
 #if PID==1
@@ -8591,27 +8591,27 @@ parse_forest_action (struct G *G, SXINT *rho)
 
 	    if (!already_seen)
 		/* On doit sortir le/les numeros des clauses */
-		is_lhs_clause = is_lhs = SXTRUE;
+		is_lhs_clause = is_lhs = true;
 	    else
-		is_lhs_clause = is_lhs = SXFALSE;
+		is_lhs_clause = is_lhs = false;
 	}
 	else {
 	    if (forest_level & FL_lhs_prdct) {
 		is_lhs = SXBA_bit_is_reset_set (pid2lhs_prdct_set [pid], rho0);
 	    }
 	    else
-		is_lhs = SXFALSE;
+		is_lhs = false;
 
 	    if (forest_level & FL_lhs_clause) {
-		is_lhs_clause = SXTRUE; /* Trace, on le sort tout le temps!! */
+		is_lhs_clause = true; /* Trace, on le sort tout le temps!! */
 	    }
 	    else
-		is_lhs_clause = SXFALSE;
+		is_lhs_clause = false;
 	}
     }
 
     if (is_lhs_clause || is_lhs || is_rhs)
-      rcg_spf_print_partial_instantiated_clause (stdout, G, rho, SXFALSE, is_lhs_clause, is_lhs, is_rhs,"\n");
+      rcg_spf_print_partial_instantiated_clause (stdout, G, rho, false, is_lhs_clause, is_lhs, is_rhs,"\n");
 
 #if is_sdag
     /* On recherche les source index de tous les terminaux de la clause pour reconstituer
@@ -8663,7 +8663,7 @@ static SXBA     *gmemoP_oflw_disp [PID];
 static SXINT    gmemoP_oflw_disp_size [PID];
 static SXINT    andk_filters [PID];
 
-static SXVOID	gripe_guide ()
+static void	gripe_guide ()
 {
     fputs ("\nA function of \"guide\" is out of date with respect to its specification.\n", sxstderr);
     sxexit(1);
@@ -8748,7 +8748,7 @@ SXINT
 guide_semact (SXINT code, SXINT numact)
 {
 static SXINT		*guide_ranges, gA_ij, glb, gub, max_rhs_arg_nb;
-static SXBOOLEAN		is_first_clause;
+static bool		is_first_clause;
     SXINT			size, xstack, ste, clause, clause_id, gclause, gclause_id, nt, range_nb, i, *rho, pair, lhs_nt, arity, pid;
     SXINT			len, A, poids, ij, x, andk_filter;
     SXBA		set;
@@ -8802,7 +8802,7 @@ static SXBOOLEAN		is_first_clause;
 	  sxba_copy (G->invalid_lex_loop_clause, G->loop_clause_set);
 #endif
 
-	is_first_clause = SXTRUE;
+	is_first_clause = true;
 
 	return 0;
 
@@ -8850,7 +8850,7 @@ static SXBOOLEAN		is_first_clause;
 	    /* On est ds le cas fully guided.  */
 	    if (is_first_clause) {
 		/* complet */
-		is_first_clause = SXFALSE;
+		is_first_clause = false;
 
 		if (guide_ranges == NULL) {
 		    /* <rhs> == true */
@@ -8968,7 +8968,7 @@ static SXBOOLEAN		is_first_clause;
 		  SXBA_0_bit (G->invalid_lex_loop_clause, clause);
 
 		/* if (G->loop_lex) SXBA_1_bit (G->loop_lex, clause); */
-		/* G->is_Lex [clause] = SXTRUE; */
+		/* G->is_Lex [clause] = true; */
 
 #if is_lex	
 		if (SXBA_bit_is_set (G->main_clause_set, clause))
@@ -9005,7 +9005,7 @@ static SXBOOLEAN		is_first_clause;
 				   <clause> = "(" %SXINT ".." %SXINT ")" ; 11 */
 	    if (is_first_clause) {
 		/* Pas de rhs */
-		is_first_clause = SXFALSE;
+		is_first_clause = false;
 		allocate_guide (0);
 	    }
 
@@ -9084,7 +9084,7 @@ from2var_mem_mngr (struct G *G, SXINT old_size, SXINT new_size)
   if (old_size == 0) {
     /* ALLOCATION */
     /* A priori, on deplie toutes les parties droites... */
-    is_rav2_coupled_and_not_FL_rhs = SXFALSE;
+    is_rav2_coupled_and_not_FL_rhs = false;
 
     /* Le 06/08/2002 : pour ressortir le source (forest_level & FL_source), on n'a pas besoin de de'plier et
        le calcul exact du nombre de clauses instanciees ne necessite plus le depliage
@@ -9093,12 +9093,12 @@ from2var_mem_mngr (struct G *G, SXINT old_size, SXINT new_size)
 	((forest_level & FL_rhs) != FL_rhs) &&
 	!((forest_level & FL_supertagger) && gG->is_factorize))
       /* On ne deplie pas */
-      is_rav2_coupled_and_not_FL_rhs = SXTRUE;
+      is_rav2_coupled_and_not_FL_rhs = true;
 #if is_coupled && !is_fully_coupled
     else
       if (gG->semact.first_pass == coupled_action || gG->semact.second_pass == coupled_action)
 	/* On ne deplie pas */
-	is_rav2_coupled_and_not_FL_rhs = SXTRUE;
+	is_rav2_coupled_and_not_FL_rhs = true;
 #endif /* is_coupled && !is_fully_coupled */
 
     (*(gG->parse.first_pass_init))(G); /* Attention, ds ce cas, on passe la forme 2var en param */
@@ -9256,7 +9256,7 @@ from2var_expand (struct G *G, SXINT Arho)
 	fill_rrho_stack (G, gclause, p);
 
 	if (from2var_walk ())
-	    ret_val = SXTRUE;
+	    ret_val = true;
 	
 	TOP (rrho_stack) = x;
     }
@@ -9377,7 +9377,7 @@ from2var_mngr (struct G *G, SXINT *rho)
       }
 #endif /* is_sdag */
 
-      ret_val = SXTRUE;
+      ret_val = true;
     }
 
     /* On remplit gG->pmemoN */
@@ -9546,7 +9546,7 @@ shallow_action (struct G *gG /* grammaire 1rcg du guide */, SXINT *rho)
     /* On vient d'effectuer une reduction ds la forme 1rcg */
     SXINT		clause, item, pid = gG->pid, eq_clause, cur, bot, top;
     SXBA	set;
-    SXBOOLEAN	has_identical;
+    bool	has_identical;
 
 #if is_sdag
     SXINT		*tbot, *ttop, x, y, index, t, triple;
@@ -9634,9 +9634,9 @@ static void
 shallow_Aij (SXINT gclause)
 {
     SXINT 	x, Aij, ij, i, j, pid, index, item;
-    SXBOOLEAN	is_empty;
+    bool	is_empty;
 #if is_sequential
-    SXBOOLEAN	sequence;
+    bool	sequence;
     SXINT		prevj;
 #endif
 
@@ -9649,9 +9649,9 @@ shallow_Aij (SXINT gclause)
 
 	XH_push (XHip_hd, lhs_nt);
 
-	is_empty = SXTRUE;
+	is_empty = true;
 #if is_sequential
-	sequence = SXTRUE;
+	sequence = true;
 	prevj = 0;
 #endif
 
@@ -9660,11 +9660,11 @@ shallow_Aij (SXINT gclause)
 	    i = ij2i (ij), j = ij2j (ij);
 
 	    if (i != j)
-		is_empty = SXFALSE;
+		is_empty = false;
 #if is_sequential
 	    /* Les ranges des args ne peuvent etre decroissants (cas des TAG) */
 	    if (i < prevj)
-		sequence = SXFALSE;
+		sequence = false;
 
 	    prevj = j;
 #endif
@@ -9734,7 +9734,7 @@ shallow_mngr (SXINT pid)
     SXINT		gGbot, gGtop, Gbot, Gtop, pGbot, pGtop, andk_filter;
     SXINT		*kclauses_nb, *clause2gclause;
     SXBA	gclause_set, clause_set, shallow_clause_set;
-    SXBOOLEAN	hasgG_identical, hasG_identical, haspG_identical;
+    bool	hasgG_identical, hasG_identical, haspG_identical;
 
     /* Les pid des guides ou des parsers guides sont identiques */
     /* G = Shallow Grammaire guide'e */
@@ -10276,7 +10276,7 @@ synchronous_nfa_extract_trans (SXINT state, void (*output_trans) (SXINT, SXINT, 
   }
 }
 
-static SXBOOLEAN
+static bool
 synchronous_empty_trans (SXINT state, SXBA epsilon_reachable_next_states)
 {
   SXINT transition, next_state = 0;
@@ -10320,7 +10320,7 @@ extract_synchronous_fsa_pathes (struct G **Gs, SXINT S0n, SXINT ret_val)
 	     synchronous_nfa_extract_trans, 
 	     NULL, 
 	     synchronous_mindfa_fill_trans, 
-	     SXTRUE /* to_be_normalized */);
+	     true /* to_be_normalized */);
 
 
     DRAZ (synchro_path_stack);
@@ -10451,7 +10451,7 @@ static void
 synchro_and_make_new_transitions (SXINT final_state1, SXINT final_state2)
 {
   SXINT prev_state, prev_fsa_state, prev_state_part, bot, top, q, t_pid, part1, part2, next_state, next_fsa_state, trans;
-  SXBOOLEAN find_final_state1, find_final_state2;
+  bool find_final_state1, find_final_state2;
 
   while (!IS_EMPTY (synchro_and_next_state_stack)) {
     prev_state = POP (synchro_and_next_state_stack);
@@ -10459,13 +10459,13 @@ synchro_and_make_new_transitions (SXINT final_state1, SXINT final_state2)
     prev_state_part = XxY_X (synchro_and_fsa_state, prev_state);
     bot = XH_X (synchro_and_fsa_state_list, prev_state_part);
     top = XH_X (synchro_and_fsa_state_list, prev_state_part+1);
-    find_final_state1 = SXFALSE;
+    find_final_state1 = false;
 
     while (bot < top) {
       q = XH_list_elem (synchro_and_fsa_state_list, bot);
 
       if (q == final_state1)
-	find_final_state1 = SXTRUE;
+	find_final_state1 = true;
 
       synchro_and_fill_non_eps_trans_set (q, non_eps_trans_set1, 0);
       bot++;
@@ -10474,13 +10474,13 @@ synchro_and_make_new_transitions (SXINT final_state1, SXINT final_state2)
     prev_state_part = XxY_Y (synchro_and_fsa_state, prev_state);
     bot = XH_X (synchro_and_fsa_state_list, prev_state_part);
     top = XH_X (synchro_and_fsa_state_list, prev_state_part+1);
-    find_final_state2 = SXFALSE;
+    find_final_state2 = false;
 
     while (bot < top) {
       q = XH_list_elem (synchro_and_fsa_state_list, bot);
 
       if (q == final_state2)
-	find_final_state2 = SXTRUE;
+	find_final_state2 = true;
 
       synchro_and_fill_non_eps_trans_set (q, non_eps_trans_set2, 1);
       bot++;
@@ -10779,7 +10779,7 @@ process_synchronous (struct G *G, SXINT *rho)
   SXINT                 clause, son_nb, A, Aij_pid, lhs_pid, son_pid, synchro_rhs_prdct_arity, son, bot, top, synchro_lhs_arity, lhs_arg, arg, lhs, pq_disp, lhs_arg_nb, arg_pos, symb_nb, symb;
   SXINT                 rhs, synchro_son_nb, son_Aij, prdct_name, left_arg_pos, prdct_call, prdct_call_bot, max_symb, jump, combi_arg, save_symb_nb, multiple_bot, multiple_top;
   SXINT                 *symbs, *symbs_lim, *lhs_args,*rhs_prdct_ptr, *save_symbs;
-  SXBOOLEAN             is_first_synchro_Aij, is_first_time, has_combi_arg = SXFALSE, is_new_combi_arg, has_multiple_clause, is_first_clause;
+  bool             is_first_synchro_Aij, is_first_time, has_combi_arg = false, is_new_combi_arg, has_multiple_clause, is_first_clause;
   struct Aij_struct	*Aij_struct_ptr;
   struct G              *synchro_G;
   struct synchro_pq     synchro_pq, *synchro_pq_ptr, *pq_ptr;
@@ -10809,7 +10809,7 @@ process_synchronous (struct G *G, SXINT *rho)
   synchro_G = synchro_Gs [lhs_pid];
   synchro_lhs_arity = synchro_G->nt2arity [A];
 
-  is_first_clause = SXTRUE;
+  is_first_clause = true;
 
   while (is_first_clause || (multiple_bot < multiple_top)) {
     if (!is_first_clause)
@@ -10918,7 +10918,7 @@ process_synchronous (struct G *G, SXINT *rho)
 	      XH_push (synchro_combi_arg, symb);
 	    }
 
-	    has_combi_arg = SXTRUE;
+	    has_combi_arg = true;
 	    is_new_combi_arg = !XH_set (&synchro_combi_arg, &combi_arg);
 
 	    pq_ptr = combi_arg2synchro_pq + combi_arg;
@@ -11063,7 +11063,7 @@ process_synchronous (struct G *G, SXINT *rho)
     }
 
     if (is_first_clause)
-      is_first_clause = SXFALSE;
+      is_first_clause = false;
     else
       multiple_bot++;
   }
@@ -11163,7 +11163,7 @@ _StrLen (SXINT *rho, SXINT *olb, SXINT *oub, SXINT len)
    p et q de idag.
    On sait que l > 0 et p < q et qu'il existe un chemin de p a q
 */
-SXBOOLEAN
+bool
 _StrLen_check (SXINT l, SXINT p, SXINT q)
 {
   SXINT	pq, r, bot, top;
@@ -11179,11 +11179,11 @@ _StrLen_check (SXINT l, SXINT p, SXINT q)
 
     if (q-r >= l-1 /* possible */ && SXBA_bit_is_set (idag.path [r], q)) {
       if (_StrLen_check (l-1, r, q) == 1)
-	return SXTRUE;
+	return true;
     }
   }
 
-  return SXFALSE;
+  return false;
 }
 
 
@@ -11290,7 +11290,7 @@ rcg_first_bu_dag_pass_processing (struct G *G, SXINT *rho)
   SXINT ret_val;
 
   if (!is_a_linear_grammar) {
-    if (rcg_spf_process_dag_yield (G, rho, SXFALSE /* unconditional */) == -1)
+    if (rcg_spf_process_dag_yield (G, rho, false /* unconditional */) == -1)
       return -1;
   }
 
@@ -11311,7 +11311,7 @@ rcg_more_spf_alloc (void)
 {
   if (!is_a_linear_grammar) {
     /* Au moins un des modules est non lineaire, on fait les alloc */
-    rcg_spf_dag_yield_alloc (SXFALSE /* is_spf_already_built */);
+    rcg_spf_dag_yield_alloc (false /* is_spf_already_built */);
   }
 }
 #endif /* 0 */
@@ -11333,7 +11333,7 @@ rcg_more_spf_alloc (void)
 
 
 #if EBUG
-print_t_clause (struct G *G, SXINT clause, char *prdct_name, SXINT p, SXINT global_t, SXINT q, SXBOOLEAN succeeded)
+print_t_clause (struct G *G, SXINT clause, char *prdct_name, SXINT p, SXINT global_t, SXINT q, bool succeeded)
 {
   printf ("(%s)%ld: &%s(%ld -->\"%s\" %ld) --> . (%s)\n",
 	  G->name, clause, prdct_name, p, glbl_t2string [global_t], q, succeeded ? "succeeds" : "fails");
@@ -11348,7 +11348,7 @@ t_clause_processing (struct G *G, SXINT prdct_id, SXINT *rho0, SXINT p, SXINT q)
   SXINT     pq, rho [4], ret_val, clause, Aij, global_t, local_t;
   SXINT     *clause_stack_bot, *clause_stack_top, *global_t_stack, *global_t_stack_top;
   SXBA      prdct_t_set;
-  SXBOOLEAN succeeded;
+  bool succeeded;
 
 #if EBUG
   char *prdct_name = G->nt2str [prdct_id];
@@ -11433,7 +11433,7 @@ t_clause_processing (struct G *G, SXINT prdct_id, SXINT *rho0, SXINT p, SXINT q)
 #endif /* 0 */
 	  succeeded = (*G->semact.first_pass)(G, rho);
 #else /* is_semantics */
-	  succeeded = SXTRUE;
+	  succeeded = true;
 #endif /* is_semantics */
 
 	  if (succeeded)
@@ -11479,7 +11479,7 @@ t_clause_processing (struct G *G, SXINT prdct_id, SXINT *rho0, SXINT p, SXINT q)
 #endif /* 0 */
 	    succeeded = (*G->semact.first_pass)(G, rho);
 #else /* is_semantics */
-	    succeeded = SXTRUE;
+	    succeeded = true;
 #endif /* is_semantics */
 
 	    if (succeeded)

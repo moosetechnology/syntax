@@ -26,13 +26,13 @@
 #include "lecl_node.h"
 #include "lecl_nn.h"
 
-char WHAT_LECLPI[] = "@(#)SYNTAX - $Id: lecl_pi.c 3603 2023-09-23 20:02:36Z garavel $" WHAT_DEBUG;
+char WHAT_LECLPI[] = "@(#)SYNTAX - $Id: lecl_pi.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
-extern SXVOID lecl_ced (struct lecl_node *visited);
+extern void lecl_ced (struct lecl_node *visited);
 
 
 
-SXVOID	lecl_pi (void)
+void	lecl_pi (void)
 {
     struct lecl_node	*visited = SXVISITED;
     struct lecl_node	*brother_2;

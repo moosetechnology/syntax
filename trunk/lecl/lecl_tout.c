@@ -23,19 +23,19 @@
 #include "lecl_ag.h"
 #include "S_tables.h"
 
-char WHAT_LECLTOUT[] = "@(#)SYNTAX - $Id: lecl_tout.c 3603 2023-09-23 20:02:36Z garavel $" WHAT_DEBUG;
+char WHAT_LECLTOUT[] = "@(#)SYNTAX - $Id: lecl_tout.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
-extern SXBOOLEAN	lecl_write (struct lecl_tables_s *lecl_tables_ptr, char *langname);
-extern SXVOID	lecl_free (struct lecl_tables_s *lecl_tables_ptr);
+extern bool	lecl_write (struct lecl_tables_s *lecl_tables_ptr, char *langname);
+extern void	lecl_free (struct lecl_tables_s *lecl_tables_ptr);
 
-SXVOID	lecl_tbls_out (struct lecl_tables_s *lecl_tables_ptr)
+void	lecl_tbls_out (struct lecl_tables_s *lecl_tables_ptr)
 {
     SXINT	i, x;
 
     if (sxverbosep) {
 	if (!sxttycol1p) {
 	    fputc ('\n', sxtty);
-	    sxttycol1p = SXTRUE;
+	    sxttycol1p = true;
 	}
 
 	fputs ("Tables Output\n", sxtty);
@@ -54,16 +54,16 @@ SXVOID	lecl_tbls_out (struct lecl_tables_s *lecl_tables_ptr)
     lecl_tables_ptr->S_tbl_size.S_last_char_code = target_collate_length - 1;
     lecl_tables_ptr->S_tbl_size.S_last_state_no = last_state_no;
     lecl_tables_ptr->S_tbl_size.S_constructor_kind = 1;
-    lecl_tables_ptr->S_tbl_size.S_are_comments_erased = (are_comments_defined) ? are_comments_erased : SXTRUE;
+    lecl_tables_ptr->S_tbl_size.S_are_comments_erased = (are_comments_defined) ? are_comments_erased : true;
     lecl_tables_ptr->S_tbl_size.S_last_static_ste = last_static_ste;
-    lecl_tables_ptr->S_tbl_size.S_is_user_action_or_prdct = SXFALSE;
+    lecl_tables_ptr->S_tbl_size.S_is_user_action_or_prdct = false;
     lecl_tables_ptr->S_tbl_size.S_is_non_deterministic = has_nondeterminism;
     lecl_tables_ptr->S_tbl_size.S_counters_size = counters_size;
     lecl_tables_ptr->S_tbl_size.S_check_kw_lgth = check_kw == NULL ? 0 : varstr_length (check_kw);
 
     for (i = 1; (i <= xprod) & !lecl_tables_ptr->S_tbl_size.S_is_user_action_or_prdct; i++)
 	if (!(action_or_prdct_code [i].is_system))
-	    lecl_tables_ptr->S_tbl_size.S_is_user_action_or_prdct = SXTRUE;
+	    lecl_tables_ptr->S_tbl_size.S_is_user_action_or_prdct = true;
 
     lecl_tables_ptr->S_char_to_simple_class = (unsigned char*) sxalloc ((SXINT) (target_collate_length), sizeof (unsigned
 	 char));

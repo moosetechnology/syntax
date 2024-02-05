@@ -6,10 +6,10 @@
 #define _binary_semact_final		sxvoid
 #define _binary_semact_last_pass	sxbvoid
 
-static SXBOOLEAN
+static bool
 mess (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     /* axiome(X Y) --> &StrLen(2, X) !d(X) . @mess */
     call_put_error (1,
@@ -18,5 +18,5 @@ mess (rho, son_nb, sons, is_first)
 '2' selects L_0 = \set{\varepsilon}, i>0, L_i = \set{(w)[w^c] \mid w \in L_{i-1}} \cup \set{[w](w^c) \mid w \in L_{i-1}}, L = \cup_{i \geq 0} L_i\n\
 ");
 
-    return SXTRUE;
+    return true;
 }  

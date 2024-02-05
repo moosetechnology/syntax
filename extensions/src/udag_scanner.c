@@ -72,7 +72,7 @@ VARSTR cur_input_vstr; /* inutilisée, sauf si on se recompile le sxsrc_mngr avec
 			  redéfinir sxgetchar de façon à remplir cette variable (c'est le cas
 			  dans sxpipe/dag2dag (patterns_semact.c)) */
 
-char WHAT_UDAG_SCANNER[] = "@(#)SYNTAX - $Id: udag_scanner.c 3234 2023-05-15 16:52:27Z garavel $" WHAT_DEBUG;
+char WHAT_UDAG_SCANNER[] = "@(#)SYNTAX - $Id: udag_scanner.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 /* Ds le cas dag_kind==DAG_KIND */
 #include "fsa.h" /* Pour read_a_re () */
@@ -102,7 +102,7 @@ static struct sxtables *tables;
 /* Pour rendre udag_scanner independant de earley.h */
 extern SXUINT          maximum_input_size; /* ds earley_parser par exemple */
 extern SXINT	       n /* nb de token du source !! */;
-extern SXBOOLEAN       is_print_time;
+extern bool       is_print_time;
 
 
 #ifdef tdef_by_dico
@@ -217,7 +217,7 @@ static SXINT ciu_name_ids [MAX_DICO_NB], lciu_name_ids [MAX_DICO_NB], digits_nam
 static SXINT      End_Of_Sentence_ste /* ste de la transition bidon vide qui peut conduire d'un etat qcq vers l'etat final */;
 static char       *wstr;
 static SXINT      wstr_lgth;
-static SXBOOLEAN  input_is_a_dag;
+static bool  input_is_a_dag;
 static VARSTR     vstr;
 
 /* Toujours visible car sxspf_mngr.c en a besoin !! (pas terrible, A VOIR) */
@@ -253,7 +253,7 @@ comb_seek (struct sxdfa_comb *sxdfa_comb_ptr, char *str, SXINT lgth, SXINT *tok)
 {  
   SXINT   cur_lgth, id, t_id;
   char    c, *cur_str, *ret_str, *cur_wstr;
-  SXBOOLEAN has_changed;
+  bool has_changed;
   
   cur_str = str;
   cur_lgth = lgth;
@@ -272,13 +272,13 @@ comb_seek (struct sxdfa_comb *sxdfa_comb_ptr, char *str, SXINT lgth, SXINT *tok)
     }
 
     cur_wstr = wstr + lgth;
-    has_changed = SXFALSE;
+    has_changed = false;
 
     while (--cur_str >= str) {
       *--cur_wstr = c = sxtolower (*cur_str);
 
       if (c != *cur_str)
-	has_changed = SXTRUE;
+	has_changed = true;
     }
 
     if (has_changed) {
@@ -300,13 +300,13 @@ comb_seek (struct sxdfa_comb *sxdfa_comb_ptr, char *str, SXINT lgth, SXINT *tok)
     }
 
     cur_wstr = wstr + lgth;
-    has_changed = SXFALSE;
+    has_changed = false;
 
     while (--cur_str >= str) {
       *--cur_wstr = c = sxtoupper (*cur_str);
 
       if (c != *cur_str)
-	has_changed = SXTRUE;
+	has_changed = true;
     }
 
     if (has_changed) {
@@ -376,7 +376,7 @@ string2dico_id (SXINT which_dico, char *str, SXINT lgth, SXINT *tok)
   SXINT   id;
   char    first_char, first_char_lc, first_char_uc;
   char    *where;
-  SXBOOLEAN is_capitalized_initial;
+  bool is_capitalized_initial;
 
   id = comb_seek (dicos [which_dico], str, lgth, tok);
 
@@ -787,7 +787,7 @@ fill_inside_t_set (SXINT p, SXINT q, SXBA inside_t_set)
            assure la correspondance global_t <--> inside_t
  */
 void
-fill_more_idag_infos (SXBOOLEAN is_qstack_needed, SXBOOLEAN is_pstack_needed, SXBOOLEAN is_inside_t_needed)
+fill_more_idag_infos (bool is_qstack_needed, bool is_pstack_needed, bool is_inside_t_needed)
 {
   SXINT p, pq, top_pq, t, q, q_nb, pt2q_stack_top;
   SXINT *tstack, *cur_t_ptr, **cur_pt2q_area_ptr, *pt2q_stack;
@@ -996,7 +996,7 @@ fill_idag_infos (void)
   SXINT            *stack, *tok_no_stack, *top_tok_no_stack, *sdag_t_tok_no_stack, *top_sdag_t_tok_no_stack;
   SXINT            ptq_nb;
   char             *str, *cur_str, *ret_str, *comment, *semlex_str = NULL;
-  SXBOOLEAN          success;
+  bool          success;
   struct sxtoken   *ptok, *semlex_ptok;
   SXBA             glbl_source_i, current_trans_t_set;
   struct sxsrcmngr save_sxsrcmngr;
@@ -1074,7 +1074,7 @@ fill_idag_infos (void)
 #if EBUG
 	  comment = ptok->comment;
 #endif /* EBUG */
-	  success = SXFALSE;
+	  success = false;
 
 	  if (ste != SXERROR_STE) {
 	    lgth = sxstrlen (ste);
@@ -1092,7 +1092,7 @@ fill_idag_infos (void)
 				      liste des catégories ou des ift si non unique */
 
 	      if (id) {
-		success = SXTRUE;
+		success = true;
 
 #ifdef is_LFG
 		/* Cas ou le dico a ete fabrique a partir d'une specif LFG ... */
@@ -1310,7 +1310,7 @@ fill_idag_infos (void)
 #endif /* EBUG */
     
 	  if (ste != End_Of_Sentence_ste) {
-	    success = SXFALSE;
+	    success = false;
 
 	    if (ste != SXERROR_STE) {
 	      lgth = sxstrlen (ste);
@@ -1326,7 +1326,7 @@ fill_idag_infos (void)
 		  ptok->lahead = id; /* on stoke dans un lahead inutile un truc tout différent: le id ds la ff principale (il peut donc etre nul) */
 
 		if (id) {
-		  success = SXTRUE;
+		  success = true;
 
 #ifdef is_LFG
 		  /* Cas ou le dico a ete fabrique a partir d'une specif LFG ... */
@@ -1442,7 +1442,7 @@ fill_idag_infos (void)
 		id = SXGET_TOKEN (sxplocals.Mtok_no).lahead; /* ... et voila le resultat */
 
 		if (id) {
-		  success = SXTRUE;
+		  success = true;
 		  ptok->lahead = id;
 
 		  if (SXBA_bit_is_reset_set (current_trans_t_set, id))
@@ -1599,7 +1599,7 @@ fill_idag_infos (void)
 static struct fa {
   SXINT          fsa_kind, init_state, final_state, sigma_card, eof_ste, transition_nb;
   XxYxZ_header fsa_hd;
-  SXBOOLEAN      has_epsilon_trans;
+  bool      has_epsilon_trans;
 } dfa, *cur_fsa;
 
 static SXBA pseudofinal_trans_to_state_set; /* liste des transitions à dupliquer car elles arrivent
@@ -1676,7 +1676,7 @@ store_idag (SXINT from_state, SXINT tok_no, SXINT to_state)
     if (q < to_state) {
       /* transition depuis from_state vers un etat different du coup precedent */
       /* On empile */
-      input_is_a_dag = SXTRUE; /* vrai DAG */
+      input_is_a_dag = true; /* vrai DAG */
       PUSH (idag.pq2q, to_state);
       pq = TOP (idag.pq2q);
       idag.pq2tok_no [pq] = tok_no;
@@ -1976,7 +1976,7 @@ static char *dag_kind_strings [] = {"??", "Dag", "Udag","??", "Sdag","??","??","
 static SXINT
 check_udag ()
 {
-  SXBOOLEAN oversized;
+  bool oversized;
   char    mess [128];
   int   severity = 0;
 
@@ -2041,13 +2041,13 @@ store_sdag_trans (SXINT p, SXINT id, SXINT q)
 
 /* Cette procedure est appelee depuis read_a_re a` la fin de la 1ere passe sur l'arbre abstrait */
 /* Les arguments sont 
-   - SXTRUE => OK
+   - true => OK
    - ste des transitions vers l'etat final
    - le nb de noeuds de cet arbre et 
    - le nb d'operande (dont eof + 1 bidon de fin) */
 /* Peut servir a faire des alloc + ciblees */
 static void
-prelude_re (SXBOOLEAN is_OK, SXINT eof_ste, SXINT node_nb, SXINT operand_nb, SXINT fsa_kind)
+prelude_re (bool is_OK, SXINT eof_ste, SXINT node_nb, SXINT operand_nb, SXINT fsa_kind)
 {
   SXINT *fsa_foreach;
 #if EBUG
@@ -2108,7 +2108,7 @@ store_re (SXINT state, struct sxtoken **ptok_ptr, struct sxtoken **semlex_ptok_p
   /* Sinon, il faudrait faire un truc du genre ... */
   if (ptok_ptr == NULL && ste == 0) {
     /* Transition epsilon */
-    cur_fsa->has_epsilon_trans = SXTRUE;
+    cur_fsa->has_epsilon_trans = true;
     XxYxZ_set (&(cur_fsa->fsa_hd), state, 0, next_state, &triple);
 #if EBUG
     printf ("%ld\t\"<EPSILON>\"\t\t%ld\n", state, next_state);
@@ -2217,7 +2217,7 @@ postlude_re (SXINT fsa_kind)
   idag_free (&idag); /* Prudence */
   idag_alloc (cur_fsa->transition_nb);
   
-  dfa_minimize (1, cur_fsa->final_state, sxplocals.Mtok_no/*cur_fsa->eof_ste*/, DFA_extract_trans, store_idag, SXTRUE /* to_be_normalized */
+  dfa_minimize (1, cur_fsa->final_state, sxplocals.Mtok_no/*cur_fsa->eof_ste*/, DFA_extract_trans, store_idag, true /* to_be_normalized */
 #ifdef ESSAI_INVERSE_MAPPING
 		, NULL
 #endif /* ESSAI_INVERSE_MAPPING */
@@ -2273,7 +2273,7 @@ dag_scanner (SXINT what, struct sxtables *arg /* reçoit toujours NULL*/)
 
   case SXOPEN:
     /* Il se peut que par exemple une chaine soit lue par read_a_re, dans ce cas on veut quand meme lui donner le type STRING_KIND, etc. */
-    input_is_a_dag = SXFALSE;
+    input_is_a_dag = false;
 
     switch (dag_kind) {
     case UDAG_KIND :
@@ -2780,7 +2780,7 @@ sub_dag_to_comment (VARSTR vstr, SXINT p, SXINT q)
   SXBA    line;
   char    *comment;
   SXBA    state_set;
-  SXBOOLEAN is_first_time;
+  bool is_first_time;
 
   if (idag.path == NULL)
     fill_idag_path ();
@@ -2789,7 +2789,7 @@ sub_dag_to_comment (VARSTR vstr, SXINT p, SXINT q)
     return vstr; /* pas de chemin, on ne fait rien */
 
   state_set = idag.path [0];
-  is_first_time = SXTRUE;
+  is_first_time = true;
   from_state = p;
 
   do {
@@ -2821,7 +2821,7 @@ sub_dag_to_comment (VARSTR vstr, SXINT p, SXINT q)
 
 	  if (comment ) {
 	    if (is_first_time) {
-	      is_first_time = SXFALSE;
+	      is_first_time = false;
 	      vstr = varstr_catenate (vstr, comment);
 	    }
 	    else {

@@ -21,7 +21,7 @@ BIB=$(SXLIB)/libsxutil.a
 
 CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util
 
-FORCE=$(SX)/incl/sxunix.h
+FORCE=$(SXINCL)/sxunix.h
 
 all: $(BIB)
 

@@ -27,7 +27,7 @@
 
 #include <memory.h>
 
-char WHAT_SXATC[] = "@(#)SYNTAX - $Id: sxatc.c 2947 2023-03-29 17:06:41Z garavel $" WHAT_DEBUG;
+char WHAT_SXATC[] = "@(#)SYNTAX - $Id: sxatc.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 struct sxatc_area {
     struct sxatc_area	*next;
@@ -121,10 +121,10 @@ static SXNODE	*allocate_area (void)
 static void nodes_alloc (void)
 {
     SXINT i, j;
-    SXBOOLEAN first_time = SXTRUE;
+    bool first_time = true;
 
     if (sxindex_is_allocated (sxatcvar.atc_lv.u.New.index_hd)) {
-      first_time = SXFALSE;
+      first_time = false;
       sxindex_clear (sxatcvar.atc_lv.u.New.index_hd);
     }
     else {
@@ -147,7 +147,7 @@ static void nodes_alloc (void)
 	sxatcvar.atc_lv.u.New.nodes [i] = (SXNODE *) sxcalloc ((SXUINT)j, (SXUINT)sxatcvar.atc_lv.node_size);
 }
 
-static SXVOID	freeareas (void)
+static void	freeareas (void)
 {
     struct sxatc_area		*p, *q;
 
@@ -230,7 +230,7 @@ static SXNODE	*rightmost_son (SXNODE *node_ptr)
 
     while ((next = node_ptr->son) != NULL) {
 	while ((next = (node_ptr = next)->brother) != NULL) {
-	    /* SXVOID */
+	    /* void */
 	}
     }
 
@@ -239,7 +239,7 @@ static SXNODE	*rightmost_son (SXNODE *node_ptr)
 
 
 /* 05/12/08 nouvelle version */
-static SXVOID	cons_comments (SXBOOLEAN is_right_cons, SXNODE *node_ptr, SXINT low, SXINT high)
+static void	cons_comments (bool is_right_cons, SXNODE *node_ptr, SXINT low, SXINT high)
 {
     char	*com, *com1, *prev_com;
     SXINT	x, lgth, prev_com_lgth;
@@ -281,12 +281,12 @@ static SXVOID	cons_comments (SXBOOLEAN is_right_cons, SXNODE *node_ptr, SXINT lo
 }
 
 
-static SXVOID	initialize (void)
+static void	initialize (void)
      /* struct sxtables	*tables; */
 /* On traite un nouveau texte source */
 {
     sxatcvar.atc_lv.abstract_tree_root = NULL;
-    sxatcvar.atc_lv.abstract_tree_is_error_node = SXFALSE;
+    sxatcvar.atc_lv.abstract_tree_is_error_node = false;
 
     if (reccall++ == 0)
 	stacktreenode = (SXNODE**) sxalloc ((stns = stns_incr) + 1, sizeof (SXNODE*));
@@ -301,7 +301,7 @@ static SXVOID	initialize (void)
 
 
 
-static SXVOID	finalize (void)
+static void	finalize (void)
      /* struct sxtables	*tables; */
 /* on a fini de traiter un texte source */
 {
@@ -347,7 +347,7 @@ static SXVOID	finalize (void)
 
 
 
-static SXVOID	test_and_create_son (SXINT x)
+static void	test_and_create_son (SXINT x)
 {
 /* x reference soit un nt soit un t generique */
     struct sxtoken	*token = &(SXSTACKtoken (x));
@@ -369,7 +369,7 @@ static SXVOID	test_and_create_son (SXINT x)
 
 
 
-static SXVOID	c_family (void)
+static void	c_family (void)
 {
     SXINT	i, bsup, pos;
     SXINT	binf, low;
@@ -403,30 +403,30 @@ static SXVOID	c_family (void)
 	low = new_top;
 
 	if (bsup > binf) {
-	    SXBOOLEAN	is_first = SXTRUE;
+	    bool	is_first = true;
 	    SXNODE	*node_ptr = sxatcvar.atc_lv.abstract_tree_root;
 
 	    for (i = bsup - 1; i >= binf; i--) {
 		SXINT	j;
 
 		if (is_first) {
-		    is_first = SXFALSE;
+		    is_first = false;
 		    node_ptr = node_ptr->son;
 		}
 		else
 		    node_ptr = node_ptr->brother;
 
 		if ((j = top - sxatcvar.SXT_tables.T_stack_schema [i]) > low)
-		  cons_comments (SXFALSE, node_ptr, low, j - 1);
+		  cons_comments (false, node_ptr, low, j - 1);
 
 		low = j + 1;
 	    }
 
 	    if (top >= low)
-		cons_comments (SXTRUE, rightmost_son (node_ptr), low, top);
+		cons_comments (true, rightmost_son (node_ptr), low, top);
 	}
 	else if (top >= low)
-	    cons_comments (SXFALSE, sxatcvar.atc_lv.abstract_tree_root, low, top);
+	    cons_comments (false, sxatcvar.atc_lv.abstract_tree_root, low, top);
     }
 
     sxatcvar.atc_lv.abstract_tree_root->token.source_index = SXSTACKtoken (new_top).source_index;
@@ -434,7 +434,7 @@ static SXVOID	c_family (void)
 
 
 
-static SXVOID	add_right_list_node (void)
+static void	add_right_list_node (void)
 {
     SXINT	i, low, pos, high;
     SXNODE	*node_ptr;
@@ -447,12 +447,12 @@ static SXVOID	add_right_list_node (void)
     test_and_create_son (low);
     node_ptr = sxatcvar.atc_lv.abstract_tree_root->son = brother;
     node_ptr->brother = son;
-    node_ptr->first_list_element = SXTRUE;
+    node_ptr->first_list_element = true;
 
     if (son != NULL)
-	son->first_list_element = SXFALSE;
+	son->first_list_element = false;
     else
-	node_ptr->last_list_element = SXTRUE;
+	node_ptr->last_list_element = true;
 
     pos = 0;
 
@@ -465,10 +465,10 @@ static SXVOID	add_right_list_node (void)
 
     if (!sxatcvar.atc_lv.are_comments_erased) {
 	if (low > new_top)
-	    cons_comments (SXFALSE, node_ptr, new_top, low - 1);
+	    cons_comments (false, node_ptr, new_top, low - 1);
 
 	if (--high > low)
-	    cons_comments (SXTRUE, rightmost_son (node_ptr), low + 1, high);
+	    cons_comments (true, rightmost_son (node_ptr), low + 1, high);
     }
 
     sxatcvar.atc_lv.abstract_tree_root->token.source_index = SXSTACKtoken (new_top).source_index;
@@ -476,7 +476,7 @@ static SXVOID	add_right_list_node (void)
 
 
 
-static SXVOID	add_list_node (void)
+static void	add_list_node (void)
 {
     SXINT	i, low, high;
 
@@ -491,15 +491,15 @@ static SXVOID	add_list_node (void)
 
     if (son == NULL) {
 	sxatcvar.atc_lv.abstract_tree_root->son = brother;
-	brother->first_list_element = SXTRUE;
+	brother->first_list_element = true;
     }
     else {
 	son->brother = brother;
-	son->last_list_element = SXFALSE;
+	son->last_list_element = false;
     }
 
     brother->position = ++sxatcvar.atc_lv.abstract_tree_root->degree;
-    brother->last_list_element = SXTRUE;
+    brother->last_list_element = true;
     sxatcvar.atc_lv.abstract_tree_root->father = brother;
 
 
@@ -507,16 +507,16 @@ static SXVOID	add_list_node (void)
 
     if (!sxatcvar.atc_lv.are_comments_erased) {
 	if (--high >= ++low)
-	    cons_comments (SXFALSE, brother, low, high);
+	    cons_comments (false, brother, low, high);
 
 	if (--high >= ++low)
-	    cons_comments (SXTRUE, rightmost_son (brother), low, top);
+	    cons_comments (true, rightmost_son (brother), low, top);
     }
 }
 
 
 
-static SXVOID	create_error_family (void)
+static void	create_error_family (void)
 {
     SXINT	j, pos, low, lahead;
     struct sxtoken	*tok;
@@ -524,7 +524,7 @@ static SXVOID	create_error_family (void)
 
     sxatcvar.atc_lv.abstract_tree_root = allocate_node ();
     sxatcvar.atc_lv.abstract_tree_root->name = ERROR_n;
-    sxatcvar.atc_lv.abstract_tree_root->is_list = SXTRUE;
+    sxatcvar.atc_lv.abstract_tree_root->is_list = true;
     pos = 0;
     low = new_top;
 
@@ -551,7 +551,7 @@ static SXVOID	create_error_family (void)
 
 	    if (pos == 1) {
 		sxatcvar.atc_lv.abstract_tree_root->son = node_ptr;
-		node_ptr->first_list_element = SXTRUE;
+		node_ptr->first_list_element = true;
 	    }
 	    else
 		son->brother = node_ptr;
@@ -560,7 +560,7 @@ static SXVOID	create_error_family (void)
 
 	    if (!sxatcvar.atc_lv.are_comments_erased) {
 		if (j > low)
-		    cons_comments (SXFALSE, node_ptr, low, j - 1);
+		    cons_comments (false, node_ptr, low, j - 1);
 
 		low = j + 1;
 	    }
@@ -568,17 +568,17 @@ static SXVOID	create_error_family (void)
     }
 
     if (pos != 0) {
-	son->last_list_element = SXTRUE;
+	son->last_list_element = true;
 	sxatcvar.atc_lv.abstract_tree_root->father = son /* ptr to the most RHS son */ ;
 
 	if (!sxatcvar.atc_lv.are_comments_erased) {
 	    if (top >= low)
-		cons_comments (SXTRUE, son, low, top);
+		cons_comments (true, son, low, top);
 	}
     }
     else {
 	if (!sxatcvar.atc_lv.are_comments_erased && top >= low)
-	    cons_comments (SXFALSE, sxatcvar.atc_lv.abstract_tree_root, low, top);
+	    cons_comments (false, sxatcvar.atc_lv.abstract_tree_root, low, top);
     }
 
     sxatcvar.atc_lv.abstract_tree_root->degree = pos;
@@ -587,7 +587,7 @@ static SXVOID	create_error_family (void)
 
 
 
-static SXVOID	c_leaf (void)
+static void	c_leaf (void)
 {
     SXINT	x;
 
@@ -598,16 +598,16 @@ static SXVOID	c_leaf (void)
 
     if (!sxatcvar.atc_lv.are_comments_erased) {
 	if (x > new_top)
-	    cons_comments (SXFALSE, sxatcvar.atc_lv.abstract_tree_root, new_top, x - 1);
+	    cons_comments (false, sxatcvar.atc_lv.abstract_tree_root, new_top, x - 1);
 
 	if (top > x)
-	    cons_comments (SXTRUE, sxatcvar.atc_lv.abstract_tree_root, x + 1, top);
+	    cons_comments (true, sxatcvar.atc_lv.abstract_tree_root, x + 1, top);
     }
 }
 
 
 
-static SXVOID	atc_open (struct sxtables *tables)
+static void	atc_open (struct sxtables *tables)
                    	        
 /* On traite un nouveau langage */
 {
@@ -623,7 +623,7 @@ static SXVOID	atc_open (struct sxtables *tables)
 
 
 
-static SXVOID	action (SXINT act)
+static void	action (SXINT act)
 {
     SXINT	j;
 
@@ -644,10 +644,10 @@ static SXVOID	action (SXINT act)
 
 	if (!sxatcvar.atc_lv.are_comments_erased) {
 	    if (j > new_top)
-		cons_comments (SXFALSE, sxatcvar.atc_lv.abstract_tree_root, new_top, j - 1);
+		cons_comments (false, sxatcvar.atc_lv.abstract_tree_root, new_top, j - 1);
 
 	    if (top > j)
-		cons_comments (SXTRUE, rightmost_son (sxatcvar.atc_lv.abstract_tree_root), j + 1, top);
+		cons_comments (true, rightmost_son (sxatcvar.atc_lv.abstract_tree_root), j + 1, top);
 	}
 
 	if (j > new_top)
@@ -678,11 +678,11 @@ static SXVOID	action (SXINT act)
 
     case 6:
 	c_family ();
-	sxatcvar.atc_lv.abstract_tree_root->is_list = SXTRUE;
+	sxatcvar.atc_lv.abstract_tree_root->is_list = true;
 
 	if ((son = sxatcvar.atc_lv.abstract_tree_root->son) != NULL) {
-	    son->first_list_element = SXTRUE;
-	    brother->last_list_element = SXTRUE;
+	    son->first_list_element = true;
+	    brother->last_list_element = true;
 	    sxatcvar.atc_lv.abstract_tree_root->father = brother; /* new most RHS son */
 	}
 
@@ -700,7 +700,7 @@ static SXVOID	action (SXINT act)
 
 
 
-SXVOID	sxatc (SXINT sxatc_what, struct sxtables *arg)
+void	sxatc (SXINT sxatc_what, struct sxtables *arg)
     /* si sxatc_what=SXACTION, arg est un entier entre 0 et 6 ;  si sxatc_what != SXACTION, arg est un pointeur vers des tables. */
 {
     SXINT l;
@@ -732,7 +732,7 @@ SXVOID	sxatc (SXINT sxatc_what, struct sxtables *arg)
 	break;
 
     case SXERROR:
-	sxatcvar.atc_lv.abstract_tree_is_error_node = SXTRUE;
+	sxatcvar.atc_lv.abstract_tree_is_error_node = true;
 
 	if ((l = (intptr_t) arg) > 0) {
 	    action ((SXINT) 4);
@@ -744,7 +744,7 @@ SXVOID	sxatc (SXINT sxatc_what, struct sxtables *arg)
 
 		sxatcvar.atc_lv.abstract_tree_root = allocate_node ();
 		sxatcvar.atc_lv.abstract_tree_root->name = ERROR_n;
-		sxatcvar.atc_lv.abstract_tree_root->is_list = SXTRUE;
+		sxatcvar.atc_lv.abstract_tree_root->is_list = true;
 		stacktreenode [new_top] = sxatcvar.atc_lv.abstract_tree_root;
 	    }
 	}

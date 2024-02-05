@@ -22,9 +22,9 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXGC[] = "@(#)SYNTAX - $Id: sxgc.c 3234 2023-05-15 16:52:27Z garavel $" WHAT_DEBUG;
+char WHAT_SXGC[] = "@(#)SYNTAX - $Id: sxgc.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
-SXVOID	sxgc (void)
+void	sxgc (void)
 /* Must return to its caller only if memory map has changed */
 {
   fprintf (sxstderr, "\tNO MORE ALLOCATION POSSIBLE...%c\n", sxbell);

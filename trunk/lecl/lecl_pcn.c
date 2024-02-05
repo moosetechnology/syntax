@@ -23,7 +23,7 @@
 #include "sxunix.h"
 #include "sxba.h"
 
-char WHAT_LECLPCN[] = "@(#)SYNTAX - $Id: lecl_pcn.c 3603 2023-09-23 20:02:36Z garavel $" WHAT_DEBUG;
+char WHAT_LECLPCN[] = "@(#)SYNTAX - $Id: lecl_pcn.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
 #define undef_name 0
 #define illegal_chars 1
@@ -103,7 +103,7 @@ struct {
 
 
 
-SXVOID	lecl_pcn (SXINT *cmax, 
+void	lecl_pcn (SXINT *cmax, 
 		  SXINT abbrev_or_class_to_ate[], 
 		  SXBA *class_to_char_set)
 {

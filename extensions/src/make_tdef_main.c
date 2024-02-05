@@ -34,7 +34,7 @@ static char	ME [] = "make_tdef_main";
 
 #include "sxversion.h"
 #include "sxunix.h"
-char WHAT_TDEFMAKETDEFMAIN[] = "@(#)SYNTAX - $Id: make_tdef_main.c 3491 2023-08-20 14:56:17Z garavel $" WHAT_DEBUG;
+char WHAT_TDEFMAKETDEFMAIN[] = "@(#)SYNTAX - $Id: make_tdef_main.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 #define SX_DFN_EXT_VAR2
 #include "udag_scanner.h"
@@ -58,7 +58,7 @@ extern struct sxtables  sxtables;
 
 
 /*  S T A T I C     V A R I A B L E S   */
-static SXBOOLEAN	is_help,is_error;
+static bool	is_help,is_error;
 static char	**err_titles;
 
 
@@ -191,36 +191,36 @@ make_tdef_run (pathname)
 int main (int argc, char *argv[])
 {
   SXINT		argnum;
-  SXBOOLEAN	is_source_file, is_stdin;
+  bool	is_source_file, is_stdin;
   char          *source_file;
 
   sxopentty ();
 
   /* valeurs par defaut */
-  sxverbosep = SXFALSE;
-  is_help = SXFALSE;
-  is_stdin = SXTRUE;
-  is_source_file = SXFALSE;
+  sxverbosep = false;
+  is_help = false;
+  is_stdin = true;
+  is_source_file = false;
   
   argnum = 0;
 
   while (++argnum < argc) {
     switch (option_get_kind (argv [argnum])) {
     case HELP:
-      is_help = SXTRUE;
+      is_help = true;
       break;
 
     case VERBOSE:
-      sxverbosep = SXTRUE;
+      sxverbosep = true;
       break;
 
     case STDIN:
-      is_stdin = SXTRUE;
+      is_stdin = true;
       break;
 
     case SOURCE_FILE:
-      is_stdin = SXFALSE;
-      is_source_file = SXTRUE;
+      is_stdin = false;
+      is_source_file = true;
       source_file = argv [argnum];
       break;
 
@@ -237,11 +237,11 @@ int main (int argc, char *argv[])
   }
 
 
-  syntax (SXINIT, &sxtables, SXFALSE /* no includes */);
+  syntax (SXINIT, &sxtables, false /* no includes */);
 
   make_tdef_run (is_stdin ? NULL : source_file);
 
-  syntax (SXFINAL, &sxtables, SXTRUE);
+  syntax (SXFINAL, &sxtables, true);
 
   sxexit (sxerr_max_severity ());
   return EXIT_SUCCESS; /* Jamais atteint !! pour les compilo susceptibles ... */
@@ -285,7 +285,7 @@ make_tdef_semact (what, arg)
     /* On sort un petit header et un define caracteristique de la date/heure.  Ca permet de faire des
        verifs eventuelles qui assurent que les tdef sont a jour */
     gen_header ();
-    is_error = SXFALSE;
+    is_error = false;
 
     break;
 
@@ -348,7 +348,7 @@ make_tdef_semact (what, arg)
     break;
 
   case SXERROR:
-    is_error = SXTRUE;
+    is_error = true;
     break;
 
   case SXFINAL:
@@ -367,7 +367,7 @@ make_tdef_semact (what, arg)
 
 
 
-SXVOID
+void
 make_tdef_scanact (code, act_no)
     SXINT		code;
     SXINT		act_no;
@@ -381,7 +381,7 @@ make_tdef_scanact (code, act_no)
 
   case SXACTION:
     switch (act_no) {
-      SXSHORT	c;
+      short	c;
 
     case 1: /* \nnn => char */
       {

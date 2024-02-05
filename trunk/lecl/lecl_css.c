@@ -31,15 +31,15 @@
 #include "lecl_nn.h"
 
 #include "lecl_node.h"
-char WHAT_LECLCSS[] = "@(#)SYNTAX - $Id: lecl_css.c 3603 2023-09-23 20:02:36Z garavel $" WHAT_DEBUG;
+char WHAT_LECLCSS[] = "@(#)SYNTAX - $Id: lecl_css.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
-extern SXBOOLEAN	lecl_check_octal_code (SXINT, struct sxsource_coord, SXINT *);
+extern bool	lecl_check_octal_code (SXINT, struct sxsource_coord, SXINT *);
 static void 	prdct_processing (struct lecl_node *, char *, SXINT);
 static SXINT	buck_no, val, cur_xcld_no, cur_kw_no;
 
 
 
-static SXVOID act_processing (struct lecl_node *visited,
+static void act_processing (struct lecl_node *visited,
 			    char *name,
 			    SXINT param)
 {
@@ -75,7 +75,7 @@ static void	prdct_processing (struct lecl_node *visited,
 
 
 
-static SXVOID st_cs (struct lecl_node *visited)
+static void st_cs (struct lecl_node *visited)
 {
     struct lecl_node	*brother, *son_1;
     SXINT		old_exclude_size, old_keyword_size;;
@@ -140,7 +140,7 @@ static SXVOID st_cs (struct lecl_node *visited)
 	goto list;
 
     case COMMENTS_n  :
-	are_comments_defined = SXTRUE;
+	are_comments_defined = true;
 	return;
 
     case COMPONENT_n  :
@@ -362,7 +362,7 @@ static SXVOID st_cs (struct lecl_node *visited)
 	/* ZOMBIES */
 
 	brother = get_brother (brother);
-	are_comments_defined = SXFALSE;
+	are_comments_defined = false;
 	st_cs (brother);
 	/* TOKENS */
 
@@ -546,7 +546,7 @@ list:
 
 
 
-SXVOID lecl_css (struct lecl_node *visited)
+void lecl_css (struct lecl_node *visited)
 
 {
     token_size = exclude_size = keyword_size = synonym_list_no = synonym_no = abbrev_size = predicate_size = action_size = class_size = char_max =

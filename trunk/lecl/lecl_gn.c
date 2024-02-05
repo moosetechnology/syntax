@@ -25,7 +25,7 @@
 #include "varstr.h"
 #include "lecl_ag.h"
 
-char WHAT_LECLGN[] = "@(#)SYNTAX - $Id: lecl_gn.c 3603 2023-09-23 20:02:36Z garavel $" WHAT_DEBUG;
+char WHAT_LECLGN[] = "@(#)SYNTAX - $Id: lecl_gn.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 static SXBA	/* char_max */ char_set = NULL, /* smax */ sc_set = NULL,
 /* max_prdct_no */ prdct_set = NULL;
@@ -34,10 +34,10 @@ static SXBA	/* char_max */ char_set = NULL, /* smax */ sc_set = NULL,
 static VARSTR	gen_sc_name (SXBA gen_sc_name_char_set, VARSTR varstr_ptr)
 {
     SXINT		i, j, l;
-    SXBOOLEAN	is_first, is_slice;
+    bool	is_first, is_slice;
 
-    is_slice = SXFALSE;
-    is_first = SXTRUE;
+    is_slice = false;
+    is_first = true;
     i = 0;
 
     while ((i = sxba_scan (gen_sc_name_char_set, i)) > 0) {
@@ -51,7 +51,7 @@ static VARSTR	gen_sc_name (SXBA gen_sc_name_char_set, VARSTR varstr_ptr)
 	if (l > 7) {
 	    /* On genere une slice */
 	    if (is_first)
-		is_first = SXFALSE;
+		is_first = false;
 	    else {
 		if (!is_slice)
 		    varstr_catenate (varstr_ptr, "\"");
@@ -61,20 +61,20 @@ static VARSTR	gen_sc_name (SXBA gen_sc_name_char_set, VARSTR varstr_ptr)
 
 	    varstr_catenate (varstr_catenate (varstr_catenate (varstr_catenate (varstr_catenate (varstr_ptr, "\""),
 		 SXCHAR_TO_STRING (i - 1)), "\"..\""), SXCHAR_TO_STRING (i + l - 2)), "\"");
-	    is_slice = SXTRUE;
+	    is_slice = true;
 	}
 	else {
 	    if (is_slice)
 		varstr_catenate (varstr_ptr, " + \"");
 	    else if (is_first) {
 		varstr_catenate (varstr_ptr, "\"");
-		is_first = SXFALSE;
+		is_first = false;
 	    }
 
 	    for (j = 0; j < l; j++)
 		varstr_catenate (varstr_ptr, SXCHAR_TO_STRING (i + j - 1));
 
-	    is_slice = SXFALSE;
+	    is_slice = false;
 	}
 
 	i += l - 1;
@@ -93,7 +93,7 @@ static VARSTR	gen_cc_name (SXBA *SC_TO_CHAR_SET,
 			     VARSTR varstr_ptr)
 {
     SXINT		i;
-    SXBOOLEAN	not_empty;
+    bool	not_empty;
 
     if (char_set == NULL)
 	char_set = sxba_calloc (char_max + 1);
@@ -129,12 +129,12 @@ static VARSTR	gen_ecc (SXBA *SC_TO_CHAR_SET,
 			 VARSTR varstr_ptr)
 {
     SXINT		prdct, esc;
-    SXBOOLEAN	firstp;
+    bool	firstp;
 
     if (sc_set == NULL)
 	sc_set = sxba_calloc (smax + 1);
 
-    firstp = SXTRUE;
+    firstp = true;
     prdct = 0;
 
     while ((prdct = sxba_scan (gen_ecc_prdct_set, prdct)) > 0) {
@@ -151,7 +151,7 @@ static VARSTR	gen_ecc (SXBA *SC_TO_CHAR_SET,
 	}
 
 	if (firstp)
-	    firstp = SXFALSE;
+	    firstp = false;
 	else
 	    varstr_catenate (varstr_ptr, " + ");
 
@@ -168,7 +168,7 @@ VARSTR	lecl_gen_ecc (SXBA *SC_TO_CHAR_SET,
 		      SXINT max_prdct_no, 
 		      VARSTR varstr_ptr)
 {
-    SXBOOLEAN	prdct_setp = SXFALSE;
+    bool	prdct_setp = false;
     SXINT		esc;
 
     if (prdct_set == NULL)
@@ -181,7 +181,7 @@ VARSTR	lecl_gen_ecc (SXBA *SC_TO_CHAR_SET,
     while ((esc = sxba_scan (esc_set, esc)) > 0) {
 	SXINT prdct;
 
-	prdct_setp = SXTRUE;
+	prdct_setp = true;
 	prdct = esc_to_sc_prdct [esc].predicate;
 	SXBA_1_bit (prdct_set, prdct);
     }
@@ -222,7 +222,7 @@ VARSTR	lecl_gen_sc (SXBA *SC_TO_CHAR_SET,
 
 
 
-SXVOID	lecl_gen_free (void)
+void	lecl_gen_free (void)
 {
     if (char_set)
 	sxfree (char_set);

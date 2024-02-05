@@ -23,7 +23,7 @@
 			 _SXPE_* soient bien definies. Ces variables sont utilisees
 			 par le fichier cx_act.c */
 
-char WHAT_CXMAIN[] = "@(#)SYNTAX - $Id: cx_main.c 3320 2023-06-04 06:52:42Z garavel $";
+char WHAT_CXMAIN[] = "@(#)SYNTAX - $Id: cx_main.c 3632 2023-12-20 17:58:08Z garavel $";
 
 char	by_mess [] = "the SYNTAX cross referencer CX";
 
@@ -87,7 +87,7 @@ static char	*option_get_text (SXINT kind)
 
 
 
-static SXVOID	language_name_cx (char *path_name)
+static void	language_name_cx (char *path_name)
 {
     char	*p;
 
@@ -105,7 +105,7 @@ static SXVOID	language_name_cx (char *path_name)
 
 
 
-static SXVOID	cx_run (char *pathname)
+static void	cx_run (char *pathname)
 {
     FILE	*infile;
 
@@ -172,11 +172,11 @@ int main (int argc, char *argv[])
     for (argnum = 1; argnum < argc; argnum++) {
 	switch (option_get_kind (argv [argnum])) {
 	case VERBOSE:
-	    sxverbosep = SXTRUE;
+	    sxverbosep = true;
 	    break;
 
 	case -VERBOSE:
-	    sxverbosep = SXFALSE;
+	    sxverbosep = false;
 	    break;
 
 	case LINE_LENGTH:
@@ -200,7 +200,7 @@ run:
 	fprintf (sxtty, "%s\n", release_mess);
     }
 
-    syntax (SXINIT, &cx_tables, SXFALSE /* no includes */);
+    syntax (SXINIT, &cx_tables, false /* no includes */);
 
     if (argnum >= argc) {
 	cx_run (NULL);
@@ -216,7 +216,7 @@ run:
 	} while (argnum < argc);
     }
 
-    syntax (SXFINAL, &cx_tables, SXTRUE);
+    syntax (SXFINAL, &cx_tables, true);
 
     sxexit (sxerr_max_severity ());
     return 0;

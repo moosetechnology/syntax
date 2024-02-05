@@ -64,7 +64,7 @@
 #endif
 
 #define SXMAGIC_NUMBER	((SXUINT) 52113)
-extern SXVOID sxcheck_magic_number (SXUINT m1, SXUINT m2, char *who);
+extern void sxcheck_magic_number (SXUINT m1, SXUINT m2, char *who);
 
 
 /* "sxba.h" includes <stdio.h> */
@@ -178,7 +178,7 @@ SX_GLOBAL_VAR FILE *sxstdout SX_INIT_VAL (NULL);
 SX_GLOBAL_VAR FILE *sxstderr SX_INIT_VAL (NULL);
 SX_GLOBAL_VAR FILE *sxtty SX_INIT_VAL (NULL);
 
-SX_GLOBAL_VAR SXBOOLEAN sxverbosep SX_INIT_VAL (SXFALSE) /* Should we animate the user's screen? Default value is false */ ;
+SX_GLOBAL_VAR bool sxverbosep SX_INIT_VAL (false) /* Should we animate the user's screen? Default value is false */ ;
 
 #if (defined(SXVERSION) && ( EBUG || EBUG_ALLOC || BUG ))
 #define sxbell ((char) 7)
@@ -410,7 +410,7 @@ SX_GLOBAL_VAR SXBOOLEAN sxverbosep SX_INIT_VAL (SXFALSE) /* Should we animate th
 /* the type SXSEMACT_T denotes 'a semantic function which can be stored in
    SXP_tables.semact' */
 
-#define SXRECOVERY_T SXBOOLEAN(*)(SXINT what, ...)
+#define SXRECOVERY_T bool(*)(SXINT what, ...)
 /* the type SXRECOVERY_T denotes 'a recovery function, which can be stored in
    SXS_tables.recovery' */
 
@@ -421,7 +421,7 @@ SX_GLOBAL_VAR SXBOOLEAN sxverbosep SX_INIT_VAL (SXFALSE) /* Should we animate th
 struct SXS_tables {
     SXINT		S_last_char_code, S_termax, S_constructor_kind, S_nbcart, S_nmax,
                 S_last_simple_class_no, S_counters_size, S_last_state_no;
-    SXBOOLEAN	S_is_user_action_or_prdct, S_are_comments_erased, S_is_non_deterministic;
+    bool	S_is_user_action_or_prdct, S_are_comments_erased, S_is_non_deterministic;
     SXINT	        *S_is_a_keyword;
     SXINT	        *S_is_a_generic_terminal;
     SXSTMI	**S_transition_matrix;
@@ -435,7 +435,7 @@ struct SXS_tables {
     char	**S_global_mess;
     SXINT	        **S_lregle;
     SXINT		(*scanact) (SXINT what, ...);
-    SXBOOLEAN	        (*recovery) (SXINT what, ...);
+    bool	        (*recovery) (SXINT what, ...);
     SXINT		(*check_keyword) (char *token_string, SXINT token_lgth);
 };
 
@@ -464,7 +464,7 @@ struct SXP_tables {
     char			**P_global_mess;
     SXINT			        *PER_tset;
     SXINT				(*scanit) (void);
-    SXBOOLEAN			        (*recovery) (SXINT what, ...);
+    bool			        (*recovery) (SXINT what, ...);
     SXINT				(*parsact) (SXINT what, ...);
     SXINT				(*desambig) (SXINT what);
     SXINT				(*semact) (SXINT what, ...);
@@ -623,14 +623,14 @@ struct sxrelocation {
 SX_GLOBAL_VAR struct sxsrcmngr {
     FILE	*infile /*			Fichier en cours de lecture		*/ ;
     struct sxsource_coord	source_coord /*	Reperes du caractere courant		*/ ;
-    SXSHORT	previous_char, current_char /*	Caracteres precedent et courant		*/ ;
-    SXSHORT	*buffer /*			chaine des caracteres lus en avance	*/ ;
+    short	previous_char, current_char /*	Caracteres precedent et courant		*/ ;
+    short	*buffer /*			chaine des caracteres lus en avance	*/ ;
     struct sxsource_coord	*bufcoords /*	Reperes associes			*/ ;
     SXINT		buflength /*			taille de "buffer"			*/ ;
     SXINT		bufused /*			indice du dernier caractere		*/ ;
     SXINT		bufindex /*			indice du caractere courant		*/ ;
     SXINT		labufindex /*			indice en avance			*/ ;
-    SXBOOLEAN	has_buffer /*			buffer valide?				*/ ;
+    bool	has_buffer /*			buffer valide?				*/ ;
 
     unsigned char	*instring /*		Chaine de car. en cours de lecture	*/ ;
     SXINT		strindex /*			index du caractere courant		*/ ;
@@ -657,11 +657,11 @@ SX_GLOBAL_VAR struct sxsrcmngr {
 struct sxscan_mode {
     SXUINT	errors_nb;
     SXUINT	mode /* SXNORMAL_SCAN, SXLA_SCAN, SXRCVR_SCAN */;
-    SXBOOLEAN		is_silent; /* no error message */
-    SXBOOLEAN		with_system_act; /* scanning system actions should be performed */
-    SXBOOLEAN		with_user_act; /* scanning user actions should be performed */
-    SXBOOLEAN		with_system_prdct; /* scanning system predicates should be performed */
-    SXBOOLEAN		with_user_prdct; /* scanning user predicates should be performed */
+    bool		is_silent; /* no error message */
+    bool		with_system_act; /* scanning system actions should be performed */
+    bool		with_user_act; /* scanning user actions should be performed */
+    bool		with_system_prdct; /* scanning system predicates should be performed */
+    bool		with_user_prdct; /* scanning user predicates should be performed */
 };
 
 struct sxlv_s {
@@ -678,11 +678,11 @@ struct sxlv {
     struct sxtoken	terminal_token /*	structure passee au parser	*/ ;
     unsigned char	source_class /*		classe du caractere		*/ ;
     SXINT		include_action /*		post-action pour les includes	*/ ;
-    SXSHORT	previous_char /*		precedant le token courant	*/ ;
+    short	previous_char /*		precedant le token courant	*/ ;
     struct mark {
 	struct sxsource_coord	source_coord;
 	SXINT	index /*			indice dans ts du mark		*/ ;
-	SXSHORT		previous_char /*	precedant la marque		*/ ;
+	short		previous_char /*	precedant la marque		*/ ;
     }	mark;
     struct sxscan_mode	mode;
 };
@@ -727,12 +727,12 @@ struct sxparse_mode {
     SXUINT	local_errors_nb;
     SXUINT	global_errors_nb;
     SXUINT	look_back; /* 0 => infinity, k>0 => look_back of k tokens. */
-    SXBOOLEAN		is_prefixe; /* parse a prefixe */
-    SXBOOLEAN		is_silent; /* no error message */
-    SXBOOLEAN		with_semact; /* semantic actions should be performed */
-    SXBOOLEAN		with_parsact; /* parsing actions should be performed */
-    SXBOOLEAN		with_parsprdct; /* parsing predicates should be performed */
-    SXBOOLEAN		with_do_undo; /* do (and undo) parsing actions in look_ahead */
+    bool		is_prefixe; /* parse a prefixe */
+    bool		is_silent; /* no error message */
+    bool		with_semact; /* semantic actions should be performed */
+    bool		with_parsact; /* parsing actions should be performed */
+    bool		with_parsprdct; /* parsing predicates should be performed */
+    bool		with_do_undo; /* do (and undo) parsing actions in look_ahead */
 };
 
 struct sxp_a_la_rigueur {
@@ -748,7 +748,7 @@ struct sxp_ARC_mod {
 
 struct sxp_lrcvr {
     SXINT			min_xs, nomod, TOK_0, TOK_i; 
-    SXBOOLEAN			is_correction_on_error_token, truncate_context, has_prdct;
+    bool			is_correction_on_error_token, truncate_context, has_prdct;
     char			**com;
     SXINT			*ARC_ster, *ster, *lter;
     SXP_SHORT	                *stack, *st_stack;
@@ -835,14 +835,14 @@ SX_GLOBAL_VAR struct sxppvariables {
     short int	tmax;
     SXCASE	kw_case /*		How should keywords be written				*/ ;
     SXCASE	*terminal_case /*	Same as kw_case, but for each type of terminal		*/ ;
-    SXBOOLEAN	kw_dark /*		Should keywords be artificially darkened		*/ ;
-    SXBOOLEAN	*terminal_dark /*	Same as kw_dark, but for each type of terminal		*/ ;
-    SXBOOLEAN	no_tabs /*		Do not optimize spaces into tabs			*/ ;
-    SXBOOLEAN	block_margin /*		Do not preserve structure when deeply nested		*/ ;
+    bool	kw_dark /*		Should keywords be artificially darkened		*/ ;
+    bool	*terminal_dark /*	Same as kw_dark, but for each type of terminal		*/ ;
+    bool	no_tabs /*		Do not optimize spaces into tabs			*/ ;
+    bool	block_margin /*		Do not preserve structure when deeply nested		*/ ;
     SXINT 	line_length /*		What it says						*/ ;
     short int	max_margin /*		Do not indent lines further than that			*/ ;
     SXINT 	tabs_interval /*	number of columns between two tab positions		*/ ;
-    SXBOOLEAN	is_error /*		SXTRUE if the pretty-printer detected an error anywhere	*/ ;
+    bool	is_error /*		true if the pretty-printer detected an error anywhere	*/ ;
     SXINT	char_count /*		number of chars output by the pretty-printer		*/ ;
     char	logical_file_name [20] /* name of the temporary file containing the logical pretty-printer */ ;
 }	sxppvariables;
@@ -863,14 +863,14 @@ struct SXS_correction_item {
     SXINT	*model;
     SXINT		model_no;
     unsigned char	simple_class;
-    SXSHORT		rank_of_char;
+    short		rank_of_char;
 };
 
 
 struct SXS_action_or_prdct_code {
     SXSTMI	stmt;
     SXINT	action_or_prdct_no, param;
-    SXBOOLEAN	is_system;
+    bool	is_system;
     char	kind;
 };
 
@@ -952,7 +952,7 @@ struct SXT_node_info {
 #define SXNODE_HEADER_S \
    SXNODE *father, *brother, *son;				\
    SXINT name, degree, position, index;				\
-   SXBOOLEAN is_list, first_list_element, last_list_element;	\
+   bool is_list, first_list_element, last_list_element;	\
    struct sxtoken token
 
 struct sxnode_header_s {
@@ -989,8 +989,8 @@ struct sxatc_local_variables {
 	    size_t	area_size;
 	} Old;
     } u;
-    SXBOOLEAN	abstract_tree_is_error_node;
-    SXBOOLEAN	are_comments_erased;
+    bool	abstract_tree_is_error_node;
+    bool	are_comments_erased;
 };
 
 
@@ -1004,18 +1004,18 @@ SX_GLOBAL_VAR struct sxatcvar {
 /*****************************************************************************/
 
 /* Variables du tree-traverser */
-extern SXVOID sxsmp (SXNODE *root, void (*pass_inherited) (void), void (*pass_derived) (void));
+extern void sxsmp (SXNODE *root, void (*pass_inherited) (void), void (*pass_derived) (void));
 
 SX_GLOBAL_VAR struct sxtt_state {
     SXNODE	*visited;
-    SXBOOLEAN	visit_kind;
+    bool	visit_kind;
     SXNODE	*last_elem_or_left;
 }	sxtt_state;
 
 
 SX_GLOBAL_VAR struct sxnext_visit {
     SXNODE	*visited;
-    SXBOOLEAN	visit_kind, normal;
+    bool	visit_kind, normal;
 }	sxnext_visit;
 
 
@@ -1042,8 +1042,8 @@ SX_GLOBAL_VAR struct sxnext_visit {
 SX_GLOBAL_VAR sxtime_t sxtime_v sxtime_t_initval;
 
 extern SXINT sxtimediff (SXINT INIT_ou_ACTION);
-extern SXVOID sxtimestamp (SXINT INIT_ou_ACTION, char *format);
-extern SXVOID sxtime (SXINT INIT_ou_ACTION, char *str);
+extern void sxtimestamp (SXINT INIT_ou_ACTION, char *format);
+extern void sxtime (SXINT INIT_ou_ACTION, char *str);
 extern void sxtimeout (int delay); /* Abandon sxexit(4) apres delay secondes */
 extern void sxvirtual_timeout (SXINT seconds, SXINT useconds); /* Abandon sxexit(4) apres seconds secondes et useconds microsecondes */
 extern void sxcaught_virtual_timeout (SXINT seconds, SXINT useconds, void (*sxvirtual_timeout_handler) (int));
@@ -1093,7 +1093,7 @@ extern char SXL [384], SXU [384], SXD [384];
 
 /* Divers parametres reglables */
 
-extern SXVOID sxexit (int sevlev)
+extern void sxexit (int sevlev)
 #ifdef __GNUC__
      __attribute__ ((noreturn))
 #endif
@@ -1173,25 +1173,25 @@ extern SXVOID sxexit (int sevlev)
 /* MISCELLANEOUS (see sxunix(3)) */
 /*********************************/
 
-extern SXVOID sxsyntax (SXINT syntax_what, struct sxtables *tables, ...);
+extern void sxsyntax (SXINT syntax_what, struct sxtables *tables, ...);
 
 #define syntax sxsyntax   /* pour compatibilite ascendante */
 
-extern SXVOID sxopentty (void);
+extern void sxopentty (void);
 
-extern SXBOOLEAN sxnumarg (char *arg, SXINT *nb);
+extern bool sxnumarg (char *arg, SXINT *nb);
 
-extern SXBOOLEAN sxfile_copy (char *in, char *out, SXINT char_count, char *ME_sxfile_copy);
+extern bool sxfile_copy (char *in, char *out, SXINT char_count, char *ME_sxfile_copy);
 
 extern SXINT sxnext_prime (SXINT germe), sxlast_bit (SXINT nb);
 
-extern SXVOID sort_by_tree (SXINT *t, SXINT bi, SXINT bs, SXBOOLEAN (*less_equal) (SXINT, SXINT));
+extern void sort_by_tree (SXINT *t, SXINT bi, SXINT bs, bool (*less_equal) (SXINT, SXINT));
    
-extern SXVOID  fermer (SXBA *R, SXBA_INDEX taille);
-extern SXVOID  fermer2 (SXBA *R, SXBA_INDEX taille);
+extern void  fermer (SXBA *R, SXBA_INDEX taille);
+extern void  fermer2 (SXBA *R, SXBA_INDEX taille);
 
-extern SXVOID		sxvoid (void);
-extern SXBOOLEAN	sxbvoid (void);
+extern void		sxvoid (void);
+extern bool	sxbvoid (void);
 extern SXINT		sxivoid (void);
 extern SXINT		sxivoid_int (SXINT i);
 
@@ -1199,7 +1199,7 @@ extern SXINT		sxivoid_int (SXINT i);
 /* STRING MANAGER (see sxstr_mngr(3)) */
 /**************************************/
 
-extern SXVOID sxstr_mngr (SXINT sxstr_mngr_what, ...);
+extern void sxstr_mngr (SXINT sxstr_mngr_what, ...);
 
 /* General primitives operating on any string table passed as 1st argument */
 
@@ -1233,10 +1233,10 @@ extern SXINT sxstr_save (sxstrmngr_t *strtable, char *string);
 #define sxstr_size(strtable) ((strtable)->top)
 
 /* Dump the contents of strtable to file f (e.g., for debugging) */
-extern SXVOID sxstr_dump (FILE *f, sxstrmngr_t *strtable);
+extern void sxstr_dump (FILE *f, sxstrmngr_t *strtable);
 
 /* Save the reserved words of language lang in strtable */
-extern SXVOID sxstr_save_keywords (sxstrmngr_t *strtable, char *lang);
+extern void sxstr_save_keywords (sxstrmngr_t *strtable, char *lang);
 
 /* Traditional primitives that operate only on the global variable sxstrmngr */
 
@@ -1270,14 +1270,14 @@ extern SXVOID sxstr_save_keywords (sxstrmngr_t *strtable, char *lang);
 	sxsrcmngr.current_char = sxgetchar ()))
 #endif
 
-extern SXSHORT sxnext_char (void);
-extern SXSHORT sxlafirst_char (void);
-extern SXSHORT sxlanext_char (void);
+extern short sxnext_char (void);
+extern short sxlafirst_char (void);
+extern short sxlanext_char (void);
 
-extern SXVOID sxsrc_mngr (SXINT sxsrc_mngr_what, ...);
-extern SXVOID sxsrcpush (SXSHORT previous_char, char *chars, struct sxsource_coord coord);
-extern SXVOID sxX (SXSHORT inserted);
-extern SXVOID sxlaback (SXINT backward_number);
+extern void sxsrc_mngr (SXINT sxsrc_mngr_what, ...);
+extern void sxsrcpush (short previous_char, char *chars, struct sxsource_coord coord);
+extern void sxX (short inserted);
+extern void sxlaback (SXINT backward_number);
 
 extern char* sxget_relocated_file (struct sxsource_coord coord);
 extern SXUINT sxget_relocated_line (struct sxsource_coord coord);
@@ -1319,9 +1319,9 @@ extern SXUINT sxget_relocated_line (struct sxsource_coord coord);
 
 #define sxcurrent_parsed_column(n) (sxcolumn (SXSTACKtoken (SXSTACKnewtop () + (n)).source_index))
 
-extern SXBOOLEAN sxparse_in_la (SXINT ep_la, SXINT Ttok_no, SXINT *Htok_no, struct sxparse_mode *mode_ptr);
+extern bool sxparse_in_la (SXINT ep_la, SXINT Ttok_no, SXINT *Htok_no, struct sxparse_mode *mode_ptr);
 
-extern SXINT sxP_get_parse_stack_size (SXVOID); /* permet de recuperer la taille actuelle de la parse_stack */
+extern SXINT sxP_get_parse_stack_size (void); /* permet de recuperer la taille actuelle de la parse_stack */
 
 /***************************************/
 /* TOKEN_MANAGER (see sxtoken_mngr(3)) */
@@ -1335,8 +1335,8 @@ extern SXINT sxP_get_parse_stack_size (SXVOID); /* permet de recuperer la taille
 /* When sxplocals.min <= SXTOKEN_PAGE(n) < sxplocals.max */
 #define SXGET_TOKEN(n)		(sxplocals.toks_buf [SXTOKEN_PAGE(n)][SXTOKEN_INDX(n)])
 
-extern SXVOID			sxtkn_mngr (SXINT sxtkn_mngr_what, SXINT size);
-extern SXBOOLEAN		sxtknzoom (SXINT token_number);
+extern void			sxtkn_mngr (SXINT sxtkn_mngr_what, SXINT size);
+extern bool		sxtknzoom (SXINT token_number);
 extern struct sxtoken		*sxget_token (SXINT token_number);
 extern SXINT			sxtknmdf (struct sxtoken *new_seq, SXINT lgth1, SXINT old_tok_no, SXINT lgth2);
 
@@ -1363,13 +1363,13 @@ char * sxcomment_book (struct sxcomment *sxcomment_ptr, SXUINT string_lgth);
 /* INCLUDE MANAGER */
 /*******************/
 
-extern SXVOID sxincl_mngr (SXINT sxincl_mngr_what, ...);
+extern void sxincl_mngr (SXINT sxincl_mngr_what, ...);
 
-extern SXBOOLEAN sxpush_incl (char *pathname);
-extern SXBOOLEAN sxpush_recincl (char *pathname);
-extern SXBOOLEAN sxpush_uniqincl (char *pathname);
+extern bool sxpush_incl (char *pathname);
+extern bool sxpush_recincl (char *pathname);
+extern bool sxpush_uniqincl (char *pathname);
 
-extern SXBOOLEAN sxpop_incl (void);
+extern bool sxpop_incl (void);
 
 extern SXINT sxincl_depth (void);
 extern SXINT sxincl_max_depth (void);
@@ -1386,9 +1386,9 @@ extern SXINT sxincl_retrieve (char *pathname);
 #define sxincl_order_increasing_depth 2
 #define sxincl_order_decreasing_depth 3
 
-extern SXVOID sxincl_depend (FILE *f, SXINT order);
+extern void sxincl_depend (FILE *f, SXINT order);
 
-extern SXVOID sxincl_depend_but (FILE *f, SXINT order, SXINT excluded_index);
+extern void sxincl_depend_but (FILE *f, SXINT order, SXINT excluded_index);
 
 /******************************/
 /* SCANNER (see sxscanner(3)) */
@@ -1458,7 +1458,7 @@ extern SXINT sxgetbit (SXINT *tab, SXINT val);
 /********************************************/
 
 extern SXNODE ***sxatc_stack (void);
-extern SXVOID sxatc_sub_tree_erase (/* SXNODE *node */ struct sxnode_header_s *node);
+extern void sxatc_sub_tree_erase (/* SXNODE *node */ struct sxnode_header_s *node);
 
 
 /********************************************/
@@ -1469,7 +1469,7 @@ extern SXNODE *sxson (/* struct sxnode_header_s */ void *visited, SXINT n),
               *sxbrother (/* struct sxnode_header_s */ void *visited, SXINT n);
 
 #define sxat_snv(kind, node_ptr)		\
-	(sxnext_visit.normal = SXFALSE,		\
+	(sxnext_visit.normal = false,		\
 	 sxnext_visit.visit_kind = kind,	\
 	 sxnext_visit.visited = node_ptr)
 
@@ -1477,13 +1477,13 @@ extern SXNODE *sxson (/* struct sxnode_header_s */ void *visited, SXINT n),
 /* PRETTY-PRINTER OF PROGRAMS (see sxppp(3))    */
 /************************************************/
 
-extern SXVOID sxppp (SXINT sxppp_what, struct sxtables *);
+extern void sxppp (SXINT sxppp_what, struct sxtables *);
 
 /************************************************/
 /* OUTPUT SOURCE LISTING (see sxlistout(3))    */
 /************************************************/
 
-extern SXVOID    sxlisting_output (FILE *LISTING);
+extern void    sxlisting_output (FILE *LISTING);
 
 /************************************************/
 /* MISC (was in sxvars.c)                       */

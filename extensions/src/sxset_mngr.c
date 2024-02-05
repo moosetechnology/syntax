@@ -20,7 +20,7 @@
 #include "sxversion.h"
 #include "sxcommon.h"
 
-char WHAT_SXSET_MNGR[] = "@(#)SYNTAX - $Id: sxset_mngr.c 3312 2023-05-28 06:06:26Z garavel $" WHAT_DEBUG;
+char WHAT_SXSET_MNGR[] = "@(#)SYNTAX - $Id: sxset_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 #if EBUG
 static char	ME [] = "sxset_mngr";
@@ -93,21 +93,21 @@ sxset_free (sxset_header *header)
 
 
 
-SXBOOLEAN
+bool
 sxset_compare (sxset_header *header, SXUINT set_id)
 {
     /* Compare set_id with header->current_set_id */
     SXUINT	x, n, elem;
 
     if (sxset_card (*header, header->current_set_id) != sxset_card (*header, set_id))
-	return SXFALSE;
+	return false;
 
     sxset_foreach (*header, set_id, x, n, elem) {
 	if (!sxset_member (header, header->current_set_id, elem))
-	    return SXFALSE;
+	    return false;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -269,7 +269,7 @@ sxset_new_set_id (sxset_header *header)
 extern void sxtrap (char *caller, char *message);
 #endif
 
-SXBOOLEAN
+bool
 sxset_member (sxset_header *header, SXUINT set_id, SXUINT elem)
 {
     SXUINT	val;
@@ -281,7 +281,7 @@ sxset_member (sxset_header *header, SXUINT set_id, SXUINT elem)
 #endif
 
     if (elem >= header->sparse_size)
-	return SXFALSE;
+	return false;
 
     val = header->sparse [elem];
 
@@ -316,7 +316,7 @@ void
 sxset_add_member (sxset_header *header, SXUINT elem)
 {
     SXUINT	val;
-    SXBOOLEAN		not_a_member;
+    bool		not_a_member;
 
     if (elem >= header->sparse_size) {
 	header->sparse_size *= 2;
@@ -327,7 +327,7 @@ sxset_add_member (sxset_header *header, SXUINT elem)
 	header->sparse = (SXUINT*) sxrealloc (header->sparse,
 						     header->sparse_size,
 						     sizeof (SXUINT));
-	not_a_member = SXTRUE;
+	not_a_member = true;
     }
     else {
 	val = header->sparse [elem];

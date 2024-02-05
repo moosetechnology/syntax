@@ -10,7 +10,9 @@ CFLAGS= -g -DEBUG_ALLOC -DEBUG
 
 CC=cc -I$(INCL) -I$(SXINCL) -I$(SXINCL)/util -I$(SX)/../outdated/oldies/incl $(CFLAGS)
 
-all: $(LIG)/lig2bnf.out
+ALL=$(LIG)/lig2bnf.out
+
+all: $(ALL)
 
 NEEDS1=$(LIB)/lig_main.o		\
 	$(LIB)/lig_sact.o		\
@@ -45,5 +47,5 @@ $(LIB)/lig_t.o:		$(SXINCL)/sxunix.h 	\
 		-Dsempass=lig_smp
 
 clean:
-	@echo "clean target for LIG should be provided"
+	rm -f $(ALL) $(NEEDS1)
 

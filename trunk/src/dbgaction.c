@@ -22,11 +22,11 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_DBGACTION[] = "@(#)SYNTAX - $Id: dbgaction.c 2947 2023-03-29 17:06:41Z garavel $" WHAT_DEBUG;
+char WHAT_DBGACTION[] = "@(#)SYNTAX - $Id: dbgaction.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
 #if BUG
 
-static SXVOID	outstack (void)
+static void	outstack (void)
 {
     SXINT	outstack_index;
     struct sxparstack	*item_ptr;
@@ -58,7 +58,7 @@ static SXVOID	outstack (void)
 #endif
 
 
-static SXVOID	gripe (char *whom)
+static void	gripe (char *whom)
 {
     fprintf (sxstderr, "The function \"%s\" is out of date with respect to its specification.\n", whom);
     sxexit (1);
@@ -108,7 +108,7 @@ SXINT	dbgsemact (SXINT what_to_do, SXINT arg)
 
 
 
-static SXVOID	print_scanner_state (void)
+static void	print_scanner_state (void)
 {
   /* LINTED this cast from long to int is needed by printf() */
   printf ("token string = \"%.*s\", state = %ld,\n", (int)sxsvar.sxlv.ts_lgth, sxsvar.sxlv_s.token_string, (SXINT) sxsvar.sxlv.current_state_no);

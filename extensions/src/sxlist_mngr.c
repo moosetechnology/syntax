@@ -49,7 +49,7 @@
 #include        <unistd.h>
 #include        <string.h>
 
-char WHAT_SXLIST_MNGR[] = "@(#)SYNTAX - $Id: sxlist_mngr.c 3312 2023-05-28 06:06:26Z garavel $" WHAT_DEBUG;
+char WHAT_SXLIST_MNGR[] = "@(#)SYNTAX - $Id: sxlist_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 
 static void
@@ -199,12 +199,12 @@ sxlist_free (sxlist_header *h)
 }
 
  
-SXBOOLEAN
+bool
 sxlist_set (sxlist_header *h, SXINT scrmbl, SXINT *elem_stack, SXINT *result)
 {
     /* Cree la liste courante contenue dans la SS_stack "elem_stack" de scramble "scrmbl". */
     /* Retourne son identifiant "result". */
-    /* Retourne SXTRUE ssi la liste est nouvelle */
+    /* Retourne true ssi la liste est nouvelle */
     SXINT				r, nl, in, *pp, list_lgth, xelem;
     struct sxlist_to_attr	*pn;
 
@@ -240,7 +240,7 @@ sxlist_set (sxlist_header *h, SXINT scrmbl, SXINT *elem_stack, SXINT *result)
 		    /* ancien */
 		    *result = nl;
 		    SS_clear (elem_stack);
-		    return SXFALSE;
+		    return false;
 		}
 	    }
 	}
@@ -268,7 +268,7 @@ sxlist_set (sxlist_header *h, SXINT scrmbl, SXINT *elem_stack, SXINT *result)
 
     pn->first_elem = r;
     *result = nl;
-    return SXTRUE;
+    return true;
 }
 
 void
@@ -314,7 +314,7 @@ sxlist_erase (sxlist_header *h, SXINT l)
 #define READ(p,l)	((bytes=(l))>0&&(read (file_descr, p, (size_t)bytes) == bytes))
 static SXINT	bytes;
 
-SXBOOLEAN
+bool
 sxlist_write (sxlist_header *header, sxfiledesc_t file_descr)
 {
     return
@@ -328,7 +328,7 @@ sxlist_write (sxlist_header *header, sxfiledesc_t file_descr)
 }
 
 
-SXBOOLEAN
+bool
 sxlist_read (sxlist_header *header,
 	     sxfiledesc_t file_descr,
 	     char *name,
@@ -336,7 +336,7 @@ sxlist_read (sxlist_header *header,
 	     SXINT (*elem_oflw) (SXINT, SXINT),
 	     FILE *stat_file)
 {
-    SXBOOLEAN b_ret =
+    bool b_ret =
 	X_read (&(header->hd), file_descr, name, sxlist_hd_oflw, stat_file)
 	&& READ (header->hd_to_list = (SXINT*) sxalloc (X_size (header->hd) + 1, sizeof (SXINT)),
 		 sizeof (SXINT) * (X_top (header->hd) + 1))
@@ -499,7 +499,7 @@ sxlist_header_to_c (sxlist_header *header, FILE *file, char *name)
 
 
 void
-sxlist_to_c (sxlist_header *header, FILE *file, char *name, SXBOOLEAN is_static)
+sxlist_to_c (sxlist_header *header, FILE *file, char *name, bool is_static)
 {
     sxlist_array_to_c (header, file, name);
     fprintf (file, "\n\n%ssxlist_header %s =\n", is_static ? "static " : "", name);

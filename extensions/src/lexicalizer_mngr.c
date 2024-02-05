@@ -22,7 +22,7 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_LEXICALIZER_MNGR[] = "@(#)SYNTAX - $Id: lexicalizer_mngr.c 3234 2023-05-15 16:52:27Z garavel $" WHAT_DEBUG;
+char WHAT_LEXICALIZER_MNGR[] = "@(#)SYNTAX - $Id: lexicalizer_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 static char	ME [] = "lexicalizer_mngr";
 
@@ -119,7 +119,7 @@ static SXINT INDEX_VAL;
 #ifdef MAKE_PROPER
 #define no_sxspf_function_declarations
 #include "sxspf.h"
-extern SXBOOLEAN is_print_time;// = SXFALSE;
+extern bool is_print_time;// = false;
 static SXINT TIME_FINAL = 0;
 static SXINT n = 0;
 #else
@@ -253,7 +253,7 @@ SXBA           *mlstn2lex_la_tset;
 SXBA           *mlstn2la_tset;
 
 #if is_set_automaton
-static SXBOOLEAN is_mlstn2lex_la_tset_for_dsa;
+static bool is_mlstn2lex_la_tset_for_dsa;
 #endif /* is_set_automaton */
 
 /* la == look-ahead, lb == look-back */
@@ -469,7 +469,7 @@ cycle_detection ()
 		if (nbv == nbnt /* tout derive ds le vide */
 		    || (spf.insideG.bvide == NULL || !SXBA_bit_is_set (spf.insideG.bvide, X)) /* C'est celle qui ne derive pas ds le vide */) {
 		  if (X == A) {
-		    spf.insideG.is_cycle = SXTRUE;
+		    spf.insideG.is_cycle = true;
 		    break;
 		  }
 
@@ -492,7 +492,7 @@ cycle_detection ()
       
       while ((A = sxba_scan (lr_recursive_set, A)) > 0) {
 	if (SXBA_bit_is_set (cyclic [A], A)) {
-	  spf.insideG.is_cycle = SXTRUE;
+	  spf.insideG.is_cycle = true;
 	  break;
 	}
       }
@@ -531,7 +531,7 @@ bmm (SXBA *P, SXBA *Q, SXBA *R, SXINT l /*, SXINT m, SXINT n */)
 
 /* On calcule D (Debutant) : D = {(A, t) | A -> \alpha t \beta et \alpha =>* \epsilon}
    FIRST = LC* D avec LC = Left-Corner */
-static SXVOID
+static void
 first_construction (SXBA *FIRST)
 {
   SXINT  prod, item, A, X;
@@ -559,7 +559,7 @@ first_construction (SXBA *FIRST)
   sxbm_free (D);
 }
 
-static SXVOID
+static void
 follow_construction (SXBA *FOLLOW, SXBA *FIRST)
 {
   /* On calcule RC~ (Transposee de Right-Corner) : RC~ = {(B, A) | A -> \alpha B \beta et \beta =>* \epsilon}
@@ -837,16 +837,16 @@ idag_t_stack_recode (SXINT *old_t2new_t)
 {
   SXINT   pq, y, lgth, new_t, max_pq;
   SXINT   *source_t_stack;
-  SXBOOLEAN multiple;
+  bool multiple;
 
   if (idag.orig_t_stack == NULL) {
-    multiple = SXFALSE;
+    multiple = false;
     idag.orig_t_stack = idag.t_stack;
     idag.orig_source_set = idag.source_set;
   }
   else {
     /* Appel multiple de idag_t_stack_recode */
-    multiple = SXTRUE;
+    multiple = true;
     sxfree (idag.source_set), idag.source_set = NULL;
   }
 
@@ -894,7 +894,7 @@ idag_t_stack_restore ()
 #ifndef MAKE_PROPER
 /* Ds ce cas c'est check_multiple_anchor_occur_pre () qui a ete appele' */
 #  ifndef MULTI_ANCHOR
-static SXBOOLEAN
+static bool
 check_multiple_anchor_occur_post (SXINT *multi_anchor_erased_prod_stack)
 {
   SXINT nb, item, prod, bot, top, t;
@@ -1063,11 +1063,11 @@ crs_dag_or_nodag_source_processing ()
 
 
 /* On verifie l'ordre des ancres multiples */
-static SXBOOLEAN
+static bool
 check_multiple_anchor_sequence (SXINT *multi_anchor_prod_stack)
 {
   SXINT     prev_t, prev_item, nb, bot_item, X, old_prev_t, prod, item, t, new_prod_nb;
-  SXBOOLEAN is_axiom_kept;
+  bool is_axiom_kept;
 
 #    if LOG
   fputs ("****** Entering the multiple anchor sequence test ******\n", stdout);
@@ -1321,10 +1321,10 @@ crs_erase_prod (SXINT prod
 /* Nelle version, insideG a (peut-etre) ete construite */
 /* Nelle nelle version, first et last referencent des titems packe's qui ne sont construits que la 1ere fois*/
 static SXINT
-check_rhs_sequences (SXBOOLEAN *is_axiom_kept)
+check_rhs_sequences (bool *is_axiom_kept)
 {
   SXINT             erased_prod_nb = 0; 
-  SXBOOLEAN         succeeded;
+  bool         succeeded;
 
 #if LOG
   fputs ("\n*** Entering check_rhs_sequences ***\n", stdout);
@@ -1594,7 +1594,7 @@ check_rhs_sequences (SXBOOLEAN *is_axiom_kept)
 
 #if EBUG
     {
-      SXBOOLEAN is_OK = SXTRUE;
+      bool is_OK = true;
       /* Comme la grammaire selectionnee par basic_item_set est reduite ... */
       /* ... si un nt est non vide, son first et last doivent l'etre egalement */
       A = 0;
@@ -1609,7 +1609,7 @@ check_rhs_sequences (SXBOOLEAN *is_axiom_kept)
 	/* A ne derive pas ds le vide et a ete calcule'*/
 	if (!SXBA_bit_is_set (non_empty_first_set, A) || !SXBA_bit_is_set (non_empty_last_set, A)) {
 	  /* nt2first|last [A] est vide (A n'est pas en lhs) */
-	  is_OK = SXFALSE;
+	  is_OK = false;
 #ifdef MAKE_INSIDEG
 	  old_A = spf.insideG.nt2init_nt [A];
 #else /* !MAKE_INSIDEG */
@@ -1680,7 +1680,7 @@ check_rhs_sequences (SXBOOLEAN *is_axiom_kept)
   {
     SXINT     A, t, packed_titem, titem;
     SXBA    look_ahead_set, suffix_set, last_packed;
-    SXBOOLEAN is_first_t;
+    bool is_first_t;
 
     A = 0;
 
@@ -1690,7 +1690,7 @@ check_rhs_sequences (SXBOOLEAN *is_axiom_kept)
       last_packed = nt2last_packed [A];
 
       sxba_empty (w_t_set);
-      is_first_t = SXTRUE;
+      is_first_t = true;
       packed_titem = 0;
 
       while ((packed_titem = sxba_scan (last_packed, packed_titem)) > 0) {
@@ -1701,7 +1701,7 @@ check_rhs_sequences (SXBOOLEAN *is_axiom_kept)
 
 	  if (SXBA_bit_is_reset_set (w_t_set, t)) {
 	    if (is_first_t) {
-	      is_first_t = SXFALSE;
+	      is_first_t = false;
 	      sxba_copy (look_ahead_set, t2la_t_set [t]);
 	      sxba_copy (suffix_set, t2suffix_t_set [t]);
 	    }
@@ -1737,7 +1737,7 @@ check_rhs_sequences (SXBOOLEAN *is_axiom_kept)
   {
     SXINT     init_A, A, t, init_t, packed_titem, titem;
     SXBA    nt_first_set, nt_last_packed, nt_follow, nt_suffix;
-    SXBOOLEAN is_empty, is_first_time;
+    bool is_empty, is_first_time;
 
     A = 0;
 
@@ -1756,7 +1756,7 @@ check_rhs_sequences (SXBOOLEAN *is_axiom_kept)
 #if is_epsilon
 	is_empty = EMPTY_SET && sxba_bit_is_set (EMPTY_SET, A);
 #else /* !is_epsilon */
-	is_empty = SXFALSE;
+	is_empty = false;
 #endif /* !is_epsilon */
 
 #ifdef MAKE_INSIDEG
@@ -1768,7 +1768,7 @@ check_rhs_sequences (SXBOOLEAN *is_axiom_kept)
 	printf ("<%s>[%i/%i is %sempty]\n", spf.inputG.ntstring [init_A], A, init_A, is_empty ? "" : "non ");
 	  
 	fputs ("\tfirst = {", stdout);
-	is_first_time = SXTRUE;
+	is_first_time = true;
 	t = 0;
 	  
 	while ((t = sxba_scan (nt_first_set, t)) > 0) {
@@ -1779,7 +1779,7 @@ check_rhs_sequences (SXBOOLEAN *is_axiom_kept)
 #endif /* !MAKE_INSIDEG */
 
 	  if (is_first_time) {
-	    is_first_time = SXFALSE;
+	    is_first_time = false;
 	    printf ("\"%s\"", spf.inputG.tstring [init_t]);
 	  }
 	  else
@@ -1791,7 +1791,7 @@ check_rhs_sequences (SXBOOLEAN *is_axiom_kept)
 	fputs ("\tlast = {", stdout);
 
 	sxba_empty (w_t_set);
-	is_first_time = SXTRUE;
+	is_first_time = true;
 	packed_titem = 0;
 	  
 	while ((packed_titem = sxba_scan (nt_last_packed, packed_titem)) > 0) {
@@ -1808,7 +1808,7 @@ check_rhs_sequences (SXBOOLEAN *is_axiom_kept)
 #endif /* !MAKE_INSIDEG */
 
 	      if (is_first_time) {
-		is_first_time = SXFALSE;
+		is_first_time = false;
 		printf ("\"%s\"", spf.inputG.tstring [init_t]);
 	      }
 	      else
@@ -1820,7 +1820,7 @@ check_rhs_sequences (SXBOOLEAN *is_axiom_kept)
 	fputs ("}\n", stdout);
 
 	fputs ("\tlook_ahead = {", stdout);
-	is_first_time = SXTRUE;
+	is_first_time = true;
 	t = 0;
 
 	while ((t = sxba_scan (nt_follow, t)) > 0) {
@@ -1830,7 +1830,7 @@ check_rhs_sequences (SXBOOLEAN *is_axiom_kept)
 	  init_t = t;
 #endif /* !MAKE_INSIDEG */
 	  if (is_first_time) {
-	    is_first_time = SXFALSE;
+	    is_first_time = false;
 	    printf ("\"%s\"", spf.inputG.tstring [init_t]);
 	  }
 	  else
@@ -1842,7 +1842,7 @@ check_rhs_sequences (SXBOOLEAN *is_axiom_kept)
 
 	fputs ("\tsuffix = {", stdout);
 	t = sxba_scan (nt_suffix, 0);
-	is_first_time = SXTRUE;
+	is_first_time = true;
 	t = 0;
 	  
 	while ((t = sxba_scan (nt_suffix, t)) > 0) {
@@ -1852,7 +1852,7 @@ check_rhs_sequences (SXBOOLEAN *is_axiom_kept)
 	  init_t = t;
 #endif /* !MAKE_INSIDEG */
 	  if (is_first_time) {
-	    is_first_time = SXFALSE;
+	    is_first_time = false;
 	    printf ("\"%s\"", spf.inputG.tstring [init_t]);
 	  }
 	  else
@@ -2029,7 +2029,7 @@ check_rhs_sequences (SXBOOLEAN *is_axiom_kept)
 			
 			if (sxba_2op (NULL, SXBA_OP_IS, nt2look_ahead_set [Xj], SXBA_OP_AND, w2_t_set)) {
 			  /* OK pour Xj et c'est le + a droite */
-			  succeeded = SXTRUE;
+			  succeeded = true;
 			  break;
 			}
 		      }
@@ -2369,7 +2369,7 @@ make_a_first_reduced_grammar ()
 
   spf.insideG.maxprod = spf.insideG.maxt = spf.insideG.maxnt = spf.insideG.maxitem = 0;
   spf.insideG.maxrhs = spf.insideG.maxrhsnt = spf.insideG.sizeofnumpd = spf.insideG.sizeoftnumpd = 0;
-  spf.insideG.is_eps = SXFALSE;
+  spf.insideG.is_eps = false;
 
   /* calcul des nt qui peuvent deriver ds t_set^* */
   tgen_nt_set = sxba_calloc (inputG_MAXNT+1);
@@ -2698,7 +2698,7 @@ make_a_first_reduced_grammar ()
 	      spf.insideG.maxrhs = rhs_nb;
 
 	    if (rhs_nb == 0)
-	      spf.insideG.is_eps = SXTRUE;
+	      spf.insideG.is_eps = true;
 	  }
 	}
 
@@ -3018,21 +3018,21 @@ make_a_first_reduced_grammar ()
 
 /* On est apres un insideG eventuel */
 /* basic_item_set contient une grammaire reduite */
-/* On supprime les cycles s'il y en a (retourne SXTRUE) */
+/* On supprime les cycles s'il y en a (retourne true) */
 
 /* On regarde si la grammaire est cyclique */
-static SXBOOLEAN
+static bool
 cycle_check ()
 {
   SXINT     prod, A, pA, item, X, pX, Y, pY, pB, repr;
   SXBA    pA_cycle_set, cycle_set, repr_set, line;
-  SXBOOLEAN is_cycle;
+  bool is_cycle;
   SXINT     pA_nb;
   SXINT     *pA2A, *A2pA, *pA2min_pA;
   SXBA    *cyclic_sets;
 #if is_epsilon
   SXINT     cur_item, Z, pZ
-  SXBOOLEAN X_vide, Y_vide;
+  bool X_vide, Y_vide;
   SXBA    pA_cycle_set;
 #endif /* is_epsilon */
 #if LOG
@@ -3182,7 +3182,7 @@ cycle_check ()
   fermer2 (cyclic_sets, pA_nb+1);
 
   cycle_set = cyclic_sets [0];
-  is_cycle = SXFALSE;
+  is_cycle = false;
 
   for (pA = 1; pA <= pA_nb; pA++) {
     line = cyclic_sets [pA];
@@ -3190,7 +3190,7 @@ cycle_check ()
     if (SXBA_bit_is_set (line, pA) /* cycle autour de A ... */
 	&& pA2min_pA [pA] == 0 /* ... jamais vu */) {
       /* ...et c'est le +petit du cycle du cycle */
-      is_cycle = SXTRUE;
+      is_cycle = true;
 
 #if LOG
       fputs ("**** There are cycles around: ", stdout);
@@ -3561,7 +3561,7 @@ static SXINT
 make_a_next_reduced_grammar ()
 {
   SXINT             item, nb, X, prod, A, bot, top, bot_item, new_prod_nb = 0, old_X, old_prod, cur, cur_item, nrg_init_tprod_stack_top;
-  SXBOOLEAN         ret_val;
+  bool         ret_val;
 #if MEASURES || LOG
   SXINT             nt_nb = 0, t_nb = 0, item_nb = 0, rhst_nb, unlexicalized_prod_nb = 0;
   SXBA            t_set;
@@ -3748,7 +3748,7 @@ make_a_next_reduced_grammar ()
     /* On vire les productions qui ne generent pas des chaines terminales ou qui sont inaccessibles depuis l'axiome */
     SXBA new_basic_item_set;
 
-    ret_val = SXTRUE; /* a priori */
+    ret_val = true; /* a priori */
 
 
 #if MEASURES || LOG
@@ -3867,7 +3867,7 @@ make_a_next_reduced_grammar ()
     basic_item_set = new_basic_item_set;
   }
   else {
-    ret_val = SXFALSE;
+    ret_val = false;
 
 #if LOG
     fputs ("\n********** WARNING: This grammar is not reduced **********\n", stdout);
@@ -4218,12 +4218,12 @@ rl_close_reduce (SXINT item
 /* remplit les control et active sets des etats du dynamic set automaton atteints depuis mlstn 
    de gauche a droite */
 /* Nelle version du 05/10/06 qui marche pour is_dag ou !is_dag */
-static SXBOOLEAN
+static bool
 sa_scanner (SXINT mlstn)
 {
   SXINT     item, t, next_mlstn, bot_pq, top_pq, trans;
   SXINT     *t_stack, *top_t_stack;
-  SXBOOLEAN   has_forward_ttrans = SXFALSE;
+  bool   has_forward_ttrans = false;
   SXBA      next_active_set;
 
   /* active_set = active_sets [mlstn]; */
@@ -4254,7 +4254,7 @@ sa_scanner (SXINT mlstn)
       t = *t_stack;
 
       if (SXBA_bit_is_set (source_t_set, t)) {
-	has_forward_ttrans = SXTRUE; /* Au moins un des next_active_set non vide */
+	has_forward_ttrans = true; /* Au moins un des next_active_set non vide */
 	sxba_2op (next_active_set, SXBA_OP_OR, cur_titem_set, SXBA_OP_AND, T2PROD_ITEM_SET (t));
       }
     }
@@ -4271,12 +4271,12 @@ sa_scanner (SXINT mlstn)
 /* remplit les control et active sets des etats du dynamic set automaton atteints depuis mlstn 
  de droite a gauche */
 /* Nelle version du 05/10/06 qui marche pour is_dag ou !is_dag */
-static SXBOOLEAN
+static bool
 sa_rlscanner (SXINT mlstn)
 {
   SXINT     item, prev_item, t, prev_mlstn, pq;
   SXINT     *t_stack, *top_t_stack, *pq_stack, *top_pq_stack;
-  SXBOOLEAN   has_backward_ttrans = SXFALSE;
+  bool   has_backward_ttrans = false;
   SXBA      prev_active_set;
 
   /* rl_active_set = rl_active_sets [mlstn]; */
@@ -4309,7 +4309,7 @@ sa_rlscanner (SXINT mlstn)
       t = *t_stack;
 
       if (SXBA_bit_is_set (source_t_set, t)) {
-	has_backward_ttrans = SXTRUE; /* Au moins un des next_active_set non vide */
+	has_backward_ttrans = true; /* Au moins un des next_active_set non vide */
 
 	/* Ca servira ds recognize () */
 	if (mlstn2lexicalized_look_ahead_t_set)
@@ -4333,11 +4333,11 @@ sa_rlscanner (SXINT mlstn)
 /* remplit les control et active sets des etats du dynamic set automaton atteints depuis mlstn 
  de gauche a droite */
 /* Nelle version du 05/10/06 qui marche pour is_dag ou !is_dag */
-static SXBOOLEAN
+static bool
 sa_scanner (SXINT mlstn)
 {
   SXINT     dag_state, trans, item, t, next_mlstn, Y, next_item;
-  SXBOOLEAN   has_forward_ttrans = SXFALSE;
+  bool   has_forward_ttrans = false;
   SXBA      next_active_set;
 
   /* active_set = active_sets [mlstn]; */
@@ -4369,7 +4369,7 @@ sa_scanner (SXINT mlstn)
 	t = glbl_source [Y], SXBA_bit_is_set (source_t_set, t)
 #endif /* !is_sdag */
 	) {
-      has_forward_ttrans = SXTRUE;
+      has_forward_ttrans = true;
       next_mlstn = XxYxZ_Z (dag_hd, trans);
 
       if (SXBA_bit_is_reset_set (next_mlstn_set, next_mlstn))
@@ -4414,7 +4414,7 @@ sa_scanner (SXINT mlstn)
 	glbl_source [mlstn] == t
 #endif /* !is_sdag */
 	) {
-      has_forward_ttrans = SXTRUE;
+      has_forward_ttrans = true;
       next_item = item+1;
       SXBA_1_bit (next_active_set, next_item); /* A -> \alpha a_i . \beta */
     }
@@ -4430,12 +4430,12 @@ sa_scanner (SXINT mlstn)
 /* remplit les control et active sets des etats du dynamic set automaton atteints depuis mlstn 
  de droite a gauche */
 /* Nelle version du 05/10/06 qui marche pour is_dag ou !is_dag */
-static SXBOOLEAN
+static bool
 sa_rlscanner (mlstn)
      SXINT mlstn;
 {
   SXINT     trans, item, prev_item, t, prev_mlstn, Y;
-  SXBOOLEAN has_backward_ttrans = SXFALSE;
+  bool has_backward_ttrans = false;
   SXBA    prev_active_set, look_ahead_t_set;
 
   /* rl_active_set = rl_active_sets [mlstn]; */
@@ -4467,7 +4467,7 @@ sa_rlscanner (mlstn)
 	t = glbl_source [Y], SXBA_bit_is_set (source_t_set, t)
 #endif /* !is_sdag */
 	) {
-      has_backward_ttrans = SXTRUE;
+      has_backward_ttrans = true;
 
       if (SXBA_bit_is_reset_set (next_mlstn_set, prev_mlstn))
 	sxba_or (rl_control_sets [prev_mlstn], new_rl_control_set);
@@ -4527,7 +4527,7 @@ sa_rlscanner (mlstn)
 	glbl_source [prev_mlstn] == t
 #endif /* !is_sdag */
 	) {
-      has_backward_ttrans = SXTRUE;
+      has_backward_ttrans = true;
       SXBA_1_bit (prev_active_set, prev_item); /* A -> \alpha . a_i \beta */
 
       if (mlstn2lexicalized_look_ahead_t_set)
@@ -4546,13 +4546,13 @@ sa_rlscanner (mlstn)
 
 
 
-static SXBOOLEAN lr_pass_succeeds;
+static bool lr_pass_succeeds;
 
 
 /* Ici on est ds le cas is_dag ou !is_dag */
 /* Si l'appelant veut associer a chaque dag_state l'ensemble des terminaux selectionnes par le
    dynamic_set_automaton, il passe mlstn2lex_la_tset non vide qui sera rempli */
-static SXBOOLEAN
+static bool
 dynamic_set_automaton ()
 {
   SXINT  t, item, item_1, X, i, A, bot, top, prod, mlstn; 
@@ -4890,11 +4890,11 @@ make_insideG (SXINT *old_prod2new_prod)
   */
 
   spf_allocate_insideG (&spf.insideG, 
-			SXFALSE,
+			false,
 #if is_set_automaton
 			IS_DYNAMIC_SET_AUTOMATON
 #else /* !is_set_automaton */
-			SXFALSE
+			false
 #endif /* !is_set_automaton */
 			);
 
@@ -5262,7 +5262,7 @@ make_smallest_insideG ()
   SXINT            *old_nt2new_nt, *prod2nb_symb, *new_nt_stack, *old_t2new_t;
   SXINT            rhsnt_nb, rhst_nb, rhs_nb;
   SXINT            *new_nt2lhs_nb, *new_nt2rhs_nb, *new_t2rhs_nb;
-  SXBOOLEAN        not_identical = SXFALSE;
+  bool        not_identical = false;
 #if MEASURES || LOG
   SXINT            unlexicalized_prod_nb = 0;
 #endif /* MEASURES || LOG */
@@ -5324,7 +5324,7 @@ make_smallest_insideG ()
 	  new_X = old_t2new_t [-X] = ++spf.insideG.maxt; /* nouveau t */
 
 	  if (new_X != -X)
-	    not_identical = SXTRUE;
+	    not_identical = true;
 	}
 
 	new_t2rhs_nb [new_X]++;
@@ -5340,7 +5340,7 @@ make_smallest_insideG ()
     spf.insideG.sizeoftnumpd += rhst_nb;
 
     if (rhs_nb == 0)
-      spf.insideG.is_eps = SXTRUE;
+      spf.insideG.is_eps = true;
 
     if (rhs_nb > spf.insideG.maxrhs)
       spf.insideG.maxrhs = rhs_nb;
@@ -5353,7 +5353,7 @@ make_smallest_insideG ()
   spf.insideG.maxt = -spf.insideG.maxt/* <0 */ -1/* eof */;
 
   if (spf.insideG.maxt != lex_insideG.maxt)
-    not_identical = SXTRUE;
+    not_identical = true;
 
   old_t2new_t [-lex_insideG.maxt] = -SXEOF; /* en neg, Il a ete trouve' */
     
@@ -5364,7 +5364,7 @@ make_smallest_insideG ()
   /* Ici toutes les cstes de spf.insideG sont positionnees */
 
   /* On appelle l'allocation generale */
-  spf_allocate_insideG (&spf.insideG, SXFALSE, SXFALSE);
+  spf_allocate_insideG (&spf.insideG, false, false);
 
   new_nt_stack = (SXINT*) sxalloc (spf.insideG.maxnt+1, sizeof (SXINT)), RAZ (new_nt_stack);
   prod2nb_symb = (SXINT*) sxcalloc (spf.insideG.maxprod+1, sizeof (SXINT));
@@ -5673,11 +5673,11 @@ make_smallest_insideG ()
 
 #ifdef HUGE_CFG
 
-static SXBOOLEAN
+static bool
 unvalid_multiple_anchor_occur_prod_pre (SXINT prod)
 {
   SXINT             item, t, cur, X;
-  SXBOOLEAN         unvalid = SXFALSE;
+  bool         unvalid = false;
 
   /* prod est multiple */
   item = spf.inputG.prolon [prod];
@@ -5689,7 +5689,7 @@ unvalid_multiple_anchor_occur_prod_pre (SXINT prod)
       if (!SXBA_bit_is_set (idag.source_set, t)) {
 	/* t n'est pas ds le source */
 	/* prod doit etre eliminee */
-	unvalid = SXTRUE;
+	unvalid = true;
 	break;
       }
     }
@@ -5700,7 +5700,7 @@ unvalid_multiple_anchor_occur_prod_pre (SXINT prod)
   return unvalid;
 }
 #else /* !HUGE_CFG */
-static SXBOOLEAN
+static bool
 check_multiple_anchor_occur_pre_with_basic_item_set (SXINT **map_stack, SXINT **maep_stack)
 {
   SXINT             item, t, prod, top, bot;
@@ -5826,11 +5826,11 @@ check_multiple_anchor_occur_pre_with_basic_item_set (SXINT **map_stack, SXINT **
 
 /* Si lex_source_set est non NULL il contiendra le sous-ensemble de source_set conserve' par la lexicalisation */
 /* Nouvelle version du 26/01/07 */
-static SXBOOLEAN
+static bool
 t_set2basic_item_set ()
 {
   SXINT     bot, top, prod, item, t, new_prod_nb, unlexicalized_prod_nb; 
-  SXBOOLEAN is_axiom_kept;
+  bool is_axiom_kept;
   SXINT     *multi_anchor_erased_prod_stack = NULL, *multi_anchor_prod_stack = NULL;
 
 #if LOG
@@ -6098,7 +6098,7 @@ t_set2basic_item_set ()
       sxtime (TIME_FINAL, "\t\tCycle Free");
 #endif /* is_cycle_free */
 
-    is_axiom_kept = SXTRUE;
+    is_axiom_kept = true;
 
 #ifndef MAKE_PROPER
 
@@ -6110,7 +6110,7 @@ t_set2basic_item_set ()
 	/* y'a eu des suppressions */
 	/* Comme ca check_rhs_sequences recoit une grammaire reduite en entree */
 	if ((new_prod_nb = make_a_next_reduced_grammar ()) == 0)
-	  is_axiom_kept = SXFALSE;
+	  is_axiom_kept = false;
       }
     }
 #  endif /* ifndef MULTI_ANCHOR */
@@ -6145,7 +6145,7 @@ t_set2basic_item_set ()
 	  /* Y'a eu des prods supprimees */
 	  /* Comme ca check_rhs_sequences () recoit une grammaire reduite en entree */
 	  if ((new_prod_nb = make_a_next_reduced_grammar ()) == 0)
-	    is_axiom_kept = SXFALSE;
+	    is_axiom_kept = false;
 	}
       }
 
@@ -6226,7 +6226,7 @@ t_set2basic_item_set ()
 #endif /* ifndef MAKE_PROPER */
   }
   else {
-    is_axiom_kept = SXFALSE;
+    is_axiom_kept = false;
 
 #ifdef HUGE_CFG
     sxfree (basic_prod_stack), basic_prod_stack = NULL;
@@ -6264,12 +6264,12 @@ t_set2basic_item_set ()
     }
 
     /* On va faire l'analyse sur insideG complete, mais bien sur il y aura des erreurs de syntaxe */
-    /* On laisse is_axiom_kept a SXFALSE */
+    /* On laisse is_axiom_kept a false */
 #  else  /* ifndef HUGE_CFG */
     if (spf.insideG.is_allocated) {
       /* On est ici ds le cas ou il y a eu MAKE_INSIDEG demande' explicitement sur une "petite" grammaire
 	 l'analyseur a du lui aussi etre compile' avec -DMAKE_INSIDEG, on va faire l'analyse avec l'insideG complet */
-      /* On laisse is_axiom_kept a SXFALSE */
+      /* On laisse is_axiom_kept a false */
     }
     else {
 #    ifdef MAKE_INSIDEG
@@ -6308,11 +6308,11 @@ t_set2basic_item_set ()
 /* autrement dit, t peut suivre t1 (uniquement si la grammaire a des prod a terminaux multiples, sinon NULL) */
 /* mlstn2la_tset [i] = {t | \exists j s.t. i ->t j dans le dag} */
 /* mlstn2lex_la_tset [i] = {t | \exists j s.t. i ->t j dans le dag et t a ete retenu par la lexicalisation} */
-SXBOOLEAN
-lexicalizer2basic_item_set (SXBOOLEAN is_mlstn2lex_la_tset, SXBOOLEAN is_mlstn2la_tset, SXBOOLEAN is_smallest_insideG)
+bool
+lexicalizer2basic_item_set (bool is_mlstn2lex_la_tset, bool is_mlstn2la_tset, bool is_smallest_insideG)
 {
   SXINT     mlstn;
-  SXBOOLEAN ret_val;
+  bool ret_val;
 
   if (is_print_time) {
     fputs ("\tLexicalizer\n", sxtty);
@@ -6350,7 +6350,7 @@ lexicalizer2basic_item_set (SXBOOLEAN is_mlstn2lex_la_tset, SXBOOLEAN is_mlstn2l
       ret_val &&
 #endif /* HUGE_CFG */
       is_mlstn2la_tset) {
-    mlstn2la_tset = sxbm_calloc (1+n+1+2, SXEOF+1); /* Rempli meme si ret_val == SXFALSE ds le cas ifndef MAKE_INSIDEG */
+    mlstn2la_tset = sxbm_calloc (1+n+1+2, SXEOF+1); /* Rempli meme si ret_val == false ds le cas ifndef MAKE_INSIDEG */
 
     idag_source_processing (SXEOF, t2suffix_t_set, mlstn2suffix_source_set, mlstn2la_tset, t2la_t_set);
 
@@ -6414,7 +6414,7 @@ lexicalizer2basic_item_set (SXBOOLEAN is_mlstn2lex_la_tset, SXBOOLEAN is_mlstn2l
 /* --------------------------------------------------------------------------------------------------- */
 /* Ci-dessous on trouve les sources des anciennes versions */
 #if is_lex2
-static SXBOOLEAN
+static bool
 t_set2index_item_set (SXBA basic_item_set,
 		      SXBA t_set,
 		      SXBA result_item_set)
@@ -6443,11 +6443,11 @@ t_set2index_item_set (SXBA basic_item_set,
 /* mlstn2suffix_source_set [i]= { t | a_i=t ou x=a_1 ... a_i ... t ... a_n} */
 /* t2suffix_t_set [t1] = {t | existe un chemin du source de la forme "eof ... t1 ... t ... eof" */
 /* autrement dit, t peut suivre t1 (uniquement si la grammaire a des prod a terminaux multiples, sinon NULL) */
-SXBOOLEAN
-lexicalizer2indexed_item_sets (SXBOOLEAN is_mlstn2lex_la_tset,
-			       SXBOOLEAN is_mlstn2la_tset)
+bool
+lexicalizer2indexed_item_sets (bool is_mlstn2lex_la_tset,
+			       bool is_mlstn2la_tset)
 {
-  SXBOOLEAN ret_val;
+  bool ret_val;
 
 #ifndef MAKE_INSIDEG
   if (is_mlstn2la_tset) {
@@ -6467,7 +6467,7 @@ lexicalizer2indexed_item_sets (SXBOOLEAN is_mlstn2lex_la_tset,
       if (!t_set2index_item_set (basic_item_set,
 				 mlstn2suffix_source_set [mlstn],
 				 indexed_item_sets [mlstn])) {
-	ret_val = SXFALSE;
+	ret_val = false;
 	break;
       }
     
@@ -6483,10 +6483,10 @@ lexicalizer2indexed_item_sets (SXBOOLEAN is_mlstn2lex_la_tset,
 #ifdef MAKE_INSIDEG
 	ret_val
 #else /* !MAKE_INSIDEG */
-	SXTRUE
+	true
 #endif /* !MAKE_INSIDEG */
 	) {
-      mlstn2la_tset = sxbm_calloc (1+n+1+2, SXEOF+1); /* Rempli meme si ret_val == SXFALSE ds le cas ifndef MAKE_INSIDEG */
+      mlstn2la_tset = sxbm_calloc (1+n+1+2, SXEOF+1); /* Rempli meme si ret_val == false ds le cas ifndef MAKE_INSIDEG */
 
       idag_source_processing (SXEOF, t2suffix_t_set, mlstn2suffix_source_set, mlstn2la_tset, t2la_t_set);
 
@@ -6702,12 +6702,12 @@ rl_close_reduce (item)
 /* remplit les control et active sets des etats du dynamic set automaton atteints depuis mlstn 
  de gauche a droite */
 /* Nelle version du 05/10/06 qui marche pour is_dag ou !is_dag */
-static SXBOOLEAN
+static bool
 sa_scanner (mlstn)
      SXINT mlstn;
 {
   SXINT     dag_state, trans, item, t, next_mlstn, Y, next_item;
-  SXBOOLEAN has_forward_ttrans = SXFALSE;
+  bool has_forward_ttrans = false;
   SXBA    next_active_set;
 
   /* active_set = active_sets [mlstn]; */
@@ -6739,7 +6739,7 @@ sa_scanner (mlstn)
 	t = toks_buf [Y].lahead, SXBA_bit_is_set (source_t_set, t)
 #endif /* !is_sdag */
 	) {
-      has_forward_ttrans = SXTRUE;
+      has_forward_ttrans = true;
       next_mlstn = XxYxZ_Z (dag_hd, trans);
 
       if (SXBA_bit_is_reset_set (next_mlstn_set, next_mlstn))
@@ -6784,7 +6784,7 @@ sa_scanner (mlstn)
 	glbl_source [mlstn] == t
 #endif /* !is_sdag */
 	) {
-      has_forward_ttrans = SXTRUE;
+      has_forward_ttrans = true;
       next_item = item+1;
       SXBA_1_bit (next_active_set, next_item); /* A -> \alpha a_i . \beta */
     }
@@ -6800,12 +6800,12 @@ sa_scanner (mlstn)
 /* remplit les control et active sets des etats du dynamic set automaton atteints depuis mlstn 
  de droite a gauche */
 /* Nelle version du 05/10/06 qui marche pour is_dag ou !is_dag */
-static SXBOOLEAN
+static bool
 sa_rlscanner (mlstn)
      SXINT mlstn;
 {
   SXINT     trans, item, prev_item, t, prev_mlstn, Y;
-  SXBOOLEAN has_backward_ttrans = SXFALSE;
+  bool has_backward_ttrans = false;
   SXBA    prev_active_set, look_ahead_t_set, rl_supertagger_item_set;
 
   /* rl_active_set = rl_active_sets [mlstn]; */
@@ -6837,7 +6837,7 @@ sa_rlscanner (mlstn)
 	t = toks_buf [Y].lahead, SXBA_bit_is_set (source_t_set, t)
 #endif /* !is_sdag */
 	) {
-      has_backward_ttrans = SXTRUE;
+      has_backward_ttrans = true;
 
       if (SXBA_bit_is_reset_set (next_mlstn_set, prev_mlstn))
 	sxba_or (rl_control_sets [prev_mlstn], new_rl_control_set);
@@ -6907,7 +6907,7 @@ sa_rlscanner (mlstn)
 	glbl_source [prev_mlstn] == t
 #endif /* !is_sdag */
 	) {
-      has_backward_ttrans = SXTRUE;
+      has_backward_ttrans = true;
       SXBA_1_bit (prev_active_set, prev_item); /* A -> \alpha . a_i \beta */
 
       if (mlstn2lexicalized_look_ahead_t_set)
@@ -6931,17 +6931,17 @@ sa_rlscanner (mlstn)
 
 
 
-static SXBOOLEAN lr_pass_succeeds;
+static bool lr_pass_succeeds;
 static SXBA    source2valid_item_set;
 
 
 /* Ici on est ds le cas is_dag ou !is_dag */
 /* Si l'appelant veut associer a chaque dag_state l'ensemble des terminaux selectionnes par le
    dynamic_set_automaton, il passe mlstn2lex_la_tset non vide qui sera rempli */
-SXBOOLEAN
+bool
 dynamic_set_automaton (SXBA *i2supertagger_item_set,
-		       SXBOOLEAN is_mlstn2lex_la_tset,
-		       SXBOOLEAN is_mlstn2la_tset)
+		       bool is_mlstn2lex_la_tset,
+		       bool is_mlstn2la_tset)
 {
   SXINT  t, item, item_1, X, i, A, bot, top, prod, mlstn; 
   SXBA supertagger_item_set;
@@ -6967,7 +6967,7 @@ dynamic_set_automaton (SXBA *i2supertagger_item_set,
 #endif /* !MAKE_INSIDEG */
 
 #if is_lex2
-  mlstn = (SXINT) lexicalizer2indexed_item_sets (SXFALSE, is_mlstn2la_tset);
+  mlstn = (SXINT) lexicalizer2indexed_item_sets (false, is_mlstn2la_tset);
 #else /* !is_lex2 */
 #  if is_lex
 #    ifdef MAKE_INSIDEG
@@ -6975,7 +6975,7 @@ dynamic_set_automaton (SXBA *i2supertagger_item_set,
 #    else /* !MAKE_INSIDEG */
   sxba_empty (w_set2);
 #    endif /* !MAKE_INSIDEG */
-  mlstn = (SXINT) lexicalizer2basic_item_set (SXFALSE, is_mlstn2la_tset);
+  mlstn = (SXINT) lexicalizer2basic_item_set (false, is_mlstn2la_tset);
 #  else /* !is_lex */
   mlstn = 0;
 
@@ -7277,7 +7277,7 @@ dynamic_set_automaton (SXBA *i2supertagger_item_set,
 #endif /* !is_sdag */
 			"string"
 #endif /* !is_dag */
-	     , (mlstn > 0) ? "SXTRUE" : "SXFALSE");
+	     , (mlstn > 0) ? "true" : "false");
 
     sxtime (TIME_FINAL, string);
   }
@@ -7296,18 +7296,18 @@ static XxY_header     glbl_dag_rcvr_txtrans;
 
 #if is_dag
 #if is_sa_rcvr
-static SXBOOLEAN
+static bool
 sa_dag_state_rl_rcvr (mlstn)
      SXINT mlstn;
 {
   SXINT dag_state, item, t, new_dag_state, trans, rule_no, triple, prev_mlstn, prev_trans, prev_tok; 
-  SXBOOLEAN ret_val;
+  bool ret_val;
   SXBA rcvr_t_set;
 #define last_rule_no 3
   SXINT rule_kind [last_rule_no+1] = {0, 1, 2, 3};
 
   if (rcvr_tok_no >= max_rcvr_tok_no)
-    return SXFALSE;
+    return false;
 
   rcvr_tok_no++;
 
@@ -7318,17 +7318,17 @@ sa_dag_state_rl_rcvr (mlstn)
 
   rcvr_t_set = glbl_source [last_tok_no+rcvr_tok_no];
 
-  ret_val = SXFALSE;
+  ret_val = false;
   item = -1;
 
   while ((item = sxba_scan_reset (cur_titem_set, item)) >= 0) {
     t = -lispro [item-1];
     SXBA_1_bit (rcvr_t_set, t);
-    ret_val = SXTRUE;
+    ret_val = true;
   }
 
   if (!ret_val)
-    return SXFALSE; 
+    return false; 
 
   new_dag_state = final_pos+rcvr_tok_no;
 
@@ -7415,7 +7415,7 @@ sa_dag_state_rl_rcvr (mlstn)
     /* On change la racine du dag */
     new_init_pos = new_dag_state;
 
-  return SXTRUE;
+  return true;
 }
 
 
@@ -7431,12 +7431,12 @@ sa_dag_state_rl_rcvr (mlstn)
   Il peut ds le dag ne pas exister de chemin entre dag_state et d1.
   On suppose donc qu'entre dag_state et d1 il y a un chemin qui s'epelle comme une \beta-phrase.
  */
-static SXBOOLEAN
+static bool
 glbl_sa_dag_state_rl_rcvr (mlstn)
      SXINT mlstn;
 {
   SXINT dag_state, item, left_item, bot_item, Y, t, trans, next_mlstn, it, next_dag_state, txtrans, right_trans; 
-  SXBOOLEAN ret_val;
+  bool ret_val;
   SXBA active_set, control_set, glbl_source_i;
 
   dag_state = mlstn2dag_state [mlstn];
@@ -7466,14 +7466,14 @@ glbl_sa_dag_state_rl_rcvr (mlstn)
   }
 
   /* Attention, des etats deja calcules  et touches par le traitement d'erreur doivent etre recalcules */
-  ret_val = SXFALSE;
+  ret_val = false;
 
   for (trans = 1; trans <= top_dag_trans; trans++) {
     next_dag_state = XxYxZ_Z (dag_hd, trans);
     next_mlstn = dag_state2mlstn [next_dag_state];
 	      
     if (next_mlstn < mlstn) {
-      ret_val = SXTRUE;
+      ret_val = true;
       Y = XxYxZ_Y (dag_hd, trans);
 #if is_sdag
       sxba_or (source_t_set, glbl_source [Y]);
@@ -7485,7 +7485,7 @@ glbl_sa_dag_state_rl_rcvr (mlstn)
   }
 
   if (ret_val) {
-    ret_val = SXFALSE;
+    ret_val = false;
     item = -1;
 
     while ((item = sxba_scan (active_set, item)) >= 0) {
@@ -7529,7 +7529,7 @@ glbl_sa_dag_state_rl_rcvr (mlstn)
 		       sxplocals.sxtables->err_titles [2]+1,
 		       sxstrget (toks_buf [XxYxZ_Y (dag_hd, trans)].string_table_entry));
 
-	      ret_val = SXTRUE;
+	      ret_val = true;
 	    }
 	  }
 	}
@@ -7616,7 +7616,7 @@ sa_dag_rcvr (bot_mlstn)
     SXINT new_mlstn, pos, trans, X, Z; 
     SXBA tbp, ap, new_mlstn_active_set, new_mlstn_already_processed;
     SXINT *new_dag_state2mlstn, *new_mlstn2dag_state;
-    SXBOOLEAN done;
+    bool done;
 
     tbp = sxba_calloc (final_pos+rcvr_tok_no+1);
     ap = sxba_calloc (final_pos+rcvr_tok_no+1);
@@ -7626,11 +7626,11 @@ sa_dag_rcvr (bot_mlstn)
 
     /* Attention, il faut partir de la [nouvelle] racine du dag */
     SXBA_1_bit (tbp, new_init_pos);
-    done = SXFALSE;
+    done = false;
     new_mlstn = 0;
 
     while (!done) {
-      done = SXTRUE;
+      done = true;
 
       pos = sxba_scan (tbp, 0);
 
@@ -7651,7 +7651,7 @@ sa_dag_rcvr (bot_mlstn)
 	XxYxZ_Xforeach (dag_hd, pos, trans) {
 	  Z = XxYxZ_Z (dag_hd, trans);
 	  SXBA_1_bit (tbp, Z);
-	  done = SXFALSE;
+	  done = false;
 	}
       }
     }
@@ -7682,7 +7682,7 @@ sa_dag_rcvr (bot_mlstn)
   }
 
   /* la passe gauche droite a pu quand m marcher, tant pis... */
-  lr_pass_succeeds = SXFALSE;
+  lr_pass_succeeds = false;
 
   if (rcvr_mlstn) {
     dag_state = mlstn2dag_state [rcvr_mlstn];
@@ -7926,7 +7926,7 @@ basic_lexicalizer (source2valid_item_set)
   SXINT t, item, prev_prod, prod, bot, top, i, j; 
   SXINT mlstn, dag_state, trans, Y, Z, flip_flop;
   SXBA *t2hd_mlstn_set, path, left_mlstn_set, next_mlstn_set, right_mlstn_set, *wset, glbl_source_i;
-  SXBOOLEAN is_empty;
+  bool is_empty;
 
   if (multiple_t_item_set) {
     t2hd_mlstn_set = sxbm_calloc (eof+1, idag.final_state+1);
@@ -8001,12 +8001,12 @@ basic_lexicalizer (source2valid_item_set)
 	  /* ancres suivantes */
 	  right_mlstn_set = t2hd_mlstn_set [t];
 
-	  is_empty = SXTRUE;
+	  is_empty = true;
 	  i = -1;
 
 	  while ((i = sxba_scan (left_mlstn_set, i)) >= 0) {
 	    if (sxba_or_and (next_mlstn_set, mlstn_path [i], right_mlstn_set))
-	      is_empty = SXFALSE;
+	      is_empty = false;
 	  }
 
 	  if (is_empty) {
@@ -8077,12 +8077,12 @@ basic_lexicalizer (source2valid_item_set)
 	    /* ancres suivantes */
 	    right_mlstn_set = t2hd_mlstn_set [t];
 
-	    is_empty = SXTRUE;
+	    is_empty = true;
 	    i = -1;
 
 	    while ((i = sxba_scan (left_mlstn_set, i)) >= 0) {
 	      if (sxba_or_and (next_mlstn_set, mlstn_path [i], right_mlstn_set))
-		is_empty = SXFALSE;
+		is_empty = false;
 	    }
 
 	    if (is_empty) {
@@ -8127,7 +8127,7 @@ ub_lexicalizer (ub2item_set)
   SXINT mlstn, dag_state, trans, flip_flop;
   SXBA *t2hd_mlstn_set, path, left_mlstn_set, next_mlstn_set, right_mlstn_set, *wset, glbl_source_i, *source_t_sets;
   SXBA source_t_set, source_t_set_Z;
-  SXBOOLEAN is_empty;
+  bool is_empty;
 
   if (multiple_t_item_set) {
     source_t_sets = sxbm_calloc (idag.final_state+1, eof+1);
@@ -8272,12 +8272,12 @@ ub_lexicalizer (ub2item_set)
 	    /* ancres suivantes */
 	    right_mlstn_set = t2hd_mlstn_set [t];
 
-	    is_empty = SXTRUE;
+	    is_empty = true;
 	    i = -1;
 
 	    while ((i = sxba_scan (left_mlstn_set, i)) >= 0) {
 	      if (sxba_or_and (next_mlstn_set, mlstn_path [i], right_mlstn_set))
-		is_empty = SXFALSE;
+		is_empty = false;
 	    }
 
 	    if (is_empty) {
@@ -8365,7 +8365,7 @@ lb_lexicalizer (lb2item_set)
   SXINT mlstn, dag_state, trans, flip_flop;
   SXBA *t2hd_mlstn_set, path, left_mlstn_set, next_mlstn_set, right_mlstn_set, *wset, *source_t_sets;
   SXBA source_t_set, source_t_set_X;
-  SXBOOLEAN is_empty;
+  bool is_empty;
 
   if (multiple_t_item_set) {
     source_t_sets = sxbm_calloc (idag.final_state+1, eof+1);
@@ -8507,12 +8507,12 @@ lb_lexicalizer (lb2item_set)
 	    /* ancres suivantes */
 	    right_mlstn_set = t2hd_mlstn_set [t];
 
-	    is_empty = SXTRUE;
+	    is_empty = true;
 	    i = -1;
 
 	    while ((i = sxba_scan (left_mlstn_set, i)) >= 0) {
 	      if (sxba_or_and (next_mlstn_set, mlstn_path [i], right_mlstn_set))
-		is_empty = SXFALSE;
+		is_empty = false;
 	    }
 
 	    if (is_empty) {
@@ -8750,12 +8750,12 @@ rl_close_reduce (item)
 
 /* remplit les control et active sets des etats du dynamic set automaton atteints depuis mlstn 
  de gauche a droite */
-static SXBOOLEAN
+static bool
 sa_dag_scanner (mlstn)
      SXINT mlstn;
 {
   SXINT dag_state, trans, item, t, next_mlstn, prod, Y;
-  SXBOOLEAN has_forward_ttrans = SXFALSE;
+  bool has_forward_ttrans = false;
   SXBA glbl_source_i, trans_set;
 
   /* active_set = active_sets [mlstn]; */
@@ -8804,7 +8804,7 @@ sa_dag_scanner (mlstn)
       trans = -1;
 
       while ((trans = sxba_scan (trans_set, trans)) >= 0) {
-	has_forward_ttrans = SXTRUE;
+	has_forward_ttrans = true;
 	next_mlstn = dag_state2mlstn [XxYxZ_Z (dag_hd, trans)];
 	SXBA_1_bit (active_sets [next_mlstn], item+1);
 
@@ -8829,12 +8829,12 @@ sa_dag_scanner (mlstn)
 
 /* remplit les control et active sets des etats du dynamic set automaton atteints depuis mlstn 
  de droite a gauche */
-static SXBOOLEAN
+static bool
 sa_dag_rlscanner (dag_state)
      SXINT dag_state;
 {
   SXINT trans, item, t, next_dag_state, prod, Y;
-  SXBOOLEAN has_backward_ttrans = SXFALSE;
+  bool has_backward_ttrans = false;
   SXBA glbl_source_i, trans_set;
 
   /* active_set = active_sets [mlstn]; */
@@ -8873,7 +8873,7 @@ sa_dag_rlscanner (dag_state)
       trans = -1;
 
       while ((trans = sxba_scan (trans_set, trans)) >= 0) {
-	has_backward_ttrans = SXTRUE;
+	has_backward_ttrans = true;
 	/* kernel non vide */
 	next_dag_state = XxYxZ_X (dag_hd, trans);
 	SXBA_1_bit (mlstn_active_set, next_dag_state);
@@ -8908,22 +8908,22 @@ sa_dag_rlscanner (dag_state)
   return has_backward_ttrans;
 }
 
-static SXBOOLEAN lr_pass_succeeds;
+static bool lr_pass_succeeds;
 static SXBA source2valid_item_set;
 
 #if is_sa_rcvr
-static SXBOOLEAN
+static bool
 sa_dag_state_rl_rcvr (mlstn)
      SXINT mlstn;
 {
   SXINT dag_state, item, t, new_dag_state, trans, rule_no, triple, prev_mlstn, prev_trans, prev_tok; 
-  SXBOOLEAN ret_val;
+  bool ret_val;
   SXBA rcvr_t_set;
 #define last_rule_no 3
   SXINT rule_kind [last_rule_no+1] = {0, 1, 2, 3};
 
   if (rcvr_tok_no >= max_rcvr_tok_no)
-    return SXFALSE;
+    return false;
 
   rcvr_tok_no++;
 
@@ -8934,17 +8934,17 @@ sa_dag_state_rl_rcvr (mlstn)
 
   rcvr_t_set = glbl_source [last_tok_no+rcvr_tok_no];
 
-  ret_val = SXFALSE;
+  ret_val = false;
   item = -1;
 
   while ((item = sxba_scan_reset (cur_titem_set, item)) >= 0) {
     t = -lispro [item-1];
     SXBA_1_bit (rcvr_t_set, t);
-    ret_val = SXTRUE;
+    ret_val = true;
   }
 
   if (!ret_val)
-    return SXFALSE; 
+    return false; 
 
   new_dag_state = final_pos+rcvr_tok_no;
 
@@ -9031,7 +9031,7 @@ sa_dag_state_rl_rcvr (mlstn)
     /* On change la racine du dag */
     new_init_pos = new_dag_state;
 
-  return SXTRUE;
+  return true;
 }
 
 
@@ -9047,12 +9047,12 @@ sa_dag_state_rl_rcvr (mlstn)
   Il peut ds le dag ne pas exister de chemin entre dag_state et d1.
   On suppose donc qu'entre dag_state et d1 il y a un chemin qui s'epelle comme une \beta-phrase.
  */
-static SXBOOLEAN
+static bool
 glbl_sa_dag_state_rl_rcvr (mlstn)
      SXINT mlstn;
 {
   SXINT dag_state, item, left_item, bot_item, Y, t, trans, next_mlstn, it, next_dag_state, txtrans, right_trans; 
-  SXBOOLEAN ret_val;
+  bool ret_val;
   SXBA active_set, control_set, glbl_source_i;
 
   dag_state = mlstn2dag_state [mlstn];
@@ -9082,14 +9082,14 @@ glbl_sa_dag_state_rl_rcvr (mlstn)
   }
 
   /* Attention, des etats deja calcules  et touches par le traitement d'erreur doivent etre recalcules */
-  ret_val = SXFALSE;
+  ret_val = false;
 
   for (trans = 1; trans <= top_dag_trans; trans++) {
     next_dag_state = XxYxZ_Z (dag_hd, trans);
     next_mlstn = dag_state2mlstn [next_dag_state];
 	      
     if (next_mlstn < mlstn) {
-      ret_val = SXTRUE;
+      ret_val = true;
       Y = XxYxZ_Y (dag_hd, trans);
 #if is_sdag
       sxba_or (source_t_set, glbl_source [Y]);
@@ -9101,7 +9101,7 @@ glbl_sa_dag_state_rl_rcvr (mlstn)
   }
 
   if (ret_val) {
-    ret_val = SXFALSE;
+    ret_val = false;
     item = -1;
 
     while ((item = sxba_scan (active_set, item)) >= 0) {
@@ -9145,7 +9145,7 @@ glbl_sa_dag_state_rl_rcvr (mlstn)
 		       sxplocals.sxtables->err_titles [2]+1,
 		       sxstrget (toks_buf [XxYxZ_Y (dag_hd, trans)].string_table_entry));
 
-	      ret_val = SXTRUE;
+	      ret_val = true;
 	    }
 	  }
 	}
@@ -9232,7 +9232,7 @@ sa_dag_rcvr (bot_mlstn)
     SXINT new_mlstn, pos, trans, X, Z; 
     SXBA tbp, ap, new_mlstn_active_set, new_mlstn_already_processed;
     SXINT *new_dag_state2mlstn, *new_mlstn2dag_state;
-    SXBOOLEAN done;
+    bool done;
 
     tbp = sxba_calloc (final_pos+rcvr_tok_no+1);
     ap = sxba_calloc (final_pos+rcvr_tok_no+1);
@@ -9242,11 +9242,11 @@ sa_dag_rcvr (bot_mlstn)
 
     /* Attention, il faut partir de la [nouvelle] racine du dag */
     SXBA_1_bit (tbp, new_init_pos);
-    done = SXFALSE;
+    done = false;
     new_mlstn = 0;
 
     while (!done) {
-      done = SXTRUE;
+      done = true;
 
       pos = sxba_scan (tbp, 0);
 
@@ -9267,7 +9267,7 @@ sa_dag_rcvr (bot_mlstn)
 	XxYxZ_Xforeach (dag_hd, pos, trans) {
 	  Z = XxYxZ_Z (dag_hd, trans);
 	  SXBA_1_bit (tbp, Z);
-	  done = SXFALSE;
+	  done = false;
 	}
       }
     }
@@ -9301,7 +9301,7 @@ sa_dag_rcvr (bot_mlstn)
   }
 
   /* la passe gauche droite a pu quand m marcher, tant pis... */
-  lr_pass_succeeds = SXFALSE;
+  lr_pass_succeeds = false;
 
   if (rcvr_mlstn) {
     dag_state = mlstn2dag_state [rcvr_mlstn];
@@ -9317,7 +9317,7 @@ sa_dag_rcvr (bot_mlstn)
 }
 #endif /* is_sa_rcvr */
 
-static SXBOOLEAN
+static bool
 dynamic_set_automaton (SXBA *lb2prod_item_set)
 {
   SXINT t, item, item_1, X, i, A, bot, top, prod, mlstn, pos, dag_state; 
@@ -9472,7 +9472,7 @@ dynamic_set_automaton (SXBA *lb2prod_item_set)
 
   if (
 #if is_sa_rcvr
-      SXTRUE ||
+      true ||
 #endif /* is_sa_rcvr */
       lr_pass_succeeds ) {
 
@@ -11257,7 +11257,7 @@ rl_close_reduce (item)
 }
 
 
-static SXBOOLEAN
+static bool
 dynamic_set_automaton (lb2prod_item_set)
      SXBA *lb2prod_item_set;
 {
@@ -11481,7 +11481,7 @@ dynamic_set_automaton (lb2prod_item_set)
   sxbm_free (lb2item_set);
 #endif /* is_lex2 */
 
-  return SXTRUE;
+  return true;
 }
 #endif /* is_set_automaton */
 #endif /* !is_dag */
@@ -11615,11 +11615,11 @@ lfsa_lexicalize (G)
 #if is_lfsa
 struct fsaG        *lfsaGs [PID];
 
-static SXBOOLEAN
+static bool
 call_lfsa ()
 {
   SXINT         i, tnb;
-  SXBOOLEAN     ret_val, pid;
+  bool     ret_val, pid;
   char	      str [164];
   struct fsaG *fsaG;
 
@@ -11653,11 +11653,11 @@ call_lfsa ()
 	     tnb,
 	     fsaG->fsa_valid_prod_set ? sxba_cardinal (fsaG->fsa_valid_prod_set) : 0,
 	     fsaG->instantiated_prod_nb,
-	     ret_val ? "SXTRUE" : "SXFALSE");
+	     ret_val ? "true" : "false");
 #else
     sprintf (str, "\tLFSA[t=%i] (%s)",
 	     tnb,
-	     ret_val ? "SXTRUE" : "SXFALSE");
+	     ret_val ? "true" : "false");
 #endif
 
     sxtime (TIME_FINAL, str);
@@ -11698,11 +11698,11 @@ rfsa_lexicalize (G)
 
 
 
-static SXBOOLEAN
+static bool
 call_rfsa ()
 {
   SXINT     i, tnb, pid;
-  SXBOOLEAN ret_val;
+  bool ret_val;
   char	  str [164];
   SXBA    set;
   struct fsaG *fsaG;
@@ -11741,11 +11741,11 @@ call_rfsa ()
 	     tnb,
 	     fsaG->fsa_valid_prod_set ? sxba_cardinal (fsaG->fsa_valid_prod_set) : 0,
 	     fsaG->instantiated_prod_nb,
-	     ret_val ? "SXTRUE" : "SXFALSE");
+	     ret_val ? "true" : "false");
 #else
     sprintf (str, "\tRFSA[t=%i] (%s)",
 	     tnb,
-	     ret_val ? "SXTRUE" : "SXFALSE");
+	     ret_val ? "true" : "false");
 #endif
 
     sxtime (TIME_FINAL, str);
@@ -12256,7 +12256,7 @@ generate (SXINT min_proto, SXINT lgth)
   }
 }
 
-static SXBOOLEAN
+static bool
 check_generate ()
 {
 #if LOG
@@ -12289,7 +12289,7 @@ check_generate ()
   fputs ("****** Leaving check_generate () ******\n", stdout);
 #endif /* LOG */
 
-  return SXTRUE; /* On sera + fin +tard */
+  return true; /* On sera + fin +tard */
 }
     
 if (is_axiom_kept && (is_axiom_kept = check_generate ())) {

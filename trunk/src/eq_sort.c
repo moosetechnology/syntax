@@ -28,19 +28,19 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_EQ_SORT[] = "@(#)SYNTAX - $Id: eq_sort.c 2428 2023-01-18 12:54:10Z garavel $" WHAT_DEBUG;
+char WHAT_EQ_SORT[] = "@(#)SYNTAX - $Id: eq_sort.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 
 static SXINT *T;
-static SXBOOLEAN (*LESS_EQUAL) (SXINT, SXINT);
+static bool (*LESS_EQUAL) (SXINT, SXINT);
 
 
-static SXBOOLEAN le (SXINT i, SXINT j)
+static bool le (SXINT i, SXINT j)
 {
 return (*LESS_EQUAL) (T[i],T[j]);
 }
 
-SXVOID equality_sort (SXINT *t, SXINT bi, SXINT bs, SXBOOLEAN (*less_equal) (SXINT, SXINT), SXBOOLEAN (*equal) (SXINT, SXINT))
+void equality_sort (SXINT *t, SXINT bi, SXINT bs, bool (*less_equal) (SXINT, SXINT), bool (*equal) (SXINT, SXINT))
 {
     /* Procedure modifie le tableau t entre bi et bs de facon telle que: 
        si (*equal) (t [i], t [j]) alors 
@@ -55,7 +55,7 @@ SXVOID equality_sort (SXINT *t, SXINT bi, SXINT bs, SXBOOLEAN (*less_equal) (SXI
     /* L O C A L   V A R I A B L E S   */
     SXINT	i, xmin, min;
     SXINT	*sorted;
-    SXBOOLEAN	is_equality;
+    bool	is_equality;
     SXINT	xi;
 
 
@@ -78,16 +78,16 @@ SXVOID equality_sort (SXINT *t, SXINT bi, SXINT bs, SXBOOLEAN (*less_equal) (SXI
 /* test des egalites dans le tableau trie */
 
     min = t [sorted [xmin = bi]];
-    is_equality = SXFALSE;
+    is_equality = false;
 
     for (i = bi + 1; i <= bs; i++) {
 	if ((*equal) (min, xi = t [sorted [i]])) {
-	    is_equality = SXTRUE;
+	    is_equality = true;
 	    min = (min <= xi) ? min : xi;
 	}
 	else {
 	    if (is_equality) {
-		is_equality = SXFALSE;
+		is_equality = false;
 
 		for (; xmin < i; xmin++) {
 		    t [sorted [xmin]] = min;

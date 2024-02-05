@@ -95,17 +95,17 @@ extern SXINT			sxsubset_set (sxsubset_header *h, SXINT subset_nb);
        Le resultat est l'identifiant de ce sous-ensemble ds la structure.
        Si resultat == subset_nb => c'est un nouveau, sinon il existait deja et on peut
        donc le liberer via sxsubset_release(h,subset_nb). */
-extern SXBOOLEAN			sxsubset_unset (sxsubset_header *h, SXINT subset_nb);
+extern bool			sxsubset_unset (sxsubset_header *h, SXINT subset_nb);
 /* Le sous-ensemble "subset_nb" redevient un simple SXBA.
-   Retourne SXTRUE ssi il figure ds le pool des sous-ensembles. */
+   Retourne true ssi il figure ds le pool des sous-ensembles. */
 extern SXINT			sxsubset_seek (sxsubset_header *h);
 /* Retourne l'identifiant entier d'un nouvel ensemble manipulable par les
    SXBA via sxsubset_to_sxba.  ATTENTION, les SXBA retourne's pre'ce'demment
    par "sxsubset_to_sxba" peuvent e^tre invalides (reallocation). */
 
 extern void			sxsubset_stat (FILE *stat_file, sxsubset_header *h);
-extern SXBOOLEAN			sxsubset_write (sxsubset_header *header, sxfiledesc_t file_descr);
-extern SXBOOLEAN			sxsubset_read (sxsubset_header *header,
+extern bool			sxsubset_write (sxsubset_header *header, sxfiledesc_t file_descr);
+extern bool			sxsubset_read (sxsubset_header *header,
 					       sxfiledesc_t file_descr,
 					       char *name,
 					       SXINT (*subset_oflw) (SXINT, SXINT), 
@@ -116,7 +116,7 @@ extern void			sxsubset_header_to_c (sxsubset_header *header, FILE *file, char *n
 extern void			sxsubset_to_c (sxsubset_header *header, 
 					       FILE *file, 
 					       char *name, 
-					       SXBOOLEAN is_static);
+					       bool is_static);
 extern void			sxsubset_reuse (sxsubset_header *header,
 						SXINT (*user_subset_oflw) (SXINT, SXINT), 
 						SXINT (*user_elem_oflw) (SXINT, SXINT),
@@ -129,7 +129,7 @@ extern void			sxsubset_reuse (sxsubset_header *header,
 #define sxsubset_is_released(h,i)\
                                 sxindex_is_released ((h).subset_hd,i)
 #define sxsubset_is_set(h,i)	((h).display [i].lnk != -2)
-/* SXTRUE ssi i == seek () && i == set () */
+/* true ssi i == seek () && i == set () */
 #define sxsubset_clear(h)	sxindex_clear ((h).subset_hd)
 #define sxsubset_nb(h)		sxindex_size ((h).subset_hd)
     /* Nombre maximal de subsets */

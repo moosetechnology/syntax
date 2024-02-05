@@ -46,7 +46,7 @@ static char ME [] = "read_a_re";
 #include "varstr.h"
 #include <setjmp.h>
 
-char WHAT_READARE[] = "@(#)SYNTAX - $Id: read_a_re.c 3090 2023-04-30 11:40:45Z garavel $" WHAT_DEBUG;
+char WHAT_READARE[] = "@(#)SYNTAX - $Id: read_a_re.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 extern VARSTR              cur_input_vstr;
 
@@ -67,7 +67,7 @@ your attribute declarations...
 
 /* CAS RE2DFA */
   SXINT     node_id, cur_position;
-  SXBOOLEAN nullable;
+  bool nullable;
 };
 /*
 N O D E   N A M E S
@@ -91,14 +91,14 @@ E N D   N O D E   N A M E S
 extern void             (*main_parser)(SXINT what); // earley eventuel ou autre ...
 
 
-static void             (*prelude_re)(SXBOOLEAN, SXINT, SXINT, SXINT, SXINT), 
+static void             (*prelude_re)(bool, SXINT, SXINT, SXINT, SXINT), 
                         (*store_re)(SXINT, struct sxtoken **, struct sxtoken **, SXINT, SXINT);
 static SXINT            (*postlude_re)(SXINT);
 
 static SXINT            what_to_do_re;
 static SXINT            eof_ste;
-static SXBOOLEAN        not_a_dag;
-extern SXBOOLEAN        tmp_file_for_stdin;
+static bool        not_a_dag;
+extern bool        tmp_file_for_stdin;
 static VARSTR           vstr;
 
 /* *********************************************** CAS RE2NFA *********************************** */
@@ -136,7 +136,7 @@ first_re2nfa_pass (struct re_node *visited)
   case KLEENE_STAR_n :/* son->name = {ALTERNATIVE_S_n, KLEENE_PLUS_n, KLEENE_STAR_n, OPTION_n, SEQUENCE_S_n, WORD_SEMLEX_n, word_n} */
     if (what_to_do_re & RE_IS_A_DAG) {
       /* Le source doit etre un DAG, KLEENE est donc interdit */
-      not_a_dag = SXTRUE;
+      not_a_dag = true;
       sxerror (visited->token.source_index,
 	       re_tables.err_titles [2][0],
 	       "%sThe regular expression must define a DAG.",
@@ -345,7 +345,7 @@ first_re2dfa_pass (struct re_node *visited)
 {
   struct re_node   *son;
   SXINT           ste;
-  SXBOOLEAN        nullable = SXFALSE;
+  bool        nullable = false;
 
   switch (visited->name) {
   case ERROR_n :
@@ -356,7 +356,7 @@ first_re2dfa_pass (struct re_node *visited)
       first_re2dfa_pass (son);
 
       if (son->nullable)
-	nullable = SXTRUE;
+	nullable = true;
     }
 
     break;
@@ -365,7 +365,7 @@ first_re2dfa_pass (struct re_node *visited)
   case KLEENE_STAR_n :/* son->name = {ALTERNATIVE_S_n, KLEENE_PLUS_n, KLEENE_STAR_n, OPTION_n, SEQUENCE_S_n, WORD_SEMLEX_n, word_n} */
     if (what_to_do_re & RE_IS_A_DAG) {
       /* Le source doit etre un DAG, KLEENE est donc interdit */
-      not_a_dag = SXTRUE;
+      not_a_dag = true;
       sxerror (visited->token.source_index,
 		   re_tables.err_titles [2][0],
 		   "%sThe regular expression must define a DAG.",
@@ -376,7 +376,7 @@ first_re2dfa_pass (struct re_node *visited)
 
   case OPTION_n :/* son->name = {ALTERNATIVE_S_n, KLEENE_PLUS_n, KLEENE_STAR_n, OPTION_n, SEQUENCE_S_n, WORD_SEMLEX_n, word_n} */
     first_re2dfa_pass (visited->son);
-    nullable = visited->name == KLEENE_PLUS_n ? SXFALSE : SXTRUE;
+    nullable = visited->name == KLEENE_PLUS_n ? false : true;
     break;
 
   case RE_ROOT_n :/* son[1]->name = {ALTERNATIVE_S_n, KLEENE_PLUS_n, KLEENE_STAR_n, OPTION_n, SEQUENCE_S_n, WORD_SEMLEX_n, word_n} */
@@ -388,17 +388,17 @@ first_re2dfa_pass (struct re_node *visited)
     first_re2dfa_pass (son);
 
     visited->cur_position = ++position; /* $ Fin de re */
-    /* nullable = SXFALSE; $ */
+    /* nullable = false; $ */
     break;
 
   case SEQUENCE_S_n :/* son->name = {ALTERNATIVE_S_n, KLEENE_PLUS_n, KLEENE_STAR_n, OPTION_n, SEQUENCE_S_n, WORD_SEMLEX_n, word_n} */
-    nullable = SXTRUE;
+    nullable = true;
 
     for (son = visited->son; son != NULL; son = son->brother) {
       first_re2dfa_pass (son);
 
       if (!(son->nullable))
-	nullable = SXFALSE;
+	nullable = false;
     }
 
     break;
@@ -469,7 +469,7 @@ second_re2dfa_pass (struct re_node *visited)
 {
   struct re_node *son, *brother;
   SXBA           visited_firstpos_set, visited_lastpos_set, brother_firstpos_set;
-  SXBOOLEAN        sons_are_nullable;
+  bool        sons_are_nullable;
 
   switch (visited->name) {
   case ERROR_n :
@@ -497,7 +497,7 @@ second_re2dfa_pass (struct re_node *visited)
     break;
 
   case RE_ROOT_n :/* son[1]->name = {ALTERNATIVE_S_n, KLEENE_PLUS_n, KLEENE_STAR_n, OPTION_n, SEQUENCE_S_n, WORD_SEMLEX_n, word_n} *//* visited->son->name = REGULAR_EXPRESSION_n */
-    /* nullable = SXFALSE; $ */
+    /* nullable = false; $ */
     son = visited->son;
     second_re2dfa_pass (son);
 
@@ -628,7 +628,7 @@ third_re2dfa_pass (struct re_node *visited)
 
   case RE_ROOT_n :/* son[1]->name = {ALTERNATIVE_S_n, KLEENE_PLUS_n, KLEENE_STAR_n, OPTION_n, SEQUENCE_S_n, WORD_SEMLEX_n, word_n} */
     /* son[2]->name = eof_n */
-    /* nullable = SXFALSE; $ */
+    /* nullable = false; $ */
     son = visited->son;
     third_re2dfa_pass (son);
 
@@ -704,7 +704,7 @@ extract_efnfa (void)
   struct sxtoken *local_re2nfa_token_ptr_stack [3] = {NULL, NULL, NULL};
   struct sxtoken *local_re2nfa_semlex_token_ptr_stack [3] = {NULL, NULL, NULL};
   SXINT            *pos2efnfa_state;
-  SXBOOLEAN        has_init_component;
+  bool        has_init_component;
 
   pos2efnfa_state = (SXINT *) sxcalloc (position+1, sizeof (SXINT));
   pos_stack = (SXINT *) sxalloc (2*position+1, sizeof (SXINT)), RAZ (pos_stack);
@@ -755,14 +755,14 @@ extract_efnfa (void)
     ste = visited->ste;
     followpos_set = followpos [pos];
     
-    has_init_component = SXFALSE;
+    has_init_component = false;
     next_efnfa_state = 0;
     fpos = 0;
 
     while ((fpos = sxba_scan (followpos_set, fpos)) > 0) {
       if (fpos < position) {
 	if (SXBA_bit_is_set (firstpos_set, fpos)) {
-	  has_init_component = SXTRUE;
+	  has_init_component = true;
 	}
 	else {
 	  next_efnfa_state = pos2efnfa_state [fpos];
@@ -891,7 +891,7 @@ extract_dfa (void)
   SXINT            i, j, couple;
   SXINT            *to_be_sorted, *dfa_state2i;
   XxY_header     XxY_dfa;
-  SXBOOLEAN        already_found;
+  bool        already_found;
   
   re2dfa_token_ptr_stack = (struct sxtoken **) sxalloc (position+2, sizeof (struct sxtoken *)), re2dfa_token_ptr_stack [0] = 0;
   re2dfa_semlex_token_ptr_stack = (struct sxtoken **) sxalloc (position+2, sizeof (struct sxtoken *)), re2dfa_semlex_token_ptr_stack [0] = 0;
@@ -1146,7 +1146,7 @@ smppass (void)
     /* premiere passe synthetisee qui calcule max_nb la "longueur" max de la sous-expression */
     first_re2nfa_pass (sxatcvar.atc_lv.abstract_tree_root);
 
-    if (prelude_re) (*prelude_re) ((SXBOOLEAN) (!not_a_dag) /* RE OK */, (SXINT) eof_ste, re_node_nb, re_leaf_nb, RE2NFA);
+    if (prelude_re) (*prelude_re) ((bool) (!not_a_dag) /* RE OK */, (SXINT) eof_ste, re_node_nb, re_leaf_nb, RE2NFA);
 
     if (!not_a_dag) {
       /* seconde passe heritee qui calcule les pre et post pos de la sous-expression */
@@ -1163,7 +1163,7 @@ smppass (void)
     first_re2dfa_pass (sxatcvar.atc_lv.abstract_tree_root);
 
     if (not_a_dag) {
-      if (prelude_re) (*prelude_re) (SXFALSE /* RE pas OK */, (SXINT) eof_ste, node_nb, position, 0);
+      if (prelude_re) (*prelude_re) (false /* RE pas OK */, (SXINT) eof_ste, node_nb, position, 0);
     }
     else {
       firstpos_sets = sxbm_calloc (node_nb+1, position+1);
@@ -1181,7 +1181,7 @@ smppass (void)
       if (what_to_do_re & RE2EFNFA) {
 	/* Cas automate non-deterministe sans transitions epsilon */
 	if (prelude_re)
-	  (*prelude_re) (SXTRUE /* RE OK */, (SXINT) eof_ste, node_nb, position, RE2EFNFA);
+	  (*prelude_re) (true /* RE OK */, (SXINT) eof_ste, node_nb, position, RE2EFNFA);
 
 	extract_efnfa ();
 
@@ -1192,7 +1192,7 @@ smppass (void)
       if (what_to_do_re & RE2DFA) {
 	/* Cas automate deterministe non minimal */
 	if (prelude_re)
-	  (*prelude_re) (SXTRUE /* RE OK */, (SXINT) eof_ste, node_nb, position, RE2DFA);
+	  (*prelude_re) (true /* RE OK */, (SXINT) eof_ste, node_nb, position, RE2DFA);
 
 	extract_dfa ();
 
@@ -1242,7 +1242,7 @@ re_smp (SXINT what, struct sxtables *sxtables_ptr)
 }
 
 SXINT
-read_a_re (void (*prelude)(SXBOOLEAN, SXINT, SXINT, SXINT, SXINT), 
+read_a_re (void (*prelude)(bool, SXINT, SXINT, SXINT, SXINT), 
 	   void (*store)(SXINT, struct sxtoken **, struct sxtoken **, SXINT, SXINT), 
 	   SXINT (*postlude)(SXINT), 
 	   SXINT what_to_do)
@@ -1296,7 +1296,7 @@ extern SXINT sxparser  (SXINT	what_to_do, struct sxtables *arg);
 SXINT
 sxparser_re_tcut  (SXINT what_to_do, struct sxtables *arg)
 {
-  SXBOOLEAN        ret_val;
+  bool        ret_val;
   SXINT            lahead = 0, store_print_time;
   struct sxtoken   *ptoken;
   SXINT            tmax;
@@ -1310,7 +1310,7 @@ sxparser_re_tcut  (SXINT what_to_do, struct sxtables *arg)
   case SXACTION:
     /* on fait un "TCUT" sur les fins-de-ligne */
     tmax = -re_tables.SXP_tables.P_tmax;
-    ret_val = SXTRUE;
+    ret_val = true;
     store_print_time = is_print_time;
 
     do { /* do pour chaque phrase */
@@ -1343,7 +1343,7 @@ sxparser_re_tcut  (SXINT what_to_do, struct sxtables *arg)
 	}
 
 	sxplocals.Mtok_no = sxplocals.atok_no = sxplocals.ptok_no = 0;
-	mem_signature_mode = SXFALSE;
+	mem_signature_mode = false;
 	continue;
       }
 	
@@ -1396,7 +1396,7 @@ sxparser_re_tcut  (SXINT what_to_do, struct sxtables *arg)
 	ret_val &= sxparser (SXACTION, arg); /* On parse la RE courante et on alloue et construit l'arbre abstrait ... */
 	
 	if (free_after_long_jmp)
-	  mem_signature_mode = SXTRUE; /* on active le mécanisme permettant de libérer ce qu'il faut après un longjump */
+	  mem_signature_mode = true; /* on active le mécanisme permettant de libérer ce qu'il faut après un longjump */
 
 	if (time_out)
 	  sxcaught_timeout (time_out, for_semact.timeout_mngr);
@@ -1426,7 +1426,7 @@ sxparser_re_tcut  (SXINT what_to_do, struct sxtables *arg)
 	}
 
 	if (free_after_long_jmp)
-	  mem_signature_mode = SXFALSE; /* on active le mécanisme permettant de libérer ce qu'il faut après un longjump */
+	  mem_signature_mode = false; /* on active le mécanisme permettant de libérer ce qu'il faut après un longjump */
 
 	if (time_out)
 	  sxcaught_timeout (0, for_semact.timeout_mngr);
@@ -1464,7 +1464,7 @@ sxparser_re_tcut  (SXINT what_to_do, struct sxtables *arg)
     re_tables.SXP_tables.semact = (SXINT(*)(SXINT, ...))sxivoid; // pour ne pas faire 2 fois semact (i.e. re_smp) sur le dernier re
       
     if (store_print_time) {
-      is_print_time = SXTRUE;
+      is_print_time = true;
       sxtime (SXACTION, "\tTotal parse time");
     }
 
@@ -1489,7 +1489,7 @@ sxparser_re_tcut  (SXINT what_to_do, struct sxtables *arg)
     break;
   }
 
-  return SXTRUE;
+  return true;
 }
 
 
@@ -1497,7 +1497,7 @@ sxparser_re_tcut  (SXINT what_to_do, struct sxtables *arg)
                              sinon, le source est ds la chaine C pathname_or_string */
 /* re_process est la fonction de l'utilisateur qui appelle read_a_re () avec les bons parametres */
 SXINT
-re_reader (char *pathname_or_string, SXBOOLEAN from_file, SXINT (*re_process)(void))
+re_reader (char *pathname_or_string, bool from_file, SXINT (*re_process)(void))
 {
   FILE	*infile = NULL;
   SXINT severity;

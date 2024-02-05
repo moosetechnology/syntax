@@ -112,21 +112,21 @@ extern int sxerr_max_severity (void);
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstrict-prototypes"
 /* on supprime les warnings de GCC concernant l'absence de  prototype */
-extern SXVOID sxerror ();
+extern void sxerror ();
 #pragma GCC diagnostic pop
 #else /* VFPRINTF_IS_BUGGED */
-extern SXVOID sxerror (struct sxsource_coord source_index, SXINT severity, char *format, ...);
+extern void sxerror (struct sxsource_coord source_index, SXINT severity, char *format, ...);
 #endif /* VFPRINTF_IS_BUGGED */
 
-extern SXVOID sxhmsg (char *file_name, char *format, ...);
+extern void sxhmsg (char *file_name, char *format, ...);
 
-extern SXVOID sxtmsg (char *file_name, char *format, ...);
+extern void sxtmsg (char *file_name, char *format, ...);
 
-extern SXVOID sxerr_mngr (SXINT what, ...);
+extern void sxerr_mngr (SXINT what, ...);
 
-extern SXVOID sxperror (char *string);
+extern void sxperror (char *string);
 
-extern SXVOID sxtrap (char *caller, char *message);
+extern void sxtrap (char *caller, char *message);
 
 #endif /* sxerr_mngr_h */
 

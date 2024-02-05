@@ -60,7 +60,7 @@
 #include        <unistd.h>
 #include        <string.h>
 
-char WHAT_SXSUBSET_MNGR[] = "@(#)SYNTAX - $Id: sxsubset_mngr.c 2947 2023-03-29 17:06:41Z garavel $" WHAT_DEBUG;
+char WHAT_SXSUBSET_MNGR[] = "@(#)SYNTAX - $Id: sxsubset_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 extern SXINT sxnext_prime (SXINT germe);
 
@@ -256,11 +256,11 @@ sxsubset_seek (sxsubset_header *h)
 }
 
 
-SXBOOLEAN
+bool
 sxsubset_unset (sxsubset_header *h, SXINT subset_nb)
 {
     /* Le sous-ensemble "subset_nb" redevient un simple SXBA.
-       Retourne SXTRUE ssi il figure ds le pool des sous-ensembles. */
+       Retourne true ssi il figure ds le pool des sous-ensembles. */
     SXINT x, *p;
 
     for (p = h->hash_tbl + (h->display [subset_nb].scrmbl % h->hash_size);
@@ -325,7 +325,7 @@ sxsubset_set (sxsubset_header *h, SXINT subset_nb)
 #define READ(p,l)	((bytes=(l))>0&&(read (file_descr, p, (size_t)bytes) == bytes))
 static SXINT	bytes;
 
-SXBOOLEAN
+bool
 sxsubset_write (sxsubset_header *header, sxfiledesc_t file_descr)
 {
     SXINT cardinal = SXBASIZE (header->subsets [0]);
@@ -342,7 +342,7 @@ sxsubset_write (sxsubset_header *header, sxfiledesc_t file_descr)
 }
 
 
-SXBOOLEAN
+bool
 sxsubset_read (sxsubset_header *header,
 	       sxfiledesc_t file_descr,
 	       char *name,
@@ -352,7 +352,7 @@ sxsubset_read (sxsubset_header *header,
 {
     SXINT cardinal;
 
-    SXBOOLEAN b_ret =
+    bool b_ret =
 	sxindex_read (&(header->subset_hd), file_descr, (sxoflw2_t) NULL)
 	&& READ (&(header->hash_size), sizeof (SXINT))
 	&& READ (&cardinal, sizeof (SXINT))
@@ -449,7 +449,7 @@ sxsubset_array_to_c (sxsubset_header *header, FILE *file, char *name)
     sxindex_array_to_c (&(header->subset_hd), file, sxsubset_str_);
 
     sxbm_to_c (file, header->subsets, sxindex_size (header->subset_hd), name,
-	       "_subsets", SXTRUE);
+	       "_subsets", true);
 
     sxsubset_cat_str ("_hash_tbl", 10);
     sxsubset_out_tab_int (file, sxsubset_str_, header->hash_tbl, header->hash_size);
@@ -490,7 +490,7 @@ sxsubset_header_to_c (sxsubset_header *header, FILE *file, char *name)
 
 
 void
-sxsubset_to_c (sxsubset_header *header, FILE *file, char *name, SXBOOLEAN is_static)
+sxsubset_to_c (sxsubset_header *header, FILE *file, char *name, bool is_static)
 {
     sxsubset_array_to_c (header, file, name);
     fprintf (file, "\n\n%ssxsubset_header %s =\n", is_static ? "static " : "", name);

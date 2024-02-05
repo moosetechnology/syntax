@@ -36,7 +36,7 @@ static char     ME [] = "lfg_smp";
 #include "varstr.h"
 #include "sxunix.h"
 #include <ctype.h>
-char WHAT_LFGSMP[] = "@(#)SYNTAX - $Id: lfg_smp.c 3492 2023-08-20 15:43:18Z garavel $" WHAT_DEBUG;
+char WHAT_LFGSMP[] = "@(#)SYNTAX - $Id: lfg_smp.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
  /* definies ds le main */
 extern     FILE              *bnf_file, *vocabulary_file;
@@ -208,7 +208,7 @@ static SXINT             doli;
 
 static SXBA          working_compound_field_set, working2_compound_field_set;
 
-static SXBOOLEAN       is_OPERATOR_LEXEME_REF, is_OPERATOR_LEX_REF;
+static bool       is_OPERATOR_LEXEME_REF, is_OPERATOR_LEX_REF;
 
 static void
 atom_names_oflw (SXINT old_size, SXINT new_size)
@@ -285,7 +285,7 @@ fill_leaves_field_kind (SXNODE *visited)
 /* Les 2 arg sont des ATOM_KIND */
 /* On regarde s'ils sont declares avec les memes atomes et si ces atomes ont les memes valeurs locales */
 /* Il faudrait memoiser */
-static SXBOOLEAN
+static bool
 check_identical_atom_type (SXINT atom_field_id1, SXINT atom_field_id2)
 {
   SXBA atom_set;
@@ -293,7 +293,7 @@ check_identical_atom_type (SXINT atom_field_id1, SXINT atom_field_id2)
   atom_set = field_id2atom_set [atom_field_id1];
 
   if (sxba_first_difference (atom_set, field_id2atom_set [atom_field_id2]) != -1)
-    return SXFALSE;
+    return false;
 
 #ifndef ESSAI
   atom2local_id1 = fieldXatom2local_id [atom_field_id1];
@@ -303,11 +303,11 @@ check_identical_atom_type (SXINT atom_field_id1, SXINT atom_field_id2)
 
   while ((atom_id = sxba_scan (atom_set, atom_id)) >= 0) {
     if (atom2local_id1 [atom_id] != atom2local_id2 [atom_id])
-      return SXFALSE;
+      return false;
   }
 #endif /* ESSAI */
   
-  return SXTRUE;
+  return true;
 }
 
 
@@ -1396,7 +1396,7 @@ static void lfg_pd (void) {
       SXINT datom_id, suffix_id, complex_atom_id;
 #if 0
       SXBA last_lhs_atom_set;
-      SXBOOLEAN invalid_complex_atom_detected;
+      bool invalid_complex_atom_detected;
 #endif /* 0 */
   
       if (last_lhs_atom_field_id == 0) {
@@ -1422,7 +1422,7 @@ static void lfg_pd (void) {
       suffix_id = sxword_2save (&suffix_names, sxstrget (brother->id), sxstrlen (brother->id));
 
 #if 0
-      invalid_complex_atom_detected = SXFALSE;
+      invalid_complex_atom_detected = false;
 #endif /* 0 */
 
       atom_id = 0;
@@ -1438,14 +1438,14 @@ static void lfg_pd (void) {
 
 #if 0
 	if (complex_atom_id == 0) {
-	  invalid_complex_atom_detected = SXTRUE;
+	  invalid_complex_atom_detected = true;
 	  sxerror (SXVISITED->token.source_index, 
 		   sxtab_ptr->err_titles [2][0],
 		   "%sComplex atomic value may result into \"%s\", which is not declared as a possible atomic value.",
 		   sxtab_ptr->err_titles [2]+1, varstr_tostr (vstr));
 	} else {
 	  if (!SXBA_bit_is_set (last_lhs_atom_set,complex_atom_id)) {
-	    invalid_complex_atom_detected = SXTRUE;
+	    invalid_complex_atom_detected = true;
 	    sxerror (SXVISITED->token.source_index, 
 		     sxtab_ptr->err_titles [2][0],
 		     "%sComplex atomic value may result into \"%s\", which is not declared as a possible atomic value for field %s.",
@@ -1862,7 +1862,7 @@ break;
 
   case OU_S_n :
     {
-      SXBOOLEAN is_error = SXFALSE;
+      bool is_error = false;
 
       field_kind = ERROR_KIND;
 
@@ -1876,11 +1876,11 @@ break;
 		       sxtab_ptr->err_titles [2][0],
 		       "%sType mismatch in disjunctions: ignored.",
 		       sxtab_ptr->err_titles [2]+1);
-	      is_error = SXTRUE;
+	      is_error = true;
 	    }
 	  }
 	  else
-	    is_error = SXTRUE;
+	    is_error = true;
 	}
       }
 
@@ -2535,7 +2535,7 @@ static SXINT             *nt_names2nt, *nt2nt_names;
 static SXINT             *rule2equation, *rule2next_rule, *prod2rule, *new_prod2rule;
 static SXINT             rule_nb;
 static FILE            *output_file;
-static SXBOOLEAN         has_optional;
+static bool         has_optional;
 
 
 static void
@@ -2561,7 +2561,7 @@ new_prod_hd_oflw (SXINT old_size, SXINT new_size)
 }
 
 /* on vient de generer la lhs et la rhs d'une equation ds code_stack, on verifie qu'elles different */
-static SXBOOLEAN
+static bool
 lhs_equal_rhs_code (void)
 {
   SXINT top, bot1, bot2, l;
@@ -2571,21 +2571,21 @@ lhs_equal_rhs_code (void)
 
   if ((l = top-bot1) & 1)
     /* taille impaire ... */
-    return SXFALSE;
+    return false;
 
   bot2 = bot1+(l>>1);
 
   do {
     if (XH_list_elem (code_stack, bot1) != XH_list_elem (code_stack, bot2))
-      return SXFALSE;
+      return false;
   } while (++bot1, ++bot2 < top);
 
-  return SXTRUE;
+  return true;
 }
 
 static SXINT main_operator;
 
-static SXBOOLEAN
+static bool
 gen_code (SXNODE *visited)
 {
   SXINT     x, prod_no, id, i, ldoli, rdoli, top;
@@ -2595,13 +2595,13 @@ gen_code (SXNODE *visited)
 
   switch (visited->name) {
   case ADD_OPER_n :
-    return SXFALSE;
+    return false;
 
   case ATOM_CONCAT_n :
     son = visited->son; /* son->name == {TERME_CHEMIN_n, TERME_CHEMIN_DOT_n} */ /* son->kind == ATOM_KIND */
 
     if (!gen_code (son))
-      return SXFALSE;
+      return false;
 
     brother = son->brother;/* brother->name = {CHAINE_n, ENTIER_n, IDENT_n, PRED_n} */
     XH_push (code_stack, brother->id);
@@ -2609,13 +2609,13 @@ gen_code (SXNODE *visited)
     XH_push (code_stack, OPERATOR_ATOM_MINUS);
     complex_atom_cardinal++;
 
-    return SXTRUE;
+    return true;
 
   case ATOM_MINUS_n :
-    return SXFALSE;
+    return false;
 
   case ATOM_PLUS_n :
-    return SXFALSE;
+    return false;
 
   case ATOM_S_n :
     for (son = visited->son; son != NULL; son = son->brother)
@@ -2639,25 +2639,25 @@ gen_code (SXNODE *visited)
       complex_atom_cardinal = 0;
     }
 
-    return SXTRUE;
+    return true;
 
   case CHAINE_n :
-    return SXFALSE;
+    return false;
 
   case CONTRAINTE_OPER_n :
-    return SXFALSE;
+    return false;
 
   case DANS_OPER_n :
-    return SXFALSE;
+    return false;
 
   case EMPTY_ADJUNCT_n :
   case EMPTY_ATOM_n :
   case EMPTY_STRUCT_n :
     XH_push (code_stack, OPERATOR_EMPTY_STRUCT); /* Regroupe les 3 cas ... !! */
-    return SXTRUE;
+    return true;
 
   case ENTIER_n :
-    return SXFALSE;
+    return false;
 
   case EQUATION_S_n :
     /* Attention code_set peut deja contenir la semantique par defaut due aux noms commencant par "_" */
@@ -2703,47 +2703,47 @@ gen_code (SXNODE *visited)
     XH_push (equation_stack, -1); /* Marqueur de fin */
     XH_set (&equation_stack, rule2equation+rule_nb);
 
-    return SXTRUE;
+    return true;
 
   case ETIQUETTE_n :
     son = visited->son; /* son->name = NODE_REF_n */
     brother = son->brother; /* brother->name = {ETIQUETTE_n, EXISTE_n, NON_n, NONEXISTE_n, POSSIBLE_n, UNIFIER_n} */
 
     if (!gen_code (brother))
-      return SXFALSE;
+      return false;
 
     rdoli = doli;
 
     if (!gen_code (son))
-      return SXFALSE;
+      return false;
 
     doli = rdoli;
 
     XH_push (code_stack, OPERATOR_ETIQUETTE);
-    return SXTRUE;
+    return true;
 
   case EXISTE_n :
     son = visited->son; /* son->name = {TERME_CHAMP_n, TERME_CHAMP_RE_n, TERME_CHEMIN_n, TERME_CHEMIN_DOT_n, TERME_CHEMIN_RE_n, TERME_CHEMIN_RE_DOT_n} */
 
     if (!gen_code (son))
-      return SXFALSE;
+      return false;
     
     if (son->name == TERME_CHAMP_RE_n || son->name == TERME_CHEMIN_RE_n || son->name == TERME_CHEMIN_RE_DOT_n)
       XH_push (code_stack, OPERATOR_RE);
 
     XH_push (code_stack, OPERATOR_EXIST);
 
-    return SXTRUE;
+    return true;
 
   case IDENT_n :
-    return SXFALSE;
+    return false;
 
   case KLEENE_n :
     son = visited->son;
    
     if (son->degree != 0) {
       if (!gen_code (son))
-	return SXFALSE;
+	return false;
     }
     else { /* le son est un IDENT ou assimilé */
       XH_push (code_stack, son->id);
@@ -2752,7 +2752,7 @@ gen_code (SXNODE *visited)
 
     XH_push (code_stack, OPERATOR_KLEENE);
 
-    return SXTRUE;
+    return true;
 
   case LEXEME_NODE_REF_n :
     i = atoi (sxstrget (visited->token.string_table_entry));
@@ -2760,12 +2760,12 @@ gen_code (SXNODE *visited)
     XH_push (code_stack, i); /* i de $i (i>0 est deja ve'rifie') */
     XH_push (code_stack, OPERATOR_LEXEME_REF); /* lex $i */
 
-    is_OPERATOR_LEXEME_REF = SXTRUE;
+    is_OPERATOR_LEXEME_REF = true;
 
     if (doli == -1)
       doli = i;
 
-    return SXTRUE;
+    return true;
 
   case LEX_NODE_REF_n :
     i = atoi (sxstrget (visited->token.string_table_entry));
@@ -2773,15 +2773,15 @@ gen_code (SXNODE *visited)
     XH_push (code_stack, i); /* i de $i (i>0 est deja ve'rifie') */
     XH_push (code_stack, OPERATOR_LEX_REF); /* lex $i */
 
-    is_OPERATOR_LEX_REF = SXTRUE;
+    is_OPERATOR_LEX_REF = true;
 
     if (doli == -1)
       doli = i;
 
-    return SXTRUE;
+    return true;
 
   case MOT_1COL_n :
-    return SXFALSE;
+    return false;
 
   case NODE_REF_n :
     i = atoi (sxstrget (visited->token.string_table_entry));
@@ -2791,7 +2791,7 @@ gen_code (SXNODE *visited)
 	       sxtab_ptr->err_titles [1][0],
 	       "%sConflict with default: ignored.",
 	       sxtab_ptr->err_titles [1]+1);
-      return SXFALSE;
+      return false;
     }
       
     XH_push (code_stack, i); /* i de $i (i==$) */
@@ -2800,26 +2800,26 @@ gen_code (SXNODE *visited)
     if (doli == -1)
       doli = i;
 
-    return SXTRUE;
+    return true;
 
   case NON_n :
-    return SXFALSE;
+    return false;
 
   case NONEXISTE_n :
     son = visited->son; /* son->name = {TERME_CHAMP_n, TERME_CHAMP_RE_n, TERME_CHEMIN_n, TERME_CHEMIN_DOT_n, TERME_CHEMIN_RE_n, TERME_CHEMIN_RE_DOT_n} */
 
     if (!gen_code (son))
-      return SXFALSE;
+      return false;
     
     if (son->name == TERME_CHAMP_RE_n || son->name == TERME_CHEMIN_RE_n || son->name == TERME_CHEMIN_RE_DOT_n)
       XH_push (code_stack, OPERATOR_RE);
 
     XH_push (code_stack, OPERATOR_NONEXIST);
 
-    return SXTRUE;
+    return true;
 
   case OPTION_OPER_n :
-    return SXFALSE;
+    return false;
 
   case OU_S_n :
     son = visited->son;/* son->name = {CHAINE_n, ENTIER_n, IDENT_n, KLEENE_n, OU_S_n, PRED_n, TERME_CHAMP_n, 
@@ -2827,7 +2827,7 @@ gen_code (SXNODE *visited)
 
     if (son->degree != 0) {
       if (!gen_code (son))
-	return SXFALSE;
+	return false;
     }
     else {
       XH_push (code_stack, son->id);
@@ -2837,7 +2837,7 @@ gen_code (SXNODE *visited)
     while ((son = son->brother) != NULL) {
       if (son->degree != 0) {
 	if (!gen_code (son))
-	  return SXFALSE;
+	  return false;
       }
       else {
 	XH_push (code_stack, son->id);
@@ -2847,20 +2847,20 @@ gen_code (SXNODE *visited)
       XH_push (code_stack, OPERATOR_OR);
     }
 
-    return SXTRUE;
+    return true;
 
   case POSSIBLE_n :
     son = visited->son; /* son->name = {EXISTE_n, NON_n, NONEXISTE_n, UNIFIER_n} */
 
     if (!gen_code (son))
-      return SXFALSE;
+      return false;
 
     XH_push (code_stack, OPERATOR_POSSIBLE);
 
-    return SXTRUE;
+    return true;
 
   case PRED_n :
-    return  SXFALSE;
+    return  false;
 
   case RULE_n :
     rule_nb++;
@@ -2873,7 +2873,7 @@ gen_code (SXNODE *visited)
       /* son->position > 1 => son->name = {IDENT_n, OPT_NON_TERMINAL_n} */
       if (son->name == OPT_NON_TERMINAL_n) {
 	XH_push (prod_hd, 0); /* Marque l'option!! */
-	has_optional = SXTRUE;
+	has_optional = true;
       }
 	
       name = sxstrget (son->token.string_table_entry);
@@ -2922,14 +2922,14 @@ gen_code (SXNODE *visited)
     for (son = visited->son; son != NULL; son = son->brother)
       gen_code (son);
 
-    return SXTRUE;
+    return true;
 
   case TERME_CHAMP_n :
   case TERME_CHAMP_RE_n :
     son = visited->son; /* son->name == {TERME_CHEMIN_n, TERME_CHEMIN_DOT_n} */ /* son->kind == ATOM_KIND */
 
     if (!gen_code (son))
-      return SXFALSE;
+      return false;
 
     brother = son->brother;/* brother->name = {CHAINE_n, ENTIER_n, IDENT_n, PRED_n} */
     XH_push (code_stack, brother->id);
@@ -2937,7 +2937,7 @@ gen_code (SXNODE *visited)
     XH_push (code_stack, OPERATOR_MINUS);
     XH_push (code_stack, OPERATOR_FIELD);
 
-    return SXTRUE;
+    return true;
 
   case TERME_CHEMIN_n :
   case TERME_CHEMIN_DOT_n :
@@ -2954,7 +2954,7 @@ gen_code (SXNODE *visited)
 
     if (brother->degree != 0) {
       if (!gen_code (brother))
-	return SXFALSE;
+	return false;
 
       /* Le 07/07/05 */
       if (brother->name == TERME_CHEMIN_n || brother->name == TERME_CHEMIN_DOT_n ||
@@ -2974,14 +2974,14 @@ gen_code (SXNODE *visited)
     doli = -1;
 
     if (!gen_code (son))
-      return SXFALSE;
+      return false;
 
     if (visited->name == TERME_CHEMIN_n || visited->name == TERME_CHEMIN_RE_n)
       XH_push (code_stack, OPERATOR_SPACE);
     else
       XH_push (code_stack, OPERATOR_DOT);
 
-    return SXTRUE;
+    return true;
 
   case UNIFIER_n :
     /* <unifier> = <lhs> <eq_oper> <rhs> ; "UNIFIER" */
@@ -2993,7 +2993,7 @@ gen_code (SXNODE *visited)
     doli = -1;
 
     if (!gen_code (brother->brother) /* RHS */)
-      return SXFALSE;
+      return false;
 
     rdoli = doli;
       
@@ -3012,7 +3012,7 @@ gen_code (SXNODE *visited)
 		 sxtab_ptr->err_titles [1][0],
 		 "%slhs and rhs are identical: ignored.",
 		 sxtab_ptr->err_titles [1]+1);
-	return SXFALSE;
+	return false;
       }
 
       ldoli = doli;
@@ -3024,7 +3024,7 @@ gen_code (SXNODE *visited)
 		 sxtab_ptr->err_titles [1][0],
 		 "%sillegal RHS update: equation ignored.",
 		 sxtab_ptr->err_titles [1]+1);
-	return SXFALSE;
+	return false;
       }
 #endif /* 0 */
 
@@ -3058,16 +3058,16 @@ gen_code (SXNODE *visited)
       XH_push (code_stack, main_operator);
       
 
-      return SXTRUE;
+      return true;
     }
 
-    return SXFALSE;
+    return false;
 
   case UNIF_OPER_n :
-    return SXFALSE;
+    return false;
 
   default:
-    return SXFALSE;
+    return false;
   }
 }
 
@@ -3554,13 +3554,13 @@ output_code_header (void)
 }
 
 
-static SXVOID
+static void
 out_ifdef (char *name)
 {
   printf ("\n\n#ifdef def_%s\n", name);
 }
 
-static SXVOID
+static void
 
 out_endif (char *name)
 {
@@ -3590,7 +3590,7 @@ output_code (void)
   out_ifdef ("dfield_pairs");
   if (dfield_pairs2field_id) {
     XxY_lock (&dfield_pairs); /* size == top */
-    XxY_to_c (&dfield_pairs, output_file, "dfield_pairs", SXTRUE /* static */);
+    XxY_to_c (&dfield_pairs, output_file, "dfield_pairs", true /* static */);
     out_endif ("dfield_pairs");
 
     top = XxY_top (dfield_pairs);
@@ -3617,7 +3617,7 @@ output_code (void)
   out_ifdef ("datom_pairs");
   if (datom_pairs2atom_id) {
     XxY_lock (&datom_pairs); /* size == top */
-    XxY_to_c (&datom_pairs, output_file, "datom_pairs", SXTRUE /* static */);
+    XxY_to_c (&datom_pairs, output_file, "datom_pairs", true /* static */);
     out_endif ("datom_pairs");
 
     top = XxY_top (datom_pairs);
@@ -3860,7 +3860,7 @@ static SXINT prod2rule [PRODS_NB+1] = {\n\
     }
 
     out_ifdef ("complete_id_set");
-    sxba2c (complete_set, stdout, "complete_id_set", "", SXTRUE, vstr);
+    sxba2c (complete_set, stdout, "complete_id_set", "", true, vstr);
     out_endif ("complete_id_set");
 
     out_ifdef ("ranks");

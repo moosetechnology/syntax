@@ -7,9 +7,9 @@ BOOT=$(TDEF)/boot
 
 CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
-all: $(SX)/bin/tdef.out
+all: $(SXBIN)/tdef.out
 
-$(SX)/bin/tdef.out:	$(TDEF)/tdef.out
+$(SXBIN)/tdef.out:	$(TDEF)/tdef.out
 	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
 NEEDS=	$(LIB)/tdef_t.o			\

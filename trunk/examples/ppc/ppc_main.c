@@ -21,12 +21,12 @@
 
 #include "sxunix.h"
 
-char WHAT_PPCMAIN[] = "@(#)SYNTAX - $Id: ppc_main.c 3331 2023-06-04 20:24:13Z garavel $";
+char WHAT_PPCMAIN[] = "@(#)SYNTAX - $Id: ppc_main.c 3633 2023-12-20 18:41:19Z garavel $";
 
 /* Les tables engendrees par SYNTAX */
 extern struct sxtables	ppc_args_tables;
 
-extern SXVOID ppc_scan_act (SXINT code, SXINT act_no);
+extern void ppc_scan_act (SXINT code, SXINT act_no);
 
 #include "ppc1_td.h"
 #include "ppc2_td.h"
@@ -40,7 +40,7 @@ extern struct sxtables	ppc1_tables, ppc2_tables, ppc3_tables;
 
 struct sxtables		*ppc_tables;
 SXINT	ppc_TYPE;
-SXBOOLEAN		ppc_verbose;
+bool		ppc_verbose;
 static SXINT	ppc_file_argnum, ppc_output;
 static char	ME [] = "ppc";
 static char	Usage [] = "\
@@ -63,20 +63,20 @@ options=\n\
 
 
 
-static SXVOID	default_options (void)
+static void	default_options (void)
 {
     ppc_tables = &ppc1_tables;
     ppc_TYPE = TYPE1;
-    sxverbosep = SXFALSE;
-    ppc_verbose = SXFALSE;
+    sxverbosep = false;
+    ppc_verbose = false;
     ppc_file_argnum = 0 /* input is stdin */ ;
     ppc_output = SXERROR_STE /* output is input */ ;
     sxppvariables.kw_case = SXNO_SPECIAL_CASE /* How should keywords be written */ ;
     sxppvariables.terminal_case = NULL /* SXNO_SPECIAL_CASE */ ;
-    sxppvariables.kw_dark = SXFALSE /* keywords are not artificially darkened */ ;
+    sxppvariables.kw_dark = false /* keywords are not artificially darkened */ ;
     sxppvariables.terminal_dark = NULL /* Same as kw_dark, but for each type of terminal */ ;
-    sxppvariables.no_tabs = SXFALSE /* optimize spaces into tabs */ ;
-    sxppvariables.block_margin = SXFALSE /* preserve structure when deeply nested */ ;
+    sxppvariables.no_tabs = false /* optimize spaces into tabs */ ;
+    sxppvariables.block_margin = false /* preserve structure when deeply nested */ ;
     sxppvariables.line_length = 122 /* What it says */ ;
     sxppvariables.max_margin = 60 /* Do not indent lines further than that */ ;
     sxppvariables.tabs_interval = 8 /* number of columns between two tab positions */ ;
@@ -84,7 +84,7 @@ static SXVOID	default_options (void)
 
 
 
-static SXVOID	option_file (char *dir_name)
+static void	option_file (char *dir_name)
 {
     FILE	*in_file;
     char	in_name [300];
@@ -99,13 +99,13 @@ static SXVOID	option_file (char *dir_name)
 
 
 
-static SXBOOLEAN	in_path_permitted = SXTRUE;
+static bool	in_path_permitted = true;
 
 
 
-static SXVOID	option_dir (char *dir)
+static void	option_dir (char *dir)
 {
-    SXBOOLEAN	ipp;
+    bool	ipp;
     struct {
 	struct sxlv	scan_lv;
 	struct sxplocals	pars_lv;
@@ -113,7 +113,7 @@ static SXVOID	option_dir (char *dir)
     }	save_lv;
 
     ipp = in_path_permitted;
-    in_path_permitted = SXFALSE;
+    in_path_permitted = false;
     save_lv.scan_lv = sxsvar.sxlv;
     save_lv.pars_lv = sxplocals;
     save_lv.src_lv = sxsrcmngr;
@@ -128,15 +128,15 @@ static SXVOID	option_dir (char *dir)
 
 
 
-static SXVOID	decode_options (int argc, char *argv[])
+static void	decode_options (int argc, char *argv[])
 {
     int 	argn;
     FILE	*in_file;
 
-    in_path_permitted = SXFALSE;
+    in_path_permitted = false;
     option_file (getenv ("HOME"));
     option_file (".");
-    in_path_permitted = SXTRUE;
+    in_path_permitted = true;
     in_file = fopen (SX_DEV_NUL, "r");
     sxsrc_mngr (SXINIT, in_file, "command line args");
     sxsrcmngr.current_char = EOF;
@@ -157,7 +157,7 @@ static SXVOID	decode_options (int argc, char *argv[])
 
 
 
-static SXVOID	ppc_run (SXINT in_ste, SXINT out_ste)
+static void	ppc_run (SXINT in_ste, SXINT out_ste)
 {
     FILE	*infile;
     char	*in_name;
@@ -228,7 +228,7 @@ static SXVOID	ppc_run (SXINT in_ste, SXINT out_ste)
     sxsrc_mngr (SXFINAL);
 }
 
-static SXVOID	user_args_error (char *message)
+static void	user_args_error (char *message)
 {
     sxerror (SXSTACKtoken (SXSTACKnewtop ()).source_index,
 	     ppc_args_tables.err_titles [2][0],
@@ -241,7 +241,7 @@ static SXVOID	user_args_error (char *message)
 
 
 
-SXVOID	ppc_args_semact (SXINT what, SXINT which)
+void	ppc_args_semact (SXINT what, SXINT which)
 {
     switch (what) {
     case SXERROR:
@@ -283,12 +283,12 @@ SXVOID	ppc_args_semact (SXINT what, SXINT which)
 
 	case 3:
 	    /* <-arg> = -verbose				*/
-	    ppc_verbose = SXTRUE;
+	    ppc_verbose = true;
 	    break;
 
 	case 4:
 	    /* <-arg> = -noverbose				*/
-	    ppc_verbose = SXFALSE;
+	    ppc_verbose = false;
 	    break;
 
 	case 5:
@@ -323,12 +323,12 @@ SXVOID	ppc_args_semact (SXINT what, SXINT which)
 
 	case 11:
 	    /* <-arg>	= -key_words_darkened			*/
-	    sxppvariables.kw_dark = SXTRUE;
+	    sxppvariables.kw_dark = true;
 	    break;
 
 	case 12:
 	    /* <-arg>	= -nokey_words_darkened			*/
-	    sxppvariables.kw_dark = SXFALSE;
+	    sxppvariables.kw_dark = false;
 	    break;
 
 	case 13:
@@ -338,12 +338,12 @@ SXVOID	ppc_args_semact (SXINT what, SXINT which)
 
 	case 14:
 	    /* <-arg>	= -tabs					*/
-	    sxppvariables.no_tabs = SXFALSE;
+	    sxppvariables.no_tabs = false;
 	    break;
 
 	case 15:
 	    /* <-arg>	= -notabs				*/
-	    sxppvariables.no_tabs = SXTRUE;
+	    sxppvariables.no_tabs = true;
 	    break;
 
 	case 16:
@@ -358,12 +358,12 @@ SXVOID	ppc_args_semact (SXINT what, SXINT which)
 
 	case 18:
 	    /* <-arg>	= -shift_margin				*/
-	    sxppvariables.block_margin = SXFALSE;
+	    sxppvariables.block_margin = false;
 	    break;
 
 	case 19:
 	    /* <-arg>	= -noshift_margin			*/
-	    sxppvariables.block_margin = SXTRUE;
+	    sxppvariables.block_margin = true;
 	    break;
 
 	case 20:
@@ -427,7 +427,7 @@ int main (int argc, char *argv[])
      * as much as possible.
      */
 
-    syntax (SXINIT, &ppc_args_tables, SXFALSE /* no includes */);
+    syntax (SXINIT, &ppc_args_tables, false /* no includes */);
 
     ppc_scan_act (SXBEGIN, 0);
     decode_options (argc, argv);
@@ -457,7 +457,7 @@ int main (int argc, char *argv[])
         } while (ppc_file_argnum < (SXINT)argc);
     }
 
-    syntax (SXFINAL, ppc_tables, SXTRUE);
+    syntax (SXFINAL, ppc_tables, true);
 
     ppc_scan_act (SXEND, 0);
     sxerr_mngr (SXEND);

@@ -22,13 +22,13 @@
 #include "SXante.h"
 #include "sxcommon.h"
 
-SX_GLOBAL_VAR SXBOOLEAN SYNTAX_is_in_critical_zone;
+SX_GLOBAL_VAR bool SYNTAX_is_in_critical_zone;
 SX_GLOBAL_VAR void *sxcont_malloc (size_t size), *sxcont_alloc (size_t n, size_t size), *sxcont_realloc (void *table, size_t size), *sxcont_recalloc (void *table, size_t old_size, size_t new_size);
 SX_GLOBAL_VAR void sxcont_free (void *zone);
-SX_GLOBAL_VAR SXBOOLEAN sxpush_in_tobereset_signature (void *ptr, size_t size);
+SX_GLOBAL_VAR bool sxpush_in_tobereset_signature (void *ptr, size_t size);
 
-#define sxprepare_for_possible_reset(data) (mem_signature_mode ? sxpush_in_tobereset_signature ((void*) &(data), sizeof (data)) : SXFALSE)
-#define sxprepare_ptr_for_possible_reset(ptr,size) (mem_signature_mode ? sxpush_in_tobereset_signature ((void*) (ptr), (size)) : SXFALSE)
+#define sxprepare_for_possible_reset(data) (mem_signature_mode ? sxpush_in_tobereset_signature ((void*) &(data), sizeof (data)) : false)
+#define sxprepare_ptr_for_possible_reset(ptr,size) (mem_signature_mode ? sxpush_in_tobereset_signature ((void*) (ptr), (size)) : false)
 
 #ifdef lint
 
@@ -54,7 +54,7 @@ SX_GLOBAL_VAR SXBOOLEAN sxpush_in_tobereset_signature (void *ptr, size_t size);
 
 extern void * sx_alloc_and_copy (size_t nbemb, size_t size, void *original_content, size_t copy_size);
 
-SX_GLOBAL_VAR SXBOOLEAN mem_signature_mode;
+SX_GLOBAL_VAR bool mem_signature_mode;
 
 struct mem_signature {
   SXINT top, size;

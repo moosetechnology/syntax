@@ -12,7 +12,7 @@ CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util -I$(SX)/../extensions/incl $(RCG_CFL
 all: $(RCG)/rcg.out \
      $(RCG)/drcg.out
 
-# $(SX)/bin/rcg.out:	$(RCG)/rcg.out
+# $(SXBIN)/rcg.out:	$(RCG)/rcg.out
 #	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
 NEEDS1=\
@@ -90,7 +90,7 @@ $(LIB)/rcg_t.o:		$(SXINCL)/sxunix.h 	\
 		-DSCANACT=rcg_scan_act		\
 		-Dsempass=rcg_smp
 
-$(SX)/bin/drcg.out:	$(RCG)/drcg.out
+$(SXBIN)/drcg.out:	$(RCG)/drcg.out
 	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
 NEEDS2=\

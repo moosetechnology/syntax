@@ -20,9 +20,9 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_PRIOSACT[] = "@(#)SYNTAX - $Id: prio_sact.c 3591 2023-09-17 18:08:45Z garavel $" WHAT_DEBUG;
+char WHAT_PRIOSACT[] = "@(#)SYNTAX - $Id: prio_sact.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
-SXVOID
+void
 prio_scan_act (SXINT code, SXINT act_no)
 {
     switch (code) {

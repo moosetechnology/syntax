@@ -32,12 +32,12 @@ extern void	sxre_doit (FILE *infile, char *file_name_or_source_string);
 extern void	sxre_free (void);
 extern SXINT	sxre_string_to_re (char *string,
 				   SXINT t_code,
-				   SXBOOLEAN is_a_generic_terminal);
-extern SXBOOLEAN	sxre_write (sxfiledesc_t file_descr /* file descriptor */);
-extern SXBOOLEAN	sxre_read (sxfiledesc_t file_descr /* file descriptor */);
+				   bool is_a_generic_terminal);
+extern bool	sxre_write (sxfiledesc_t file_descr /* file descriptor */);
+extern bool	sxre_read (sxfiledesc_t file_descr /* file descriptor */);
 extern void	sxre_array_to_c (FILE *file, char *name);
 extern void	sxre_header_to_c (FILE *file, char *name);
-extern void	sxre_to_c (FILE *file, char *name, SXBOOLEAN is_static);
+extern void	sxre_to_c (FILE *file, char *name, bool is_static);
 extern void	sxre_reuse (void);
 
 
@@ -145,7 +145,7 @@ struct terminal_to_attr {
     SXINT		token_no,
                 next_syno;
 
-    SXBOOLEAN	is_kw,
+    bool	is_kw,
                 is_generic;
 };
 
@@ -154,7 +154,7 @@ struct abbrev_to_attr {
     SXINT		init_item,
                 final_item;
 
-    SXBOOLEAN	is_empty;
+    bool	is_empty;
 };
 
 
@@ -175,7 +175,7 @@ struct item_to_attr {
                 val, /* index ds char_sets, ou reduce ou action ou predicat */
                 param; /* Parametre eventuel des actions ou predicats. */
 
-    SXBOOLEAN	is_erased;
+    bool	is_erased;
     SXINT        kind /* KCLASS, KREDUCE, KACTION, KPREDICATE */;
 };
 

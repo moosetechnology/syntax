@@ -26,25 +26,25 @@
 #include "XxYxZ.h"
 #include "sxlist.h"
 
-extern SXBOOLEAN	sxdp_write (sxfiledesc_t file_descr /* file descriptor */);
-extern SXBOOLEAN	sxdp_read (sxfiledesc_t file_descr /* file descriptor */);
-extern SXVOID	sxdp_alloc (SXINT rule_nb);
-extern SXVOID	sxdp_free (void);
+extern bool	sxdp_write (sxfiledesc_t file_descr /* file descriptor */);
+extern bool	sxdp_read (sxfiledesc_t file_descr /* file descriptor */);
+extern void	sxdp_alloc (SXINT rule_nb);
+extern void	sxdp_free (void);
 extern SXINT	sxdp_rule_is_set (SXINT rhs_lgth, SXINT *symbols);
-extern SXBOOLEAN	sxdp_rule_is_activated (SXINT rule);
-extern SXBOOLEAN	sxdp_rule_set (SXINT rhs_lgth, SXINT *symbols, SXINT *rule, SXINT action_nb, SXINT prio, SXINT assoc);
-extern SXVOID	sxdp_rule_get_attr (SXINT rule, SXINT *action_nb, SXINT *prio, SXINT *assoc);
-extern SXVOID	sxdp_rule_set_attr (SXINT rule, SXINT action_nb, SXINT prio, SXINT assoc);
-extern SXVOID	sxdp_rule_activate (SXINT rule);
-extern SXVOID	sxdp_rule_deactivate (SXINT rule);
-extern SXVOID	sxdp_rule_delete (SXINT rule);
-extern SXVOID	sxdp_init_state (void);
+extern bool	sxdp_rule_is_activated (SXINT rule);
+extern bool	sxdp_rule_set (SXINT rhs_lgth, SXINT *symbols, SXINT *rule, SXINT action_nb, SXINT prio, SXINT assoc);
+extern void	sxdp_rule_get_attr (SXINT rule, SXINT *action_nb, SXINT *prio, SXINT *assoc);
+extern void	sxdp_rule_set_attr (SXINT rule, SXINT action_nb, SXINT prio, SXINT assoc);
+extern void	sxdp_rule_activate (SXINT rule);
+extern void	sxdp_rule_deactivate (SXINT rule);
+extern void	sxdp_rule_delete (SXINT rule);
+extern void	sxdp_init_state (void);
 extern SXINT	sxdynam_parser (SXINT what_to_do, struct sxtables *arg);
-extern SXBOOLEAN	sxdp_new_xt (SXINT t, SXINT prdct, SXINT *xt, SXINT prio, SXINT assoc);
-extern SXBOOLEAN	sxdp_new_xnt (SXINT nt, SXINT prdct, SXINT *xnt);
-extern SXVOID	sxdp_delete_xt (SXINT xt);
-extern SXVOID	sxdp_delete_xnt (SXINT xnt);
-extern SXBOOLEAN	sxdp_add_new_state (SXINT transition, SXINT *result);
+extern bool	sxdp_new_xt (SXINT t, SXINT prdct, SXINT *xt, SXINT prio, SXINT assoc);
+extern bool	sxdp_new_xnt (SXINT nt, SXINT prdct, SXINT *xnt);
+extern void	sxdp_delete_xt (SXINT xt);
+extern void	sxdp_delete_xnt (SXINT xnt);
+extern bool	sxdp_add_new_state (SXINT transition, SXINT *result);
 
 struct priority {
     SXINT assoc, value;
@@ -125,7 +125,7 @@ struct sxdynam_grammar {
 
     SXINT		(*desambig) (void);
 
-    SXBOOLEAN	is_in_look_ahead,
+    bool	is_in_look_ahead,
                 has_been_updated,
                 has_been_erased;
 };

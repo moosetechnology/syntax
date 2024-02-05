@@ -52,16 +52,6 @@
 
 /* -------------------------------------------------------------------------- */
 
-#define SXVOID void
-
-#define SXSHORT short
-
-#define SXBOOLEAN bool
-#define SXFALSE false
-#define SXTRUE true
-
-/* -------------------------------------------------------------------------- */
-
 /*
  * note : in the early 32-bit-only versions of SYNTAX, SXINT was defined as
  * int; SXUINT was defined as unsigned int; SXINT_SIZE was equal to 32; and

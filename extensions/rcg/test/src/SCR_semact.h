@@ -6,10 +6,10 @@
 #define _SCR_semact_final		sxvoid
 #define _SCR_semact_last_pass	sxbvoid
 
-static SXBOOLEAN
+static bool
 mess (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     /* axiome(X Y) --> &StrLen(2, X) !d(X) . @mess */
     call_put_error (1,
@@ -18,5 +18,5 @@ mess (rho, son_nb, sons, is_first)
 'b' selects extended scrambling\n\
 ");
 
-    return SXTRUE;
+    return true;
 }  

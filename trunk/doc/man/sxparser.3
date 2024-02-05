@@ -19,12 +19,12 @@ sxplocals
 
 struct sxtables  sxtables\|;
 
-SXVOID sxparser (what, sxtables)
+void sxparser (what, sxtables)
 .ta \w'SXVOI'u +\w'struct sxtables 'u
 	int	what\|;
 	struct sxtables	*sxtables\|;
 
-SXVOID sxpsature (nbt)
+void sxpsature (nbt)
 .ta \w'SXVOI'u +\w'int  'u
 	int	nbt\|;
 
@@ -32,7 +32,7 @@ struct sxtoken *sxget_token (tok_no)
 .ta \w'SXVOI'u +\w'int  'u
 	int	tok_no\|;
 
-SXBOOLEAN sxprecovery (what)
+bool sxprecovery (what)
 .ta \w'SXVOI'u +\w'int  'u
 	int	what\|;
 
@@ -94,7 +94,7 @@ and the declarations are close to the following\|:
 .ta \w'\fBstr\fP'u +\w'\fBstruct\fP sxtoken 'u +\w'token 'u +\w'/* lexical token 'u
 \fBstruct\fP sxparstack {
 	\fBstruct\fP sxtoken	token	/* lexical token	*/\|;
-	\fBSXSHORT\fP	state	/* LR state	*/\|;
+	\fBshort\fP	state	/* LR state	*/\|;
 	}\|;
 
 .fi
@@ -107,10 +107,10 @@ have no meaning for the user.
 .ta \w'\fBstr\fP'u +\w'\fBstruct\fP sxparstack 'u +\w'*parse_stack 'u +\w'/* right hand side rule size 'u
 \fBstruct\fP sxpglobals {
 	\fBstruct\fP sxparstack	*parse_stack	/* parse stack	*/\|;
-	\fBSXSHORT\fP	 reduce	/* grammar rule number	*/\|;
-	\fBSXSHORT\fP	 xps	/* parse stack top	*/\|;
-	\fBSXSHORT\fP	 pspl	/* right hand side rule size	*/\|;
-	\fBSXSHORT\fP	 stack_bot	/* parse stack bottom	*/\|;
+	\fBshort\fP	 reduce	/* grammar rule number	*/\|;
+	\fBshort\fP	 xps	/* parse stack top	*/\|;
+	\fBshort\fP	 pspl	/* right hand side rule size	*/\|;
+	\fBshort\fP	 stack_bot	/* parse stack bottom	*/\|;
 	} sxpglobals;
 
 .fi
@@ -137,7 +137,7 @@ parser, it is automatically managed upon recursive call of the parser.
 \fBstruct\fP sxplocals {
 	\fBstruct\fP P_tables	 P_tables	/* parser tables	*/\|;
 	\fBstruct\fP sxtables	*sxtables	/* the whole tables	*/\|;
-	\fBSXSHORT\fP	 state	/* internal use	*/\|;
+	\fBshort\fP	 state	/* internal use	*/\|;
 	\fBstruct\fP sxtoken	*toks_buf	/* look ahead tokens buffer	*/\|;
 	\fBint\fP	 atok_no	/* look ahead token number for actions	*/,
 		 ptok_no	/* token number for predicates	*/,

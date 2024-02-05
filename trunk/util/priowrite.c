@@ -21,14 +21,14 @@
 #include "sxunix.h"
 #include "D_tables.h"
 
-char WHAT_PRIOWRITE[] = "@(#)SYNTAX - $Id: priowrite.c 3146 2023-05-02 12:21:39Z garavel $" WHAT_DEBUG;
+char WHAT_PRIOWRITE[] = "@(#)SYNTAX - $Id: priowrite.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 #define WRITE(f,p,l)		\
 	if (bytes = (l), (write (f, p, bytes) != bytes))	\
 		goto write_error
 
 
-SXBOOLEAN		prio_write (SXINT t_priorities_size, 
+bool		prio_write (SXINT t_priorities_size, 
 			    SXINT r_priorities_size,
 			    struct priority *t_priorities,
 			    struct priority *r_priorities,
@@ -55,11 +55,11 @@ SXBOOLEAN		prio_write (SXINT t_priorities_size,
     WRITE (F_dt, t_priorities, t_priorities_size * sizeof (struct priority));
     WRITE (F_dt, r_priorities, r_priorities_size * sizeof (struct priority));
     close (F_dt);
-    return SXTRUE;
+    return true;
 
 write_error:
     fprintf (sxstderr, "%s: write error on ", ME);
 file_error:
     sxperror (ent_name);
-    return SXFALSE;
+    return false;
 }

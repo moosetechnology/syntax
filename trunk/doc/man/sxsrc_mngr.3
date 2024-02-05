@@ -13,7 +13,7 @@ sxsrcpush
 \- source manager for SYNTAX.
 .SH SYNOPSIS
 .nf
-.ta \w'\s-2SXVOID\s0  'u +\w'\s-2SXSHORT\s0  'u
+.ta \w'void  'u +\w'short  'u
 .B
 #include "sxunix.h"
 .PP
@@ -21,7 +21,7 @@ sxsrcpush
 struct sxsrcmngr  sxsrcmngr\|;
 .PP
 .B
-\s-2SXVOID\s0 sxsrc_mngr (what, infile, file_name)
+void sxsrc_mngr (what, infile, file_name)
 .B
 	int	 what\|;
 .B
@@ -30,28 +30,28 @@ struct sxsrcmngr  sxsrcmngr\|;
 	char	*file_name\|;
 .PP
 .B
-\s-2SXSHORT\s0 sxnext_char ()
+short sxnext_char ()
 .PP
 .B
-\s-2SXSHORT\s0 sxlafirst_char ()
+short sxlafirst_char ()
 .PP
 .B
-\s-2SXSHORT\s0 sxlanext_char ()
+short sxlanext_char ()
 .PP
 .B
-\s-2SXVOID\s0 sxlaback (backward_number)
+void sxlaback (backward_number)
 .B
 	int	backward_number\|;
 .PP
 .B
-\s-2SXVOID\s0 sxX (inserted)
+void sxX (inserted)
 .B
-	\s-2SXSHORT\s0	inserted\|;
+	short	inserted\|;
 .PP
 .B
-\s-2SXVOID\s0 sxsrcpush (previous_char, chars, coord)
+void sxsrcpush (previous_char, chars, coord)
 .B
-	\s-2SXSHORT\s0	 previous_char\|;
+	short	 previous_char\|;
 .B
 	char	*chars\|;
 .B
@@ -130,7 +130,7 @@ structure is declared in the include file
 that declaration is close to the following\|:
 
 .nf
-.ta \w'\fBstru'u +\w'\s-2SXSHORT\s0  'u +\w' previous_char, 'u +\w'/* coordinates of characters in \fIbuffer\fP\| 'u
+.ta \w'\fBstru'u +\w'short  'u +\w' previous_char, 'u +\w'/* coordinates of characters in \fIbuffer\fP\| 'u
 .ne 2
 \fBstruct\fP sxsrcmngr {
 	\s-2FILE\s0	*infile\|;	/* stream being accessed	*/
@@ -138,10 +138,10 @@ that declaration is close to the following\|:
 	\fBstruct\fP sxsource_coord  source_coord\|;
 			/* coordinates of \fIcurrent_char\fP	*/
 .ne 2
-	\s-2SXSHORT\s0	 previous_char,	/* preceding \fIcurrent_char\fP	*/
+	short	 previous_char,	/* preceding \fIcurrent_char\fP	*/
 		 current_char\|;	/* last character returned	*/
-.\"	\s-2SXBOOLEAN\s0	 has_buffer\|;	/* of internal interest only	*/
-	\s-2SXSHORT\s0	*buffer\|;	/* characters read in \fIlook-ahead\fP	*/
+.\"	\s-2bool\s0	 has_buffer\|;	/* of internal interest only	*/
+	short	*buffer\|;	/* characters read in \fIlook-ahead\fP	*/
 .ne 2
 	\fBstruct\fP sxsource_coord *bufcoords\|;
 			/* coordinates of characters in \fIbuffer\fP	*/
@@ -160,14 +160,13 @@ When there is some
 .\"the variable
 .\".I has_buffer
 .\"is set to
-.\".I \s-2SXTRUE\s0
+.\".I true
 .\"(but the converse is not true).
 .\"In that case,
 more variables may be safely accessed\|:
 .TP
 .I buffer
-pointer to an array of
-.IR \s-2SXSHORT\s0 s,
+pointer to an array of shorts,
 which contains all characters read, from at least the current
 character (which may therefore be accessed either by
 .I current_char

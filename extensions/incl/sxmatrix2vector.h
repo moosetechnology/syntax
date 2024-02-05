@@ -58,8 +58,8 @@ struct matrix {
 
 extern void matrix2vector (struct matrix*, struct vector*, SXINT);
 /* 0 <= percent <= 100 taux de remplissage qui indique pour chaque ligne de matrix si on en fait un vecteur ou une matrice */
-/* SXFALSE si c,a n'a pas marche' */
-extern void vector2c (struct vector*, FILE*, char*, SXBOOLEAN);
+/* false si c,a n'a pas marche' */
+extern void vector2c (struct vector*, FILE*, char*, bool);
 /* Genere :
    static SXINT name_disp [last_line+1] = {...}
    static struct v_elem name_list [last_index+1] = {..., {val, check}, ...};

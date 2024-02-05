@@ -21,14 +21,14 @@
 #include "sxunix.h"
 #include "P_tables.h"
 
-char WHAT_PARSERREAD[] = "@(#)SYNTAX - $Id: parserread.c 3146 2023-05-02 12:21:39Z garavel $" WHAT_DEBUG;
+char WHAT_PARSERREAD[] = "@(#)SYNTAX - $Id: parserread.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 #define READ(f,p,l)						\
 	if (bytes = (l), (read (f, p, bytes) != bytes))		\
 		goto read_error
 
 
-SXBOOLEAN		parser_read (struct parser_ag_item *parser_ag_ptr, char *langname)
+bool		parser_read (struct parser_ag_item *parser_ag_ptr, char *langname)
 {
     SXINT	bytes, n;
     sxfiledesc_t	/* file descriptor */ F_pt;
@@ -48,7 +48,7 @@ SXBOOLEAN		parser_read (struct parser_ag_item *parser_ag_ptr, char *langname)
 
     if (pt_version != pt_num_version) {
 	fprintf (sxstderr, "tables format has changed : please use the new csynt\n");
-	return (SXFALSE);
+	return (false);
     }
 
     READ (F_pt, &(parser_ag_ptr->bnf_modif_time), sizeof (SXINT));
@@ -105,11 +105,11 @@ SXBOOLEAN		parser_read (struct parser_ag_item *parser_ag_ptr, char *langname)
 	parser_ag_ptr->prdct_list = NULL;
 
     close (F_pt);
-    return SXTRUE;
+    return true;
 
 read_error:
     fprintf (sxstderr, "%s: read error on ", ME);
 file_error:
     sxperror (parser_tables_name);
-    return SXFALSE;
+    return false;
 }

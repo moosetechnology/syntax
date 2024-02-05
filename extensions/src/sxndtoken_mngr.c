@@ -22,7 +22,7 @@
 #include "sxcommon.h"
 #include "sxnd.h"
 
-char WHAT_SXNDTOKEN_MNGR[] = "@(#)SYNTAX - $Id: sxndtoken_mngr.c 2428 2023-01-18 12:54:10Z garavel $" WHAT_DEBUG;
+char WHAT_SXNDTOKEN_MNGR[] = "@(#)SYNTAX - $Id: sxndtoken_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 #if EBUG
 # define stdout_or_NULL	stdout
@@ -33,7 +33,7 @@ char WHAT_SXNDTOKEN_MNGR[] = "@(#)SYNTAX - $Id: sxndtoken_mngr.c 2428 2023-01-18
 
 /* Module sxmilstn_mngr.c		*/
 
-SXVOID sxmilstn_oflw (sxindex_header *index_header_ptr, SXINT old_line_nb, SXINT old_size)
+void sxmilstn_oflw (sxindex_header *index_header_ptr, SXINT old_line_nb, SXINT old_size)
 {
     SXINT new_line_nb = sxindex_line_nb (*index_header_ptr);
     SXINT new_column_nb = sxindex_column_nb (*index_header_ptr);
@@ -51,7 +51,7 @@ SXVOID sxmilstn_oflw (sxindex_header *index_header_ptr, SXINT old_line_nb, SXINT
     sxndtkn.milestones.set = sxba_resize (sxndtkn.milestones.set, new_size);
 }
 
-SXVOID sxmilstn_alloc (sxmilstn_header *header, SXINT size)
+void sxmilstn_alloc (sxmilstn_header *header, SXINT size)
 {
     SXINT i, l;
 
@@ -69,7 +69,7 @@ SXVOID sxmilstn_alloc (sxmilstn_header *header, SXINT size)
     header->set = sxba_calloc (l);
 }
 
-SXVOID sxmilstn_free (sxmilstn_header *header)
+void sxmilstn_free (sxmilstn_header *header)
 {
     SXINT i = sxindex_line_nb (header->indexes);
 
@@ -110,10 +110,10 @@ struct sxmilstn_elem	*milestone_new (struct sxmilstn_elem *prev_milstn_ptr, SXIN
 }
 
 
-SXVOID	sxndtkn_put (SXBA set)
+void	sxndtkn_put (SXBA set)
 {
     SXINT			tde, old_milestone, x = -1;
-    SXBOOLEAN		is_kept, is_first = SXTRUE, is_check_complete = SXFALSE;
+    bool		is_kept, is_first = true, is_check_complete = false;
     struct sxndlv	*p;
 
 /* Il est possible que plusieurs reduces donnent exactement le meme token :
@@ -125,7 +125,7 @@ SXVOID	sxndtkn_put (SXBA set)
     while ((x = sxba_scan_reset (set, x)) >= 0) {
 	p = sxndsvar.ndlv + x;
 	old_milestone = p->milestone;
-	is_kept = SXTRUE;
+	is_kept = true;
 
 	if (p->terminal_token.lahead > 0) {
 	    sxput_token (p->terminal_token);
@@ -138,7 +138,7 @@ SXVOID	sxndtkn_put (SXBA set)
 
 		if (p->terminal_token.lahead == sxndsvar.SXS_tables.S_termax) {
 		    /* On suppose que tous les scanners ont reconnus eof */
-		    is_first = SXFALSE; /* Il doit disparaitre */
+		    is_first = false; /* Il doit disparaitre */
 		}
 	    }
 
@@ -150,18 +150,18 @@ SXVOID	sxndtkn_put (SXBA set)
 	}
 	else if (p->terminal_token.comment != NULL)
 	    /* On suppose les commentaires (non nuls) tous differents */
-	    ndlv_clear (p, SXTRUE);
+	    ndlv_clear (p, true);
 
 	if (p->terminal_token.lahead > 0 || p->terminal_token.comment == NULL) {
 	    if (is_first) {
-		is_first = SXFALSE;
+		is_first = false;
 
 		if (sxndsvar.index_header.set)
 		  /* Le 09/05/3003 */
-		  ndlv_clear (p, SXFALSE);
+		  ndlv_clear (p, false);
 	    }
 	    else {
-		is_kept = SXFALSE;
+		is_kept = false;
 
 		if (sxndsvar.index_header.set)
 		  /* Le 09/05/3003 */
@@ -175,7 +175,7 @@ SXVOID	sxndtkn_put (SXBA set)
 	/* la verification complete ne peut se faire que lorsque tous les
 	   active_ndlv_set sont connus, donc hors de la boucle principale */
 	if (!is_kept || old_milestone != p->milestone) {
-	    is_check_complete = SXTRUE;
+	    is_check_complete = true;
 	    SXBA_1_bit (sxndtkn.milestones.set, old_milestone);
 	}
     }
@@ -214,7 +214,7 @@ SXVOID	sxndtkn_put (SXBA set)
 }
 
 
-SXVOID	sxndtkn_mngr (SXINT sxndtkn_mngr_what, SXINT size)
+void	sxndtkn_mngr (SXINT sxndtkn_mngr_what, SXINT size)
 {
     SXINT 		tde, prev_mlstn;
     static SXINT tokens_dag_foreach [] = {1, 0, 1, 0, 0, 0};

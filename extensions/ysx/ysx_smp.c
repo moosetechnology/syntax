@@ -28,7 +28,7 @@ static char	ME [] = "ysx_smp";
 #include "varstr.h"
 #include "ysx_vars.h"
 
-char WHAT_YSXSMP[] = "@(#)SYNTAX - $Id: ysx_smp.c 3365 2023-06-16 16:38:56Z garavel $" WHAT_DEBUG;
+char WHAT_YSXSMP[] = "@(#)SYNTAX - $Id: ysx_smp.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 struct ysx_node {
     SXNODE_HEADER_S	SXVOID_NAME;
@@ -39,7 +39,7 @@ extern struct sxtables	yaction_tables;
 
 static struct sxtables	*ysxtables;
 static FILE	*yax_file, *prio_file, *tdef_file;
-static SXBOOLEAN	needs_prio, needs_tdef;
+static bool	needs_prio, needs_tdef;
 
 #define NON_TERMINAL	0
 #define TERMINAL	1
@@ -92,7 +92,7 @@ N O D E   N A M E S
 E N D   N O D E   N A M E S
 */
 
-SXINLINE static SXVOID	gripe (char *who)
+SXINLINE static void	gripe (char *who)
 {
     fprintf (sxstderr, "The function \"%s\" does not correspond to its specification.\n", who);
     sxexit(1);
@@ -100,7 +100,7 @@ SXINLINE static SXVOID	gripe (char *who)
 
 
 
-SXINLINE static SXVOID	found_id (SXNODE *node)
+SXINLINE static void	found_id (SXNODE *node)
 {
     SXINT	ste;
 
@@ -114,7 +114,7 @@ SXINLINE static SXVOID	found_id (SXNODE *node)
 
 
 
-SXINLINE static SXVOID	found_token (SXNODE *node)
+SXINLINE static void	found_token (SXNODE *node)
 {
     SXINT	ste;
 
@@ -125,14 +125,14 @@ SXINLINE static SXVOID	found_token (SXNODE *node)
 
 
 
-SXINLINE static SXVOID	found_typed_token (SXNODE *node)
+SXINLINE static void	found_typed_token (SXNODE *node)
 {
     token_type [node->token.string_table_entry] = GENERIC;
 }
 
 
 
-SXINLINE static SXVOID	error_typed_token (SXNODE *node)
+SXINLINE static void	error_typed_token (SXNODE *node)
 {
     sxerror (node->token.source_index,
 	     ysxtables->err_titles [1][0],
@@ -142,14 +142,14 @@ SXINLINE static SXVOID	error_typed_token (SXNODE *node)
 
 
 
-SXINLINE static SXVOID	found_action (SXNODE *node)
+SXINLINE static void	found_action (SXNODE *node)
 {
     token_type [node->token.string_table_entry] = USER_ACTION;
 }
 
 
 
-SXINLINE static SXVOID	ysx_st_i (void)
+SXINLINE static void	ysx_st_i (void)
 {
     switch (SXVISITED->father->name) {
     default:
@@ -328,7 +328,7 @@ fault:	gripe ("ysx_st_i");
 
 
 
-SXINLINE static SXVOID	ysx_st_d (void)
+SXINLINE static void	ysx_st_d (void)
 {
     switch (SXVISITED->name) {
     default:
@@ -358,7 +358,7 @@ SXINLINE static SXVOID	ysx_st_d (void)
 	break;
 
     case ID_NUM_n:
-	needs_tdef = SXTRUE;
+	needs_tdef = true;
 	break;
 
     case LCURL_n:
@@ -368,7 +368,7 @@ SXINLINE static SXVOID	ysx_st_d (void)
 	break;
 
     case LEFT_PRIO_n:
-	needs_prio = SXTRUE;
+	needs_prio = true;
 	break;
 
     case LIT_n:
@@ -376,7 +376,7 @@ SXINLINE static SXVOID	ysx_st_d (void)
 	break;
 
     case LIT_NUM_n:
-	needs_tdef = SXTRUE;
+	needs_tdef = true;
 	found_token (SXVISITED);
 	break;
 
@@ -384,7 +384,7 @@ SXINLINE static SXVOID	ysx_st_d (void)
 	break;
 
     case NONASSOC_PRIO_n:
-	needs_prio = SXTRUE;
+	needs_prio = true;
 	break;
 
     case POST_ACTION_n:
@@ -392,13 +392,13 @@ SXINLINE static SXVOID	ysx_st_d (void)
 
     case RIGHT_HAND_SIDE_n:
 	if (SXVISITED->brother->name != VOID_n) {
-	    needs_prio = SXTRUE;
+	    needs_prio = true;
 	}
 
 	break;
 
     case RIGHT_PRIO_n:
-	needs_prio = SXTRUE;
+	needs_prio = true;
 	break;
 
     case RULES_n:
@@ -433,14 +433,14 @@ SXINLINE static SXVOID	ysx_st_d (void)
 
 
 
-SXINLINE static SXVOID	out_union (SXNODE *node)
+SXINLINE static void	out_union (SXNODE *node)
 {
     fprintf (yax_file, "typedef union <%s>\tYYSTYPE;\n\n", sxstrget (node->token.string_table_entry));
 }
 
 
 
-SXINLINE static SXVOID	out_lcurl (SXNODE *node)
+SXINLINE static void	out_lcurl (SXNODE *node)
 {
     /* LINTED this cast from long to int is needed by printf() */
     fprintf (yax_file, "%.*s\n\n", (int) sxstrlen (node->token.string_table_entry) - 4, sxstrget (node->token.
@@ -449,14 +449,14 @@ SXINLINE static SXVOID	out_lcurl (SXNODE *node)
 
 
 
-SXINLINE static SXVOID	out_tail (SXNODE *node)
+SXINLINE static void	out_tail (SXNODE *node)
 {
     fprintf (yax_file, "%s\n\n", sxstrget (node->token.string_table_entry));
 }
 
 
 
-SXINLINE static SXVOID	out_start (void)
+SXINLINE static void	out_start (void)
 {
     fprintf (yax_file, "<$start>\t= <%s>\t;\n\n", sxstrget (start));
 }
@@ -491,7 +491,7 @@ static VARSTR	out_GENERIC (SXINT ste)
 
 
 
-SXINLINE static SXVOID	out_lhs (SXINT ste)
+SXINLINE static void	out_lhs (SXINT ste)
 {
     varstr_raz (rule);
     varstr_catenate (out_NON_TERMINAL (ste), "\t=");
@@ -499,7 +499,7 @@ SXINLINE static SXVOID	out_lhs (SXINT ste)
 
 
 
-SXINLINE static SXVOID	out_id (SXNODE *node)
+SXINLINE static void	out_id (SXNODE *node)
 {
     SXINT	ste;
 
@@ -524,7 +524,7 @@ SXINLINE static SXVOID	out_id (SXNODE *node)
 
 
 
-SXINLINE static SXVOID	out_action (SXNODE *node)
+SXINLINE static void	out_action (SXNODE *node)
 {
     action_offset = node->position - 1;
     sxsrcpush (EOF, sxstrget (node->token.string_table_entry), node->token.source_index);
@@ -533,7 +533,7 @@ SXINLINE static SXVOID	out_action (SXNODE *node)
 
 
 
-SXVOID	yaction (SXINT code, SXINT numact)
+void	yaction (SXINT code, SXINT numact)
 {
     switch (code) {
     default:
@@ -588,7 +588,7 @@ fault:	gripe ("yaction");
 
 
 
-SXINLINE static SXVOID	out_rhs (SXNODE *node)
+SXINLINE static void	out_rhs (SXNODE *node)
 {
     SXINT	ste;
 
@@ -628,21 +628,21 @@ SXINLINE static SXVOID	out_rhs (SXNODE *node)
 
 
 
-SXINLINE static SXVOID	out_prio (char *string)
+SXINLINE static void	out_prio (char *string)
 {
     fprintf (prio_file, "%s", string);
 }
 
 
 
-SXINLINE static SXVOID	end_prio (void)
+SXINLINE static void	end_prio (void)
 {
     fprintf (prio_file, "\n");
 }
 
 
 
-SXINLINE static SXVOID	out_token (FILE *file, SXNODE *node)
+SXINLINE static void	out_token (FILE *file, SXNODE *node)
 {
     SXINT	ste;
 
@@ -662,21 +662,21 @@ SXINLINE static SXVOID	out_token (FILE *file, SXNODE *node)
 
 
 
-SXINLINE static SXVOID	out_attribute (SXNODE *node)
+SXINLINE static void	out_attribute (SXNODE *node)
 {
     fprintf (yax_file, "$<%s> (", sxstrget (node->token.string_table_entry));
 }
 
 
 
-SXINLINE static SXVOID	end_type (void)
+SXINLINE static void	end_type (void)
 {
     fprintf (yax_file, ")\n");
 }
 
 
 
-SXINLINE static SXVOID	end_rhs (void)
+SXINLINE static void	end_rhs (void)
 {
     varstr_catenate (rule, "\t;");
     fprintf (yax_file, "%s\n", varstr_tostr (rule));
@@ -684,7 +684,7 @@ SXINLINE static SXVOID	end_rhs (void)
 
 
 
-SXINLINE static SXVOID	out_post_action (void)
+SXINLINE static void	out_post_action (void)
 {
     SXINT	column;
 
@@ -699,7 +699,7 @@ SXINLINE static SXVOID	out_post_action (void)
 
 
 
-SXINLINE static SXVOID	out_prec (SXNODE *node)
+SXINLINE static void	out_prec (SXNODE *node)
 {
     fprintf (prio_file, "%s\t%%prec", varstr_tostr (rule));
     out_token (prio_file, node);
@@ -708,7 +708,7 @@ SXINLINE static SXVOID	out_prec (SXNODE *node)
 
 
 
-SXINLINE static SXVOID	out_tdef (SXNODE *node)
+SXINLINE static void	out_tdef (SXNODE *node)
 {
     fprintf (tdef_file, "%s\t=", sxstrget (node->token.string_table_entry));
     out_token (tdef_file, node);
@@ -717,7 +717,7 @@ SXINLINE static SXVOID	out_tdef (SXNODE *node)
 
 
 
-SXINLINE static SXVOID	ysx_pi (void)
+SXINLINE static void	ysx_pi (void)
 {
     switch (SXVISITED->father->name) {
     default:
@@ -907,7 +907,7 @@ fault:	gripe ("ysx_pi");
 
 
 
-SXINLINE static SXVOID	ysx_pd (void)
+SXINLINE static void	ysx_pd (void)
 {
     switch (SXVISITED->name) {
     default:
@@ -1035,7 +1035,7 @@ fault:	gripe ("ysx_pd");
 
 
 
-SXINLINE static SXVOID	smpopen (struct sxtables *sxtables_ptr)
+SXINLINE static void	smpopen (struct sxtables *sxtables_ptr)
 {
     sxatcvar.atc_lv.node_size = sizeof (struct ysx_node);
     ysxtables = sxtables_ptr;
@@ -1043,14 +1043,14 @@ SXINLINE static SXVOID	smpopen (struct sxtables *sxtables_ptr)
 
 
 
-static SXBOOLEAN	init_yax (void)
+static bool	init_yax (void)
 {
     char	name [32];
 
     if ((yax_file = sxfopen (strcat (strcpy (name, prgentname), ".yax"), "w")) == NULL) {
 nope:	fprintf (sxstderr, "%s: cannot open (create) ", ME);
 	sxperror (name);
-	return SXFALSE;
+	return false;
     }
 
     if (needs_prio && (prio_file = sxfopen (strcat (strcpy (name, prgentname), ".prio"), "w")) == NULL) {
@@ -1061,14 +1061,14 @@ nope:	fprintf (sxstderr, "%s: cannot open (create) ", ME);
 	goto nope;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
 
-SXINLINE static SXVOID	smppass (void)
+SXINLINE static void	smppass (void)
 {
-    SXBOOLEAN stack_is_already_freed;
+    bool stack_is_already_freed;
     struct {
 	struct sxsvar	sxsvar;
 	struct sxplocals	sxplocals;
@@ -1086,8 +1086,8 @@ SXINLINE static SXVOID	smppass (void)
 	fputs ("    Symbols Table\n", sxtty);
     }
 
-    needs_prio = SXFALSE;
-    needs_tdef = SXFALSE;
+    needs_prio = false;
+    needs_tdef = false;
     start = SXERROR_STE;
     token_type = sxcalloc (sxstrmngr.top, sizeof (*token_type));
     attribute_type = (SXINT*) sxcalloc (sxstrmngr.top, sizeof (*attribute_type));
@@ -1152,7 +1152,7 @@ SXINLINE static SXVOID	smppass (void)
 }
 
 
-SXVOID
+void
 ysx_smp (SXINT what, struct sxtables *sxtables_ptr)
 {
     switch (what) {

@@ -8,7 +8,9 @@ INCL=$(TAG)/incl
 
 CC=cc -I$(INCL) -I$(SXINCL) -I$(SXINCL)/util -I$(TAG)/../incl $(CFLAGS)
 
-all: $(TAG)/xtag2lig.out
+ALL=$(TAG)/xtag2lig.out
+
+all: $(ALL)
 
 NEEDS1=$(LIB)/xtag_main.o		\
        $(LIB)/xtag_sact.o		\
@@ -45,5 +47,5 @@ $(LIB)/xtag_t.o:	$(SXINCL)/sxunix.h 	\
 		-Dsempass=xtag_smp
 
 clean:
-	@echo "clean target for TAG should be added"
+	rm -f $(ALL) $(NEEDS1)
 

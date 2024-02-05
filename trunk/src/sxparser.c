@@ -23,7 +23,7 @@ static char	ME [] = "PARSER";
 #include "sxunix.h"
 
 #ifndef VARIANT_32
-char WHAT_SXPARSER[] = "@(#)SYNTAX - $Id: sxparser.c 3127 2023-05-01 09:24:35Z garavel $" WHAT_DEBUG;
+char WHAT_SXPARSER[] = "@(#)SYNTAX - $Id: sxparser.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 #endif
 
 /*   V A R I A B L E S   */
@@ -34,14 +34,14 @@ char WHAT_SXPARSER[] = "@(#)SYNTAX - $Id: sxparser.c 3127 2023-05-01 09:24:35Z g
 
 static SXINT	lgt1, lgt2;
 static SXP_SHORT	*stack /* lgt1 */;
-static SXBOOLEAN	bscan;
+static bool	bscan;
 static struct gstack {
     SXINT		top, bot;
     SXP_SHORT	*stack /* lgt2 */;
     SXP_SHORT	state;
 } ga, gb;
 
-SXINT sxP_get_parse_stack_size (SXVOID)
+SXINT sxP_get_parse_stack_size (void)
 {
     return lgt1;
 }
@@ -71,7 +71,7 @@ SXP_SHORT		sxP_access (struct SXP_bases *abase, SXINT j)
 }
 
 #if BUG
-static SXVOID print_tok (SXINT tok_no, SXINT xps, struct sxtoken *pt)
+static void print_tok (SXINT tok_no, SXINT xps, struct sxtoken *pt)
 {
   fprintf (sxstdout,
 	   "%s\t\ttoken [%ld(%ld, %ld)], (xps = %ld) = (%ld, \"%s\")\n" /* & */
@@ -94,7 +94,7 @@ static SXVOID print_tok (SXINT tok_no, SXINT xps, struct sxtoken *pt)
 	   (pt->comment != NULL) ? pt->comment : "(NULL)");
 }
 
-static SXVOID print_reduce (SXINT red_no)
+static void print_reduce (SXINT red_no)
 {
   fprintf (sxstdout,
 	   "%s\t\treduction_no = %ld\n",
@@ -102,7 +102,7 @@ static SXVOID print_reduce (SXINT red_no)
 }
 #endif
 
-static SXVOID	execute_actions (struct gstack *s1)
+static void	execute_actions (struct gstack *s1)
 {
     /* Caracteristique de s1 :
        - elle contient exactement un Scan
@@ -136,7 +136,7 @@ static SXVOID	execute_actions (struct gstack *s1)
 	    /* Reduce or Halt */
 	    if ((sxpglobals.reduce =
 		  (ared = sxplocals.SXP_tables.reductions + ref)->reduce) != 0 /* Reduce */ ) {
-	        SXBOOLEAN is_semact = 
+	        bool is_semact = 
 		   sxpglobals.reduce <= sxplocals.SXP_tables.P_nbpro && sxis_semantic_action (ared->action);
 
 #if BUG
@@ -232,7 +232,7 @@ static SXINT undo_actions (struct gstack *s1, SXINT xs)
 
 
 
-static SXVOID	sxpsature (SXINT nbt)
+static void	sxpsature (SXINT nbt)
 
 /* overflow of tables for normal analysis */
     
@@ -343,7 +343,7 @@ passee de &i, son execution au cours du rattrapage d'erreur et sa
 future execution apres rattrapage donnent le meme resultat.
 */
 
-static SXBOOLEAN	sxparse_it (void)
+static bool	sxparse_it (void)
 {
     SXP_SHORT			ref;
     SXINT                       lahead;
@@ -408,7 +408,7 @@ restart:
     ref = sxP_access (sxplocals.SXP_tables.t_bases + (s2->state = state), lahead);
     s1->top = s1->bot /* top = bottom, empty the stacks */ ;
     s2->top = s2->bot;
-    bscan = SXFALSE;
+    bscan = false;
 
 
 /* Swap de s1 et s2 : premiere etiquette apres scan
@@ -437,7 +437,7 @@ restart:
 		(*(sxplocals.SXP_tables.scanit)) ();
 
 	    lahead = SXGET_TOKEN (n).lahead;
-	    bscan = SXTRUE;
+	    bscan = true;
 	}
 	else
 	    ref = -ref;
@@ -453,7 +453,7 @@ restart:
 	    if (bscan) {
 		struct gstack	*pp;
 
-		bscan = SXFALSE;
+		bscan = false;
 		/* swap s1 <-> s2, s1 doit etre vide */
 		pp = s1, s1 = s2, s2 = pp;
 		s2->state = state;
@@ -464,12 +464,12 @@ restart:
 	else if (ref <= sxplocals.SXP_tables.Mred /* Reduce, Error or Halt */ ) {
 	    if (ref == 0 /* error recovery */ ) {
 	      if (sxplocals.mode.is_prefixe && state == (SXP_SHORT) sxplocals.SXP_tables.final_state)
-		    return SXTRUE;
+		    return true;
 
 		sxplocals.mode.local_errors_nb++;
 
 		if (sxplocals.mode.kind == SXWITHOUT_ERROR)
-		    return SXFALSE;
+		    return false;
 
 		if (sxplocals.mode.with_do_undo && sxplocals.mode.with_parsact)
 		{
@@ -509,7 +509,7 @@ restart:
 		}
 		
 		/* Failure */
-		return SXFALSE;
+		return false;
 	    }
 
 /* Reduce or Halt */
@@ -599,12 +599,12 @@ restart:
     }
 
     sxtkn_mngr (SXFINAL, 0);
-    return SXTRUE;
+    return true;
 }
 
 
 
-SXBOOLEAN sxparser (SXINT	what_to_do, struct sxtables *arg)
+bool sxparser (SXINT	what_to_do, struct sxtables *arg)
 {
     switch (what_to_do) {
     case SXBEGIN:
@@ -665,12 +665,12 @@ SXBOOLEAN sxparser (SXINT	what_to_do, struct sxtables *arg)
 	sxplocals.mode.kind = SXWITH_RECOVERY;
 	sxplocals.mode.local_errors_nb = 0;
 	sxplocals.mode.global_errors_nb = 0;
-	sxplocals.mode.is_prefixe = SXFALSE;
-	sxplocals.mode.is_silent = SXFALSE;
-	sxplocals.mode.with_semact = SXTRUE;
-	sxplocals.mode.with_parsact = SXTRUE;
-	sxplocals.mode.with_parsprdct = SXTRUE;
-	sxplocals.mode.with_do_undo = SXFALSE;
+	sxplocals.mode.is_prefixe = false;
+	sxplocals.mode.is_silent = false;
+	sxplocals.mode.with_semact = true;
+	sxplocals.mode.with_parsact = true;
+	sxplocals.mode.with_parsprdct = true;
+	sxplocals.mode.with_do_undo = false;
 	break;
 
     case SXACTION:
@@ -683,8 +683,8 @@ SXBOOLEAN sxparser (SXINT	what_to_do, struct sxtables *arg)
 	    SXINT		old_ga_bot = ga.bot, old_ga_top = ga.top, old_gb_bot = gb.bot, old_gb_top = gb.top;
 	    SXINT	reduce = sxpglobals.reduce;
 	    SXINT	pspl = sxpglobals.pspl;
-	    SXBOOLEAN	old_bscan = bscan;
-	    SXBOOLEAN	ret_val;
+	    bool	old_bscan = bscan;
+	    bool	ret_val;
 
 	    if ((sxpglobals.stack_bot = sxpglobals.xps + 5) > lgt1)
 		sxpsature ((SXINT)1);
@@ -732,18 +732,18 @@ SXBOOLEAN sxparser (SXINT	what_to_do, struct sxtables *arg)
 	    /*NOTREACHED*/
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
-SXBOOLEAN sxparse_in_la (SXINT ep_la, SXINT Ttok_no, SXINT *Htok_no, struct sxparse_mode *mode_ptr)
+bool sxparse_in_la (SXINT ep_la, SXINT Ttok_no, SXINT *Htok_no, struct sxparse_mode *mode_ptr)
 {
     /* Appel recursif du parser pour verifier si le sous-langage defini par
        le point d'entree ep_la contient un prefixe du source. */
     /* Le token caracteristique du point d'entree est memorise en Ttok_no */
     /* L'indice du dernier token analyse par cet appel est range en Htok_no */
     SXINT		atok_no, ptok_no, old_left_border;
-    SXBOOLEAN			ret_val;
+    bool			ret_val;
     struct sxtoken		old_tt, *ptt;
     struct sxparse_mode		old_mode;
 

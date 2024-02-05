@@ -26,9 +26,9 @@
 #include <stdio.h>
 #include <unistd.h>
 
-char WHAT_SXBA_WRITE[] = "@(#)SYNTAX - $Id: sxba_write.c 2947 2023-03-29 17:06:41Z garavel $" WHAT_DEBUG;
+char WHAT_SXBA_WRITE[] = "@(#)SYNTAX - $Id: sxba_write.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
-SXBOOLEAN
+bool
 sxba_write (sxfiledesc_t file, SXBA bits_array)
 /*
  * "sxba_write" writes "bits_array" on "file".
@@ -123,7 +123,7 @@ sxba64_to_c (FILE *file, SXBA set)
 
 
 void
-sxba_to_c (SXBA set, FILE *file_descr, char *name1, char *name2, SXBOOLEAN is_static)
+sxba_to_c (SXBA set, FILE *file_descr, char *name1, char *name2, bool is_static)
 {
     SXBA_INDEX lgth, nbmot;
 
@@ -297,7 +297,7 @@ sxba64_to_vstr (SXBA set, VARSTR vstr)
 /* mais ca reste d'une lenteur effrayante. */
 
 void
-sxba2c (SXBA set, FILE *file_descr, char *name1, char *name2, SXBOOLEAN is_static, VARSTR vstr)
+sxba2c (SXBA set, FILE *file_descr, char *name1, char *name2, bool is_static, VARSTR vstr)
 {
     SXBA_INDEX	lgth, nbmot;
 
@@ -344,7 +344,7 @@ sxba2c (SXBA set, FILE *file_descr, char *name1, char *name2, SXBOOLEAN is_stati
 
 
 void
-sxbm2c (FILE *file_descr, SXBA *bits_matrix, SXBA_INDEX line_nb, char *name1, char *name2, SXBOOLEAN is_static, VARSTR vstr)
+sxbm2c (FILE *file_descr, SXBA *bits_matrix, SXBA_INDEX line_nb, char *name1, char *name2, bool is_static, VARSTR vstr)
 {
     /* Genere un SXBA_ELT [] [] et non un sxbm */
     SXBA_INDEX	i, lgth, nbmot;

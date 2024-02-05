@@ -87,7 +87,7 @@ struct sxSL_header {
                         elems_size,
                         free;
 
-    SXBOOLEAN		has_erased;
+    bool		has_erased;
 } /* sxSL_header */ ;
 
 
@@ -128,7 +128,7 @@ static void move (header, x, y, lgth)
           (h).free = -1,							\
           (h).oflw = o,								\
           (h).move = m,								\
-          (h).has_erased = SXFALSE
+          (h).has_erased = false
 
 /* Free the whole structure */
 #define sxSL_free(h)		(sxfree ((h).display), (h).display = NULL,	\
@@ -170,7 +170,7 @@ static void move (header, x, y, lgth)
 #define sxSL_clear(h)								\
          (h).sorted_top = (h).display_top = (h).elems_top = 0,			\
          (h).free = -1,								\
-         (h).has_erased = SXFALSE
+         (h).has_erased = false
 
 /* Length of list l */
 #define sxSL_lgth(h,l)		(h).display [l].lgth
@@ -204,7 +204,7 @@ static void move (header, x, y, lgth)
 
 /* Erase (list l */
 #define sxSL_erase(h,l)		((h).display [l].X |= sxSL_80,			\
-                                (h).has_erased = SXTRUE)
+                                (h).has_erased = true)
 
 /* Is list l erased ? */
 #define sxSL_is_erased(h,l)	((h).display [l].X & sxSL_80)
@@ -212,7 +212,7 @@ static void move (header, x, y, lgth)
 
 
 
-extern SXBOOLEAN			sxSL_GC (sxSL_header *header);
+extern bool			sxSL_GC (sxSL_header *header);
 
 extern void 			sxSL_stat (sxSL_header	*header, 
 					   FILE		*file,

@@ -77,18 +77,18 @@ extern SXINT			XxY_is_set (XxY_header *header,
 /* If the couple ("X", "Y") is already stored it returns its index (a strictly
    positive integer) else it returns 0. */
 
-extern SXBOOLEAN			XxY_set (XxY_header *header, 
+extern bool			XxY_set (XxY_header *header, 
 					 SXINT X, 
 					 SXINT Y, 
 					 SXINT *ref);
 /* Put the couple ("X", "Y") in the structure and returns its index (a strictly
-   positive integer). Moreover it returns SXTRUE if the couple ("X", "Y") is
-   already stored else it returns SXFALSE. */
+   positive integer). Moreover it returns true if the couple ("X", "Y") is
+   already stored else it returns false. */
 
-extern SXBOOLEAN			XxY_write (XxY_header *header, sxfiledesc_t F_XxY /* file descriptor */);
+extern bool			XxY_write (XxY_header *header, sxfiledesc_t F_XxY /* file descriptor */);
 /* Write on "file" the structure "*header" */
 
-extern SXBOOLEAN			XxY_read (XxY_header *header, 
+extern bool			XxY_read (XxY_header *header, 
 					  sxfiledesc_t F_XxY /* file descriptor */, 
 					  char *name, 
 					  void (*user_oflw) (SXINT, SXINT), 
@@ -100,7 +100,7 @@ extern SXBOOLEAN			XxY_read (XxY_header *header,
 extern void XxY_to_c (XxY_header *header, 
 		      FILE *F_XxY /* named output stream */, 
 		      char *name, 
-		      SXBOOLEAN is_static);
+		      bool is_static);
 
 /* Print on "F_X" a the C text for the structure "header" */
 
@@ -123,14 +123,14 @@ extern void			XxY_reuse (XxY_header *header,
 
 /* Allow for the (re)use of the structure "header" based upon a C text */
 
-extern SXBOOLEAN			XxY_set_and_close (XxY_header *header, 
+extern bool			XxY_set_and_close (XxY_header *header, 
 						   SXINT X, 
 						   SXINT Y, 
 						   SXINT *ref);
 /* Same as "XxY_set" but it also performs a transitive closure. */
 
 extern void			XxY_to_SXBM (XxY_header *header, 
-					     SXBOOLEAN (*get_couple) (SXINT*, SXINT*, SXINT), 
+					     bool (*get_couple) (SXINT*, SXINT*, SXINT), 
 					     SXINT couple_nb, 
 					     X_header *index_hd, 
 					     SXBA **M);
@@ -150,13 +150,13 @@ extern void			XxY_to_SXBM (XxY_header *header,
 /* WARNING: "h" is used several times in the macro expansion. */
 
 #define XxY_is_erased(h,x)	X_root_is_erased(h,x)
-/* Is SXTRUE if the couple whose index is "x" has been "XxY_erased". */
+/* Is true if the couple whose index is "x" has been "XxY_erased". */
 
 #define XxY_is_static(h)	X_root_is_static(h)
-/* Is SXTRUE iff the whole structure is defined statically. */
+/* Is true iff the whole structure is defined statically. */
 
 #define XxY_is_allocated(h)	X_root_is_allocated(h)
-/* Is SXTRUE iff the structure is allocated. */
+/* Is true iff the structure is allocated. */
 
 #define XxY_size(h)		X_root_size(h)
 /* Is the current size of the structure (last index available). */

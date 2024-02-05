@@ -25,7 +25,7 @@
 #include "varstr.h"
 #include "lecl_ag.h"
 
-char WHAT_LECLFSA[] = "@(#)SYNTAX - $Id: lecl_fsa.c 3603 2023-09-23 20:02:36Z garavel $" WHAT_DEBUG;
+char WHAT_LECLFSA[] = "@(#)SYNTAX - $Id: lecl_fsa.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 extern SXINT	lecl_diagnoses_one_la (struct lr_marker *current_state_ptr, 
 				       SXBA sra_set, 
@@ -52,18 +52,18 @@ extern SXINT	lecl_diagnoses_immediate (struct lr_marker *current_state_ptr,
 					  SXINT detection_state, 
 					  char conflict_kind /* bit (5) */,
 					  SXINT choice, 
-					  SXBOOLEAN with_detection_point);
+					  bool with_detection_point);
 
 extern SXINT	lecl_diagnoses_unbounded_output (struct conflict_record *u_head_ptr, struct conflict_record *m_head_ptr);
 extern SXINT	lecl_sature (SXINT nbt);
-/* extern SXINT	sort_by_tree (); 1. c'est un SXVOID et 2. il est maintenant dans sxunix.h */
+/* extern SXINT	sort_by_tree (); 1. c'est un void et 2. il est maintenant dans sxunix.h */
 extern VARSTR	lecl_gen_cc (SXBA *SC_TO_CHAR_SET, 
 			     SXBA esc_set, 
 			     VARSTR varstr_ptr);
 static SXINT	ctxt_mngr__put (SXBA ctxt_mngr__put_ctxt_set);
 struct sc_prdct_to_next_item {
     SXINT		state_no, lnk, *bwrd_ptr;
-    SXBOOLEAN	is_del, is_scan;
+    bool	is_del, is_scan;
 };
 static struct conflict_record	*u_head_ptr, *m_head_ptr;
 static SXINT	FSA_HSH_TBL [127];
@@ -78,7 +78,7 @@ static SXINT	action_no, hsh, i, j, k, ner, next_state, seed_state, shift_state,
                 xfsa1, xfsa_t2, xitem, xitem2, xstate, xsubstate, xcc, items_no, origine,
                 sommet, predicate_no, indx, max_items_no, esc1, esc, x, xcurrent_state,
                 conflict_mode, sc, sc1, else_state, erase_inconsistency;
-static SXBOOLEAN	bdel, scan, is_first_reduce, is_the_same_trans, is_first,
+static bool	bdel, scan, is_first_reduce, is_the_same_trans, is_first,
                 process_predicates, has_predicate;
 static char	current_state_kind, next_state_kind /* bit (6) */ ;
 static SXINT	*to_be_sorted, *indexes, *sorted_actions, *new_ctxt /* 1:items_no */ ;
@@ -214,7 +214,7 @@ static void	filsubstate (struct lr_marker *filsubstate_lrm)
 
 
 
-static void	subsuiv (SXBOOLEAN is_kept, SXBOOLEAN is_next, SXBOOLEAN subsuiv_is_first_reduce)
+static void	subsuiv (bool is_kept, bool is_next, bool subsuiv_is_first_reduce)
 {
     SXINT	l, t, subsuiv_origine, xs1, subsuiv_ner;
     struct lr_marker	subsuiv_lrm;
@@ -254,7 +254,7 @@ static void	subsuiv (SXBOOLEAN is_kept, SXBOOLEAN is_next, SXBOOLEAN subsuiv_is_
 
 
 
-static SXBOOLEAN	eq_lr_marker (struct lr_marker *si, struct lr_marker *sj)
+static bool	eq_lr_marker (struct lr_marker *si, struct lr_marker *sj)
 {
     return si->index == sj->index && si->attributes.origine_index == sj->attributes.origine_index && si->attributes.
 	 ctxt_no == sj->attributes.ctxt_no && si->attributes.kind == sj->attributes.kind;
@@ -262,10 +262,10 @@ static SXBOOLEAN	eq_lr_marker (struct lr_marker *si, struct lr_marker *sj)
 
 
 
-static SXBOOLEAN	is_state_already_defined (SXINT is_state_already_defined_seed_state, 
+static bool	is_state_already_defined (SXINT is_state_already_defined_seed_state, 
 					  SXINT else_prdct, 
-					  SXBOOLEAN is_del, 
-					  SXBOOLEAN is_scan, 
+					  bool is_del, 
+					  bool is_scan, 
 					  SXINT *xfsa, 
 					  SXINT is_state_already_defined_hsh)
 {
@@ -302,7 +302,7 @@ static SXBOOLEAN	is_state_already_defined (SXINT is_state_already_defined_seed_s
 
 	    xitem2 = xitem;
 	    *xfsa = y;
-	    return SXTRUE;
+	    return true;
 	}
 
 different:
@@ -317,12 +317,12 @@ different:
 	fsa [is_state_already_defined_x].lnk = xfsa2;
 
     fsa [xfsa2].lnk = 0;
-    return SXFALSE;
+    return false;
 }
 
 
 
-static SXBOOLEAN	less (SXINT less_i, SXINT less_j)
+static bool	less (SXINT less_i, SXINT less_j)
 {
     struct lr_marker	*si, *sj;
 
@@ -330,27 +330,27 @@ static SXBOOLEAN	less (SXINT less_i, SXINT less_j)
     sj = state + less_j;
 
     if (si->index < sj->index)
-	return SXTRUE;
+	return true;
 
     if (si->index > sj->index)
-	return SXFALSE;
+	return false;
 
     if (si->attributes.origine_index < sj->attributes.origine_index)
-	return SXTRUE;
+	return true;
 
     if (si->attributes.origine_index > sj->attributes.origine_index)
-	return SXFALSE;
+	return false;
 
     if (si->attributes.ctxt_no < sj->attributes.ctxt_no)
-	return SXTRUE;
+	return true;
 
     if (si->attributes.ctxt_no > sj->attributes.ctxt_no)
-	return SXFALSE;
+	return false;
 
     if (si->attributes.kind < sj->attributes.kind)
-	return SXTRUE;
+	return true;
 
-    return SXFALSE;
+    return false;
 }
 
 
@@ -359,7 +359,7 @@ static	void build_state (SXINT *xt,
 			  SXINT *build_state_hsh, 
 			  char *state_kind, 
 			  SXINT *build_state_ner, 
-			  SXBOOLEAN is_la)
+			  bool is_la)
 {
     /* Cette procedure prend les info ds state (1..xstate), les trie, supprime les
        doublons eventuels, calcule la valeur du hash_code et range le resultat
@@ -491,7 +491,7 @@ static	void put_in_state (SXBA put_in_state_not_yet_processed, SXINT d)
 
 
 
-static	void put_new_trans (SXINT ref, SXINT state_no, SXBOOLEAN del, SXBOOLEAN put_new_trans_scan)
+static	void put_new_trans (SXINT ref, SXINT state_no, bool del, bool put_new_trans_scan)
 {
     struct fsa_trans_item	*fsa_trans_item_ptr;
 
@@ -508,8 +508,8 @@ static	void put_new_trans (SXINT ref, SXINT state_no, SXBOOLEAN del, SXBOOLEAN p
 static void	set_new_state (SXINT seed_state_no, 
 			       SXINT shift_state_no, 
 			       SXINT else_prdct_no, 
-			       SXBOOLEAN set_new_state_bdel, 
-			       SXBOOLEAN set_new_state_scan, 
+			       bool set_new_state_bdel, 
+			       bool set_new_state_scan, 
 			       char state_kind)
 {
     struct fsa_item	*fsa_item_ptr;
@@ -529,9 +529,9 @@ static void	set_new_state (SXINT seed_state_no,
 
 static	void predicates_processing (SXINT predicates_processing_origine, 
 				    SXINT predicates_processing_items_no, 
-				    SXBOOLEAN is_in_la)
+				    bool is_in_la)
 {
-    SXBOOLEAN	predicates_processing_is_first, is_prdct_true_used, is_first_trans, is_the_same, is_first_pass, predicates_processing_bdel, else_del, predicates_processing_scan, else_scan
+    bool	predicates_processing_is_first, is_prdct_true_used, is_first_trans, is_the_same, is_first_pass, predicates_processing_bdel, else_del, predicates_processing_scan, else_scan
 	 , is_trans_to_prdct, is_conflict;
     SXINT	d, predicates_processing_x, prd, prdct;
     SXINT		predicates_processing_predicate_no, predicates_processing_k, predicates_processing_hsh, predicates_processing_next_state, predicates_processing_ner, predicates_processing_else_state;
@@ -548,11 +548,11 @@ static	void predicates_processing (SXINT predicates_processing_origine,
     for (d = 1; d <= predicates_processing_items_no; d++)
 	SXBA_1_bit (not_yet_processed, d);
 
-    is_trans_to_prdct = SXFALSE;
+    is_trans_to_prdct = false;
 
     while (!sxba_is_empty (not_yet_processed) && !is_trans_to_prdct) {
 	xstate = xsubstate = 0;
-	predicates_processing_is_first = SXTRUE;
+	predicates_processing_is_first = true;
 	d = 0;
 
 	while ((d = sxba_scan (not_yet_processed, d)) > 0) {
@@ -562,7 +562,7 @@ static	void predicates_processing (SXINT predicates_processing_origine,
 
 	    if (prd > 0) {
 		if (predicates_processing_is_first) {
-		    predicates_processing_is_first = SXFALSE;
+		    predicates_processing_is_first = false;
 		    prdct = prd;
 		    put_in_substate (not_yet_processed, d);
 		}
@@ -576,11 +576,11 @@ static	void predicates_processing (SXINT predicates_processing_origine,
 
 /* d ^= 0 */
 
-	subsuiv (SXTRUE, SXFALSE, SXFALSE);
+	subsuiv (true, false, false);
 
 	for (predicates_processing_x = 1; predicates_processing_x <= xstate && !is_trans_to_prdct; predicates_processing_x++) {
 	    if (ers [state [predicates_processing_x].index].lispro > 0)
-		is_trans_to_prdct = SXTRUE;
+		is_trans_to_prdct = true;
 	}
     }
 
@@ -589,14 +589,14 @@ static	void predicates_processing (SXINT predicates_processing_origine,
 
     sxinitialise (predicates_processing_scan); /* pour faire taire gcc -Wuninitialized */
     sxinitialise (predicates_processing_bdel); /* pour faire taire gcc -Wuninitialized */
-    is_prdct_true_used = SXFALSE;
-    is_first_trans = SXTRUE;
-    is_first_pass = SXTRUE;
-    is_the_same = SXTRUE;
+    is_prdct_true_used = false;
+    is_first_trans = true;
+    is_first_pass = true;
+    is_the_same = true;
 
     while (!sxba_is_empty (not_yet_processed)) {
 	xstate = xsubstate = 0;
-	predicates_processing_is_first = SXTRUE;
+	predicates_processing_is_first = true;
 	d = 0;
 
 	while ((d = sxba_scan (not_yet_processed, d)) > 0) {
@@ -622,7 +622,7 @@ static	void predicates_processing (SXINT predicates_processing_origine,
 			put_in_substate (not_yet_processed, d);
 		}
 		else if (predicates_processing_is_first) {
-		    predicates_processing_is_first = SXFALSE;
+		    predicates_processing_is_first = false;
 
 		    if (prd > 0) {
 			predicates_processing_predicate_no = prd;
@@ -646,8 +646,8 @@ static	void predicates_processing (SXINT predicates_processing_origine,
 /* d ^= 0 */
 
 	predicates_processing_else_state = 0;
-	else_del = SXFALSE;
-	else_scan = SXFALSE;
+	else_del = false;
+	else_scan = false;
 
 	if (is_first_pass) {
 	    predicates_processing_predicate_no = prdct_true_code;
@@ -667,7 +667,7 @@ static	void predicates_processing (SXINT predicates_processing_origine,
 	}
 
 	if (predicates_processing_predicate_no != prdct_true_code)
-	    subsuiv (SXTRUE, SXFALSE, SXFALSE);
+	    subsuiv (true, false, false);
 
 	if (xstate == 0 /* vide & &True */ ) {
 	    predicates_processing_next_state = fsa [xfsa1].else_prdct;
@@ -676,7 +676,7 @@ static	void predicates_processing (SXINT predicates_processing_origine,
 	}
 	else {
 	    xitem = xitem2;
-	    build_state (&xitem2, &predicates_processing_hsh, &predicates_processing_next_state_kind, &predicates_processing_ner, SXFALSE);
+	    build_state (&xitem2, &predicates_processing_hsh, &predicates_processing_next_state_kind, &predicates_processing_ner, false);
 
 	    if (!(predicates_processing_next_state_kind & SHIFT)) {
 		/* On a forcement predicates_processing_next_state_kind & REDUCE */
@@ -691,12 +691,12 @@ static	void predicates_processing (SXINT predicates_processing_origine,
 /* on a des predicats differents non disjoints, il y a conflit si leur 
    next_state sont differents */
 
-		    is_conflict = SXFALSE;
+		    is_conflict = false;
 		    names = varstr_alloc (128);
 
 		    for (predicates_processing_x = xitem + 1; predicates_processing_x < xitem2; predicates_processing_x++) {
 			if (predicates_processing_next_state != item [predicates_processing_x].attributes.origine_index) {
-			    is_conflict = SXTRUE;
+			    is_conflict = true;
 			    varstr_catenate (varstr_catenate (names, sxstrget (action_or_prdct_to_ate [-ers [item [predicates_processing_x].
 				 index - 1].prolis])), " ");
 			}
@@ -729,19 +729,19 @@ static	void predicates_processing (SXINT predicates_processing_origine,
 	if (predicates_processing_next_state) {
 	    /* On ne genere pas les transitions vers erreur */
 	    if (is_first_trans)
-		is_first_trans = SXFALSE;
+		is_first_trans = false;
 	    else {
 		if (fsa_trans [xfsa_t - 1].next_state_no != predicates_processing_next_state)
-		    is_the_same = SXFALSE;
+		    is_the_same = false;
 	    }
 
 	    if (predicates_processing_predicate_no == prdct_true_code)
-		is_prdct_true_used = SXTRUE;
+		is_prdct_true_used = true;
 
 	    put_new_trans (predicates_processing_predicate_no, predicates_processing_next_state, predicates_processing_bdel, predicates_processing_scan);
 	}
 
-	is_first_pass = SXFALSE;
+	is_first_pass = false;
     }
 
 
@@ -792,7 +792,7 @@ static SXINT	ctxt_mngr__put (SXBA ctxt_mngr__put_ctxt_set)
 
 
 
-static SXBOOLEAN	less_action (SXINT less_action_i, SXINT less_action_j)
+static bool	less_action (SXINT less_action_i, SXINT less_action_j)
 {
     return ers [state [less_action_i].index].lispro < ers [state [less_action_j].index].lispro;
 }
@@ -851,7 +851,7 @@ static	void build_action_states (SXINT build_action_states_items_no)
 	sort_by_tree (sorted_actions, 1, build_action_states_items_no, less_action);
 
     build_action_states_lrm = store + sorted_actions [1];
-    bdel = scan = SXFALSE;
+    bdel = scan = false;
 
     for (build_action_states_x = 1; build_action_states_x <= build_action_states_items_no; build_action_states_x = y) {
 	xstate = 0;
@@ -868,15 +868,15 @@ static	void build_action_states (SXINT build_action_states_items_no)
 	}
 
 	xitem = xitem2;
-	build_state (&xitem2, &build_action_states_hsh, &next_state_kind, &dum_int /* unused */ , SXFALSE);
+	build_state (&xitem2, &build_action_states_hsh, &next_state_kind, &dum_int /* unused */ , false);
 
-	if (!is_state_already_defined ((SXINT)0, (SXINT)0, SXFALSE, SXFALSE, &next_state, build_action_states_hsh))
-	    set_new_state ((SXINT)0, (SXINT)0, (SXINT)0, SXFALSE, SXFALSE, next_state_kind);
+	if (!is_state_already_defined ((SXINT)0, (SXINT)0, false, false, &next_state, build_action_states_hsh))
+	    set_new_state ((SXINT)0, (SXINT)0, (SXINT)0, false, false, next_state_kind);
 
 	if (is_non_deterministic_automaton)
 	    set_sc_prdct_to_next ((SXINT)1, prdct_true_code) /* Any */;
 	else
-	    put_new_trans (build_action_states_action_no, next_state, SXFALSE, SXFALSE);
+	    put_new_trans (build_action_states_action_no, next_state, false, false);
     }
 }
 
@@ -898,7 +898,7 @@ static SXINT	get_action_state (SXINT state_no, SXINT act_no)
 
 
 
-static SXBOOLEAN	get_del (SXBA get_del_sc_set)
+static bool	get_del (SXBA get_del_sc_set)
 {
     /* cette fonction verifie si la suppression des caracteres des items de 
    substate est consistante pour les terminaux de get_del_sc_set.
@@ -906,7 +906,7 @@ static SXBOOLEAN	get_del (SXBA get_del_sc_set)
    c'est-a-dire qu'aucun n'est associe a &False et que si l'un est associe a &True,
    ils y sont tous.
    Si une E.R. comporte le predicat &True la suppression eventuelle des
-   caracteres de cette E.R. non suivis de &SXTRUE n'est pas prise en compte
+   caracteres de cette E.R. non suivis de &true n'est pas prise en compte
    ex:  ANY | -quote &True
    est correct,le quote de ANY n'etant pas pris en compte.
    De plus elle retourne un booleen indiquant si les caracteres sur
@@ -914,43 +914,43 @@ static SXBOOLEAN	get_del (SXBA get_del_sc_set)
    l'analyse lexico. */
     struct ers_item	*ers_item_ptr;
     SXINT	get_del_i, get_del_x;
-    SXBOOLEAN	all_0 = SXTRUE, all_1 = SXTRUE;
+    bool	all_0 = true, all_1 = true;
     SXINT	n;
-    SXBOOLEAN is_sysRE = SXFALSE;
+    bool is_sysRE = false;
     char er_name [66], suffixe [40];
 
     for (get_del_i = 1; get_del_i <= xsubstate; get_del_i++) {
 	if ((ers_item_ptr = ers + substate [get_del_i].index)->is_erased) {
 	    if (ers_item_ptr->liserindx.line > 0) {
 		/* Occurrence dans une ER utilisateur */
-		all_0 = SXFALSE;
+		all_0 = false;
 	    }
 	    else {
 		/* Il s'agit d'une ER systeme */
 		/* Vu la "linearite" des ER systeme, une classe (caractere) ne peut intervenir
-		   qu'une fois et une seule dans un etat, le defaut "is_erased == SXTRUE"
+		   qu'une fois et une seule dans un etat, le defaut "is_erased == true"
 		   est donc sans influence, ni sur le passe ni sur le futur, il s'adapte
 		   a son environnement */
-		is_sysRE = SXTRUE;
+		is_sysRE = true;
 	    }
 	}
 	else
-	    all_1 = SXFALSE;
+	    all_1 = false;
     }
 
     if (all_1)
-	return SXTRUE;
+	return true;
 
     if (is_sysRE)
 	for (get_del_i = 1; get_del_i <= xsubstate; get_del_i++) {
 	    if ((ers_item_ptr = ers + substate [get_del_i].index)->liserindx.line == 0) {
 		/* Pour le listing de la table des symboles */
-		ers_item_ptr->is_erased = SXFALSE;
+		ers_item_ptr->is_erased = false;
 	    }
 	}
 
     if (all_0)
-	return SXFALSE;
+	return false;
 
 
     /* Il y a incohérence vis-a-vis des "delete", on sort les messages d'erreur */
@@ -994,22 +994,22 @@ static SXBOOLEAN	get_del (SXBA get_del_sc_set)
 	}
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
 
-static SXBOOLEAN	is_first_reduction (SXINT state_no)
+static bool	is_first_reduction (SXINT state_no)
 {
     SXINT	is_first_reduction_x;
     SXINT	lim = fsa [state_no + 1].item_ref;
 
     for (is_first_reduction_x = fsa [state_no].item_ref; is_first_reduction_x < lim; is_first_reduction_x++) {
 	if (item [is_first_reduction_x].attributes.kind == FIRST_REDUCE)
-	    return SXTRUE;
+	    return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
@@ -1072,7 +1072,7 @@ static void set_conflict_mode_prio (SXBA sra_set,
     }
 }
     
-static SXBOOLEAN	is_conflict (SXBA sra_set, 
+static bool	is_conflict (SXBA sra_set, 
 			     SXINT *is_conflict_conflict_mode, 
 			     char *user_priority /* bit (3) */)
 {
@@ -1093,7 +1093,7 @@ static SXBOOLEAN	is_conflict (SXBA sra_set,
 	    case 1:
 		/* conflict */
 		if (*is_conflict_conflict_mode == ONELA_CONFLICT || lrm1_ptr->index == lrm2_ptr->index)
-		    return SXTRUE;
+		    return true;
 		
 		break;
 		
@@ -1102,7 +1102,7 @@ static SXBOOLEAN	is_conflict (SXBA sra_set,
 		if (ers [lrm1_ptr->attributes.origine_index].lispro !=
 		    ers [lrm2_ptr->attributes.origine_index].lispro)
 		    if (*is_conflict_conflict_mode == ONELA_CONFLICT || lrm1_ptr->index == lrm2_ptr->index)
-			return SXTRUE;
+			return true;
 		
 		break;
 		
@@ -1111,7 +1111,7 @@ static SXBOOLEAN	is_conflict (SXBA sra_set,
 		if (ers_disp [ers [lrm1_ptr->attributes.origine_index - 1].prolis].master_token !=
 		    ers_disp [ers [lrm2_ptr->attributes.origine_index - 1].prolis].master_token)
 		    if (*is_conflict_conflict_mode == ONELA_CONFLICT || lrm1_ptr->index == lrm2_ptr->index)
-			return SXTRUE;
+			return true;
 		
 		break;
 		
@@ -1130,7 +1130,7 @@ static SXBOOLEAN	is_conflict (SXBA sra_set,
 	}
     }
     
-    return SXFALSE;
+    return false;
 }
 
 
@@ -1226,13 +1226,13 @@ static void apply_user_prio (SXBA sra_set, char apply_user_prio_prio /* bit (3) 
 }
 
 
-static	SXBOOLEAN conflict_mngr (SXBA sra_set, 
+static	bool conflict_mngr (SXBA sra_set, 
 			       SXINT conflict_mngr_conflict_mode, 
 			       char conflict_mngr_prio /* bit (3) */)
 {
     SXINT		conflict_mngr_x, conflict_mngr_j;
     SXINT		conflict_mngr_ner, choice, choice_priority, typ, class, orig, current_conflict_mode;
-    SXBOOLEAN	is_shift, is_action, is_reduce;
+    bool	is_shift, is_action, is_reduce;
     char	kind /* bit (2) */ ;
     char	conflict_kind /* bit (5) */ ;
 
@@ -1251,7 +1251,7 @@ static	SXBOOLEAN conflict_mngr (SXBA sra_set,
 
 	if (!is_conflict (sra_set, &current_conflict_mode, &dum_char))
 	    /* Tous les conflits ont ete resolus par les priorites de l'utilisateur */
-	    return SXFALSE;
+	    return false;
     }
 
 
@@ -1263,7 +1263,7 @@ static	SXBOOLEAN conflict_mngr (SXBA sra_set,
     conflict_kind = 0;
     /* Shift || (first) Action || (next) Action || (first) Reduce || (next) Reduce */
     choice_priority = UNKNOWN;
-    is_reduce = is_action = SXFALSE;
+    is_reduce = is_action = false;
 
 
 /* Priorite au shift sinon priorite a l'action ou au reduce d'index min */
@@ -1281,7 +1281,7 @@ static	SXBOOLEAN conflict_mngr (SXBA sra_set,
 		    conflict_kind |= 4 /* (next) Action */ ;
 	    }
 	    else {
-		is_action = SXTRUE;
+		is_action = true;
 		class = ers [orig].lispro;
 		conflict_kind |= 2 /* (first) Action */ ;
 	    }
@@ -1291,7 +1291,7 @@ static	SXBOOLEAN conflict_mngr (SXBA sra_set,
 		    conflict_kind |= 16 /* (next) Reduce */ ;
 	    }
 	    else {
-		is_reduce = SXTRUE;
+		is_reduce = true;
 		conflict_mngr_ner = orig;
 		conflict_kind |= 8 /* (first) Reduce */ ;
 	    }
@@ -1315,7 +1315,7 @@ static	SXBOOLEAN conflict_mngr (SXBA sra_set,
 	    if (is_non_deterministic_automaton && (conflict_kind & 6))
 		/* Conflit avec des actions */
 		lecl_diagnoses_immediate (current_state, sra_set, xfsa1, conflict_kind,
-					  choice, SXFALSE);
+					  choice, false);
 	    else
 		lecl_diagnoses_one_la (current_state, sra_set, xfsa1, conflict_kind,
 				       choice, esc1_set);
@@ -1327,18 +1327,18 @@ static	SXBOOLEAN conflict_mngr (SXBA sra_set,
 	     lecl_diagnoses_unbounded (current_state, sra_set, fsa [xfsa1].seed_state,
 				       xfsa1, conflict_kind, choice, &u_head_ptr);
 	 else
-	     lecl_diagnoses_immediate (current_state, sra_set, xfsa1, conflict_kind, choice, SXTRUE);
+	     lecl_diagnoses_immediate (current_state, sra_set, xfsa1, conflict_kind, choice, true);
 
     if (!is_non_deterministic_automaton) {
-	is_reduce = is_action = is_shift = SXFALSE;
+	is_reduce = is_action = is_shift = false;
 	class = ers [choice].lispro;
 	
 	if (class >= 0)
-	    is_shift = SXTRUE;
+	    is_shift = true;
 	else if (class <= xactmin)
-	    is_action = SXTRUE;
+	    is_action = true;
 	else
-	    is_reduce = SXTRUE;
+	    is_reduce = true;
 	
 	conflict_mngr_x = 0;
 	
@@ -1364,18 +1364,18 @@ static	SXBOOLEAN conflict_mngr (SXBA sra_set,
 
 
 
-static	SXBOOLEAN conflict_in_comments (SXBA sra_set)
+static	bool conflict_in_comments (SXBA sra_set)
 {
     SXINT	sra_set_card, x1, x2;
     char	priority /* bit (3) */ ;
-    SXBOOLEAN	has_conflict;
+    bool	has_conflict;
 
     sra_set_card = sxba_cardinal (sra_set);
 
     if (sra_set_card < 2)
-	return SXFALSE;
+	return false;
 
-    has_conflict = SXFALSE;
+    has_conflict = false;
 
     if (sra_set_card == 2) {
 	/* Easy case */
@@ -1492,12 +1492,12 @@ static	SXBOOLEAN conflict_in_comments (SXBA sra_set)
 
 
 
-static	SXBOOLEAN unbounded_conflict (SXBA sra_set, 
+static	bool unbounded_conflict (SXBA sra_set, 
 				    char unbounded_conflict_prio /* bit (3) */)
 {
     SXBA	/* xcurrent_state */ set;
     SXINT	unbounded_conflict_x, xindexes, unbounded_conflict_i, ind;
-    SXBOOLEAN		has_conflict;
+    bool		has_conflict;
 
     sxinitialise(unbounded_conflict_i); /* pour faire taire gcc -Wuninitialized */
 /* On redecoupe par adresse de detection */
@@ -1520,7 +1520,7 @@ next:	SXBA_1_bit (sra_s [unbounded_conflict_i], unbounded_conflict_x);
     }
 
     sxba_empty (sra_set);
-    has_conflict = SXFALSE;
+    has_conflict = false;
 
     for (unbounded_conflict_x = 1; unbounded_conflict_x <= xindexes; unbounded_conflict_x++) {
 	set = sra_s [unbounded_conflict_x];
@@ -1544,10 +1544,10 @@ next:	SXBA_1_bit (sra_s [unbounded_conflict_i], unbounded_conflict_x);
 
 static	void maj_trans (void)
 {
-    SXBOOLEAN	found;
+    bool	found;
     SXINT	maj_trans_x, cc_ref;
 
-    found = SXFALSE;
+    found = false;
 
     for (maj_trans_x = xfsa_t2; maj_trans_x < xfsa_t && !found; maj_trans_x++) {
 	if (fsa_trans [maj_trans_x].next_state_no == next_state
@@ -1555,7 +1555,7 @@ static	void maj_trans (void)
 	    && fsa_trans [maj_trans_x].is_scan == scan) {
 	    cc_ref = fsa_trans [maj_trans_x].cc_ref;
 	    sxba_or (compound_classes [cc_ref], sc_set);
-	    found = SXTRUE;
+	    found = true;
 	}
     }
 
@@ -1604,7 +1604,7 @@ static	void liberer (void)
 
 
 
-static SXBOOLEAN	is_act_red (SXBA w_set, 
+static bool	is_act_red (SXBA w_set, 
 			    SXBA is_act_red_sc_set, 
 			    SXINT is_act_red_next_state)
 {
@@ -1628,24 +1628,24 @@ static SXBOOLEAN	is_act_red (SXBA w_set,
 
 		if (!sxba_is_empty (w_set) && current_state [is_act_red_x].attributes.origine_index == is_act_red_index && current_state [is_act_red_x].
 		     attributes.kind != FIRST_REDUCE) {
-		    return SXFALSE;
+		    return false;
 		}
 	    }
 	}
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
 
 static void complete_trans (void)
 {
-    SXBOOLEAN	is_sc_set_empty = SXFALSE;
+    bool	is_sc_set_empty = false;
 
     if (has_predicate) {
 	sxba_empty (sc_set);
-	is_sc_set_empty = SXTRUE;
+	is_sc_set_empty = true;
 	esc1 = 0;
 	
 	while ((esc1 = sxba_scan (esc1_set, esc1)) > 0) {
@@ -1663,13 +1663,13 @@ static void complete_trans (void)
 	    }
 	    else {
 		SXBA_1_bit (sc_set, k);
-		is_sc_set_empty = SXFALSE;
+		is_sc_set_empty = false;
 	    }
 	}
     }
     
     if (next_state_kind & LA)
-	bdel = scan = SXFALSE;
+	bdel = scan = false;
     
     if (!is_sc_set_empty)
 	/* On est sur que les sc intervenant dans la transition
@@ -1725,8 +1725,8 @@ static SXINT create_nd_state (struct sc_prdct_to_next_item *p)
     create_nd_state_hsh = -(create_nd_state_hsh % 127);
 
     next_state_kind = NONDETER;
-    bdel = SXFALSE;
-    scan = SXFALSE;
+    bdel = false;
+    scan = false;
     
     if (!is_state_already_defined ((SXINT)0, (SXINT)0, bdel,
 				   scan, &next_state, create_nd_state_hsh))
@@ -1737,15 +1737,15 @@ static SXINT create_nd_state (struct sc_prdct_to_next_item *p)
 }
 
 
-SXVOID	lecl_fsa_construction (void)
+void	lecl_fsa_construction (void)
 {
-    SXBOOLEAN				is_nd_trans;
+    bool				is_nd_trans;
     struct sc_prdct_to_next_item	*p, *p1;
     
     if (sxverbosep) {
 	if (!sxttycol1p) {
 	    fputc ('\n', sxtty);
-	    sxttycol1p = SXTRUE;
+	    sxttycol1p = true;
 	}
 
 	fputs ("FSA Construction\n", sxtty);
@@ -1813,17 +1813,17 @@ SXVOID	lecl_fsa_construction (void)
     }
 
     xstate = 0;
-    subsuiv (SXTRUE, SXFALSE, SXFALSE);
+    subsuiv (true, false, false);
 
     if (xstate > max_items_no)
 	max_items_no = xstate;
 
     allouer ();
     xitem = xitem2;
-    build_state (&xitem2, &hsh, &next_state_kind, &ner, SXFALSE);
+    build_state (&xitem2, &hsh, &next_state_kind, &ner, false);
     fsa_hsh_tbl [hsh] = xfsa2;
     fsa [xfsa2].lnk = 0;
-    set_new_state ((SXINT)0, (SXINT)0, (SXINT)0, SXFALSE, SXFALSE, next_state_kind);
+    set_new_state ((SXINT)0, (SXINT)0, (SXINT)0, false, false, next_state_kind);
 
 
 /* on boucle tant qu'il y a un etat non traite */
@@ -1831,7 +1831,7 @@ SXVOID	lecl_fsa_construction (void)
     for (xfsa1 = 1; xfsa1 < xfsa2; xfsa1++) {
 	if (sxverbosep) {
 	    fputc ('S', sxtty);
-	    sxttycol1p = SXFALSE;
+	    sxttycol1p = false;
 	}
 
 	current_state_kind = fsa [xfsa1].state_kind;
@@ -1851,14 +1851,14 @@ SXVOID	lecl_fsa_construction (void)
 	    }
 
 	    action_no = ers [item [origine].index].lispro;
-	    subsuiv (SXTRUE, SXFALSE, SXFALSE);
+	    subsuiv (true, false, false);
 	    xitem = xitem2;
-	    build_state (&xitem2, &hsh, &next_state_kind, &ner, SXFALSE);
+	    build_state (&xitem2, &hsh, &next_state_kind, &ner, false);
 
-	    if (!is_state_already_defined ((SXINT)0, (SXINT)0, SXFALSE, SXFALSE, &next_state, hsh))
-		set_new_state ((SXINT)0, (SXINT)0, (SXINT)0, SXFALSE, SXFALSE, next_state_kind);
+	    if (!is_state_already_defined ((SXINT)0, (SXINT)0, false, false, &next_state, hsh))
+		set_new_state ((SXINT)0, (SXINT)0, (SXINT)0, false, false, next_state_kind);
 
-	    put_new_trans (action_no, next_state, SXFALSE, SXFALSE);
+	    put_new_trans (action_no, next_state, false, false);
 	    fsa [xfsa1 + 1].transition_ref = xfsa_t;
 	}
 	else if (items_no == 1 && (current_state_kind & SHIFT)) {
@@ -1866,19 +1866,19 @@ SXVOID	lecl_fsa_construction (void)
 	    indx = item [origine].index;
 	    predicate_no = ers [indx].prdct_no;
 	    bdel = ers [indx].is_erased;
-	    scan = SXTRUE;
+	    scan = true;
 
 	    if (predicate_no != prdct_false_code) {
 		maj (&xsubstate, (SXINT)1);
 		substate [xsubstate] = item [origine];
-		subsuiv (SXTRUE, SXFALSE, SXFALSE);
+		subsuiv (true, false, false);
 	    }
 
 
 /* Si &False => xstate = 0 */
 
 	    xitem = xitem2;
-	    build_state (&xitem2, &hsh, &next_state_kind, &ner, SXFALSE);
+	    build_state (&xitem2, &hsh, &next_state_kind, &ner, false);
 
 	    if (!is_state_already_defined ((SXINT)0, (SXINT)0, bdel, scan, &next_state, hsh))
 		set_new_state ((SXINT)0, (SXINT)0, (SXINT)0, bdel, scan, next_state_kind);
@@ -1890,9 +1890,9 @@ SXVOID	lecl_fsa_construction (void)
 				      (SXINT)(scan ? 1 : 0),
 				      (char) (bdel ? 2 : 0));
 		xstate = 0;
-		subsuiv (SXTRUE, SXFALSE, SXFALSE);
+		subsuiv (true, false, false);
 		xitem = xitem2;
-		build_state (&xitem2, &hsh, &next_state_kind, &ner, SXFALSE);
+		build_state (&xitem2, &hsh, &next_state_kind, &ner, false);
 		next_state_kind = PRDCT;
 
 		if (!is_state_already_defined ((SXINT)0, (SXINT)0, bdel, scan, &next_state, hsh))
@@ -1907,7 +1907,7 @@ SXVOID	lecl_fsa_construction (void)
 	    /* Il n'y a pas de conflit impliquant un predicat:
 	       S'il y a un marqueur en position reduce, on suppose qu'il se trouve devant 
 	       "&Else" */
-	    predicates_processing (origine, items_no, (SXBOOLEAN)(current_state_kind & LA));
+	    predicates_processing (origine, items_no, (bool)(current_state_kind & LA));
 	else if (current_state_kind & NONDETER) {
 	    /* Traitement d'un etat non-deterministe */
 	    i = 0;
@@ -1915,8 +1915,8 @@ SXVOID	lecl_fsa_construction (void)
 	    for (xitem = origine; xitem < sommet; xitem++) {
 		put_new_trans (++i,
 			       item [xitem].index,
-			       (SXBOOLEAN) (item [xitem].attributes.kind == 1), /* del */
-			       (SXBOOLEAN) (item [xitem].attributes.ctxt_no == 1) /* scan */);
+			       (bool) (item [xitem].attributes.kind == 1), /* del */
+			       (bool) (item [xitem].attributes.ctxt_no == 1) /* scan */);
 	    }
 
 	    if (i > xnondetermax)
@@ -1930,7 +1930,7 @@ SXVOID	lecl_fsa_construction (void)
 	    SXBA_0_bit (sc1_set, 0);
 	    SXBA_0_bit (sc1_set, 1);
 	    sxba_copy (compound_classes [++xcc], sc1_set);
-	    put_new_trans (xcc, -ers [item [origine].index - 1].prolis, SXFALSE, SXFALSE);
+	    put_new_trans (xcc, -ers [item [origine].index - 1].prolis, false, false);
 	    fsa [xfsa1 + 1].transition_ref = xfsa_t;
 	}
 	else {
@@ -1970,7 +1970,7 @@ SXVOID	lecl_fsa_construction (void)
 		}
 
 		if (xsubstate > 0)
-		    subsuiv (SXTRUE, SXTRUE, SXTRUE);
+		    subsuiv (true, true, true);
 	    
 		/* state est rempli avec l'etat courant 
 		   Il n'est pas trie et il peut y avoir des doublons
@@ -2087,13 +2087,13 @@ SXVOID	lecl_fsa_construction (void)
 			    
 				if (xstate > 0) {
 				    xitem = xitem2;
-				    build_state (&xitem2, &hsh, &next_state_kind, &ner, SXFALSE);
+				    build_state (&xitem2, &hsh, &next_state_kind, &ner, false);
 				    
-				    if (!is_state_already_defined ((SXINT)0, (SXINT)0, SXFALSE, SXFALSE,
+				    if (!is_state_already_defined ((SXINT)0, (SXINT)0, false, false,
 								   &next_state, hsh))
-					set_new_state ((SXINT)0, (SXINT)0, (SXINT)0, SXFALSE, SXFALSE, next_state_kind);
+					set_new_state ((SXINT)0, (SXINT)0, (SXINT)0, false, false, next_state_kind);
 				    
-				    bdel = scan = SXFALSE;
+				    bdel = scan = false;
 				}
 				else
 				    next_state = 0;
@@ -2120,8 +2120,8 @@ SXVOID	lecl_fsa_construction (void)
 					if (current_state [y].attributes.origine_index == ner)
 					    SXBA_0_bit (xcurrent_state_set, y);
 				    
-				    bdel = SXFALSE;
-				    scan = SXFALSE;
+				    bdel = false;
+				    scan = false;
 				    set_sc_prdct_to_next ((SXINT)1, prdct_true_code) /* Any */;
 				}
 			    }
@@ -2142,8 +2142,8 @@ SXVOID	lecl_fsa_construction (void)
 			/* On genere le non determinisme immediatement */
 			p = &(next_state_no_list [sc_prdct_to_next [1] [prdct_true_code]]);
 			next_state = create_nd_state (p);
-			bdel = SXFALSE;
-			scan = SXFALSE;
+			bdel = false;
+			scan = false;
 			sc_prdct_to_next [1] [prdct_true_code] = 0;
 			sxba_fill (sc_set);
 			SXBA_0_bit (sc_set, 0);
@@ -2174,7 +2174,7 @@ SXVOID	lecl_fsa_construction (void)
 		is_first_reduce = is_first_reduction (xfsa1);
 	    /* Il existe dans l'etat courant au moins un item FIRST_REDUCE */
 	    else
-		is_first_reduce = SXFALSE;
+		is_first_reduce = false;
 	    
 	    xstate = 0;
 	    xsubstate = 0;
@@ -2227,7 +2227,7 @@ SXVOID	lecl_fsa_construction (void)
 	    }
 	    
 	    if (xsubstate > 0)
-		subsuiv (SXFALSE, SXTRUE, is_first_reduce);
+		subsuiv (false, true, is_first_reduce);
 	    
 	    
 	    /* state est rempli avec l'etat courant, aucun marqueur ne refere une action 
@@ -2365,7 +2365,7 @@ SXVOID	lecl_fsa_construction (void)
 
 	    sxba_empty (esc_set);
 	    sxba_empty (has_prdct);
-	    has_predicate = SXFALSE;
+	    has_predicate = false;
 	    sxba_empty (has_true);
 
 	    for (x = 1; x <= smax; x++)
@@ -2405,7 +2405,7 @@ SXVOID	lecl_fsa_construction (void)
 				    else {
 					esc = sc_prdct_to_esc [k] [predicate_no];
 					SXBA_1_bit (has_prdct, k);
-					has_predicate = SXTRUE;
+					has_predicate = true;
 					SXBA_1_bit (sc_to_prdct [k], predicate_no);
 				    }
 
@@ -2457,7 +2457,7 @@ SXVOID	lecl_fsa_construction (void)
 /* Il est impossible de modifier current_state pendant la resolution des
    conflits, chaque item pouvant etre "partage" entre plusieurs sous-ensembles */
 
-		is_nd_trans = SXFALSE;
+		is_nd_trans = false;
 
 		if (current_state_kind & (MIXTE + REDUCE))
 		    if (is_conflict (xcurrent_state_set, &conflict_mode, &prio)) {
@@ -2472,7 +2472,7 @@ SXVOID	lecl_fsa_construction (void)
 
 		if (is_nd_trans) {
 		    /* Non-determinisme : generation independante. */
-		    SXBOOLEAN	doit, lecl_fsa_construction_is_first;
+		    bool	doit, lecl_fsa_construction_is_first;
 		    SXINT		orig, class, lecl_fsa_construction_ner, cur_sc, cur_prdct;
 		    
 		    if (esc <= smax) {
@@ -2489,7 +2489,7 @@ SXVOID	lecl_fsa_construction (void)
 		    if (current_state_kind & LA) {
 			next_state = fsa [xfsa1].shift_state;
 			bdel = fsa [xfsa1].del;
-			scan = SXTRUE;
+			scan = true;
 			next_state_kind = 0;
 		    }
 		    else if ((current_state_kind & SHIFT)) {
@@ -2513,12 +2513,12 @@ SXVOID	lecl_fsa_construction (void)
 			/* il y a au moins un point shift en position shift */
 			xstate = 0;
 			bdel = get_del (sc_set);
-			scan = SXTRUE;
-			subsuiv (SXTRUE, SXFALSE, SXFALSE);
+			scan = true;
+			subsuiv (true, false, false);
 			/* Si xstate==0, on a un etat vide (utilisation de &False),
 			   qui sera traite lors de la generation de code */
 			xitem = xitem2;
-			build_state (&xitem2, &hsh, &next_state_kind, &lecl_fsa_construction_ner, SXFALSE);
+			build_state (&xitem2, &hsh, &next_state_kind, &lecl_fsa_construction_ner, false);
 			/* on a forcement un etat principal */
 			
 			if (!is_state_already_defined ((SXINT)0, (SXINT)0, bdel, scan, &next_state, hsh))
@@ -2529,7 +2529,7 @@ SXVOID	lecl_fsa_construction (void)
 			set_sc_prdct_to_next (cur_sc, cur_prdct);
 		    
 		    while ((x = sxba_scan (xcurrent_state_set, 0)) > 0) {
-			lecl_fsa_construction_is_first = SXTRUE;
+			lecl_fsa_construction_is_first = true;
 			next_state = 0;
 			
 			do {
@@ -2538,7 +2538,7 @@ SXVOID	lecl_fsa_construction (void)
 			    
 			    if (class >= 0)
 				/* Shift (en look-ahead) already processed */
-				doit = SXTRUE;
+				doit = true;
 			    else if (class <= xactmin) {
 				if (current_state_kind & LA)
 				    lecl_fsa_construction_ner = get_action_state (fsa [xfsa1].seed_state, class);
@@ -2546,8 +2546,8 @@ SXVOID	lecl_fsa_construction (void)
 				    lecl_fsa_construction_ner = get_action_state (xfsa1, class);
 
 				if  (lecl_fsa_construction_is_first) {
-				    lecl_fsa_construction_is_first = SXFALSE;
-				    doit = SXTRUE;
+				    lecl_fsa_construction_is_first = false;
+				    doit = true;
 				    next_state = lecl_fsa_construction_ner;
 				}
 				else
@@ -2555,10 +2555,10 @@ SXVOID	lecl_fsa_construction (void)
 			    }
 			    else {
 				if (lecl_fsa_construction_is_first) {
-				    lecl_fsa_construction_is_first = SXFALSE;
+				    lecl_fsa_construction_is_first = false;
 				    lecl_fsa_construction_ner = orig;
 				    next_state = -ers [lecl_fsa_construction_ner - 1].prolis;
-				    doit = SXTRUE;
+				    doit = true;
 				}
 				else
 				    doit = lecl_fsa_construction_ner == orig;
@@ -2570,8 +2570,8 @@ SXVOID	lecl_fsa_construction (void)
 			} while ((x = sxba_scan (xcurrent_state_set, x)) > 0); 
 			
 			if (next_state != 0) {
-			    bdel = SXFALSE;
-			    scan = SXFALSE;
+			    bdel = false;
+			    scan = false;
 			    next_state_kind = 0;
 			    set_sc_prdct_to_next (cur_sc, cur_prdct);
 			}
@@ -2581,8 +2581,8 @@ SXVOID	lecl_fsa_construction (void)
 		       dans le coup, sinon l'epilogue s'en chargera... */
 		    p = &(next_state_no_list [sc_prdct_to_next [cur_sc] [cur_prdct]]);
 		    next_state = create_nd_state (p);
-		    bdel = SXFALSE;
-		    scan = SXFALSE;
+		    bdel = false;
+		    scan = false;
 
 		    if (SXBA_bit_is_set (has_prdct, cur_sc)) {
 			p->state_no = next_state;
@@ -2613,8 +2613,8 @@ SXVOID	lecl_fsa_construction (void)
 		}
 		else {
 		    next_state = 0;
-		    bdel = SXFALSE;
-		    scan = SXFALSE;
+		    bdel = false;
+		    scan = false;
 		    
 		    if ((current_state_kind & SHIFT) && !(current_state_kind & LA)) {
 			/* etat principal shift ou shift_reduce */
@@ -2637,12 +2637,12 @@ SXVOID	lecl_fsa_construction (void)
 			    /* il y a au moins un point shift en position shift */
 			    xstate = 0;
 			    bdel = get_del (sc_set);
-			    scan = SXTRUE;
-			    subsuiv (SXTRUE, SXFALSE, SXFALSE);
+			    scan = true;
+			    subsuiv (true, false, false);
 			    /* Si xstate==0, on a un etat vide (utilisation de &False),
 			       qui sera traite lors de la generation de code */
 			    xitem = xitem2;
-			    build_state (&xitem2, &hsh, &next_state_kind, &ner, SXFALSE);
+			    build_state (&xitem2, &hsh, &next_state_kind, &ner, false);
 			    
 			    
 			    /* on a forcement un etat principal */
@@ -2668,11 +2668,11 @@ SXVOID	lecl_fsa_construction (void)
 			}
 			
 			xstate = 0;
-			subsuiv (is_non_deterministic_automaton, SXFALSE, SXFALSE);
+			subsuiv (is_non_deterministic_automaton, false, false);
 			/* en look_ahead aucun marqueur lr ne reference d'action
 			 sauf ds le cas non-deterministe */
 			xitem = xitem2;
-			build_state (&xitem2, &hsh, &next_state_kind, &ner, SXTRUE);
+			build_state (&xitem2, &hsh, &next_state_kind, &ner, true);
 			
 			if (!(next_state_kind & MIXTE)) {
 			    xitem2 = xitem;
@@ -2684,7 +2684,7 @@ SXVOID	lecl_fsa_construction (void)
 				if (current_state_kind & LA) {
 				    next_state = fsa [xfsa1].shift_state;
 				    bdel = fsa [xfsa1].del;
-				    scan = SXTRUE;
+				    scan = true;
 				}
 				/* else next_state, scan et bdel viennent d'etre positionnes */
 			    }
@@ -2740,8 +2740,8 @@ SXVOID	lecl_fsa_construction (void)
 		    else_state = 0;
 		    sxba_empty (sc_set);
 		    SXBA_1_bit (sc_set, sc);
-		    bdel = SXFALSE;
-		    scan = SXFALSE;
+		    bdel = false;
+		    scan = false;
 		    prdct_set = sc_to_prdct [sc];
 		    /* On tente de detecter a priori les transitions vers le meme etat */
 		    sc1 = sc;
@@ -2750,7 +2750,7 @@ SXVOID	lecl_fsa_construction (void)
 			if (sxba_first_difference (sc_to_prdct [sc1], prdct_set) == -1) {
 			    /* compatible predicats */
 			    /* on verifie la compatibilite next_state */
-			    is_the_same_trans = SXTRUE;
+			    is_the_same_trans = true;
 			    predicate_no = 0;
 
 			    while (is_the_same_trans
@@ -2761,7 +2761,7 @@ SXVOID	lecl_fsa_construction (void)
 				if (p->state_no != p1->state_no
 				    || p->is_del != p1->is_del
 				    || p->is_scan != p1->is_scan)
-				    is_the_same_trans = SXFALSE;
+				    is_the_same_trans = false;
 			    }
 
 			    if (is_the_same_trans) {
@@ -2771,11 +2771,11 @@ SXVOID	lecl_fsa_construction (void)
 			}
 		    }
 
-		    process_predicates = SXTRUE;
+		    process_predicates = true;
 
 		    if (is_optimize) {
-			is_first = SXTRUE;
-			is_the_same_trans = SXTRUE;
+			is_first = true;
+			is_the_same_trans = true;
 			predicate_no = 0;
 
 			while (is_the_same_trans
@@ -2783,7 +2783,7 @@ SXVOID	lecl_fsa_construction (void)
 			    p = &(next_state_no_list [sc_prdct_to_next [sc] [predicate_no]]);
 
 			    if (is_first) {
-			      is_first = SXFALSE;
+			      is_first = false;
 			      next_state = p->state_no;
 			      bdel = p->is_del;
 			      scan = p->is_scan;
@@ -2796,7 +2796,7 @@ SXVOID	lecl_fsa_construction (void)
 				 && is_act_red (sc1_set, sc_set, next_state))
 				 ;
 				 else
-				 is_the_same_trans = SXFALSE;
+				 is_the_same_trans = false;
 			      */
 			      /* Re_Changement le 3/11/03, je n'y comprend toujours pas grand chose, mais je remets comme avant
 				 car le test du predicat p ds "a"&p s'il n'y a aucun probleme (pas d'autre "a" en //) disparait !!  
@@ -2808,13 +2808,13 @@ SXVOID	lecl_fsa_construction (void)
 				    && is_act_red (sc1_set, sc_set, next_state))
 				  ;
 				else
-				  is_the_same_trans = SXFALSE;
+				  is_the_same_trans = false;
 			      }
 			    }
 			    else if (next_state != p->state_no
 				     || bdel != p->is_del
 				     || scan != p->is_scan)
-				is_the_same_trans = SXFALSE;
+				is_the_same_trans = false;
 			}
 
 			if (is_the_same_trans) {
@@ -2828,7 +2828,7 @@ SXVOID	lecl_fsa_construction (void)
 
 /* On est en optimize. Les predicats ne sont pas testes s'ils conduisent
    tous a des comportements identiques. */
-			    process_predicates = SXFALSE;
+			    process_predicates = false;
 			    maj_trans ();
 
 			    predicate_no = 0;
@@ -2859,9 +2859,9 @@ SXVOID	lecl_fsa_construction (void)
 			}
 
 			xstate = 0;
-			subsuiv (SXTRUE, SXFALSE, SXFALSE);
+			subsuiv (true, false, false);
 			xitem = xitem2;
-			build_state (&xitem2, &hsh, &next_state_kind, &ner, SXFALSE);
+			build_state (&xitem2, &hsh, &next_state_kind, &ner, false);
 
 			if (current_state_kind & LA)
 			    seed_state = fsa [xfsa1].seed_state;
@@ -2875,8 +2875,8 @@ SXVOID	lecl_fsa_construction (void)
 			    set_new_state (seed_state, (SXINT)0, else_state, bdel,
 					   scan, next_state_kind);
 
-			bdel = SXFALSE;
-			scan = SXFALSE;
+			bdel = false;
+			scan = false;
 			maj_trans ();
 		    }
 		}

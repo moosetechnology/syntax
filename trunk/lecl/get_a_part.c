@@ -22,13 +22,13 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_LECLGETAPART[] = "@(#)SYNTAX - $Id: get_a_part.c 3603 2023-09-23 20:02:36Z garavel $" WHAT_DEBUG;
+char WHAT_LECLGETAPART[] = "@(#)SYNTAX - $Id: get_a_part.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 struct equiv_class_item {
     SXINT	repr, eq_lnk;
 };
 
-SXVOID get_a_partition (SXBOOLEAN (*is_compatible)(SXINT, SXINT, SXINT), 
+void get_a_partition (bool (*is_compatible)(SXINT, SXINT, SXINT), 
 		      SXINT (*get_next_state)(SXINT, SXINT), 
 		      SXBA is_used, 
 		      SXINT state_no, 
@@ -73,7 +73,7 @@ SXVOID get_a_partition (SXBOOLEAN (*is_compatible)(SXINT, SXINT, SXINT),
     SXINT		*partitions, *sano /* 1:state_no */ ;
     /* donne le nb d'actions shift dans l'etat i */
     SXINT		**shift_action /* 1:state_no, 1:tmax */ ;
-    SXBOOLEAN	is_a_new_partition;
+    bool	is_a_new_partition;
     SXINT	*shifti, *shiftj;
     SXINT		l, xp1, xp2, prev, new_part;
 
@@ -138,10 +138,10 @@ SXVOID get_a_partition (SXBOOLEAN (*is_compatible)(SXINT, SXINT, SXINT),
 	}
     }
 
-    is_a_new_partition = SXTRUE;
+    is_a_new_partition = true;
 
     while (is_a_new_partition) {
-	is_a_new_partition = SXFALSE;
+	is_a_new_partition = false;
 
 	for (xp1 = 1; xp1 < xp2; xp1++) {
 	    i = partitions [xp1];
@@ -175,7 +175,7 @@ next:		;
 	    if (new_part != 0) {
 		/* une nouvelle partition a ete creee */
 		(*partition_no)++;
-		is_a_new_partition = SXTRUE;
+		is_a_new_partition = true;
 
 		if (equiv_class [new_part].eq_lnk != 0) {
 		    /* Cette partition a au moins deux elements, on la stocke */

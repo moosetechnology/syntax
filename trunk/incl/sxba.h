@@ -236,12 +236,12 @@ extern SXBA    sxba_clear_range (SXBA bits_array, SXBA_INDEX i, SXBA_INDEX l);
 extern void    sxbm_empty (SXBA *bits_matrix, SXBA_INDEX line_nb);
 
 /* Tests */
-extern SXBOOLEAN sxba_bit_is_set (SXBA bits_array, SXBA_INDEX bit);
-extern SXBOOLEAN sxba_bit_is_reset_set (SXBA bits_array, SXBA_INDEX bit);
-extern SXBOOLEAN sxba_bit_is_set_reset (SXBA bits_array, SXBA_INDEX bit);
-extern SXBOOLEAN sxba_is_empty (SXBA bits_array);
-extern SXBOOLEAN sxba_is_full (SXBA bits_array);
-extern SXBOOLEAN sxba_is_subset (SXBA bits_array_1, SXBA bits_array_2);
+extern bool sxba_bit_is_set (SXBA bits_array, SXBA_INDEX bit);
+extern bool sxba_bit_is_reset_set (SXBA bits_array, SXBA_INDEX bit);
+extern bool sxba_bit_is_set_reset (SXBA bits_array, SXBA_INDEX bit);
+extern bool sxba_is_empty (SXBA bits_array);
+extern bool sxba_is_full (SXBA bits_array);
+extern bool sxba_is_subset (SXBA bits_array_1, SXBA bits_array_2);
 extern SXBA_INDEX_OR_ERROR sxba_first_difference (SXBA bits_array_1, SXBA bits_array_2);
 
 /* boucles */
@@ -254,9 +254,9 @@ extern SXBA_INDEX_OR_ERROR     sxba_0_rlscan (SXBA bits_array, SXBA_INDEX_OR_ERR
 
 /* Operations ensemblistes */
 /* generiques */
-/* lhs op1= rhs1 op2 rhs2, return SXTRUE <=> ensemble resultat non vide */
+/* lhs op1= rhs1 op2 rhs2, return true <=> ensemble resultat non vide */
 /* rhs2 != NULL && op2 != SXBA_OP_NULL */
-extern SXBOOLEAN sxba_2op (SXBA lhs, SXINT op1, SXBA rhs1, SXINT op2, SXBA rhs2);
+extern bool sxba_2op (SXBA lhs, SXINT op1, SXBA rhs1, SXINT op2, SXBA rhs2);
 
 /* Binaires */
 extern SXBA    sxba_and (SXBA lhs_bits_array, SXBA rhs_bits_array);
@@ -265,35 +265,35 @@ extern SXBA    sxba_xor (SXBA lhs_bits_array, SXBA rhs_bits_array);
 extern SXBA    sxba_minus (SXBA lhs_bits_array, SXBA rhs_bits_array);
 extern SXBA    sxba_substr (SXBA bits_array1, SXBA bits_array2, SXBA_INDEX i1, SXBA_INDEX i2, SXBA_INDEX l);
 extern SXBA    sxba_copy (SXBA lhs_bits_array, SXBA rhs_bits_array);
-extern SXBOOLEAN sxba_incr (SXBA lhs, SXBA rhs, SXBA_INDEX incr); /* lhs = {i+incr | i \in rhs} */
-extern SXBOOLEAN sxba_decr (SXBA lhs, SXBA rhs, SXBA_INDEX decr); /* lhs = {i-decr | i \in rhs} */
+extern bool sxba_incr (SXBA lhs, SXBA rhs, SXBA_INDEX incr); /* lhs = {i+incr | i \in rhs} */
+extern bool sxba_decr (SXBA lhs, SXBA rhs, SXBA_INDEX decr); /* lhs = {i-decr | i \in rhs} */
 /* Binaires + return (la lhs a-t-elle change') */
-extern SXBOOLEAN sxba_or_with_test (SXBA lhs_bits_array, SXBA rhs_bits_array);
+extern bool sxba_or_with_test (SXBA lhs_bits_array, SXBA rhs_bits_array);
 
 /* unaires */
 extern SXBA    sxba_not (SXBA bits_array);
 extern SXBA_INDEX     sxba_cardinal (SXBA bits_array);
 
 /* I/O */
-extern SXBOOLEAN sxba_read (sxfiledesc_t file, SXBA bits_array);
-extern SXBOOLEAN sxba_write (sxfiledesc_t file, SXBA bits_array);
-extern SXBOOLEAN sxbm_read (sxfiledesc_t file, SXBA *bits_matrix, SXBA_INDEX line_nb);
-extern SXBOOLEAN sxbm_write (sxfiledesc_t file, SXBA *bits_matrix, SXBA_INDEX line_nb);
-extern void    sxba_to_c (SXBA set, FILE *file_descr, char *name1, char *name2, SXBOOLEAN is_static);
+extern bool sxba_read (sxfiledesc_t file, SXBA bits_array);
+extern bool sxba_write (sxfiledesc_t file, SXBA bits_array);
+extern bool sxbm_read (sxfiledesc_t file, SXBA *bits_matrix, SXBA_INDEX line_nb);
+extern bool sxbm_write (sxfiledesc_t file, SXBA *bits_matrix, SXBA_INDEX line_nb);
+extern void    sxba_to_c (SXBA set, FILE *file_descr, char *name1, char *name2, bool is_static);
 extern void    sxba_print (SXBA set);
 
 /* ... en C */
 extern void    sxba32_to_c (FILE *file, SXBA set);
 extern void    sxba64_to_c (FILE *file, SXBA set);
-extern void    sxbm_to_c (FILE *file_descr, SXBA *bits_matrix, SXBA_INDEX line_nb, char *name1, char *name2, SXBOOLEAN is_static);
-extern void    sxbm2_to_c (FILE *file_descr, SXBA *bits_matrix, SXBA_INDEX line_nb, char *name1, char *name2, SXBOOLEAN is_static);
+extern void    sxbm_to_c (FILE *file_descr, SXBA *bits_matrix, SXBA_INDEX line_nb, char *name1, char *name2, bool is_static);
+extern void    sxbm2_to_c (FILE *file_descr, SXBA *bits_matrix, SXBA_INDEX line_nb, char *name1, char *name2, bool is_static);
 extern void    sxbm3header_to_c (SXBA_INDEX *repr, FILE *file_descr, SXBA *bits_matrix, SXBA_INDEX line_nb, char *name1, char *name2);
-extern void    sxbm3core_to_c (SXBA_INDEX *repr, FILE *file_descr, SXBA_INDEX line_nb, char *name1, char *name2, SXBOOLEAN is_static);
-extern void    sxbm3_to_c (FILE *file_descr, SXBA *bits_matrix, SXBA_INDEX line_nb, char *name1, char *name2, SXBOOLEAN is_static);
+extern void    sxbm3core_to_c (SXBA_INDEX *repr, FILE *file_descr, SXBA_INDEX line_nb, char *name1, char *name2, bool is_static);
+extern void    sxbm3_to_c (FILE *file_descr, SXBA *bits_matrix, SXBA_INDEX line_nb, char *name1, char *name2, bool is_static);
 #ifdef varstr_h
      /* L'appelant ne peut les utiliser que s'il a inclus "varstr.h" */
-extern void    sxba2c (SXBA set, FILE *file_descr, char *name1, char *name2, SXBOOLEAN is_static, VARSTR vstr);
-extern void    sxbm2c (FILE *file_descr, SXBA *bits_matrix, SXBA_INDEX line_nb, char *name1, char *name2, SXBOOLEAN is_static, VARSTR vstr)
+extern void    sxba2c (SXBA set, FILE *file_descr, char *name1, char *name2, bool is_static, VARSTR vstr);
+extern void    sxbm2c (FILE *file_descr, SXBA *bits_matrix, SXBA_INDEX line_nb, char *name1, char *name2, bool is_static, VARSTR vstr)
      ;
 #endif /* varstr_h */
 

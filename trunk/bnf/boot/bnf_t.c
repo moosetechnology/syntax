@@ -149,7 +149,7 @@ static char *err_titles[SXSEVERITIES]={
 "\002Error:\t",
 };
 static char abstract []= "%ld warnings and %ld errors are reported.";
-extern SXBOOLEAN sxprecovery (SXINT what_to_do, SXINT *at_state, SXINT latok_no);
+extern bool sxprecovery (SXINT what_to_do, SXINT *at_state, SXINT latok_no);
 
 static unsigned char S_char_to_simple_class[]={
 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
@@ -376,7 +376,7 @@ static char *S_global_mess[]={0,
 extern SXINT SCANACT(SXINT what, SXINT act_no);
 #endif /* SCANACT */
 extern SXINT sxscan_it(void);
-extern SXBOOLEAN sxsrecovery (SXINT sxsrecovery_what, SXINT state_no, unsigned char *class);
+extern bool sxsrecovery (SXINT sxsrecovery_what, SXINT state_no, unsigned char *class);
 static struct SXT_node_info SXT_node_info[]={{0,0},
 {3,1},{0,2},{8,4},{0,5},{0,6},{10,8},{6,9},{11,10},{2,12},{0,13},{12,14},{9,16},
 {4,17},{0,18},};
