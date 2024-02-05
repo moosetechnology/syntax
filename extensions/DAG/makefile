@@ -7,12 +7,12 @@ LIB=$(DAG)/lib
 
 CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
-all: $(SX)/bin/dag2udag.out
+all: $(SXBIN)/dag2udag.out
 
-$(SX)/bin/dag2udag.out:	$(DAG)/dag2udag.out
+$(SXBIN)/dag2udag.out:	$(DAG)/dag2udag.out
 	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
-$(SX)/bin/amlgm_cmpd.out:	$(DAG)/amlgm_cmpd.out
+$(SXBIN)/amlgm_cmpd.out:	$(DAG)/amlgm_cmpd.out
 	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
 NEEDS=	$(LIB)/dag2udag_main.o

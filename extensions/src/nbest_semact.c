@@ -38,7 +38,7 @@ static char	ME [] = "nbest_semact";
 #include <math.h>
 #include <float.h>
 
-char WHAT_NBEST_SEMACT[] = "@(#)SYNTAX - $Id: nbest_semact.c 3349 2023-06-12 11:00:11Z garavel $" WHAT_DEBUG;
+char WHAT_NBEST_SEMACT[] = "@(#)SYNTAX - $Id: nbest_semact.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 /* Ensemble des triplets (A, prod, val) ou
    - prod est une B-prod, 
@@ -51,7 +51,7 @@ char WHAT_NBEST_SEMACT[] = "@(#)SYNTAX - $Id: nbest_semact.c 3349 2023-06-12 11:
 
 /* valeur par defaut */
 static SXINT     beam, contextual_proba_kind, cpk;
-static SXBOOLEAN is_print_nbest_trees, is_filtering = SXTRUE, is_print_nbest_forest, is_output_nbest_value;
+static bool is_print_nbest_trees, is_filtering = true, is_print_nbest_forest, is_output_nbest_value;
 static char      *best_weights_file_name;
 static double    min_weight_arg;
 static double    fudge_factor;
@@ -163,14 +163,14 @@ nbest_args_usage (void)
 
 /* decode les arguments specifiques a lfg */
 /* l'option argv [*parg_num] est inconnue du parseur earley */
-static SXBOOLEAN
+static bool
 nbest_args_decode (int *pargnum, int argc, char *argv[])
 {
   switch (option_get_kind (argv [*pargnum])) {
   case NBEST:
     if (++*pargnum >= argc) {
       fprintf (stderr, "%s: an integer number must follow the \"%s\" option;\n", ME, option_get_text (NBEST));
-      return SXFALSE;
+      return false;
     }
 
     nbest = atoi (argv [*pargnum]);
@@ -180,7 +180,7 @@ nbest_args_decode (int *pargnum, int argc, char *argv[])
     /* On utilise les proba contextuelles */
     if (++*pargnum >= argc) {
       fprintf (sxstderr, "%s: an integer number must follow the \"%s\" option;\n", ME, option_get_text (CONTEXTUAL_PROBA));
-      return SXFALSE;
+      return false;
     }
 
     if (!isdigit (argv [*pargnum] [0]))
@@ -213,28 +213,28 @@ nbest_args_decode (int *pargnum, int argc, char *argv[])
   case BEAM:
     if (++*pargnum >= argc) {
       fprintf (sxstderr, "%s: an integer number must follow the \"%s\" option;\n", ME, option_get_text (BEAM));
-      return SXFALSE;
+      return false;
     }
 
     beam = atoi (argv [*pargnum]);
     break;
 
   case PRINT_NBEST_TREES:
-    is_print_nbest_trees = SXTRUE;
+    is_print_nbest_trees = true;
     break;
 
   case PRINT_NBEST_FOREST:
-    is_print_nbest_forest = SXTRUE;
+    is_print_nbest_forest = true;
     break;
 
   case NO_FILTER:
-    is_filtering = SXFALSE;
+    is_filtering = false;
     break;
 
   case OUTPUT_BEST_WEIGHTS:
     if (++*pargnum >= argc) {
       fprintf (sxstderr, "%s: a pathname must follow the \"%s\" option;\n", ME, option_get_text (OUTPUT_BEST_WEIGHTS));
-      return SXFALSE;
+      return false;
     }
 	      
     best_weights_file_name = argv [*pargnum];
@@ -244,7 +244,7 @@ nbest_args_decode (int *pargnum, int argc, char *argv[])
   case MIN_WEIGHT:
     if (++*pargnum >= argc) {
       fprintf (sxstderr, "%s: a (floating) number must follow the \"%s\" option;\n", ME, option_get_text (MIN_WEIGHT));
-      return SXFALSE;
+      return false;
     }
 
     min_weight_arg = atof (argv [*pargnum]);
@@ -254,7 +254,7 @@ nbest_args_decode (int *pargnum, int argc, char *argv[])
   case FUDGE_FACTOR:
     if (++*pargnum >= argc) {
       fprintf (sxstderr, "%s: a (floating) number must follow the \"%s\" option;\n", ME, option_get_text (FUDGE_FACTOR));
-      return SXFALSE;
+      return false;
     }
 
     fudge_factor = atof (argv [*pargnum]);
@@ -263,11 +263,11 @@ nbest_args_decode (int *pargnum, int argc, char *argv[])
 
 
   case OUTPUT_NBEST_VALUE:
-    is_output_nbest_value = SXTRUE;
+    is_output_nbest_value = true;
     break;
 
   case UNKNOWN_ARG:
-    return SXFALSE;
+    return false;
   default: /* pour faire taire gcc -Wswitch-default */
 #if EBUG
     sxtrap(ME,"unknown switch case #1");
@@ -275,7 +275,7 @@ nbest_args_decode (int *pargnum, int argc, char *argv[])
     break;
   }
 
-  return SXTRUE;
+  return true;
 }
 
 
@@ -283,7 +283,7 @@ static SXINT nbest_sem_pass (void);
 static void nbest_sem_init (void);
 static void nbest_sem_final (void);
 static void nbest_sem_close (void);
-static SXBOOLEAN Aij_or_item_kth_best (SXINT Aij_or_item, SXINT k);
+static bool Aij_or_item_kth_best (SXINT Aij_or_item, SXINT k);
 
 
 void
@@ -302,7 +302,7 @@ nbest_semact (void)
 
      nbest_free ()
   */
-  is_filtering = SXTRUE; /* defaut si semantique */
+  is_filtering = true; /* defaut si semantique */
 #endif /* 0 */
 
   nbest = 1;
@@ -1317,7 +1317,7 @@ set_item_weight_list (SXINT item)
   SXINT                      cur_contextual_proba_kind, PpqK;
   double                   min_ctxt_weight, prev_min_ctxt_weight, best_total_weight, ctxt_weight, local_weight, total_weight;
   SXINT        *base_ptr, *PijKs_ptr, *best_PijKs_ptr; 
-  SXBOOLEAN                  not_in_stats, is_first_time;
+  bool                  not_in_stats, is_first_time;
   struct signet_elem       *signet_elem_ptr, signet_elem;
 
   sxinitialise(best_PijKs_ptr);  /* pour faire taire "gcc -Wuninitialized" */
@@ -1357,8 +1357,8 @@ set_item_weight_list (SXINT item)
 
   PijKs_ptr = base_ptr;
   min_ctxt_weight = 0;
-  is_first_time = SXTRUE;
-  not_in_stats = SXFALSE;
+  is_first_time = true;
+  not_in_stats = false;
 
   father_eprod = Pij2eprod [Pij];
 
@@ -1415,7 +1415,7 @@ set_item_weight_list (SXINT item)
 	total_weight = local_weight+ctxt_weight;
 
 	if (is_first_time || (total_weight > best_total_weight)) {
-	  is_first_time = SXFALSE;
+	  is_first_time = false;
 	  best_total_weight = total_weight;
 	  best_PijKs_ptr = PijKs_ptr;
 	}
@@ -1424,7 +1424,7 @@ set_item_weight_list (SXINT item)
 	/* Les stats utilisees ne sont pas suffisamment completes, on va utiliser des moins contraintes ...*/
 	/* Ces moins contraintes sont examinees dans l'ordre, leurs probas etant reajustees par la proba
 	   min de l'essai precedant */
-	not_in_stats = SXTRUE;
+	not_in_stats = true;
       }
 
       *PijKs_ptr = PpqK;
@@ -1448,7 +1448,7 @@ set_item_weight_list (SXINT item)
   if (not_in_stats) {
     do {
       /* On met a jour les not_in_stats dans l'ordre */
-      not_in_stats = SXFALSE;
+      not_in_stats = false;
       prev_min_ctxt_weight = min_ctxt_weight;
       min_ctxt_weight = 0;
       PijKs_ptr = base_ptr;
@@ -1510,13 +1510,13 @@ set_item_weight_list (SXINT item)
 
 
 	      if (is_first_time || (total_weight > best_total_weight)) {
-		is_first_time = SXFALSE;
+		is_first_time = false;
 		best_total_weight = total_weight;
 		best_PijKs_ptr = PijKs_ptr;
 	      }
 	    }
 	    else {
-	      not_in_stats = SXTRUE;
+	      not_in_stats = true;
 	    }
 	  }
 
@@ -1770,14 +1770,14 @@ compute_Pij_local_weight (SXINT Pij, SXINT signature, double *ctxt_weight_ptr)
 
 
 /* Pour toutes les Aij_prods, selectionne le meilleur poids et stocke le resultat ds dedication_list */
-static SXBOOLEAN
+static bool
 get_Aij_or_item_best_weight (SXINT Aij_or_item, SXINT k)
 {
   SXINT                Aij, hook, Pij, best_signature, best_Pij, couple, next;
   double             best_weight;
   struct dedication  *dedication_ptr;
   struct signet_elem *signet_elem_ptr;
-  SXBOOLEAN            is_fully_computed;
+  bool            is_fully_computed;
 #if LOG
   SXINT signature;
 #endif
@@ -2317,13 +2317,13 @@ next_signet (struct dedication *dedication_ptr)
 
 
 /* Retourne le kieme meilleur resultat associe a Aij_or_item */
-static SXBOOLEAN
+static bool
 Aij_or_item_kth_best (SXINT Aij_or_item, SXINT k)
 {
   struct dedication *dedication_ptr;
 
   if (SXBA_bit_is_set (fully_computed_Aij_or_item_set, Aij_or_item))
-    return SXFALSE;
+    return false;
 
 #if EBUG
   if (Aij_or_item2last_dedication [Aij_or_item] == 0)
@@ -2334,7 +2334,7 @@ Aij_or_item_kth_best (SXINT Aij_or_item, SXINT k)
 
   if (dedication_ptr->k >= k)
     /* La valeur demandee est deja calculee */
-    return SXTRUE;
+    return true;
 
   /* ici non encore calculee, on le fait */
 #if EBUG
@@ -2352,7 +2352,7 @@ Aij_or_item_kth_best (SXINT Aij_or_item, SXINT k)
 }
 
 static SXINT
-one_best_post_bu_walk (SXINT Aij, SXBOOLEAN status)
+one_best_post_bu_walk (SXINT Aij, bool status)
 {
   SXINT               dedication;
 #if LOG
@@ -2639,10 +2639,10 @@ nbest_print_forest (SXINT Aij_or_item, SXINT cur_contextual_proba_kind, SXINT k)
     /* Aij_or_item est un item */
     print_decorated_item (Aij_or_item);
     
-    spf_topological_top_down_walk (spf.outputG.rhs [Aij_or_item].lispro, print_decorated_ctxt_prod, NULL, (SXINT(*)(SXINT, SXBOOLEAN))NULL);
+    spf_topological_top_down_walk (spf.outputG.rhs [Aij_or_item].lispro, print_decorated_ctxt_prod, NULL, (SXINT(*)(SXINT, bool))NULL);
   }
   else
-    spf_topological_top_down_walk (Aij_or_item, print_decorated_iprod, print_decorated_Aij, (SXINT(*)(SXINT, SXBOOLEAN))NULL);
+    spf_topological_top_down_walk (Aij_or_item, print_decorated_iprod, print_decorated_Aij, (SXINT(*)(SXINT, bool))NULL);
 }
  
 static SXINT
@@ -2698,7 +2698,7 @@ void
 nbest_filter_forest (SXINT cur_contextual_proba_kind)
 {
   if (cur_contextual_proba_kind <= EPCFG)
-    spf_topological_top_down_walk (spf.outputG.start_symbol, dummy_Pij_walk, prune_decorated_Aij, (SXINT(*)(SXINT, SXBOOLEAN))NULL);
+    spf_topological_top_down_walk (spf.outputG.start_symbol, dummy_Pij_walk, prune_decorated_Aij, (SXINT(*)(SXINT, bool))NULL);
   
   sxba_not (best_Pij_set);
   SXBA_0_bit (best_Pij_set, 0);
@@ -2742,7 +2742,7 @@ nbest_sem_pass_with_cpk (SXINT root_Aij, SXINT kind)
   SXINT      k, real_nbest, start_symbol_or_item;
   double   threshold, best_forest_weight, prev_weight, weight;
   char     str [128];
-  SXBOOLEAN ret_val;
+  bool ret_val;
 
   sxinitialise(threshold);  /* pour faire taire "gcc -Wuninitialized" */
   /* L'appel a nbest_allocate a du etre fait de l'exterieur */
@@ -2969,10 +2969,10 @@ nbest_sem_pass (void)
 /* Peut etre appelee depuis de la semantique */
 /* nbest_allocate (cur_contextual_proba_kind) et nbest_free () sont a la charge de l'utilisateur */
 SXINT
-nbest_perform (SXINT root_Aij, SXINT h /* k */, SXINT b /* beam */ , SXINT cur_contextual_proba_kind, SXBOOLEAN do_filtering)
+nbest_perform (SXINT root_Aij, SXINT h /* k */, SXINT b /* beam */ , SXINT cur_contextual_proba_kind, bool do_filtering)
 {
   SXINT     old_nbest, old_beam, old_contextual_proba_kind, real_nbest;
-  SXBOOLEAN old_is_filtering;
+  bool old_is_filtering;
 
   old_nbest = nbest;
   old_beam = beam;

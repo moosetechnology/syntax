@@ -23,16 +23,16 @@
 #include "bnf_vars.h"
 #include "T_tables.h"
 
-char WHAT_SEMATGENAT[] = "@(#)SYNTAX - $Id: genat_c.c 3598 2023-09-18 11:39:54Z garavel $" WHAT_DEBUG;
+char WHAT_SEMATGENAT[] = "@(#)SYNTAX - $Id: genat_c.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 extern SXINT      get_node_name_ref (SXINT i);
 extern SXINT      delta_to_lispro (SXINT x_prod, SXINT delta);
 extern SXINT	max_line_length;
-static SXBOOLEAN	inherited;
+static bool	inherited;
 static SXBA	*node_to_red_set /* 1:T_nbnod, T_nbpro */ ;
 static SXBA	b_used, prod_set, node_set;
 
-static SXVOID	node_name_set (SXINT nt)
+static void	node_name_set (SXINT nt)
 {
     SXINT	j, k, m, n, lim1, lim2;
 
@@ -62,14 +62,14 @@ static SXVOID	node_name_set (SXINT nt)
 
 
 
-static SXVOID	print_sons (struct T_ag_item *T_ag,
+static void	print_sons (struct T_ag_item *T_ag,
 			    SXBA print_sons_prod_set,
 			    SXINT son, 
 			    SXINT init_col)
 {
     SXINT i, j, m, k;
     SXINT		act, lim;
-    SXBOOLEAN	is_set;
+    bool	is_set;
     char *s;
 
     i = 0;
@@ -105,10 +105,10 @@ static SXVOID	print_sons (struct T_ag_item *T_ag,
 	if (sxba_cardinal (node_set) > 1) {
 	    j++;
 	    printf ("{");
-	    is_set = SXTRUE;
+	    is_set = true;
 	}
 	else {
-	    is_set = SXFALSE;
+	    is_set = false;
 	}
 
 	while (i > 0) {
@@ -152,7 +152,7 @@ static SXVOID	print_sons (struct T_ag_item *T_ag,
 
 
 
-static SXVOID	gen_header (void)
+static void	gen_header (void)
 {
     printf ("\nstatic void %s_p%c (void) {\n\n/*\n%s\n*/\n\nswitch (SXVISITED->%sname) {\n\n", prgentname, inherited ? 'i' : 'd',
 	 inherited ? "I N H E R I T E D" : "D E R I V E D", inherited ? "father->" : "");
@@ -160,12 +160,12 @@ static SXVOID	gen_header (void)
 
 
 
-static SXVOID	gen_trailer (void)
+static void	gen_trailer (void)
 {
     printf ("\n\n/*\nZ Z Z Z\n*/\n\ndefault:\nbreak;\n}\n/* end %s_p%c */\n}\n", prgentname, inherited ? 'i' : 'd');
 }
 
-static SXVOID indent(SXINT indentation)
+static void indent(SXINT indentation)
 {
   SXINT j;
   printf("\n");
@@ -174,7 +174,7 @@ static SXVOID indent(SXINT indentation)
 }
   
 
-static SXVOID gen_default_switch_case (SXINT indentation)
+static void gen_default_switch_case (SXINT indentation)
 {
   indent (indentation);
   printf ("default:");
@@ -184,7 +184,7 @@ static SXVOID gen_default_switch_case (SXINT indentation)
 }
 
 
-SXVOID
+void
 genat_c (struct T_ag_item *T_ag)
 {
     SXINT		i, j, k, l;
@@ -249,7 +249,7 @@ your attribute declarations...\n\
 
     b_used = sxba_calloc (bnf_ag.WS_TBL_SIZE.nbpro + 1);
     node_set = sxba_calloc (T_ag->T_constants.T_nbnod + 1);
-    inherited = SXTRUE;
+    inherited = true;
     gen_header ();
 
     for (i = 1; i <= T_ag->T_constants.T_nbnod; i++) {
@@ -298,7 +298,7 @@ your attribute declarations...\n\
 
 /* pass derived generation */
 
-    inherited = SXFALSE;
+    inherited = false;
     gen_header ();
 
     for (i = 1; i <= T_ag->T_constants.T_nbnod; i++) {

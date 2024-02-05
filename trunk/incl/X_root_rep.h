@@ -47,7 +47,7 @@
 #define X_root_X(h,x)		((h).display[x].X)
 #define X_root_Y(h,x)		((h).display[x].Y)
 #define X_root_Z(h,x)		((h).display[x].Z)
-#define X_root_unlock(h)	((h).is_locked = SXFALSE)
+#define X_root_unlock(h)	((h).is_locked = false)
 #define X_root_foreach(h,x)	for (x=X_root_top(h);x>0;x--) \
                                    if (((h).hash_lnk[x] & X_root_80) == 0)
 #define X_root_Xforeach(h,i,x)	for (x=(h).lnk_hd[XYZ_X][X_is_set((h).X_hd[XYZ_X],i)];\
@@ -188,9 +188,9 @@
     SXINT			(*suppress) (SXINT);	\
     SXINT			(*assign) (SXINT);	\
     FILE		*stat_file;		\
-    SXBOOLEAN		is_locked;		\
-    SXBOOLEAN		is_static;		\
-    SXBOOLEAN		is_allocated
+    bool		is_locked;		\
+    bool		is_static;		\
+    bool		is_allocated
 
 typedef struct {
     X_root_header_s	X_VOID_NAME;

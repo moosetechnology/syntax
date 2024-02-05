@@ -123,7 +123,7 @@ get_weight (rho, son_nb, sons)
 static void
 propagate_min (local_weight, rho, son_nb, sons, is_first)
     SXINT 	local_weight, *rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     SXINT		val, *p, i;
     
@@ -165,7 +165,7 @@ propagate_min (local_weight, rho, son_nb, sons, is_first)
 }
 
 
-static SXBOOLEAN
+static bool
 sem_void (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
 {
@@ -177,16 +177,16 @@ sem_void (rho, son_nb, sons, is_first)
 	propagate_min (0, rho, son_nb, sons, is_first);
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
 #if 0
 /* Ancienne version de distance */
-static SXBOOLEAN
+static bool
 rcvr_change (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     if (is_second_pass) {
 	/* On recupere les infos de la LHS */
@@ -212,14 +212,14 @@ rcvr_change (rho, son_nb, sons, is_first)
     else
 	propagate_min (REPLACE_WGHT, rho, son_nb, sons, is_first);
 
-    return SXTRUE;
+    return true;
 }
 
 
-static SXBOOLEAN
+static bool
 rcvr_del (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     SXINT		local_weight;
 
@@ -246,14 +246,14 @@ rcvr_del (rho, son_nb, sons, is_first)
 	propagate_min (local_weight, rho, son_nb, sons, is_first);
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
-static SXBOOLEAN
+static bool
 rcvr_swap (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     if (is_second_pass) {
 	/* On recupere les infos de la LHS */
@@ -272,12 +272,12 @@ rcvr_swap (rho, son_nb, sons, is_first)
     else
 	propagate_min (EXCHANGE_WGHT, rho, son_nb, sons, is_first);
 
-    return SXTRUE;
+    return true;
 }
 #endif
 
 #if is_multiple_pass
-static SXBOOLEAN _distance_semact ();
+static bool _distance_semact ();
 void
 _distance_first_pass_for_semact (for_semact)
 struct for_semact *for_semact;
@@ -289,10 +289,10 @@ for_semact->first_pass_final = _distance_first_pass_final;
 #endif
 
 
-static SXBOOLEAN
+static bool
 rcvr_substitute (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     /* Est appele sur
        &distance(L1 L2,X1 X2,Y1 Y2) --> &StrLen(1,L2) &StrLen(1,X2) &StrLen(1,Y2) !&StrEq(X2,Y2)
@@ -309,14 +309,14 @@ rcvr_substitute (rho, son_nb, sons, is_first)
     else
 	propagate_min (REPLACE_WGHT, rho, son_nb, sons, is_first);
 
-    return SXTRUE;
+    return true;
 }
 
 
-static SXBOOLEAN
+static bool
 rcvr_insert (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     /* La correction est une insertion dans la chaine source */
     /* ATTENTION est appele sur :
@@ -351,15 +351,15 @@ rcvr_insert (rho, son_nb, sons, is_first)
 	propagate_min (local_weight, rho, son_nb, sons, is_first);
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
 
-static SXBOOLEAN
+static bool
 rcvr_delete (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     /* La correction est une suppression dans la chaine source */
     /* ATTENTION est appele sur :
@@ -391,14 +391,14 @@ rcvr_delete (rho, son_nb, sons, is_first)
 	propagate_min (local_weight, rho, son_nb, sons, is_first);
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
-static SXBOOLEAN
+static bool
 rcvr_swap (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     /* Est appele sur :
        &distance(L1 L2,X1 X2 X3,Y1 Y2 Y3)
@@ -415,5 +415,5 @@ rcvr_swap (rho, son_nb, sons, is_first)
     else
 	propagate_min (EXCHANGE_WGHT, rho, son_nb, sons, is_first);
 
-    return SXTRUE;
+    return true;
 }

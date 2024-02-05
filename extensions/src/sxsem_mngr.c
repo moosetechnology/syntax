@@ -37,7 +37,7 @@ static char	ME [] = "sxsem_mngr";
 extern void TIMEOUT_HANDLER (void)
 #endif
 
-char WHAT_SXSEM_MNGR[] = "@(#)SYNTAX - $Id: sxsem_mngr.c 3234 2023-05-15 16:52:27Z garavel $" WHAT_DEBUG;
+char WHAT_SXSEM_MNGR[] = "@(#)SYNTAX - $Id: sxsem_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 static struct for_semact weights_for_semact, structure_for_semact, chunker_for_semact;
 static struct for_semact proper_for_semact, nbest_for_semact, exact_nbest_for_semact;;
@@ -104,10 +104,10 @@ static char	Usage [] = "\
 #define UNKNOWN_ARG 	   0
 #define MAP 	           1
 
-SXBOOLEAN     weights_sem_pass_arg;
-SXBOOLEAN     structure_sem_pass_arg;
-SXBOOLEAN     chunker_sem_pass_arg;
-SXBOOLEAN     proper_sem_pass_arg;
+bool     weights_sem_pass_arg;
+bool     structure_sem_pass_arg;
+bool     chunker_sem_pass_arg;
+bool     proper_sem_pass_arg;
 char          output_sem_pass_arg;
 
 static char	*option_tbl [] = {
@@ -152,9 +152,9 @@ static char	*option_get_text (SXINT kind)
   return option_tbl [i];
 }
 
-static SXBOOLEAN call_sem_pass (struct for_semact *call_sem_pass_for_semact)
+static bool call_sem_pass (struct for_semact *call_sem_pass_for_semact)
 {
-  SXBOOLEAN ret_val;
+  bool ret_val;
 
   if (call_sem_pass_for_semact->sem_pass) {
 #ifdef LONGJUMP_SUPPORT
@@ -179,10 +179,10 @@ static SXBOOLEAN call_sem_pass (struct for_semact *call_sem_pass_for_semact)
 #endif /* LONGJUMP_SUPPORT */
     return ret_val;
   }
-  return SXFALSE;
+  return false;
 }
 
-static SXBOOLEAN call_sem_final (struct for_semact *call_sem_final_for_semact)
+static bool call_sem_final (struct for_semact *call_sem_final_for_semact)
 {
   if (call_sem_final_for_semact->sem_pass && call_sem_final_for_semact->pass_nb && call_sem_final_for_semact->sem_final) {
 #ifdef LONGJUMP_SUPPORT
@@ -195,12 +195,12 @@ static SXBOOLEAN call_sem_final (struct for_semact *call_sem_final_for_semact)
     sxmem_signatures_raz ();
     mem_signatures = &(for_semact.mem_signatures);
 #endif /* LONGJUMP_SUPPORT */
-    return SXTRUE;
+    return true;
   }
-  return SXFALSE;
+  return false;
 }
 
-static SXBOOLEAN call_sem_close (struct for_semact *call_sem_close_for_semact)
+static bool call_sem_close (struct for_semact *call_sem_close_for_semact)
 {
   if (call_sem_close_for_semact->sem_pass) {
 #ifdef LONGJUMP_SUPPORT
@@ -214,13 +214,13 @@ static SXBOOLEAN call_sem_close (struct for_semact *call_sem_close_for_semact)
     sxmem_signatures_free ();
     mem_signatures = &(for_semact.mem_signatures);
 #endif /* LONGJUMP_SUPPORT */
-    return SXTRUE;
+    return true;
   }
-  return SXFALSE;
+  return false;
 }
 
 
-static SXBOOLEAN call_sem_open (struct for_semact *call_sem_open_for_semact)
+static bool call_sem_open (struct for_semact *call_sem_open_for_semact)
 {
   if (call_sem_open_for_semact->sem_pass) {
 #ifdef LONGJUMP_SUPPORT
@@ -235,9 +235,9 @@ static SXBOOLEAN call_sem_open (struct for_semact *call_sem_open_for_semact)
     sxmem_signatures_allocate (250);
     mem_signatures = &(for_semact.mem_signatures);
 #endif /* LONGJUMP_SUPPORT */
-    return SXTRUE;
+    return true;
   }
-  return SXFALSE;
+  return false;
 }
 
 #ifdef LONGJUMP_SUPPORT
@@ -420,14 +420,14 @@ sxsem_mngr_args_usage (void)
 
 /* decode les arguments specifiques au filtre */
 /* l'option argv [*parg_num] est inconnue du parseur earley */
-static SXBOOLEAN
+static bool
 sxsem_mngr_args_decode (int *pargnum, int argc, char *argv[])
 {
   switch (option_get_kind (argv [*pargnum])) {
   case MAP:
     if (++*pargnum >= argc) {
       fprintf (sxstderr, "%s: a map specification string must follow the \"%s\" option;\n", ME, option_get_text (MAP));
-      return SXFALSE;
+      return false;
     }
 
     map_spec = argv [*pargnum];
@@ -435,38 +435,38 @@ sxsem_mngr_args_decode (int *pargnum, int argc, char *argv[])
     
   case UNKNOWN_ARG:
     if (weights_for_semact.process_args && (*weights_for_semact.process_args) (pargnum, argc, argv))
-      return SXTRUE;
+      return true;
 
     if (structure_for_semact.process_args && (*structure_for_semact.process_args) (pargnum, argc, argv))
-      return SXTRUE;
+      return true;
 
     if (chunker_for_semact.process_args && (*chunker_for_semact.process_args) (pargnum, argc, argv))
-      return SXTRUE;
+      return true;
 
     if (proper_for_semact.process_args && (*proper_for_semact.process_args) (pargnum, argc, argv))
-      return SXTRUE;
+      return true;
 
     if (usersem_for_semact.process_args && (*usersem_for_semact.process_args) (pargnum, argc, argv))
-      return SXTRUE;
+      return true;
 
     if (nbest_for_semact.process_args && (*nbest_for_semact.process_args) (pargnum, argc, argv))
-      return SXTRUE;
+      return true;
 
     if (exact_nbest_for_semact.process_args && (*exact_nbest_for_semact.process_args) (pargnum, argc, argv))
-      return SXTRUE;
+      return true;
 
     if (lfg_for_semact.process_args && (*lfg_for_semact.process_args) (pargnum, argc, argv))
-      return SXTRUE;
+      return true;
 
     if (output_for_semact.process_args && (*output_for_semact.process_args) (pargnum, argc, argv))
-      return SXTRUE;
+      return true;
 
-    return SXFALSE;
+    return false;
   default: /* pour faire taire gcc -Wswitch-default */
     break;
   }
 
-  return SXTRUE;
+  return true;
 }
 
 static SXINT sxsem_mngr_sem_pass (void);
@@ -518,7 +518,7 @@ sxsem_mngr_close (void)
   sxmem_signatures_free ();
   mem_signatures = &(parser_mem_signatures);
   sxmem_signatures_free ();
-  mem_signature_mode = SXFALSE;
+  mem_signature_mode = false;
   mem_signatures = NULL;
 #endif /* LONGJUMP_SUPPORT */
 }
@@ -620,7 +620,7 @@ memoflw_mngr (void)
 {
   char msg [32];
 
-  SYNTAX_is_in_critical_zone = SXFALSE;
+  SYNTAX_is_in_critical_zone = false;
 
   if (is_print_time) {
     sprintf (msg, "\tMemory overflow (%s)", get_cur_sem_name ());
@@ -633,7 +633,7 @@ sxtrap_mngr (void)
 {
   char msg [32];
 
-  SYNTAX_is_in_critical_zone = SXFALSE;
+  SYNTAX_is_in_critical_zone = false;
 
   if (is_print_time) {
     sprintf (msg, "\tInternal error (%s)", get_cur_sem_name ());
@@ -660,7 +660,7 @@ timeout_mngr (int sigid)
     sxtrap (ME, "timeout_mngr (timeout outside the memory protection mode)");
 
   /* Pour avertir qui de droit !! */
-  is_virtual_timeout_signal_raised = SXTRUE;
+  is_virtual_timeout_signal_raised = true;
 
   if (is_print_time) {
     sprintf (msg, "\tTimeout (%s)", get_cur_sem_name ());
@@ -688,7 +688,7 @@ timeout_mngr (int sigid)
 	  /* Le rattrapage est de continuer ce qu'on etait en train de faire (pour au plus 1s) */
 	  cur_map_spec += 2; /* On suppose qu'on a "/r/"
 				on continuera donc derriere le rattrapage comme si de rien n'etait !! */
-	  is_virtual_timeout_signal_raised = SXFALSE;
+	  is_virtual_timeout_signal_raised = false;
 
 	  return;
 	}
@@ -781,15 +781,15 @@ sxsem_mngr_semact (void)
   /* Ds le cas contraire, on prend les rcvr_spec de SEMANTICS qui a donc priorite' */
   /* On doit remplir rcvr_spec, structure qui dirige la facon dont va proceder la rcvr syntaxique */
   rcvr_spec.range_walk_kind = MIXED_FORWARD_RANGE_WALK_KIND; 
-  rcvr_spec.perform_repair = SXTRUE; /* On fait de la correction d'erreur ... */
+  rcvr_spec.perform_repair = true; /* On fait de la correction d'erreur ... */
   rcvr_spec.repair_kind = 1; /* ... mais on ne genere qu'une chaine de la longueur min */
-  rcvr_spec.perform_repair_parse = SXTRUE; /* On analyse cette chaine ... */
+  rcvr_spec.perform_repair_parse = true; /* On analyse cette chaine ... */
   rcvr_spec.repair_parse_kind = 1; /* ... mais on ne genere qu'une seule analyse */
 
   //  rcvr_spec.try_kind = TRY_MEDIUM; /* temporaire, à supprimer */
 
   /* On change les valeurs par defaut de l'analyseur earley */
-  is_parse_forest = SXTRUE;
+  is_parse_forest = true;
 
   map_spec = map_spec_default; /* default == "l", sauf si option de compilation adéquate */
 
@@ -907,7 +907,7 @@ static SXINT
 sxsem_mngr_sem_pass (void)
 {
   SXINT        ret_val [16], if_depth;
-  SXBOOLEAN    do_sthg [16], else_passed [16];
+  bool    do_sthg [16], else_passed [16];
   char       msg [30];
   SXBA       sxba_tmp;
   static SXINT skip_next_semantics = 0;
@@ -916,7 +916,7 @@ sxsem_mngr_sem_pass (void)
     mem_signatures = &(for_semact.mem_signatures);
 #endif /* LONGJUMP_SUPPORT */
 
-  do_sthg [0] = SXTRUE;
+  do_sthg [0] = true;
   if_depth = 0;
 
   /* On epluche map_spec */
@@ -946,14 +946,14 @@ sxsem_mngr_sem_pass (void)
 	if (if_depth>=16)
 	  sxtrap (ME, "sxsem_mngr_sem_pass (too much recursion in argument of -m option)");
 
-	else_passed [if_depth] = SXFALSE;
+	else_passed [if_depth] = false;
 	do_sthg [if_depth] = do_sthg [if_depth-1] && ret_val [if_depth-1];
 	ret_val [if_depth] = 0;
 	break;
 
       case ':':
       case '|':
-	else_passed [if_depth] = SXTRUE;
+	else_passed [if_depth] = true;
 	do_sthg [if_depth] = !do_sthg [if_depth] && do_sthg [if_depth-1];
 	break;
       

@@ -1,3 +1,0 @@
-      INTEGER FUNCTION FCT()
-      RETURN
-      END

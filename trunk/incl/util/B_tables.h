@@ -35,7 +35,7 @@ struct ws_tbl_size_s {
 
 struct ws_nbpro_s {
     SXINT           prolon, reduc, numpg, action;
-    SXBOOLEAN       bprosimpl;
+    bool       bprosimpl;
 };
 
 struct ws_indpro_s {
@@ -73,6 +73,6 @@ struct bnf_ag_item {
 };
 
 
-extern SXBOOLEAN bnf_read (struct bnf_ag_item *B, char *langname);
-extern SXBOOLEAN bnf_write (struct bnf_ag_item *B, char *langname);
-extern SXVOID  bnf_free (struct bnf_ag_item *B);
+extern bool bnf_read (struct bnf_ag_item *B, char *langname);
+extern bool bnf_write (struct bnf_ag_item *B, char *langname);
+extern void  bnf_free (struct bnf_ag_item *B);

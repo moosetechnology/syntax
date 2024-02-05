@@ -21,9 +21,9 @@
 #include "sxunix.h"
 #include "B_tables.h"
 
-char WHAT_BNFFREE[] = "@(#)SYNTAX - $Id: bnffree.c 3146 2023-05-02 12:21:39Z garavel $" WHAT_DEBUG;
+char WHAT_BNFFREE[] = "@(#)SYNTAX - $Id: bnffree.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
-SXVOID	bnf_free (B)
+void	bnf_free (B)
     struct bnf_ag_item		*B;
 {
     if (B->NT_STRING != NULL)

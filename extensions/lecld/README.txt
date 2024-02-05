@@ -36,6 +36,6 @@ $(SXAUX)/lecld.out:	$(LECLD)	$(SXBIBS)
 
 $(LIB)/lecld_main.o:	$(SXINCL)/sxdynam_scanner.h	\
 			$(SXINCL)/util/B_tables.h	\
-			$(SRC)/lecld_main.c
-	$(CC) $(SRC)/lecld_main.c
+			lecld_main.c
+	$(CC) lecld_main.c
 

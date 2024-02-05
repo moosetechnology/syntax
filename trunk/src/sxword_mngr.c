@@ -26,7 +26,7 @@
 #include <string.h> /* Pour memcpy, strlen, ... */
 #include <unistd.h>
 
-char WHAT_SXWORD_MNGR[] = "@(#)SYNTAX - $Id: sxword_mngr.c 2947 2023-03-29 17:06:41Z garavel $" WHAT_DEBUG;
+char WHAT_SXWORD_MNGR[] = "@(#)SYNTAX - $Id: sxword_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 
 #if EBUG_ALLOC
@@ -184,7 +184,7 @@ sxword_2save (sxword_header *header, char *string, SXUINT sxword_2save_strlen)
 	    (*header->oflw) (old_tablength, header->tablength);
 
 	/* Used by (*header->oflw) () */
-	header->is_head_table_static = SXFALSE;
+	header->is_head_table_static = false;
     }
 
     return ste;
@@ -387,8 +387,8 @@ sxword_alloc (sxword_header *header,
     header->oflw = oflw;
     header->stat_file = stat_file;
 
-    header->is_string_static = SXFALSE;
-    header->is_head_table_static = SXFALSE;
+    header->is_string_static = false;
+    header->is_head_table_static = false;
 }
 
 
@@ -424,7 +424,7 @@ sxword_free (sxword_header *header)
 #define WRITE(p,l)	((bytes=(l))>0&&(write(file_descr, p, (size_t)bytes) == bytes))
 #define READ(p,l)	((bytes=(l))>0&&(read (file_descr, p, (size_t)bytes) == bytes))
 
-static SXBOOLEAN
+static bool
 write_table (sxword_header *header, sxfiledesc_t file_descr)
 {
     SXINT	bytes; 
@@ -439,15 +439,15 @@ write_table (sxword_header *header, sxfiledesc_t file_descr)
 	    && WRITE (&(p->collision_link), sizeof (SXINT))
 	    && WRITE (p->pointer, sizeof (char) * (p->length + 1))
 	    ))
-	    return SXFALSE;
+	    return false;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
 
-static SXBOOLEAN
+static bool
 read_table (sxword_header *header, sxfiledesc_t file_descr)
 {
     SXINT	bytes; 
@@ -467,13 +467,13 @@ read_table (sxword_header *header, sxfiledesc_t file_descr)
 		            sizeof (char) * (p->length + 1)),
 		header->strnext += p->length + 1)
 	    ))
-	    return SXFALSE;
+	    return false;
     }
 
-    return SXTRUE;
+    return true;
 }
 
-SXBOOLEAN
+bool
 sxword_write (sxword_header *header, sxfiledesc_t file_descr)
 {
     SXINT	bytes;  
@@ -492,7 +492,7 @@ sxword_write (sxword_header *header, sxfiledesc_t file_descr)
 	    );
 }
 
-SXBOOLEAN
+bool
 sxword_read (sxword_header *header,
 	     sxfiledesc_t file_descr,
 	     char *area_name,
@@ -632,14 +632,14 @@ sxword_header_to_c (sxword_header *header, FILE *file, char *name, SXUINT total_
     fprintf (file, "NULL /* (*oflw) () */,\n");
     fprintf (file, "NULL /* *stat_file */,\n");
 
-    fprintf (file, "SXTRUE /* is_string_static */,\n");
-    fprintf (file, "SXTRUE /* is_head_table_static */\n");
+    fprintf (file, "true /* is_string_static */,\n");
+    fprintf (file, "true /* is_head_table_static */\n");
 
     fprintf (file, "}");
 }
 
 void
-sxword_to_c (sxword_header *header, FILE *file, char *name, SXBOOLEAN is_static)
+sxword_to_c (sxword_header *header, FILE *file, char *name, bool is_static)
 {
   SXUINT	total_lgth;
 

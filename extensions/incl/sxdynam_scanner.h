@@ -32,7 +32,7 @@ extern void	sxds_putit (void);
 extern void	sxds_scanit (void);
 
 extern struct configs*
-                sxds_string_to_token (char *string, SXBOOLEAN is_set);
+                sxds_string_to_token (char *string, bool is_set);
 
 
 struct sxdslv {
@@ -94,7 +94,7 @@ struct sxdynam_scanner {
     SXINT			eof_code,
                         eof_reg_exp_name;
 
-    SXBOOLEAN		is_char_sets_static,
+    bool		is_char_sets_static,
          		is_item_to_attr_static,
          		is_token_no_to_terminal_static,
          		is_smp_error;
@@ -114,16 +114,16 @@ struct sxdynam_scanner {
 
     struct sxtoken	terminal_token;
 
-    SXBOOLEAN		(*scanact) (SXINT, SXINT, SXINT) /* scanner level user's actions & predicates*/ ;
+    bool		(*scanact) (SXINT, SXINT, SXINT) /* scanner level user's actions & predicates*/ ;
     void		(*recovery) (SXINT) /* scanner level error recovery		*/ ;
     void		(*desambig) (struct configs *, struct configs *) /* scanner level user's desambiguation	*/ ;
 
     SXINT			current_char_no /* No de current_char depuis le debut du token*/ ;
 
-    SXSHORT		current_char,
+    short		current_char,
                         previous_char;
 
-    SXBOOLEAN		begin_parser;	
+    bool		begin_parser;	
 
     struct sx_variables	sx;		/* syntax variables */
     struct sxscan_mode	mode /* 	en global pour l'instant		*/ ;

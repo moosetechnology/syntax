@@ -22,10 +22,10 @@
 
 #include "PP_tables.h"
 
-char WHAT_PARADISFREE[] = "@(#)SYNTAX - $Id: paradisfree.c 3146 2023-05-02 12:21:39Z garavel $" WHAT_DEBUG;
+char WHAT_PARADISFREE[] = "@(#)SYNTAX - $Id: paradisfree.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
 
-SXVOID	paradis_free (struct PP_ag_item *PP_ag)
+void	paradis_free (struct PP_ag_item *PP_ag)
 {
     if (PP_ag->SXPP_schema != NULL) {
 	sxfree (PP_ag->SXPP_schema), PP_ag->SXPP_schema = NULL;

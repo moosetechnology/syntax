@@ -30,10 +30,10 @@ static char	ME [] = "output_semact";
 #include <float.h>
 #include "X.h"
 
-char WHAT_OUTPUT_SEMACT[] = "@(#)SYNTAX - $Id: output_semact.c 3492 2023-08-20 15:43:18Z garavel $" WHAT_DEBUG;
+char WHAT_OUTPUT_SEMACT[] = "@(#)SYNTAX - $Id: output_semact.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
-static SXBOOLEAN          is_print_headers;
-static SXBOOLEAN          is_print_xml_headers;
+static bool          is_print_headers;
+static bool          is_print_xml_headers;
 
 #define SENTENCE_CONCAT 0X80000000
 #define SENTENCE_OR     0X40000000
@@ -142,7 +142,7 @@ output_args_usage (void)
 
 /* decode les arguments specifiques a output */
 /* l'option argv [*parg_num] est inconnue du parseur earley */
-static SXBOOLEAN
+static bool
 output_args_decode (int *pargnum, int argc, char *argv [])
 {
   switch (option_get_kind (argv [*pargnum])) {
@@ -150,7 +150,7 @@ output_args_decode (int *pargnum, int argc, char *argv [])
   case XML:
     if (++*pargnum >= argc) {
       fprintf (sxstderr, "%s: a pathname must follow the \"%s\" option;\n", ME, option_get_text (XML));
-      return SXFALSE;
+      return false;
     }
     xml_file_name = argv [*pargnum];
     
@@ -159,24 +159,24 @@ output_args_decode (int *pargnum, int argc, char *argv [])
   case ODAG:
     if (++*pargnum >= argc) {
       fprintf (sxstderr, "%s: a pathname must follow the \"%s\" option;\n", ME, option_get_text (ODAG));
-      return SXFALSE;
+      return false;
     }
     odag_file_name = argv [*pargnum];
     
     break;
 
   case PRINT_HEADERS:
-    is_print_headers = SXTRUE;
+    is_print_headers = true;
 
   case PRINT_XML_HEADER:
-    is_print_xml_headers = SXTRUE;
+    is_print_xml_headers = true;
 
   case UNKNOWN_ARG:
   default:
-    return SXFALSE;
+    return false;
   }
 
-  return SXTRUE;
+  return true;
 }
 
 
@@ -222,7 +222,7 @@ ntstring2phrasename (char *ntstring)
 
 static SXINT              *spf_count;
 static SXINT              rec_level;
-static SXBOOLEAN          nl_done;
+static bool          nl_done;
 static SXINT cur_snt_id;
 
 /* parcours top-down y compris les terminaux: boucle récursive */
@@ -248,13 +248,13 @@ spf_td_walk_incl_terminals (SXINT Aij, char* (*ntstring2name) (char *), char *nt
     if (ntstring != SXNUL && Aij2i (Aij) < Aij2j (Aij)) {
       if (!nl_done) {
 	fprintf(xml_file,"\n");
-	nl_done=SXTRUE;
+	nl_done=true;
       }
       for (i = 0; i <= rec_level; i++)
 	fprintf(xml_file,"  ");
       fprintf(xml_file,"<%s type=\"%s\" id=\"E%ld%s%ld\">", ntkind, ntstring, sentence_id, ntkindshort, cur_snt_id++);
       rec_level++;
-      nl_done=SXFALSE;
+      nl_done=false;
     }
     
     hook = spf.outputG.lhs [spf.outputG.maxxprod+Aij].prolon;
@@ -277,7 +277,7 @@ spf_td_walk_incl_terminals (SXINT Aij, char* (*ntstring2name) (char *), char *nt
 	      /* terminal*/
 	      if (!nl_done)
 		fputs ("\n",xml_file);
-	      nl_done = SXTRUE;
+	      nl_done = true;
 
 	      tok_no = spf_get_Tij2tok_no_stack (-Xpq)[1]; /* le premier token de Tpq  (ils ont tous le meme commentaire) */
 	      tok_ptr = &(SXGET_TOKEN (tok_no));
@@ -296,12 +296,12 @@ spf_td_walk_incl_terminals (SXINT Aij, char* (*ntstring2name) (char *), char *nt
 		    last_f = local_f;
 		    if (!nl_done)
 		      fputs("\n",xml_file);
-		    nl_done = SXTRUE;
+		    nl_done = true;
 		    for (i = 0; i <= rec_level; i++)
 		      fprintf(xml_file, "  ");
 		    do {
 		      fprintf(xml_file, "%c", *comment);
-		      nl_done = SXFALSE;
+		      nl_done = false;
 		    } while (*++comment != '}');
 		  } else {
 		    comment = strchr (comment, (int)'>');
@@ -321,7 +321,7 @@ spf_td_walk_incl_terminals (SXINT Aij, char* (*ntstring2name) (char *), char *nt
       rec_level--;
       if (!nl_done)
 	fprintf(xml_file,"\n");
-      nl_done=SXTRUE;
+      nl_done=true;
       for (i = 0; i <= rec_level; i++)
 	fprintf(xml_file,"  ");
       fprintf(xml_file,"</%s>\n",ntkind);
@@ -464,7 +464,7 @@ xml_count_leaves (void)
 }
 
 
-static SXVOID
+static void
 xml_print_terminal_leaves (void)
 {
   SXINT  Tpq, T, p, q, tok_no;
@@ -634,22 +634,22 @@ xml_print_unique_tree (SXINT Aij)
   struct lhs *plhs;
   struct rhs *prhs;
   char* ntstring;
-  SXBOOLEAN hide = SXFALSE;
+  bool hide = false;
 
   if (Aij2i (Aij) == Aij2j (Aij) && Aij2i (Aij) > 0)
     return;
 
   ntstring = spf.inputG.ntstring[Aij2A (Aij)];
   if (ntstring[0] == '[')
-    hide = SXTRUE;
+    hide = true;
 
   if (strlen(ntstring) > 6 && strncmp(ntstring, "DISJ__", 6) == 0)
-    hide = SXTRUE;
+    hide = true;
 
   if (strlen(ntstring) > 7 && strncmp(ntstring + strlen(ntstring) - 7, "___PLUS", 7) == 0)
-    hide = SXTRUE;
+    hide = true;
   if (strlen(ntstring) > 7 && strncmp(ntstring + strlen(ntstring) - 7, "___STAR", 7) == 0)
-    hide = SXTRUE;
+    hide = true;
 
   hook = spf.outputG.lhs [spf.outputG.maxxprod+Aij].prolon; 
   while ((Pij = spf.outputG.rhs [hook++].lispro) < 0);
@@ -819,7 +819,7 @@ xml_gen_header (void)
 }
 
 static void
-xml_output (SXBOOLEAN print_unique_tree)
+xml_output (bool print_unique_tree)
 {
   SXINT tok_no;
 
@@ -867,7 +867,7 @@ dag_output (void)
   if (spf.outputG.is_error_detected)
     compact_infos[1]='R';
 
-  spf_yield2dfa (SXFALSE /*= DAG ; SXTRUE = UDAG */);
+  spf_yield2dfa (false /*= DAG ; true = UDAG */);
 }
 
 #ifdef chunker
@@ -879,7 +879,7 @@ chunks_output (void)
 {
   fprintf(xml_file,"<E sid=\"E%ld\">\n",sentence_id);
   fprintf(xml_file,"<constituants>\n");
-  nl_done=SXTRUE;
+  nl_done=true;
   spf_output_partial_forest (ntstring2chunksname, "Groupe", "G");
   //  spf_topological_walk (spf.outputG.start_symbol,NULL,print_chunks);
   fprintf(xml_file,"</constituants>\n");
@@ -900,7 +900,7 @@ propositions_output (void)
 
   fprintf(xml_file,"<E sid=\"E%ld\">\n",sentence_id);
   fprintf(xml_file,"<propositions>\n");
-  nl_done=SXTRUE;
+  nl_done=true;
   spf_output_partial_forest (ntstring2propsname, "Proposition", "P");
   /*  spf_output_partial_forest (ntstring2propname, "Proposition", "P", 1);*/
   fprintf(xml_file,"</propositions>\n");
@@ -911,7 +911,7 @@ static void
 props_output (void)
 {
   fprintf(xml_file,"<E sid=\"E%ld\">\n",sentence_id);
-  nl_done=SXTRUE;
+  nl_done=true;
   spf_topological_walk (spf.outputG.start_symbol,NULL,print_props);
   fprintf(xml_file,"</E>\n");
 }
@@ -926,7 +926,7 @@ phrases_output (void)
   rec_level=0;
 
   fprintf(xml_file,"<E sid=\"E%ld\">\n",sentence_id);
-  nl_done=SXTRUE;
+  nl_done=true;
   spf_output_partial_forest (ntstring2phrasename, "Syntagme", "S");
   fprintf(xml_file,"</E>\n");
 }
@@ -956,7 +956,7 @@ output_sem_pass (void)
       if ((odag_file = sxfopen (odag_file_name, "w")) == NULL) {
 	fprintf (sxstderr, "%s: Cannot open (create) ", ME);
 	sxperror (odag_file_name);
-	return SXFALSE;
+	return false;
       }
     } else
     odag_file=stdout;
@@ -966,7 +966,7 @@ output_sem_pass (void)
       if ((xml_file = sxfopen (xml_file_name, "w")) == NULL) {
 	fprintf (sxstderr, "%s: Cannot open (create) ", ME);
 	sxperror (xml_file_name);
-	return SXFALSE;
+	return false;
       }
     } else
       xml_file=stdout;
@@ -1015,10 +1015,10 @@ output_sem_pass (void)
 #endif /* chunker */
     break;
   case 'x':
-    xml_output(SXFALSE);
+    xml_output(false);
     break;
   case 'X':
-    xml_output(SXTRUE);
+    xml_output(true);
     break;
   default:
     sxtrap(ME,"output_sem_pass (unknown action for output_semact module)");
@@ -1027,7 +1027,7 @@ output_sem_pass (void)
 
 #if LOG
   printf ("\n ******* Tagged input sentence with f_structure filtering:\n");
-  spf_yield2dfa (SXFALSE /*= DAG ; SXTRUE = UDAG */);
+  spf_yield2dfa (false /*= DAG ; true = UDAG */);
 #endif /* LOG */
 
   if (is_print_time) {

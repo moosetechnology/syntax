@@ -32,12 +32,12 @@
 /* on a donc demande' une compilation speciale de sxscanner.c avec -Dsxgetchar, car on veut se le
    redefinir differement de la macro definie dans sxunix.h */
 #undef sxgetchar
-extern SXSHORT sxgetchar (void);
+extern short sxgetchar (void);
 #define sxgetchar sxgetchar
 #endif /* sxgetchar_is_redefined */
 
 #ifndef VARIANT_32
-char WHAT_SXSCANNER[] = "@(#)SYNTAX - $Id: sxscanner.c 3126 2023-05-01 08:57:52Z garavel $" WHAT_DEBUG;
+char WHAT_SXSCANNER[] = "@(#)SYNTAX - $Id: sxscanner.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 #endif
 
 static char	ME [] = "SCANNER";
@@ -59,7 +59,7 @@ static struct sxlv	*sxsvar_include;
 
 
 /* Nelle version qui utilise sxcomment_mngr */
-static SXVOID
+static void
 comments_put (char *str, SXINT lgth)
 {
   sxsvar.sxlv.terminal_token.comment = sxcomment_put (str, lgth);
@@ -82,7 +82,7 @@ comments_put (char *str, SXINT lgth)
 
 
 
-SXVOID	sxscan_it (void)
+void	sxscan_it (void)
 {
     SXSTMI	stmt;
     SXINT	current_state;
@@ -195,7 +195,7 @@ done:
 	    ts_null ();
 
 	    if (sxsvar.sxlv.mode.with_user_act)
-		(SXVOID) (*sxsvar.SXS_tables.scanact) (SXACTION, sxsvar.sxlv.include_action);
+		(void) (*sxsvar.SXS_tables.scanact) (SXACTION, sxsvar.sxlv.include_action);
 
 	    goto ccnewlextok; /* sur l'ancien source */
 	}
@@ -245,7 +245,7 @@ read_la_transition:
 
 	if (action_or_prdct_code->kind == IsPredicate) {
 	    /* transition vers un groupe de predicats */
-	    SXBOOLEAN	is_prdct_satisfied = SXFALSE;
+	    bool	is_prdct_satisfied = false;
 
 	    action_or_prdct_code--;
 
@@ -253,7 +253,7 @@ read_la_transition:
 		if ((++action_or_prdct_code)->is_system) {
 		    switch (action_or_prdct_code->action_or_prdct_no) {
 		    case IsTrue:
-			is_prdct_satisfied = SXTRUE;
+			is_prdct_satisfied = true;
 			break;
 
 		    case IsFirstCol:
@@ -278,7 +278,7 @@ read_la_transition:
 		    case NotIsLastCol:
 			{
 			    SXINT	sxchar;
-			    SXBOOLEAN	is_a_lookahead;
+			    bool	is_a_lookahead;
 
 			    sxchar = (is_a_lookahead = IS_IN_LA) ? sxlanext_char () : sxlafirst_char ();
 
@@ -446,7 +446,7 @@ read_la_transition:
 		ts_null ();
 
 		if (sxsvar.sxlv.mode.with_user_act)
-		    (SXVOID) (*sxsvar.SXS_tables.scanact) (SXACTION, action_or_prdct_code->action_or_prdct_no);
+		    (void) (*sxsvar.SXS_tables.scanact) (SXACTION, action_or_prdct_code->action_or_prdct_no);
 		current_class = char_to_class (sxsrcmngr.current_char);
 		
 
@@ -476,7 +476,7 @@ read_la_transition:
 	ts_null ();
 
 	if (sxsvar.sxlv.mode.with_user_act)
-	    (SXVOID) (*sxsvar.SXS_tables.scanact) (SXACTION, action_or_prdct_code->action_or_prdct_no);
+	    (void) (*sxsvar.SXS_tables.scanact) (SXACTION, action_or_prdct_code->action_or_prdct_no);
 
 	if (sxsvar.sxlv.terminal_token.lahead == 0) {
 	    /* Dans tous les cas, la post-action s'est occupee des commentaires eventuels. */
@@ -547,11 +547,11 @@ SXINT sxscanner (SXINT what_to_do, struct sxtables *arg)
 	     S_counters_size, sizeof (SXINT)) : NULL;
 
 	sxsvar.sxlv.mode.errors_nb = 0;
-	sxsvar.sxlv.mode.is_silent = SXFALSE;
-	sxsvar.sxlv.mode.with_system_act = SXTRUE;
-	sxsvar.sxlv.mode.with_user_act = SXTRUE;
-	sxsvar.sxlv.mode.with_system_prdct = SXTRUE;
-	sxsvar.sxlv.mode.with_user_prdct = SXTRUE;
+	sxsvar.sxlv.mode.is_silent = false;
+	sxsvar.sxlv.mode.with_system_act = true;
+	sxsvar.sxlv.mode.with_user_act = true;
+	sxsvar.sxlv.mode.with_system_prdct = true;
+	sxsvar.sxlv.mode.with_user_prdct = true;
 
 	char_to_class (EOF) = 2 /* EOF class */ ;
 

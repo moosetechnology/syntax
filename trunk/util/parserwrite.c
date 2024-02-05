@@ -21,7 +21,7 @@
 #include "sxunix.h"
 #include "P_tables.h"
 
-char WHAT_PARSERWRITE[] = "@(#)SYNTAX - $Id: parserwrite.c 3146 2023-05-02 12:21:39Z garavel $" WHAT_DEBUG;
+char WHAT_PARSERWRITE[] = "@(#)SYNTAX - $Id: parserwrite.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 
 #define WRITE(f,p,l)						\
@@ -29,7 +29,7 @@ char WHAT_PARSERWRITE[] = "@(#)SYNTAX - $Id: parserwrite.c 3146 2023-05-02 12:21
 		goto write_error
 
 
-SXBOOLEAN		parser_write (struct parser_ag_item *parser_ag_ptr, char *langname)
+bool		parser_write (struct parser_ag_item *parser_ag_ptr, char *langname)
 {
     /* sortie des tables du parser */
     SXINT	bytes;
@@ -72,11 +72,11 @@ SXBOOLEAN		parser_write (struct parser_ag_item *parser_ag_ptr, char *langname)
 	WRITE (F_pt, parser_ag_ptr->prdct_list + 1, parser_ag_ptr->constants.Mprdct_list * sizeof (struct P_prdct_list));
 
     close (F_pt);
-    return SXTRUE;
+    return true;
 
 write_error:
     fprintf (sxstderr, "%s: write error on ", ME);
 file_error:
     sxperror (parser_tables_name);
-    return SXFALSE;
+    return false;
 }

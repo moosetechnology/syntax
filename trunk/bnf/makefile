@@ -7,11 +7,11 @@ BOOT=$(BNF)/boot
 
 CC=$(COMPILER) -I$(BOOT) -I$(SXINCL) -I$(SXINCL)/util -I$(BNF) $(CFLAGS)
 
-all: $(SX)/bin/bnf.out \
+all: $(SXBIN)/bnf.out \
      $(SXAUX)/print_bt.out	\
      $(SXAUX)/check_bnf.out
 
-$(SX)/bin/bnf.out:	$(BNF)/bnf.out
+$(SXBIN)/bnf.out:	$(BNF)/bnf.out
 	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
 NEEDS1=\
@@ -157,4 +157,7 @@ bnf.rt: bnf.bt bnf.st bnf.recor
 
 clean:
 	/bin/rm -f $(LIB)/*.o $(SXAUX)/print_bt.out $(SXAUX)/check_bnf.out $(BNF)/bnf.out
+	/bin/rm -f bnf.att bnf.bt bnf.pt bnf.rt bnf.st
+	/bin/rm -f bnf.bn.l bnf.lc.l bnf.rc.l
+	/bin/rm -f bnf.c.skeleton bnf_t.c
 

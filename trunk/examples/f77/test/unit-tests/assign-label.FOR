@@ -1,4 +1,0 @@
-       INTEGER PHORMAT 
-2      FORMAT ( A80 ) 
-       ASSIGN 2 TO PHORMAT
-       END

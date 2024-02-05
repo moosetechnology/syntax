@@ -23,7 +23,7 @@
 #include "lecl_ag.h"
 #include "sxdico.h"
 
-char WHAT_LECLGENCHECKKW[] = "@(#)SYNTAX - $Id: gen_check_kw.c 3603 2023-09-23 20:02:36Z garavel $" WHAT_DEBUG;
+char WHAT_LECLGENCHECKKW[] = "@(#)SYNTAX - $Id: gen_check_kw.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 #define char_max 256
 
@@ -55,10 +55,10 @@ static char	tail [] = "   do {\n\
 static SXINT	*sorted, *sorted_by_char;
 static SXBA	char_set1, char_set2;
 static SXINT	x_char, x_couple, x_couple_syno;
-static SXBOOLEAN	is_compare, is_syno, is_compare_syno;
+static bool	is_compare, is_syno, is_compare_syno;
 static char new_line []= "\n";
 
-static SXVOID cat_nnl (SXINT level, char *str)
+static void cat_nnl (SXINT level, char *str)
 {
     SXINT nb = 3 * level;
 
@@ -71,25 +71,25 @@ static SXVOID cat_nnl (SXINT level, char *str)
     varstr_catenate (check_kw, str);
 }
 
-static SXVOID cat (SXINT level, char *str)
+static void cat (SXINT level, char *str)
 {
     cat_nnl (level, str);
     varstr_catenate (check_kw, new_line);
 }
 
 
-static SXVOID cat_ap (char *str)
+static void cat_ap (char *str)
 {
     varstr_catenate (check_kw, str);
     varstr_catenate (check_kw, new_line);
 }
 
-static SXVOID cat_apnnl (char *str)
+static void cat_apnnl (char *str)
 {
     varstr_catenate (check_kw, str);
 }
 
-static SXVOID cat_cstr_in_comment (char *str)
+static void cat_cstr_in_comment (char *str)
 {
     char *p = str;
 
@@ -102,13 +102,13 @@ static SXVOID cat_cstr_in_comment (char *str)
 	varstr_lcat_cstring (check_kw, str, p - str);
 	varstr_catenate (check_kw, "\\");
 	str = p;
-    } while (SXTRUE);
+    } while (true);
 
     varstr_cat_cstring (check_kw, str);
 }
 
 
-static SXVOID cat_c (char c)
+static void cat_c (char c)
 {
     if (c != '\'')
 	varstr_catenate (check_kw, SXCHAR_TO_STRING (c));
@@ -116,7 +116,7 @@ static SXVOID cat_c (char c)
 	varstr_catenate (check_kw, "\\'");
 }
 
-static SXVOID cat_nl (SXINT n)
+static void cat_nl (SXINT n)
 {
     SXINT i;
 
@@ -125,7 +125,7 @@ static SXVOID cat_nl (SXINT n)
     }
 }
 
-static SXVOID cat_apnb (SXINT nb)
+static void cat_apnb (SXINT nb)
 {
     char s[22];
 
@@ -133,21 +133,21 @@ static SXVOID cat_apnb (SXINT nb)
     varstr_catenate (check_kw, s);
 }
 
-static SXBOOLEAN	by_lgth (SXINT i, SXINT j)
+static bool	by_lgth (SXINT i, SXINT j)
 {
     return kws [i].lgth < kws [j].lgth;
 }
 
 
 
-static SXBOOLEAN	less (SXINT i, SXINT j)
+static bool	less (SXINT i, SXINT j)
 {
     return kws [sorted [i]].str [x_char] < kws [sorted [j]].str [x_char];
 }
 
 
 
-static SXVOID	sort (SXINT bi, SXINT bf, SXINT x)
+static void	sort (SXINT bi, SXINT bf, SXINT x)
 {
     SXINT	i;
 
@@ -169,7 +169,7 @@ static SXVOID	sort (SXINT bi, SXINT bf, SXINT x)
 
 
 
-static SXVOID	store (struct couple *store_couples,
+static void	store (struct couple *store_couples,
                        SXINT *store_x_couple, 
                        SXINT lgth, 
                        SXINT delta)
@@ -188,9 +188,9 @@ static SXVOID	store (struct couple *store_couples,
 
 
 
-static SXVOID	gen_cmp (struct couple *gen_cmp_couples,
+static void	gen_cmp (struct couple *gen_cmp_couples,
                          SXINT gen_cmp_x_couple,
-                         SXBOOLEAN gen_cmp_is_syno)
+                         bool gen_cmp_is_syno)
 {
     struct couple	*xc;
 
@@ -238,7 +238,7 @@ static SXVOID	gen_cmp (struct couple *gen_cmp_couples,
 
 
 
-static SXINT	get_best (SXINT bi, SXINT bf, SXINT kw_lgth, SXINT *min, SXINT *max, SXBOOLEAN *is_min)
+static SXINT	get_best (SXINT bi, SXINT bf, SXINT kw_lgth, SXINT *min, SXINT *max, bool *is_min)
 {
     SXINT	x, imin, imax, l1, l2, xmin;
     unsigned char	*str;
@@ -262,12 +262,12 @@ static SXINT	get_best (SXINT bi, SXINT bf, SXINT kw_lgth, SXINT *min, SXINT *max
 	/* On doit progresser dans la discrimination */
 
 	if (l1 >= l2) {
-	    *is_min = SXTRUE;
+	    *is_min = true;
 	    ++*min;
 	    x = imin;
 	}
 	else {
-	    *is_min = SXFALSE;
+	    *is_min = false;
 	    ++*max;
 	    x = imax;
 	}
@@ -288,7 +288,7 @@ static SXINT	get_best (SXINT bi, SXINT bf, SXINT kw_lgth, SXINT *min, SXINT *max
 	    }
 	}
 
-	*is_min = SXFALSE;
+	*is_min = false;
 	x = xmin;
     }
 
@@ -298,12 +298,12 @@ static SXINT	get_best (SXINT bi, SXINT bf, SXINT kw_lgth, SXINT *min, SXINT *max
 
 
 
-static SXVOID gen (SXINT bi, SXINT bf, SXINT kw_lgth, SXINT min, SXINT max, SXINT level)
+static void gen (SXINT bi, SXINT bf, SXINT kw_lgth, SXINT min, SXINT max, SXINT level)
 {
     SXINT	x, y;
     SXINT		char_no, d;
     struct kw *kw;
-    SXBOOLEAN	is_min;
+    bool	is_min;
     char	*str;
 
     if (bi == bf) {
@@ -347,11 +347,11 @@ static SXVOID gen (SXINT bi, SXINT bf, SXINT kw_lgth, SXINT min, SXINT max, SXIN
 		cat_nnl (level, "t_syno = ");
 		cat_apnb (kw->syno);
 		cat_apnnl (" /* ");
-		is_compare_syno = SXTRUE;
+		is_compare_syno = true;
 		store (couples_syno, &x_couple_syno, min + max, min);
 	    }
 	    else {
-		is_compare = SXTRUE;
+		is_compare = true;
 		store (couples, &x_couple, min + max, min);
 	    }
 
@@ -405,7 +405,7 @@ static SXVOID gen (SXINT bi, SXINT bf, SXINT kw_lgth, SXINT min, SXINT max, SXIN
 
 
 
-SXVOID gen_check_kw (void)
+void gen_check_kw (void)
 {
     SXINT	i, bi, bf, lgth;
     SXINT 		syno, code;
@@ -422,7 +422,7 @@ SXVOID gen_check_kw (void)
 	    fputc ('\n', sxtty);
 	}
 	else
-	    sxttycol1p = SXFALSE;
+	    sxttycol1p = false;
 
 	fputs ("Check Keywords", sxtty);
     }
@@ -430,7 +430,7 @@ SXVOID gen_check_kw (void)
 
     kws = (struct kw*) sxalloc (nbndef + 1, sizeof (struct kw));
 
-    is_compare = is_compare_syno = is_syno = SXFALSE;
+    is_compare = is_compare_syno = is_syno = false;
     syno = termax + 1;
 
     if (is_dico) {
@@ -450,7 +450,7 @@ SXVOID gen_check_kw (void)
 	mot2.lgth [0] = 0;
 	mot2.optim_kind = TIME; /* Priorite au temps sur l'espace */
 	mot2.process_kind = PARTIEL; /* Seuls les prefixe et suffixe discriminants minimaux de chaque chaine sont entres ds l'automate */
-	mot2.print_on_sxtty = SXFALSE; /* on travaille ds le silence */
+	mot2.print_on_sxtty = false; /* on travaille ds le silence */
 	mot2.min = (SXINT*) sxalloc (mot2.nb + 1, sizeof (SXINT));
 	mot2.max = (SXINT*) sxalloc (mot2.nb + 1, sizeof (SXINT));
 
@@ -475,7 +475,7 @@ SXVOID gen_check_kw (void)
 		code = syno++;
 		last_static_ste++;
 		syno_kw_string_lgth += l;
-		is_syno = SXTRUE;
+		is_syno = true;
 	    }
 
 	    mot2.code [i] = i;
@@ -632,7 +632,7 @@ SXVOID gen_check_kw (void)
 		kw->syno = syno++;
 		last_static_ste++;
 		syno_kw_string_lgth += l;
-		is_syno = SXTRUE;
+		is_syno = true;
 	    }
 	    else
 		kw->syno = kw->code;
@@ -692,12 +692,12 @@ SXVOID gen_check_kw (void)
    }\n");
 
 	if (is_compare) {
-	    gen_cmp (couples, x_couple, SXFALSE);
+	    gen_cmp (couples, x_couple, false);
 	    cat_ap (tail);
 	}
 
 	if (is_compare_syno) {
-	    gen_cmp (couples_syno, x_couple_syno, SXTRUE);
+	    gen_cmp (couples_syno, x_couple_syno, true);
 	    cat_ap (tail);
 	}
 

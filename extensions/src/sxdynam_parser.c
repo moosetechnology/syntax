@@ -30,7 +30,7 @@ static char	ME [] = "DYNAM_PARSER";
 #include <sys/stat.h>
 #include <fcntl.h>
 
-char WHAT_SXDYNAM_PARSER[] = "@(#)SYNTAX - $Id: sxdynam_parser.c 3295 2023-05-23 12:46:26Z garavel $" WHAT_DEBUG;
+char WHAT_SXDYNAM_PARSER[] = "@(#)SYNTAX - $Id: sxdynam_parser.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 
 /* 
@@ -75,7 +75,7 @@ static struct pstack_to_attr empty_attr;
 
 
 
-static  SXVOID
+static  void
 P_oflw (SXINT old_size, SXINT new_size)
 {
   SXINT *new_ptr;
@@ -124,7 +124,7 @@ P_oflw (SXINT old_size, SXINT new_size)
 }
 
 
-static  SXVOID
+static  void
 items_oflw (SXINT old_size, SXINT new_size)
 {
   SXINT *new_ptr;
@@ -188,7 +188,7 @@ states_oflw (SXINT old_size, SXINT new_size)
    return 0;
 }
 
-static  SXVOID
+static  void
 xt_oflw (SXINT old_size, SXINT new_size)
 {
   struct priority *new_ptr;
@@ -211,7 +211,7 @@ xt_oflw (SXINT old_size, SXINT new_size)
   }
 }
 
-static  SXVOID
+static  void
 transitions_oflw (SXINT old_size, SXINT new_size)
 {
 
@@ -231,7 +231,7 @@ transitions_oflw (SXINT old_size, SXINT new_size)
 
 
 
-static  SXVOID
+static  void
 parse_stacks_oflw (SXINT old_size, SXINT new_size)
 {
     sxuse(old_size); /* pour faire taire gcc -Wunused */
@@ -241,7 +241,7 @@ parse_stacks_oflw (SXINT old_size, SXINT new_size)
 }
 
 
-static SXVOID
+static void
 update_automaton (SXINT rule)
 {
     SXINT lhs, transition, state, couple;
@@ -255,7 +255,7 @@ update_automaton (SXINT rule)
 	if (SXBA_bit_is_set_reset (SXDG.is_state_linked, state))
 	{
 	    /* cut_in_transitions */
-	    SXDG.has_been_updated = SXTRUE;
+	    SXDG.has_been_updated = true;
 
 	    XxY_Yforeach (SXDG.transitionxnext_state, state, couple)
 	    {
@@ -280,19 +280,19 @@ sxdp_rule_is_set (SXINT rhs_lgth, SXINT *symbols)
 }
 
 
-SXBOOLEAN
+bool
 sxdp_rule_is_activated (SXINT rule)
 {
    return SXBA_bit_is_set (SXDG.active_rule_set, rule) ;
 }
 
 
-SXBOOLEAN
+bool
 sxdp_rule_set (SXINT rhs_lgth, SXINT *symbols, SXINT *rule, SXINT action_nb, SXINT prio, SXINT assoc)
 {
-    /* retourne SXTRUE ssi la regle est nouvelle. */
+    /* retourne true ssi la regle est nouvelle. */
     SXINT	rhs, i, item, next_item;
-    SXBOOLEAN	is_new;
+    bool	is_new;
 
     rhs = 0;
 
@@ -330,7 +330,7 @@ sxdp_rule_set (SXINT rhs_lgth, SXINT *symbols, SXINT *rule, SXINT action_nb, SXI
 }
 
 
-SXVOID
+void
 sxdp_rule_get_attr (SXINT rule, SXINT *action_nb, SXINT *prio, SXINT *assoc)
 {
     *action_nb = SXDG.rule_to_action [rule];
@@ -339,7 +339,7 @@ sxdp_rule_get_attr (SXINT rule, SXINT *action_nb, SXINT *prio, SXINT *assoc)
 }
 
 
-SXVOID
+void
 sxdp_rule_set_attr (SXINT rule, SXINT action_nb, SXINT prio, SXINT assoc)
 {
     SXDG.rule_to_action [rule] = action_nb;
@@ -352,7 +352,7 @@ sxdp_rule_set_attr (SXINT rule, SXINT action_nb, SXINT prio, SXINT assoc)
 }
 
 
-SXVOID
+void
 sxdp_rule_activate (SXINT rule)
 {
     if (SXBA_bit_is_reset_set (SXDG.active_rule_set, rule))
@@ -360,7 +360,7 @@ sxdp_rule_activate (SXINT rule)
 }
 
 
-SXVOID
+void
 sxdp_rule_deactivate (SXINT rule)
 {
     if (SXBA_bit_is_set_reset (SXDG.active_rule_set, rule))
@@ -368,7 +368,7 @@ sxdp_rule_deactivate (SXINT rule)
 }
 
 
-static SXVOID
+static void
 GC_states (void)
 {
     /* "Recupere" les etats de l'automate */
@@ -431,10 +431,10 @@ GC_states (void)
 	}
     }
 
-    SXDG.has_been_erased = SXFALSE;
+    SXDG.has_been_erased = false;
 }
 
-SXVOID
+void
 sxdp_rule_delete (SXINT rule)
 {
     /* Suppression de rule : A -> alpha */
@@ -459,12 +459,12 @@ sxdp_rule_delete (SXINT rule)
     XxY_erase (SXDG.P, rule);
 
     sxdp_rule_deactivate (rule);
-    SXDG.has_been_erased = SXTRUE;
+    SXDG.has_been_erased = true;
 }
 
 
 
-static SXBOOLEAN
+static bool
 new_pstack (SXINT ops, SXINT state, SXINT ptok_no, SXINT *nps)
 {
 #if EBUG
@@ -473,16 +473,16 @@ new_pstack (SXINT ops, SXINT state, SXINT ptok_no, SXINT *nps)
 #endif
 
     if (XxYxZ_set (&SXDG.parse_stacks, ops, state, ptok_no, nps))
-	return SXFALSE;
+	return false;
 
     SXDG.pstack_to_attr [*nps] = empty_attr;
-    return SXTRUE;
+    return true;
 }
 
-static SXBOOLEAN
+static bool
 closure (SXINT item)
 {
-    /* retourne SXTRUE ssi l'item existe deja.
+    /* retourne true ssi l'item existe deja.
        Ca signifie que cet item est initial et que les regles ayant cet lhs
        ont deja ete examinees ou sont en cours d'examen et qu'on peut donc
        arreter la branche courante. */
@@ -499,21 +499,21 @@ closure (SXINT item)
 		    break;
 	}
 
-	return SXFALSE;
+	return false;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
 
-SXBOOLEAN
+bool
 sxdp_add_new_state (SXINT transition, SXINT *result)
 {
     /* Construction de l'etat atteint par transition */
-    /* Retourne SXTRUE ssi l'etat *result est nouveau */
+    /* Retourne true ssi l'etat *result est nouveau */
     SXINT next_state, nucleus, item_occur, item, inter_trans, symbol, couple, prdct_no, x, scrmbl;
-    SXBOOLEAN has_prdct, is_new_state;
+    bool has_prdct, is_new_state;
 
     has_prdct = SXBA_bit_is_set (SXDG.trans_has_prdct, transition);
 
@@ -596,11 +596,11 @@ sxdp_add_new_state (SXINT transition, SXINT *result)
 }
 
 
-static SXBOOLEAN
+static bool
 check_viable_prefix (SXINT xps, SXINT *parse_stack)
 {
     SXINT x, prev_state, state, next_state, xsymbol, symbol, transition, old_pstack, pstack;
-    SXBOOLEAN stack_has_changed;
+    bool stack_has_changed;
     
     /* On utilise "sxpglobals.parse_stack [x].state" comme structure temporaire
        pour deplier pstack. */
@@ -613,7 +613,7 @@ check_viable_prefix (SXINT xps, SXINT *parse_stack)
     } while ((old_pstack = XxYxZ_X (SXDG.parse_stacks, old_pstack)) > 0);
 
     pstack = 0;
-    stack_has_changed = SXFALSE;
+    stack_has_changed = false;
 
     /* On regarde si un etat de la pile a ete "isole'". */
     prev_state = SXDG.init_state;
@@ -644,7 +644,7 @@ check_viable_prefix (SXINT xps, SXINT *parse_stack)
 	}
 
 	if (next_state != state)
-	    stack_has_changed = SXTRUE;
+	    stack_has_changed = true;
 
 	if (stack_has_changed)
 	    new_pstack (pstack, next_state, XxYxZ_Z (SXDG.parse_stacks, old_pstack), &pstack);
@@ -666,13 +666,13 @@ check_viable_prefix (SXINT xps, SXINT *parse_stack)
     }
 
     *parse_stack = pstack;
-    SXDG.has_been_updated = SXFALSE;
+    SXDG.has_been_updated = false;
 
     return stack_has_changed;
 }
 
 
-static SXVOID
+static void
 reactivate_path (SXINT xps, SXINT pstack)
 {
     /* On est sur que les etats de pstack existent, on reactive les liens
@@ -717,11 +717,11 @@ reactivate_path (SXINT xps, SXINT pstack)
 	sxtrap (ME, "reactivate_path");
 #endif
 
-    SXDG.has_been_updated = SXFALSE;
+    SXDG.has_been_updated = false;
 }
 
 
-SXVOID
+void
 sxdp_init_state (void)
 {
     SXINT init_item, item_occur;
@@ -745,7 +745,7 @@ sxdp_init_state (void)
 
 
 
-static SXVOID
+static void
 push_next_state (SXINT state, SXINT symbol)
 {
     /* state et symbol sont negatifs */
@@ -761,11 +761,11 @@ push_next_state (SXINT state, SXINT symbol)
 }
 
 
-static SXVOID
+static void
 get_next_states (SXINT transition)
 {
     SXINT 	prdct_true_symbol, prdct_no, state, trans, symbol;
-    SXBOOLEAN	is_dynam_prdct_already_processed;
+    bool	is_dynam_prdct_already_processed;
 
     if ((state = SXDG.trans_to_next_state [transition]) == 0)
 	sxdp_add_new_state (transition, &state);
@@ -774,7 +774,7 @@ get_next_states (SXINT transition)
     {
 	/* Il y a des predicats ds le coup */
 	prdct_true_symbol = 0;
-	is_dynam_prdct_already_processed = SXFALSE;
+	is_dynam_prdct_already_processed = false;
 
 	XxY_Xforeach (SXDG.transitions, state, trans)
 	{
@@ -791,7 +791,7 @@ get_next_states (SXINT transition)
 			/* Les predicats dynamiques sont traites "simultanement"
 			   On pourrait de plus rendre accessible l'ensemble des
 			   predicats attendus ?. */
-			is_dynam_prdct_already_processed = SXTRUE;
+			is_dynam_prdct_already_processed = true;
 
 			if (sxplocals.mode.with_parsprdct)
 			    /* Remplit SXDG.prdct_stack avec tous les predicats corrects. */
@@ -817,11 +817,11 @@ get_next_states (SXINT transition)
 }
 
 
-static SXBOOLEAN
+static bool
 solve_conflicts (SXINT parse_stack, SXINT *la_lgth, SXINT *rule_or_trans, SXINT *pstack1);
 
 
-static SXVOID
+static void
 read_a_tok (SXINT ptok_no)
 {
     SXINT Mtok_no;
@@ -923,7 +923,7 @@ parsact_DO (SXINT rule, SXINT rhs_lgth)
     return action;
 }
 
-static SXVOID
+static void
 parsact_UNDO (SXINT rule, SXINT rhs_lgth, SXINT action)
 {
     
@@ -935,12 +935,12 @@ parsact_UNDO (SXINT rule, SXINT rhs_lgth, SXINT action)
 }
 
 
-static SXBOOLEAN
+static bool
 check_reduce (SXINT pstack_orig, SXINT la_lgth, SXINT rule)
 {
     SXINT		lhs, prdct_no, rhs_lgth, i, transition, state, pstack, nps, nc, rule_or_trans, action;
     struct pstack_to_attr	*pconf;
-    SXBOOLEAN	is_checked = SXFALSE;;
+    bool	is_checked = false;;
     /* Les parsact sont codees en negatif, ca permet de les reconnaitre
        facilement tout en permettant de les creer dynamiquement au milieu
        de regles normales. */
@@ -977,7 +977,7 @@ check_reduce (SXINT pstack_orig, SXINT la_lgth, SXINT rule)
 		&& (prdct_no = XNT_TO_PRDCT (SXDG, lhs)) != -1)
 		is_checked = (*sxplocals.SXP_tables.parsact) (SXPREDICATE, prdct_no);
 	    else
-		is_checked = SXTRUE;
+		is_checked = true;
 	    
 	    if (is_checked)
 	    {
@@ -1021,7 +1021,7 @@ check_t_trans (SXINT pstack, SXINT la_lgth, SXINT transition)
        token [sxplocals.ptok_no] est un suivant possible. */
     SXINT		state, valid_trans_nb, pstack1, lahead, rule_or_trans, nc;
     struct pstack_to_attr	*pconf;
-    SXBOOLEAN	last_t_trans, is_checked;
+    bool	last_t_trans, is_checked;
 
     /* On teste les predicats eventuels et on recupere les etats atteints. */
     SS_open (SXDG.next_state_stack);
@@ -1049,7 +1049,7 @@ check_t_trans (SXINT pstack, SXINT la_lgth, SXINT transition)
 	new_pstack (pstack, state, sxplocals.ptok_no, &pstack1);
 
 	if (last_t_trans)
-	    is_checked = SXTRUE;
+	    is_checked = true;
 	else
 	    if (!(is_checked = solve_conflicts (pstack1, &la_lgth, &rule_or_trans, &nc)))
 		XxYxZ_erase (SXDG.parse_stacks, pstack1);
@@ -1072,7 +1072,7 @@ check_t_trans (SXINT pstack, SXINT la_lgth, SXINT transition)
     return valid_trans_nb;
 }
 
-static SXVOID
+static void
 erase_pstack (SXINT pstack)
 {
     SXINT next_pstack;
@@ -1085,7 +1085,7 @@ erase_pstack (SXINT pstack)
     XxYxZ_erase (SXDG.parse_stacks, pstack);
 }
 
-static SXVOID
+static void
 erase_subpstack (SXINT pstack)
 {
     SXINT prev_pstack;
@@ -1098,13 +1098,13 @@ erase_subpstack (SXINT pstack)
 }
 
 
-static SXBOOLEAN
+static bool
 call_solve_conflicts (SXINT pstack_orig, SXINT pstack, SXINT *la_lgth)
 {
     /* On ajuste la parse-stack pour la faire passer a pstack
        et on appelle solve_conflicts sans verification. */
     SXINT rule_or_trans, pstack1, rhs_lgth, rule, action;
-    SXBOOLEAN	is_solved;
+    bool	is_solved;
  /* SXINT state = XxYxZ_Y (SXDG.parse_stacks, pstack); */
 
     sxinitialise(rhs_lgth); /* pour faire taire "gcc -Wuninitialized" */
@@ -1151,7 +1151,7 @@ call_solve_conflicts (SXINT pstack_orig, SXINT pstack, SXINT *la_lgth)
 
 
 
-static SXBOOLEAN
+static bool
 solve_conflicts (SXINT parse_stack, SXINT *la_lgth, SXINT *rule_or_trans, SXINT *pstack1)
 {
     /* pstack est la pile courante. */
@@ -1172,7 +1172,7 @@ solve_conflicts (SXINT parse_stack, SXINT *la_lgth, SXINT *rule_or_trans, SXINT 
 
     SXINT		rule, prio, prio_reduce, xt, prio_shift, lahead, sup_lahead, valid_action_nb, pstack, state, item_occur, reduce_transition, shift_transition, shift_pstack, reduce_pstack, assoc, choosed_pstack, choosed_rule;
     SXINT		*pconf;
-    SXBOOLEAN	is_in_look_ahead;
+    bool	is_in_look_ahead;
     struct pstack_to_attr	*pattr = SXDG.pstack_to_attr + parse_stack;
 
     sxinitialise(xt); /* pour faire taire "gcc -Wuninitialized" */
@@ -1188,13 +1188,13 @@ solve_conflicts (SXINT parse_stack, SXINT *la_lgth, SXINT *rule_or_trans, SXINT 
 
 	if (*pstack1 == 0)
 	    /* et a e'choue' */
-	    return SXFALSE;
+	    return false;
 
 	*rule_or_trans = SXDG.pstack_to_attr [*pstack1].rule_or_trans;
 
 	if (pattr->la_lgth == -1
 	    || (*la_lgth >= 0 && *la_lgth <= pattr->la_lgth) /* .. sur une distance superieure */)
-	    return SXTRUE;
+	    return true;
 
 	/* On relance le tout sur la nouvelle longueur */
 	/* pstack1 est unique car deja calcule'. */
@@ -1205,11 +1205,11 @@ solve_conflicts (SXINT parse_stack, SXINT *la_lgth, SXINT *rule_or_trans, SXINT 
 	    --(*la_lgth);
 	    
 	if (call_solve_conflicts (parse_stack, *pstack1, la_lgth))
-	    return SXTRUE;
+	    return true;
 	    
 	erase_pstack (*pstack1);
 	pattr->son = 0;
-	return SXFALSE;
+	return false;
     }
 
     state = XxYxZ_Y (SXDG.parse_stacks, pstack);
@@ -1236,7 +1236,7 @@ solve_conflicts (SXINT parse_stack, SXINT *la_lgth, SXINT *rule_or_trans, SXINT 
 	{
 	    /* une seule reduction et pas de shift sur le terminal courant => LR (0) */
 	    *pstack1 = 0;
-	    return SXTRUE;
+	    return true;
 	}
 
 	*la_lgth = 1;
@@ -1596,7 +1596,7 @@ reduce (SXINT rule, SXINT pstack_orig, SXINT pstack1)
 {
     /* Si pstack1 == 0, on doit la calculer */
     SXINT		action, rhs_lgth, conf, pstack, lhs, prdct_no, state, transition;
-    SXBOOLEAN	is_semact, is_checked;
+    bool	is_semact, is_checked;
 
     sxpglobals.reduce = rule;
     sxpglobals.pspl = (rhs_lgth = SXDG.rule_to_rhs_lgth [rule]) - 1;
@@ -1653,7 +1653,7 @@ reduce (SXINT rule, SXINT pstack_orig, SXINT pstack1)
 		&& (prdct_no = XNT_TO_PRDCT (SXDG, lhs)) != -1)
 		is_checked = (*sxplocals.SXP_tables.parsact) (SXPREDICATE, prdct_no);
 	    else
-		is_checked = SXTRUE;
+		is_checked = true;
 	    
 	    if (is_checked)
 	    {
@@ -1756,7 +1756,7 @@ shift (void)
 }
 
 
-static SXBOOLEAN
+static bool
 sxdp_parse_it (void)
 {
     SXINT next_state;
@@ -1788,10 +1788,10 @@ sxdp_parse_it (void)
 }
 
 
-SXBOOLEAN
+bool
 sxdp_new_xt (SXINT t, SXINT prdct, SXINT *xt, SXINT prio, SXINT assoc)
 {
-    SXBOOLEAN is_new;
+    bool is_new;
 
     if ((is_new = !XxY_set (&SXDG.xt, t, prdct, xt)))
     {
@@ -1806,33 +1806,33 @@ sxdp_new_xt (SXINT t, SXINT prdct, SXINT *xt, SXINT prio, SXINT assoc)
 }
 
 
-SXVOID
+void
 sxdp_delete_xt (SXINT xt)
 {
     /* xt > 0 */
     XxY_erase (SXDG.xt, xt);
 }
 
-SXBOOLEAN
+bool
 sxdp_new_xnt (SXINT nt, SXINT prdct, SXINT *xnt)
 {
     return !XxY_set (&SXDG.xnt, nt, prdct, xnt);
 }
 
 
-SXVOID
+void
 sxdp_delete_xnt (SXINT xnt)
 {
     /* xt > 0 */
     XxY_erase (SXDG.xnt, xnt);
 }
 
-SXBOOLEAN
+bool
 sxdp_write (sxfiledesc_t file_descr /* file descriptor */ )
 {
 #define WRITE(p,l)	((bytes=(l))>0&&(write(file_descr, p, (size_t)bytes) == bytes))
   SXINT	bytes;  
-  SXBOOLEAN is_prio = SXDG.r_priorities != NULL;
+  bool is_prio = SXDG.r_priorities != NULL;
 
   return (sxlist_write (&(SXDG.states), file_descr)
 
@@ -1866,7 +1866,7 @@ sxdp_write (sxfiledesc_t file_descr /* file descriptor */ )
 	  && WRITE (&(SXDG.super_rule), sizeof (SXINT))
 	  && WRITE (&(SXDG.eof_code), sizeof (SXINT))
 
-	  && WRITE (&is_prio, sizeof (SXBOOLEAN))
+	  && WRITE (&is_prio, sizeof (bool))
 	  && (!is_prio || WRITE (SXDG.t_priorities, sizeof (struct priority) * (XxY_top (SXDG.xt) + 1)))
 	  && (!is_prio || WRITE (SXDG.r_priorities, sizeof (struct priority) * (XxY_top (SXDG.P) + 1)))
 
@@ -1874,12 +1874,12 @@ sxdp_write (sxfiledesc_t file_descr /* file descriptor */ )
 }
 
 
-SXBOOLEAN
+bool
 sxdp_read (sxfiledesc_t file_descr /* file descriptor */)
 {
 #define READ(p,l)	((bytes=(l))>0&&(read (file_descr, p, (size_t) bytes) == bytes))
   SXINT	        bytes;
-  SXBOOLEAN     is_prio;
+  bool     is_prio;
 
   return (sxlist_read (&(SXDG.states), file_descr, "states", states_oflw, (sxoflw1_t) NULL, NULL)
 
@@ -1923,7 +1923,7 @@ sxdp_read (sxfiledesc_t file_descr /* file descriptor */)
 	  && READ (&(SXDG.super_rule), sizeof (SXINT))
 	  && READ (&(SXDG.eof_code), sizeof (SXINT))
 
-	  && READ (&is_prio, sizeof (SXBOOLEAN))
+	  && READ (&is_prio, sizeof (bool))
 	  && (!is_prio || READ (SXDG.t_priorities =
 				(struct priority*) sxalloc (XxY_size (SXDG.xt) + 1,
 							    sizeof (struct priority)),
@@ -1936,7 +1936,7 @@ sxdp_read (sxfiledesc_t file_descr /* file descriptor */)
 }
 
 
-SXVOID
+void
 sxdp_alloc (SXINT rule_nb)
 {
     static SXINT	parse_stacks_foreach [] = {0, 0, 0, 0, 0, 0};
@@ -1997,7 +1997,7 @@ sxdp_alloc (SXINT rule_nb)
 }
 
 
-SXVOID
+void
 sxdp_free (void)
 {
     if (SXDG.rule_to_rhs_lgth != NULL)
@@ -2077,7 +2077,7 @@ sxdp_free (void)
 }
 
 
-static SXVOID
+static void
 sxdp_G0 (void)
 {
     if (*language_name  /* Doit etre positionne' par le "main ()" de l'utilisateur. */ != SXNUL)
@@ -2148,20 +2148,20 @@ sxdynam_parser (SXINT what_to_do, struct sxtables *arg)
 	   scan_act ou pars_act. */
 	SXDG.token_filter = (struct sxtoken * (*) (SXINT)) NULL;
 	SXDG.desambig = (SXINT (*) (void)) NULL;
-	SXDG.is_in_look_ahead = SXFALSE;
+	SXDG.is_in_look_ahead = false;
 	
 	sxplocals.mode.mode = SXPARSER;
 	sxplocals.mode.kind = SXWITH_RECOVERY;
 	sxplocals.mode.local_errors_nb = 0;
 	sxplocals.mode.global_errors_nb = 0;
 	sxplocals.mode.look_back = 0; 
-	sxplocals.mode.is_prefixe = SXFALSE;
-	sxplocals.mode.is_silent = SXFALSE;
-	sxplocals.mode.with_semact = SXTRUE;
-	sxplocals.mode.with_parsact = SXTRUE;
-	sxplocals.mode.with_parsprdct = SXTRUE;
+	sxplocals.mode.is_prefixe = false;
+	sxplocals.mode.is_silent = false;
+	sxplocals.mode.with_semact = true;
+	sxplocals.mode.with_parsact = true;
+	sxplocals.mode.with_parsprdct = true;
 	/* Don't do (and undo) parsing actions in look_ahead */
-	sxplocals.mode.with_do_undo = SXFALSE;
+	sxplocals.mode.with_do_undo = false;
 	break;
 			  
     case SXACTION:
@@ -2169,13 +2169,13 @@ sxdynam_parser (SXINT what_to_do, struct sxtables *arg)
 	{
 	    /* Si appel recursif (parse_in_la ?) avec le meme SXDG. */
 	    erase_subpstack (SXDG.parse_stack);
-	    return SXTRUE;
+	    return true;
 	}    
 
 	if (!sxplocals.mode.is_silent)
 	    sxerror (SXGET_TOKEN (sxplocals.ptok_no).source_index, sxplocals.sxtables->err_titles [2][0], "%ssyntax error", sxplocals.sxtables->err_titles [2]+1);
 
-	return SXFALSE;
+	return false;
 
     case SXFINAL:
 	sxtkn_mngr (SXFINAL, 0);
@@ -2195,7 +2195,7 @@ sxdynam_parser (SXINT what_to_do, struct sxtables *arg)
 	sxexit(1);
     }
 
-    return SXTRUE;
+    return true;
 }
 
 

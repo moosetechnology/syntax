@@ -20,7 +20,7 @@ DEF5= -Ddelta_n=0 -Dis_parser=1 -Dis_1LA=1
 
 CC=cc -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
-all: $(TEST)/wcw.out		\
+ALL=$(TEST)/wcw.out		\
      $(TEST)/wcw_lr.out		\
      $(TEST)/nnf.out		\
      $(TEST)/nnf_lr.out		\
@@ -31,6 +31,8 @@ all: $(TEST)/wcw.out		\
      $(TEST)/anbmcndm.out	\
      $(TEST)/anbmcndm_lr.out	\
      $(TEST)/anbncn.out
+
+all: $(ALL)
 
 WCW=$(LIB)/wcw_pt.o		\
 	$(LIB)/wcw_t.o		\
@@ -287,5 +289,6 @@ $(LIB)/anbncn_ligt.o: 	$(SXINCL)/sxunix.h		\
 	$(CC) -o $@ -c $(SRC)/anbncn_ligt.c -DSXLIGuse_reduced=0 -DRDGmax_cycles=0 -Dfeatures_action=sxvoid
 
 clean:
-	@echo "clean target for LIG_LC should be provided"
+	rm -f $(ALL) $(WCW) $(WCW_LR) $(NNF) $(NNF_LR) $(CYC) $(CYC_LR)
+	rm -f $(CYC2) $(CYC2_LR) $(ANBM) $(ANBM_LR) $(ANBNCN) 
 

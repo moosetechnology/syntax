@@ -23,7 +23,7 @@
 
 #include "sxunix.h"
 
-char WHAT_SXMAIN[] = "@(#)SYNTAX - $Id: re_main_sample.c 3234 2023-05-15 16:52:27Z garavel $" WHAT_DEBUG;
+char WHAT_SXMAIN[] = "@(#)SYNTAX - $Id: re_main_sample.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 static char ME[] = "re_main";
 
@@ -40,7 +40,7 @@ static char mess [128];
 static struct fa {
   SXINT          fsa_kind, init_state, final_state, sigma_card, eof_ste, transition_nb;
   XxYxZ_header fsa_hd;
-  SXBOOLEAN      has_epsilon_trans;
+  bool      has_epsilon_trans;
 } nfa, efnfa, dfa, *cur_fsa;
 
 
@@ -56,7 +56,7 @@ static SXINT        fsa_trans_nb;
 
 /* Cette procedure est appelee depuis read_a_re a` la fin de la 1ere passe sur l'arbre abstrait */
 /* Les arguments sont 
-   - SXTRUE => OK
+   - true => OK
    - ste des transitions vers l'etat final
    - le nb de noeuds de cet arbre et 
    - le nb d'operande (dont eof + 1 bidon de fin) */
@@ -141,7 +141,7 @@ store_re (SXINT state, struct sxtoken **ptok_ptr, SXINT ste, SXINT next_state)
 
   if (ptok_ptr == NULL && ste == 0) {
     /* Transition epsilon */
-    cur_fsa->has_epsilon_trans = SXTRUE;
+    cur_fsa->has_epsilon_trans = true;
     XxYxZ_set (&(cur_fsa->fsa_hd), state, 0, next_state, &triple);
 #if EBUG
     printf ("%i\t\"<EPSILON>\"\t\t%i\n", state, next_state);
@@ -171,14 +171,14 @@ raz_re ()
 
 
 /* On met ds next_nfa_state_set les etats atteint par transition vide depuis nfa_state */
-static SXBOOLEAN
+static bool
 nfa_empty_trans (SXINT nfa_state, SXBA next_nfa_state_set)
 {
   SXINT     triple, next_nfa_state;
-  SXBOOLEAN ret_val = SXFALSE;
+  bool ret_val = false;
 
   XxYxZ_XYforeach (cur_fsa->fsa_hd, nfa_state, 0, triple) {
-    ret_val = SXTRUE;
+    ret_val = true;
     next_nfa_state = XxYxZ_Z (cur_fsa->fsa_hd, triple);
     SXBA_1_bit (next_nfa_state_set, next_nfa_state);
   }
@@ -257,12 +257,12 @@ XxY_out_trans_oflw (SXINT old_size, SXINT new_size)
 static XxYxZ_header minDFA_hd;
 static SXINT          minDFA_foreach [] = {1 /* X pour minDFA_extract_trans */, 0, 0, 0, 1 /* XZ pour minDFA_edges */, 0};
 static SXINT          minDFA_final_state;
-static SXBOOLEAN        is_a_dag;
+static bool        is_a_dag;
 
 static void
 minDFA_alloc ()
 {
-  is_a_dag = SXTRUE; /* A priori */
+  is_a_dag = true; /* A priori */
   XxYxZ_alloc (&minDFA_hd, "minDFA_hd", fsa_trans_nb+1, 1, minDFA_foreach, NULL, NULL);
 }
 
@@ -286,7 +286,7 @@ minDFA_fill_trans (SXINT dfa_state, SXINT t, SXINT next_dfa_state)
     XxYxZ_set (&minDFA_hd, dfa_state, t, next_dfa_state, &triple);
 
     if (next_dfa_state <= dfa_state)
-      is_a_dag = SXFALSE;
+      is_a_dag = false;
 
     if (t == cur_fsa->eof_ste)
      minDFA_final_state = next_dfa_state;
@@ -411,7 +411,7 @@ postlude_re (SXINT fsa_kind)
 #endif
 
     nfa2dfa (cur_fsa->init_state, cur_fsa->final_state, cur_fsa->eof_ste, cur_fsa->has_epsilon_trans ? nfa_empty_trans : NULL, nfa_extract_trans,
-	     dfa_fill_trans, NULL /* pas de min */, SXFALSE /* ... et donc to_be_normalized est sans objet */);
+	     dfa_fill_trans, NULL /* pas de min */, false /* ... et donc to_be_normalized est sans objet */);
 #if LOG
     sprintf (mess, "NFA2DFA: state_nb = %i, total_trans_nb = %i", final_state, total_trans_nb);
     total_trans_nb = 0;
@@ -423,7 +423,7 @@ postlude_re (SXINT fsa_kind)
 #endif
     fsa_trans_nb = XxY_top (XxY_out_trans);
     minDFA_alloc ();
-    dfa_minimize (1, dfa_final_state, cur_fsa->eof_ste, dfa_extract_trans, minDFA_fill_trans, SXTRUE /* to_be_normalized */);
+    dfa_minimize (1, dfa_final_state, cur_fsa->eof_ste, dfa_extract_trans, minDFA_fill_trans, true /* to_be_normalized */);
 #if LOG
     sprintf (mess, "DFA2min_DFA: state_nb = %i, total_trans_nb = %i", final_state, total_trans_nb);
     total_trans_nb = 0;
@@ -443,7 +443,7 @@ postlude_re (SXINT fsa_kind)
     fputs ("EFNFA2DFA\n", stdout);
 #endif
 
-    nfa2dfa (cur_fsa->init_state, cur_fsa->final_state, cur_fsa->eof_ste, NULL, nfa_extract_trans, dfa_fill_trans, NULL /* pas de min */, SXFALSE /* ... et donc to_be_normalized est sans objet */);
+    nfa2dfa (cur_fsa->init_state, cur_fsa->final_state, cur_fsa->eof_ste, NULL, nfa_extract_trans, dfa_fill_trans, NULL /* pas de min */, false /* ... et donc to_be_normalized est sans objet */);
 #if LOG
     sprintf (mess, "EFNFA2DFA: state_nb = %i, total_trans_nb = %i", final_state, total_trans_nb);
     total_trans_nb = 0;
@@ -455,7 +455,7 @@ postlude_re (SXINT fsa_kind)
 #endif
     fsa_trans_nb = XxY_top (XxY_out_trans);
     minDFA_alloc ();
-    dfa_minimize (1, dfa_final_state, cur_fsa->eof_ste, dfa_extract_trans, minDFA_fill_trans, SXTRUE /* to_be_normalized */);
+    dfa_minimize (1, dfa_final_state, cur_fsa->eof_ste, dfa_extract_trans, minDFA_fill_trans, true /* to_be_normalized */);
 #if LOG
     sprintf (mess, "EFDFA2min_DFA: state_nb = %i, total_trans_nb = %i", final_state, total_trans_nb);
     total_trans_nb = 0;
@@ -477,7 +477,7 @@ postlude_re (SXINT fsa_kind)
 #endif
     /* fsa_trans_nb est celui de cur_fsa */
     minDFA_alloc ();
-    dfa_minimize (1, cur_fsa->final_state, cur_fsa->eof_ste, DFA_extract_trans, minDFA_fill_trans, SXTRUE /* to_be_normalized */);
+    dfa_minimize (1, cur_fsa->final_state, cur_fsa->eof_ste, DFA_extract_trans, minDFA_fill_trans, true /* to_be_normalized */);
 #if LOG
     sprintf (mess, "DFA2min_DFA: state_nb = %i, total_trans_nb = %i", final_state, total_trans_nb);
     total_trans_nb = 0;
@@ -530,7 +530,7 @@ main(int argc, char *argv[])
 
   if (argc == 1) {
     /* Pas d'argument: on lit sur stdin */
-    re_reader (NULL, SXTRUE, fsa_processor);
+    re_reader (NULL, true, fsa_processor);
   }
   else {
     /* Tous les arguments sont des noms de fichiers, "-" signifiant stdin */
@@ -538,10 +538,10 @@ main(int argc, char *argv[])
 
     for (argnum = 1; argnum < argc; argnum++)
       if (argv [argnum] [0] == '-' && argv [argnum] [1] == '\0') {
-	re_reader (NULL, SXTRUE, fsa_processor);
+	re_reader (NULL, true, fsa_processor);
       }
       else {
-	re_reader (argv [argnum], SXTRUE, fsa_processor);
+	re_reader (argv [argnum], true, fsa_processor);
       }
   }
 

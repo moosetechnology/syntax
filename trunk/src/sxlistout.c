@@ -22,7 +22,7 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXLISTOUT[] = "@(#)SYNTAX - $Id: sxlistout.c 2947 2023-03-29 17:06:41Z garavel $" WHAT_DEBUG;
+char WHAT_SXLISTOUT[] = "@(#)SYNTAX - $Id: sxlistout.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
 static FILE	*listing;
 static FILE	*error_file;
@@ -34,7 +34,7 @@ static SXINT	max_err_size = {128};
 
 
 
-static SXVOID	output_error (SXINT err_no)
+static void	output_error (SXINT err_no)
 {
     SXINT	err_size;
     off_t	filepos;
@@ -54,7 +54,7 @@ static SXVOID	output_error (SXINT err_no)
 
 
 
-SXVOID	sxlisting_output (FILE *LISTING)
+void	sxlisting_output (FILE *LISTING)
 {
     int 	c;
     SXINT	line_no;
@@ -67,7 +67,7 @@ SXVOID	sxlisting_output (FILE *LISTING)
     err_no = 0, errline_no = ~((SXUINT) 0);
 
     if (sxerrmngr.err_kept > 0) {
-	extern SXVOID	sxerrsort (void);
+	extern void	sxerrsort (void);
 
 	sxerrsort ();
 

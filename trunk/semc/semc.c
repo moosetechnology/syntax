@@ -50,7 +50,7 @@
 #include "sxunix.h"
 #include "B_tables.h"
 
-char WHAT_SEMC[] = "@(#)SYNTAX - $Id: semc.c 3599 2023-09-18 12:57:19Z garavel $" WHAT_DEBUG;
+char WHAT_SEMC[] = "@(#)SYNTAX - $Id: semc.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 #include "semc_vars.h"
 #include "put_edit.h"
@@ -61,8 +61,8 @@ static char	ME [] = "semc";
 static char	quotes [] = "''''''''''''''''''''''''''''''";
 static SXINT	size_ste_to, nb_tnt;
 extern struct sxtables	bnf_tables, dec_tables, def_tables;
-extern SXVOID	put_copyright (SXVOID);
-extern SXVOID	put_identite (SXINT nat1, SXINT nat2, SXINT pos);
+extern void	put_copyright (void);
+extern void	put_identite (SXINT nat1, SXINT nat2, SXINT pos);
 
 #define	        NBTERM	        6
 /* nombre d'attributs de terminaux */
@@ -132,7 +132,7 @@ extern SXVOID	put_identite (SXINT nat1, SXINT nat2, SXINT pos);
    |               et de sortie du C	                                  |
    ------------------------------------------------------------------------ */
 
-static SXVOID	sature (void)
+static void	sature (void)
 {
     /* appelee lors de la saturation des tables */
 /* on multiplie par deux leur taille et on continue */
@@ -166,7 +166,7 @@ static SXVOID	sature (void)
 
 /* --------------------------------------------------------- */
 
-static SXVOID	put_ste_to (SXINT ste, short code, short nature)
+static void	put_ste_to (SXINT ste, short code, short nature)
 {
     struct ste_elem	*p1, *p2;
     SXINT	x;
@@ -253,7 +253,7 @@ SXINT	placer_attr (struct sxtoken ttok)
 		 bnf_tables.err_titles [1][0], 
 		 "%sThis attribute has already been declared.", 
 		 bnf_tables.err_titles [1]+1);
-	is_err = SXTRUE;
+	is_err = true;
 	return 0;
     }
 
@@ -289,7 +289,7 @@ SXINT	chercher_attr (SXINT ste)
 		 bnf_tables.err_titles [2][0],
 		 "%sUndeclared attribute.",
 		 bnf_tables.err_titles [2]+1);
-	is_err = SXTRUE;
+	is_err = true;
 	return 0;
     }
 
@@ -314,7 +314,7 @@ SXINT	chercher_nt (SXINT ste)
 		 bnf_tables.err_titles [2][0],
 		 "%sUnknown non-terminal symbol.", 
 		 bnf_tables.err_titles [2]+1);
-	is_err = SXTRUE;
+	is_err = true;
 	return 0;
     }
 
@@ -340,7 +340,7 @@ SXINT	chercher_t (SXINT ste)
 		 bnf_tables.err_titles [2][0],
 		 "%sUnknown terminal symbol.",
 		 bnf_tables.err_titles [2]+1);
-	is_err = SXTRUE;
+	is_err = true;
 	return 0;
     }
 
@@ -390,7 +390,7 @@ SXINT	posprod (SXINT prodnum /* numero d'une production */,
 	     bnf_tables.err_titles [2][0],
 	     "%sThis symbol does not exist in this rule.",
 	     bnf_tables.err_titles [2]+1);
-    is_err = SXTRUE;
+    is_err = true;
     return -1;
 }
 
@@ -401,7 +401,7 @@ SXINT	posprod (SXINT prodnum /* numero d'une production */,
 
 /* --------------------------------------------------------- */
 
-static SXVOID	print_ident (SXINT attrg, SXINT attrd, SXINT posd)
+static void	print_ident (SXINT attrg, SXINT attrd, SXINT posd)
 {
     SXINT	pg;
     char	*nt1, *nt2, *quotes_ptr;
@@ -443,7 +443,7 @@ static SXVOID	print_ident (SXINT attrg, SXINT attrd, SXINT posd)
 
 /* --------------------------------------------------------- */
 
-SXVOID	creer (SXINT attrg, SXINT attrd, SXINT posd)
+void	creer (SXINT attrg, SXINT attrd, SXINT posd)
     /* cree une identite */
 {
     put_identite (attrg, attrd, posd);
@@ -465,7 +465,7 @@ SXVOID	creer (SXINT attrg, SXINT attrd, SXINT posd)
 
 /* --------------------------------------------------------- */
 
-SXVOID	creervide (SXINT attrg, SXINT attrd, SXINT posd)
+void	creervide (SXINT attrg, SXINT attrd, SXINT posd)
     /* cree une identite vide */
 {
     if (is_default)
@@ -486,7 +486,7 @@ SXVOID	creervide (SXINT attrg, SXINT attrd, SXINT posd)
 
 /* --------------------------------------------------------- */
 
-SXVOID	creermilieu (SXINT attrg, SXINT attrd, SXINT posd)
+void	creermilieu (SXINT attrg, SXINT attrd, SXINT posd)
 {
     /* cree une identite avec un symbole situe au milieu de la regle */
 
@@ -503,7 +503,7 @@ SXVOID	creermilieu (SXINT attrg, SXINT attrd, SXINT posd)
 
 /* --------------------------------------------------------- */
 
-SXVOID	tilt (SXINT attrno, SXINT ntno, SXINT posp)
+void	tilt (SXINT attrno, SXINT ntno, SXINT posp)
 {
     /* pour crier quand il y a une erreur */
 
@@ -524,8 +524,8 @@ SXVOID	tilt (SXINT attrno, SXINT ntno, SXINT posp)
 	     sxstrget (attr_to_ste [attrno]),
 	     sxstrget (nt_to_ste [ntno]),
 	     quotes + sizeof (quotes) / sizeof (quotes [0]) - 1 - nbq );
-    bident = SXFALSE;
-    is_err = SXTRUE;
+    bident = false;
+    is_err = true;
 }
 
 
@@ -535,7 +535,7 @@ SXVOID	tilt (SXINT attrno, SXINT ntno, SXINT posp)
 
 /* ---------------------------------------- */
 
-SXVOID	semc_free (void)
+void	semc_free (void)
 {
     SXINT	i;
     struct ste_elem	*ptr;
@@ -574,7 +574,7 @@ SXVOID	semc_free (void)
 
 /* ---------------------------------------- */
 
-static SXVOID	semc_lo_init (void)
+static void	semc_lo_init (void)
 {
     char	lst_name [32];
 
@@ -582,7 +582,7 @@ static SXVOID	semc_lo_init (void)
 	if ((listing = sxfopen (strcat (strcpy (lst_name, prgentname), ".bn.l"), "a")) == NULL) {
 	    fprintf (sxstderr, "%s: cannot open (append) ", ME);
 	    sxperror (lst_name);
-	    is_list = SXFALSE;
+	    is_list = false;
 	}
 	else
 	    put_edit_initialize (listing);
@@ -596,7 +596,7 @@ static SXVOID	semc_lo_init (void)
 
 /* --------------------------------------------------------- */
 
-SXBOOLEAN		tab_sem (void)
+bool		tab_sem (void)
 {
     SXINT	i, ste;
     SXINT       xnt, xt;
@@ -717,7 +717,7 @@ SXBOOLEAN		tab_sem (void)
     max_attr = 0;
     M_at = 0;
     /* longueur maximum d'un attribut */
-    is_err = SXFALSE;
+    is_err = false;
     semc_lo_init ();
     put_copyright ();
 
@@ -740,9 +740,9 @@ SXBOOLEAN		tab_sem (void)
     xprod = 0;
     nb_definitions = 0;
     nt_pg = ws_nbpro [1].reduc;
-    is_empty = SXTRUE;
+    is_empty = true;
     /* a priori pas de semantique */
-    is_ident = SXTRUE;
+    is_ident = true;
     /* initialisation bidon */
     mod_ident [0] = SXNUL;
 

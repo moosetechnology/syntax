@@ -9,9 +9,9 @@ LIB=$(YAX)/lib
 
 CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util -I$(BNF) $(CFLAGS)
 
-all: $(SX)/bin/yax.out
+all: $(SXBIN)/yax.out
 
-$(SX)/bin/yax.out:	$(YAX)/yax.out
+$(SXBIN)/yax.out:	$(YAX)/yax.out
 	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
 NEEDS=	$(LIB)/yax_put.o	\

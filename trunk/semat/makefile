@@ -10,10 +10,10 @@ BNFLIB=$(BNF)/lib
 
 CC=$(COMPILER) -I$(BNF) -I$(BOOT) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
-all: $(SX)/bin/semat.out	\
+all: $(SXBIN)/semat.out	\
      $(SXAUX)/print_att.out
 
-$(SX)/bin/semat.out:	$(SEMAT)/semat.out
+$(SXBIN)/semat.out:	$(SEMAT)/semat.out
 	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
 NEEDS=	$(LIB)/genat_c.o		\

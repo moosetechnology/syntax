@@ -430,11 +430,11 @@ SX_GLOBAL_VAR_RCG XxY_header	        XxY_lhs_guide [];
 SX_GLOBAL_VAR_RCG struct spf_node	**XxY_lhs_guide2rhs [];
 #endif /* SX_DFN_EXT_VAR_RCG */
 
-#define GET_FULL_GUIDE(q,p,r,c)	((range=XxY_is_set (&(XxY_lhs_guide [p]), r, c)) ? (q=XxY_lhs_guide2rhs [p][range], SXTRUE) : SXFALSE)
+#define GET_FULL_GUIDE(q,p,r,c)	((range=XxY_is_set (&(XxY_lhs_guide [p]), r, c)) ? (q=XxY_lhs_guide2rhs [p][range], true) : false)
 
 /* typedef unsigned short	ushort; */
 typedef void 		(*vfun)();
-typedef SXBOOLEAN	(*bfun)();
+typedef bool	(*bfun)();
 typedef SXINT		(*ifun)();
 
 struct fun_calls {
@@ -453,10 +453,10 @@ struct fun_calls {
 
     bfun        lexicalizer;
 
-    SXBOOLEAN   (*dynamic_lexicalizer)(SXINT, SXBA);
+    bool   (*dynamic_lexicalizer)(SXINT, SXBA);
 };
 
-SX_GLOBAL_VAR_RCG SXBOOLEAN		is_second_pass, is_robust_run;
+SX_GLOBAL_VAR_RCG bool		is_second_pass, is_robust_run;
 SX_GLOBAL_VAR_RCG SXINT			rcvr_n; /* repere l'index ds global_source du eof du (vrai) source */
 
 SX_GLOBAL_VAR_RCG SXUINT                nt_calls, clause_calls, memo_prdct_hit, memo_clause_hit;
@@ -468,7 +468,7 @@ SX_GLOBAL_VAR_RCG SXINT			logn, ANDj;
 SX_GLOBAL_VAR_RCG SXINT			min_max, local_val;
 SX_GLOBAL_VAR_RCG SXINT			call_level; /* #if EBUG niveau d'appel des predicats */
 SX_GLOBAL_VAR_RCG SXINT			counter_lb; /* Borne inf des "compteurs" */
-SX_GLOBAL_VAR_RCG SXBOOLEAN             input_is_a_dag;
+SX_GLOBAL_VAR_RCG bool             input_is_a_dag;
 
 
 struct Aij_struct {
@@ -661,14 +661,14 @@ struct G {
   SXINT         *nl_pos_stack; /* ... qui repere une stack contenant toutes les positions des args (LHS et RHS) qui le contienne (en temps que chaine de var) */
 #endif /* 0 */
   struct G	**Gs; /* Pour acceder aux autres modules */
-  SXBOOLEAN	is_combinatorial; /* pour la verif dynamique de la coherence des modules / combinatorial */
-  SXBOOLEAN	is_linear; /* pour traiter les textes source sous forme de DAG */
-  SXBOOLEAN	is_overlapping; /* pour traiter les textes source sous forme de DAG */
-  SXBOOLEAN	robust; /* pour savoir si l'analyseur RCG a ete compile avec l'option -DROBUST */
-  SXBOOLEAN	is_factorize; /* pour savoir si le constructeur rcg a ete appele avec les options -2var_form et -factorize */
-  SXBOOLEAN	is_GET_QSTACK; /* Le parseur a-t-il besoin de GSTACKs ? */
-  SXBOOLEAN	is_GET_PSTACK; /* Le parseur a-t-il besoin de PSTACKs ? */
-  SXBOOLEAN     is_a_complete_terminal_grammar; /* Les clauses sont toutes de la forme A(t) --> . */
+  bool	is_combinatorial; /* pour la verif dynamique de la coherence des modules / combinatorial */
+  bool	is_linear; /* pour traiter les textes source sous forme de DAG */
+  bool	is_overlapping; /* pour traiter les textes source sous forme de DAG */
+  bool	robust; /* pour savoir si l'analyseur RCG a ete compile avec l'option -DROBUST */
+  bool	is_factorize; /* pour savoir si le constructeur rcg a ete appele avec les options -2var_form et -factorize */
+  bool	is_GET_QSTACK; /* Le parseur a-t-il besoin de GSTACKs ? */
+  bool	is_GET_PSTACK; /* Le parseur a-t-il besoin de PSTACKs ? */
+  bool     is_a_complete_terminal_grammar; /* Les clauses sont toutes de la forme A(t) --> . */
 };
 
 SX_GLOBAL_VAR_RCG struct G *Gs [];
@@ -680,7 +680,7 @@ SX_GLOBAL_VAR_RCG struct G *Gs [];
 #define RANGE2i(ij)	((ij)>>logn)
 #define RANGE2j(ij)	((ij)&ANDj)
 
-SX_GLOBAL_VAR_RCG SXBOOLEAN    arity_eq_1_is_used, arity_eq_2_is_used, arity_eq_3_is_used, arity_geq_4_is_used;
+SX_GLOBAL_VAR_RCG bool    arity_eq_1_is_used, arity_eq_2_is_used, arity_eq_3_is_used, arity_geq_4_is_used;
 
 SX_GLOBAL_VAR_RCG XH_header    arity_gte_4;
 SX_GLOBAL_VAR_RCG XxYxZ_header arity_eq_3;
@@ -731,7 +731,7 @@ struct which_guide {
 
 /* FIRST_LAST est aussi utilise par &First et &Last */
 #if is_sdag
-extern SXBOOLEAN is_AND();
+extern bool is_AND();
 #if is_generator
 #define FIRST_LAST(tok,fl)	(!SXBA_bit_is_set(tok,ANY) && !is_AND(tok,fl))
 #else /* is_generator */
@@ -767,7 +767,7 @@ extern SXBOOLEAN is_AND();
 #            endif /* is_guided3 */
 #         endif /* is_guided2 */
 #      else /* !is_guided4 */
-#      define coupled_clause(k,cl)	(SXTRUE)
+#      define coupled_clause(k,cl)	(true)
 #         if is_guided2
 #         define coupled_prdct(k,nt)	((tc2rho[k]=X_is_set(ptcrhoA_hd,(X_is_set(ptcrange_1,MAKE_ij(olb[k],oub[k]))<<G.guide_lognt)+nt))>0 &&\
 					 TCMEMON1(k))
@@ -776,7 +776,7 @@ extern SXBOOLEAN is_AND();
 #            define coupled_prdct(k,nt)	((tcrho[k]=X_is_set(ptcrhoA_hd,(X_is_set(ptcrange_1,MAKE_ij(ilb[k],iub[k]))<<G.guide_lognt)+nt))>0 &&\
 					 TCMEMON1(k))
 #            else /* !is_guided3 */
-#            define coupled_prdct(k,nt)	(SXTRUE)
+#            define coupled_prdct(k,nt)	(true)
 #            endif /* is_guided3 */
 #         endif /* is_guided2 */
 #      endif /* is_guided4 */
@@ -799,7 +799,7 @@ extern SXBOOLEAN is_AND();
 #            endif /* is_guided3 */
 #         endif /* is_guided2 */
 #      else /* !is_guided4 */
-#      define coupled_clause(k,cl)	(SXTRUE)
+#      define coupled_clause(k,cl)	(true)
 #         if is_guided2
 #         define coupled_prdct(k,nt)	((tc2rho[k]=X_is_set(ptcrhoA_hd,(MAKE_ij(olb[k],oub[k])<<G.guide_lognt)+nt))>0 &&\
 					 TCMEMON1(k))
@@ -808,7 +808,7 @@ extern SXBOOLEAN is_AND();
 #            define coupled_prdct(k,nt)	((tcrho[k]=X_is_set(ptcrhoA_hd,(MAKE_ij(ilb[k],iub[k])<<G.guide_lognt)+nt))>0 &&\
 					 TCMEMON1(k))
 #            else /* !is_guided3 */
-#            define coupled_prdct(k,nt)	(SXTRUE)
+#            define coupled_prdct(k,nt)	(true)
 #            endif /* is_guided3 */
 #         endif /* is_guided2 */
 #      endif /* is_guided4 */
@@ -824,7 +824,7 @@ SX_GLOBAL_VAR_RCG SXUINT           total_clause_nb, total_clause1_nb, total_clau
 
 #if is_earley_guide
 /* Ds le cas d'un guide earley, l'acces a tcmemoN1 est inutile (attention il n'est pas alloue) */
-#define TCMEMON1(k) SXTRUE
+#define TCMEMON1(k) true
 #else /* !is_earley_guide */
 #define TCMEMON1(k) (SXBA_bit_is_set(tcmemoN1,tc2rho[k]))
 #endif /* !is_earley_guide */
@@ -834,8 +834,8 @@ SX_GLOBAL_VAR_RCG void          process_loop (struct G *G, SXINT *rho, ifun sema
 SX_GLOBAL_VAR_RCG void          sem_mem_mngr (struct G *G, SXINT old_size, SXINT new_size);
 #endif /* 0 */
 SX_GLOBAL_VAR_RCG void	        rcg_rcvr_mess (SXINT kind, SXINT mark, SXINT index1, SXINT index2);
-SX_GLOBAL_VAR_RCG SXBOOLEAN	prdct_guide (void);
-SX_GLOBAL_VAR_RCG SXINT		*StrConcat (SXBOOLEAN is_first_arg, SXINT *arg, SXINT *Xlb, SXINT *Xub);
+SX_GLOBAL_VAR_RCG bool	prdct_guide (void);
+SX_GLOBAL_VAR_RCG SXINT		*StrConcat (bool is_first_arg, SXINT *arg, SXINT *Xlb, SXINT *Xub);
 SX_GLOBAL_VAR_RCG void		tree_nb (struct G *G), store_elem_tree (struct G *G), parse_forest (struct G *G), build_coupled_guide (struct G *G);
 // void		fill_buf (void);
 SX_GLOBAL_VAR_RCG void          arg_nb_put_error (char *prdct_name, SXINT def_nb, SXINT decl_nb);

@@ -7,9 +7,9 @@ BOOT=$(PRIO)/boot
 
 CC=$(COMPILER) -I$(BOOT) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
-all: $(SX)/bin/prio.out
+all: $(SXBIN)/prio.out
 
-$(SX)/bin/prio.out:	$(PRIO)/prio.out
+$(SXBIN)/prio.out:	$(PRIO)/prio.out
 	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
 NEEDS=	$(LIB)/prio_t.o			\

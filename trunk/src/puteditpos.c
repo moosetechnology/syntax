@@ -23,9 +23,9 @@
 #include "sxunix.h"
 #include "put_edit.h"
 
-char WHAT_PUTEDITPOS[] = "@(#)SYNTAX - $Id: puteditpos.c 2428 2023-01-18 12:54:10Z garavel $" WHAT_DEBUG;
+char WHAT_PUTEDITPOS[] = "@(#)SYNTAX - $Id: puteditpos.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
-SXVOID	_SXPE_pos (size_t col)
+void	_SXPE_pos (size_t col)
 {
     size_t	nb_tabs, nb_spaces;
     static char		hts [] = "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t", *TABS = &hts [sizeof

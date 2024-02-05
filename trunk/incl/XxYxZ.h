@@ -83,21 +83,21 @@ extern SXINT			XxYxZ_is_set (XxYxZ_header *header,
 /* If the triple ("X", "Y", "Z") is already stored it returns its index
    (a strictly positive integer) else it returns 0. */
 
-extern SXBOOLEAN			XxYxZ_set (XxYxZ_header *header, 
+extern bool			XxYxZ_set (XxYxZ_header *header, 
 					   SXINT X, 
 					   SXINT Y, 
 					   SXINT Z, 
 					   SXINT *ref);
 /* Put the triple ("X", "Y", "Z") in the structure and returns its index
-   (a strictly positive integer). Moreover it returns SXTRUE if the triple
-   ("X", "Y", "Z") is already stored else it returns SXFALSE. */
+   (a strictly positive integer). Moreover it returns true if the triple
+   ("X", "Y", "Z") is already stored else it returns false. */
 
 
-extern SXBOOLEAN			XxYxZ_write (XxYxZ_header *header, 
+extern bool			XxYxZ_write (XxYxZ_header *header, 
 					     sxfiledesc_t F_XxYxZ /* file descriptor */);
 /* Write on "file" the structure "*header" */
 
-extern SXBOOLEAN			XxYxZ_read (XxYxZ_header *header, 
+extern bool			XxYxZ_read (XxYxZ_header *header, 
 					    sxfiledesc_t F_XxYxZ /* file descriptor */, 
 					    char *name, 
 					    void (*user_oflw) (SXINT, SXINT), 
@@ -111,7 +111,7 @@ extern void XxYxZ_to_c (
 			XxYxZ_header *header, 
 			FILE *F_XxYxZ, 
 			char *name, 
-			SXBOOLEAN local_is_static);
+			bool local_is_static);
 
 /* Print on "F_X" the C text for the structure "header" */
 
@@ -141,13 +141,13 @@ extern void			XxYxZ_reuse (XxYxZ_header *header,
 /* WARNING: "h" is used several times in the macro expansion. */
 
 #define XxYxZ_is_erased(h,x)	X_root_is_erased(h,x)
-/* Is SXTRUE if the triple whose index is "x" has been "XxYxZ_erased". */
+/* Is true if the triple whose index is "x" has been "XxYxZ_erased". */
 
 #define XxYxZ_is_static(h)	X_root_is_static(h)
-/* Is SXTRUE iff the whole structure is defined statically. */
+/* Is true iff the whole structure is defined statically. */
 
 #define XxYxZ_is_allocated(h)	X_root_is_allocated(h)
-/* Is SXTRUE iff the structure is allocated. */
+/* Is true iff the structure is allocated. */
 
 #define XxYxZ_size(h)		X_root_size(h)
 /* Is the current size of the structure (last index available). */

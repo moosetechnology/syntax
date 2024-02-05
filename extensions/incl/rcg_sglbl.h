@@ -37,8 +37,8 @@
 
 /* Options des analyseurs RCG (positionnes par RCG_main). */
 
-SX_GLOBAL_VAR SXBOOLEAN			is_default_semantics, is_print_time, is_no_semantics, is_parse_tree_number;
-SX_GLOBAL_VAR SXBOOLEAN			is_guiding, is_full_guiding;
+SX_GLOBAL_VAR bool			is_default_semantics, is_print_time, is_no_semantics, is_parse_tree_number;
+SX_GLOBAL_VAR bool			is_guiding, is_full_guiding;
 SX_GLOBAL_VAR SXINT			forest_level, debug_level, best_tree_number;
 SX_GLOBAL_VAR FILE                      *dag_yield_file;			
 SX_GLOBAL_VAR char                      *dag_yield_file_name;			

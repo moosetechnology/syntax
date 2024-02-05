@@ -34,16 +34,16 @@
 /* on a donc demande' une compilation speciale de sxsrc_mngr.c avec -Dsxgetchar, car on veut se le
    redefinir differement de la macro definie dans sxunix.h */
 #undef sxgetchar
-extern SXSHORT sxgetchar (void);
+extern short sxgetchar (void);
 #define sxgetchar sxgetchar
 #endif /* sxgetchar_is_redefined */
 
-char WHAT_SXSRC_MNGR[] = "@(#)SYNTAX - $Id: sxsrc_mngr.c 3229 2023-05-14 08:11:44Z garavel $" WHAT_DEBUG;
+char WHAT_SXSRC_MNGR[] = "@(#)SYNTAX - $Id: sxsrc_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 
 #if BUG
 
-static SXVOID	srcdebug (char *format, char *arg)
+static void	srcdebug (char *format, char *arg)
 {
     SXUINT	srcdebug_index;
 
@@ -98,12 +98,12 @@ char	BEGIN_FMT [] = "%s () begins with", END_FMT [] = "%s () ends with";
 /* Local buffer, to avoid repetitive small allocations */
 
 static struct localbuf {
-	   SXSHORT	buffer [LOCALBUFLENGTH];
+	   short	buffer [LOCALBUFLENGTH];
        }	localbuf;
 static struct localcoords {
 	   struct sxsource_coord	bufcoords [LOCALBUFLENGTH];
        }	localcoords;
-static SXBOOLEAN	usinglocalbuf = {SXFALSE};
+static bool	usinglocalbuf = {false};
 
 
 
@@ -113,7 +113,7 @@ static SXBOOLEAN	usinglocalbuf = {SXFALSE};
 
 /* Acces au caractere suivant */
 
-SXSHORT	sxnext_char (void)
+short	sxnext_char (void)
 {
 
 #if BUG
@@ -142,7 +142,7 @@ SXSHORT	sxnext_char (void)
 
 	}
 
-	sxsrcmngr.has_buffer = SXFALSE;
+	sxsrcmngr.has_buffer = false;
     }
 
     if (sxsrcmngr.current_char != SXNEWLINE)
@@ -182,7 +182,7 @@ end:
 
 /* Acces au caractere en avance suivant */
 
-SXSHORT	sxlanext_char (void)
+short	sxlanext_char (void)
 {
 
 #if BUG
@@ -201,8 +201,8 @@ SXSHORT	sxlanext_char (void)
 #ifndef SIMPLE
 
 	    if (sxsrcmngr.buffer == localbuf.buffer) {
-		usinglocalbuf = SXFALSE;
-		*(struct localbuf*) (sxsrcmngr.buffer = (SXSHORT*) sxalloc (sxsrcmngr.buflength *= 2, sizeof (SXSHORT))) =
+		usinglocalbuf = false;
+		*(struct localbuf*) (sxsrcmngr.buffer = (short*) sxalloc (sxsrcmngr.buflength *= 2, sizeof (short))) =
 		     localbuf, *(struct localcoords*) (sxsrcmngr.bufcoords = (struct sxsource_coord*) sxalloc (sxsrcmngr.
 		     buflength, sizeof (struct sxsource_coord))) = localcoords;
 	    }
@@ -210,7 +210,7 @@ SXSHORT	sxlanext_char (void)
 
 #endif
 
-		sxsrcmngr.buffer = (SXSHORT*) sxrealloc (sxsrcmngr.buffer, sxsrcmngr.buflength *= 2, sizeof (SXSHORT)),
+		sxsrcmngr.buffer = (short*) sxrealloc (sxsrcmngr.buffer, sxsrcmngr.buflength *= 2, sizeof (short)),
 		     sxsrcmngr.bufcoords = (struct sxsource_coord*) sxrealloc (sxsrcmngr.bufcoords, sxsrcmngr.buflength,
 		     sizeof (struct sxsource_coord));
 	}
@@ -239,7 +239,7 @@ SXSHORT	sxlanext_char (void)
 
 /* Acces au premier caractere en avance */
 
-SXSHORT	sxlafirst_char (void)
+short	sxlafirst_char (void)
 {
 
 #if BUG
@@ -257,18 +257,18 @@ SXSHORT	sxlafirst_char (void)
 	    if (!usinglocalbuf) {
 		sxsrcmngr.buffer = localbuf.buffer, sxsrcmngr.bufcoords = localcoords.bufcoords;
 		sxsrcmngr.buflength = LOCALBUFLENGTH;
-		usinglocalbuf = SXTRUE;
+		usinglocalbuf = true;
 	    }
 	    else
 
 #endif
 
-		sxsrcmngr.buffer = (SXSHORT*) sxalloc (sxsrcmngr.buflength = LOCALBUFLENGTH, sizeof (SXSHORT)), sxsrcmngr.
+		sxsrcmngr.buffer = (short*) sxalloc (sxsrcmngr.buflength = LOCALBUFLENGTH, sizeof (short)), sxsrcmngr.
 		     bufcoords = (struct sxsource_coord*) sxalloc (sxsrcmngr.buflength, sizeof (struct sxsource_coord));
 	}
 	sxsrcmngr.buffer [0] = sxsrcmngr.current_char, sxsrcmngr.bufcoords [0] = sxsrcmngr.source_coord;
 	sxsrcmngr.bufindex = sxsrcmngr.labufindex = sxsrcmngr.bufused = 0;
-	sxsrcmngr.has_buffer = SXTRUE;
+	sxsrcmngr.has_buffer = true;
     }
     else
 	sxsrcmngr.labufindex = sxsrcmngr.bufindex;
@@ -288,7 +288,7 @@ SXSHORT	sxlafirst_char (void)
 
 /* Recul d'un caractere: le scanner veut inserer un caractere devant */
 
-SXVOID	sxX (SXSHORT inserted)
+void	sxX (short inserted)
                     
 /* On est forcement dans le cas ou le buffer est valide, puisqu'une	*/
 /* correction d'erreur impose un look-ahead prealable.  Par ailleurs,	*/
@@ -312,7 +312,7 @@ SXVOID	sxX (SXSHORT inserted)
 
 /* Retour en arriere dans la lecture en avance */
 
-SXVOID	sxlaback (SXINT backward_number)
+void	sxlaback (SXINT backward_number)
                            
 /* Une erreur a ete detectee et corrigee en look-ahead.  Celui-ci doit	*/
 /* reprendre plus haut.  "backward_number" est cense etre valide	*/
@@ -337,7 +337,7 @@ SXVOID	sxlaback (SXINT backward_number)
 
 /* Push a string ahead of the current character */
 
-SXVOID	sxsrcpush (SXSHORT previous_char, char *chars, struct sxsource_coord coord)
+void	sxsrcpush (short previous_char, char *chars, struct sxsource_coord coord)
 /* On traite une action "@Release".  Le "source manager" est dans un */
 /* etat quelconque.  En particulier "buffer" peut exister ou non...  */
 
@@ -371,16 +371,16 @@ SXVOID	sxsrcpush (SXSHORT previous_char, char *chars, struct sxsource_coord coor
 #ifndef SIMPLE
 
 		if (sxsrcmngr.buffer == localbuf.buffer) {
-		    usinglocalbuf = SXFALSE;
-		    *(struct localbuf*) (sxsrcmngr.buffer = (SXSHORT*) sxalloc (sxsrcmngr.buflength = minlength, sizeof (
-			 SXSHORT))) = localbuf, *(struct localcoords*) (sxsrcmngr.bufcoords = (struct sxsource_coord*)
+		    usinglocalbuf = false;
+		    *(struct localbuf*) (sxsrcmngr.buffer = (short*) sxalloc (sxsrcmngr.buflength = minlength, sizeof (
+			 short))) = localbuf, *(struct localcoords*) (sxsrcmngr.bufcoords = (struct sxsource_coord*)
 			 sxalloc (sxsrcmngr.buflength, sizeof (struct sxsource_coord))) = localcoords;
 		}
 		else
 
 #endif
 
-		    sxsrcmngr.buffer = (SXSHORT*) sxrealloc (sxsrcmngr.buffer, sxsrcmngr.buflength = minlength, sizeof (SXSHORT)), sxsrcmngr.bufcoords = (struct sxsource_coord*) sxrealloc (sxsrcmngr.bufcoords, sxsrcmngr.buflength, sizeof (struct sxsource_coord));
+		    sxsrcmngr.buffer = (short*) sxrealloc (sxsrcmngr.buffer, sxsrcmngr.buflength = minlength, sizeof (short)), sxsrcmngr.bufcoords = (struct sxsource_coord*) sxrealloc (sxsrcmngr.bufcoords, sxsrcmngr.buflength, sizeof (struct sxsource_coord));
 	    }
 	}
 
@@ -388,7 +388,7 @@ SXVOID	sxsrcpush (SXSHORT previous_char, char *chars, struct sxsource_coord coor
 /* If there is not room enough, push the contents to the right */
 
 	if (sxsrcmngr.bufindex < length) {
-	    SXSHORT	*buf1, *buf2;
+	    short	*buf1, *buf2;
 	    struct sxsource_coord	*coords1, *coords2;
 	    SXINT	count;
 
@@ -414,7 +414,7 @@ SXVOID	sxsrcpush (SXSHORT previous_char, char *chars, struct sxsource_coord coor
 #ifndef SIMPLE
 
 		if (sxsrcmngr.buffer == localbuf.buffer)
-		    usinglocalbuf = SXFALSE;
+		    usinglocalbuf = false;
 		else
 
 #endif
@@ -427,17 +427,17 @@ SXVOID	sxsrcpush (SXSHORT previous_char, char *chars, struct sxsource_coord coor
 	    if (!usinglocalbuf && sxsrcmngr.buflength <= LOCALBUFLENGTH) {
 		sxsrcmngr.buffer = localbuf.buffer, sxsrcmngr.bufcoords = localcoords.bufcoords;
 		sxsrcmngr.buflength = LOCALBUFLENGTH;
-		usinglocalbuf = SXTRUE;
+		usinglocalbuf = true;
 	    }
 	    else
 
 #endif
 
-		sxsrcmngr.buffer = (SXSHORT*) sxalloc (sxsrcmngr.buflength, sizeof (SXSHORT)), sxsrcmngr.bufcoords = (struct
+		sxsrcmngr.buffer = (short*) sxalloc (sxsrcmngr.buflength, sizeof (short)), sxsrcmngr.bufcoords = (struct
 		     sxsource_coord*) sxalloc (sxsrcmngr.buflength, sizeof (struct sxsource_coord));
 	}
 
-	sxsrcmngr.has_buffer = SXTRUE;
+	sxsrcmngr.has_buffer = true;
     }
 
 
@@ -447,7 +447,7 @@ SXVOID	sxsrcpush (SXSHORT previous_char, char *chars, struct sxsource_coord coor
 	 source_coord;
 
     {
-	SXSHORT	*buf;
+	short	*buf;
 	struct sxsource_coord	*coords;
 
 	buf = &sxsrcmngr.buffer [sxsrcmngr.bufindex -= length], coords = &sxsrcmngr.bufcoords [sxsrcmngr.bufindex];
@@ -567,7 +567,7 @@ SXUINT sxget_relocated_line (struct sxsource_coord coord)
 
 /*VARARGS1*/
 
-SXVOID	sxsrc_mngr (SXINT sxsrc_mngr_what, ... /* FILE *infile, char *name_or_string */ )
+void	sxsrc_mngr (SXINT sxsrc_mngr_what, ... /* FILE *infile, char *name_or_string */ )
 {
     va_list ap;
     FILE *infile;
@@ -595,7 +595,7 @@ SXVOID	sxsrc_mngr (SXINT sxsrc_mngr_what, ... /* FILE *infile, char *name_or_str
 	sxsrcmngr.current_char = SXNEWLINE;
 	sxsrcmngr.buffer = NULL;
 	sxsrcmngr.buflength = sxsrcmngr.bufused = sxsrcmngr.bufindex = 0;
-	sxsrcmngr.has_buffer = SXFALSE;
+	sxsrcmngr.has_buffer = false;
 	
 	if (infile) {
 #if defined _WIN32 && defined __MSVCRT__ && !defined __CYGWIN__
@@ -677,7 +677,7 @@ SXVOID	sxsrc_mngr (SXINT sxsrc_mngr_what, ... /* FILE *infile, char *name_or_str
 	if (sxsrcmngr.buffer != NULL) {
 #ifndef SIMPLE
 	    if (sxsrcmngr.buffer == localbuf.buffer)
-		usinglocalbuf = SXFALSE;
+		usinglocalbuf = false;
 	    else
 #endif
 		sxfree (sxsrcmngr.buffer), sxfree (sxsrcmngr.bufcoords);

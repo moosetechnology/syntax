@@ -28,11 +28,11 @@
 #include "lecl_ag.h"
 #include "sxsstmt.h"
 
-char WHAT_LECLCG[] = "@(#)SYNTAX - $Id: lecl_cg.c 3603 2023-09-23 20:02:36Z garavel $" WHAT_DEBUG;
+char WHAT_LECLCG[] = "@(#)SYNTAX - $Id: lecl_cg.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
-static SXINT	gen_action_code (SXINT V, SXBOOLEAN is_keep, SXBOOLEAN is_scan, SXINT ref, SXINT codop);
+static SXINT	gen_action_code (SXINT V, bool is_keep, bool is_scan, SXINT ref, SXINT codop);
 static SXINT	install_action (struct action_or_prdct_code_item fe);
-static SXBOOLEAN	is_unique (transition_matrix_item *is_unique_stmt) /* bullshit */ ;
+static bool	is_unique (transition_matrix_item *is_unique_stmt) /* bullshit */ ;
 
 
 SXINT	tmhb1, tmhb2, predhb1;
@@ -40,11 +40,11 @@ SXINT	tmhb1, tmhb2, predhb1;
 #define Dummy 10
 /* Codop bidon pour les transitions vers des post-actions */
 
-static SXBOOLEAN	is_a_shift_code [Dummy + 1] = {SXFALSE, SXTRUE, SXTRUE, SXFALSE, SXFALSE, SXFALSE, SXFALSE, SXTRUE, SXTRUE, SXTRUE, SXFALSE};
+static bool	is_a_shift_code [Dummy + 1] = {false, true, true, false, false, false, false, true, true, true, false};
 
 #define max(x,y) ((x)>(y))?(x):(y)
 
-extern SXINT	equality_sort (SXINT *t, SXINT bi, SXINT bs, SXBOOLEAN (*less_equal) (SXINT, SXINT), SXBOOLEAN (*equal) (SXINT, SXINT));
+extern SXINT	equality_sort (SXINT *t, SXINT bi, SXINT bs, bool (*less_equal) (SXINT, SXINT), bool (*equal) (SXINT, SXINT));
 static SXBA	/* max_re */ is_re_erased;
 static transition_matrix_item	**tm /* 1:tmhb1, 1:tmhb2 */ ;
 static transition_matrix_item	*tm_line;
@@ -76,7 +76,7 @@ static SXBA	 /* xprdct_to_ate */ is_user_prdct_in_la;
 static SXBA	/* tmhb1 */ is_processed, is_cycle;
 static SXINT	*la_value /* 1:tmhb1 */ ;
 
-extern SXINT	get_a_partition (SXBOOLEAN (*)(SXINT, SXINT, SXINT), 
+extern SXINT	get_a_partition (bool (*)(SXINT, SXINT, SXINT), 
 				 SXINT (*)(SXINT, SXINT), 
 				 SXBA, 
 				 SXINT, 
@@ -85,20 +85,20 @@ extern SXINT	get_a_partition (SXBOOLEAN (*)(SXINT, SXINT, SXINT),
 				 SXINT *);
 
 
-static SXBOOLEAN	less_equal (SXINT less_equal_i, SXINT less_equal_j)
+static bool	less_equal (SXINT less_equal_i, SXINT less_equal_j)
 {
     SXBA	lj;
     SXINT	less_equal_x;
 
     if ((less_equal_x = sxba_first_difference (tm_tilde [less_equal_i], lj = tm_tilde [less_equal_j])) == -1)
-	return SXTRUE;
+	return true;
 
     return sxba_bit_is_set (lj, less_equal_x);
 }
 
 
 
-static SXBOOLEAN	equal (SXINT equal_i, SXINT equal_j)
+static bool	equal (SXINT equal_i, SXINT equal_j)
 {
     return sxba_first_difference (tm_tilde [equal_i], tm_tilde [equal_j]) == -1;
 }
@@ -132,7 +132,7 @@ static VARSTR	token_name_list (SXBA token_set, VARSTR string, SXINT *nb)
 
 
 
-static SXBOOLEAN	re_erased (SXINT re_erased_re_no)
+static bool	re_erased (SXINT re_erased_re_no)
 {
     SXINT		origine, delta, re_erased_l, re_erased_t, re_erased_x, erase_ate;
     char	kind /* bit (2) */ ;
@@ -185,7 +185,7 @@ erase_kind = "11"b	=>	tous les chemins de re_erased_x a EOT sont supprimes et il
 
 
 
-static transition_matrix_item	test_ref (SXBOOLEAN is_keep, SXBOOLEAN is_scan, SXINT codop, SXINT ref)
+static transition_matrix_item	test_ref (bool is_keep, bool is_scan, SXINT codop, SXINT ref)
 {
     SXINT		test_ref_re_no, re_ref, test_ref_x;
 
@@ -209,8 +209,8 @@ static transition_matrix_item	test_ref (SXBOOLEAN is_keep, SXBOOLEAN is_scan, SX
 	if (test_ref_re_no == include_re_no) {
 	    floyd_evans.stmt = STMT (0, 0, State, 1);
 	    floyd_evans.action_or_prdct_no = Include;
-	    floyd_evans.is_system = SXTRUE;
-	    /* floyd_evans.is_predicate = SXFALSE; */
+	    floyd_evans.is_system = true;
+	    /* floyd_evans.is_predicate = false; */
 	    floyd_evans.kind = IsAction;
 	    floyd_evans.param = test_ref_x = ers_disp [re_ref].post_action;
 
@@ -237,13 +237,13 @@ static transition_matrix_item	test_ref (SXBOOLEAN is_keep, SXBOOLEAN is_scan, SX
 
 	    if (ref == termax && is_scan)
 		/* On enleve le scan */
-		is_keep = is_scan = SXFALSE;
+		is_keep = is_scan = false;
 
 
 /* Traitement des post_actions */
 
 	    if (ers_disp [re_ref].post_action != 0) {
-		ref = gen_action_code (ers_disp [re_ref].post_action, SXFALSE, SXFALSE, ref, (codop == HashReduce) ? HashReducePost :
+		ref = gen_action_code (ers_disp [re_ref].post_action, false, false, ref, (codop == HashReduce) ? HashReducePost :
 		     ReducePost);
 		codop = Dummy;
 	    }
@@ -258,21 +258,21 @@ static transition_matrix_item	test_ref (SXBOOLEAN is_keep, SXBOOLEAN is_scan, SX
 static transition_matrix_item	gen_code (SXINT current_state_no, 
 					  char gen_code_current_state_kind,
 					  SXINT gen_code_next_state_no, 
-					  SXBOOLEAN is_del, 
-					  SXBOOLEAN is_scan)
+					  bool is_del, 
+					  bool is_scan)
 {
-    SXBOOLEAN	is_keep;
+    bool	is_keep;
     SXINT		codop, ref;
     char	gen_code_next_state_kind;
 
     ref = gen_code_next_state_no;
     
     /* Next line expanded for the bugged apollo C compiler */
-    /* is_keep = is_scan ? !is_del : SXFALSE; */
+    /* is_keep = is_scan ? !is_del : false; */
     if (is_scan)
 	is_keep = !is_del;
     else
-	is_keep = SXFALSE;
+	is_keep = false;
 
     if (gen_code_next_state_no > 0) {
 	/* Shift */
@@ -288,7 +288,7 @@ static transition_matrix_item	gen_code (SXINT current_state_no,
 	    }
 	}
 	else if (gen_code_next_state_kind & (PRDCT + NONDETER))
-	    is_keep = is_scan = SXFALSE /* prudence */, codop = ActPrdct;
+	    is_keep = is_scan = false /* prudence */, codop = ActPrdct;
 	else if ((gen_code_next_state_kind & REDUCE) && !(gen_code_next_state_kind & MIXTE) && is_optimize) {
 	    /* Shift_Reduce */
 	    ref = fsa_trans [fsa [gen_code_next_state_no].transition_ref].next_state_no;
@@ -300,7 +300,7 @@ static transition_matrix_item	gen_code (SXINT current_state_no,
 	    if (gen_code_next_state_kind & LA) {
 
 		SXBA_1_bit (has_la, current_state_no);
-		is_keep = is_scan = SXFALSE;
+		is_keep = is_scan = false;
 
 		if (gen_code_current_state_kind & LA)
 		    codop = NextLookAhead;
@@ -313,7 +313,7 @@ static transition_matrix_item	gen_code (SXINT current_state_no,
     }
     else {
 	/* Reduce */
-	is_keep = is_scan = SXFALSE;
+	is_keep = is_scan = false;
 	codop = Reduce;
 	max_la = 1;
     }
@@ -349,11 +349,11 @@ static transition_matrix_item	gen_action (/* gen_action_action_no, */SXINT gen_a
 
 
 
-static SXVOID gen_nondeter_code (SXINT V, SXBOOLEAN is_keep, SXBOOLEAN is_scan, SXINT ref, SXINT codop)
+static void gen_nondeter_code (SXINT V, bool is_keep, bool is_scan, SXINT ref, SXINT codop)
 {
     struct action_or_prdct_code_item	fe;
 
-    fe.is_system = SXTRUE;
+    fe.is_system = true;
     fe.param = 0;
     fe.action_or_prdct_no = V;
     fe.kind = IsNonDeter;
@@ -363,14 +363,14 @@ static SXVOID gen_nondeter_code (SXINT V, SXBOOLEAN is_keep, SXBOOLEAN is_scan, 
 
 
 
-static SXVOID gen_prdct_code (SXINT V, SXBOOLEAN is_keep, SXBOOLEAN is_scan, SXINT ref, SXINT codop)
+static void gen_prdct_code (SXINT V, bool is_keep, bool is_scan, SXINT ref, SXINT codop)
 {
     struct action_or_prdct_code_item	fe;
     char	*string;
     char	first;
-    SXBOOLEAN	is_not;
+    bool	is_not;
 
-    fe.is_system = SXTRUE;
+    fe.is_system = true;
     fe.param = 0;
     sxinitialise (fe.action_or_prdct_no); /* pour faire taire gcc -Wuninitialized */
 
@@ -378,11 +378,11 @@ static SXVOID gen_prdct_code (SXINT V, SXBOOLEAN is_keep, SXBOOLEAN is_scan, SXI
 	string = sxstrget (action_or_prdct_to_ate [V]);
 
 	if (*string == '^') {
-	    is_not = SXTRUE;
+	    is_not = true;
 	    string++;
 	}
 	else
-	    is_not = SXFALSE;
+	    is_not = false;
 
 	string++;
 
@@ -409,7 +409,7 @@ static SXVOID gen_prdct_code (SXINT V, SXBOOLEAN is_keep, SXBOOLEAN is_scan, SXI
 	    }
 	}
 	else {
-	    fe.is_system = SXFALSE;
+	    fe.is_system = false;
 	    fe.action_or_prdct_no = atoi (string);
 
 	    if (is_not)
@@ -417,7 +417,7 @@ static SXVOID gen_prdct_code (SXINT V, SXBOOLEAN is_keep, SXBOOLEAN is_scan, SXI
 	}
     }
 
-    /* fe.is_predicate = SXTRUE; */
+    /* fe.is_predicate = true; */
     fe.kind = IsPredicate;
     fe.stmt = STMT (is_keep, is_scan, codop, (ref < 0) ? -ref : ref);
     productions [++xprod] = fe;
@@ -425,13 +425,13 @@ static SXVOID gen_prdct_code (SXINT V, SXBOOLEAN is_keep, SXBOOLEAN is_scan, SXI
 
 
 
-static SXINT	gen_action_code (SXINT V, SXBOOLEAN is_keep, SXBOOLEAN is_scan, SXINT ref, SXINT codop)
+static SXINT	gen_action_code (SXINT V, bool is_keep, bool is_scan, SXINT ref, SXINT codop)
 {
     struct action_or_prdct_code_item	fe;
     char	*string;
     char	first;
 
-    fe.is_system = SXTRUE;
+    fe.is_system = true;
     fe.param = 0;
     string = sxstrget (action_or_prdct_to_ate [V]) + 1;
     first = *string;
@@ -489,11 +489,11 @@ static SXINT	gen_action_code (SXINT V, SXBOOLEAN is_keep, SXBOOLEAN is_scan, SXI
     else if (first == 'M' /* Mark */ )
 	fe.action_or_prdct_no = Mark;
     else {
-	fe.is_system = SXFALSE;
+	fe.is_system = false;
 	fe.action_or_prdct_no = atoi (string);
     }
 
-    /* fe.is_predicate = SXFALSE; */
+    /* fe.is_predicate = false; */
     fe.kind = IsAction;
     fe.stmt = STMT (is_keep, is_scan, codop, (ref < 0) ? -ref : ref);
     return install_action (fe);
@@ -501,7 +501,7 @@ static SXINT	gen_action_code (SXINT V, SXBOOLEAN is_keep, SXBOOLEAN is_scan, SXI
 
 
 
-static SXVOID la_reduc (/* max_state_no, */ SXINT max_extended_state_no, 
+static void la_reduc (/* max_state_no, */ SXINT max_extended_state_no, 
 		      SXBA *la_reduc_pred, 
 		      SXBA action_set, 
 		      SXBA state_set, 
@@ -553,7 +553,7 @@ static SXVOID la_reduc (/* max_state_no, */ SXINT max_extended_state_no,
 
 
 
-static SXVOID put_in_tm_tilde (SXINT put_in_tm_tilde_i, 
+static void put_in_tm_tilde (SXINT put_in_tm_tilde_i, 
 			     SXINT put_in_tm_tilde_j, 
 			     transition_matrix_item put_in_tm_tilde_stmt)
 {
@@ -741,7 +741,7 @@ static SXINT	get_la_length (SXINT get_la_length_state_no)
 
 
 
-static SXBOOLEAN	is_compatible (SXINT statei, SXINT statej, SXINT symbole)
+static bool	is_compatible (SXINT statei, SXINT statej, SXINT symbole)
 {
     /* Rend vrai ssi les actions (statei, symbole) et (statej, symbole)
        sont 0-indistinguables */
@@ -752,21 +752,21 @@ static SXBOOLEAN	is_compatible (SXINT statei, SXINT statej, SXINT symbole)
        sur une action avec le code associe' a une transition terminale...
        Bug de'tecte' par HGaravel sur une grammaire de lotos. */
     if (fsa [statei].state_kind != fsa [statej].state_kind)
-	return SXFALSE;
+	return false;
   
     if ((stmti = tm [statei] [symbole]) == (stmtj = tm [statej] [symbole])) {
-	return SXTRUE;
+	return true;
     }
 
     if (KSC (stmti) != KSC (stmtj)) {
-	return SXFALSE;
+	return false;
     }
 
     if (is_a_shift_code [CODOP (stmti)]) {
-	return SXTRUE;
+	return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
@@ -785,45 +785,45 @@ static SXINT	get_next_state (SXINT get_next_state_state, SXINT symbole)
 
 
 
-static SXBOOLEAN	is_in_a_lane (SXINT action)
+static bool	is_in_a_lane (SXINT action)
 {
     SXINT	is_in_lane_state_no, is_in_lane_x;
-    SXBOOLEAN	is_action;
+    bool	is_action;
     transition_matrix_item	is_in_lane_stmt;
 
     is_in_lane_state_no = 0;
 
     while ((is_in_lane_state_no = sxba_scan (scan_reached, is_in_lane_state_no)) > 0) {
-	is_action = SXTRUE;
+	is_action = true;
 
 	for (is_in_lane_x = is_in_lane_state_no;
 	     is_action && is_in_lane_x != action;
 	     is_action = (CODOP (is_in_lane_stmt) != ActPrdct)
-	     ? SXFALSE
+	     ? false
 	     : sxba_bit_is_set (has_action, is_in_lane_x = NEXT (is_in_lane_stmt))) {
 	    is_in_lane_stmt = tm [is_in_lane_x] [state_to_action [is_in_lane_x]];
 	}
 
 	if (is_in_lane_x == action) {
-	    return SXTRUE;
+	    return true;
 	}
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
 
-static SXBOOLEAN	is_utp (transition_matrix_item *is_utp_stmt)
+static bool	is_utp (transition_matrix_item *is_utp_stmt)
 {
     if (SCAN (*is_utp_stmt)) {
-	return SXTRUE;
+	return true;
     }
 
     switch (CODOP (*is_utp_stmt)) {
     case FirstLookAhead:
     case NextLookAhead:
-	return SXTRUE;
+	return true;
 
     default:
 	return is_unique (is_utp_stmt);
@@ -832,15 +832,15 @@ static SXBOOLEAN	is_utp (transition_matrix_item *is_utp_stmt)
 
 
 
-static SXBOOLEAN	is_unique (transition_matrix_item *is_unique_stmt)
+static bool	is_unique (transition_matrix_item *is_unique_stmt)
 {
-    SXBOOLEAN	is_first, is_equal;
+    bool	is_first, is_equal;
     transition_matrix_item	*is_unique_tm_line, stmt1, stmt_ref;
     SXINT	is_unique_x, next;
     static transition_matrix_item empty_stmt_ref;
 
     if (SCAN (*is_unique_stmt)) {
-	return SXFALSE;
+	return false;
     }
 
     switch (CODOP (*is_unique_stmt)) {
@@ -859,11 +859,11 @@ static SXBOOLEAN	is_unique (transition_matrix_item *is_unique_stmt)
 		is_unique (&(is_unique_tm_line [state_to_action [next]]));
 	    }
 
-	    return SXFALSE;
+	    return false;
 	}
 
-	is_first = SXTRUE;
-	is_equal = SXTRUE;
+	is_first = true;
+	is_equal = true;
 	stmt_ref = empty_stmt_ref;  /* pour faire taire gcc -Wuninitialized */
 
 	for (is_unique_x = 1; is_equal && is_unique_x <= tmhb2; is_unique_x++) {
@@ -871,13 +871,13 @@ static SXBOOLEAN	is_unique (transition_matrix_item *is_unique_stmt)
 
 	    if (CODOP (stmt1) != Error) {
 		if (is_first) {
-		    is_first = SXFALSE;
+		    is_first = false;
 		    is_equal = is_utp (&stmt1);
 		    stmt_ref = stmt1;
 		}
 		else {
 		    if (!is_utp (&stmt1) || stmt_ref != stmt1) {
-			is_equal = SXFALSE;
+			is_equal = false;
 		    }
 		}
 	    }
@@ -890,11 +890,11 @@ static SXBOOLEAN	is_unique (transition_matrix_item *is_unique_stmt)
 	return is_equal;
 
     default:
-	return SXFALSE;
+	return false;
     }
 }
 
-static SXBOOLEAN is_covered (SXINT is_covered_x)
+static bool is_covered (SXINT is_covered_x)
 {
     /* Cette fonction regarde si la sequence de predicats comprise entre is_covered_x
        et xprod couvre tout le referentiel */
@@ -903,7 +903,7 @@ static SXBOOLEAN is_covered (SXINT is_covered_x)
     
     if (is_covered_x+1 != xprod) {
         /* On ne traite que les doublets */
-	return SXFALSE;
+	return false;
     }
     
     fe1 = &productions [is_covered_x];
@@ -911,7 +911,7 @@ static SXBOOLEAN is_covered (SXINT is_covered_x)
 
     if (!fe1->is_system || !fe2->is_system) {
         /* de predicats systeme */
-	return SXFALSE;
+	return false;
     }
     
     if ((fe1->action_or_prdct_no == IsSet && fe2->action_or_prdct_no == IsReset)
@@ -921,21 +921,21 @@ static SXBOOLEAN is_covered (SXINT is_covered_x)
 
     if ((fe1->action_or_prdct_no == IsFirstCol && fe2->action_or_prdct_no == NotIsFirstCol)
 	|| (fe1->action_or_prdct_no == NotIsFirstCol && fe2->action_or_prdct_no == IsFirstCol)) {
-        return SXTRUE;
+        return true;
     }
 
     if ((fe1->action_or_prdct_no == IsLastCol && fe2->action_or_prdct_no == NotIsLastCol)
 	|| (fe1->action_or_prdct_no == NotIsLastCol && fe2->action_or_prdct_no == IsLastCol)) {
-        return SXTRUE;
+        return true;
     }
     
-    return SXFALSE;
+    return false;
 }
 
 static struct fsa_trans_item	unique_fsa_trans;
-static SXBOOLEAN			is_unique_fsa_trans_set;
+static bool			is_unique_fsa_trans_set;
 
-static SXBOOLEAN non_unique (SXINT xtrans)
+static bool non_unique (SXINT xtrans)
 {
     /* Gere unique_fsa_trans */
     struct fsa_trans_item	*p = &(fsa_trans [xtrans]);
@@ -946,16 +946,16 @@ static SXBOOLEAN non_unique (SXINT xtrans)
 		|| p->is_scan != unique_fsa_trans.is_scan);
     }
 
-    is_unique_fsa_trans_set = SXTRUE;
+    is_unique_fsa_trans_set = true;
     unique_fsa_trans = *p;
-    return SXFALSE;
+    return false;
 }
 
 
-static SXBOOLEAN	forward_look_ahead (SXINT current_state)
+static bool	forward_look_ahead (SXINT current_state)
 {
     /* next_state est un etat en look_ahead */
-    /* Retourne SXTRUE ssi le sous-automate issu de current_state a un traitement unique. */
+    /* Retourne true ssi le sous-automate issu de current_state a un traitement unique. */
     SXINT bot, top, next_state;
 
     if (SXBA_bit_is_reset_set (to_be_processed, current_state)) {
@@ -969,15 +969,15 @@ static SXBOOLEAN	forward_look_ahead (SXINT current_state)
 		if (next_state < 0) {
 		    /* Reduce */
 		    if (non_unique (bot))
-			return SXFALSE;
+			return false;
 		}
 		else {
 		    if (fsa [next_state].state_kind & LA) {
 			if (!forward_look_ahead (next_state))
-			    return SXFALSE;
+			    return false;
 		    }
 		    else if (non_unique (bot))
-			return SXFALSE;
+			return false;
 		}
 	    }
 
@@ -985,16 +985,16 @@ static SXBOOLEAN	forward_look_ahead (SXINT current_state)
 	}
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
-SXVOID	lecl_code_gen (void)
+void	lecl_code_gen (void)
 {
     if (sxverbosep) {
 	if (!sxttycol1p) {
 	    fputc ('\n', sxtty);
-	    sxttycol1p = SXTRUE;
+	    sxttycol1p = true;
 	}
 
 	fputs ("Code Generation\n", sxtty);
@@ -1103,7 +1103,7 @@ SXVOID	lecl_code_gen (void)
 			    if (next_state_kind & LA) {
 /* On regarde si, apres resolution par le [sous-]automate de look-ahead
    le traitement est unique. Auquel cas cet automate est ignore'. */
-				is_unique_fsa_trans_set = SXFALSE; /* vide */
+				is_unique_fsa_trans_set = false; /* vide */
 				sxba_empty (to_be_processed);
 
 				if (forward_look_ahead (next_state)) {
@@ -1165,7 +1165,7 @@ SXVOID	lecl_code_gen (void)
 		SXBA_0_bit (is_re_erased, comments_re_no);
 	}
 	else {
-	    are_comments_erased = SXTRUE;
+	    are_comments_erased = true;
 
 	    for (j = 1; j <= ers_disp [comments_re_no].component_no; j++) {
 		re_no = comments_re_no + j;
@@ -1475,7 +1475,7 @@ SXVOID	lecl_code_gen (void)
    (xprod) */
     new_state_no = 0;
     old_state_no = 0;
-    has_nondeterminism = SXFALSE;
+    has_nondeterminism = false;
 
     while ((old_state_no = sxba_scan (major_state_set, old_state_no)) > 0) {
 	if (equiv_class [old_state_no].repr != old_state_no)
@@ -1515,8 +1515,8 @@ SXVOID	lecl_code_gen (void)
 			codop = CODOP (stmt);
 			ref = NEXT (stmt);
 			gen_prdct_code (prdct,
-					(SXBOOLEAN) (KEEP (stmt) != 0),
-					(SXBOOLEAN) (SCAN (stmt) != 0),
+					(bool) (KEEP (stmt) != 0),
+					(bool) (SCAN (stmt) != 0),
 					is_a_shift_code [codop] ? equiv_class [ref].repr : ref,
 					codop);
 
@@ -1548,8 +1548,8 @@ SXVOID	lecl_code_gen (void)
 			codop = CODOP (stmt);
 			ref = NEXT (stmt);
 			gen_nondeter_code (j - 1,
-					   (SXBOOLEAN) (KEEP (stmt) != 0),
-					   (SXBOOLEAN) (SCAN (stmt) != 0),
+					   (bool) (KEEP (stmt) != 0),
+					   (bool) (SCAN (stmt) != 0),
 					   is_a_shift_code [codop] ? equiv_class [ref].repr : ref,
 					   codop);
 		    }
@@ -1559,7 +1559,7 @@ SXVOID	lecl_code_gen (void)
 		    /* la sequence existait deja */
 		    xprod = x;
 		else {
-		    has_nondeterminism = SXTRUE;
+		    has_nondeterminism = true;
 		    y = x + 1;
 		}
 
@@ -1627,14 +1627,14 @@ SXVOID	lecl_code_gen (void)
    en look-ahead, le code doit donc en tenir compte... */
 
         VARSTR vstr = varstr_alloc (128);
-	SXBOOLEAN is_first = SXTRUE, found;
+	bool is_first = true, found;
 	char *s;
 	
 	prdct = 0;
 
 	while ((prdct = sxba_scan (is_user_prdct_in_la, prdct)) > 0) {
 	    s = sxstrget (action_or_prdct_to_ate [prdct]);
-	    found = SXFALSE;
+	    found = false;
 
 	    if (*s == '^') {
 		s++;
@@ -1642,7 +1642,7 @@ SXVOID	lecl_code_gen (void)
 
 		while ((x = sxba_scan (is_user_prdct_in_la, x)) < prdct)
 		    if (strcmp (sxstrget (action_or_prdct_to_ate [x]), s) == 0) {
-		        found = SXTRUE;
+		        found = true;
 			break;
 		}
 		
@@ -1652,7 +1652,7 @@ SXVOID	lecl_code_gen (void)
 
 		while ((x = sxba_scan (is_user_prdct_in_la, x)) < prdct)
 		    if (strcmp (sxstrget (action_or_prdct_to_ate [x]) + 1, s) == 0) {
-		        found = SXTRUE;
+		        found = true;
 			break;
 		}
 		
@@ -1662,7 +1662,7 @@ SXVOID	lecl_code_gen (void)
 		continue;
 
 	    if (is_first)
-	        is_first = SXFALSE;
+	        is_first = false;
 	    else
 	        varstr_catenate (vstr, ", ");
 

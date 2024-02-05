@@ -11,9 +11,9 @@ BOOT=$(PARADIS)/boot
 
 CC=$(COMPILER) -I$(BOOT) -I$(BNF) -I$(SXINCL) -I$(SXINCL)/util -Dsxtables=paradis_tables $(CFLAGS)
 
-all: $(SX)/bin/paradis.out $(SXAUX)/print_ppt.out
+all: $(SXBIN)/paradis.out $(SXAUX)/print_ppt.out
 
-$(SX)/bin/paradis.out:	$(PARADIS)/paradis.out
+$(SXBIN)/paradis.out:	$(PARADIS)/paradis.out
 	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
 NEEDS=		$(BNFLIB)/bnf_sact.o	\
@@ -87,4 +87,7 @@ paradis.rt: paradis.bt paradis.st paradis.recor
 
 clean:
 	/bin/rm -f $(LIB)/*.o $(PARADIS)/paradis.out $(SXAUX)/print_ppt.out
+	/bin/rm -f paradis.att paradis.bt paradis.pt paradis.rt paradis.st
+	/bin/rm -f paradis.bn.l paradis.lc.l paradis.rc.l
+	/bin/rm -f paradis.c.skeleton paradis_t.c
 

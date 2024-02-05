@@ -21,7 +21,7 @@
 #include "sxunix.h"
 #include "D_tables.h"
 
-char WHAT_PRIOREAD[] = "@(#)SYNTAX - $Id: prioread.c 3146 2023-05-02 12:21:39Z garavel $" WHAT_DEBUG;
+char WHAT_PRIOREAD[] = "@(#)SYNTAX - $Id: prioread.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 
 #define READ(f,p,l)		\
@@ -29,7 +29,7 @@ char WHAT_PRIOREAD[] = "@(#)SYNTAX - $Id: prioread.c 3146 2023-05-02 12:21:39Z g
 		goto read_error
 
 
-SXBOOLEAN		prio_read (SXINT t_priorities_size, 
+bool		prio_read (SXINT t_priorities_size, 
 			   SXINT r_priorities_size,
 			   struct priority **t_priorities,
 			   struct priority **r_priorities,
@@ -49,24 +49,24 @@ SXBOOLEAN		prio_read (SXINT t_priorities_size,
 
     if ((F_dt = open (strcat (strcpy (ent_name, langname), ".dt"), 0+O_BINARY)) < 0) {
 	/* No message: this is normal */
-	return SXFALSE;
+	return false;
     }
 
     READ (F_dt, &(dt_version), sizeof (SXINT));
 
     if (dt_version != dt_num_version) {
 	fprintf (sxstderr, "tables format has changed : please use the new prio\n");
-	return (SXFALSE);
+	return (false);
     }
 
     READ (F_dt, *t_priorities, t_priorities_size * sizeof (struct priority));
     READ (F_dt, *r_priorities, r_priorities_size * sizeof (struct priority));
     close (F_dt);
-    return SXTRUE;
+    return true;
 
 read_error:
     fprintf (sxstderr, "%s: read error on ", ME);
     sxperror (ent_name);
     close (F_dt);
-    return SXFALSE;
+    return false;
 }

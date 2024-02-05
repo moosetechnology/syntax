@@ -10,7 +10,7 @@ BOOT=$(TAB)/boot
 
 CC=$(COMPILER) -I$(TAB) -I$(SXINCL) -I$(SXINCL)/util -I$(BNF) $(CFLAGS)
 
-all: $(SX)/bin/semc.out
+all: $(SXBIN)/semc.out
 
 NEEDS= \
  $(BNL)/bnf_folcon.o	$(BNL)/bnf_lo.o		\
@@ -20,7 +20,7 @@ NEEDS= \
  $(LIB)/dec.o		$(LIB)/def.o		$(LIB)/def_sact.o	\
  $(LIB)/dec_t.o		$(LIB)/def_t.o		$(LIB)/semc_lo.o
 
-$(SX)/bin/semc.out:	$(TAB)/semc.out
+$(SXBIN)/semc.out:	$(TAB)/semc.out
 	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
 $(TAB)/semc.out:	$(NEEDS)	$(SXBIBS)
@@ -138,12 +138,12 @@ def.rt: def.bt def.st def.recor
 
 clean:
 	/bin/rm -f $(LIB)/*.o $(TAB)/semc.out
-	/bin/rm -f dec_t.c
+	/bin/rm -f dec.c dec_t.c
 	/bin/rm -f dec.bt dec.pt dec.rt dec.st 
 # pas de dec.dt dec_td.h 
 	/bin/rm -f dec.bn.l dec.lc.l dec.pr.l dec.rc.l 
 # pas de dec.la.l dec.td.l 
-	/bin/rm -f def_t.c
+	/bin/rm -f def.c def_t.c
 	/bin/rm -f def.bt def.pt def.rt def.st 
 # pas de dec.dt dec_td.h 
 	/bin/rm -f def.bn.l def.lc.l def.pr.l def.rc.l 

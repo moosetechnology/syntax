@@ -45,10 +45,6 @@ dummy_csynt:
 	variant that does nothing. No documentation was found for this
 	processor.
 
-etc:
-	This directory contains scripts that seem of limited interest
-	or that are used by the autoconf scripts.
-
 examples:
 	This directory contains examples files that have been moved from
 	trunk/examples to here.

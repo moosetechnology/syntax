@@ -31,7 +31,7 @@ static char	ME [] = "weights2proba";
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_WEIGHTS2PROBA[] = "@(#)SYNTAX - $Id: weights2proba.c 3492 2023-08-20 15:43:18Z garavel $" WHAT_DEBUG;
+char WHAT_WEIGHTS2PROBA[] = "@(#)SYNTAX - $Id: weights2proba.c 3632 2023-12-20 17:58:08Z garavel $" WHAT_DEBUG;
 
 #ifdef LC_TABLES_H
 /* On compile les tables "left_corner" ... */
@@ -492,16 +492,16 @@ process_weights ()
   fputs ("SXINT logprobs_nt_nb = NT_NB;\n", stdout);
 
   XxY_lock (&prodXval2eprod_hd);
-  XxY_to_c (&prodXval2eprod_hd, stdout, "prodXval2eprod_hd", SXFALSE /* external */);
+  XxY_to_c (&prodXval2eprod_hd, stdout, "prodXval2eprod_hd", false /* external */);
 
   XxY_lock (&full_ctxt_hd);
-  XxY_to_c (&full_ctxt_hd, stdout, "full_ctxt_hd", SXFALSE /* external */);
+  XxY_to_c (&full_ctxt_hd, stdout, "full_ctxt_hd", false /* external */);
 
   /* Utilisation maximale du contexte */
   XxY_lock (&full_ctxtXeprod_hd);
   top = XxY_top (full_ctxtXeprod_hd);
   fputs ("\n\n/* Full context case */", stdout);
-  XxY_to_c (&full_ctxtXeprod_hd, stdout, "full_ctxtXeprod_hd", SXFALSE /* external */);
+  XxY_to_c (&full_ctxtXeprod_hd, stdout, "full_ctxtXeprod_hd", false /* external */);
 
   printf ("\ndouble full_ctxtXeprod2logprobs [%i] = {%f,\n", top+1, min_logprob);
 
@@ -537,7 +537,7 @@ process_weights ()
   XxY_lock (&eprod_ctxtXeprod_hd);
   top = XxY_top (eprod_ctxtXeprod_hd);
   fputs ("\n\n/* Full context case, without pos */\n", stdout);
-  XxY_to_c (&eprod_ctxtXeprod_hd, stdout, "eprod_ctxtXeprod_hd", SXFALSE /* external */);
+  XxY_to_c (&eprod_ctxtXeprod_hd, stdout, "eprod_ctxtXeprod_hd", false /* external */);
 
   printf ("\ndouble eprod_ctxtXeprod2logprobs [%i] = {%f,\n", top+1, min_logprob);
 
@@ -571,7 +571,7 @@ process_weights ()
   XxY_lock (&prod_ctxtXeprod_hd);
   top = XxY_top (prod_ctxtXeprod_hd);
   fputs ("\n\n/* Partial context case, with father production */\n", stdout);
-  XxY_to_c (&prod_ctxtXeprod_hd, stdout, "prod_ctxtXeprod_hd", SXFALSE /* external */);
+  XxY_to_c (&prod_ctxtXeprod_hd, stdout, "prod_ctxtXeprod_hd", false /* external */);
 
   printf ("\ndouble prod_ctxtXeprod2logprobs [%i] = {%f,\n", top+1, min_logprob);
 
@@ -602,7 +602,7 @@ process_weights ()
   XxY_lock (&A_ctxtXeprod_hd);
   top = XxY_top (A_ctxtXeprod_hd);
   fputs ("\n\n/* Partial context case, with the lhs father production */\n", stdout);
-  XxY_to_c (&A_ctxtXeprod_hd, stdout, "A_ctxtXeprod_hd", SXFALSE /* external */);
+  XxY_to_c (&A_ctxtXeprod_hd, stdout, "A_ctxtXeprod_hd", false /* external */);
 
   printf ("\n\ndouble A_ctxtXeprod2logprobs [%i] = {%f,\n", top+1, min_logprob);
 
@@ -677,7 +677,7 @@ process_weights ()
   XxY_lock (&full_ctxtXlex_id_hd);
   top = XxY_top (full_ctxtXlex_id_hd);
   fputs ("\n\n/* Full contextual lexical desambiguation probabilities */\n", stdout);
-  XxY_to_c (&full_ctxtXlex_id_hd, stdout, "full_ctxtXlex_id_hd", SXFALSE /* external */);
+  XxY_to_c (&full_ctxtXlex_id_hd, stdout, "full_ctxtXlex_id_hd", false /* external */);
 
   printf ("\n\ndouble full_ctxtXlex_id2logprobs [%i] = {0,\n", top+1);
 
@@ -712,7 +712,7 @@ process_weights ()
   XxY_lock (&eprod_ctxtXlex_id_hd);
   top = XxY_top (eprod_ctxtXlex_id_hd);
   fputs ("\n\n/* Eprod contextual lexical desambiguation probabilities */\n", stdout);
-  XxY_to_c (&eprod_ctxtXlex_id_hd, stdout, "eprod_ctxtXlex_id_hd", SXFALSE /* external */);
+  XxY_to_c (&eprod_ctxtXlex_id_hd, stdout, "eprod_ctxtXlex_id_hd", false /* external */);
 
   printf ("\n\ndouble eprod_ctxtXlex_id2logprobs [%i] = {0,\n", top+1);
 
@@ -744,7 +744,7 @@ process_weights ()
   XxY_lock (&prod_ctxtXlex_id_hd);
   top = XxY_top (prod_ctxtXlex_id_hd);
   fputs ("\n\n/* Prod contextual lexical desambiguation probabilities */\n", stdout);
-  XxY_to_c (&prod_ctxtXlex_id_hd, stdout, "prod_ctxtXlex_id_hd", SXFALSE /* external */);
+  XxY_to_c (&prod_ctxtXlex_id_hd, stdout, "prod_ctxtXlex_id_hd", false /* external */);
 
   printf ("\n\ndouble prod_ctxtXlex_id2logprobs [%i] = {0,\n", top+1);
 
@@ -772,7 +772,7 @@ process_weights ()
   XxY_lock (&A_ctxtXlex_id_hd);
   top = XxY_top (A_ctxtXlex_id_hd);
   fputs ("\n\n/* Lhs contextual lexical desambiguation probabilities */\n", stdout);
-  XxY_to_c (&A_ctxtXlex_id_hd, stdout, "A_ctxtXlex_id_hd", SXFALSE /* external */);
+  XxY_to_c (&A_ctxtXlex_id_hd, stdout, "A_ctxtXlex_id_hd", false /* external */);
 
   printf ("\n\ndouble A_ctxtXlex_id2logprobs [%i] = {0,\n", top+1);
 
@@ -799,7 +799,7 @@ process_weights ()
   XxY_lock (&ff_idXt2lex_id_hd);
   top = XxY_top (ff_idXt2lex_id_hd);
   fputs ("\n\n/* Context-free lexical desambiguation probabilities */\n", stdout);
-  XxY_to_c (&ff_idXt2lex_id_hd, stdout, "ff_idXt2lex_id_hd", SXFALSE /* external */);
+  XxY_to_c (&ff_idXt2lex_id_hd, stdout, "ff_idXt2lex_id_hd", false /* external */);
 
   printf ("\n\ndouble lex_id2logprobs [%i] = {0,\n", top+1);
 
@@ -824,11 +824,11 @@ process_weights ()
   /* On reajuste plutot list_size */
   XH_list_size (fs_signatures_hd) = XH_list_top (fs_signatures_hd) + max_fs_signature_size+1 /* pour permettre les XH_is_set sans reallocation */;
   fputs ("\n\n/* Full contextual f-structures desambiguation probabilities */\n", stdout);
-  XH2c (&fs_signatures_hd, stdout, "fs_signatures_hd", SXFALSE /* external */);
+  XH2c (&fs_signatures_hd, stdout, "fs_signatures_hd", false /* external */);
   
   XxY_lock (&ctxtXsign_hd);
   top = XxY_top (ctxtXsign_hd);
-  XxY_to_c (&ctxtXsign_hd, stdout, "ctxtXsign_hd", SXFALSE /* external */);
+  XxY_to_c (&ctxtXsign_hd, stdout, "ctxtXsign_hd", false /* external */);
 
   printf ("\n\ndouble ctxtXsign2logprobs [%i] = {0,\n", top+1);
 
@@ -984,14 +984,14 @@ main (argc, argv)
       case MAX_SIGNATURE_DEPTH:
 	if (++argnum >= argc) {
 	  fprintf (sxstderr, "%s: an integer number must follow the \"%s\" option;\n", ME, option_get_text (MAX_SIGNATURE_DEPTH));
-	  return SXFALSE;
+	  return false;
 	}
 
 	max_signature_depth = atoi (argv [argnum]);
 	break;
 
       case UNKNOWN_ARG:
-	return SXFALSE;
+	return false;
       }
     }
   }

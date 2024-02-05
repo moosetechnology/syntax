@@ -5,7 +5,7 @@ sxppp
 \- pretty-printer of programs
 .SH SYNOPSIS
 .nf
-.ta \w'\s-2SXVOID\s0  'u +\w'\s-2SHORT\s0  'u
+.ta \w'void  'u +\w'short  'u
 .B
 #include "sxunix.h"
 .PP
@@ -13,7 +13,7 @@ sxppp
 struct sxppvariables  sxppvariables\|;
 .PP
 .B
-\s-2SXVOID\s0 sxppp (what, sxtables)
+void sxppp (what, sxtables)
 .B
 	int	 what\|;
 .B
@@ -118,24 +118,24 @@ other than for variables private to the paragrapher, that declaration
 is close to the following\|:
 
 .nf
-.if t .ta \w'\fBstru'u +\w'\s-2SXBOOLEAN\s0  'u +\w' *terminal_dark\|; 'u +\w'/* Same as kw_case, but for each type of terminal\| 'u
+.if t .ta \w'\fBstru'u +\w'bool  'u +\w' *terminal_dark\|; 'u +\w'/* Same as kw_case, but for each type of terminal\| 'u
 .if n .ta \w'\fBstru'u +\w'\fBshort int\fP  'u +\w' *terminal_dark\|; 'u +\w'/* Same as kw_case, but for each type of terminal\| 'u
 .ne 3
 \fBstruct\fP sxppvariables {
 	\s-2SXCASE\s0	kw_case\|;	/* How should keywords be written	*/
 	\s-2SXCASE\s0	*terminal_case\|;	/* Same as kw_case, but for each type of terminal	*/
 .ne 2
-	\s-2SXBOOLEAN\s0	kw_dark\|;	/* Should keywords be artificially darkened	*/
-	\s-2SXBOOLEAN\s0	*terminal_dark\|;	/* Same as kw_dark, but for each type of terminal	*/
+	\fBbool\fP	kw_dark\|;	/* Should keywords be artificially darkened	*/
+	\fBbool\fP	*terminal_dark\|;	/* Same as kw_dark, but for each type of terminal	*/
 .ne 2
-	\s-2SXBOOLEAN\s0	no_tabs\|;	/* Do not optimize spaces into tabs	*/
+	\fBbool\fP	no_tabs\|;	/* Do not optimize spaces into tabs	*/
 	\fBshort int\fP	tabs_interval\|;	/* Number of columns between two tab positions	*/
 .ne 2
-	\s-2SXBOOLEAN\s0	block_margin\|;	/* Do not preserve structure when deeply nested	*/
+	\fBbool\fP	block_margin\|;	/* Do not preserve structure when deeply nested	*/
 	\fBshort int\fP	max_margin\|;	/* Do not indent lines further than that	*/
 .ne 3
 	\fBshort int\fP	line_length\|;	/* What it says	*/
-	\s-2SXBOOLEAN\s0	is_error\|;	/* SXTRUE if the pretty-printer detected an error	*/
+	\fBbool\fP	is_error\|;	/* true if the pretty-printer detected an error	*/
 	\fBlong int\fP	char_count\|;	/* Number of chars output by the pretty-printer	*/
 } sxppvariables\|;
 .fi

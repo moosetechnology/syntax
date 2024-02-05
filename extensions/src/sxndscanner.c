@@ -21,9 +21,9 @@
 #include "sxcommon.h"
 
 #ifndef VARIANT_32
-char WHAT_SXNDSCANNER[] = "@(#)SYNTAX - $Id: sxndscanner.c 2955 2023-03-30 14:20:45Z garavel $" WHAT_DEBUG;
+char WHAT_SXNDSCANNER[] = "@(#)SYNTAX - $Id: sxndscanner.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 #else
-char WHAT_SXNDSCANNER32[] = "@(#)SYNTAX - $Id: sxndscanner.c 2955 2023-03-30 14:20:45Z garavel $ SXNDSCANNER_32" WHAT_DEBUG;
+char WHAT_SXNDSCANNER32[] = "@(#)SYNTAX - $Id: sxndscanner.c 3633 2023-12-20 18:41:19Z garavel $ SXNDSCANNER_32" WHAT_DEBUG;
 #endif
 
 /*
@@ -101,7 +101,7 @@ static SXINT pop_include (void)
 }
 
 
-static SXVOID	comments_put (char *str, SXINT lgth)
+static void	comments_put (char *str, SXINT lgth)
 {
     SXINT	lgth_comment;
 
@@ -130,7 +130,7 @@ static SXVOID	comments_put (char *str, SXINT lgth)
 #define char_to_class(c) (sxndsvar.SXS_tables.S_char_to_simple_class[c])
 
 
-SXVOID ndlv_clear (struct sxndlv *ndlv, SXBOOLEAN keep_comments)
+void ndlv_clear (struct sxndlv *ndlv, bool keep_comments)
 {
     if (!keep_comments)
 	ndlv->terminal_token.comment = NULL;
@@ -201,7 +201,7 @@ static void ndlv_oflw (sxindex_header *index_hd_ptr, SXINT old_line_nb_parameter
 
     if (sxndsvar.SXS_tables.S_is_user_action_or_prdct
 	&& sxndsvar.mode.with_user_act)
-	(SXVOID) (*sxndsvar.SXS_tables.scanact) (SXOFLW, sxndsvar.ndlv_size);
+	(void) (*sxndsvar.SXS_tables.scanact) (SXOFLW, sxndsvar.ndlv_size);
 }
 
 		
@@ -222,7 +222,7 @@ static void seek_active_scanner (void)
     }
 
     sxndsvar.current_ndlv->my_index = i;
-    ndlv_clear (sxndsvar.current_ndlv, SXFALSE);
+    ndlv_clear (sxndsvar.current_ndlv, false);
 }
 
 
@@ -275,14 +275,14 @@ SXINT clone_active_scanner (SXSTMI stmt)
 
     if (sxndsvar.SXS_tables.S_is_user_action_or_prdct
 	&& sxndsvar.mode.with_user_act)
-	(SXVOID) (*sxndsvar.SXS_tables.scanact) (SXCLONE, i);
+	(void) (*sxndsvar.SXS_tables.scanact) (SXCLONE, i);
 
     return i;
 }
 
 SXSTMI predicate_processing (struct SXS_action_or_prdct_code *action_or_prdct_code)
 {
-    SXBOOLEAN	is_prdct_satisfied = SXFALSE;
+    bool	is_prdct_satisfied = false;
 
     /* transition vers un groupe de predicats */
     
@@ -292,7 +292,7 @@ SXSTMI predicate_processing (struct SXS_action_or_prdct_code *action_or_prdct_co
 	if ((++action_or_prdct_code)->is_system) {
 	    switch (action_or_prdct_code->action_or_prdct_no) {
 	    case IsTrue:
-		is_prdct_satisfied = SXTRUE;
+		is_prdct_satisfied = true;
 		break;
 		
 	    case IsFirstCol:
@@ -323,7 +323,7 @@ SXSTMI predicate_processing (struct SXS_action_or_prdct_code *action_or_prdct_co
 	    case NotIsLastCol:
 	    {
 		SXINT	sxchar;
-		SXBOOLEAN	is_a_lookahead;
+		bool	is_a_lookahead;
 		
 		sxchar = (is_a_lookahead = !SXNDNORMAL_SCAN_P)
 		    ? sxlanext_char () : sxlafirst_char ();
@@ -407,7 +407,7 @@ SXSTMI action_processing (struct SXS_action_or_prdct_code *action_or_prdct_code)
 	    if (SXNDNORMAL_SCAN_P) {
 		/* Quoi faire en erreur ? */
 		push_include (action_or_prdct_code->param);
-		ndlv_clear (sxndsvar.current_ndlv, SXFALSE);
+		ndlv_clear (sxndsvar.current_ndlv, false);
 		stmt = 0;	/* sera calcule' */
 	    }
 
@@ -490,7 +490,7 @@ SXSTMI action_processing (struct SXS_action_or_prdct_code *action_or_prdct_code)
 	ts_null ();
 	
 	if (sxndsvar.mode.with_user_act)
-	    (SXVOID) (*sxndsvar.SXS_tables.scanact)
+	    (void) (*sxndsvar.SXS_tables.scanact)
 		(SXACTION, action_or_prdct_code->action_or_prdct_no);
 	
 	/* cas tordu :
@@ -509,13 +509,13 @@ SXSTMI action_processing (struct SXS_action_or_prdct_code *action_or_prdct_code)
     return stmt;
 }
 
-SXVOID	sxndscan_it (void)
+void	sxndscan_it (void)
 {
     /* debut de la reconnaissance d'une nouvelle unite lexicale */
     SXSTMI				stmt, codop;
     SXINT					current_index;
     struct SXS_action_or_prdct_code	*action_or_prdct_code;
-    SXBOOLEAN				has_reduce, has_read;
+    bool				has_reduce, has_read;
     
     do {
 	while ((current_index = sxba_scan_reset (sxndsvar.active_ndlv_set, -1)) != -1) {
@@ -696,7 +696,7 @@ SXVOID	sxndscan_it (void)
 			    ts_null ();
 			    
 			    if (sxndsvar.mode.with_user_act)
-				(SXVOID) (*sxndsvar.SXS_tables.scanact)
+				(void) (*sxndsvar.SXS_tables.scanact)
 				    (SXACTION, action_or_prdct_code->action_or_prdct_no);
 			    /* Dans tous les cas, la post-action s'est occupee
 			       des commentaires eventuels. */
@@ -719,7 +719,7 @@ SXVOID	sxndscan_it (void)
 	}
 	
 	if ((current_index = sxba_scan_reset (sxndsvar.read_char_ndlv_set, -1)) >= 0) {
-	    has_read = SXTRUE;
+	    has_read = true;
 	    
 	    if (!has_reduce) {
 		do {
@@ -760,7 +760,7 @@ SXVOID	sxndscan_it (void)
 	    }
 	}
 	else {
-	    has_read = SXFALSE;
+	    has_read = false;
 
 	    if (!has_reduce) {
 		/* ni shift ni reduce */
@@ -779,7 +779,7 @@ SXVOID	sxndscan_it (void)
 			sxndsvar.ndlv->terminal_token.lahead = sxndsvar.SXS_tables.S_termax;
 			/* End Of File */ 
 			SXBA_1_bit (sxndsvar.reduce_ndlv_set, current_index);
-			has_reduce = SXTRUE;
+			has_reduce = true;
 		    }
 		    else {
 			sxndsvar.current_ndlv->stmt = 0;
@@ -823,7 +823,7 @@ SXVOID	sxndscan_it (void)
 		    ts_null ();
 		    
 		    if (sxndsvar.mode.with_user_act)
-			(SXVOID) (*sxndsvar.SXS_tables.scanact)
+			(void) (*sxndsvar.SXS_tables.scanact)
 			    (SXACTION, include_action);
 
 		    /* Tout se passe comme si on avait reconnu un comment
@@ -881,11 +881,11 @@ SXINT sxndscanner (SXINT what_to_do, struct sxtables *arg)
 
 	sxndsvar.mode.errors_nb = 0;
 	sxndsvar.mode.mode = SXNORMAL_SCAN;
-	sxndsvar.mode.is_silent = SXFALSE;
-	sxndsvar.mode.with_system_act = SXTRUE;
-	sxndsvar.mode.with_user_act = SXTRUE;
-	sxndsvar.mode.with_system_prdct = SXTRUE;
-	sxndsvar.mode.with_user_prdct = SXTRUE;
+	sxndsvar.mode.is_silent = false;
+	sxndsvar.mode.with_system_act = true;
+	sxndsvar.mode.with_user_act = true;
+	sxndsvar.mode.with_system_prdct = true;
+	sxndsvar.mode.with_user_prdct = true;
 	
 	char_to_class (EOF) = 2 /* EOF class */ ;
 	break;

@@ -22,7 +22,7 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXMAIN[] = "@(#)SYNTAX - $Id: sxmain.c 3234 2023-05-15 16:52:27Z garavel $" WHAT_DEBUG;
+char WHAT_SXMAIN[] = "@(#)SYNTAX - $Id: sxmain.c 3632 2023-12-20 17:58:08Z garavel $" WHAT_DEBUG;
 
 /* On est dans un cas "mono-langage": */
 
@@ -30,7 +30,7 @@ extern struct sxtables	sxtables;
 
 int main(int argc, char *argv[])
 {
-    syntax (SXINIT, &sxtables, SXFALSE /* no include manager */);
+    syntax (SXINIT, &sxtables, false /* no include manager */);
 
     if (argc == 1) {
 	/* Pas d'argument: on lit sur stdin */
@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
 	    }
     }
 
-    syntax (SXFINAL, &sxtables, SXTRUE);
+    syntax (SXFINAL, &sxtables, true);
 
     sxexit (sxerr_max_severity ());
 

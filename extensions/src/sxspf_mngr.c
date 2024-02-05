@@ -51,7 +51,7 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXSPF_MNGR[] = "@(#)SYNTAX - $Id: sxspf_mngr.c 2970 2023-03-31 15:29:19Z garavel $" WHAT_DEBUG;
+char WHAT_SXSPF_MNGR[] = "@(#)SYNTAX - $Id: sxspf_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 static char	ME [] = "sxspf_mngr";
 
@@ -204,11 +204,11 @@ spf_make_proper_check_bu (SXINT Pij)
 /* A mettre ds topo (et changer topo en walk) */
 
 /* Corps recursif */
-static SXBOOLEAN
+static bool
 spf_walk (SXINT Aij)
 {
   SXINT             item, Xpq, hook, base_hook, result_kind, pd_kind, pi_kind, Pij;
-  SXBOOLEAN         must_be_kept, Pij_kept;
+  bool         must_be_kept, Pij_kept;
 
   sxinitialise(result_kind); /* pour faire taire "gcc -Wuninitialized" */
   sxinitialise(pi_kind); /* pour faire taire "gcc -Wuninitialized" */
@@ -292,7 +292,7 @@ spf_walk (SXINT Aij)
     
     if (spf.walk.post_pass) {
       /* Debut des appels top-down des Aij_prods */
-      pi_kind = (*spf.walk.post_pass) (Aij, (SXBOOLEAN) (result_kind > 0));
+      pi_kind = (*spf.walk.post_pass) (Aij, (bool) (result_kind > 0));
 
 #if LLOG
       fputs ("The post top_down visit of ", stdout);
@@ -323,7 +323,7 @@ spf_walk (SXINT Aij)
     result_kind = 1;
 
   hook = base_hook;
-  Pij_kept = SXFALSE;
+  Pij_kept = false;
 
   while ((Pij = spf.outputG.rhs [hook].lispro) != 0) {
     /* On parcourt les productions dont la lhs est Aij */
@@ -342,7 +342,7 @@ spf_walk (SXINT Aij)
 	  /* A eliminer */
 	  /* Attention, ne peut pas etre fait ds la boucle spf.walk.pass_inherited */
 	  spf.outputG.rhs [hook].lispro = -Pij; /* On elimine */
-	  spf.outputG.is_proper = SXFALSE;
+	  spf.outputG.is_proper = false;
 	}
       }
 
@@ -397,7 +397,7 @@ spf_walk (SXINT Aij)
 		  || SXBA_bit_is_set (spf.walk.invalid_Aij_set, Xpq)
 		/* ... et a echoue' */
 		  ) {
-		spf.outputG.is_proper = SXFALSE; /* Pour le cas cycliqye */
+		spf.outputG.is_proper = false; /* Pour le cas cycliqye */
 		spf.outputG.rhs [hook].lispro = -Pij; /* On elimine la Pij courante */
 
 #if LLOG	
@@ -417,7 +417,7 @@ spf_walk (SXINT Aij)
 	  /* filtre supplementaire utilisateur sur les Pij sans modifier la foret */
 	  ) {
 	/* Pij est gardee */
-	Pij_kept = SXTRUE;
+	Pij_kept = true;
       }
     }
 
@@ -450,7 +450,7 @@ spf_walk (SXINT Aij)
 	      /* filtre supplementaire utilisateur sur les Pij sans modifier la foret */
 	      ) {
 	    spf.outputG.rhs [hook].lispro = -Pij; /* On l'elimine ... */
-	    spf.outputG.is_proper = SXFALSE;
+	    spf.outputG.is_proper = false;
 	  }
 
 	  hook++;
@@ -464,7 +464,7 @@ spf_walk (SXINT Aij)
       pd_kind = 1;
 
     if (pd_kind == 1) {
-      must_be_kept = SXFALSE;
+      must_be_kept = false;
 
       while ((spf.walk.cur_Pij = spf.outputG.rhs [hook].lispro) != 0) {
 	/* On parcourt les productions dont la lhs est Aij */
@@ -488,11 +488,11 @@ spf_walk (SXINT Aij)
 
 	  if (pd_kind < 0) {
 	    spf.outputG.rhs [hook].lispro = -spf.walk.cur_Pij; /* On l'elimine ... */
-	    spf.outputG.is_proper = SXFALSE;
+	    spf.outputG.is_proper = false;
 	  }
 	  else {
 	    /* Ce Pij n'est pas elimine' */
-	    must_be_kept = SXTRUE;
+	    must_be_kept = true;
 	  }
 	}
 
@@ -523,13 +523,13 @@ spf_walk (SXINT Aij)
 	      /* filtre supplementaire utilisateur sur les Pij sans modifier la foret */
 	      ) {
 	    spf.outputG.rhs [hook].lispro = -Pij; /* On l'elimine ... */
-	    spf.outputG.is_proper = SXFALSE;
+	    spf.outputG.is_proper = false;
 	  }
 
 	  hook++;
 	}
     
-	must_be_kept = SXFALSE;
+	must_be_kept = false;
       }
     }
   }
@@ -542,11 +542,11 @@ spf_walk (SXINT Aij)
 
 /* Retourne faux ssi toute la foret a disparue !! */
 /* Wrappeur pour spf_topological_[top_down_|bottom_up_]walk */
-static SXBOOLEAN
+static bool
 spf_call_walk_core (SXINT root)
 {
   SXINT     hook, item, Xpq, Aij, Pij;
-  SXBOOLEAN ret_val;
+  bool ret_val;
 
   if (spf.walk.invalid_Aij_set == NULL)
     spf.walk.invalid_Aij_set = sxba_calloc (spf.walk.Aij_top+1);
@@ -634,10 +634,10 @@ spf_call_walk_core (SXINT root)
   return ret_val;
 }
 
-static SXBOOLEAN
+static bool
 spf_call_walk (SXINT root)
 {
-  SXBOOLEAN ret_val;
+  bool ret_val;
 
 #if EBUG
   SXBA status;
@@ -757,14 +757,14 @@ spf_allocate_spf (SXINT sxmaxprod)
   spf.outputG.Aij2rhs_nb = (SXINT*) sxcalloc ((SXUINT)XxYxZ_size (spf.outputG.Axixj2Aij_hd)+1, sizeof (SXINT));
 
   spf.outputG.maxt = 0;
-  spf.outputG.is_proper = SXTRUE;
+  spf.outputG.is_proper = true;
 }
 
 void
-spf_allocate_insideG (struct insideG *insideG_ptr, SXBOOLEAN has_lex2, SXBOOLEAN has_set_automaton)
+spf_allocate_insideG (struct insideG *insideG_ptr, bool has_lex2, bool has_set_automaton)
 {
   sxprepare_ptr_for_possible_reset (insideG_ptr, sizeof (struct insideG));
-  insideG_ptr->is_allocated = SXTRUE;
+  insideG_ptr->is_allocated = true;
 
   insideG_ptr->lispro = (SXINT*) sxalloc (insideG_ptr->maxitem+1, sizeof (SXINT));
   insideG_ptr->prolis = (SXINT*) sxalloc (insideG_ptr->maxitem+1, sizeof (SXINT));
@@ -860,7 +860,7 @@ spf_free_insideG (struct insideG *insideG_ptr)
     if (insideG_ptr->nt2min_gen_lgth) sxfree (insideG_ptr->nt2min_gen_lgth), insideG_ptr->nt2min_gen_lgth = NULL;
     if (insideG_ptr->t2item_set) sxbm_free (insideG_ptr->t2item_set), insideG_ptr->t2item_set = NULL;
 
-    insideG_ptr->is_allocated = SXFALSE;
+    insideG_ptr->is_allocated = false;
   }
 }
 
@@ -1065,7 +1065,7 @@ extern SXINT   special_Tpq_name  (char *string, SXINT lgth); /* Ds earley */
 extern SXINT   get_SEMLEX_lahead (void); /* Ds dag_scanner, retourne 0 si pas de SEMLEX */
 
 
-static SXBOOLEAN
+static bool
 spf_is_a_suffix (char *string, SXINT string_lgth, char *suffix, SXINT suffix_lgth)
 {
   /* On regarde si string se termine par "__" || suffix */
@@ -1076,14 +1076,14 @@ spf_is_a_suffix (char *string, SXINT string_lgth, char *suffix, SXINT suffix_lgt
 
   if (string_lgth <= suffix_lgth+2)
     /* le prefixe doit etre non vide */
-    return SXFALSE;
+    return false;
 
   top = suffix + suffix_lgth;
   string += string_lgth;
 
   while (--top >= suffix) {
     if (*top != *--string)
-      return SXFALSE;
+      return false;
   }
 
   return string [-1] == '_' && string [-2] == '_';
@@ -1334,7 +1334,7 @@ spf_print_Xpq (FILE *out_file, SXINT Xpq)
 
 
 
-SXBOOLEAN
+bool
 spf_print_iprod (FILE *out_file, SXINT prod, char *prefix, char *suffix)
 {
   SXINT Aij, Xpq, cur_item, i, j, p, q;
@@ -1386,7 +1386,7 @@ spf_print_iprod (FILE *out_file, SXINT prod, char *prefix, char *suffix)
 
   fprintf (out_file, ";%s", suffix);
     
-  return SXTRUE; /* Ca peut etre utilise comme de la semantique */
+  return true; /* Ca peut etre utilise comme de la semantique */
 }
 
 /* Extrait de spf le p ieme sous-arbre enracine' en Aij
@@ -1434,7 +1434,7 @@ spf_dag2tree (SXUINT p,
       Xpq_tree_nb = (SXUINT)spf.tree_count.nt2nb [Xpq];
 
       if (!spf_dag2tree (p%Xpq_tree_nb, Xpq, f))
-	return SXFALSE;
+	return false;
 
       p /= Xpq_tree_nb;
     }
@@ -1582,7 +1582,7 @@ spf_fill_Tij2tok_no ()
 
   SXINT   Tpq, maxTpq, nb, tok_no, size, ste;
   SXINT   *tok_no_stack, *top_tok_no_stack;
-  SXBOOLEAN is_first_time;
+  bool is_first_time;
   char    *comment, *new_comment;
   VARSTR  vstr;
 
@@ -1623,10 +1623,10 @@ spf_fill_Tij2tok_no ()
 
 	  if (comment) {
 	    vstr = varstr_catenate (vstr, comment);
-	    is_first_time = SXFALSE;
+	    is_first_time = false;
 	  }
 	  else
-	    is_first_time = SXTRUE;
+	    is_first_time = true;
 
 	  /* On s'occupe des commentaires */
 	  while (++tok_no_stack <= top_tok_no_stack) {
@@ -1635,7 +1635,7 @@ spf_fill_Tij2tok_no ()
 
 	    if (new_comment && strcmp (comment, new_comment) != 0) {
 	      if (is_first_time) {
-		is_first_time = SXFALSE;
+		is_first_time = false;
 		vstr = varstr_catenate (vstr, new_comment);
 	      }
 	      else {
@@ -1798,7 +1798,7 @@ spf_fill_Pij2eval (void)
 
 
 
-SXBOOLEAN
+bool
 spf_tree_count (double *count)
 {
   SXINT i;
@@ -1806,7 +1806,7 @@ spf_tree_count (double *count)
   /* A partir du 13/01/06 Les cycles eventuels ds la foret ont ete elimines */
   if (spf.outputG.start_symbol == 0 /* || spf.inputG.has_cycles */) {
     *count = 0;
-    return SXFALSE;
+    return false;
   }
 
   if (spf.tree_count.prod2nb == NULL) {
@@ -1825,21 +1825,21 @@ spf_tree_count (double *count)
 
   *count = spf.tree_count.nt2nb [spf.outputG.start_symbol];
 
-  return SXTRUE;
+  return true;
 }
 
 #if 0
 /* calcule spf.walk.invalid_Aij_set */
 /* Un Aij n'est pas invalide s'il existe dans la sous-foret Aij au moins un arbre qui ne contient que des Apq valides. */
-static SXBOOLEAN
+static bool
 make_proper_first_td_walk (SXINT Aij)
 {
   SXINT     Xpq, hook, Pij, item, bot_item;
-  SXBOOLEAN ret_val, keep_Pij;
+  bool ret_val, keep_Pij;
 
   if (SXBA_bit_is_reset_set (spf.walk.Aij_set, Aij)) {
     /* C'est la 1ere fois qu'on appelle make_proper_first_td_walk sur Aij */
-    ret_val = SXFALSE;
+    ret_val = false;
     hook = spf.outputG.lhs [spf.outputG.maxxprod+Aij].prolon;
     
     while ((Pij = spf.outputG.rhs [hook++].lispro) != 0) {
@@ -1847,7 +1847,7 @@ make_proper_first_td_walk (SXINT Aij)
       if (Pij > 0) { /* et qui ne sont pas filtrées */
 	bot_item = spf.outputG.lhs [Pij].prolon;
 
-	keep_Pij = SXTRUE;
+	keep_Pij = true;
 	item = bot_item;
 	
 	while ((Xpq = spf.outputG.rhs [item++].lispro) != 0) {
@@ -1856,7 +1856,7 @@ make_proper_first_td_walk (SXINT Aij)
 	    /* nt */
 	    if (!make_proper_first_td_walk (Xpq)) {
 	      /* Pij sera invalide'e ds make_proper_second_td_walk */
-	      keep_Pij = SXFALSE;
+	      keep_Pij = false;
 	      /* Il est inutile d'aller examiner le reste de la rhs ... */
 	      break;
 	    }
@@ -1864,7 +1864,7 @@ make_proper_first_td_walk (SXINT Aij)
 	}
 
 	if (keep_Pij)
-	  ret_val = SXTRUE; /* Un Pij est garde' */
+	  ret_val = true; /* Un Pij est garde' */
       }
     }
 
@@ -1880,11 +1880,11 @@ make_proper_first_td_walk (SXINT Aij)
 #endif /* 0 */
 
 /* calcule spf.outputG.Aij2rhs_nb */
-static SXBOOLEAN
+static bool
 make_proper_second_td_walk (SXINT Aij)
 {
   SXINT     hook, Pij, item, bot_item, Xpq;
-  SXBOOLEAN retval = SXFALSE;
+  bool retval = false;
 
   /* on n'est appelés qu'une seule fois par Xpq grâce au contrôle sur spf.outputG.Aij2rhs_nb */
   hook = spf.outputG.lhs [spf.outputG.maxxprod+Aij].prolon;
@@ -1904,7 +1904,7 @@ make_proper_second_td_walk (SXINT Aij)
 	spf.outputG.rhs [hook].lispro = -Pij;
       }
       else { /* aucun des symboles de rhs n'est invalide: on le garde */
-	retval = SXTRUE; /* au moins une Pij de Aij a donc une rhs valide: on a au moins un sous-arbre */
+	retval = true; /* au moins une Pij de Aij a donc une rhs valide: on a au moins un sous-arbre */
 	item = bot_item;
 	  
 	while ((Xpq = spf.outputG.rhs [item++].lispro) != 0) {
@@ -1954,7 +1954,7 @@ spf_check_consistency (void)
 /* Elle "desactive" toutes les productions inaccessibles (grammaire pas propre et/ou qq Pij mis en negatif)
    et recalcule Aij2rhs_nb pour les passes heritees eventuelles */
 static SXINT
-make_proper_keep_valid_Aijs (SXINT Aij, SXBOOLEAN must_be_kept)
+make_proper_keep_valid_Aijs (SXINT Aij, bool must_be_kept)
 {
   if (must_be_kept)
     SXBA_0_bit (spf.walk.invalid_Aij_set, Aij);
@@ -1962,11 +1962,11 @@ make_proper_keep_valid_Aijs (SXINT Aij, SXBOOLEAN must_be_kept)
   return must_be_kept ? 1 : -1;
 }
 
-SXBOOLEAN
+bool
 spf_make_proper (SXINT root_Aij)
 {
   SXINT        Xpq, hook, Pij;
-  SXBOOLEAN    ret_val;
+  bool    ret_val;
 
   sxuse(root_Aij); /* pour faire taire gcc -Wunused */
 #if LOG
@@ -2004,7 +2004,7 @@ spf_make_proper (SXINT root_Aij)
      On ne peut donc pas utiliser spf.walk.invalid_Aij_set pour connaitre exactement les Aij invalides.
      On va utiliser spf.outputG.Aij2rhs_nb */
   for (Xpq = (make_proper_second_td_walk (spf.outputG.start_symbol) ? 2 : 1); /* make_proper_second_td_walk
-									       rend SXTRUE ss'il reste
+									       rend true ss'il reste
 									       au moins 1 arbre:
 									       dans ce cas on
 									       n'efface pas l'axiome
@@ -2028,7 +2028,7 @@ spf_make_proper (SXINT root_Aij)
     }
   }
 
-  spf.outputG.is_proper = SXTRUE;
+  spf.outputG.is_proper = true;
 
 #if LOG
   fputs ("*** Leaving spf_make_proper()\n", stdout);
@@ -2139,12 +2139,12 @@ spf_pop_status (void)
 
 
 
-SXBOOLEAN
+bool
 spf_topological_walk (SXINT root,
 		      SXINT (*pi)(SXINT),
 		      SXINT (*pd)(SXINT))
 {
-  SXBOOLEAN ret_val;
+  bool ret_val;
 
 #if EBUG
   if (pi && pd)
@@ -2177,13 +2177,13 @@ spf_topological_walk (SXINT root,
 
 
 
-SXBOOLEAN
+bool
 spf_topological_top_down_walk (SXINT root,
 			       SXINT (*pi)(SXINT),
 			       SXINT (*pre_pass)(SXINT),
-			       SXINT (*post_pass)(SXINT, SXBOOLEAN))
+			       SXINT (*post_pass)(SXINT, bool))
 {
-  SXBOOLEAN ret_val;
+  bool ret_val;
 
 #if LOG
   fputs ("*** Entering spf_topological_top_down_walk (", stdout);
@@ -2207,13 +2207,13 @@ spf_topological_top_down_walk (SXINT root,
   return ret_val;
 }
 
-SXBOOLEAN
+bool
 spf_topological_bottom_up_walk (SXINT root,
 				SXINT (*pd)(SXINT),
 				SXINT (*pre_pass)(SXINT),
-				SXINT (*post_pass)(SXINT, SXBOOLEAN))
+				SXINT (*post_pass)(SXINT, bool))
 {
-  SXBOOLEAN ret_val;
+  bool ret_val;
 
 #if LOG
   fputs ("*** Entering spf_topological_bottom_up_walk (", stdout);
@@ -2239,11 +2239,11 @@ spf_topological_bottom_up_walk (SXINT root,
 
 
 /* attention Pij_set est vide au retour */
-SXBOOLEAN
+bool
 spf_erase (SXBA Pij_set)
 {
   SXINT     Pij, prod, Aij, hook;
-  SXBOOLEAN ret_val;
+  bool ret_val;
 
 #if LOG
   fputs ("*** Entering spf_erase ***\n", stdout);
@@ -2258,7 +2258,7 @@ spf_erase (SXBA Pij_set)
     while ((prod = spf.outputG.rhs [hook].lispro) != 0) {
       if (prod > 0 && SXBA_bit_is_set_reset (Pij_set, prod)) {
 	/* finesse */
-	spf.outputG.is_proper = SXFALSE;
+	spf.outputG.is_proper = false;
 	spf.outputG.rhs [hook].lispro = -prod;
       }
 
@@ -2269,7 +2269,7 @@ spf_erase (SXBA Pij_set)
   if (!spf.outputG.is_proper)
     ret_val = spf_make_proper (spf.outputG.start_symbol /* global */);
   else
-    ret_val = SXTRUE;
+    ret_val = true;
 
 #if LOG
   fputs ("*** Leaving spf_erase ***\n", stdout);
@@ -2308,7 +2308,7 @@ spf_print_tree_count (void)
 #define SUBDAG_THRESHOLD 12
 #define SUBDAG_THRESHOLD_2 100
 
-SXBOOLEAN UDAG_wanted;
+bool UDAG_wanted;
 
 static SXINT           yield_eof_Tpq, maxxnt, yield_eof_ste, *Aij2rhs_occ_nb, *Aij2visited_rhs_occ_nb;
 static SXBA            special_Aij_set, yield_Tpq_set, yield_valid_Aij_set;
@@ -2451,7 +2451,7 @@ spf_first_yield_td_walk (SXINT Pij)
   SXINT             item, Xpq, Tpq, Aij, special_Aij, lgth;
   SXINT             ub, p, q, j;
   char              *ntstring;
-  SXBOOLEAN           is_OK;
+  bool           is_OK;
 
   sxinitialise (ub);
   Aij = spf.walk.cur_Aij;
@@ -2516,7 +2516,7 @@ spf_first_yield_td_walk (SXINT Pij)
       }
     }
     else
-      is_OK = SXTRUE;
+      is_OK = true;
 
     if (is_OK) {
       if (Xpq > 0) {
@@ -2548,7 +2548,7 @@ static SXINT            minDAG_final_state;
 static SXINT            minDAG_min_state, minDAG_max_state;
 static XxYxZ_header     spf_dag_yield_hd;
 
-static SXBOOLEAN spf_empty_trans (SXINT state, SXBA epsilon_reachable_next_states);
+static bool spf_empty_trans (SXINT state, SXBA epsilon_reachable_next_states);
 static void spf_nfa_extract_trans (SXINT state, void (*output_trans) (SXINT, SXINT, SXINT));
 
 #if LOG
@@ -2632,7 +2632,7 @@ reduce_subDAG (/* source */ struct subDAG_struct *subDAG_struct_source_ptr,
 	     spf_nfa_extract_trans, 
 	     NULL, 
 	     minsubDAG_fill_trans, 
-	     SXTRUE /* to_be_normalized */
+	     true /* to_be_normalized */
 #ifdef ESSAI_INVERSE_MAPPING
 	     , NULL
 #endif /* ESSAI_INVERSE_MAPPING */
@@ -3143,7 +3143,7 @@ spf_dag_yield_extract_trans (SXINT p, void (*f) (SXINT p, SXINT t, SXINT q))
   }
 }
 
-static SXBOOLEAN
+static bool
 spf_empty_trans (SXINT state, SXBA epsilon_reachable_next_states)
 {
   SXINT transition, next_state = 0;
@@ -3191,11 +3191,11 @@ spf_yield_extract_dfa (void)
 		     SXINT final_state,
 		     SXINT 0,
 		     SXINT eof_ste,
-		     SXBOOLEAN (*empty_trans)(SXINT, SXBA), 
+		     bool (*empty_trans)(SXINT, SXBA), 
 		     void (*nfa_extract_trans)(SXINT, void (*nfa_fill_trans)(SXINT, SXINT, SXINT) ), 
-		     void (*dfa_fill_trans)(SXINT, SXINT, SXINT, SXBOOLEAN), 
+		     void (*dfa_fill_trans)(SXINT, SXINT, SXINT, bool), 
 		     void (*mindfa_fill_trans)(SXINT, SXINT, SXINT), 
-		     SXBOOLEAN to_be_normalized);
+		     bool to_be_normalized);
   */
 #if LOG
   print_subDAG (subDAG_struct_source_ptr);
@@ -3220,7 +3220,7 @@ spf_yield_extract_dfa (void)
 	   spf_nfa_extract_trans, 
 	   NULL,
  	   spf_mindfa_fill_trans, 
-	   SXTRUE /* to_be_normalized */
+	   true /* to_be_normalized */
 #ifdef ESSAI_INVERSE_MAPPING
 	   , NULL
 #endif /* ESSAI_INVERSE_MAPPING */
@@ -3251,7 +3251,7 @@ spf_yield_extract_dfa (void)
 }
 
 void
-spf_yield2dfa (SXBOOLEAN which_form)
+spf_yield2dfa (bool which_form)
 {
   SXINT maxtnt;
   SXINT yield_fsa_XxYxZ_foreach[6] = {1, 0, 0, 0, 0, 0};

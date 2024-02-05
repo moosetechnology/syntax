@@ -1,34 +1,34 @@
 /*** THIS FILE IS NOT PART OF THE SYNTAX LIBRARY libsx.a ***/ 
 #include "rcg_glbl.h"
 #include "sxcommon.h"
-char WHAT_RCGTESTPRIME6[] = "@(#)SYNTAX - $Id: prime6_parsact.c 1289 2008-05-13 13:35:23Z rlacroix $" WHAT_DEBUG;
+char WHAT_RCGTESTPRIME6[] = "@(#)SYNTAX - $Id: prime6_parsact.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 SXINT	Is_OK_arity = 1, Set_OK_arity = 1;
 SXINT	Is_OK_pid, Set_OK_pid;
 
 static SXINT	local_pid;
-static SXBOOLEAN	OK;
+static bool	OK;
 
-SXBOOLEAN
+bool
 _Is_OK ()
 {
     return OK;
 }
 
-SXBOOLEAN
+bool
 _Set_OK ()
 {
-    return OK = SXTRUE;
+    return OK = true;
 }
 
 #if is_parser
 #if is_multiple_pass
-SXBOOLEAN
+bool
 _walk_Is_OK ()
 {
 }
 
-SXBOOLEAN
+bool
 _walk_Set_OK ()
 {
 }

@@ -22,7 +22,7 @@
 #include "varstr.h"    
 #include "bstr.h"
 
-char WHAT_BSTR[] = "@(#)SYNTAX - $Id: bstr.c 3146 2023-05-02 12:21:39Z garavel $" WHAT_DEBUG;
+char WHAT_BSTR[] = "@(#)SYNTAX - $Id: bstr.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
 static char	blancs [ /* 132 */ ] = "                                                                                                                                    " ;
 static char	*blanks = blancs + sizeof blancs - 1;
@@ -58,14 +58,14 @@ struct bstr	*bstr_alloc (SXINT size, SXINT lmargin, SXINT rmargin)
 
 
 
-SXVOID	bstr_free (struct bstr *bstr)
+void	bstr_free (struct bstr *bstr)
 {
     varstr_free (bstr->vstr);
     sxfree (bstr);
 }
 
 
-SXVOID	bstr_get_attr (struct bstr *bstr, SXINT *lgth, SXINT *col)
+void	bstr_get_attr (struct bstr *bstr, SXINT *lgth, SXINT *col)
 {
     *col = bstr->col;
     *lgth = varstr_length (bstr->vstr);

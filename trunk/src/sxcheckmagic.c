@@ -20,9 +20,9 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXCHECKMAGIC[] = "@(#)SYNTAX - $Id: sxcheckmagic.c 3234 2023-05-15 16:52:27Z garavel $" WHAT_DEBUG;
+char WHAT_SXCHECKMAGIC[] = "@(#)SYNTAX - $Id: sxcheckmagic.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
-SXVOID	sxcheck_magic_number (SXUINT m1, SXUINT m2, char *who)
+void	sxcheck_magic_number (SXUINT m1, SXUINT m2, char *who)
 {
     if (m1 == m2) {
 	return;

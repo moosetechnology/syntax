@@ -31,7 +31,7 @@ SX_GLOBAL_VAR_NBEST void   nbest_close (void);
 
 SX_GLOBAL_VAR_NBEST void   nbest_allocate (SXINT nbest, SXINT cur_contextual_proba_kind);
 SX_GLOBAL_VAR_NBEST void   nbest_free (void);
-SX_GLOBAL_VAR_NBEST SXINT    nbest_perform (SXINT root_Aij, SXINT h, SXINT b, SXINT cur_contextual_proba_kind, SXBOOLEAN do_filtering);
+SX_GLOBAL_VAR_NBEST SXINT    nbest_perform (SXINT root_Aij, SXINT h, SXINT b, SXINT cur_contextual_proba_kind, bool do_filtering);
 SX_GLOBAL_VAR_NBEST double nbest_get_weight (SXINT root_Aij, SXINT h, SXINT cur_contextual_proba_kind);
 SX_GLOBAL_VAR_NBEST SXINT    nbest_get_Pij (SXINT root_Aij, SXINT h , SXINT cur_contextual_proba_kind);
 #if 0

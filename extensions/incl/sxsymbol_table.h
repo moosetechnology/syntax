@@ -43,23 +43,23 @@ extern void	sxsymbol_table_alloc	(struct sxsymbol_table_hd *header,
 
 extern void	sxsymbol_table_free	(struct sxsymbol_table_hd *header);
 
-extern SXBOOLEAN	sxsymbol_table_put	(struct sxsymbol_table_hd *header,
+extern bool	sxsymbol_table_put	(struct sxsymbol_table_hd *header,
 					 SXINT name,
 					 SXINT scope_nb,
 					 SXINT *sxsymbol_table_put_index);
-/* SXFALSE => already exists at the same scope_nb. */
+/* false => already exists at the same scope_nb. */
 
 extern void	sxsymbol_table_erase	(struct sxsymbol_table_hd *header,
 					 SXINT sxsymbol_table_erase_index,
-					 SXBOOLEAN all);
+					 bool all);
 /* Erase "name" for "nested" entries. */
-/* all == SXTRUE => also erases the "scoped" entries */
+/* all == true => also erases the "scoped" entries */
 
 extern void	sxsymbol_table_close	(struct sxsymbol_table_hd *header,
 					 SXINT scope_nb,
-					 SXBOOLEAN all);
+					 bool all);
 /* Erase "names" with "scope_nb" for "nested" entries. */
-/* all == SXTRUE => also erases the "scoped" entries */
+/* all == true => also erases the "scoped" entries */
 
 
 #define sxsymbol_table_get_nested(h,n)		\

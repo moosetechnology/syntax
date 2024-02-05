@@ -40,4 +40,4 @@
 
 SX_GLOBAL_VAR_YSX char	*prgentname;
 SX_GLOBAL_VAR_YSX SXINT	options_set;
-SX_GLOBAL_VAR_YSX SXBOOLEAN		is_source;
+SX_GLOBAL_VAR_YSX bool		is_source;

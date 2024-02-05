@@ -25,7 +25,7 @@ struct lecl_node {
 	item_code,
 	node_no /* init 0 */ ;
 
-    SXBOOLEAN is_empty, 
+    bool is_empty, 
 	    not_is_first_visit,
 	    is_erased;
    };

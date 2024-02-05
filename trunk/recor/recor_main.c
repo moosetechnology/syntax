@@ -21,7 +21,7 @@
 #include "sxunix.h"
 #include "put_edit.h"
 
-char WHAT_RECORMAIN[] = "@(#)SYNTAX - $Id: recor_main.c 3601 2023-09-23 19:44:39Z garavel $" WHAT_DEBUG;
+char WHAT_RECORMAIN[] = "@(#)SYNTAX - $Id: recor_main.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 char	by_mess [] = "the SYNTAX error processor RECOR";
 
@@ -31,7 +31,7 @@ extern struct sxtables	recor_tables;
 /*    options    */
 /*---------------*/
 
-SXBOOLEAN		is_source;
+bool		is_source;
 SXINT	options_set;
 char	*prgentname;
 static char	ME [] = "recor";
@@ -91,7 +91,7 @@ static char	*option_get_text (SXINT kind)
 
 
 
-static SXVOID	extract_language_name (char *path_name)
+static void	extract_language_name (char *path_name)
 {
     char	*p;
 
@@ -109,7 +109,7 @@ static SXVOID	extract_language_name (char *path_name)
 
 
 
-static	SXVOID recor_run (char *pathname)
+static	void recor_run (char *pathname)
 {
     FILE	*infile;
 
@@ -179,7 +179,7 @@ int main (int argc, char *argv[])
   /* valeurs par defaut */
 
   options_set = OPTION (VERBOSE) | OPTION (SOURCE);
-  is_source = SXTRUE;
+  is_source = true;
 
 
   /* Decodage des options */
@@ -187,19 +187,19 @@ int main (int argc, char *argv[])
   for (argnum = 1; argnum < argc; argnum++) {
     switch (option_get_kind (argv [argnum])) {
     case VERBOSE:
-      sxverbosep = SXTRUE, options_set |= OPTION (VERBOSE);
+      sxverbosep = true, options_set |= OPTION (VERBOSE);
       break;
 
     case -VERBOSE:
-      sxverbosep = SXFALSE, options_set &= noOPTION (VERBOSE);
+      sxverbosep = false, options_set &= noOPTION (VERBOSE);
       break;
 
     case SOURCE:
-      is_source = SXTRUE, options_set |= OPTION (SOURCE);
+      is_source = true, options_set |= OPTION (SOURCE);
       break;
 
     case -SOURCE:
-      is_source = SXFALSE, options_set &= noOPTION (SOURCE);
+      is_source = false, options_set &= noOPTION (SOURCE);
       break;
 
     case LANGUAGE_NAME:
@@ -245,7 +245,7 @@ int main (int argc, char *argv[])
     fprintf (sxtty, "%s\n", release_mess);
   }
 
-  syntax (SXINIT, &recor_tables, SXFALSE /* no includes */);
+  syntax (SXINIT, &recor_tables, false /* no includes */);
 
   if (options_set & OPTION (LANGUAGE_NAME)) {
     recor_run ((char*)NULL);
@@ -261,7 +261,7 @@ int main (int argc, char *argv[])
     } while (argnum < argc);
   }
 
-  syntax (SXFINAL, &recor_tables, SXTRUE);
+  syntax (SXFINAL, &recor_tables, true);
 
   sxexit (sxerr_max_severity ());
   return EXIT_SUCCESS; /* Jamais atteint !! pour les compilo susceptibles ... */
@@ -272,14 +272,14 @@ int main (int argc, char *argv[])
 char	*options_text (char *line)
 {
     SXINT	i;
-    SXBOOLEAN	is_first = SXTRUE;
+    bool	is_first = true;
 
     *line = SXNUL;
 
     for (i = 1; i <= LAST_OPTION; i++)
 	if (options_set & OPTION (i)) {
 	    if (is_first)
-		is_first = SXFALSE;
+		is_first = false;
 	    else
 		strcat (line, ", ");
 

@@ -25,7 +25,7 @@
 #include "varstr.h"
 #include "put_edit.h"
 
-char WHAT_BNFLO[] = "@(#)SYNTAX - $Id: bnf_lo.c 3605 2023-09-24 05:36:48Z garavel $" WHAT_DEBUG;
+char WHAT_BNFLO[] = "@(#)SYNTAX - $Id: bnf_lo.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 extern char	by_mess [];
 static FILE	*listing;
@@ -33,7 +33,7 @@ static SXINT	nbs;
 static VARSTR	vstr;
 
 
-SXVOID
+void
 no_tables (void)
 {
     sxtmsg (sxsrcmngr.source_coord.file_name, "Construction failed : the tables are not generated.", sxtab_ptr->err_titles [2]+1);
@@ -75,7 +75,7 @@ VARSTR	cat_t_string (VARSTR cat_t_string_vstr, SXINT code)
 
 
 
-static SXVOID	print_messages (void)
+static void	print_messages (void)
 {
     SXINT	i, nt;
 
@@ -84,7 +84,7 @@ static SXVOID	print_messages (void)
     if (proper [1]) {
 	/* useless non_terminal */
 	SXINT	undefined = 0;
-	SXBOOLEAN		*defined = sxalloc (proper [1] [0] + 1, sizeof (SXBOOLEAN));
+	bool		*defined = sxalloc (proper [1] [0] + 1, sizeof (bool));
 
 	for (i = 1; i <= proper [1] [0]; i++) {
 	    nt = proper [1] [i];
@@ -99,7 +99,7 @@ static SXVOID	print_messages (void)
 	case 1:
 	    put_edit_nnl (1, "The non terminal symbol ");
 
-	    for (i = 1; SXTRUE; i++)
+	    for (i = 1; true; i++)
 		if (!defined [i]) {
 		    put_edit_apnnl (get_nt_string (proper [1] [i]));
 		    break;
@@ -112,7 +112,7 @@ static SXVOID	print_messages (void)
 	    put_edit (1, "The following non terminal symbols");
 	    nbs = undefined;
 
-	    for (i = 1; SXTRUE; i++)
+	    for (i = 1; true; i++)
 		if (!defined [i]) {
 		    put_edit (9, get_nt_string (proper [1] [i]));
 
@@ -133,7 +133,7 @@ static SXVOID	print_messages (void)
 	    put_edit_nl (1);
 	    put_edit_nnl (1, "The non terminal symbol ");
 
-	    for (i = 1; SXTRUE; i++)
+	    for (i = 1; true; i++)
 		if (defined [i]) {
 		    put_edit_apnnl (get_nt_string (proper [1] [i]));
 		    break;
@@ -146,7 +146,7 @@ static SXVOID	print_messages (void)
 	    put_edit_nl (1);
 	    put_edit (1, "The following non terminal symbols");
 
-	    for (i = 1; SXTRUE; i++)
+	    for (i = 1; true; i++)
 		if (defined [i]) {
 		    put_edit (9, get_nt_string (proper [1] [i]));
 
@@ -195,7 +195,7 @@ static SXVOID	print_messages (void)
 
 
 
-static SXBOOLEAN	less_t (SXINT i, SXINT j)
+static bool	less_t (SXINT i, SXINT j)
 {
     char	*k1, *k2;
 
@@ -214,7 +214,7 @@ static SXBOOLEAN	less_t (SXINT i, SXINT j)
 
 
 
-static SXBOOLEAN	less_nt (SXINT i, SXINT j)
+static bool	less_nt (SXINT i, SXINT j)
 {
     char	*k1, *k2;
 
@@ -233,7 +233,7 @@ static SXBOOLEAN	less_nt (SXINT i, SXINT j)
 
 
 
-static SXINT	*sort (SXBOOLEAN (*compare) (SXINT, SXINT), SXINT n)
+static SXINT	*sort (bool (*compare) (SXINT, SXINT), SXINT n)
 {
     SXINT	i;
     SXINT	*code /* 1:n */ ;
@@ -275,7 +275,7 @@ static char	*strrevcpy (char *destination, char *source, SXINT size)
 
 
 
-static SXVOID	print_tables (void)
+static void	print_tables (void)
 {
   SXINT	i, j, k, col;
   SXINT		l, x, prev_rule_no, rule_no;
@@ -488,7 +488,7 @@ static SXINT	max_err_size = {128};
 
 
 
-static SXVOID	bnf_output_error (SXINT bnf_output_error_errno)
+static void	bnf_output_error (SXINT bnf_output_error_errno)
 {
     SXINT	err_size;
     off_t	filepos;
@@ -510,7 +510,7 @@ static SXVOID	bnf_output_error (SXINT bnf_output_error_errno)
 
 extern SXUINT bnf_get_line_no (SXINT);
 
-static SXVOID	bnf_header (void)
+static void	bnf_header (void)
 {
     put_edit_nnl (9, "Listing of:");
     put_edit_nnl (25, sxsrcmngr.source_coord.file_name);
@@ -542,7 +542,7 @@ static SXVOID	bnf_header (void)
 	SXINT	bnf_header_errno, i, n;
 	SXUINT	errline_no;
 	SXINT	this_file_ste;
-	extern SXVOID	sxerrsort (void);
+	extern void	sxerrsort (void);
 
 	sxinitialise(this_file_ste); /* pour faire taire gcc -Wuninitialized */
 	bnf_header_errno = 0, errline_no = ~((SXUINT) 0);
@@ -677,7 +677,7 @@ static SXVOID	bnf_header (void)
 
 
 
-SXVOID	bnf_lo (void)
+void	bnf_lo (void)
 {
   char *lst_name;
 

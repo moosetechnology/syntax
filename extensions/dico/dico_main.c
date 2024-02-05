@@ -23,11 +23,11 @@
 #include "sxunix.h"
 #include "sxdico.h"
 
-char WHAT_DICOMAIN[] = "@(#)SYNTAX - $Id: dico_main.c 3359 2023-06-16 15:20:30Z garavel $" WHAT_DEBUG;
+char WHAT_DICOMAIN[] = "@(#)SYNTAX - $Id: dico_main.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 SXINT             optim_kind, process_kind, print_on_sxtty;
 char            *dico_name, *prgentname;
-SXBOOLEAN         static_kind, extern_kind;
+bool         static_kind, extern_kind;
 
 /*---------------*/
 /*    options    */
@@ -128,7 +128,7 @@ static char	*option_get_text (SXINT kind)
 
 extern struct sxtables	sxtables;
 
-static SXVOID	extract_language_name (char *path_name)
+static void	extract_language_name (char *path_name)
 {
     char	*p;
 
@@ -158,10 +158,10 @@ int main(int argc, char *argv[])
   /* valeurs par defaut */
   optim_kind = SPACE; /* priorite a l'espace */
   process_kind = TOTAL; /* Les mots sont ranges en entier ds le dico */
-  sxverbosep = SXFALSE; /* Les phases du traitement restent silencieuses */
+  sxverbosep = false; /* Les phases du traitement restent silencieuses */
   print_on_sxtty = 0; /* Pas d'animation au cours de la construction du dico */
-  static_kind = SXTRUE; /* Le dico est static */
-  extern_kind = SXFALSE; /* Le dico est externe */
+  static_kind = true; /* Le dico est static */
+  extern_kind = false; /* Le dico est externe */
 
   /* Decodage des options */
   for (argnum = 1; argnum < argc; argnum++) {
@@ -171,12 +171,12 @@ int main(int argc, char *argv[])
       return EXIT_SUCCESS;
 
     case VERBOSE:
-      sxverbosep = SXTRUE;
+      sxverbosep = true;
       print_on_sxtty = 1;
       break;
 
     case -VERBOSE:
-      sxverbosep = SXFALSE;
+      sxverbosep = false;
       break;
 
     case PARTIEL_opt:
@@ -214,13 +214,13 @@ int main(int argc, char *argv[])
       break;
 
     case STATIC_opt:
-      static_kind = SXTRUE;
-      extern_kind = SXFALSE;
+      static_kind = true;
+      extern_kind = false;
       break;
 
     case EXTERN_opt:
-      extern_kind = SXTRUE;
-      static_kind = SXFALSE;
+      extern_kind = true;
+      static_kind = false;
       break;
 
     case UNKNOWN_ARG:
@@ -242,7 +242,7 @@ int main(int argc, char *argv[])
       break;
   }
 
-  syntax (SXINIT, &sxtables, SXFALSE /* no includes */);
+  syntax (SXINIT, &sxtables, false /* no includes */);
 
   if (argnum == argc /* stdin (sans -) */ ||
       strcmp (argv [argnum], "-") == 0) {
@@ -284,7 +284,7 @@ int main(int argc, char *argv[])
     }
   }
 
-  syntax (SXFINAL, &sxtables, SXTRUE);
+  syntax (SXFINAL, &sxtables, true);
 
   if (prgentname != NULL)
     sxfree (prgentname), prgentname = NULL;

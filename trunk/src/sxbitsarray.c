@@ -24,7 +24,7 @@
 #include "sxversion.h"
 #include "sxcommon.h"
 
-char WHAT_SXBITSARRAY[] = "@(#)SYNTAX - $Id: sxbitsarray.c 2428 2023-01-18 12:54:10Z garavel $" WHAT_DEBUG;
+char WHAT_SXBITSARRAY[] = "@(#)SYNTAX - $Id: sxbitsarray.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 #include "sxba.h"
 
@@ -165,11 +165,11 @@ sxba_1_bit (SXBA bits_array, SXBA_INDEX
 
 
 
-SXBOOLEAN
+bool
 sxba_bit_is_set (SXBA bits_array, SXBA_INDEX bit)
 /*
- * "sxba_bit_is_set" returns "SXTRUE" if the bit numbered "bit" is set
- * in "bits_array", "SXFALSE" otherwise.
+ * "sxba_bit_is_set" returns "true" if the bit numbered "bit" is set
+ * in "bits_array", "false" otherwise.
  */
 {
     sxbassert ((*(bits_array+SXNBLONGS (SXBASIZE (bits_array))) & ((~((SXBA_ELT)0)) << 1 << MOD (SXBASIZE (bits_array) - 1))) == 0, "bit_is_set");

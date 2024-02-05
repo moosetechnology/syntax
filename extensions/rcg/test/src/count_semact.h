@@ -8,10 +8,10 @@ static struct Aij_struct 	*pAij;
 static SXINT			*lb, *ub;
 static SXINT			i, p, q, D[4];
 
-static SXBOOLEAN
+static bool
 PrintQ2InBaseP (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     /* Result(R3,R2,R1,R0,P)	-->  . @PrintQ2InBaseP */
 
@@ -29,5 +29,5 @@ PrintQ2InBaseP (rho, son_nb, sons, is_first)
 
     fprintf (stdout, "\nWe get %i*%i = %i = (%i %i %i %i) in base %i\n", q, q, q*q, D[0], D[1], D[2], D[3], p);
 
-    return SXTRUE;
+    return true;
 }  

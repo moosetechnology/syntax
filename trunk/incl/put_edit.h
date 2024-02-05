@@ -40,11 +40,11 @@ SX_GLOBAL_VAR	size_t	_SXPE_col;
 SX_GLOBAL_VAR	char	_SXPE_str [21];
 SX_GLOBAL_VAR	char	*_SXPE_string;
 
-extern SXVOID	_SXPE_pos (size_t col);
+extern void	_SXPE_pos (size_t col);
 
-extern SXVOID	put_edit_fnb (SXINT col, SXINT f, SXINT number);
-extern SXVOID	put_edit_nl (SXINT n);
-extern SXVOID	put_edit_cut_point (char *string, char *cut_chars, size_t max_cut_point, size_t *xcut, SXBOOLEAN *is_ok);
+extern void	put_edit_fnb (SXINT col, SXINT f, SXINT number);
+extern void	put_edit_nl (SXINT n);
+extern void	put_edit_cut_point (char *string, char *cut_chars, size_t max_cut_point, size_t *xcut, bool *is_ok);
 
 #define	put_edit_ap(string)	(fputs(string,_SXPE_file),\
 				 putc ('\n',_SXPE_file),\

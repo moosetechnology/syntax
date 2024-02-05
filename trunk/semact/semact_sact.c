@@ -23,20 +23,20 @@
 #include "B_tables.h"
 #include "bnf_vars.h"
 
-char WHAT_SEMACT_SACT[] = "@(#)SYNTAX - $Id: semact_sact.c 3593 2023-09-18 05:38:29Z garavel $" WHAT_DEBUG;
+char WHAT_SEMACT_SACT[] = "@(#)SYNTAX - $Id: semact_sact.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 static SXINT	*user_actions;
 static SXINT	act_lgth, rule_no;
 
 
-static SXVOID	gripe (void)
+static void	gripe (void)
 {
     fputs ("\nA function of \"semact\" is out of date with respect to its specification.\n", sxstderr);
     sxexit(1);
 }
 
 
-SXVOID
+void
 semact_semact (SXINT code, SXINT numact)
 {
 
@@ -76,7 +76,7 @@ extern struct sxtables	semact_tables;
 
 
 
-SXBOOLEAN		semact_sem (void)
+bool		semact_sem (void)
 {
     SXINT	i;
     SXINT	act;
@@ -84,18 +84,18 @@ SXBOOLEAN		semact_sem (void)
     if (W.nbpro != rule_no) {
 	sxtmsg (sxsrcmngr.source_coord.file_name, "%sInternal inconsistency %ld-%ld;\n\tactions will not be produced.\n",
 	     semact_tables.err_titles [2]+1, W.nbpro, rule_no);
-	return SXFALSE;
+	return false;
     }
 
     for (i = 1; i <= rule_no; i++) {
 	if ((act = user_actions [i]) != 0) {
 	    WN [i].action = act;
-	    WN [i].bprosimpl = SXFALSE;
+	    WN [i].bprosimpl = false;
 	}
     }
 
     W.sem_kind = sem_by_action;
-    return SXTRUE;
+    return true;
 }
 
 

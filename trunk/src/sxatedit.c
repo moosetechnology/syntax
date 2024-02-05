@@ -24,13 +24,13 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXATEDIT[] = "@(#)SYNTAX - $Id: sxatedit.c 2947 2023-03-29 17:06:41Z garavel $" WHAT_DEBUG;
+char WHAT_SXATEDIT[] = "@(#)SYNTAX - $Id: sxatedit.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
 #define USER_PTR	void*		/* Any pointer, same as in sxpptree.c */
 
 static FILE	*ateditfile = NULL;
 static SXINT	min_dist = 1, min_dist_on_subtrees = 1, page_width = 132;
-extern SXVOID	sxpptree (USER_PTR tree,
+extern void	sxpptree (USER_PTR tree,
 			  SXINT min_dist_sxpptree,
 			  SXINT min_dist_on_subtrees_sxpptree,
 			  SXINT page_width_sxpptree,
@@ -38,18 +38,18 @@ extern SXVOID	sxpptree (USER_PTR tree,
 			  USER_PTR (*get_left_son) (USER_PTR),
 			  USER_PTR (*get_right_brother) (USER_PTR),
 			  SXINT (*get_sons_number) (USER_PTR),
-			  SXVOID (*print_from_arrows) (char *),
-			  SXVOID (*print_horizontal_bar) (char *),
-			  SXVOID (*print_key) (USER_PTR, SXINT, SXINT),
-			  SXVOID (*print_to_arrows) (char *),
-			  SXVOID (*put_blanks) (SXINT),
-			  SXVOID (*put_page) (void),
-			  SXVOID (*put_skip) (void),
+			  void (*print_from_arrows) (char *),
+			  void (*print_horizontal_bar) (char *),
+			  void (*print_key) (USER_PTR, SXINT, SXINT),
+			  void (*print_to_arrows) (char *),
+			  void (*put_blanks) (SXINT),
+			  void (*put_page) (void),
+			  void (*put_skip) (void),
 			  SXINT switches);
 
 
 
-SXVOID	sxateditinit (FILE *file, SXINT md1, SXINT md2, SXINT pw)
+void	sxateditinit (FILE *file, SXINT md1, SXINT md2, SXINT pw)
         	      
         	             
 /* le fichier de sortie (passe en parametre) doit avoir ete ouvert
@@ -110,7 +110,7 @@ static SXINT	get_sons_number (SXNODE *node)
 
 
 
-static SXVOID	print_a_string (char *str)
+static void	print_a_string (char *str)
         	     
 /* imprime la chaine de caracteres passee en argument, suivie d'une fin de
    ligne. Utilisee pour imprimer les arcs et les barres horizontales. */
@@ -121,7 +121,7 @@ static SXVOID	print_a_string (char *str)
 
 
 
-static SXVOID	print_key (SXNODE *node, SXINT start, SXINT lgt)
+static void	print_key (SXNODE *node, SXINT start, SXINT lgt)
         	      
         	      
         	    
@@ -155,7 +155,7 @@ static SXVOID	print_key (SXNODE *node, SXINT start, SXINT lgt)
 
 
 
-static SXVOID	put_blanks (SXINT count)
+static void	put_blanks (SXINT count)
         	      
 /* imprime le nombre d'espaces indiques */
 {
@@ -165,7 +165,7 @@ static SXVOID	put_blanks (SXINT count)
 
 
 
-static SXVOID	put_page (void)
+static void	put_page (void)
 /* se repositionne sur la page suivante, pour commencer un nouveau le qui
    devra etre place a cote du precedent. */
 {
@@ -174,7 +174,7 @@ static SXVOID	put_page (void)
 
 
 
-static SXVOID	put_skip (void)
+static void	put_skip (void)
 /* se positionne en colonne un sur la ligne qui suit. */
 {
     putc ('\n', ateditfile);
@@ -182,7 +182,7 @@ static SXVOID	put_skip (void)
 
 
 
-SXVOID	sxatedit (SXNODE *tree)
+void	sxatedit (SXNODE *tree)
         	      
 /* fait le boulot! */
 {

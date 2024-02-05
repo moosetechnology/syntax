@@ -46,7 +46,7 @@ static char	ME [] = "rcg_smp";
 #include <string.h>
 #include <stdlib.h>
 
-char WHAT_RCGSMP[] = "@(#)SYNTAX - $Id: rcg_smp.c 3354 2023-06-12 12:12:32Z garavel $" WHAT_DEBUG;
+char WHAT_RCGSMP[] = "@(#)SYNTAX - $Id: rcg_smp.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 SXINT       clause2lhs_nt (SXINT clause);
 extern void gen_clause_comment (FILE *parser_file, SXINT clause);
@@ -57,7 +57,7 @@ extern void lrbnf (void),
             one_rcg (void), 
             two_var_form (void), 
             lrfsa (void), 
-            rcg2bnf (SXBOOLEAN);
+            rcg2bnf (bool);
 
 /*  N O D E   N A M E S  */
 #define ERROR_n 1
@@ -87,7 +87,7 @@ E N D   N O D E   N A M E S
 /* Le 19/12/03 suppression de is_empty_arg car 
    A(X) --> . 
    est une clause qui marche avec un arg vide!! */
-static SXBOOLEAN		is_rhs, has_non_range_arg /*, is_empty_arg */, must_be_checked, is_false_clause;
+static bool		is_rhs, has_non_range_arg /*, is_empty_arg */, must_be_checked, is_false_clause;
 static SXINT		cur_var, lhs_var, lhs_prdct, cur_prdct;
 static SXINT		max_rhs_arity = 1; /* prudence */
 static SXINT		etc_nb, log_max_prdct_nb;
@@ -97,7 +97,7 @@ static SXINT		rhs_arg_nb, lhs_arg_nb;
 static SXINT		cur_rhs, cur_clause, cur_nt, cur_t, ste;
 static SXINT		*clause2rhsnb;
 static SXINT		prev_var, prev_symb;
-static SXBOOLEAN		is_first_pass;
+static bool		is_first_pass;
 static SXBA		lhs_var_ste_set, rhs_var_ste_set, ste_set;
 static SXBA             lhs_pos_set, lhs_pos_hd_set;
 static SXINT            *lhs_pos2ste, max_lhs_pos, max_lhs_pos_nb;
@@ -148,7 +148,7 @@ memel_oflw (SXINT old_size, SXINT new_size)
 }
 
 
-SXBOOLEAN
+bool
 IS_AND (SXBA lhs_bits_array, SXBA rhs_bits_array)
 {
     SXBA	lhs_bits_ptr, rhs_bits_ptr;
@@ -158,15 +158,15 @@ IS_AND (SXBA lhs_bits_array, SXBA rhs_bits_array)
 
     while (slices_number-- > 0) {
 	if (*lhs_bits_ptr-- & *rhs_bits_ptr--)
-	    return SXTRUE;
+	    return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
 
-static SXBOOLEAN
+static bool
 str2int (char *str, SXINT *val)
 {
     char 	*str2 = (char *) NULL;
@@ -176,18 +176,18 @@ str2int (char *str, SXINT *val)
     return (*str2 == SXNUL);
 }
 
-static SXBOOLEAN
+static bool
 is_monotone (SXINT is_monotone_ste)
 {
     SXINT		couple;
-    SXBOOLEAN	ret_val;
+    bool	ret_val;
 
     if (SXBA_bit_is_reset_set (ste_set, is_monotone_ste)) {
-	ret_val = SXTRUE;
+	ret_val = true;
 
 	XxY_Xforeach (var_couples, is_monotone_ste, couple) {
 	    if (!is_monotone (XxY_Y (var_couples, couple))) {
-		ret_val = SXFALSE;
+		ret_val = false;
 		break;
 	    }
 	}
@@ -195,7 +195,7 @@ is_monotone (SXINT is_monotone_ste)
 	SXBA_0_bit (ste_set, is_monotone_ste);
     }
     else
-	ret_val = SXFALSE;
+	ret_val = false;
 
     return ret_val;
 }
@@ -207,12 +207,12 @@ is_monotone (SXINT is_monotone_ste)
 /* Attention : l'attribution des codes des variables de depend pas que de la clause en cours
    de traitement.  Ces codes dependent aussi des clauses precedentes a cause des ste qui dependent
    du contexte !!  C'est un peu desagreable */
-static SXBOOLEAN
+static bool
 check_monotonicity (void)
 {
     /* On verifie que les var de la LHS sont monotones et on affecte les codes dans tous les cas */
     SXINT		ste, ste1, couple;
-    SXBOOLEAN	ret_val = SXTRUE;
+    bool	ret_val = true;
     
 
     /* Pas de boucle ds var_couples */
@@ -221,7 +221,7 @@ check_monotonicity (void)
     while ((ste = sxba_scan (hd_var_ste_set, ste)) > 0) {
 	if (!is_monotone (ste)) {
 	    /* detection d'un cycle */
-	    ret_val = SXFALSE;
+	    ret_val = false;
 	    break;
 	}
     }
@@ -294,12 +294,12 @@ check_monotonicity (void)
 }
 #endif /* 0 */
 
-static SXBOOLEAN
+static bool
 check_monotonicity (void)
 {
   /* On verifie que les var de la LHS sont monotones et on affecte les codes dans tous les cas */
   SXINT		check_monotonicity_ste, ste1, couple, lhs_pos;
-  SXBOOLEAN	ret_val = SXTRUE;
+  bool	ret_val = true;
     
 
   /* Pas de boucle ds var_couples */
@@ -310,7 +310,7 @@ check_monotonicity (void)
 
     if (!is_monotone (check_monotonicity_ste)) {
       /* detection d'un cycle */
-      ret_val = SXFALSE;
+      ret_val = false;
       break;
     }
   }
@@ -398,8 +398,8 @@ check_monotonicity (void)
 
 
 
-static SXBOOLEAN  is_bottom_up_erasing_clause, is_top_down_erasing_clause, is_loop_clause, is_combinatorial_clause;
-static SXBOOLEAN  is_proper_clause, is_simple_clause;
+static bool  is_bottom_up_erasing_clause, is_top_down_erasing_clause, is_loop_clause, is_combinatorial_clause;
+static bool  is_proper_clause, is_simple_clause;
 
 static void
 rcg_pi (void)
@@ -425,7 +425,7 @@ rcg_pi (void)
     case CLAUSE_n :
 	switch (SXVISITED->position) {
 	case 1 :		/* SXVISITED->name = PREDICATE_n */
-	    is_rhs = SXFALSE;
+	    is_rhs = false;
 		
 	    if (is_first_pass) {
 		sxba_empty (lhs_var_ste_set);
@@ -439,7 +439,7 @@ rcg_pi (void)
 	    break;
 
 	case 2 :		/* SXVISITED->name = PREDICATE_S_n */
-	    is_rhs = SXTRUE;
+	    is_rhs = true;
 
 	    if (is_first_pass) {
 		/* On verifie que les arguments de la LHS forment une suite monotone */
@@ -451,7 +451,7 @@ rcg_pi (void)
 	    }
 	    else {
 	      if (SXVISITED->degree > 0 || lhs_arg_nb != 1)
-		is_a_complete_terminal_grammar = SXFALSE;
+		is_a_complete_terminal_grammar = false;
 
 		if (ovar_nb > lhs_max_ovar_nb)
 		    lhs_max_ovar_nb = ovar_nb;
@@ -460,7 +460,7 @@ rcg_pi (void)
 		    max_lhs_adr = lhs_adr;
 
 		lhs_var = max_var;
-		has_non_range_arg = SXFALSE;
+		has_non_range_arg = false;
 		tooth_pos = 0;
 		rhs_arg_nb = 0;
 		rhs_arity = 0;
@@ -473,7 +473,7 @@ rcg_pi (void)
 		if (SXVISITED->name == VOID_n)
 		    clause2action [cur_clause] = SXEMPTY_STE;
 		else {
-		    has_sem_act = SXTRUE;
+		    has_sem_act = true;
 		    clause2action [cur_clause] = SXVISITED->token.string_table_entry;
 		}
 	    }
@@ -488,11 +488,11 @@ rcg_pi (void)
 	break;
 
     case CLAUSE_S_n :		/* SXVISITED->name = CLAUSE_n */
-	is_first_pass = SXTRUE;
+	is_first_pass = true;
 	clause = SXVISITED->position;
-	is_false_clause = SXFALSE;
-	is_proper_clause = is_simple_clause = SXTRUE;
-	is_bottom_up_erasing_clause = is_top_down_erasing_clause = is_loop_clause = is_combinatorial_clause = SXFALSE;
+	is_false_clause = false;
+	is_proper_clause = is_simple_clause = true;
+	is_bottom_up_erasing_clause = is_top_down_erasing_clause = is_loop_clause = is_combinatorial_clause = false;
 	break;
 
     case NOT_n :		/* SXVISITED->name = {PREDICATE_n} */
@@ -618,7 +618,7 @@ is_a_sub_param (SXINT param, SXINT bot3, SXINT top3)
   return -1; /* Ce n'est pas une sous_chaine */
 }
 
-static SXBOOLEAN
+static bool
 is_a_sub_arg (SXINT is_a_sub_arg_lhs_prdct, SXINT bot3, SXINT top3)
 {
   /* On regarde si l'argument courant est une sous-chaine de l'un des args de la LHS */
@@ -634,15 +634,15 @@ is_a_sub_arg (SXINT is_a_sub_arg_lhs_prdct, SXINT bot3, SXINT top3)
       param = XH_list_elem (rcg_predicates, lhs_cur2);
 
       if (is_a_sub_param (param, bot3, top3) >= 0)
-	return SXTRUE;
+	return true;
     }
   }
 
-  return SXFALSE;
+  return false;
 }
 
 
-SXBOOLEAN
+bool
 rhs_arg2sub_arg (SXINT rhs_arg2sub_arg_lhs_prdct, SXINT arg)
 {
     /* Si l'arg est de la forme ...u...v...w..., on decoupe en u, v et w */
@@ -659,7 +659,7 @@ rhs_arg2sub_arg (SXINT rhs_arg2sub_arg_lhs_prdct, SXINT arg)
 	    if (bot3 < cur3) {
 		/* superieure */
 		if (!is_a_sub_arg (rhs_arg2sub_arg_lhs_prdct, bot3, cur3))
-		    return SXFALSE;
+		    return false;
 	    }
 
 	    /* et inferieure */
@@ -670,7 +670,7 @@ rhs_arg2sub_arg (SXINT rhs_arg2sub_arg_lhs_prdct, SXINT arg)
     if (bot3 < cur3)
 	return is_a_sub_arg (rhs_arg2sub_arg_lhs_prdct, bot3, cur3);
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -769,7 +769,7 @@ rcg_pd (void)
     /* D E R I V E D */
 
     SXINT		x, lahead;
-    SXBOOLEAN	is_old;
+    bool	is_old;
 
     switch (SXVISITED->name) {
 
@@ -782,7 +782,7 @@ rcg_pd (void)
 
 	    if (is_rhs) {
 		SXINT		bot, arg1, arg2, bot3, X;
-		SXBOOLEAN		is_pos_call;
+		bool		is_pos_call;
 
 		bot = XH_X (rcg_predicates, cur_prdct);
 		is_pos_call = XH_list_elem (rcg_predicates, bot) == 0;
@@ -891,7 +891,7 @@ rcg_pd (void)
 			    cur_prdct = 0;
 			}
 
-			has_first_last_pp = SXTRUE;
+			has_first_last_pp = true;
 			break;
 
 		    case last_t:
@@ -903,7 +903,7 @@ rcg_pd (void)
 			    cur_prdct = 0;
 			}
 
-			has_first_last_pp = SXTRUE;
+			has_first_last_pp = true;
 			break;
 
 		    case cut_t:
@@ -989,7 +989,7 @@ rcg_pd (void)
 
     case CLAUSE_n :
 	if (is_first_pass) {
-	    is_first_pass = SXFALSE;
+	    is_first_pass = false;
 	    /* On reboucle sur la LHS */
 	    sxat_snv (SXINHERITED, SXVISITED->son);
 	}
@@ -1087,7 +1087,7 @@ rcg_pd (void)
 		    is_old = XxY_set (&rcg_clauses, (x<<log_max_prdct_nb)+lhs_prdct, cur_rhs, &cur_clause);
 		}
 
-		has_identical_clauses = SXTRUE;
+		has_identical_clauses = true;
 		SXBA_1_bit (has_an_identical_clause_set, cur_clause);
 		clause2identical [cur_clause] = main_clause;
 	    }
@@ -1147,7 +1147,7 @@ rcg_pd (void)
 	    /* Rien au cours de la 1ere passe */
 	    if (SXVISITED->degree == 0) {
 		cur_param = 0;
-		/* Le 19/12/03 is_empty_arg = SXTRUE; */
+		/* Le 19/12/03 is_empty_arg = true; */
 	    }
 	    else {
 		XH_set (&rcg_parameters, &cur_param);
@@ -1205,7 +1205,7 @@ rcg_pd (void)
 			  var2param [X] = cur_param;
 			else {
 			  if (param != cur_param)
-			    is_overlapping_clause = is_overlapping_grammar = SXTRUE;
+			    is_overlapping_clause = is_overlapping_grammar = true;
 			}
 		      }
 
@@ -1215,8 +1215,8 @@ rcg_pd (void)
 
 		    if (SXVISITED->degree != 1) {
 		      /* Les predicats predefinis doivent peut etre avoir un statut particulier ? */
-		      is_combinatorial_grammar = is_combinatorial_clause = SXTRUE;
-		      is_proper_grammar = is_simple_grammar = is_proper_clause = is_simple_clause = SXFALSE;
+		      is_combinatorial_grammar = is_combinatorial_clause = true;
+		      is_proper_grammar = is_simple_grammar = is_proper_clause = is_simple_clause = false;
 
 		      if (!is_combinatorial || is_proper || is_simple) {
 			sxerror (SXVISITED->token.source_index,
@@ -1235,7 +1235,7 @@ rcg_pd (void)
 		      if (lahead == streq_t || lahead == streqlen_t || lahead == strlen_t) {
 			if (lahead == streq_t || SXVISITED->father->father->father->name == NOT_n)
 			  /* Il y a du genere sur les appels negatifs */
-			  has_non_range_arg = SXTRUE;
+			  has_non_range_arg = true;
 		      }
 		      else
 #endif /* 0 */
@@ -1303,7 +1303,7 @@ rcg_pd (void)
 		top = XH_X (rcg_parameters, cur_param+1);
 
 		if (top-bot != 1 || XH_list_elem (rcg_parameters, bot) > 0 /* var */)
-		  is_a_complete_terminal_grammar = SXFALSE;
+		  is_a_complete_terminal_grammar = false;
 	      }
 	    }
 
@@ -1315,7 +1315,7 @@ rcg_pd (void)
 	if (SXVISITED->father->name == PREDICATE_n) {
 	    if (is_first_pass) {
 		if (SXVISITED->token.lahead == false_t)
-		    is_false_clause = SXTRUE;
+		    is_false_clause = true;
 	    }
 	    else {
 		switch (SXVISITED->token.lahead) {
@@ -1582,7 +1582,7 @@ rcg_pd (void)
 		SXVISITED->father->position == 1 &&
 		SXVISITED->father->father->father->name == PREDICATE_n &&
 		(t == strlen_t || t == streqlen_t)) {
-	      SXBOOLEAN is_int = str2int (str, &cur_t);
+	      bool is_int = str2int (str, &cur_t);
 
 	      if (t == strlen_t) {
 		if (is_int) {
@@ -1644,14 +1644,14 @@ rcg_pd (void)
 		if (lahead == internal_user_predicate_t || lahead == external_user_predicate_t) {
 		    /* On ne tient pas compte des args des predefinis pour decider la linearite a droite */
 		    if (!SXBA_bit_is_reset_set (rhs_var_ste_set, ste)) {
-			is_proper_grammar = is_simple_grammar = is_proper_clause = is_simple_clause = SXFALSE;
+			is_proper_grammar = is_simple_grammar = is_proper_clause = is_simple_clause = false;
 		    }
 		}
 
 		if (!SXBA_bit_is_set (lhs_var_ste_set, ste)) {
 		    /* Variable de la RHS non deja definie en LHS */
-		    is_bottom_up_erasing_grammar = is_bottom_up_erasing_clause = SXTRUE;
-		    is_simple_grammar = is_simple_clause = SXFALSE;
+		    is_bottom_up_erasing_grammar = is_bottom_up_erasing_clause = true;
+		    is_simple_grammar = is_simple_clause = false;
 		    sxerror (SXVISITED->token.source_index,
 			     sxtab_ptr->err_titles [2][0],
 			     "%sUndefined RHS variable.",
@@ -1679,7 +1679,7 @@ rcg_pd (void)
 	      lhs_pos2ste [max_lhs_pos] = ste;
 
 	      if (!SXBA_bit_is_reset_set (lhs_var_ste_set, ste)) {
-		is_proper_grammar = is_simple_grammar = is_proper_clause = is_simple_clause = SXFALSE;
+		is_proper_grammar = is_simple_grammar = is_proper_clause = is_simple_clause = false;
 	      }
 
 	      prev_var = ste;
@@ -1696,8 +1696,8 @@ rcg_pd (void)
 	    else {
 		if (!SXBA_bit_is_set (rhs_var_ste_set, ste)) {
 		    /* Variable de la LHS non deja definie en RHS */
-		    is_top_down_erasing_grammar = is_top_down_erasing_clause = SXTRUE;
-		    is_simple_grammar = is_simple_clause = SXFALSE;
+		    is_top_down_erasing_grammar = is_top_down_erasing_clause = true;
+		    is_simple_grammar = is_simple_clause = false;
 
 		    if (is_proper || is_simple) {
 		      sxerror (SXVISITED->token.source_index,
@@ -1734,7 +1734,7 @@ static void
 false_clause_propagate (void)
 {
   SXINT false_clause_propagate_clause, A, A_clause, bot, top;
-  SXBOOLEAN done;
+  bool done;
   SXBA A_clause_set;
 
   if (!IS_EMPTY (new_false_clause_stack)) {
@@ -1788,7 +1788,7 @@ false_clause_propagate (void)
     /* Algo un peu grossier qui "rate" par exemple A --> A (toutes les autres A-clauses sont false) */
     /* On laisse la suite s'occuper de ce cas (non_instantiable) */
     while (!done) {
-      done = SXTRUE;
+      done = true;
 
       /* On saute l'axiome (appele depuis le main, donc pas faux) */
       A = 1;
@@ -1818,7 +1818,7 @@ false_clause_propagate (void)
 
 	      while ((A_clause = sxba_scan (A_clause_set, A_clause)) > 0) {
 		if (SXBA_bit_is_reset_set (false_clause_set, A_clause)) {
-		  done = SXFALSE;
+		  done = false;
 #if 0
 		  fprintf (sxtty, "Induced false clause #%ld\n", A_clause);
 #endif
@@ -1949,7 +1949,7 @@ equiv_prdct (SXINT cur_x, SXINT next_x, SXINT equiv_prdct_prev_var, SXINT equiv_
     return 0;
 }
 
-static SXBOOLEAN
+static bool
 is_equiv_prdct (SXINT cur_x, 
 		SXINT next_clause_bot, 
 		SXINT delta, 
@@ -1966,14 +1966,14 @@ is_equiv_prdct (SXINT cur_x,
     if ((next_var = equiv_prdct (cur_x, next_x, is_equiv_prdct_prev_var, is_equiv_prdct_lhs_var)) > 0) {
 
 	if (n == 0)
-	    return SXTRUE;
+	    return true;
 
 	SXBA_1_bit (next_rhs_set, delta);
 
 	for (next_delta = 0; next_delta < rhs_lgth; next_delta++) {
 	    if (!SXBA_bit_is_set (next_rhs_set, next_delta)) {
 		if (is_equiv_prdct (cur_x+1, next_clause_bot, next_delta, rhs_lgth, is_equiv_prdct_lhs_var, next_var, is_equiv_prdct_max_var, n-1))
-		    return SXTRUE;
+		    return true;
 	    }
 	}
 
@@ -1986,11 +1986,11 @@ is_equiv_prdct (SXINT cur_x,
 	    next_var2cur [y] = 0;
     }
 
-    return SXFALSE;
+    return false;
 }
     
 
-static SXBOOLEAN
+static bool
 equiv_rhs (SXINT equiv_rhs_cur_clause, SXINT next_clause)
 {
     SXINT		cur_clause_rhs, cur_clause_bot, next_clause_rhs, next_clause_bot, rhs_lgth, equiv_rhs_lhs_var, equiv_rhs_max_var;
@@ -2015,13 +2015,13 @@ equiv_rhs (SXINT equiv_rhs_cur_clause, SXINT next_clause)
 
     if (delta == rhs_lgth)
 	/* next_var2cur est RAZe */
-	return SXFALSE;
+	return false;
 
     for (y = equiv_rhs_max_var; y > equiv_rhs_lhs_var; y--) {
 	next_var2cur [y] = 0;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -2031,7 +2031,7 @@ is_a_set (void)
 {
     /* We check that clauses are all different after permutation of their RHSs */
     SXINT		next_clause, next_rhs, rhs_lgth, cur_bot, cur_x, is_a_set_cur_prdct, next_prdct;
-    SXBOOLEAN	is_cur_bottom_up_erasing, is_next_bottom_up_erasing;
+    bool	is_cur_bottom_up_erasing, is_next_bottom_up_erasing;
     SXINT		*ne_couples, *e_couples;
     SXBA	tbp;
 
@@ -2153,7 +2153,7 @@ is_a_set (void)
 		/* XxY_erase (rcg_clauses, next_clause); */ /* Le 09/04/04 */
 	      }
 
-	      has_identical_clauses = SXTRUE;
+	      has_identical_clauses = true;
 	      SXBA_1_bit (has_an_identical_clause_set, next_clause);
 	      clause2identical [next_clause] = cur_clause;
 	    }
@@ -2182,7 +2182,7 @@ is_a_set (void)
 		/* XxY_erase (rcg_clauses, next_clause); */ /* Le 09/04/04 */
 	      }
 
-	      has_identical_clauses = SXTRUE;
+	      has_identical_clauses = true;
 	      SXBA_1_bit (has_an_identical_clause_set, next_clause);
 	      clause2identical [next_clause] = cur_clause;
 	    }
@@ -2216,7 +2216,7 @@ extract_params (SXINT prdct)
 
 			if (!SXBA_bit_is_reset_set (var_set, symb)) {
 			    /* Occurrence multiple de la variable symb */
-			    must_be_checked = SXTRUE;
+			    must_be_checked = true;
 			    SXBA_1_bit (multiple_var_set, symb);
 			}
 		    }
@@ -2243,7 +2243,7 @@ set_equal (SXINT i, SXINT j)
 
 
 
-static SXBOOLEAN
+static bool
 is_instantiable_clause (void)
 {
     /* On ne considere que les parametres ayant une variable de multiple_var_set */
@@ -2393,7 +2393,7 @@ is_instantiable_clause (void)
 
 	while ((j = sxba_scan (less_i, j)) > 0) {
 	    if (SXBA_bit_is_set (less_eq [j], i))
-		return SXFALSE;
+		return false;
 	}
 
 	j = i;
@@ -2404,11 +2404,11 @@ is_instantiable_clause (void)
 	    symbj = XH_list_elem (rcg_parameters, state_stack [j]);
 
 	    if (symbi < 0 && symbj < 0 && symbi != symbj)
-		return SXFALSE;
+		return false;
 	}
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -2425,7 +2425,7 @@ check_counter_args (void)
   SXBA      has_t_param_set, counter_param_set, variable_set, *prdct2clause_set, local_clause_set;
   SXINT     *Ak_stack_check_counter_args;
   SXNODE    *prdct_ptr, *param_ptr;
-  SXBOOLEAN has_var;
+  bool has_var;
 
   sxinitialise (bot); /* pour faire taire gcc -Wunused -Wuninitialized */
 
@@ -2557,7 +2557,7 @@ check_counter_args (void)
       /* A occurre ds cur_clause en lhs */
       lhs_prdct = XxY_X (rcg_clauses, cur_clause) & lhs_prdct_filter;
       prdct_bot = XH_X (rcg_predicates, lhs_prdct);
-      has_var = SXFALSE;
+      has_var = false;
 
       x = prdct_bot+2+k;
       param = XH_list_elem (rcg_predicates, x);
@@ -2572,7 +2572,7 @@ check_counter_args (void)
 
 	  if (symb > 0) {
 	    SXBA_1_bit (variable_set, symb);
-	    has_var = SXTRUE;
+	    has_var = true;
 	  }
 
 	  param_bot++;
@@ -2678,9 +2678,9 @@ check_linearity (void)
     symb_Ak_stack += max_garity+1;
   }
 
-  is_left_linear_grammar = SXTRUE;
-  is_right_linear_grammar = SXTRUE;
-  is_overlapping_grammar = SXFALSE;
+  is_left_linear_grammar = true;
+  is_right_linear_grammar = true;
+  is_overlapping_grammar = false;
 
   XxY_foreach (rcg_clauses, cur_clause_check_linearity) {
     if (clause2identical [cur_clause_check_linearity] == cur_clause_check_linearity && !SXBA_bit_is_set (false_clause_set, cur_clause_check_linearity)) {
@@ -2710,7 +2710,7 @@ check_linearity (void)
 	      if (symb > 0) {
 		if (!SXBA_bit_is_reset_set (lhs_var_set, symb)) {
 		  /* Occur multiple de symb en LHS */
-		  is_left_linear_grammar = SXFALSE;
+		  is_left_linear_grammar = false;
 
 		  if (is_proper || is_simple)
 		    sxerror (param_ptr->token.source_index,
@@ -2781,7 +2781,7 @@ check_linearity (void)
 			SXBA_1_bit (nl_Ak_set, left_Ak);
 			SXBA_1_bit (nl_Ak_set, Ak);
 
-			is_right_linear_grammar = SXFALSE;
+			is_right_linear_grammar = false;
 
 			if (is_proper || is_simple)
 			  sxerror (param_ptr->token.source_index,
@@ -2795,7 +2795,7 @@ check_linearity (void)
 
 			if (param != var2param_check_linearity [symb])
 			  /* La meme variable figure dans 2 args differents => overlapping */
-			  is_overlapping_grammar = SXTRUE;
+			  is_overlapping_grammar = true;
 		      }
 		    
 		      symb_Ak_stack = symb2Ak_stack [symb];
@@ -2844,8 +2844,8 @@ check_linearity (void)
     sxba_or (non_linear_Ak_set, derive_Ak [Ak]);
   }
 
-  if (is_left_linear_grammar == SXFALSE || is_right_linear_grammar == SXFALSE)
-    is_proper_grammar = is_simple_grammar = SXFALSE;
+  if (is_left_linear_grammar == false || is_right_linear_grammar == false)
+    is_proper_grammar = is_simple_grammar = false;
 
   sxfree (lhs_var_set);
   sxfree (rhs_var_set);
@@ -2979,7 +2979,7 @@ is_instantiable (void)
 		sxba_empty (equal [i]), sxba_empty (plus1 [i]), sxba_empty (moins1 [i]),
 		sxba_empty (less [i]), sxba_empty (less_eq [i]);
 
-	    must_be_checked = SXFALSE;
+	    must_be_checked = false;
 	}
     }
 }
@@ -3065,7 +3065,7 @@ Xref (void)
 	      } 
 
 	      if (XH_list_elem (rcg_predicates, y) == 1) {
-		is_negative = SXTRUE;
+		is_negative = true;
 		SXBA_1_bit (negative_nt_set, nt);
 	      }
 
@@ -3107,7 +3107,7 @@ has_loops (void)
   /* Detecte les productions de la forme A(\vec{\alpha}) --> A(\vec{\alpha}) &Lex(...) . */
   SXINT has_loops_clause, rhs, has_loops_lhs_prdct, rhs_prdct, x, top, nt;
   SXINT	cur2, bot2, top2, param,cur3, bot3, top3;
-  SXBOOLEAN	has_lhs_prdct;
+  bool	has_lhs_prdct;
 
   XxY_foreach (rcg_clauses, has_loops_clause) {
     if (clause2identical [has_loops_clause] == has_loops_clause && !SXBA_bit_is_set (false_clause_set, has_loops_clause)) { /* Le 10/02/04 */
@@ -3115,14 +3115,14 @@ has_loops (void)
 
       if (rhs > 0) {
 	has_loops_lhs_prdct = XxY_X (rcg_clauses, has_loops_clause) & lhs_prdct_filter;
-	has_lhs_prdct = SXFALSE;
+	has_lhs_prdct = false;
 
 	for (top = XH_X (rcg_rhs, rhs+1), x = XH_X (rcg_rhs, rhs); x < top; x++) {
 	  rhs_prdct = XH_list_elem (rcg_rhs, x);
 	  nt = XH_list_elem (rcg_predicates, XH_X (rcg_predicates, rhs_prdct)+1);
 
 	  if (rhs_prdct == has_loops_lhs_prdct)
-	    has_lhs_prdct = SXTRUE;
+	    has_lhs_prdct = true;
 	  else
 	    if (nt != LEX_ic)
 	      break;
@@ -3154,7 +3154,7 @@ has_loops (void)
 	    SXBA_1_bit (loop_clause_set, has_loops_clause);
 	    nt = XH_list_elem (rcg_predicates, XH_X (rcg_predicates, has_loops_lhs_prdct)+1);
 	    SXBA_1_bit (loop_nt_set, nt);
-	    is_loop_grammar = SXTRUE;
+	    is_loop_grammar = true;
 	  }
 	}
       }
@@ -3458,13 +3458,13 @@ clause2rhsnt_nb (SXINT clause, SXINT nt)
 #endif /* 0 */
 
 
-static SXBOOLEAN
+static bool
 OR (SXBA lhs_bits_array, SXBA rhs_bits_array)
 {
     SXBA	lhs_bits_ptr, rhs_bits_ptr;
     SXINT	slices_number = SXNBLONGS (SXBASIZE (rhs_bits_array));
     SXBA_ELT	val1, val2;
-    SXBOOLEAN		has_changed = SXFALSE;
+    bool		has_changed = false;
 
     lhs_bits_ptr = lhs_bits_array + slices_number, rhs_bits_ptr = rhs_bits_array + slices_number;
 
@@ -3475,7 +3475,7 @@ OR (SXBA lhs_bits_array, SXBA rhs_bits_array)
 
 	if (val1 != val2)
 	{
-	    has_changed = SXTRUE;
+	    has_changed = true;
 	    *lhs_bits_ptr = val2;
 	}
 
@@ -3495,22 +3495,22 @@ set_empty (SXINT nt, SXBA bvect)
   /* On associe le couple (nt, bvect) */
   SXINT		clause, rhsnb, pos;
   SXBA	        line;
-  SXBOOLEAN	is_first_occur, has_changed;
+  bool	is_first_occur, has_changed;
   SXBA          empty_vector;
 
   if (SXBA_bit_is_reset_set (nt2empty_vector_is_set, nt)) {
-    has_changed = SXTRUE;
+    has_changed = true;
     sxba_copy (nt2empty_vector [nt], bvect);
   }
   else {
     empty_vector = nt2empty_vector [nt];
     /* 0 => peut deriver ds le vide l'emporte */
-    has_changed = SXFALSE;
+    has_changed = false;
     pos = -1;
 
     while ((pos = sxba_scan (empty_vector, pos)) >= 0) {
       if (!SXBA_bit_is_set (bvect, pos)) {
-	has_changed = SXTRUE;
+	has_changed = true;
 	SXBA_0_bit (empty_vector, pos);
       }
     }
@@ -3569,7 +3569,7 @@ substitute (SXINT clause)
   */
   SXINT		lhs_prdct, bot, top, nt, pos, param, bot2, top2, symb, uparnb;
   SXINT		x, y;
-  SXBOOLEAN	is_undef;
+  bool	is_undef;
 
   lhs_prdct = XxY_X (rcg_clauses, clause) & lhs_prdct_filter;
   bot = XH_X (rcg_predicates, lhs_prdct);
@@ -3585,7 +3585,7 @@ substitute (SXINT clause)
     if (param != 0) {
       bot2 = XH_X (rcg_parameters, param);
       top2 = XH_X (rcg_parameters, param+1);
-      is_undef = SXFALSE;
+      is_undef = false;
 
       for (y = bot2; y < top2; y++) {
 	symb = XH_list_elem (rcg_parameters, y);
@@ -3599,7 +3599,7 @@ substitute (SXINT clause)
 	}
 	else {
 	  if (!SXBA_bit_is_set (V_set, symb))
-	    is_undef = SXTRUE;
+	    is_undef = true;
 	}
       }
 
@@ -3654,13 +3654,13 @@ substitute (SXINT clause)
 }
 
 
-static SXBOOLEAN
+static bool
 is_lhs_complete (SXINT clause)
 {
     /* On regarde si le vecteur caracteristique de clause peut se calculer sans regarder sa RHS */
     SXINT		lhs_prdct, bot, top, nt, pos, param, bot2, top2, symb;
     SXINT		x, y;
-    SXBOOLEAN	is_complete;
+    bool	is_complete;
 
     lhs_prdct = XxY_X (rcg_clauses, clause) & lhs_prdct_filter;
     bot = XH_X (rcg_predicates, lhs_prdct);
@@ -3668,7 +3668,7 @@ is_lhs_complete (SXINT clause)
 
     /* bvect = 0; */
     sxba_empty (wbvect);
-    is_complete = SXTRUE;
+    is_complete = true;
 
     for (pos = 0, top = XH_X (rcg_predicates, lhs_prdct+1), x = bot+2; x < top; pos++, x++) {
 	param = XH_list_elem (rcg_predicates, x);
@@ -3691,7 +3691,7 @@ is_lhs_complete (SXINT clause)
 	    if (y >= top2) {
 		/* param ne contient que des variables */
 		/* On va examiner la RHS */
-		is_complete = SXFALSE;
+		is_complete = false;
 
 		for (y = bot2; y < top2; y++) {
 		    symb = XH_list_elem (rcg_parameters, y);
@@ -3730,7 +3730,7 @@ walk_rhs_prdct (SXINT clause, SXINT cur, SXINT top)
     SXINT		U_set_nb, Vtop, NVtop0, NVtop, xparam, param, bot3, cur3, top3, Vnb, NVnb, Unb, var;
     SXINT		prdct, bot2, top2, nt, arity;
     SXINT		n, max, v, i, l;
-    SXBOOLEAN	is_set;
+    bool	is_set;
     SXBA	U_line;
 
     if (cur == top) {
@@ -3782,13 +3782,13 @@ walk_rhs_prdct (SXINT clause, SXINT cur, SXINT top)
 			/* Seules les variables sensibles de la partie gauche sont prises en compte */
 			U_set_nb++;
 			U_line = U_set [U_set_nb];
-			is_set = SXFALSE;
+			is_set = false;
 			
 			while(!IS_EMPTY (U_stack)) {
 			    var = POP (U_stack);
 
 			    if (SXBA_bit_is_set (lhs_var_set, var)) {
-				is_set = SXTRUE;
+				is_set = true;
 				SXBA_1_bit (GU_set, var);
 				SXBA_1_bit (U_line, var);
 			    }
@@ -4011,7 +4011,7 @@ walk_rhs_prdct_bvect (SXINT clause,
   /* Si bvect != NULL, c'est une chaine de bits  */
 
   SXINT		Vtop, NVtop, paramtop, pos, cur2, param, bot3, cur3, top3, symb, var; 
-  SXBOOLEAN	is_arg_empty, is_arg_non_empty, has_t;
+  bool	is_arg_empty, is_arg_non_empty, has_t;
   /* Le 19/12/03 */
   /* Si is_arg_empty ou is_arg_non_empty sont positionnes, on est su^r que c'est vide ou que c'est non vide
      sinon doute!! */
@@ -4025,7 +4025,7 @@ walk_rhs_prdct_bvect (SXINT clause,
     /* bvect >>= 1; */
     if (bvect) {
       is_arg_non_empty = SXBA_bit_is_set (bvect, pos);
-      is_arg_empty = SXFALSE; /* on sait pas */
+      is_arg_empty = false; /* on sait pas */
     }
     else {
       /* La` on sait ... */
@@ -4038,14 +4038,14 @@ walk_rhs_prdct_bvect (SXINT clause,
     if (param != 0) {
       bot3 = XH_X (rcg_parameters, param);
       top3 = XH_X (rcg_parameters, param+1);
-      has_t = SXFALSE;
+      has_t = false;
 
       for (cur3 = bot3; cur3 < top3; cur3++) {
 	symb = XH_list_elem (rcg_parameters, cur3);
 
 	if (symb < 0) {
 	  /* terminal */
-	  has_t = SXTRUE;
+	  has_t = true;
 	  break;
 	}
       }
@@ -4247,12 +4247,12 @@ propagate_empty_memel (SXINT param, SXINT val)
 }
 
 /* val > 1, on exploite */
-static SXBOOLEAN
+static bool
 process_memel_result (SXINT process_memel_result_clause, SXINT param, SXINT rhs_pos, SXINT val)
 {
   SXINT     size;
   SXBA    process_memel_result_lhs_pos_set, empty_vector;
-  SXBOOLEAN has_changed;
+  bool has_changed;
 
   propagate_empty_memel (param, val);
     
@@ -4271,11 +4271,11 @@ process_memel_result (SXINT process_memel_result_clause, SXINT param, SXINT rhs_
 
       if (!sxba_is_empty (empty_vector)) {
 	sxba_empty (empty_vector);
-	return SXTRUE; /* Ca a change */
+	return true; /* Ca a change */
       }
     }
 
-    return SXFALSE;
+    return false;
   }
 
   /* ... donc val == 2 => param ne derive pas ds le vide */
@@ -4300,7 +4300,7 @@ empty_construction (void)
   SXINT     empty_construction_clause, bot, cur, top, empty_construction_lhs_prdct, lhs_pos, param, param1, param2, bot2, cur2, top2;
   SXINT     rhs, prdct, nt, pair, rhs_pos, cur_rhs_pos, pos, val; 
   SXBA    clause_empty_vector, nt_empty_vector, line;
-  SXBOOLEAN is_init_phase, has_changed, is_first;
+  bool is_init_phase, has_changed, is_first;
 
   /* Initialement, on remplit nt2empty_vector et clause2empty_vector de facon telle que si nt2empty_vector [nt] [pos] ==
      1 => pos ne derive pas ds le vide
@@ -4323,17 +4323,17 @@ empty_construction (void)
   }
 
   sxba_empty (nt_set);
-  is_init_phase = SXTRUE;
+  is_init_phase = true;
 
   while (!IS_EMPTY (clause_stack)) {
     while (!IS_EMPTY (clause_stack)) {
       empty_construction_clause = POP (clause_stack);
       SXBA_0_bit (clause_set, empty_construction_clause);
       clause_empty_vector = clause2empty_vector [empty_construction_clause];
-      has_changed = SXFALSE;
+      has_changed = false;
 
       if (is_init_phase) {
-	has_changed = SXTRUE; /* Ds tous les cas */
+	has_changed = true; /* Ds tous les cas */
 	/* pos ne derive pas ds le vide si un arg contient un terminal */
 	empty_construction_lhs_prdct = XxY_X (rcg_clauses, empty_construction_clause) & lhs_prdct_filter;
 	bot = XH_X (rcg_predicates, empty_construction_lhs_prdct);
@@ -4459,7 +4459,7 @@ empty_construction (void)
 		    /* val == 2 => ne derive jamais ds le vide */
 		    /* val == 3 => contradiction, clause non instantiable */
 		    if (val > 1 && process_memel_result (empty_construction_clause, param, cur_rhs_pos, val))
-		      has_changed = SXTRUE;
+		      has_changed = true;
 		  }
 		}
 	      }
@@ -4476,7 +4476,7 @@ empty_construction (void)
 		  val = walk_empty_memel (param2, (SXINT)0);
 		    
 		  if (val > 1 && process_memel_result (empty_construction_clause, param2, cur_rhs_pos+1, val))
-		    has_changed = SXTRUE;
+		    has_changed = true;
 		}
 		else {
 		  val = walk_empty_memel (param1, (SXINT)0);
@@ -4484,7 +4484,7 @@ empty_construction (void)
 		    
 		  if (val > 1 && (process_memel_result (empty_construction_clause, param1, cur_rhs_pos, val)
 				  || process_memel_result (empty_construction_clause, param2, cur_rhs_pos+1, val)))
-		    has_changed = SXTRUE;
+		    has_changed = true;
 		}
 	      }
 	      else {
@@ -4497,7 +4497,7 @@ empty_construction (void)
 		    val = walk_empty_memel (param2, (SXINT)0);
 		    
 		    if (val > 1 && process_memel_result (empty_construction_clause, param2, cur_rhs_pos+1, val))
-		      has_changed = SXTRUE;
+		      has_changed = true;
 		  }
 		}
 		else {
@@ -4530,12 +4530,12 @@ empty_construction (void)
 
       /* Au moins une nt_clause a change' */
       empty_construction_clause = 0;
-      is_first = SXTRUE;
+      is_first = true;
 
       while ((empty_construction_clause = sxba_scan (line, empty_construction_clause)) > 0) {
 	if (clause2identical [empty_construction_clause] == empty_construction_clause && !SXBA_bit_is_set (false_clause_set, empty_construction_clause)) {
 	  if (is_first) {
-	    is_first = SXFALSE;
+	    is_first = false;
 	    sxba_copy (pos_set, clause2empty_vector [empty_construction_clause]);
 	  }
 	  else
@@ -4561,7 +4561,7 @@ empty_construction (void)
       }
     }
 
-    is_init_phase = SXFALSE;
+    is_init_phase = false;
   }
 }
 #endif /* 1 */
@@ -4995,7 +4995,7 @@ first_last_complete (SXINT clause)
     SXINT		ntpos, *X_stack, Ak, param3, bot3, top3, x3, symb3;
     SXINT		xx, Bh, elem, elem2;
     SXBA	cur_first, cur_last;
-    SXBOOLEAN	is_t_arg;
+    bool	is_t_arg;
 
     lhs_prdct = XxY_X (rcg_clauses, clause) & lhs_prdct_filter;
     bot = XH_X (rcg_predicates, lhs_prdct);
@@ -5016,14 +5016,14 @@ first_last_complete (SXINT clause)
 	    bot2 = XH_X (rcg_parameters, param);
 	    top2 = XH_X (rcg_parameters, param+1);
 
-	    is_t_arg = SXFALSE;
+	    is_t_arg = false;
 
 	    for (y = bot2; y < top2; y++) {
 		/* On regarde si l'arg contient un terminal */
 		symb = XH_list_elem (rcg_parameters, y);
 
 		if (symb < 0) {
-		    is_t_arg = SXTRUE;
+		    is_t_arg = true;
 		    break;
 		}
 	    }
@@ -5319,7 +5319,7 @@ first_last_complete (SXINT clause)
 #endif
 
 #if 0
-static SXBOOLEAN first_last_arg_walk (SXINT clause, 
+static bool first_last_arg_walk (SXINT clause, 
 				    SXINT cur, 
 				    SXINT top, 
 				    SXINT bot2, 
@@ -5327,14 +5327,14 @@ static SXBOOLEAN first_last_arg_walk (SXINT clause,
 				    SXBA bvect, 
 				    SXINT predef_bvect);
 
-static SXBOOLEAN
+static bool
 first_last_rhs_walk (SXINT clause, SXINT cur, SXINT top)
 {
     /* Parcourt de la rhs de clause.  Le predicat courant est en cur */
     SXINT		U_set_nb, Vtop, NVtop0, NVtop, xparam, param, bot3, cur3, top3, Vnb, NVnb, Unb, var;
     SXINT		prdct, bot2, top2, nt, arity;
     SXINT		n, max, v, i, l;
-    SXBOOLEAN	is_set, ret_val;
+    bool	is_set, ret_val;
     SXBA	U_line;
 
     if (cur == top) {
@@ -5370,7 +5370,7 @@ first_last_rhs_walk (SXINT clause, SXINT cur, SXINT top)
 
 		if (NVnb + Unb == 0) {
 		    /* Toutes les var sont vides => Echec */
-		    return SXFALSE;
+		    return false;
 		}
 
 		if (NVnb == 0) {
@@ -5388,13 +5388,13 @@ first_last_rhs_walk (SXINT clause, SXINT cur, SXINT top)
 			/* Seules les variables sensibles de la partie gauche sont prises en compte */
 			U_set_nb++;
 			U_line = U_set [U_set_nb];
-			is_set = SXFALSE;
+			is_set = false;
 			
 			while(!IS_EMPTY (U_stack)) {
 			    var = POP (U_stack);
 
 			    if (var > 0 && SXBA_bit_is_set (lhs_var_set, var)) {
-				is_set = SXTRUE;
+				is_set = true;
 				SXBA_1_bit (GU_set, var);
 				SXBA_1_bit (U_line, var);
 			    }
@@ -5475,7 +5475,7 @@ first_last_rhs_walk (SXINT clause, SXINT cur, SXINT top)
 	    first_last_complete (clause);
 	}
 
-	ret_val = SXTRUE;
+	ret_val = true;
     }
     else {
       prdct = XH_list_elem (rcg_rhs, cur);
@@ -5503,13 +5503,13 @@ first_last_rhs_walk (SXINT clause, SXINT cur, SXINT top)
 	    /* Empty est alloue */
 	    ret_val = first_last_arg_walk (clause, cur, top, bot2+2, top2, nt2empty_vector [nt], 0);
 #if 0
-	    ret_val = SXFALSE;
+	    ret_val = false;
 
 	    XxY_Xforeach (empty, nt, elem) {
 	      bvect = XxY_Y (empty, elem);
 
 	      if (first_last_arg_walk (clause, cur, top, bot2+2, top2, bvect, 0))
-		ret_val = SXTRUE;
+		ret_val = true;
 	    }
 #endif
 	  }
@@ -5553,7 +5553,7 @@ first_last_rhs_walk (SXINT clause, SXINT cur, SXINT top)
 	      ret_val = first_last_arg_walk (clause, cur, top, bot2+2, top2, 0);
 
 	      if (first_last_arg_walk (clause, cur, top, bot2+2, top2, 3))
-		ret_val = SXTRUE;
+		ret_val = true;
 #endif
 
 	      break;
@@ -5592,7 +5592,7 @@ first_last_rhs_walk (SXINT clause, SXINT cur, SXINT top)
 		ret_val = first_last_arg_walk (clause, cur, top, bot2+3, top2, 0);
 
 		if (first_last_arg_walk (clause, cur, top, bot2+3, top2, 1))
-		  ret_val = SXTRUE;
+		  ret_val = true;
 #endif
 		break;
 	      }
@@ -5604,10 +5604,10 @@ first_last_rhs_walk (SXINT clause, SXINT cur, SXINT top)
 	      ret_val = first_last_arg_walk (clause, cur, top, bot2+2, top2, 1);
 
 	      if (first_last_arg_walk (clause, cur, top, bot2+2, top2, 2))
-		ret_val = SXTRUE;
+		ret_val = true;
 
 	      if (first_last_arg_walk (clause, cur, top, bot2+2, top2, 3))
-		ret_val = SXTRUE;
+		ret_val = true;
 #endif
 	      break;
 
@@ -5632,7 +5632,7 @@ first_last_rhs_walk (SXINT clause, SXINT cur, SXINT top)
     return ret_val;
 }
 
-static SXBOOLEAN
+static bool
 first_last_arg_walk (SXINT clause, 
 		     SXINT cur, 
 		     SXINT top, 
@@ -5650,7 +5650,7 @@ first_last_arg_walk (SXINT clause,
      3 => 2 args non vides */
   /* Si bvect != NULL, c'est une chaine de bits  */
   SXINT		Vtop, NVtop, paramtop, pos, cur2, param, bot3, cur3, top3, symb, var; 
-  SXBOOLEAN	is_arg_empty, is_arg_non_empty, has_t, ret_val;
+  bool	is_arg_empty, is_arg_non_empty, has_t, ret_val;
   /* Le 19/12/03 */
   /* Si is_arg_empty ou is_arg_non_empty sont positionnes, on est su^r que c'est vide ou que c'est non vide
      sinon doute!! */
@@ -5662,7 +5662,7 @@ first_last_arg_walk (SXINT clause,
   for (pos = 0, cur2 = bot2; cur2 < top2; pos++, cur2++) {
     if (bvect) {
       is_arg_non_empty = SXBA_bit_is_set (bvect, pos);
-      is_arg_empty = SXFALSE; /* on sait pas */
+      is_arg_empty = false; /* on sait pas */
     }
     else {
       /* La` on sait ... */
@@ -5675,14 +5675,14 @@ first_last_arg_walk (SXINT clause,
     if (param != 0) {
       bot3 = XH_X (rcg_parameters, param);
       top3 = XH_X (rcg_parameters, param+1);
-      has_t = SXFALSE;
+      has_t = false;
 
       for (cur3 = bot3; cur3 < top3; cur3++) {
 	symb = XH_list_elem (rcg_parameters, cur3);
 
 	if (symb < 0) {
 	  /* terminal */
-	  has_t = SXTRUE;
+	  has_t = true;
 	  break;
 	}
       }
@@ -5746,7 +5746,7 @@ first_last_arg_walk (SXINT clause,
     ret_val = first_last_rhs_walk (clause, cur+1, top);
   }
   else
-    ret_val = SXFALSE;
+    ret_val = false;
 
   /* On remet en etat */
   while (V_stack [0] > Vtop) {
@@ -6161,7 +6161,7 @@ static SXINT		infix_args_top, infix_args_size, iargs2arg_disp_top, iargs2arg_dis
 
 
 
-static SXBOOLEAN
+static bool
 set_iargs2arg_disp (SXINT set_iargs2arg_disp_clause, SXINT param, SXINT *iarg)
 {
     /* Retourne le iarg ou est range param */
@@ -6170,14 +6170,14 @@ set_iargs2arg_disp (SXINT set_iargs2arg_disp_clause, SXINT param, SXINT *iarg)
     for (x = clause2iargs [set_iargs2arg_disp_clause]; x < iargs2arg_disp_top; x++) {
 	if (iargs2arg_disp [x].arg == param) {
 	    *iarg = x;
-	    return SXTRUE;
+	    return true;
 	}
     }
 
     iargs2arg_disp [*iarg = x].arg = param;
     iargs2arg_disp_top++;
 
-    return SXFALSE;
+    return false;
 }
 
 
@@ -6186,7 +6186,7 @@ fill_infix_args (SXINT fill_infix_args_clause, SXINT lhs_cur3, SXINT lhs_top3, S
 {
     /* On met ds infix_args les iargs qui correspondend a la reconnaissance de la position lhs_cur3 */
     SXINT		symb, cur, top, bot, prdct, bot2, top2, nt, cur2, k, param, bot3, top3, lcur3, cur3, x;
-    SXBOOLEAN	is_lgth_1 = SXFALSE;
+    bool	is_lgth_1 = false;
 
     symb = XH_list_elem (rcg_parameters, lhs_cur3);
 
@@ -6196,7 +6196,7 @@ fill_infix_args (SXINT fill_infix_args_clause, SXINT lhs_cur3, SXINT lhs_top3, S
     /* Ce qui suit permet de sauter (de facon non-deterministe) au symbole suivant ds tous les cas
        avec un decompte minimal */
     if (symb < 0) {
-	is_lgth_1 = SXTRUE;
+	is_lgth_1 = true;
 	infix_args [infix_args_top] = -1;
 	infix_args_top++;
 
@@ -6244,9 +6244,9 @@ fill_infix_args (SXINT fill_infix_args_clause, SXINT lhs_cur3, SXINT lhs_top3, S
 #if 0
 			      /* Supprime' le 03/02/2004 car a priori c,a ne correspond pas a du TOP_DOWN_ERASED!! */
 				if (top3-bot3 == 1)
-				    is_lgth_1 = SXTRUE;
+				    is_lgth_1 = true;
 #endif /* 0 */
-				is_lgth_1 = SXTRUE;
+				is_lgth_1 = true;
 
 				set_iargs2arg_disp (fill_infix_args_clause, param, &(infix_args [infix_args_top]));
 				infix_args_top++;
@@ -6276,7 +6276,7 @@ fill_infix_args (SXINT fill_infix_args_clause, SXINT lhs_cur3, SXINT lhs_top3, S
 
 
 static SXINT
-walk_memel (SXINT iarg_bot, SXINT iarg, SXBOOLEAN with_Ak)
+walk_memel (SXINT iarg_bot, SXINT iarg, bool with_Ak)
 {
     SXINT pair, iarg1, iarg2, iarg_rel;
 
@@ -6368,7 +6368,7 @@ update_memel (SXINT update_memel_clause, SXINT rhs)
      iarg1 et iarg2 ont des longueurs calculees differentes */
   SXINT		top, cur, bot, prdct, bot2, nt, arity, cur2, cur3, top2, arg1, A1, A2, iarg1, arg2, iarg2, pair, base;
   SXINT         iarg1_lgth, iarg2_lgth;
-  SXBOOLEAN	is_old;
+  bool	is_old;
 
   if (rhs == 0) return;
 
@@ -6460,7 +6460,7 @@ canonical_form (SXINT canonical_form_clause, struct iarg_struct *iarg_struct, st
     while ((loc_iarg = sxba_scan (iarg_struct->set, loc_iarg)) >= 0) {
 	iarg = loc_iarg+base;
 
-	if ((iarg = walk_memel (base, iarg, SXFALSE)) <= 0)
+	if ((iarg = walk_memel (base, iarg, false)) <= 0)
 	    can_struct->lgth -= iarg;
 	else {
 	    /* On choisit comme representant de la classe d'equivalence, le + petit iarg */
@@ -6484,19 +6484,19 @@ canonical_form (SXINT canonical_form_clause, struct iarg_struct *iarg_struct, st
     }
 }
 
-static SXBOOLEAN
+static bool
 fill_iarg2_struct (SXINT fill_iarg2struct_clause, struct arg_memo *bot, struct arg_memo *top)
 {
     SXINT			iarg, x, arg, next;
     SXINT			*bot2, *top2;
-    SXBOOLEAN             ret_val;
+    bool             ret_val;
 
     if (bot == top) {
 	canonical_form (fill_iarg2struct_clause, &iarg2_struct, &can2_struct);
 
 	/* On compare can1_struct et can2_struct */
 	if (can2_struct.lgth != can1_struct.lgth)
-	    return SXFALSE;
+	    return false;
 
 #if 0
 	/* Le 03/02/2004 */
@@ -6504,16 +6504,16 @@ fill_iarg2_struct (SXINT fill_iarg2struct_clause, struct arg_memo *bot, struct a
 #endif /* 0 */
 
 	if (sxba_first_difference (can1_struct.set, can2_struct.set) >= 0)
-	  return SXFALSE;
+	  return false;
 
 	iarg = -1;
 
 	while ((iarg = sxba_scan (can1_struct.set, iarg)) >= 0) {
 	  if (can1_struct.nb [iarg] != can2_struct.nb [iarg])
-	    return SXFALSE;
+	    return false;
 	}
 
-	return SXTRUE;
+	return true;
     }
 
     /* Traitement du symbole courant */
@@ -6531,7 +6531,7 @@ fill_iarg2_struct (SXINT fill_iarg2struct_clause, struct arg_memo *bot, struct a
 
 		iarg2_struct.lgth += iarg;
 
-		if (ret_val) return SXTRUE;
+		if (ret_val) return true;
 	    }
 	}
 	else {
@@ -6544,23 +6544,23 @@ fill_iarg2_struct (SXINT fill_iarg2struct_clause, struct arg_memo *bot, struct a
 
 	    SXBA_0_bit (iarg2_struct.set, x);
 
-	    if (ret_val) return SXTRUE;
+	    if (ret_val) return true;
 	}
 	
 	bot2++;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
-static SXBOOLEAN
+static bool
 fill_iarg1_struct (SXINT fill_iarg1struct_clause, struct arg_memo *bot, struct arg_memo *top, SXINT iarg2)
 {
     SXINT arg2, iarg, x, arg, next;
     SXINT	*bot2, *top2;
     struct arg_memo	*pbot, *ptop;
-    SXBOOLEAN             ret_val;
+    bool             ret_val;
 
     if (bot == top) {
 	canonical_form (fill_iarg1struct_clause, &iarg1_struct, &can1_struct);
@@ -6587,7 +6587,7 @@ fill_iarg1_struct (SXINT fill_iarg1struct_clause, struct arg_memo *bot, struct a
 
 		iarg1_struct.lgth += iarg;
 
-		if (ret_val) return SXTRUE;
+		if (ret_val) return true;
 	    }
 	}
 	else {
@@ -6600,16 +6600,16 @@ fill_iarg1_struct (SXINT fill_iarg1struct_clause, struct arg_memo *bot, struct a
 
 	    SXBA_0_bit (iarg1_struct.set, x);
 
-	    if (ret_val) return SXTRUE;
+	    if (ret_val) return true;
 	}
 	
 	bot2++;
     }
 
-    return SXFALSE;
+    return false;
 }
 
-static SXBOOLEAN
+static bool
 is_iarg_equality (SXINT is_iarg_equality_clause, SXINT iarg1, SXINT iarg2)
 {
     SXINT arg1;
@@ -6682,7 +6682,7 @@ eval_arg (SXINT eval_arg_clause, struct arg_memo *bot, struct arg_memo *top)
       /* A FAIRE : On pourrait detecter des clauses inutiles :
 	 ... -> len(1,X) len (2,Y) A(X,Y) .
 	 Si de plus on a A0==A1 */
-      if ((lgth = walk_memel (clause2iargs [eval_arg_clause], iarg, SXTRUE)) <= 0) {
+      if ((lgth = walk_memel (clause2iargs [eval_arg_clause], iarg, true)) <= 0) {
 	local_val.min = local_val.max = -lgth;
       }
       else {
@@ -6861,7 +6861,7 @@ eval_arg (clause, bot, top)
       /* A FAIRE : On pourrait detecter des clauses inutiles :
 	 ... -> len(1,X) len (2,Y) A(X,Y) .
 	 Si de plus on a A0==A1 */
-      if ((iarg = walk_memel (clause2iargs [clause], iarg, SXTRUE)) <= 0) {
+      if ((iarg = walk_memel (clause2iargs [clause], iarg, true)) <= 0) {
 	local_min = /* local_len = */local_max = -iarg;
       }
       else {
@@ -7040,14 +7040,14 @@ Ak2min_construction (void)
   SXINT			min, max, lhs_pos, A1, A2, son1, son2, arg1, arg2, A1_min, arity, Ak2min_construction_max_clausek, clausek;
   SXINT			local_min, local_max, xbot, nt2IeqJ_top, nt2IeqJ_size;
   SXINT			*ip;
-  SXBOOLEAN		is_initial, noteq_has_changed = SXFALSE, has_min_changed;
+  bool		is_initial, noteq_has_changed = false, has_min_changed;
   struct arg_memo	*pbot, *ptop;
   SXBA		        ntline, is_initial_set, prev_Ak_max_set, Ak_max_set;
   SXINT                   StrLen1;
 
   if (sxverbosep) {
     fputs ("\tMin/Max Computing .... ", sxtty);
-    sxttycol1p = SXFALSE;
+    sxttycol1p = false;
   }
 
 #if 0
@@ -7189,7 +7189,7 @@ Ak2min_construction (void)
 
   for (Ak2min_construction_clause = 1; Ak2min_construction_clause <= last_clause; Ak2min_construction_clause++) {
     if (clause2identical [Ak2min_construction_clause] == Ak2min_construction_clause && !SXBA_bit_is_set (false_clause_set, Ak2min_construction_clause)) {
-      is_initial = SXTRUE;
+      is_initial = true;
       Ak2min_construction_lhs_prdct = XxY_X (rcg_clauses, Ak2min_construction_clause) & lhs_prdct_filter;
       lhs_bot2 = XH_X (rcg_predicates, Ak2min_construction_lhs_prdct);
       lhs_nt = XH_list_elem (rcg_predicates, lhs_bot2+1);
@@ -7234,7 +7234,7 @@ Ak2min_construction (void)
 	    /* appel positif */
 	    if ((nt > 0 && SXBA_bit_is_set (is_lhs_nt, nt)) || nt == STREQ_ic || nt == STREQLEN_ic || nt == STRLEN_ic) {
 	      if (nt > 0) {
-		is_initial = SXFALSE;
+		is_initial = false;
 	      }
 
 	      sxinitialise (iarg1); /* pour faire taire gcc -Wuninitialized */
@@ -7405,7 +7405,7 @@ Ak2min_construction (void)
 #if EBUG_PRDCT
 		  print_debug_prdct (A1,A2);
 #endif /* EBUG_PRDCT */
-		  noteq_has_changed = SXTRUE;
+		  noteq_has_changed = true;
 		  SXBA_1_bit (noteq_nt_set, lhs_nt);
 		}
 		else {
@@ -7421,7 +7421,7 @@ Ak2min_construction (void)
 #if EBUG_PRDCT
 		print_debug_prdct (A1,A2);
 #endif /* EBUG_PRDCT */
-		noteq_has_changed = SXTRUE;
+		noteq_has_changed = true;
 		SXBA_1_bit (noteq_nt_set, lhs_nt);
 	      }
 	    }
@@ -7445,7 +7445,7 @@ Ak2min_construction (void)
   }
 
   while (noteq_has_changed) {
-    noteq_has_changed = SXFALSE;
+    noteq_has_changed = false;
 
     nt = 0;
 
@@ -7478,7 +7478,7 @@ Ak2min_construction (void)
 #if EBUG_PRDCT
 		    print_debug_prdct (A1,A2);
 #endif /* EBUG_PRDCT */
-		    noteq_has_changed = SXTRUE;
+		    noteq_has_changed = true;
 		    SXBA_1_bit (noteq_nt_set, lhs_nt);
 		  }
 		  else {
@@ -7494,7 +7494,7 @@ Ak2min_construction (void)
 #if EBUG_PRDCT
 		  print_debug_prdct (A1,A2);
 #endif /* EBUG_PRDCT */
-		  noteq_has_changed = SXTRUE;
+		  noteq_has_changed = true;
 		  SXBA_1_bit (noteq_nt_set, lhs_nt);
 		}
 	      }
@@ -7616,7 +7616,7 @@ Ak2min_construction (void)
 
       /* On repercute le resultat vers les Ak */
       Ak = A_k2Ak (nt, 0);
-      has_min_changed = SXFALSE;
+      has_min_changed = false;
 
       for (x = 0; x < arity; Ak++, x++) {
 	/* Le 03/02/04 on reaffecte completemet les nouvelles valeurs des Ak2m[in|ax], idependamment des anciennes */
@@ -7627,7 +7627,7 @@ Ak2min_construction (void)
 	if (local_min >= 0 && (*ip == -1 || *ip > local_min)) {
 	  /* On prend le min des min */
 	  *ip = local_min;
-	  has_min_changed = SXTRUE;
+	  has_min_changed = true;
 	}
 
 	ip = &(Ak2max [Ak]);
@@ -7637,7 +7637,7 @@ Ak2min_construction (void)
 	  /* On prend le max des max */
 	  *ip = local_max;
 	  SXBA_1_bit (Ak_max_set, Ak);
-	  /* has_max_changed = SXTRUE; MODIF du 18/6/2002 */
+	  /* has_max_changed = true; MODIF du 18/6/2002 */
 	}
       }
 
@@ -7827,7 +7827,7 @@ Ak2min_construction (void)
 
   if (sxverbosep) {
     fputs ("done\n", sxtty);
-    sxttycol1p = SXTRUE;
+    sxttycol1p = true;
   }
 }
 
@@ -7841,7 +7841,7 @@ rcg_lo (void)
 
   if (sxverbosep) {
     fputs ("\tListing Output .... ", sxtty);
-    sxttycol1p = SXFALSE;
+    sxttycol1p = false;
   }
 
   vstr = varstr_alloc (32);
@@ -7943,7 +7943,7 @@ rcg_lo (void)
 
   if (sxverbosep) {
     fputs ("done\n", sxtty);
-    sxttycol1p = SXTRUE;
+    sxttycol1p = true;
   }
 }
 
@@ -7965,7 +7965,7 @@ smppass (void)
 
     if (sxverbosep) {
 	fputs ("\tSemantic Pass .... ", sxtty);
-	sxttycol1p = SXFALSE;
+	sxttycol1p = false;
     }
 
     /*   I N I T I A L I S A T I O N S   */
@@ -8069,8 +8069,8 @@ smppass (void)
 	
     /*   A T T R I B U T E S    E V A L U A T I O N   */
     /* is_a_complete_terminal_grammar ssi toutes les clauses sont de la forme A (t) --> . */
-    is_proper_grammar = is_simple_grammar = is_left_linear_grammar = is_right_linear_grammar = is_a_complete_terminal_grammar = SXTRUE;
-    is_bottom_up_erasing_grammar = is_top_down_erasing_grammar = is_loop_grammar = is_combinatorial_grammar = is_overlapping_grammar = SXFALSE;
+    is_proper_grammar = is_simple_grammar = is_left_linear_grammar = is_right_linear_grammar = is_a_complete_terminal_grammar = true;
+    is_bottom_up_erasing_grammar = is_top_down_erasing_grammar = is_loop_grammar = is_combinatorial_grammar = is_overlapping_grammar = false;
 
     sxsmp (sxatcvar.atc_lv.abstract_tree_root, rcg_pi, rcg_pd);
 
@@ -8086,7 +8086,7 @@ smppass (void)
 
     if (sxverbosep) {
 	fputs ("done\n", sxtty);
-	sxttycol1p = SXTRUE;
+	sxttycol1p = true;
     }
     
     false_A_set = sxba_calloc (max_nt + 1);
@@ -8152,7 +8152,7 @@ smppass (void)
 	do {
 	  if (sxverbosep) {
 	    fputs ("\tChecking .... ", sxtty);
-	    sxttycol1p = SXFALSE;
+	    sxttycol1p = false;
 	  }
 
 	  false_clause_propagate ();
@@ -8320,7 +8320,7 @@ smppass (void)
 		 les 0 reperent les arguments pouvant etre vides
 		 les 1 ceux qui ne peuvent pas deriver ds le vide
 	      */
-	      /* is_empty_arg = SXTRUE; "empty" est alloue' */
+	      /* is_empty_arg = true; "empty" est alloue' */
 #if 0
 	      param_set = sxba_calloc (max_garity+1);
 	      productive_eclause_set = sxba_calloc (last_clause+1);
@@ -8355,7 +8355,7 @@ smppass (void)
 
 	  if (sxverbosep) {
 	    fputs ("done\n", sxtty);
-	    sxttycol1p = SXTRUE;
+	    sxttycol1p = true;
 	  }
 
 	  if (!IS_ERROR) {
@@ -8395,7 +8395,7 @@ smppass (void)
 	      /* Si |T| == 0, inutile */
 	      if (sxverbosep) {
 		fputs ("\tFirst & last .... ", sxtty);
-		sxttycol1p = SXFALSE;
+		sxttycol1p = false;
 	      }
     
 	      if (first) {
@@ -8456,7 +8456,7 @@ smppass (void)
 
 	      if (sxverbosep) {
 		fputs ("done\n", sxtty);
-		sxttycol1p = SXTRUE;
+		sxttycol1p = true;
 	      }
 	    }
 	  }

@@ -21,10 +21,10 @@
 
 /* lrfsa.h */
 
-extern SXBOOLEAN          is_AND();
+extern bool          is_AND();
 
 typedef void 		(*vfun)();
-typedef SXBOOLEAN		(*bfun)();
+typedef bool		(*bfun)();
 typedef SXINT		(*ifun)();
 
 struct fsaG {
@@ -33,7 +33,7 @@ struct fsaG {
   SXBA    Lex, fsa_valid_prod_set, *prod2lub;
   bfun    process_fsa;
   vfun    final_fsa;
-  SXBOOLEAN shallow;
+  bool shallow;
 };
 
 SXINT                    lfsa_global_pid, rfsa_global_pid;

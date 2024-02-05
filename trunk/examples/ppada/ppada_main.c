@@ -22,7 +22,7 @@
 #include "sxunix.h"
 #include "ppada_td.h"
 
-char WHAT_PPADAMAIN[] = "@(#)SYNTAX - $Id: ppada_main.c 3329 2023-06-04 20:05:18Z garavel $";
+char WHAT_PPADAMAIN[] = "@(#)SYNTAX - $Id: ppada_main.c 3633 2023-12-20 18:41:19Z garavel $";
 
 extern struct sxtables	ppada_args_tables, ppada_tables;
 
@@ -30,10 +30,10 @@ extern struct sxtables	ppada_args_tables, ppada_tables;
 /*    options    */
 /*---------------*/
 
-SXBOOLEAN		ppada_verbose;
+bool		ppada_verbose;
 static SXINT	ppada_file_argnum, ppada_output;
 static SXCASE	ppada_id_case;
-static SXBOOLEAN	ppada_id_dark;
+static bool	ppada_id_dark;
 static char	ME [] = "ppada";
 static char	Usage [] = "\
 Usage:\t%s [options] [files]\n\
@@ -56,26 +56,26 @@ options=\n\
 \t-of PATH, -output_file PATH, -nof, -nooutput_file,\n\
 \t-d PATH, -directory PATH.\n";
 
-static SXVOID	default_options (void)
+static void	default_options (void)
 {
-    sxverbosep = SXFALSE;
-    ppada_verbose = SXFALSE;
+    sxverbosep = false;
+    ppada_verbose = false;
     ppada_file_argnum = 0 /* input is stdin */ ;
     ppada_output = SXERROR_STE /* output is input */ ;
     ppada_id_case = SXNO_SPECIAL_CASE /* How should identifiers be written */ ;
-    ppada_id_dark = SXFALSE /* identifiers are not artificially darkened */ ;
+    ppada_id_dark = false /* identifiers are not artificially darkened */ ;
     sxppvariables.kw_case = SXNO_SPECIAL_CASE /* How should keywords be written */ ;
     sxppvariables.terminal_case = NULL /* SXNO_SPECIAL_CASE */ ;
-    sxppvariables.kw_dark = SXFALSE /* keywords are not artificially darkened */ ;
+    sxppvariables.kw_dark = false /* keywords are not artificially darkened */ ;
     sxppvariables.terminal_dark = NULL /* Same as kw_dark, but for each type of terminal */ ;
-    sxppvariables.no_tabs = SXFALSE /* optimize spaces into tabs */ ;
-    sxppvariables.block_margin = SXFALSE /* preserve structure when deeply nested */ ;
+    sxppvariables.no_tabs = false /* optimize spaces into tabs */ ;
+    sxppvariables.block_margin = false /* preserve structure when deeply nested */ ;
     sxppvariables.line_length = 122 /* What it says */ ;
     sxppvariables.max_margin = 60 /* Do not indent lines further than that */ ;
     sxppvariables.tabs_interval = 8 /* number of columns between two tab positions */ ;
 }
 
-static SXVOID	option_file (char *dir_name)
+static void	option_file (char *dir_name)
 {
     FILE	*in_file;
     char	in_name [300];
@@ -88,11 +88,11 @@ static SXVOID	option_file (char *dir_name)
     }
 }
 
-static SXBOOLEAN	in_path_permitted = SXTRUE;
+static bool	in_path_permitted = true;
 
-static SXVOID	option_dir (char *dir)
+static void	option_dir (char *dir)
 {
-    SXBOOLEAN	ipp;
+    bool	ipp;
     struct {
 	struct sxlv	scan_lv;
 	struct sxplocals	pars_lv;
@@ -100,7 +100,7 @@ static SXVOID	option_dir (char *dir)
     }	save_lv;
 
     ipp = in_path_permitted;
-    in_path_permitted = SXFALSE;
+    in_path_permitted = false;
     save_lv.scan_lv = sxsvar.sxlv;
     save_lv.pars_lv = sxplocals;
     save_lv.src_lv = sxsrcmngr;
@@ -113,15 +113,15 @@ static SXVOID	option_dir (char *dir)
     in_path_permitted = ipp;
 }
 
-static SXVOID	decode_options (int argc, char *argv[])
+static void	decode_options (int argc, char *argv[])
 {
     int 	argn;
     FILE	*in_file;
 
-    in_path_permitted = SXFALSE;
+    in_path_permitted = false;
     option_file (getenv ("HOME"));
     option_file (".");
-    in_path_permitted = SXTRUE;
+    in_path_permitted = true;
     in_file = fopen (SX_DEV_NUL, "r");
     sxsrc_mngr (SXINIT, in_file, "command line args");
     sxsrcmngr.current_char = EOF;
@@ -139,7 +139,7 @@ static SXVOID	decode_options (int argc, char *argv[])
       fclose (in_file);
 }
 
-static SXVOID	register_options (void)
+static void	register_options (void)
 {
     SXINT	terminal;
 
@@ -159,20 +159,20 @@ static SXVOID	register_options (void)
     }
 
     if (ppada_id_dark) {
-	sxppvariables.terminal_dark = sxcalloc (ADA_EOF, sizeof (SXBOOLEAN));
-	sxppvariables.terminal_dark [IDENTIFIER] = SXTRUE;
+	sxppvariables.terminal_dark = sxcalloc (ADA_EOF, sizeof (bool));
+	sxppvariables.terminal_dark [IDENTIFIER] = true;
 
 	if (sxppvariables.kw_dark) {
 	    for (terminal = 1; terminal < ADA_EOF; terminal++) {
 		if (sxkeywordp (&ppada_tables, terminal)) {
-		    sxppvariables.terminal_dark [terminal] = SXTRUE;
+		    sxppvariables.terminal_dark [terminal] = true;
 		}
 	    }
 	}
     }
 }
 
-static SXVOID	ppada_run (SXINT in_ste, SXINT out_ste)
+static void	ppada_run (SXINT in_ste, SXINT out_ste)
 {
     FILE	*infile;
     char	*in_name;
@@ -238,7 +238,7 @@ static SXVOID	ppada_run (SXINT in_ste, SXINT out_ste)
     sxsrc_mngr (SXFINAL);
 }
 
-SXVOID	ppada_args_semact (SXINT what, SXINT which)
+void	ppada_args_semact (SXINT what, SXINT which)
 {
     switch (what) {
     case SXERROR:
@@ -279,12 +279,12 @@ SXVOID	ppada_args_semact (SXINT what, SXINT which)
 
 	case 3:
 	    /* <-arg> = -verbose				*/
-	    ppada_verbose = SXTRUE;
+	    ppada_verbose = true;
 	    break;
 
 	case 4:
 	    /* <-arg> = -noverbose				*/
-	    ppada_verbose = SXFALSE;
+	    ppada_verbose = false;
 	    break;
 
 	case 5:
@@ -314,12 +314,12 @@ SXVOID	ppada_args_semact (SXINT what, SXINT which)
 
 	case 11:
 	    /* <-arg>	= -key_words_darkened			*/
-	    sxppvariables.kw_dark = SXTRUE;
+	    sxppvariables.kw_dark = true;
 	    break;
 
 	case 12:
 	    /* <-arg>	= -nokey_words_darkened			*/
-	    sxppvariables.kw_dark = SXFALSE;
+	    sxppvariables.kw_dark = false;
 	    break;
 
 	case 13:
@@ -329,12 +329,12 @@ SXVOID	ppada_args_semact (SXINT what, SXINT which)
 
 	case 14:
 	    /* <-arg>	= -tabs					*/
-	    sxppvariables.no_tabs = SXFALSE;
+	    sxppvariables.no_tabs = false;
 	    break;
 
 	case 15:
 	    /* <-arg>	= -notabs				*/
-	    sxppvariables.no_tabs = SXTRUE;
+	    sxppvariables.no_tabs = true;
 	    break;
 
 	case 16:
@@ -349,12 +349,12 @@ SXVOID	ppada_args_semact (SXINT what, SXINT which)
 
 	case 18:
 	    /* <-arg>	= -shift_margin				*/
-	    sxppvariables.block_margin = SXFALSE;
+	    sxppvariables.block_margin = false;
 	    break;
 
 	case 19:
 	    /* <-arg>	= -noshift_margin			*/
-	    sxppvariables.block_margin = SXTRUE;
+	    sxppvariables.block_margin = true;
 	    break;
 
 	case 20:
@@ -384,12 +384,12 @@ SXVOID	ppada_args_semact (SXINT what, SXINT which)
 
 	case 25:
 	    /* <-arg>	= -identifiers_darkened			*/
-	    ppada_id_dark = SXTRUE;
+	    ppada_id_dark = true;
 	    break;
 
 	case 26:
 	    /* <-arg>	= -noidentifiers_darkened		*/
-	    ppada_id_dark = SXFALSE;
+	    ppada_id_dark = false;
 	    break;
 
 	default:
@@ -426,7 +426,7 @@ int main (int argc, char *argv[])
      * as much as possible.
      */ 
 
-    syntax (SXINIT, &ppada_args_tables, SXFALSE /* no includes */);
+    syntax (SXINIT, &ppada_args_tables, false /* no includes */);
 
     decode_options (argc, argv);
 
@@ -457,7 +457,7 @@ int main (int argc, char *argv[])
         } while (ppada_file_argnum < (SXINT)argc);
     }
 
-    syntax (SXFINAL, &ppada_tables, SXTRUE);
+    syntax (SXFINAL, &ppada_tables, true);
 
     sxerr_mngr (SXEND);
 

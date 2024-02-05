@@ -22,10 +22,10 @@
 #include <stdio.h>
 #include "R_tables.h"
 
-char WHAT_RECORPRINTRT[] = "@(#)SYNTAX - $Id: print_rt.c 3601 2023-09-23 19:44:39Z garavel $" WHAT_DEBUG;
+char WHAT_RECORPRINTRT[] = "@(#)SYNTAX - $Id: print_rt.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
-extern SXBOOLEAN	recor_read (struct R_tables_s *R_tables, char *langname);
-extern SXVOID	recor_free (struct R_tables_s *R_tables);
+extern bool	recor_read (struct R_tables_s *R_tables, char *langname);
+extern void	recor_free (struct R_tables_s *R_tables);
 static struct R_tables_s	R_tables;
 
 static char	*copy (char *s1, char *s2, SXINT l)

@@ -14,7 +14,9 @@ REINCL=$(RE)/incl
 
 CC=cc -I$(REINCL) -I$(LECLINCL) -I$(SXINCL) -I$(SXINCL)/util -I$(SX)/../extensions/incl $(CFLAGS)
 
-all: $(RE)/reg_exp.out
+ALL=$(RE)/reg_exp.out
+
+all: $(ALL)
 
 NEEDS=		$(RELIB)/reg_exp_main.o
 
@@ -28,5 +30,5 @@ $(RELIB)/reg_exp_main.o: $(SXINCL)/sxunix.h				\
 	$(CC) -o $@ -c $(RESRC)/reg_exp_main.c
 
 clean:
-	@echo "clean target for reg_exp should be provided"
+	rm -f $(ALL) $(NEEDS)
 

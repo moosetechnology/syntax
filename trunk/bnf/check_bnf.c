@@ -28,7 +28,7 @@
 #include "XH.h"
 #include "XxY.h"
 
-char WHAT_CHECKBNF[] = "@(#)SYNTAX - $Id: check_bnf.c 3605 2023-09-24 05:36:48Z garavel $" WHAT_DEBUG;
+char WHAT_CHECKBNF[] = "@(#)SYNTAX - $Id: check_bnf.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 #if 0
 struct bnf_ag_item {
@@ -88,8 +88,8 @@ static struct bnf_ag_item bnf_ag;
 /*    options    */
 /*---------------*/
 
-static SXBOOLEAN  is_help, is_debug1, is_debug2, is_stdout, is_lexicon;
-static SXBOOLEAN  is_cycle_free, is_lr_recursive_free, is_full_eps_rule_free, is_eps_rule_free;
+static bool  is_help, is_debug1, is_debug2, is_stdout, is_lexicon;
+static bool  is_cycle_free, is_lr_recursive_free, is_full_eps_rule_free, is_eps_rule_free;
 static char	ME [] = "check_bnf";
 static char	Usage [] = "\
 Usage:\t%s [options] language_name\n\
@@ -168,7 +168,7 @@ static SXINT        *item2prod;
 static XxY_header lhsntXprod_hd;
 static XxY_header xnt_hd;
 static SXBA       full_eps_set, NULLABLE, VIDE;
-static SXBOOLEAN    is_epsilon_free, bnf_has_changed, is_new_axiom_needed;
+static bool    is_epsilon_free, bnf_has_changed, is_new_axiom_needed;
 
 static char bnf_header [] = "\n\
 *   ********************************************************************\n\
@@ -352,11 +352,11 @@ print_prod (SXINT prod, SXINT *pleft, SXINT *pright, SXINT *pdot)
 
 /* ************************************************************************************************* */  
 /* La grammaire n'est pas epsilon-free, on regarde s'il existe des nt qui ne derivent que ds le vide */
-static SXBOOLEAN
+static bool
 fill_full_eps_set (void)
 {
   SXINT A, bot, top, X, prod, item;
-  SXBOOLEAN done;
+  bool done;
 
   /* ... ils doivent deja deriver ds le vide */
   sxba_copy (full_eps_set, bnf_ag.BVIDE);
@@ -384,10 +384,10 @@ fill_full_eps_set (void)
     }
   }
 
-  done = SXFALSE;
+  done = false;
 
   while (!done) {
-    done = SXTRUE;
+    done = true;
 
     A = 0;
 
@@ -407,7 +407,7 @@ fill_full_eps_set (void)
 
 	if (X > 0) {
 	  SXBA_0_bit (full_eps_set, A);
-	  done = SXFALSE; /* ... faudra boucler */
+	  done = false; /* ... faudra boucler */
 	  break;
 	}
 
@@ -452,7 +452,7 @@ static void
 complete_prod_hd (void)
 {
   SXINT A, prod, bot_item, top_item, X, item, ntXprod, top_prod;
-  SXBOOLEAN is_nullable;
+  bool is_nullable;
 
   if (item2prod == NULL) {
     item2prod = (SXINT*) sxalloc (XH_list_size (prod_hd)+1, sizeof (SXINT));
@@ -474,7 +474,7 @@ complete_prod_hd (void)
     bot_item = PROLON (prod_hd, prod);
     item = top_item = TOP_ITEM (prod_hd, prod);	
 
-    is_nullable = SXTRUE;
+    is_nullable = true;
 
     while (--item >= bot_item) {
       item2prod [item] = prod;
@@ -485,7 +485,7 @@ complete_prod_hd (void)
 	if (X > 0 && SXBA_bit_is_set (VIDE, X))
 	  SXBA_1_bit (NULLABLE, item);
 	else
-	  is_nullable = SXFALSE;
+	  is_nullable = false;
       }
     }
 
@@ -501,7 +501,7 @@ static void
 fill_prod_hd (void)
 {
   SXINT     A, bot, top, prod, item, X, prod_no;
-  SXBOOLEAN has_changed;
+  bool has_changed;
 
   if (is_debug2)
     fputs ("\n*Initialisation\n", stdout);
@@ -517,13 +517,13 @@ fill_prod_hd (void)
 	prod = bnf_ag.WS_NBPRO [bot].numpg;
 	XH_push (prod_hd, A);
 	item = bnf_ag.WS_NBPRO [prod].prolon;
-	has_changed = SXFALSE;
+	has_changed = false;
 
 	while ((X = bnf_ag.WS_INDPRO [item++].lispro) != 0) {
 	  if (X < 0 || !SXBA_bit_is_set (full_eps_set, X))
 	    XH_push (prod_hd, X);
 	  else
-	    has_changed = SXTRUE;
+	    has_changed = true;
 	}
 	  
 	if (XH_set (&prod_hd, &prod_no)) {
@@ -550,7 +550,7 @@ fill_prod_hd (void)
     }
     else {
       if (is_full_eps_rule_free)
-	bnf_has_changed = SXTRUE;
+	bnf_has_changed = true;
 
       if (is_debug2) {
 	bot = NPG (A);
@@ -742,7 +742,7 @@ eps_rule_elimination (SXBA empty_set)
 /* Cette procedure transforme la grammaire cyclique prod_hd en une grammaire equivalente sans cycle */
 /* repr_set contient les representants (nt) des classes d'equivalence de la relation cycle */
 /* Si A est un representant, la classe d'equivalence de representant A est ds cyclic_sets [A] */
-static SXBOOLEAN            is_cyclic;
+static bool            is_cyclic;
 
 static void
 cycle_elimination (SXBA repr_set, SXBA *cyclic_sets)
@@ -893,7 +893,7 @@ cycle_elimination (SXBA repr_set, SXBA *cyclic_sets)
        <new_axiom> = <axiom> ;
        <new_axiom> = ;
     */
-    is_new_axiom_needed = SXTRUE;
+    is_new_axiom_needed = true;
     printf ("<new_%s = %s ;\n", get_nt_string ((SXINT)1)+1, get_nt_string ((SXINT)1));
     printf ("<new_%s = ;\n", get_nt_string ((SXINT)1)+1);
   }
@@ -967,7 +967,7 @@ cycle_elimination (SXBA repr_set, SXBA *cyclic_sets)
 }
 
 /* On regarde si la grammaire est cyclique */
-static SXBOOLEAN
+static bool
 cycle_check (void)
 {
   SXINT                prod, A, item, X, B, x, bot_item, top_item; 
@@ -977,7 +977,7 @@ cycle_check (void)
   cyclic_set = sxbm_calloc (NTMAX+1, NTMAX+1);
   repr_set = sxba_calloc (NTMAX+1);
 
-  is_cyclic = SXFALSE;
+  is_cyclic = false;
 
   for (A = 1; A <= NTMAX; A++) {
     line = cyclic_set [A];
@@ -1015,7 +1015,7 @@ cycle_check (void)
       /* cycle autour de A ... */
       /* ...et c'est le representant du cycle */
       SXBA_1_bit (repr_set, A);
-      is_cyclic = SXTRUE;
+      is_cyclic = true;
 
       if (is_debug1)
 	fputs ("\n* Cycles around: ", stdout);
@@ -1075,7 +1075,7 @@ cycle_check (void)
     }
 
     if (is_cycle_free) {
-      bnf_has_changed = SXTRUE;
+      bnf_has_changed = true;
       cycle_elimination (repr_set, cyclic_set);
     }
   }
@@ -1467,12 +1467,12 @@ left_recursion_elimination (SXBA lr_nt_set /*, rr_nt_set */)
 }
 
 
-static SXBOOLEAN
+static bool
 lr_recursive_check (void)
 {
   SXINT                prod, A, X, nb, B, item, x, bot_item, top_item, Aprod, prod_no, prev_xnt, Aprime; 
   SXBA               line_LR, line_RR;
-  SXBOOLEAN            is_ambiguous = SXFALSE; 
+  bool            is_ambiguous = false; 
   SXBA               *LR, *RR, LRR, LRR2, item_set, tbp_empty_nt_set, line;
   SXINT                *tbp;
   XH_header          new_prod_hd;
@@ -1517,7 +1517,7 @@ lr_recursive_check (void)
     if (SXBA_bit_is_set (LR [A], A) && SXBA_bit_is_set (RR [A], A)) {
       /* A est a la fois recursif gauche et droit */
       SXBA_1_bit (LRR, A);
-      is_ambiguous = SXTRUE;
+      is_ambiguous = true;
     }
   }
 
@@ -1881,7 +1881,7 @@ lr_recursive_check (void)
       sxfree (non_lr_nt_set), non_lr_nt_set = NULL;
       sxfree (Aprimes), Aprimes = NULL;
 
-      bnf_has_changed = SXTRUE;
+      bnf_has_changed = true;
     }
   }
 
@@ -1937,7 +1937,7 @@ static int
 run (char *name)
 {
   SXINT     prod, A, x;
-  SXBOOLEAN is_ambiguous;
+  bool is_ambiguous;
 
   if (!bnf_read (&bnf_ag, name))
     return 2;
@@ -1989,7 +1989,7 @@ run (char *name)
 
       if (is_eps_rule_free && !sxba_is_empty (VIDE)) {
 	eps_rule_elimination (VIDE);
-	bnf_has_changed = SXTRUE;
+	bnf_has_changed = true;
       }
 
       is_ambiguous = cycle_check (); /* is_ambiguous => y'a des cycles */
@@ -2001,7 +2001,7 @@ run (char *name)
       else {
 	if (lr_recursive_check ())
 	  /* Y'a des recursivites gauches et droites simultanees */
-	  is_ambiguous = SXTRUE;
+	  is_ambiguous = true;
       }
 
       if (bnf_has_changed) {
@@ -2068,8 +2068,8 @@ int main (int argc, char *argv[])
   sxopentty ();
 
   /* valeurs par defaut */
-  /* is_help = is_debug1 = is_debug2 = is_stdout = is_lexicon = SXFALSE; */
-  is_full_eps_rule_free = is_eps_rule_free = is_cycle_free = is_lr_recursive_free = SXFALSE;
+  /* is_help = is_debug1 = is_debug2 = is_stdout = is_lexicon = false; */
+  is_full_eps_rule_free = is_eps_rule_free = is_cycle_free = is_lr_recursive_free = false;
 
   /* Decodage des options */
   for (argnum = 1; argnum < argc; argnum++) {
@@ -2077,36 +2077,36 @@ int main (int argc, char *argv[])
 
     switch (kind) {
     case HELP:
-      is_help = SXTRUE;
+      is_help = true;
       break;
 
     case DEBUG1:
-      is_debug1 = SXTRUE;
+      is_debug1 = true;
       break;
 
     case DEBUG2:
-      is_debug1 = SXTRUE;
-      is_debug2 = SXTRUE;
+      is_debug1 = true;
+      is_debug2 = true;
       break;
 
     case LEXICON:
-      is_lexicon = SXTRUE;
+      is_lexicon = true;
       break;
 
     case FERF:
-      is_full_eps_rule_free = SXTRUE;
+      is_full_eps_rule_free = true;
       break;
 
     case ERF:
-      is_eps_rule_free = SXTRUE;
+      is_eps_rule_free = true;
       break;
 
     case CF:
-      is_cycle_free = SXTRUE;
+      is_cycle_free = true;
       break;
 
     case LRRF:
-      is_lr_recursive_free = SXTRUE;
+      is_lr_recursive_free = true;
       break;
 
     case STDOUT:
@@ -2115,7 +2115,7 @@ int main (int argc, char *argv[])
 	sxexit (3);
       }
 
-      is_stdout = SXTRUE;
+      is_stdout = true;
       break;
 
     case UNKNOWN_ARG:
@@ -2138,13 +2138,13 @@ int main (int argc, char *argv[])
   }
 
   if (is_lr_recursive_free)
-    is_full_eps_rule_free = is_eps_rule_free = is_cycle_free = SXTRUE;
+    is_full_eps_rule_free = is_eps_rule_free = is_cycle_free = true;
   else
     if (is_cycle_free)
-      is_full_eps_rule_free = is_eps_rule_free = SXTRUE;
+      is_full_eps_rule_free = is_eps_rule_free = true;
     else
       if (is_eps_rule_free)
-	is_full_eps_rule_free = SXTRUE;
+	is_full_eps_rule_free = true;
 
   severity = run (argv [argnum]);
 

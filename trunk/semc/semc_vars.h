@@ -43,11 +43,11 @@
 SX_GLOBAL_VAR_SEMC SXINT     max_attr;
 SX_GLOBAL_VAR_SEMC SXINT	nt_pg, prolnb, maxlis, xnomod, ximplic, xprod, nb_definitions, nb_sem_rules, nb_defaults, nb_identities,
      M_at;
-SX_GLOBAL_VAR_SEMC SXBOOLEAN		is_ident, is_bigbez, bident, is_err, is_empty;
+SX_GLOBAL_VAR_SEMC bool		is_ident, is_bigbez, bident, is_err, is_empty;
 
 /* options de semc */
 
-SX_GLOBAL_VAR_SEMC SXBOOLEAN		is_sem_out, is_default;
+SX_GLOBAL_VAR_SEMC bool		is_sem_out, is_default;
 SX_GLOBAL_VAR_SEMC SXINT	tbl_lgth;
 SX_GLOBAL_VAR_SEMC char	*modele, *mod_ident, *a_repeter;
 SX_GLOBAL_VAR_SEMC struct sxtoken	rule_token, terminal_token;

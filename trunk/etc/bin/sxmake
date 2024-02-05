@@ -377,7 +377,7 @@ LOCAL_COMPILE_OLDIE() {
 		cd $OLDIES/$OLDIE
 		$MAKE "ARCH=$ARCH" \
 			"COMPILER=$COMPILER" \
-			"CFLAGS=$CFLAGS" \
+			"CFLAGS=$CFLAGS -DSXBOOLEAN=bool -DSXFALSE=false -DSXSHORT=short -DSXTRUE=true -DSXVOID=void" \
 			"LDFLAGS=$LDFLAGS" \
 			clean all
 	)
@@ -408,9 +408,7 @@ HYPERGENESIS() {
 		DIR=`dirname $BOOT`
 		echo ""
 
-		sh $SX/etc/bin/liens-tmp.sh $DIR/tmp
-
-		( cd $DIR/tmp ; $MAKE -f $DIR/makefile "ARCH=$ARCH" \
+		( cd $DIR ; $MAKE -f $DIR/makefile "ARCH=$ARCH" \
 			"COMPILER=$COMPILER" \
 			"CFLAGS=$CFLAGS" \
 			"LDFLAGS=$LDFLAGS" \
@@ -418,7 +416,7 @@ HYPERGENESIS() {
 
 		for FILE in `ls $BOOT`
 		do
-			ORIG=`echo $BOOT | sed -e 's+/boot$+/tmp+'`
+			ORIG=`echo $BOOT | sed -e 's+/boot$+/+'`
 			OLD_FILE=$BOOT/$FILE
 			NEW_FILE=$ORIG/$FILE
 			set +e
@@ -474,11 +472,6 @@ HYPERGENESIS() {
 			fi
 			set -e
 		done
-
-		if [ "$OPTION_DEBUG" = "" ]
-		then
-			sh $SX/etc/bin/menage-tmp.sh $DIR/tmp
-		fi
 	done
 
 	sh $SX/etc/bin/vasy-prepare-directories.sh restore

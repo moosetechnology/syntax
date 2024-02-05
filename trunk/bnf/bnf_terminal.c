@@ -22,7 +22,7 @@
 #include "B_tables.h"
 #include "bnf_vars.h"
 
-char WHAT_BNFTERMINAL[] = "@(#)SYNTAX - $Id: bnf_terminal.c 3605 2023-09-24 05:36:48Z garavel $" WHAT_DEBUG;
+char WHAT_BNFTERMINAL[] = "@(#)SYNTAX - $Id: bnf_terminal.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
 static void
 output_header (time_t bnf_modif_time, char *langname)
@@ -62,7 +62,7 @@ escape_printf (char *str)
 
 #define get_t_string(t)		(bnf_ag.T_STRING + bnf_ag.ADR [t])
 
-SXVOID
+void
 bnf_terminal (struct bnf_ag_item *B, char *langname)
 {
   SXINT    t;

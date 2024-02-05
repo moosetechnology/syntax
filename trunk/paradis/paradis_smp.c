@@ -29,10 +29,10 @@
 #include "sem_by.h"
 #include "varstr.h"
 
-char WHAT_PARADISSMP[] = "@(#)SYNTAX - $Id: paradis_smp.c 3602 2023-09-23 19:50:11Z garavel $" WHAT_DEBUG;
+char WHAT_PARADISSMP[] = "@(#)SYNTAX - $Id: paradis_smp.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 
-extern SXVOID    bnf_get_rule_tail (SXUINT rule_no, SXUINT *tline, SXUINT *tcol);
+extern void    bnf_get_rule_tail (SXUINT rule_no, SXUINT *tline, SXUINT *tcol);
 
 struct paradis_node {
     SXNODE_HEADER_S	SXVOID_NAME;
@@ -89,16 +89,16 @@ static char	*codop_name [11] = {"", "SKIP", "PAGE", "SPACE", "TAB", "MARGIN", "C
 
 extern struct sxtables		paradis_tables;
 extern VARSTR	cat_t_string (VARSTR, SXINT);
-extern SXBOOLEAN	is_check;
+extern bool	is_check;
 
 /*   S T A T I C   */
 
 static SXINT	line_lgth, xline;
 static char	*line;
-static SXBOOLEAN	SUCCESS;
+static bool	SUCCESS;
 static SXINT	x_prod, column, hash_value, x_check, x_schema, PP_schema_size;
 static SXINT	x_lispro, margin, prev_column, EOL_nb;
-static SXBOOLEAN	is_a_spec, is_inh;
+static bool	is_a_spec, is_inh;
 static char	current_char;
 static SXINT	xtok, mtok;
 static struct PP_ag_item	PP_ag;
@@ -116,9 +116,9 @@ static struct coords {
 
 /* P R O C E D U R E S    */
 
-static SXSHORT	skip_sem (void)
+static short	skip_sem (void)
 {
-    SXSHORT	c = sxsrcmngr.current_char;
+    short	c = sxsrcmngr.current_char;
 
     while (c != EOF) {
 	if (c == '<' && sxsrcmngr.source_coord.column == 1)
@@ -143,16 +143,16 @@ do {										\
 
 
 
-static SXVOID	gen_code (SXINT codop, SXINT move)
+static void	gen_code (SXINT codop, SXINT move)
 {
 
     if (is_inh) {
-	is_inh = SXFALSE /* un seul message */;
+	is_inh = false /* un seul message */;
 	sxerror (inh_source_index,
 		 paradis_tables.err_titles [2][0],
 		 "%sINH can only be the last specification of a rule.",
 		 paradis_tables.err_titles [2]+1);
-	SUCCESS = SXFALSE;
+	SUCCESS = false;
 	}
 
     x_schema++;
@@ -170,7 +170,7 @@ static SXVOID	gen_code (SXINT codop, SXINT move)
 
 
 
-static SXVOID	optimize (void)
+static void	optimize (void)
 {
     SXINT	l, y, y1;
     SXINT	x, z, size;
@@ -202,14 +202,14 @@ static SXVOID	optimize (void)
 
 
 
-static SXVOID	smppass (struct paradis_node *visited)
+static void	smppass (struct paradis_node *visited)
 {
     struct paradis_node	*brother, *son;
 
     sxinitialise(son); /* pour faire taire gcc -Wuninitialized */
     switch (visited->name) {
     case TERMINAL_n:
-	is_a_spec = SXFALSE;
+	is_a_spec = false;
 
 	{
 	    SXINT	t = bnf_ag.WS_INDPRO [x_lispro++].lispro;
@@ -235,12 +235,12 @@ static SXVOID	smppass (struct paradis_node *visited)
 #endif
 
     case PREDICATE_n:
-	is_a_spec = SXFALSE;
+	is_a_spec = false;
 	break;
 
     case LHS_n:
 	margin = (prev_column = coords [++xtok].column) + 1;
-	is_a_spec = SXFALSE;
+	is_a_spec = false;
 	return;
 
     case RULE_S_n:
@@ -251,11 +251,11 @@ static SXVOID	smppass (struct paradis_node *visited)
 		gen_code (RETURN, (SXINT)0);
 
 
-/* if !(CALL 0; RETURN 0) => bprosimpl=SXFALSE */
+/* if !(CALL 0; RETURN 0) => bprosimpl=false */
 
 	    if (bnf_ag.WS_NBPRO [x_prod].bprosimpl) {
 		if (x_schema - PP_ag.PP_indx [x_prod] != 1 || PP_ag.SXPP_schema [x_schema].PP_act != 0 /* INH */) {
-		    bnf_ag.WS_NBPRO [x_prod].bprosimpl = SXFALSE;
+		    bnf_ag.WS_NBPRO [x_prod].bprosimpl = false;
 		    bnf_ag.WS_NBPRO [x_prod].action = 1;
 		}
 	    }
@@ -271,7 +271,7 @@ static SXVOID	smppass (struct paradis_node *visited)
 	x_lispro = bnf_ag.WS_NBPRO [x_prod = visited->position].prolon;
 	hash_value = 0;
 	PP_ag.PP_indx [x_prod] = x_schema + 1;
-	is_inh = SXFALSE;
+	is_inh = false;
 
 	for (son = visited->son; son != NULL; son = son->brother)
 	    smppass (son);
@@ -301,7 +301,7 @@ static SXVOID	smppass (struct paradis_node *visited)
 	return;
 
     case PP_SPEC_n:
-	is_a_spec = SXTRUE;
+	is_a_spec = true;
 
 	{
 	    SXINT	codop, move_val;
@@ -336,7 +336,7 @@ static SXVOID	smppass (struct paradis_node *visited)
 			     paradis_tables.err_titles [2][0],
 			     "%sA move specification must be a non zero integer less than 256.",
 			     paradis_tables.err_titles [2]+1);
-		    SUCCESS = SXFALSE;
+		    SUCCESS = false;
 		    move_val = 1;
 		}
 	    }
@@ -386,7 +386,7 @@ static SXVOID	smppass (struct paradis_node *visited)
 		gen_code (codop, move_val);
 	
 		if (visited->name == INHIBITION_n) {
-		    is_inh = SXTRUE;
+		    is_inh = true;
 		    inh_source_index = visited->token.source_index;
 		}
 	    }
@@ -409,7 +409,7 @@ Z Z Z Z
 
 
 
-SXBOOLEAN		paradis_sem (void)
+bool		paradis_sem (void)
 {
     static struct {
 	       struct sxsvar	sxsvar;
@@ -423,7 +423,7 @@ SXBOOLEAN		paradis_sem (void)
 
 /* I N I T I A L I Z A T I O N S    */
 
-    SUCCESS = SXTRUE;
+    SUCCESS = true;
     x_schema = x_check = 0;
 
     {
@@ -481,13 +481,13 @@ SXBOOLEAN		paradis_sem (void)
 	if (!is_check) {
 	    /* On cree les tables permanentes */
 	    if (!paradis_write (&PP_ag, prgentname))
-		SUCCESS = SXFALSE;
+		SUCCESS = false;
 	    else
 		bnf_ag.WS_TBL_SIZE.sem_kind = sem_by_paradis;
 	}
     }
     else {
-	SUCCESS = SXFALSE;
+	SUCCESS = false;
 	sxtmsg (sxsrcmngr.source_coord.file_name, "%sTables are not generated.", paradis_tables.err_titles [2]+1);
     }
 
@@ -501,7 +501,7 @@ SXBOOLEAN		paradis_sem (void)
 /* L I S T I N G _ O U T P U T     */
 extern SXUINT bnf_get_line_no (SXINT);
 
-SXVOID	paradis_lo (void)
+void	paradis_lo (void)
 {
     if (is_list && SUCCESS) {
 	SXUINT	debut, tline;
@@ -558,7 +558,7 @@ SXVOID	paradis_lo (void)
 		SXINT	codop, move_val;
 		SXINT	i;
 		SXINT	paradis_lo_x_lispro = bnf_ag.WS_NBPRO [x_prod].prolon;
-		SXBOOLEAN		return_not_found = SXTRUE;
+		bool		return_not_found = true;
 
 		for (i = PP_ag.PP_indx [x_prod]; return_not_found; i++) {
 		    move_val = PP_ag.SXPP_schema [i].PP_act;
@@ -586,7 +586,7 @@ SXVOID	paradis_lo (void)
 			    move_val = 0;
 			}
 
-			return_not_found = SXFALSE;
+			return_not_found = false;
 			break;
 		    default:
 #if EBUG
@@ -645,7 +645,7 @@ SXVOID	paradis_lo (void)
 
 
 
-SXVOID	paradis_smp (SXINT what, struct sxtables *paradis_smp_paradis_tables)
+void	paradis_smp (SXINT what, struct sxtables *paradis_smp_paradis_tables)
 {
     sxuse(paradis_smp_paradis_tables); /* pour faire taire gcc -Wunused */
     switch (what) {
@@ -673,7 +673,7 @@ SXVOID	paradis_smp (SXINT what, struct sxtables *paradis_smp_paradis_tables)
 }
 
 
-SXVOID
+void
 paradis_scan_act (SXINT code, SXINT act_no)
 {
     switch (code) {

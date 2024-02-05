@@ -7,10 +7,10 @@ sxsmp, sxbrother, sxson \- abstract tree traversor for SYNTAX.
 .nf
 #include "sxunix.h"
 
-SXVOID sxsmp (root, pass_inherited, pass_derived)
+void sxsmp (root, pass_inherited, pass_derived)
 .ta \w'SXVOI'u +\w'SXNODE 'u
 	SXNODE	*root;
-	SXVOID	 (*pass_inherited) (),
+	void	 (*pass_inherited) (),
 		 (*pass_derived) ();
 
 SXNODE *sxbrother (node, n)
@@ -51,8 +51,8 @@ and the declarations are close to the following\|:
 \fBstruct\fP sxtt_state {
 .ta \w'\fBstr\fP'u +\w'\fBuni\fP'u +\w'\fBSXNODEN\fP  'u +\w' visit_kind 'u +\w'/* pointer to the visited node 'u
 	\fBSXNODE\fP	*visited		/* pointer to the visited node		*/;
-	\fBSXBOOLEAN\fP	 visit_kind		/* SXINHERITED or SXDERIVED			*/;
-	\fBSXBOOLEAN\fP	 last_elem_or_left	/* last son or left brother pointer	*/;
+	\fBbool\fP	 visit_kind		/* SXINHERITED or SXDERIVED			*/;
+	\fBbool\fP	 last_elem_or_left	/* last son or left brother pointer	*/;
 	} sxtt_state;
 
 
@@ -75,15 +75,15 @@ is (a pointer to) its rightmost son if any else NULL.
 .nf
 
 \fBstruct\fP sxnext_visit {
-.ta \w'\fBstr\fP'u +\w'\fBSXBOOLEAN\fP 'u +\w' visit_kind 'u +\w'/* next node to be visited 'u
+.ta \w'\fBstr\fP'u +\w'\fBbool\fP 'u +\w' visit_kind 'u +\w'/* next node to be visited 'u
 	\fBSXNODE\fP	*visited	/* next node to be visited	*/;
-	\fBSXBOOLEAN\fP	 visit_kind	/* in this way	*/,
-		 normal	/* if SXFALSE	*/;
+	\fBbool\fP	 visit_kind	/* in this way	*/,
+		 normal	/* if false	*/;
 	} sxnext_visit;
 
 
 #define sxat_snv(kind, node_ptr)	\\
-		(sxnext_visit.normal = SXFALSE,	\\
+		(sxnext_visit.normal = false,	\\
 		 sxnext_visit.visit_kind = kind,	\\
 		 sxnext_visit.visited = node_ptr)
 

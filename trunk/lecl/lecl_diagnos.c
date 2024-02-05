@@ -25,7 +25,7 @@
 #include "varstr.h"
 #include "lecl_ag.h"
 
-char WHAT_LECLDIAGNOS[] = "@(#)SYNTAX - $Id: lecl_diagnos.c 3603 2023-09-23 20:02:36Z garavel $" WHAT_DEBUG;
+char WHAT_LECLDIAGNOS[] = "@(#)SYNTAX - $Id: lecl_diagnos.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 extern VARSTR	lecl_gen_ecc (SXBA *SC_TO_CHAR_SET, 
 			      SXBA esc_set, 
@@ -139,12 +139,12 @@ static VARSTR	build_re_string (VARSTR varstr_ptr, SXINT mark_index, char *mark_c
 static VARSTR	cat_conflict_name (VARSTR varstr_ptr, char kind /* bit (5) */)
 {
     SXINT		cat_conflict_name_i, cat_conflict_name_x;
-    SXBOOLEAN	is_first = SXTRUE;
+    bool	is_first = true;
 
     for (cat_conflict_name_x = 1, cat_conflict_name_i = 1; cat_conflict_name_i < 6; cat_conflict_name_x <<= 1, cat_conflict_name_i++)
 	if (kind & cat_conflict_name_x) {
 	    if (is_first)
-		is_first = SXFALSE;
+		is_first = false;
 	    else
 		varstr_catenate (varstr_ptr, "/");
 
@@ -156,7 +156,7 @@ static VARSTR	cat_conflict_name (VARSTR varstr_ptr, char kind /* bit (5) */)
 
 
 
-static SXVOID given_priority (VARSTR varstr_ptr, SXINT choice)
+static void given_priority (VARSTR varstr_ptr, SXINT choice)
 {
     SXINT		given_priority_k;
 
@@ -203,14 +203,14 @@ static VARSTR	detection_mess (VARSTR varstr_ptr, SXINT n, struct detection_recor
 
 
 
-static SXBOOLEAN	less_origine_index (SXINT less_origine_index_i, SXINT less_origine_index_j)
+static bool	less_origine_index (SXINT less_origine_index_i, SXINT less_origine_index_j)
 {
     return current_state [less_origine_index_i].attributes.origine_index < current_state [less_origine_index_j].attributes.origine_index;
 }
 
 
 
-static SXVOID put (struct conflict_record *conflict_record_ptr, SXINT put_i, SXINT put_j)
+static void put (struct conflict_record *conflict_record_ptr, SXINT put_i, SXINT put_j)
 {
     /* prend le point de detection repere par l'index put_i de to_be_sorted et le
        range dans detection_items [put_j].detection_ptr */
@@ -249,14 +249,14 @@ static SXVOID put (struct conflict_record *conflict_record_ptr, SXINT put_i, SXI
 
 
 
-static SXVOID unbounded_or_mixte (struct lr_marker *current_state_ptr, 
+static void unbounded_or_mixte (struct lr_marker *current_state_ptr, 
 				SXBA sra_set, 
 				SXINT seed_state, 
 				SXINT detection_state,
 				char conflict_kind /* bit (5) */, 
 				SXINT choice, 
 				struct conflict_record **head_ptr, 
-				SXBOOLEAN is_unbounded)
+				bool is_unbounded)
 {
     SXINT		*to_be_sorted /* 1:n */ ;
     SXINT		n, unbounded_or_mixte_x, unbounded_or_mixte_i, orig1, orig2;
@@ -371,7 +371,7 @@ fill_detections:
 
 
 
-static SXBOOLEAN	less_item (SXINT less_item_i, SXINT less_item_j)
+static bool	less_item (SXINT less_item_i, SXINT less_item_j)
 {
     struct item	*pi, *pj;
 
@@ -379,22 +379,22 @@ static SXBOOLEAN	less_item (SXINT less_item_i, SXINT less_item_j)
     pj = items + less_item_j;
 
     if (pi->origine < pj->origine)
-	return SXTRUE;
+	return true;
 
     if (pi->origine > pj->origine)
-	return SXFALSE;
+	return false;
 
     return pi->index < pj->index;
 }
 
 
 
-static SXVOID	immediate_or_one_la (VARSTR varstr_ptr /* ATTENTION : freed !!! */, 
+static void	immediate_or_one_la (VARSTR varstr_ptr /* ATTENTION : freed !!! */, 
 				     struct lr_marker *current_state_ptr, 
 				     SXBA sra_set,
 				     /* detection_state, conflict_kind, */
 				     SXINT choice, 
-				     SXBOOLEAN with_detection_point)
+				     bool with_detection_point)
 {
     SXINT		*to_be_sorted /* 1:n */ ;
     SXINT		orig1, orig2, immediate_or_one_la_i, immediate_or_one_la_x, y, n;
@@ -464,7 +464,7 @@ next_orig:
 static SXINT get_transition_name_refs (SXBA_INDEX get_transition_name_refs_x, SXBA_INDEX y, char **p)
 {
     SXINT		get_transition_name_refs_j, ate, class, first_trans, last_trans;
-    SXBOOLEAN	is_prdct;
+    bool	is_prdct;
 
     sxinitialise (ate);
     *p = NULL;
@@ -535,13 +535,13 @@ static SXINT get_transition_name_refs (SXBA_INDEX get_transition_name_refs_x, SX
 
 
 
-SXBOOLEAN		has_la_trans (SXBA *M, SXINT has_la_trans_state)
+bool		has_la_trans (SXBA *M, SXINT has_la_trans_state)
 {
-    SXBOOLEAN	is_la;
+    bool	is_la;
     SXINT		has_la_trans_j, has_la_trans_x;
     char	state_kind;
 
-    is_la = SXFALSE;
+    is_la = false;
 
     for (has_la_trans_j = fsa [has_la_trans_state].transition_ref; has_la_trans_j < fsa [has_la_trans_state + 1].transition_ref; has_la_trans_j++) {
 	has_la_trans_x = fsa_trans [has_la_trans_j].next_state_no;
@@ -553,7 +553,7 @@ SXBOOLEAN		has_la_trans (SXBA *M, SXINT has_la_trans_state)
 	    /* if ((state_kind & LA) || ((state_kind & PRDCT) && has_la_trans (M, has_la_trans_x))) {
 	       Cette version peut boucler... si boucle en look-ahead ds l'automate. */
 		SXBA_1_bit (M [has_la_trans_state], has_la_trans_x);
-		is_la = SXTRUE;
+		is_la = true;
 	    }
 	}
     }
@@ -563,7 +563,7 @@ SXBOOLEAN		has_la_trans (SXBA *M, SXINT has_la_trans_state)
 
 
 
-SXVOID	lecl_diagnoses_unbounded (struct lr_marker *current_state_ptr, 
+void	lecl_diagnoses_unbounded (struct lr_marker *current_state_ptr, 
 				  SXBA sra_set, 
 				  SXINT seed_state, 
 				  SXINT detection_state, 
@@ -571,12 +571,12 @@ SXVOID	lecl_diagnoses_unbounded (struct lr_marker *current_state_ptr,
 				  SXINT choice, 
 				  struct conflict_record **u_head_ptr)
 {
-    unbounded_or_mixte (current_state_ptr, sra_set, seed_state, detection_state, conflict_kind, choice, u_head_ptr, SXTRUE);
+    unbounded_or_mixte (current_state_ptr, sra_set, seed_state, detection_state, conflict_kind, choice, u_head_ptr, true);
 }
 
 
 
-SXVOID	lecl_diagnoses_mixte (struct lr_marker *current_state_ptr, 
+void	lecl_diagnoses_mixte (struct lr_marker *current_state_ptr, 
 			      SXBA sra_set, 
 			      SXINT seed_state, 
 			      SXINT detection_state, 
@@ -584,14 +584,14 @@ SXVOID	lecl_diagnoses_mixte (struct lr_marker *current_state_ptr,
 			      SXINT choice, 
 			      struct conflict_record **m_head_ptr)
 {
-    unbounded_or_mixte (current_state_ptr, sra_set, seed_state, detection_state, conflict_kind, choice, m_head_ptr, SXFALSE);
+    unbounded_or_mixte (current_state_ptr, sra_set, seed_state, detection_state, conflict_kind, choice, m_head_ptr, false);
 }
 
 
 
-SXVOID	lecl_diagnoses_unbounded_output (struct conflict_record *u_head_ptr, struct conflict_record *m_head_ptr)
+void	lecl_diagnoses_unbounded_output (struct conflict_record *u_head_ptr, struct conflict_record *m_head_ptr)
 {
-    SXBOOLEAN	is_unbounded;
+    bool	is_unbounded;
     SXINT		lecl_diagnoses_unbounded_output_i, lecl_diagnoses_unbounded_output_x, lecl_diagnoses_unbounded_output_orig;
     char	s1 [8], s2 [8];
     struct conflict_record	*head_ptr, *conflict_record_ptr;
@@ -628,11 +628,11 @@ SXVOID	lecl_diagnoses_unbounded_output (struct conflict_record *u_head_ptr, stru
     for (lecl_diagnoses_unbounded_output_i = 2; lecl_diagnoses_unbounded_output_i > 0; lecl_diagnoses_unbounded_output_i--) {
 	if (lecl_diagnoses_unbounded_output_i == 2) {
 	    head_ptr = u_head_ptr;
-	    is_unbounded = SXTRUE;
+	    is_unbounded = true;
 	}
 	else {
 	    head_ptr = m_head_ptr;
-	    is_unbounded = SXFALSE;
+	    is_unbounded = false;
 	}
 
 	for (conflict_record_ptr = head_ptr;
@@ -681,12 +681,12 @@ SXVOID	lecl_diagnoses_unbounded_output (struct conflict_record *u_head_ptr, stru
 
 
 
-SXVOID	lecl_diagnoses_immediate (struct lr_marker *current_state_ptr, 
+void	lecl_diagnoses_immediate (struct lr_marker *current_state_ptr, 
 				  SXBA sra_set, 
 				  SXINT detection_state, 
 				  char conflict_kind /* bit (5) */,
 				  SXINT choice, 
-				  SXBOOLEAN with_detection_point)
+				  bool with_detection_point)
 {
     char	s [8];
 
@@ -697,7 +697,7 @@ SXVOID	lecl_diagnoses_immediate (struct lr_marker *current_state_ptr,
 
 
 
-SXVOID	lecl_diagnoses_one_la (struct lr_marker *current_state_ptr, 
+void	lecl_diagnoses_one_la (struct lr_marker *current_state_ptr, 
 			       SXBA sra_set, 
 			       SXINT detection_state, 
 			       char conflict_kind /* bit (5) */, 
@@ -708,5 +708,5 @@ SXVOID	lecl_diagnoses_one_la (struct lr_marker *current_state_ptr,
 
     sprintf (s, "%-ld", (SXINT) detection_state);
     immediate_or_one_la (varstr_catenate (lecl_gen_ecc (sc_to_char_set, esc_set, xprdct_to_ate, varstr_catenate (varstr_catenate (varstr_catenate (cat_conflict_name (varstr_catenate (varstr_alloc (2048), "1_look_ahead "), conflict_kind), " conflict in state "), s), " on ")), " between\n"),
-			 current_state_ptr, sra_set, /* detection_state, conflict_kind, */choice, SXTRUE);
+			 current_state_ptr, sra_set, /* detection_state, conflict_kind, */choice, true);
 }

@@ -21,10 +21,10 @@
 #include "sxunix.h"
 #include "T_tables.h"
 
-char WHAT_SEMATPRINTATT[] = "@(#)SYNTAX - $Id: print_att.c 3598 2023-09-18 11:39:54Z garavel $" WHAT_DEBUG;
+char WHAT_SEMATPRINTATT[] = "@(#)SYNTAX - $Id: print_att.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
-extern SXBOOLEAN	semat_read (struct T_ag_item *T_ag, char *langname);
-extern SXVOID	semat_free (struct T_ag_item *T_ag);
+extern bool	semat_read (struct T_ag_item *T_ag, char *langname);
+extern void	semat_free (struct T_ag_item *T_ag);
 static struct T_ag_item		T_ag;
 
 /************************************************************************/

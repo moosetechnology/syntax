@@ -17,9 +17,9 @@
  *   can be found at, e.g., http://www.cecill.info
  *****************************************************************************/
 #include "sxunix.h"
-char WHAT_PPRECORSACT[] = "@(#)SYNTAX - $Id: pprecor_sact.c 3324 2023-06-04 10:43:01Z garavel $" WHAT_DEBUG;
+char WHAT_PPRECORSACT[] = "@(#)SYNTAX - $Id: pprecor_sact.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
-SXVOID	pp_recor_scan_act (SXINT what, SXINT act_no)
+void	pp_recor_scan_act (SXINT what, SXINT act_no)
 {
     switch (what) {
     case SXOPEN:

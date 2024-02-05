@@ -21,7 +21,7 @@
 #include "sxunix.h"
 #include "S_tables.h"
 
-char WHAT_LECLWRITE[] = "@(#)SYNTAX - $Id: leclwrite.c 3146 2023-05-02 12:21:39Z garavel $" WHAT_DEBUG;
+char WHAT_LECLWRITE[] = "@(#)SYNTAX - $Id: leclwrite.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 
 #define WRITE(f,p,l)		\
@@ -32,7 +32,7 @@ char WHAT_LECLWRITE[] = "@(#)SYNTAX - $Id: leclwrite.c 3146 2023-05-02 12:21:39Z
 		goto write_error
 
 
-SXBOOLEAN		lecl_write (struct lecl_tables_s *lecl_tables_ptr, char *langname)
+bool		lecl_write (struct lecl_tables_s *lecl_tables_ptr, char *langname)
 {
     SXINT	bytes;
     SXINT	i;
@@ -75,11 +75,11 @@ SXBOOLEAN		lecl_write (struct lecl_tables_s *lecl_tables_ptr, char *langname)
     BA_WRITE (F_st, lecl_tables_ptr->S_is_a_generic_terminal);
     BA_WRITE (F_st, lecl_tables_ptr->S_is_a_keyword);
     close (F_st);
-    return SXTRUE;
+    return true;
 
 write_error:
     fprintf (sxstderr, "%s: write error on ", ME);
 file_error:
     sxperror (ent_name);
-    return SXFALSE;
+    return false;
 }

@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <string.h>
 
-char WHAT_SXBITSMATRIX[] = "@(#)SYNTAX - $Id: sxbitsmatrix.c 2947 2023-03-29 17:06:41Z garavel $" WHAT_DEBUG;
+char WHAT_SXBITSMATRIX[] = "@(#)SYNTAX - $Id: sxbitsmatrix.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 SXBA
 *sxbm_calloc (SXBA_INDEX lines_number, SXBA_INDEX bits_number)
@@ -67,7 +67,7 @@ SXBA
     SXBA_INDEX	new_slices_number = SXNBLONGS (new_bits_number);
     SXBA_INDEX	line, slice;
     SXBA_INDEX	old_slices_number = SXNBLONGS (old_bits_number);
-    SXBOOLEAN	has_changed;
+    bool	has_changed;
     SXBA_INDEX	min_slice_number;
     SXBA	old_bits_array, new_bits_array, bits_array, old_ba;
 
@@ -131,11 +131,11 @@ sxbm_free (SXBA *bits_matrix)
 }
 
 
-SXBOOLEAN
+bool
 sxbm_write (sxfiledesc_t file, SXBA *bits_matrix, SXBA_INDEX line_nb)
 {
     SXBA_INDEX i;
-    SXBOOLEAN result = SXTRUE;
+    bool result = true;
 
     for (i = 0; result && (i < line_nb); i++)
 	result = sxba_write (file, bits_matrix [i]);
@@ -143,11 +143,11 @@ sxbm_write (sxfiledesc_t file, SXBA *bits_matrix, SXBA_INDEX line_nb)
     return result;
 }
 
-SXBOOLEAN
+bool
 sxbm_read (sxfiledesc_t file, SXBA *bits_matrix, SXBA_INDEX line_nb)
 {
     SXBA_INDEX i;
-    SXBOOLEAN result = SXTRUE;
+    bool result = true;
 
     for (i = 0; result && (i < line_nb); i++)
 	result = sxba_read (file, bits_matrix [i]);
@@ -157,7 +157,7 @@ sxbm_read (sxfiledesc_t file, SXBA *bits_matrix, SXBA_INDEX line_nb)
 
 
 void
-sxbm_to_c (FILE *file_descr, SXBA *bits_matrix, SXBA_INDEX line_nb, char *name1, char *name2, SXBOOLEAN is_static)
+sxbm_to_c (FILE *file_descr, SXBA *bits_matrix, SXBA_INDEX line_nb, char *name1, char *name2, bool is_static)
 {
     char	*prefix, str [20];
     SXBA_INDEX		i;
@@ -173,7 +173,7 @@ sxbm_to_c (FILE *file_descr, SXBA *bits_matrix, SXBA_INDEX line_nb, char *name1,
     for (i = 0; i < line_nb; i++)
     {
 	sprintf (str, "%ld", (SXINT) i);
-	sxba_to_c (bits_matrix [i], file_descr, prefix, str, SXTRUE);
+	sxba_to_c (bits_matrix [i], file_descr, prefix, str, true);
     }
 
     fprintf (file_descr, "\n\n%s SXBA %s%s [%li] = {\n", is_static ? "static " : "",
@@ -191,7 +191,7 @@ sxbm_to_c (FILE *file_descr, SXBA *bits_matrix, SXBA_INDEX line_nb, char *name1,
 }
 
 void
-sxbm2_to_c (FILE *file_descr, SXBA *bits_matrix, SXBA_INDEX line_nb, char *name1, char *name2, SXBOOLEAN is_static)
+sxbm2_to_c (FILE *file_descr, SXBA *bits_matrix, SXBA_INDEX line_nb, char *name1, char *name2, bool is_static)
 {
     /* Genere un SXBA_ELT [] [] et non un sxbm */
     SXBA_INDEX	i, lgth, nbmot;
@@ -323,7 +323,7 @@ sxbm3header_to_c (SXBA_INDEX *repr, FILE *file_descr, SXBA *bits_matrix, SXBA_IN
 
 
 void
-sxbm3core_to_c (SXBA_INDEX *repr, FILE *file_descr, SXBA_INDEX line_nb, char *name1, char *name2, SXBOOLEAN is_static)
+sxbm3core_to_c (SXBA_INDEX *repr, FILE *file_descr, SXBA_INDEX line_nb, char *name1, char *name2, bool is_static)
 {
   SXBA_INDEX		i;
 
@@ -345,7 +345,7 @@ sxbm3core_to_c (SXBA_INDEX *repr, FILE *file_descr, SXBA_INDEX line_nb, char *na
 }
 
 void
-sxbm3_to_c (FILE *file_descr, SXBA *bits_matrix, SXBA_INDEX line_nb, char *name1, char *name2, SXBOOLEAN is_static)
+sxbm3_to_c (FILE *file_descr, SXBA *bits_matrix, SXBA_INDEX line_nb, char *name1, char *name2, bool is_static)
 {
   /* genere un SXBM dont les SXBA egaux sont partages */
   SXBA_INDEX		*repr;

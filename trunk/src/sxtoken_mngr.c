@@ -20,7 +20,7 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXTOKEN_MNGR[] = "@(#)SYNTAX - $Id: sxtoken_mngr.c 2755 2023-02-17 14:45:33Z garavel $" WHAT_DEBUG;
+char WHAT_SXTOKEN_MNGR[] = "@(#)SYNTAX - $Id: sxtoken_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 /*	TOKEN   MANAGER
 
@@ -82,7 +82,7 @@ char WHAT_SXTOKEN_MNGR[] = "@(#)SYNTAX - $Id: sxtoken_mngr.c 2755 2023-02-17 14:
 */
 
 
-SXBOOLEAN	sxtknzoom (SXINT n)
+bool	sxtknzoom (SXINT n)
 {
     /* gestion du debordement de toks_buf */
 
@@ -115,7 +115,7 @@ SXBOOLEAN	sxtknzoom (SXINT n)
 	} while (++i < sxplocals.max);
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -187,7 +187,7 @@ SXINT	sxtknmdf (struct sxtoken *new_seq, SXINT lgth1, SXINT old_tok_no, SXINT lg
     return old_tok_no;
 }
 
-SXVOID	sxtkn_mngr (SXINT sxtkn_mngr_what, SXINT size)
+void	sxtkn_mngr (SXINT sxtkn_mngr_what, SXINT size)
 {
     SXINT i;
 

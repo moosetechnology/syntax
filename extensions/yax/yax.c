@@ -46,7 +46,7 @@
 #include "yax_vars.h"
 #include "put_edit.h"
 
-char WHAT_YAX[] = "@(#)SYNTAX - $Id: yax.c 3502 2023-08-20 19:31:52Z garavel $" WHAT_DEBUG;
+char WHAT_YAX[] = "@(#)SYNTAX - $Id: yax.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 static char	ME [] = "yax";
 static SXINT	nb_tnt;
@@ -57,7 +57,7 @@ extern struct sxtables	def_tables;
 
 #include "sem_by.h"
 
-extern SXVOID	put_release (void);
+extern void	put_release (void);
 
 
 
@@ -122,7 +122,7 @@ extern SXVOID	put_release (void);
    |               et de sortie du C	                                  |
    ------------------------------------------------------------------------ */
 
-static SXVOID	sature (void)
+static void	sature (void)
 {
     /* appelee lors de la saturation des tables */
 /* on multiplie par deux leur taille et on continue */
@@ -169,7 +169,7 @@ SXINT	placer_attr (SXINT ste)
 		     ste <= nb_tnt ?
 		     "An attribute name must be different from the name of a terminal symbol" :
 		     "This attribute has already been declared");
-	    is_err = SXTRUE;
+	    is_err = true;
 	}
 
 	return 0;		/* attr bidon */
@@ -199,7 +199,7 @@ SXINT	chercher_attr (SXINT ste)
 		 bnf_tables.err_titles [2][0],
 		 "%sUndeclared attribute.",
 		 bnf_tables.err_titles [2]+1);
-	is_err = SXTRUE;
+	is_err = true;
     }
 
     return entree;
@@ -220,7 +220,7 @@ SXINT	chercher_nt (SXINT ste)
 		     bnf_tables.err_titles [2][0],
 		     "%sUnknown non-terminal symbol.",
 		     bnf_tables.err_titles [2]+1);
-	    is_err = SXTRUE;
+	    is_err = true;
 	}
 
 	return W.ntmax;
@@ -234,7 +234,7 @@ SXINT	chercher_nt (SXINT ste)
 
 /* --------------------------------------------------------- */
 
-static SXBOOLEAN	less_nt (SXINT i, SXINT j)
+static bool	less_nt (SXINT i, SXINT j)
 {
     char	*k1, *k2;
 
@@ -249,7 +249,7 @@ static SXBOOLEAN	less_nt (SXINT i, SXINT j)
 
 
 
-SXVOID	yax_lo (void)
+void	yax_lo (void)
 {
     SXINT	i, j, k;
     SXINT	*sort_symbols;
@@ -326,7 +326,7 @@ SXVOID	yax_lo (void)
 
 /*  ---------------------------------------- */
 
-SXVOID	yax_free (void)
+void	yax_free (void)
 {
     SXINT	i;
 
@@ -350,7 +350,7 @@ SXVOID	yax_free (void)
 
 /* ---------------------------------------- */
 
-static SXVOID	mise_en_place (void)
+static void	mise_en_place (void)
 {
     SXINT	ste;
     SXINT	i;
@@ -443,7 +443,7 @@ static SXVOID	mise_en_place (void)
 
 /* ---------------------------------------- */
 
-SXBOOLEAN		yax_sem (void)
+bool		yax_sem (void)
 {
     struct {
 	struct sxsvar	sxsvar;
@@ -462,7 +462,7 @@ SXBOOLEAN		yax_sem (void)
     bnf.sxsvar = sxsvar;
     bnf.sxplocals = sxplocals;
     W.sem_kind = sem_by_action;
-    is_err = SXFALSE;
+    is_err = false;
     put_edit_initialize (sxstdout);
     put_release ();
 

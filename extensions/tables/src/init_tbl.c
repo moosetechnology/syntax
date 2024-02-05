@@ -1,1 +1,0 @@
-../../../trunk/tables/src/init_tbl.c

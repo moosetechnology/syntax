@@ -24,9 +24,9 @@
 #include "B_tables.h"
 #include "bnf_vars.h"
 
-char WHAT_PRINTBT[] = "@(#)SYNTAX - $Id: print_bt.c 3605 2023-09-24 05:36:48Z garavel $" WHAT_DEBUG;
+char WHAT_PRINTBT[] = "@(#)SYNTAX - $Id: print_bt.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
-extern SXVOID bnf_dump (void);
+extern void bnf_dump (void);
 
 /************************************************************************/
 /* main function */

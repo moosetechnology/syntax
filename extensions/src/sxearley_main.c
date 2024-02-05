@@ -26,7 +26,7 @@
 #include <float.h>
 #include <math.h>
 
-char WHAT_SXEARLEY_MAIN[] = "@(#)SYNTAX - $Id: sxearley_main.c 3234 2023-05-15 16:52:27Z garavel $" WHAT_DEBUG;
+char WHAT_SXEARLEY_MAIN[] = "@(#)SYNTAX - $Id: sxearley_main.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 static char	ME [] = "sxearley_main";
 
@@ -47,10 +47,10 @@ static struct sxtables	*dummy_tables_ptr = {NULL};
 /*    options    */
 /*---------------*/
 
-extern SXBOOLEAN tmp_file_for_stdin; /* Ds earley_parser.c */
-extern SXBOOLEAN sxtty_is_stderr;
+extern bool tmp_file_for_stdin; /* Ds earley_parser.c */
+extern bool sxtty_is_stderr;
 
-static SXBOOLEAN  is_help;
+static bool  is_help;
 static char	Usage [] = "\
 Usage:\t%s [options] [files]\n\
 options=\t-v, -verbose, -nv, -noverbose,\n\
@@ -272,7 +272,7 @@ earley_run (char *pathname)
   source_file = infile;
     
   {
-    SXSHORT c;
+    short c;
 
     /* si le dag_kind n'est pas spécifié par -dag ou -udag, on tente une détection automatique */
     if (dag_kind == 0) {
@@ -316,7 +316,7 @@ int
 sxearley_main (int argc, char *argv[])
 {
   int		argnum;
-  SXBOOLEAN	in_options, is_source_file, is_stdin;
+  bool	in_options, is_source_file, is_stdin;
 
   sxinitialise (is_source_file); /* pour faire taire gcc -Wuninitialized */
 
@@ -329,17 +329,17 @@ sxearley_main (int argc, char *argv[])
   sxopentty ();
 
   /* valeurs par defaut */
-  sxverbosep = SXFALSE;
-  is_print_time = SXTRUE;
-  is_print_prod = SXFALSE;
-  is_no_semantics = SXFALSE;
-  is_parse_tree_number = SXFALSE;
-  is_default_semantics = SXTRUE; /* Semantique specifiee avec la grammaire */
-  is_help = SXFALSE;
-  is_parse_forest = SXFALSE;
-  tmp_file_for_stdin = SXFALSE;
+  sxverbosep = false;
+  is_print_time = true;
+  is_print_prod = false;
+  is_no_semantics = false;
+  is_parse_tree_number = false;
+  is_default_semantics = true; /* Semantique specifiee avec la grammaire */
+  is_help = false;
+  is_parse_forest = false;
+  tmp_file_for_stdin = false;
 
-  is_stdin = SXTRUE;
+  is_stdin = true;
 
   dag_kind = 0;
 
@@ -350,15 +350,15 @@ sxearley_main (int argc, char *argv[])
 
   time_out = 0;
   vtime_out_s = vtime_out_us = 0;
-  is_tagged_dag = SXFALSE;
-  is_tagged_sdag = SXFALSE;
+  is_tagged_dag = false;
+  is_tagged_sdag = false;
 
-  beam_value_is_set = SXFALSE;
+  beam_value_is_set = false;
   beam_value = -DBL_MAX;
 
   /* Options du lexicalizer */
   IS_CHECK_RHS_SEQUENCES = 0; /* -1 => pt fixe, 0 => rien, i>0 => i fois */
-  IS_DYNAMIC_SET_AUTOMATON = SXFALSE;
+  IS_DYNAMIC_SET_AUTOMATON = false;
   maximum_input_size = ~((SXUINT) 0); /* unbounded */
 
   /* On fait un 1er passage pour reperer NO_SEM ou PARSE_TREE_NUMBER car ces options modifient sxearley_open_for_semact */
@@ -369,16 +369,16 @@ sxearley_main (int argc, char *argv[])
     while (++argnum < argc) {
       switch (option_get_kind (argv [argnum])) {
       case NO_SEM:
-	is_no_semantics = SXTRUE;
-	is_default_semantics = SXFALSE;
-	is_parse_tree_number = SXFALSE;
+	is_no_semantics = true;
+	is_default_semantics = false;
+	is_parse_tree_number = false;
 	break;
 
       case PARSE_TREE_NUMBER:
-	is_no_semantics = SXFALSE;
-	is_default_semantics = SXFALSE;
-	is_parse_tree_number = SXTRUE;
-	is_parse_forest = SXTRUE;
+	is_no_semantics = false;
+	is_default_semantics = false;
+	is_parse_tree_number = true;
+	is_parse_forest = true;
 	break;
 
       default:
@@ -392,55 +392,55 @@ sxearley_main (int argc, char *argv[])
   sxearley_set_for_semact ();
 
   if (argc > 1) {
-    is_source_file = SXFALSE;
+    is_source_file = false;
 
     /* Decodage des options */
-    in_options = SXTRUE;
+    in_options = true;
     argnum = 0;
 
     while (in_options && ++argnum < argc) {
       switch (option_get_kind (argv [argnum])) {
       case VERBOSE:
-	sxverbosep = SXTRUE;
+	sxverbosep = true;
 	break;
 
       case -VERBOSE:
-	sxverbosep = SXFALSE;
+	sxverbosep = false;
 	break;
 
       case NO_SEM:
-	is_no_semantics = SXTRUE;
-	is_default_semantics = SXFALSE;
-	is_parse_tree_number = SXFALSE;
+	is_no_semantics = true;
+	is_default_semantics = false;
+	is_parse_tree_number = false;
 	break;
 
       case DEFAULT_SEM:
-	is_no_semantics = SXFALSE;
-	is_default_semantics = SXTRUE;
-	is_parse_tree_number = SXFALSE;
+	is_no_semantics = false;
+	is_default_semantics = true;
+	is_parse_tree_number = false;
 	break;
 
       case PARSE_TREE_NUMBER:
-	is_no_semantics = SXFALSE;
-	is_default_semantics = SXFALSE;
-	is_parse_tree_number = SXTRUE;
-	is_parse_forest = SXTRUE;
+	is_no_semantics = false;
+	is_default_semantics = false;
+	is_parse_tree_number = true;
+	is_parse_forest = true;
 	break;
 
       case TIME:
-	is_print_time = SXTRUE;
+	is_print_time = true;
 	break;
 
       case -TIME:
-	is_print_time = SXFALSE;
+	is_print_time = false;
 	break;
 
       case PRINT_PROD:
-	is_print_prod = SXTRUE;
+	is_print_prod = true;
 	break;
 
       case HELP:
-	is_help = SXTRUE;
+	is_help = true;
 	break;
 
       case TRY_LOWER:
@@ -479,11 +479,11 @@ sxearley_main (int argc, char *argv[])
 	break;
 
       case STDIN:
-	is_stdin = SXTRUE;
+	is_stdin = true;
 	break;
 
       case PARSE_FOREST:
-	is_parse_forest = SXTRUE;
+	is_parse_forest = true;
 	break;
 
       case TIME_OUT:
@@ -535,11 +535,11 @@ sxearley_main (int argc, char *argv[])
 	break;
 
       case TAGGED_DAG:
-	is_tagged_dag = SXTRUE;
+	is_tagged_dag = true;
 	break;
 
       case TAGGED_SDAG:
-	is_tagged_sdag = SXTRUE;
+	is_tagged_sdag = true;
 	break;
 
       case DAG_INPUT:
@@ -568,7 +568,7 @@ sxearley_main (int argc, char *argv[])
 	break;
 
       case DYNAMIC_SET_AUTOMATON:
-	IS_DYNAMIC_SET_AUTOMATON = SXTRUE;
+	IS_DYNAMIC_SET_AUTOMATON = true;
 	break;
 
       case BEAM_VALUE:
@@ -581,11 +581,11 @@ sxearley_main (int argc, char *argv[])
 
 	if (beam_value < 1) {
 	  beam_value = -DBL_MAX;
-	  beam_value_is_set = SXFALSE;
+	  beam_value_is_set = false;
 	}
 	else {
 	  beam_value = -log10 (beam_value);
-	  beam_value_is_set = SXTRUE;
+	  beam_value_is_set = true;
 	}
 
 	break;
@@ -600,16 +600,16 @@ sxearley_main (int argc, char *argv[])
 	break;
 
       case TMP_FILE_FOR_STDIN:
-	tmp_file_for_stdin = SXTRUE;
+	tmp_file_for_stdin = true;
 	break;
 
       case SOURCE_FILE:
 	if (is_stdin) {
-	  is_stdin = SXFALSE;
+	  is_stdin = false;
 	}
 
-	is_source_file = SXTRUE;
-	in_options = SXFALSE;
+	is_source_file = true;
+	in_options = false;
 	break;
 
       case UNKNOWN_ARG:

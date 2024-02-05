@@ -70,17 +70,17 @@ extern SXINT			X_is_set (X_header *header, SXINT X);
 /* If the element "X" is already stored it returns its index (a strictly positive
    integer) else it returns 0. */
 
-extern SXBOOLEAN			X_set (X_header *header,
+extern bool			X_set (X_header *header,
 				       SXINT X,
 				       SXINT *result_ptr);
 /* Put the element "X" in the structure and returns its index (a strictly positive
-   integer). Moreover it returns SXTRUE if the element "X" is already stored else
-   it returns SXFALSE. */
+   integer). Moreover it returns true if the element "X" is already stored else
+   it returns false. */
 
-extern SXBOOLEAN			X_write (X_header *header, sxfiledesc_t file /* file descriptor */);
+extern bool			X_write (X_header *header, sxfiledesc_t file /* file descriptor */);
 /* Write on "file" the structure "*header" */
 
-extern SXBOOLEAN			X_read (X_header *header, 
+extern bool			X_read (X_header *header, 
 					sxfiledesc_t file /* file descriptor */, 
 					char *name, 
 					void (*user_oflw) (SXINT, SXINT), 
@@ -92,7 +92,7 @@ extern void X_to_c (
 		    X_header *header, 
 		    FILE *F_X, 
 		    char *name, 
-		    SXBOOLEAN is_static);
+		    bool is_static);
 
 /* Print on "F_X" a the C text for the structure "header" */
 
@@ -123,13 +123,13 @@ extern void			X_reuse (X_header *header,
 /* WARNING: "h" is used several times in the macro expansion. */
 
 #define X_is_erased(h,x)	X_root_is_erased(h,x)
-/* Is SXTRUE if the element whose index is "x" has been "X_erased". */
+/* Is true if the element whose index is "x" has been "X_erased". */
 
 #define X_is_static(h)		X_root_is_static(h)
-/* Is SXTRUE iff the whole structure is defined statically. */
+/* Is true iff the whole structure is defined statically. */
 
 #define X_is_allocated(h)	X_root_is_allocated(h)
-/* Is SXTRUE iff the structure is allocated. */
+/* Is true iff the structure is allocated. */
 
 #define X_size(h)		X_root_size(h)
 /* Is the current size of the structure (last index available). */

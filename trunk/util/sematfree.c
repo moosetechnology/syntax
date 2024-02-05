@@ -21,10 +21,10 @@
 #include "sxunix.h"
 #include "T_tables.h"
 
-char WHAT_SEMATFREE[] = "@(#)SYNTAX - $Id: sematfree.c 3146 2023-05-02 12:21:39Z garavel $" WHAT_DEBUG;
+char WHAT_SEMATFREE[] = "@(#)SYNTAX - $Id: sematfree.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
 
-SXVOID	semat_free (struct T_ag_item *T_ag)
+void	semat_free (struct T_ag_item *T_ag)
 {
     if (T_ag->SXT_node_info != NULL) {
 	sxfree (T_ag->SXT_node_info), T_ag->SXT_node_info = NULL;

@@ -21,14 +21,14 @@
 #include "sxunix.h"
 #include "varstr.h"
 #include <ctype.h>
-char WHAT_RCGSACT[] = "@(#)SYNTAX - $Id: rcg_sact.c 3354 2023-06-12 12:12:32Z garavel $" WHAT_DEBUG;
+char WHAT_RCGSACT[] = "@(#)SYNTAX - $Id: rcg_sact.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
 extern struct sxtables	rcg_tables;
 
 static VARSTR	vstr;
 
 
-static SXVOID	gripe (void)
+static void	gripe (void)
 {
     fputs ("\nThe function \"rcg_scan_act\" is out of date with respect to its specification.\n", sxstderr);
     sxexit(1);

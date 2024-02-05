@@ -21,7 +21,7 @@
 #include "sxcommon.h"
 #include "X.h"
 
-char WHAT_X_MNGR[] = "@(#)SYNTAX - $Id: X_mngr.c 2947 2023-03-29 17:06:41Z garavel $" WHAT_DEBUG;
+char WHAT_X_MNGR[] = "@(#)SYNTAX - $Id: X_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 extern void sxtrap (char *caller, char *message);
 
@@ -175,11 +175,11 @@ void	X_gc (X_header *header)
 }
 
 
-SXBOOLEAN	X_set (X_header *header, SXINT X, SXINT *ref)
+bool	X_set (X_header *header, SXINT X, SXINT *ref)
 {
     /* Si l'element X de header existe, cette fonction
-       retourne SXTRUE et ref designe cet element, sinon elle cree un nouvel
-       element, ref le designe et elle retourne SXFALSE */
+       retourne true et ref designe cet element, sinon elle cree un nouvel
+       element, ref le designe et elle retourne false */
 
     if (header->is_locked)
 	sxtrap ("X_set", header->name);
@@ -203,27 +203,27 @@ void	X_lock (X_header *header)
     X_root_lock ((X_root_header*)(HEADER_ = header));
 }
 
-SXBOOLEAN X_write (X_header *header, sxfiledesc_t F_X /* file descriptor */)
+bool X_write (X_header *header, sxfiledesc_t F_X /* file descriptor */)
 {
     size_t	bytes;
 
-#define WRITE(p,l)	if ((bytes = (l)) > 0 && ((size_t)write (F_X, p, bytes) != bytes)) return SXFALSE
+#define WRITE(p,l)	if ((bytes = (l)) > 0 && ((size_t)write (F_X, p, bytes) != bytes)) return false
 
     if (X_root_write ((X_root_header*)header, F_X)) {
 	WRITE (header->display, sizeof (struct X_elem) * (header->top + 1));
 
-	return SXTRUE;
+	return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
-SXBOOLEAN X_read (X_header *header, sxfiledesc_t F_X /* file descriptor */, char *name, void (*user_oflw) (SXINT, SXINT), FILE *stat_file)
+bool X_read (X_header *header, sxfiledesc_t F_X /* file descriptor */, char *name, void (*user_oflw) (SXINT, SXINT), FILE *stat_file)
 {
     size_t	bytes;
 
-#define READ(p,l)	if ((bytes = (l)) > 0 && ((size_t)read (F_X, p, bytes) != bytes)) return SXFALSE
+#define READ(p,l)	if ((bytes = (l)) > 0 && ((size_t)read (F_X, p, bytes) != bytes)) return false
 
     if (X_root_read ((X_root_header*)header, F_X)) {
 	header->display = (struct X_elem*) sxalloc (header->size + 1, sizeof (struct X_elem));
@@ -237,10 +237,10 @@ SXBOOLEAN X_read (X_header *header, sxfiledesc_t F_X /* file descriptor */, char
 	header->assign = X_assign;
 	header->stat_file = stat_file;
 
-	return SXTRUE;
+	return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 void X_array_to_c (X_header *header, FILE *F_X /* named output stream */, char *name)
@@ -272,7 +272,7 @@ void X_header_to_c (X_header *header, FILE *F_X /* named output stream */, char 
 }
 
 
-void X_to_c (X_header *header, FILE *F_X /* named output stream */, char *name, SXBOOLEAN is_static)
+void X_to_c (X_header *header, FILE *F_X /* named output stream */, char *name, bool is_static)
 {
     X_array_to_c (header, F_X, name);
     fprintf (F_X, "\n\n%sX_header %s =\n", is_static ? "static " : "", name);

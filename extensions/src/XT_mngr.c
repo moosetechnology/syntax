@@ -40,7 +40,7 @@
 #include "X.h"
 #include "XT.h"
 
-char WHAT_XT_MNGR[] = "@(#)SYNTAX - $Id: XT_mngr.c 3312 2023-05-28 06:06:26Z garavel $" WHAT_DEBUG;
+char WHAT_XT_MNGR[] = "@(#)SYNTAX - $Id: XT_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 void
 XT_alloc (XT_header *header, 
@@ -105,7 +105,7 @@ XT_free (XT_header *header)
 
 
 
-SXBOOLEAN
+bool
 XT_set (XT_header *header, SXINT list, SXINT *result)
 {
     SXINT i, x;

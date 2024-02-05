@@ -30,7 +30,7 @@
 #include "lecl_ag.h"
 #include "lecl_nn.h"
 
-char WHAT_LECLPRS[] = "@(#)SYNTAX - $Id: lecl_prs.c 3603 2023-09-23 20:02:36Z garavel $" WHAT_DEBUG;
+char WHAT_LECLPRS[] = "@(#)SYNTAX - $Id: lecl_prs.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
 static SXINT	xclass, i, codofcar, class_no, xtc;
 static SXBA	/* char_max */ char_set;
@@ -38,7 +38,7 @@ static struct lecl_node		*brother;
 
 
 
-static SXVOID	maj (struct lecl_node *visited)
+static void	maj (struct lecl_node *visited)
 {
     if (++xclass >= target_collate_length) {
 	sxerror (visited->token.source_index,
@@ -51,7 +51,7 @@ static SXVOID	maj (struct lecl_node *visited)
 
 
 
-static SXVOID	process (struct lecl_node *visited)
+static void	process (struct lecl_node *visited)
 {
     switch (visited->name) {
     case ERROR_n  :
@@ -426,7 +426,7 @@ class_ref:
 
 
 
-SXVOID	lecl_prs (struct lecl_node *visited)
+void	lecl_prs (struct lecl_node *visited)
 {
     process (visited);
 }

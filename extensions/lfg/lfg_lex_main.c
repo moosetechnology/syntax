@@ -20,9 +20,9 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_LFGLEXMAIN[] = "@(#)SYNTAX - $Id: lfg_lex_main.c 3352 2023-06-12 11:52:07Z garavel $" WHAT_DEBUG;
+char WHAT_LFGLEXMAIN[] = "@(#)SYNTAX - $Id: lfg_lex_main.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
-SXBOOLEAN           use_a_dico, ignore_warnings, make_proper_will_be_used;
+bool           use_a_dico, ignore_warnings, make_proper_will_be_used;
 char              *path_name, *prgent_name;
 SXUINT lfg_lex_time;
 
@@ -132,7 +132,7 @@ suffixname (char *pathname)
 #include <sys/timeb.h>
 
 
-static SXVOID	lfg_run (char *pathname)
+static void	lfg_run (char *pathname)
 {
     FILE	*infile;
 
@@ -201,8 +201,8 @@ int main (int argc, char *argv[])
   }
 
   /* valeurs par defaut */
-  sxverbosep = SXFALSE;
-  use_a_dico = SXTRUE;
+  sxverbosep = false;
+  use_a_dico = true;
 
   /* Decodage des options */
   for (argnum = 1; argnum < argc; argnum++) {
@@ -212,27 +212,27 @@ int main (int argc, char *argv[])
       return EXIT_SUCCESS;
 
     case VERBOSE:
-      sxverbosep = SXTRUE;
+      sxverbosep = true;
       break;
 
     case -VERBOSE:
-      sxverbosep = SXFALSE;
+      sxverbosep = false;
       break;
 
     case DICO:
-      use_a_dico = SXTRUE;
+      use_a_dico = true;
       break;
 
     case -DICO:
-      use_a_dico = SXFALSE;
+      use_a_dico = false;
       break;
 
     case IGNORE_WARNINGS:
-      ignore_warnings = SXTRUE;
+      ignore_warnings = true;
       break;
 
     case MAKE_PROPER:
-      make_proper_will_be_used = SXTRUE;
+      make_proper_will_be_used = true;
       break;
 
     case UNKNOWN_ARG:
@@ -261,7 +261,7 @@ int main (int argc, char *argv[])
        fprintf (sxtty, "Release %s\n", SXVERSION);
        } */
 
-  syntax (SXINIT, &lfg_lex_tables, SXFALSE /* no includes */);
+  syntax (SXINIT, &lfg_lex_tables, false /* no includes */);
 
   if (argnum == argc /* stdin (sans -) */ ||
       strcmp (argv [argnum], "-") == 0) {
@@ -272,7 +272,7 @@ int main (int argc, char *argv[])
     lfg_run (path_name = argv [argnum]);
   }
 
-  syntax (SXFINAL, &lfg_lex_tables, SXTRUE);
+  syntax (SXFINAL, &lfg_lex_tables, true);
 
   {
     int	severity;

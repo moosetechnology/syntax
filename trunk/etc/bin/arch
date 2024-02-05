@@ -3,7 +3,7 @@
 # CADP (CONSTRUCTION AND ANALYSIS OF DISTRIBUTED PROCESSES)
 # http://cadp.inria.fr
 
-# arch version 1.48 -- date 2022/11/03 16:41:56 -- Hubert Garavel
+# arch version 1.52 -- date 2023/12/15 18:38:03 -- Hubert Garavel
 
 PATH="/bin:$PATH" ; export PATH
 
@@ -88,6 +88,9 @@ case $UNAME_MACHINE-$UNAME_SYSTEM-$UNAME_RELEASE in
 				;;
 		esac
 		;;
+	aarch64-Linux-* )
+		echo "a64"
+		;;
 	ia64-Linux-* )
 		# Processeur Intel Itanium 64 bits / Linux
 		case "$CADP_BITS" in
@@ -98,7 +101,8 @@ case $UNAME_MACHINE-$UNAME_SYSTEM-$UNAME_RELEASE in
 		esac
 		;;
 	RISC-ULTRIX-* ) 
-		echo "dec5000" ;;
+		echo "dec5000"
+		;;
 	i[3456]86-CYGWIN*-* )
 	  	# Solution Cygwin (32 bits) de Cygnus
 		if [ "$1" = "-detailed" ]
@@ -114,16 +118,7 @@ case $UNAME_MACHINE-$UNAME_SYSTEM-$UNAME_RELEASE in
 		then
 			echo "win64-cygnus"
 		else
-			case "$CADP_BITS" in
-				"" | 32 )
-					# par defaut, le cas 64 bits est, pour
-					# l'instant, assimile au cas 32 bits
-					echo "win32" ;;
-				64 )
-					# non-documente, experimental
-					echo "win64" ;;
-			esac
-
+			echo "win64"
 		fi
 		;;
 	i[3456]86-MINGW32*-* )
@@ -178,6 +173,7 @@ case $UNAME_MACHINE-$UNAME_SYSTEM-$UNAME_RELEASE in
 		;;
 	arm64-Darwin-[23]*.*)
 		# macOS ARM (a partir de Darwin 20 "Big Sur") avec noyau 64 bits
+		# (a terme, ce sera "arm64")
 		if [ "$1" = "-detailed" ]
 		then
 			echo "mac64-arm"

@@ -103,7 +103,7 @@ xcsynt/src/left_corner.c:207:5: note: here
 
 xcsynt/src/LC0.c: In function 'ntfe':
 xcsynt/src/LC0.c:598:16: warning: variable 'is_xnt' set but not used [-Wunused-but-set-variable]
-     SXBOOLEAN  is_xnt, is_nd_list;
+     bool  is_xnt, is_nd_list;
                 ^~~~~~
 	gcc -o xcsynt/lc.out
 

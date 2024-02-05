@@ -31,22 +31,22 @@
 #include "lecl_pcn.h"
 #include "S_tables.h" /* for struct lecl_tables_s */
 
-char WHAT_LECLSMP[] = "@(#)SYNTAX - $Id: lecl_smp.c 3603 2023-09-23 20:02:36Z garavel $" WHAT_DEBUG;
+char WHAT_LECLSMP[] = "@(#)SYNTAX - $Id: lecl_smp.c 3631 2023-12-20 17:16:41Z garavel $" WHAT_DEBUG;
 
 extern SXINT	lecl_sature (SXINT nbt);
-extern SXVOID	lecl_css (struct lecl_node *visited);
-extern SXVOID	lecl_st (void);
-extern SXVOID	lecl_fsa_construction (void);
-extern SXVOID	lecl_code_gen (void);
-extern SXVOID	gen_check_kw (void);
-extern SXVOID	lecl_tbls_out (struct lecl_tables_s *lecl_tables_ptr);
-extern SXVOID	lecl_list_out (void);
-extern SXVOID	lecl_ag_free (void);
+extern void	lecl_css (struct lecl_node *visited);
+extern void	lecl_st (void);
+extern void	lecl_fsa_construction (void);
+extern void	lecl_code_gen (void);
+extern void	gen_check_kw (void);
+extern void	lecl_tbls_out (struct lecl_tables_s *lecl_tables_ptr);
+extern void	lecl_list_out (void);
+extern void	lecl_ag_free (void);
 
 static time_t	bnf_modif_time;
 
 
-static SXVOID	smpopen (struct sxtables *sxtables_ptr)
+static void	smpopen (struct sxtables *sxtables_ptr)
 {
     err_titles = sxtables_ptr->err_titles;
     sxatcvar.atc_lv.node_size = sizeof (struct lecl_node);
@@ -57,7 +57,7 @@ static SXVOID	smpopen (struct sxtables *sxtables_ptr)
 
 /* The storage is allocated here ! */
 
-static SXVOID smppass (void)
+static void smppass (void)
 {
     char	*s, *s1;
     SXINT		c;
@@ -262,7 +262,7 @@ static SXVOID smppass (void)
     }
 
     lecl_st ();
-    st_done = SXTRUE;
+    st_done = true;
 
     if (is_check) {
 	if (is_source)
@@ -280,7 +280,7 @@ static SXVOID smppass (void)
     if (sxerrmngr.nbmess [2] > 0)
 	goto no_automaton;
 
-    fsa_done = SXTRUE;
+    fsa_done = true;
     lecl_code_gen ();
     gen_check_kw ();
 
@@ -311,7 +311,7 @@ no_automaton:
 
 
 
-SXVOID	lecl_smp (SXINT what, struct sxtables *sxtables_ptr)
+void	lecl_smp (SXINT what, struct sxtables *sxtables_ptr)
 {
     switch (what) {
     case SXOPEN:
@@ -322,7 +322,7 @@ SXVOID	lecl_smp (SXINT what, struct sxtables *sxtables_ptr)
 	if (sxverbosep) {
 	    if (!sxttycol1p) {
 		fputc ('\n', sxtty);
-		sxttycol1p = SXTRUE;
+		sxttycol1p = true;
 	    }
 
 	    fputs ("Semantic Pass\n", sxtty);

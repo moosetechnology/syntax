@@ -46,7 +46,7 @@ extern void sxdico_process            (struct mot2 input, struct dico *output);
 extern void sxdico2c                  (struct dico *sxdico2c_dico, 
 				       FILE *file, 
 				       char *dico_name, 
-				       SXBOOLEAN is_static);
+				       bool is_static);
 
 #define TOTAL        0
 #define PARTIEL      1

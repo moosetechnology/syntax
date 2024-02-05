@@ -29,7 +29,7 @@
 #include <sys/stat.h>
 #include <sys/timeb.h>
 
-char WHAT_DRCGMAIN[] = "@(#)SYNTAX - $Id: drcg_main.c 3354 2023-06-12 12:12:32Z garavel $" WHAT_DEBUG;
+char WHAT_DRCGMAIN[] = "@(#)SYNTAX - $Id: drcg_main.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 #include "sxversion.h"
 
@@ -212,7 +212,7 @@ static char	*option_get_text (SXINT kind)
 
 
 
-static SXVOID	extract_language_name (char *path_name)
+static void	extract_language_name (char *path_name)
 {
     char	*p;
 
@@ -230,7 +230,7 @@ static SXVOID	extract_language_name (char *path_name)
 
 
 
-static SXVOID	drcg_run (char *pathname)
+static void	drcg_run (char *pathname)
 {
     extern void		drcg_pass (void);
     FILE	*infile;
@@ -317,46 +317,46 @@ int main (int argc, char *argv[])
   /* valeurs par defaut */
 
   /* On avertit rcg_smp, rcg_gen_parser, ... que l'on traite une grammaire de type DRCG */
-  is_drcg = SXTRUE;
+  is_drcg = true;
 
   options_set = OPTION (VERBOSE) | OPTION (CHECK_SELF_DEFINITION) | OPTION (DECREASE_ORDER) |
     OPTION (GEN_BNF) | OPTION (FACTORIZE) | OPTION (FIRST_LAST);
-  sxverbosep = SXFALSE;
-  check_self_definition = SXTRUE;
-  check_set = SXFALSE; /* Les clauses peuvent ne pas former un ensemble */
-  decrease_order = SXTRUE; /* controle le sens du parcourt des boucles for */
-  is_gen_bnf = SXTRUE; /* On genere un .bnf */
+  sxverbosep = false;
+  check_self_definition = true;
+  check_set = false; /* Les clauses peuvent ne pas former un ensemble */
+  decrease_order = true; /* controle le sens du parcourt des boucles for */
+  is_gen_bnf = true; /* On genere un .bnf */
 
-  is_listing_output = SXFALSE;
-  is_CF_parser = SXFALSE;
-  is_OLTAG = SXFALSE; /* OLTAG == SXTRUE : la RCG est produite a partir d'une TAG et la bnf produite est
+  is_listing_output = false;
+  is_CF_parser = false;
+  is_OLTAG = false; /* OLTAG == true : la RCG est produite a partir d'une TAG et la bnf produite est
 		       un peu particuliere */
-  is_1_RCG = SXFALSE; /* 1rcg => On produit en sortie une 1-RCG qui decrit un sur-langage et qui servira de guide */
-  is_simple = is_proper = SXFALSE; /* On verifie si la RCG est simple ou propre */
-  is_2var_form = SXFALSE;
-  is_factorize = SXTRUE; /* Les clauses et predicats identiques sont reduits */
-  is_combinatorial = SXFALSE; /* ATTENTION : si is_combinatorial est "SXFALSE" pour un module, la generation
+  is_1_RCG = false; /* 1rcg => On produit en sortie une 1-RCG qui decrit un sur-langage et qui servira de guide */
+  is_simple = is_proper = false; /* On verifie si la RCG est simple ou propre */
+  is_2var_form = false;
+  is_factorize = true; /* Les clauses et predicats identiques sont reduits */
+  is_combinatorial = false; /* ATTENTION : si is_combinatorial est "false" pour un module, la generation
 			       du traitement des cycles non triviaux suppose que toute la grammaire -- les autres
 			       modules -- sont aussi non-combinatoire, le test est effectue dynamiquement */
   lfsa_file = NULL;
   rfsa_file = NULL;
   h_value = 1;
-  is_left_corner = SXTRUE;
-  used_nfndfsa = SXFALSE;
-  is_full_lex = SXFALSE; /* La guiding RCG contient tous les &Lex */
-  is_first_last = SXTRUE; /* On genere les test pour first et last */
-  is_look_ahead = SXFALSE; /* On n'utilise pas de look-ahead ds le FSA */
-  is_tagger = SXFALSE; /* Le FSA ne contient plus que des transitions terminales (a l'exception des reduces
+  is_left_corner = true;
+  used_nfndfsa = false;
+  is_full_lex = false; /* La guiding RCG contient tous les &Lex */
+  is_first_last = true; /* On genere les test pour first et last */
+  is_look_ahead = false; /* On n'utilise pas de look-ahead ds le FSA */
+  is_tagger = false; /* Le FSA ne contient plus que des transitions terminales (a l'exception des reduces
                         qui ont des &Lex associes).  L'analyse ne retient que l'indice ds le source des
 			terminaux valides.  Peut servir pour faire du POS tagging ou un 1er niveau de guide */
-  is_keep_lex = SXFALSE; /* Si is_tagger.  Garde ds l'automate les productions qui ont du &Lex associe.
+  is_keep_lex = false; /* Si is_tagger.  Garde ds l'automate les productions qui ont du &Lex associe.
 			  C,a permet d'etre +fin sur le tagging */
-  is_keep_epsilon_rules = SXFALSE; /* Si is_keep_lex == SXTRUE.  Supprime de l'automate les productions vides
+  is_keep_epsilon_rules = false; /* Si is_keep_lex == true.  Supprime de l'automate les productions vides
 				    meme si elles ont du &Lex
 				    C,a peut augmenter la vitesse */
-  is_shift_reduce = SXFALSE; /* Les actions shift-reduce du PDA sont codees par une transition unique. Le
-			      langage du FSA est +proche de celui du PDA  si is_shift_reduce == SXTRUE */
-  is_shallow = SXFALSE; /* cas (l|r)fsa on traite des clauses et non des LHS_prdct */
+  is_shift_reduce = false; /* Les actions shift-reduce du PDA sont codees par une transition unique. Le
+			      langage du FSA est +proche de celui du PDA  si is_shift_reduce == true */
+  is_shallow = false; /* cas (l|r)fsa on traite des clauses et non des LHS_prdct */
   shallow_file = NULL;
   lbnf_file = NULL;
   rbnf_file = NULL;
@@ -366,115 +366,115 @@ int main (int argc, char *argv[])
   for (argnum = 1; argnum < argc; argnum++) {
     switch (option_get_kind (argv [argnum])) {
     case VERBOSE:
-      sxverbosep = SXTRUE, options_set |= OPTION (VERBOSE);
+      sxverbosep = true, options_set |= OPTION (VERBOSE);
       break;
 
     case -VERBOSE:
-      sxverbosep = SXFALSE, options_set &= noOPTION (VERBOSE);
+      sxverbosep = false, options_set &= noOPTION (VERBOSE);
       break;
 
     case LISTING_OUTPUT:
-      is_listing_output = SXTRUE, options_set |= OPTION (LISTING_OUTPUT);
+      is_listing_output = true, options_set |= OPTION (LISTING_OUTPUT);
       break;
 
     case -LISTING_OUTPUT:
-      is_listing_output = SXFALSE, options_set &= noOPTION (LISTING_OUTPUT);
+      is_listing_output = false, options_set &= noOPTION (LISTING_OUTPUT);
       break;
 
     case CHECK_SELF_DEFINITION:
-      check_self_definition = SXTRUE, options_set |= OPTION (CHECK_SELF_DEFINITION);
+      check_self_definition = true, options_set |= OPTION (CHECK_SELF_DEFINITION);
       break;
 
     case -CHECK_SELF_DEFINITION:
-      check_self_definition = SXFALSE, options_set &= noOPTION (CHECK_SELF_DEFINITION);
+      check_self_definition = false, options_set &= noOPTION (CHECK_SELF_DEFINITION);
       break;
 
     case CONTEXT_FREE_GRAMMAR:
-      is_CF_parser = SXTRUE, options_set |= OPTION (CONTEXT_FREE_GRAMMAR);
+      is_CF_parser = true, options_set |= OPTION (CONTEXT_FREE_GRAMMAR);
       break;
 
     case -CONTEXT_FREE_GRAMMAR:
-      is_CF_parser = SXFALSE, options_set &= noOPTION (CONTEXT_FREE_GRAMMAR);
+      is_CF_parser = false, options_set &= noOPTION (CONTEXT_FREE_GRAMMAR);
       break;
 
     case CHECK_SET:
-      check_set = SXTRUE, options_set |= OPTION (CHECK_SET);
+      check_set = true, options_set |= OPTION (CHECK_SET);
       break;
 
     case -CHECK_SET:
-      check_set = SXFALSE, options_set &= noOPTION (CHECK_SET);
+      check_set = false, options_set &= noOPTION (CHECK_SET);
       break;
 
     case DECREASE_ORDER:
-      decrease_order = SXTRUE, options_set |= OPTION (DECREASE_ORDER);
+      decrease_order = true, options_set |= OPTION (DECREASE_ORDER);
       break;
 
     case -DECREASE_ORDER:
-      decrease_order = SXFALSE, options_set &= noOPTION (DECREASE_ORDER);
+      decrease_order = false, options_set &= noOPTION (DECREASE_ORDER);
       break;
 
     case OLTAG:
-      is_OLTAG = SXTRUE, options_set |= OPTION (OLTAG);
+      is_OLTAG = true, options_set |= OPTION (OLTAG);
       break;
 
     case -OLTAG:
-      is_OLTAG = SXFALSE, options_set &= noOPTION (OLTAG);
+      is_OLTAG = false, options_set &= noOPTION (OLTAG);
       break;
 
     case ONE_RCG:
-      is_1_RCG = SXTRUE, options_set |= OPTION (ONE_RCG);
+      is_1_RCG = true, options_set |= OPTION (ONE_RCG);
       break;
 
     case -ONE_RCG:
-      is_1_RCG = SXFALSE, options_set &= noOPTION (ONE_RCG);
+      is_1_RCG = false, options_set &= noOPTION (ONE_RCG);
       break;
 
     case GEN_BNF:
-      is_gen_bnf = SXTRUE, options_set |= OPTION (GEN_BNF);
+      is_gen_bnf = true, options_set |= OPTION (GEN_BNF);
       break;
 
     case -GEN_BNF:
-      is_gen_bnf = SXFALSE, options_set &= noOPTION (GEN_BNF);
+      is_gen_bnf = false, options_set &= noOPTION (GEN_BNF);
       break;
 
     case SIMPLE:
-      is_simple = SXTRUE, options_set |= OPTION (GEN_BNF);
+      is_simple = true, options_set |= OPTION (GEN_BNF);
       break;
 
     case -SIMPLE:
-      is_simple = SXFALSE, options_set &= noOPTION (GEN_BNF);
+      is_simple = false, options_set &= noOPTION (GEN_BNF);
       break;
 
     case PROPER:
-      is_proper = SXTRUE, options_set |= OPTION (GEN_BNF);
+      is_proper = true, options_set |= OPTION (GEN_BNF);
       break;
 
     case -PROPER:
-      is_proper = SXFALSE, options_set &= noOPTION (GEN_BNF);
+      is_proper = false, options_set &= noOPTION (GEN_BNF);
       break;
 
     case TWO_VAR_FORM:
-      is_2var_form = SXTRUE, options_set |= OPTION (TWO_VAR_FORM);
+      is_2var_form = true, options_set |= OPTION (TWO_VAR_FORM);
       break;
 
     case -TWO_VAR_FORM:
-      is_2var_form = SXFALSE, options_set &= noOPTION (TWO_VAR_FORM);
+      is_2var_form = false, options_set &= noOPTION (TWO_VAR_FORM);
       break;
 
     case FACTORIZE:
-      is_factorize = SXTRUE, options_set |= OPTION (TWO_VAR_FORM);
+      is_factorize = true, options_set |= OPTION (TWO_VAR_FORM);
       break;
 
     case -FACTORIZE:
-      is_factorize = SXFALSE, options_set &= noOPTION (TWO_VAR_FORM);
+      is_factorize = false, options_set &= noOPTION (TWO_VAR_FORM);
       break;
 
     case COMBINATORIAL:
-      is_combinatorial = SXTRUE, options_set |= OPTION (COMBINATORIAL);
+      is_combinatorial = true, options_set |= OPTION (COMBINATORIAL);
       break;
 
     case -COMBINATORIAL:
-      is_combinatorial = SXFALSE, options_set &= noOPTION (COMBINATORIAL);
+      is_combinatorial = false, options_set &= noOPTION (COMBINATORIAL);
       break;
 
     case LFSA:
@@ -521,27 +521,27 @@ int main (int argc, char *argv[])
       break;
 
     case LEFT_CORNER:
-      is_left_corner = SXTRUE, options_set |= OPTION (LEFT_CORNER);
+      is_left_corner = true, options_set |= OPTION (LEFT_CORNER);
       break;
 
     case -LEFT_CORNER:
-      is_left_corner = SXFALSE, options_set &= noOPTION (LEFT_CORNER);
+      is_left_corner = false, options_set &= noOPTION (LEFT_CORNER);
       break;  
 
     case NFNDFSA:
-      used_nfndfsa = SXTRUE, options_set |= OPTION (NFNDFSA);
+      used_nfndfsa = true, options_set |= OPTION (NFNDFSA);
       break;
 
     case -NFNDFSA:
-      used_nfndfsa = SXFALSE, options_set &= noOPTION (NFNDFSA);
+      used_nfndfsa = false, options_set &= noOPTION (NFNDFSA);
       break;
 
     case FULL_LEX:
-      is_full_lex = SXTRUE, options_set |= OPTION (FULL_LEX);
+      is_full_lex = true, options_set |= OPTION (FULL_LEX);
       break;
 
     case -FULL_LEX:
-      is_full_lex = SXFALSE, options_set &= noOPTION (FULL_LEX);
+      is_full_lex = false, options_set &= noOPTION (FULL_LEX);
       break; 
 
     case USELESS_CLAUSE_PATHNAME:
@@ -559,39 +559,39 @@ int main (int argc, char *argv[])
       break;
 
     case FIRST_LAST:
-      is_first_last = SXTRUE, options_set |= OPTION (FIRST_LAST);
+      is_first_last = true, options_set |= OPTION (FIRST_LAST);
       break;
 
     case -FIRST_LAST:
-      is_first_last = SXFALSE, options_set &= noOPTION (FIRST_LAST);
+      is_first_last = false, options_set &= noOPTION (FIRST_LAST);
       break;
 
     case LOOK_AHEAD:
-      is_look_ahead = SXTRUE, options_set |= OPTION (LOOK_AHEAD);
+      is_look_ahead = true, options_set |= OPTION (LOOK_AHEAD);
       break;
 
     case -LOOK_AHEAD:
-      is_look_ahead = SXFALSE, options_set &= noOPTION (LOOK_AHEAD);
+      is_look_ahead = false, options_set &= noOPTION (LOOK_AHEAD);
       break; 
 
     case TAGGER:
-      is_tagger = SXTRUE, options_set |= OPTION (TAGGER);
+      is_tagger = true, options_set |= OPTION (TAGGER);
       break;
 
     case -TAGGER:
-      is_tagger = SXFALSE, options_set &= noOPTION (TAGGER);
+      is_tagger = false, options_set &= noOPTION (TAGGER);
       break; 
 
     case SHIFT_REDUCE:
-      is_shift_reduce = SXTRUE, options_set |= OPTION (SHIFT_REDUCE);
+      is_shift_reduce = true, options_set |= OPTION (SHIFT_REDUCE);
       break;
 
     case -SHIFT_REDUCE:
-      is_shift_reduce = SXFALSE, options_set &= noOPTION (SHIFT_REDUCE);
+      is_shift_reduce = false, options_set &= noOPTION (SHIFT_REDUCE);
       break; 
 
     case SHALLOW:
-      is_shallow = SXTRUE, options_set |= OPTION (SHALLOW);
+      is_shallow = true, options_set |= OPTION (SHALLOW);
 
       if (++argnum >= argc) {
 	fprintf (sxstderr, "%s: a pathname (or %s) must follow the \"%s\" option;\n", ME, SX_DEV_NUL, option_get_text (LFSA));
@@ -609,19 +609,19 @@ int main (int argc, char *argv[])
       break;
 
     case KEEP_LEX:
-      is_keep_lex = SXTRUE, options_set |= OPTION (KEEP_LEX);
+      is_keep_lex = true, options_set |= OPTION (KEEP_LEX);
       break;
 
     case -KEEP_LEX:
-      is_keep_lex = SXFALSE, options_set &= noOPTION (KEEP_LEX);
+      is_keep_lex = false, options_set &= noOPTION (KEEP_LEX);
       break; 
 
     case KEEP_EPS_RULES:
-      is_keep_epsilon_rules = SXTRUE, options_set |= OPTION (KEEP_EPS_RULES);
+      is_keep_epsilon_rules = true, options_set |= OPTION (KEEP_EPS_RULES);
       break;
 
     case -KEEP_EPS_RULES:
-      is_keep_epsilon_rules = SXFALSE, options_set &= noOPTION (KEEP_EPS_RULES);
+      is_keep_epsilon_rules = false, options_set &= noOPTION (KEEP_EPS_RULES);
       break;
 
     case LBNF:
@@ -695,7 +695,7 @@ int main (int argc, char *argv[])
     fprintf (sxtty, "%s\n", release_mess);
   }
 
-  syntax (SXINIT, &rcg_tables, SXFALSE /* no includes */);
+  syntax (SXINIT, &rcg_tables, false /* no includes */);
 
   if (options_set & OPTION (LANGUAGE_NAME)) {
     drcg_run ((char*)NULL);
@@ -710,7 +710,7 @@ int main (int argc, char *argv[])
     } while (argnum < argc);
   }
 
-  syntax (SXFINAL, &rcg_tables, SXTRUE);
+  syntax (SXFINAL, &rcg_tables, true);
 
   sxexit (sxerr_max_severity ());
   return EXIT_SUCCESS; /* Jamais atteint !! pour les compilo susceptibles ... */
@@ -721,14 +721,14 @@ int main (int argc, char *argv[])
 char	*options_text (char *line)
 {
     SXINT	i;
-    SXBOOLEAN	is_first = SXTRUE;
+    bool	is_first = true;
 
     *line = SXNUL;
 
     for (i = 1; i <= LAST_OPTION; i++)
 	if (options_set & OPTION (i)) {
 	    if (is_first)
-		is_first = SXFALSE;
+		is_first = false;
 	    else
 		strcat (line, ", ");
 

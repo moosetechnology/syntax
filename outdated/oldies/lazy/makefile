@@ -8,12 +8,14 @@ INCL=$(L)/incl
 
 CC=cc -I$(SXINCL) -I$(SXINCL)/util -I$(INCL) $(CFLAGS) -DEBUG
 
-all: $(L)/SL.out			\
+ALL=$(L)/SL.out			\
      $(L)/DL.out			\
      $(L)/test_sxindex.out		\
      $(L)/test_sxlist.out		\
      $(L)/test_sxword.out		\
      $(L)/test_partition.out
+
+all: $(ALL)
 
 SL_NEEDS=$(LIB)/L_main.o		\
 	 $(LIB)/L_act.o			\
@@ -107,5 +109,7 @@ $(LIB)/test_partition.o:$(SXINCL)/sxpart.h 	\
 	$(CC) -o $@ -c $(SRC)/test_partition.c
 
 clean:
-	@echo "clean target for lazy should be provided"
+	rm -f $(ALL) $(SL_NEEDS) $(DL_NEEDS)
+	rm -f $(TEST) $(TEST2) $(TEST3) $(TEST4)
+
 

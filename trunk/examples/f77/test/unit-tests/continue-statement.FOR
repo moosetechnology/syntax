@@ -1,3 +1,0 @@
-      PROGRAM SIMPLEMAIN
- 10   CONTINUE  
-      END

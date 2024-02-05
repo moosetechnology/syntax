@@ -21,7 +21,7 @@
 #include        "sxcommon.h"
 #include "sxsymbol_table.h"
 
-char WHAT_SXSYMBOL_TABLE_MNGR[] = "@(#)SYNTAX - $Id: sxsymbol_table_mngr.c 2460 2023-01-20 16:21:43Z garavel $" WHAT_DEBUG;
+char WHAT_SXSYMBOL_TABLE_MNGR[] = "@(#)SYNTAX - $Id: sxsymbol_table_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 
 static struct sxsymbol_table_hd	*stp_;
@@ -80,16 +80,16 @@ void sxsymbol_table_free (struct sxsymbol_table_hd *header)
 }
 
 
-SXBOOLEAN sxsymbol_table_put (struct sxsymbol_table_hd *header, SXINT name, SXINT scope_nb, SXINT *sxsymbol_table_put_index)
+bool sxsymbol_table_put (struct sxsymbol_table_hd *header, SXINT name, SXINT scope_nb, SXINT *sxsymbol_table_put_index)
 {
     /* In all cases sets *index with a unique integer for (name, scope_nb).
-       returns SXFALSE iff (name, scope_nb) already exists. */
+       returns false iff (name, scope_nb) already exists. */
     SXINT		*p;
 
     stp_ = header;
 
     if (XxY_set (&(header->scoped_access), name, scope_nb, sxsymbol_table_put_index))
-	return SXFALSE;
+	return false;
 
     if (header->nested_access != NULL) {
 	if (name > header->nested_access_size)
@@ -99,13 +99,13 @@ SXBOOLEAN sxsymbol_table_put (struct sxsymbol_table_hd *header, SXINT name, SXIN
 	*p = *sxsymbol_table_put_index;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
-void sxsymbol_table_erase (struct sxsymbol_table_hd *header, SXINT sxsymbol_table_erase_index, SXBOOLEAN all)
+void sxsymbol_table_erase (struct sxsymbol_table_hd *header, SXINT sxsymbol_table_erase_index, bool all)
 {
-    /* If all is SXTRUE, recovers space. */
+    /* If all is true, recovers space. */
     SXINT name;
 
     name = XxY_X (header->scoped_access, sxsymbol_table_erase_index);
@@ -120,7 +120,7 @@ void sxsymbol_table_erase (struct sxsymbol_table_hd *header, SXINT sxsymbol_tabl
 
 
 
-void sxsymbol_table_close (struct sxsymbol_table_hd *header, SXINT scope_nb, SXBOOLEAN all)
+void sxsymbol_table_close (struct sxsymbol_table_hd *header, SXINT scope_nb, bool all)
 {
     SXINT sxsymbol_table_close_index;
 

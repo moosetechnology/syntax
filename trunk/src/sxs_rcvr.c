@@ -29,13 +29,13 @@
 #endif /* defined(SXVERSION) */
 
 #ifndef VARIANT_32
-char WHAT_SXS_RECOVERY[] = "@(#)SYNTAX - $Id: sxs_rcvr.c 2489 2023-01-21 20:46:41Z garavel $" WHAT_DEBUG;
+char WHAT_SXS_RECOVERY[] = "@(#)SYNTAX - $Id: sxs_rcvr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 #endif
 
 /* Tables pour la correction erreur de taille max de tous les langages */
 
 static SXINT	*source_classes, *ranks;
-static SXSHORT	*source_char;
+static short	*source_char;
 static SXBA	insertable_valid_class_set, non_insertable_valid_class_set;
 static SXINT	nmax = 0, last_simple_class_no = 0;
 
@@ -45,18 +45,18 @@ static SXINT	nmax = 0, last_simple_class_no = 0;
 #define char_to_class(c) (sxsvar.SXS_tables.S_char_to_simple_class[c])
 
 
-static SXVOID	allouer_correction (void)
+static void	allouer_correction (void)
 {
     if (nmax == 0) {
 	if ((nmax = sxsvar.SXS_tables.S_nmax) == 0)
 	    nmax = 1 /* On lit toujours le caractere suivant */;
 
-	source_char = (SXSHORT*) sxalloc (nmax + 1, sizeof (SXSHORT));
+	source_char = (short*) sxalloc (nmax + 1, sizeof (short));
 	source_classes = (SXINT*) sxalloc (nmax + 2, sizeof (SXINT)) + 1;
     }
     else if (nmax < sxsvar.SXS_tables.S_nmax) {
 	nmax = sxsvar.SXS_tables.S_nmax;
-	source_char = (SXSHORT*) sxrealloc (source_char, nmax + 1, sizeof (SXSHORT));
+	source_char = (short*) sxrealloc (source_char, nmax + 1, sizeof (short));
 	source_classes = (SXINT*) sxrealloc (source_classes - 1, nmax + 2, sizeof (SXINT)) + 1;
     }
 
@@ -81,7 +81,7 @@ static SXVOID	allouer_correction (void)
 /* CORRECTION  */
 /* *********** */
 
-static SXBOOLEAN	is_insertable (SXINT class_no, SXINT *rank)
+static bool	is_insertable (SXINT class_no, SXINT *rank)
 {
     /* cherche s'il existe un caractere de classe class_no n'appartenant pas a
        S_dont_insert et rend son code interne dans rank */
@@ -90,40 +90,40 @@ static SXBOOLEAN	is_insertable (SXINT class_no, SXINT *rank)
 
     for (i = 0; i <= sxsvar.SXS_tables.S_last_char_code; i++) {
 	if (class_no == char_to_class (i) && !sxgetbit (sxsvar.SXS_tables.S_no_insert, *rank = i))
-		return SXTRUE;
+		return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
 
-static SXBOOLEAN	check (SXINT state_no, SXINT class_of_X, SXINT *model, SXBOOLEAN is_la)
+static bool	check (SXINT state_no, SXINT class_of_X, SXINT *model, bool is_la)
 {
     /* verifie si le sous_modele model_no debutant a l'index index_no est
        compatible avec la sous chaine correspondante de source_classes ou
        state_no est l'etat initial */
 
-    /* Si l'erreur a ete detectee en look-ahead (is_la == SXTRUE) on ne peut
+    /* Si l'erreur a ete detectee en look-ahead (is_la == true) on ne peut
        verifier le modele qu'en look-ahead (toute instruction ramenant en
        scan normal ramene en fait avant la detection de l'erreur..) */
 
     SXSTMI	stmt;
     struct SXS_action_or_prdct_code	*action_or_prdct_code;
     SXINT	xm, xm_la, xs, class, codop, next, firstlookaheadclass;
-    SXSHORT	sxchar;
-    SXBOOLEAN	is_satisfied, is_in_tm, char_checked;
+    short	sxchar;
+    bool	is_satisfied, is_in_tm, char_checked;
 
     sxinitialise(action_or_prdct_code); /* pour faire taire "gcc -Wuninitialized" */
     sxinitialise(firstlookaheadclass); /* pour faire taire "gcc -Wuninitialized" */
     next = state_no;
-    is_in_tm = SXTRUE;
+    is_in_tm = true;
     xm_la = 0;
 
     for (xm = 1; xm <= model [0]; xm++) {
 	xs = model [xm];
 	class = (xs < 0 /* X */ ) ? class_of_X : source_classes [xs];
-	char_checked = SXFALSE;
+	char_checked = false;
 
 	while (!char_checked) {
 	    if (is_in_tm) {
@@ -135,22 +135,22 @@ static SXBOOLEAN	check (SXINT state_no, SXINT class_of_X, SXINT *model, SXBOOLEA
 	    }
 
 	    codop = CODOP (stmt);
-	    is_satisfied = SXTRUE;
+	    is_satisfied = true;
 
 	    if (!is_in_tm && action_or_prdct_code->kind == IsPredicate) {
-		is_satisfied = SXFALSE;
+		is_satisfied = false;
 
 
 /* Probleme de l'execution des predicats lors du rattrapage
 	       d'erreur: delicat meme pour certains predicats systeme (&Is_Set
 	       et &Is_Reset car les actions correspondantes ne sont pas
 	       executees), on peut boucler... Par prudence, on leur fait
-	       rendre "SXFALSE", on peut donc rater des modeles valides. */
+	       rendre "false", on peut donc rater des modeles valides. */
 
 		if (action_or_prdct_code->is_system) {
 		    switch (action_or_prdct_code->action_or_prdct_no) {
 		    case IsTrue:
-			is_satisfied = SXTRUE;
+			is_satisfied = true;
 			break;
 
 		    case NotIsFirstCol:
@@ -173,7 +173,7 @@ static SXBOOLEAN	check (SXINT state_no, SXINT class_of_X, SXINT *model, SXBOOLEA
 
 		    case IsSet:
 		    case IsReset:
-			is_satisfied = SXFALSE;
+			is_satisfied = false;
 			/* prudence */
 			break;
 
@@ -200,7 +200,7 @@ static SXBOOLEAN	check (SXINT state_no, SXINT class_of_X, SXINT *model, SXBOOLEA
 		    }
 		}
 		else
-		    is_satisfied = SXFALSE;
+		    is_satisfied = false;
 
 
 /* prudence */
@@ -212,25 +212,25 @@ static SXBOOLEAN	check (SXINT state_no, SXINT class_of_X, SXINT *model, SXBOOLEA
 
 	    if (is_satisfied) {
 		if (SCAN (stmt)) {
-		    char_checked = SXTRUE;
+		    char_checked = true;
 		}
 
 		next = NEXT (stmt);
-		is_in_tm = SXTRUE;
+		is_in_tm = true;
 
 		switch (codop) {
 		case Error:
-		    return SXFALSE;
+		    return false;
 
 		case Reduce:
 		case HashReduce:
 		case ReducePost:
 		case HashReducePost:
 		    if (is_la)
-			return SXFALSE;
+			return false;
 
 		    if (next == sxsvar.SXS_tables.S_termax) {
-			char_checked = SXTRUE;
+			char_checked = true;
 		    }
 
 		    next = 1;
@@ -244,7 +244,7 @@ static SXBOOLEAN	check (SXINT state_no, SXINT class_of_X, SXINT *model, SXBOOLEA
 		    break;
 
 		case ActPrdct:
-		    is_in_tm = SXFALSE;
+		    is_in_tm = false;
 		    break;
 
 		case FirstLookAhead:
@@ -257,11 +257,11 @@ static SXBOOLEAN	check (SXINT state_no, SXINT class_of_X, SXINT *model, SXBOOLEA
 
 		case NextLookAhead:
 		    if (is_la) {
-			char_checked = SXTRUE;
+			char_checked = true;
 		    }
 		    else {
 			if (++xm_la > model [0])
-			    return SXTRUE;
+			    return true;
 			
 			xs = model [xm_la];
 			class = (xs < 0 /* X */ ) ? class_of_X : source_classes [xs];
@@ -272,7 +272,7 @@ static SXBOOLEAN	check (SXINT state_no, SXINT class_of_X, SXINT *model, SXBOOLEA
 		case SameState:
 		case State:
 		    if (is_la)
-			return SXFALSE;
+			return false;
 
 		    if (xm_la > 0) {
 			/* Sortie d'un look-ahead local */
@@ -291,12 +291,12 @@ static SXBOOLEAN	check (SXINT state_no, SXINT class_of_X, SXINT *model, SXBOOLEA
 	}
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
 
-static SXBOOLEAN	is_valid (SXINT state_no, struct SXS_correction_item *current, SXBOOLEAN *is_validated, SXBOOLEAN is_la)
+static bool	is_valid (SXINT state_no, struct SXS_correction_item *current, bool *is_validated, bool is_la)
 {
     /* Verifie si le source valide le modele current. Si is_validated est
        faux, cette validation a necessite l'insertion d'un caractere de
@@ -309,7 +309,7 @@ static SXBOOLEAN	is_valid (SXINT state_no, struct SXS_correction_item *current, 
     if (current->model [1] < 0) {
 
 	if (current->model [2] == 1 /* remplacement */ && source_char [0] == EOF /* de EOF */)
-	    return SXFALSE;
+	    return false;
 
 	sxba_empty (non_insertable_valid_class_set);
 	sxba_empty (insertable_valid_class_set);
@@ -342,7 +342,7 @@ static SXBOOLEAN	is_valid (SXINT state_no, struct SXS_correction_item *current, 
 		if (check (state_no, (SXINT)current->simple_class, current->model, is_la)) {
 		    *is_validated = (i == 1);
 		    current->rank_of_char = ranks [current->simple_class];
-		    return SXTRUE;
+		    return true;
 		}
 	    }
 	}
@@ -350,34 +350,34 @@ static SXBOOLEAN	is_valid (SXINT state_no, struct SXS_correction_item *current, 
     else {
 
 	if (source_char [0] == EOF /* Suppression de EOF */)
-	    return SXFALSE;
+	    return false;
 
-	*is_validated = SXTRUE;
+	*is_validated = true;
 	return check (state_no, (SXINT)0, current->model, is_la);
     }
 
-    return SXFALSE;
+    return false;
 }
 
 static struct SXS_correction_item empty_SXS_correction_item;
 
-static SXVOID	tryacorr (SXINT state_no, SXBOOLEAN is_la, struct SXS_correction_item *best)
+static void	tryacorr (SXINT state_no, bool is_la, struct SXS_correction_item *best)
 {
-    SXBOOLEAN	is_validated;
+    bool	is_validated;
     struct SXS_correction_item	a_la_rigueur, current;
 
     a_la_rigueur = current = empty_SXS_correction_item; /* Le 13/04/07 */
 
     for (current.model_no = 1; current.model_no <= sxsvar.SXS_tables.S_nbcart; current.model_no++) {
 	current.model = &(sxsvar.SXS_tables.S_lregle [current.model_no] [0]);
-	is_validated = SXTRUE;
+	is_validated = true;
 
 	if (is_valid (state_no, &current, &is_validated, is_la)) {
 	    if (is_validated &&
 		current.model [2] != 0 /* le caractere en erreur est detruit */ &&
 		source_classes [0] > 2 &&
 		sxgetbit (sxsvar.SXS_tables.S_no_delete, source_char [0]))
-			is_validated = SXFALSE;
+			is_validated = false;
 
 	    if (is_validated) {
 		*best = current;
@@ -394,7 +394,7 @@ static SXVOID	tryacorr (SXINT state_no, SXBOOLEAN is_la, struct SXS_correction_i
 
 
 
-static SXBOOLEAN	recovery (SXINT state_no, unsigned char *class)
+static bool	recovery (SXINT state_no, unsigned char *class)
 {
     /* Une correction impliquant la suppression d'un caractere dont la classe
        simple est dans S_dont_delete ne peut etre validee que s'il n'existe
@@ -411,8 +411,8 @@ static SXBOOLEAN	recovery (SXINT state_no, unsigned char *class)
        retour en traitement normal. */
 
     SXINT	i, j;
-    SXBOOLEAN	is_error_in_la;
-    SXSHORT	lanext_char;
+    bool	is_error_in_la;
+    short	lanext_char;
     struct SXS_correction_item	best;
 
     is_error_in_la = sxsvar.SXS_tables.S_transition_matrix [state_no] [1];
@@ -442,16 +442,16 @@ static SXBOOLEAN	recovery (SXINT state_no, unsigned char *class)
 
       if (sxsrcmngr.current_char == EOF) {
 	*class = 2;
-	return SXFALSE;
+	return false;
       }
       else {
 	lanext_char = sxlanext_char ();
 	*class = char_to_class (lanext_char);
 	if (lanext_char == EOF) {
-	  return SXFALSE;
+	  return false;
 	}
 	else {
-	  return SXTRUE;
+	  return true;
 	}
       }
     }
@@ -492,12 +492,12 @@ static SXBOOLEAN	recovery (SXINT state_no, unsigned char *class)
 			 sxsvar.sxtables->err_titles [2]+1);
 
 	    sxlaback (sxsvar.SXS_tables.S_nmax);
-	    return SXFALSE;
+	    return false;
 	}
 
     if (!is_error_in_la && !sxsvar.sxlv.mode.is_silent) {
 	/* no error message in look_ahead */
-	SXSHORT	sxchar;
+	short	sxchar;
 
 	if (best.model_no == 0) {
 	    /* No Correction => Recovery */
@@ -577,12 +577,12 @@ static SXBOOLEAN	recovery (SXINT state_no, unsigned char *class)
 	*class = source_classes [1];
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
 
-static SXVOID	recovery_free (void)
+static void	recovery_free (void)
 {
     if (source_char != NULL) {
 	nmax = last_simple_class_no = 0;
@@ -596,7 +596,7 @@ static SXVOID	recovery_free (void)
 
 
 
-SXBOOLEAN		sxsrecovery (SXINT sxsrecovery_what, SXINT state_no, unsigned char *class)
+bool		sxsrecovery (SXINT sxsrecovery_what, SXINT state_no, unsigned char *class)
 {
     switch (sxsrecovery_what) {
     case SXACTION:
@@ -611,5 +611,5 @@ SXBOOLEAN		sxsrecovery (SXINT sxsrecovery_what, SXINT state_no, unsigned char *c
 	sxexit(1);
     }
 
-    return SXTRUE;
+    return true;
 }

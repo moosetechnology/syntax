@@ -72,8 +72,8 @@ typedef struct {
     void			(*free) (void *);
     void			(*oflw) (SXINT, SXINT);
     FILE			*stat_file;
-    SXBOOLEAN			is_string_static;
-    SXBOOLEAN			is_head_table_static;
+    bool			is_string_static;
+    bool			is_head_table_static;
 } sxword_header;
 
 extern void		sxword_alloc (sxword_header *header,
@@ -95,8 +95,8 @@ extern SXINT	sxword_2save (sxword_header *header, char *string, SXUINT sxword_2s
 extern SXINT	sxword_retrieve (sxword_header *header, char *string);
 extern SXINT	sxword_2retrieve (sxword_header *header, char *string, SXUINT strlength);
 extern void		sxword_stat (sxword_header *header, FILE *stat_file);
-extern SXBOOLEAN		sxword_write (sxword_header *header, sxfiledesc_t file_descr);
-extern SXBOOLEAN		sxword_read (sxword_header *header,
+extern bool		sxword_write (sxword_header *header, sxfiledesc_t file_descr);
+extern bool		sxword_read (sxword_header *header,
 				     sxfiledesc_t file_descr,
 				     char *area_name,
 				     void *(*sxword_read_malloc) (size_t),
@@ -108,7 +108,7 @@ extern SXBOOLEAN		sxword_read (sxword_header *header,
 				     FILE *stat_file);
 extern SXUINT	sxword_array_to_c (sxword_header *header, FILE *file, char *name);
 extern void		sxword_header_to_c (sxword_header *header, FILE  *file, char *name, SXUINT total_lgth);
-extern void		sxword_to_c (sxword_header *header, FILE *file, char *name, SXBOOLEAN is_static);
+extern void		sxword_to_c (sxword_header *header, FILE *file, char *name, bool is_static);
 extern void		sxword_reuse (sxword_header *header,
 				      char *area_name,
 				      void *(*sxword_reuse_malloc) (size_t),
@@ -149,12 +149,12 @@ extern SXUINT	sxword_len (sxword_header *header, SXINT ste);
 #define SXWORD_retrieve(h,s)		sxword_2retrieve (&(h),s,strlen(s))
 
 /* Save "s", a SXNUL terminated string of unknown length in table "h" and sets "ste" to its
-   unique identifier. Moreover this macro returns SXTRUE iff "s" is brand new in "h".
+   unique identifier. Moreover this macro returns true iff "s" is brand new in "h".
    The SXUINT cell "x" is used as a temporary. */
 #define SXWORD_test_and_save(h,x,ste,s) (x=SXWORD_top(h),(ste=sxword_save(&(h),s))==x)
 
 /* Save "s", a string of length "l" in table "h" and sets "ste" to its
-   unique identifier. Moreover this macro returns SXTRUE iff "s" is brand new in "h".
+   unique identifier. Moreover this macro returns true iff "s" is brand new in "h".
    The SXUINT cell "x" is used as a temporary. */
 #define SXWORD_test_and_2save(h,x,ste,s,l) (x=SXWORD_top(h),(ste=sxword_2save(&(h),s,l))==x)
 

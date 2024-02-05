@@ -26,7 +26,7 @@
 /*------------------------------*/
 
 SXINT		options_set;
-SXBOOLEAN		is_normal_form;
+bool		is_normal_form;
 char		prgentname [32];
 struct sxtables	*sxtab_ptr;
 

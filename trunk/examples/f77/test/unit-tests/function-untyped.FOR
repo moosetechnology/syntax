@@ -1,2 +1,0 @@
-      FUNCTION FCT()
-      END

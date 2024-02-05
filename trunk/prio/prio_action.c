@@ -26,18 +26,18 @@
 #include "D_tables.h"
 #include "varstr.h"
 
-char WHAT_PRIOACTION[] = "@(#)SYNTAX - $Id: prio_action.c 3591 2023-09-17 18:08:45Z garavel $" WHAT_DEBUG;
+char WHAT_PRIOACTION[] = "@(#)SYNTAX - $Id: prio_action.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 /*   E X T E R N S   */
 
-extern SXBOOLEAN	prio_write (SXINT t_priorities_size, 
+extern bool	prio_write (SXINT t_priorities_size, 
                             SXINT r_priorities_size,
                             struct priority *t_priorities,
                             struct priority *r_priorities,
                             char *langname);
-extern SXVOID	prio_free (struct priority **t_priorities, struct priority **r_priorities);
-extern SXBOOLEAN	is_source;
-extern SXBOOLEAN	is_listing;
+extern void	prio_free (struct priority **t_priorities, struct priority **r_priorities);
+extern bool	is_source;
+extern bool	is_listing;
 extern char	by_mess [], *prgentname;
 
 /*  C O N S T A N T S   */
@@ -53,7 +53,7 @@ extern char	by_mess [], *prgentname;
 static VARSTR	vstr;
 static char	**err_titles;
 static SXINT	alpha_no, symbol_table_lgth, height, assoc_kind;
-static SXBOOLEAN	is_error, is_first_time;
+static bool	is_error, is_first_time;
 static struct bnf_ag_item	bnf_ag;
 static struct priority	*t_priorities /* 1:xtmax */ ;
 static struct priority	*r_priorities /* 1:xnbpro */ ;
@@ -66,7 +66,7 @@ static struct sxsource_coord	*designator;
 
 /*   P R O C E D U R E S   */
 
-static SXVOID	header (void)
+static void	header (void)
 {
     put_edit_nnl (9, "Listing of:");
     put_edit_nnl (25, sxsrcmngr.source_coord.file_name);
@@ -93,7 +93,7 @@ static SXVOID	header (void)
     put_edit_nl (2);
 }
 
-static SXVOID priority_dump (FILE *listing, struct priority *p)
+static void priority_dump (FILE *listing, struct priority *p)
 {
   if (p == NULL) {
     fprintf (listing, "<nil>\n");
@@ -120,7 +120,7 @@ static SXVOID priority_dump (FILE *listing, struct priority *p)
   fprintf (listing, ", %ld>\n", p->value);
 }
 
-static SXVOID prio_dump (FILE *listing)
+static void prio_dump (FILE *listing)
 {
   SXINT i;
 
@@ -138,7 +138,7 @@ static SXVOID prio_dump (FILE *listing)
   }
 }
 
-static SXVOID	listing_output (void)
+static void	listing_output (void)
 {
     FILE	*listing;
     char	*lst_name;
@@ -171,7 +171,7 @@ static SXVOID	listing_output (void)
 
 
 
-static SXVOID	set_next (SXINT tnt)
+static void	set_next (SXINT tnt)
 {
     SXINT	i;
 
@@ -187,7 +187,7 @@ static SXVOID	set_next (SXINT tnt)
 
 
 
-static SXVOID	set_priority (struct priority *priorities,
+static void	set_priority (struct priority *priorities,
 			      SXINT xp)
 {
     struct priority	*priorities_xp = priorities + xp;
@@ -240,7 +240,7 @@ static SXINT	get_ate (SXINT d)
 
 
 
-static SXVOID	init (void)
+static void	init (void)
 {
     SXINT	i;
 
@@ -272,13 +272,13 @@ static SXVOID	init (void)
     }
 
     height = 0;
-    is_error = SXFALSE;
-    is_first_time = SXTRUE;
+    is_error = false;
+    is_first_time = true;
 }
 
 
 
-static SXVOID	action (SXINT action_no)
+static void	action (SXINT action_no)
 {
     if (is_error)
 	return;
@@ -359,7 +359,7 @@ static SXVOID	action (SXINT action_no)
 	if (is_first_time) {
 	    SXINT	i;
 
-	    is_first_time = SXFALSE;
+	    is_first_time = false;
 	    nt_symbol_table = (SXINT*) sxcalloc (symbol_table_lgth + 1, sizeof (SXINT));
 
 	    for (i = 1; i <= bnf_ag.WS_TBL_SIZE.xntmax; i++) {
@@ -489,7 +489,7 @@ static SXVOID	action (SXINT action_no)
     }
 }
 
-static SXVOID	final (void)
+static void	final (void)
 {
   if (occur_set != NULL) {
     sxfree (occur_set);
@@ -528,7 +528,7 @@ static SXVOID	final (void)
 }
 
 
-SXVOID
+void
 prio_action (SXINT what, struct sxtables *arg)
 {
     switch (what) {
@@ -548,7 +548,7 @@ prio_action (SXINT what, struct sxtables *arg)
 	break;
 
     case SXERROR:
-	is_error = SXTRUE;
+	is_error = true;
 	break;
 
     case SXFINAL:

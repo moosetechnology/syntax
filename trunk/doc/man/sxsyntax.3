@@ -5,12 +5,12 @@ sxsyntax
 \- SYNTAX.
 .SH SYNOPSIS
 .nf
-.ta \w'\s-2SXVOID\s0  'u +\w'\s-2SXVOID\s0  'u
+.ta \w'void  'u +\w'void  'u
 .B
 #include "sxunix.h"
 .PP
 .B
-\s-2SXVOID\s0 sxsyntax (what, tables, ...)
+void sxsyntax (what, tables, ...)
 .B
 	int	 what\|;
 .B
@@ -65,7 +65,7 @@ with the following arguments in the following order:
 where
 .I use_include_manager
 has type
-.IR SXBOOLEAN ,
+.IR bool ,
 initialises an analyzer for the language described by
 .IR tables .
 This call successively invokes
@@ -73,7 +73,7 @@ This call successively invokes
 \fIsxstr_mngr (SXBEGIN)\fP,
 \fI(*(tables->analyzers.parser)) (SXBEGIN, tables)\fP,
 \fIsyntax (SXOPEN, tables)\fP,
-and, if \fIuse_include_manager\fP is equal to \fISXTRUE\fP,
+and, if \fIuse_include_manager\fP is equal to \fItrue\fP,
 it also invokes
 \fIsxincl_mngr (SXOPEN)\fP.
 
@@ -95,7 +95,7 @@ which should be opened before calling \fIsxsyntax (SXBEGIN, ...)\fP.
 This call successively invokes
 \fIsxsrc_mngr (SXINIT, file, pathname)\fP,
 \fIsxerr_mngr (SXBEGIN)\fP,
-and, if \fIuse_include_manager\fP was equal to \fISXTRUE\fP in the prior call
+and, if \fIuse_include_manager\fP was equal to \fItrue\fP in the prior call
 to \fIsxsyntax (SXINIT, ...)\fP, it also invokes
 \fIsxincl_mngr (SXINIT)\fP.
 
@@ -111,7 +111,7 @@ call to \fIsxsyntax (SXBEGIN, ...)\fP.
 This call successively invokes
 \fIsxsrc_mngr (SXFINAL)\fP,
 \fIsxerr_mngr (SXEND)\fP,
-and, if \fIuse_include_manager\fP was equal to \fISXTRUE\fP in the prior call
+and, if \fIuse_include_manager\fP was equal to \fItrue\fP in the prior call
 to \fIsxsyntax (SXINIT, ...)\fP, it also invokes
 \fIsxincl_mngr (SXFINAL)\fP.
 
@@ -120,17 +120,17 @@ to \fIsxsyntax (SXINIT, ...)\fP, it also invokes
 where
 .I delete_str_manager
 has type
-.IR SXBOOLEAN ,
+.IR bool ,
 terminates all the \fBSYNTAX\fP modules of the analyzer, except perhaps 
 the \fBstr_mngr\fP (keeping the string table may be useful if data structures
 referring to entries in this table are still in use). This call successively
 invokes
 \fIsyntax (SXCLOSE, tables)\fP,
 \fI(*(tables->analyzers.parser)) (SXEND, tables)\fP,
-and, if \fIuse_include_manager\fP was equal to \fISXTRUE\fP in the prior call
+and, if \fIuse_include_manager\fP was equal to \fItrue\fP in the prior call
 to \fIsxsyntax (SXINIT, ...)\fP, it also invokes
 \fIsxincl_mngr (SXINIT)\fP. Finally, if \fIdelete_str_manager\fP is
-equal to \fISXTRUE\fP, the call also invokes
+equal to \fItrue\fP, the call also invokes
 \fIsxstr_mngr (SXEND)\fP.
 
 .SS SPECIAL MODE
@@ -171,11 +171,11 @@ one single grammar, without using the include manager:
     FILE *file;
     file = fopen ("pathname", "r");
     if (file == NULL) /* error */ 
-    sxsyntax (SXINIT, &sxtables, SXFALSE);
+    sxsyntax (SXINIT, &sxtables, false);
     sxsyntax (SXBEGIN, &sxtables, file, "pathname");
     sxsyntax (SXACTION, &sxtables);
     sxsyntax (SXEND, &sxtables);
-    sxsyntax (SXFINAL, &sxtables, SXTRUE);
+    sxsyntax (SXFINAL, &sxtables, true);
     (void) fclose (file);
 .fi
 
@@ -189,11 +189,11 @@ after the analysis (e.g., because they might be referenced by the abstract
 syntax tree constructed during the analysis) until the string manager
 table is destroyed explicitly:
 .nf
-    sxsyntax (SXINIT, &sxtables, SXFALSE);
+    sxsyntax (SXINIT, &sxtables, false);
     sxsyntax (SXBEGIN, &sxtables, stdin, "");
     sxsyntax (SXACTION, &sxtables);
     sxsyntax (SXEND, &sxtables);
-    sxsyntax (SXFINAL, &sxtables, SXFALSE);
+    sxsyntax (SXFINAL, &sxtables, false);
     ... /* here, the strings are still available */
     sxstr_mngr (SXEND);
     ... /* here, the strings are no longer available */
@@ -209,7 +209,7 @@ this example is a simplification of \fIsrc/sxmain.c\fP.
 .nf
     int i;
     FILE *file;
-    sxsyntax (SXINIT, &sxtables, SXFALSE);
+    sxsyntax (SXINIT, &sxtables, false);
     for (i = 1; i < argc; i++) {
         file = sxfopen (argv[i], "r");
         if (file == NULL) {
@@ -224,7 +224,7 @@ this example is a simplification of \fIsrc/sxmain.c\fP.
             (void) fclose (file);
         }
     }
-    sxsyntax (SXFINAL, &sxtables, SXTRUE);
+    sxsyntax (SXFINAL, &sxtables, true);
 .fi
 
 .SH EXAMPLE 4
@@ -238,7 +238,7 @@ table, and to use the source manager in absolute mode.
     file = fopen ("pathname", "r");
     if (file == NULL) /* error */ 
     /* the include manager will be used */
-    sxsyntax (SXINIT, &sxtables, SXTRUE);
+    sxsyntax (SXINIT, &sxtables, true);
     sxsyntax (SXBEGIN, &sxtables, file, "pathname");
     /* creation of a table to store pathnames of included files */
     sxstr_mngr (SXOPEN, &INCLUDE_TABLE);
@@ -249,7 +249,7 @@ table, and to use the source manager in absolute mode.
     sxsrc_mngr (SXABSOLUTE, "apparent pathname", firstline);
     sxsyntax (SXACTION, &sxtables);
     sxsyntax (SXEND, &sxtables);
-    sxsyntax (SXFINAL, &sxtables, SXFALSE);
+    sxsyntax (SXFINAL, &sxtables, false);
     ...
     /* deletion of the two string tables */
     sxstr_mngr (SXEND);

@@ -29,7 +29,7 @@
 
 #include "sxstack.h"
 
-char WHAT_BNFHUGE[] = "@(#)SYNTAX - $Id: bnf_huge.c 3605 2023-09-24 05:36:48Z garavel $" WHAT_DEBUG;
+char WHAT_BNFHUGE[] = "@(#)SYNTAX - $Id: bnf_huge.c 3631 2023-12-20 17:16:41Z garavel $" WHAT_DEBUG;
 
 static void
 output_header (time_t bnf_modif_time, char *langname)
@@ -180,20 +180,20 @@ segment_hd_oflw (SXINT old_size, SXINT new_size)
 }
 
 
-static SXVOID
+static void
 out_ifdef (char *name)
 {
   printf ("\n\n#ifdef def_%s\n", name);
 }
 
-static SXVOID
+static void
 
 out_endif (char *name)
 {
   printf ("#endif /* def_%s */\n", name);
 }
 
-SXVOID
+void
 bnf_huge (struct bnf_ag_item *B, char *langname)
 {
   SXINT    i, j, k, item, lgth, rhs_lgth, nbt, X;
@@ -293,7 +293,7 @@ bnf_huge (struct bnf_ag_item *B, char *langname)
   sxfree (item2nbt);
 
   out_ifdef ("BVIDE");
-  sxba2c (B->BVIDE, stdout, "BVIDE", "", SXTRUE, vstr);
+  sxba2c (B->BVIDE, stdout, "BVIDE", "", true, vstr);
   out_endif ("BVIDE");
 
   out_ifdef ("tstring");
@@ -320,16 +320,16 @@ bnf_huge (struct bnf_ag_item *B, char *langname)
     struct sxdfa_comb       sxdfa_comb_inflected_form;
 
     word_tree_alloc (&word_tree_struct_inflected_form, "word_tree_struct_inflected_form", -B->WS_TBL_SIZE.tmax /* word_nb */, (B->WS_TBL_SIZE.t_string_length/(-B->WS_TBL_SIZE.tmax))+1 /* word_lgth */,
-		     1 /* Xforeach */, 0 /* Yforeach */, SXTRUE /* from_left_to_right */, SXTRUE /* with_path2id */, (sxoflw0_t) NULL /* void (*oflw) () */, NULL /* FILE *stats */);
+		     1 /* Xforeach */, 0 /* Yforeach */, true /* from_left_to_right */, true /* with_path2id */, (sxoflw0_t) NULL /* void (*oflw) () */, NULL /* FILE *stats */);
 	  
     for (i = -1; i >  B->WS_TBL_SIZE.tmax; i--) {
       t_string = B->T_STRING+B->ADR [i];
       word_tree_add_a_string (&word_tree_struct_inflected_form, t_string, strlen (t_string), -i);
     }
 
-    word_tree2sxdfa (&word_tree_struct_inflected_form, &sxdfa_struct_inflected_form, "sxdfa_struct_inflected_form", NULL /* FILE *stats */, SXTRUE /* to_be_minimized */);
+    word_tree2sxdfa (&word_tree_struct_inflected_form, &sxdfa_struct_inflected_form, "sxdfa_struct_inflected_form", NULL /* FILE *stats */, true /* to_be_minimized */);
     sxdfa2comb_vector (&sxdfa_struct_inflected_form, 0 /* optim_kind (comb simple) */, 10000 /* comb_vector_threshold */, &sxdfa_comb_inflected_form);
-    sxdfa_comb2c (&sxdfa_comb_inflected_form, stdout, "sxdfa_comb_inflected_form", SXTRUE /* is_static */);
+    sxdfa_comb2c (&sxdfa_comb_inflected_form, stdout, "sxdfa_comb_inflected_form", true /* is_static */);
     sxdfa_comb_free (&sxdfa_comb_inflected_form);
 
 #if 0
@@ -342,7 +342,7 @@ bnf_huge (struct bnf_ag_item *B, char *langname)
       sxword_save (&inflected_form_names, B->T_STRING+B->ADR [i]);
     }
 
-    sxword_to_c (&inflected_form_names, stdout, "inflected_form_names", SXTRUE);
+    sxword_to_c (&inflected_form_names, stdout, "inflected_form_names", true);
 
     sxword_free (&inflected_form_names);
 #endif /* 0 */
@@ -358,17 +358,17 @@ bnf_huge (struct bnf_ag_item *B, char *langname)
     struct sxdfa_comb       sxdfa_comb_non_terminal_names;
 
     word_tree_alloc (&word_tree_struct_non_terminal_names, "word_tree_struct_non_terminal_names", B->WS_TBL_SIZE.ntmax /* word_nb */, (B->WS_TBL_SIZE.nt_string_length/(B->WS_TBL_SIZE.ntmax))+1 /* word_lgth */,
-		     1 /* Xforeach */, 0 /* Yforeach */, SXTRUE /* from_left_to_right */, SXTRUE /* with_path2id */, (sxoflw0_t) NULL /* void (*oflw) () */, NULL /* FILE *stats */);
+		     1 /* Xforeach */, 0 /* Yforeach */, true /* from_left_to_right */, true /* with_path2id */, (sxoflw0_t) NULL /* void (*oflw) () */, NULL /* FILE *stats */);
 	  
     for (i = 1; i <  B->WS_TBL_SIZE.ntmax; i++) {
       nt_string = B->NT_STRING+B->ADR [i];
       word_tree_add_a_string (&word_tree_struct_non_terminal_names, nt_string, strlen (nt_string), i);
     }
 
-    word_tree2sxdfa (&word_tree_struct_non_terminal_names, &sxdfa_struct_non_terminal_names, "sxdfa_struct_non_terminal_names", NULL /* FILE *stats */, SXTRUE /* to_be_minimized */);
+    word_tree2sxdfa (&word_tree_struct_non_terminal_names, &sxdfa_struct_non_terminal_names, "sxdfa_struct_non_terminal_names", NULL /* FILE *stats */, true /* to_be_minimized */);
     sxdfa2comb_vector (&sxdfa_struct_non_terminal_names, 0 /* optim_kind (comb simple) */, 10000 /* comb_vector_threshold */, &sxdfa_comb_non_terminal_names);
     out_ifdef ("sxdfa_comb_non_terminal_names");
-    sxdfa_comb2c (&sxdfa_comb_non_terminal_names, stdout, "sxdfa_comb_non_terminal_names", SXTRUE /* is_static */);
+    sxdfa_comb2c (&sxdfa_comb_non_terminal_names, stdout, "sxdfa_comb_non_terminal_names", true /* is_static */);
     out_endif ("sxdfa_comb_non_terminal_names");
     sxdfa_comb_free (&sxdfa_comb_non_terminal_names);
 
@@ -382,7 +382,7 @@ bnf_huge (struct bnf_ag_item *B, char *langname)
       sxword_save (&non_terminal_names, B->NT_STRING+B->ADR [i]);
     }
 
-    sxword_to_c (&non_terminal_names, stdout, "non_terminal_names", SXTRUE);
+    sxword_to_c (&non_terminal_names, stdout, "non_terminal_names", true);
 
     sxword_free (&non_terminal_names);
 #endif /* 0 */
@@ -492,7 +492,7 @@ bnf_huge (struct bnf_ag_item *B, char *langname)
     fputs ("#define multiple_anchor_prod_nb ", stdout);
     if (multiple_t_prod_set) {
       printf ("%li\n", (SXINT) sxba_cardinal (multiple_t_prod_set));
-      sxba2c (multiple_t_prod_set, stdout, "multiple_t_prod_set", "", SXTRUE, vstr);
+      sxba2c (multiple_t_prod_set, stdout, "multiple_t_prod_set", "", true, vstr);
       sxfree (multiple_t_prod_set);
     }
     else {
@@ -504,7 +504,7 @@ bnf_huge (struct bnf_ag_item *B, char *langname)
     
     out_ifdef ("t2prod_hd");
     if (unlexicalized_prod_set) {
-      sxba2c (unlexicalized_prod_set, stdout, "unlexicalized_prod_set", "", SXTRUE, vstr);
+      sxba2c (unlexicalized_prod_set, stdout, "unlexicalized_prod_set", "", true, vstr);
       sxfree (unlexicalized_prod_set);
     }
     else
@@ -545,7 +545,7 @@ bnf_huge (struct bnf_ag_item *B, char *langname)
 
     out_ifdef ("nt2gen_t_set");
     /* nt2gen_t_set n'est jamais vide car on a nt2gen_t_set [1] = T */
-    sxbm3_to_c (stdout, nt2gen_t_set, B->WS_TBL_SIZE.ntmax+1, "nt2gen_t_set", "", SXTRUE /* is_static */);
+    sxbm3_to_c (stdout, nt2gen_t_set, B->WS_TBL_SIZE.ntmax+1, "nt2gen_t_set", "", true /* is_static */);
     
     if (gen_t_list) {
       printf ("static SXINT nt2gen_t_list [%ld] = {\n\

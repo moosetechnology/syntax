@@ -56,7 +56,7 @@ extern void			XT_alloc (XT_header *header,
 					  void (*oflw) (SXINT, SXINT), 
 					  FILE *stat_file);
 extern void			XT_free (XT_header *header);
-extern SXBOOLEAN			XT_set (XT_header *header, SXINT list, SXINT *result);
+extern bool			XT_set (XT_header *header, SXINT list, SXINT *result);
 extern SXINT			XT_list_lgth (XT_header *header, SXINT list);
 extern void			XT_stat (FILE *stat_file, XT_header *header);
 
