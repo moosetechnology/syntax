@@ -92,25 +92,35 @@ SXML_TYPE_LIST ast_program_unit( SXML_TYPE_TEXT tag,
           SXML_TYPE_LIST statement_list) {
 
   return JSON_MAP(
-      SXML_LLLTLTL(
-  ast_tag(tag),
-  (header == NULL ? JSON_KQ_ ("name", "null") : header),
-  location,
-        ",\n",
-  end_location,
-        ",\n",
-  JSON_KU ("statement_list", JSON_ARRAY( statement_list)) ));
+    SXML_LLLTLTL(
+      ast_tag(tag),
+      (header == NULL ? SXML_LL(JSON_KQ_ ("name", "null"), JSON_KU_ ("parameters", JSON_ARRAY(NULL))) : header),
+      location,
+      ",\n",
+      end_location,
+      ",\n",
+      JSON_KU ("statement_list", JSON_ARRAY( statement_list)) 
+    )
+  );
 }
 
 
 /* -------------------------------------------------------------------------
- * outputs header of a program_unit (some, e.g. main_program,
- * don't have parameters, but we still output empty 'parameters')
- * Is that a problem ?
+ * - name
+ */
+SXML_TYPE_LIST ast_mainprogram_unit_header( SXML_TYPE_LIST name) {
+
+  return SXML_L(
+    JSON_KU_ ("name", name)
+  );
+}
+
+
+/* -------------------------------------------------------------------------
  * - name
  * - parameters
  */
-SXML_TYPE_LIST ast_program_unit_header( SXML_TYPE_LIST name,
+SXML_TYPE_LIST ast_subprogram_unit_header( SXML_TYPE_LIST name,
           SXML_TYPE_LIST parameters) {
 
   return SXML_LL(
@@ -280,7 +290,7 @@ SXML_TYPE_LIST ast_type_statement( SXML_TYPE_LIST type_reference,
             SXML_TYPE_LIST variables) {
 
   return SXML_LTLTL(
-    ast_abstract_statement ( "type_statement", location),
+    ast_abstract_statement ( "variable_declaration_statement", location),
     ",\n",
     JSON_KU ("type", type_reference),
     ",\n",
@@ -449,7 +459,7 @@ SXML_TYPE_LIST ast_data_statement( SXML_TYPE_LIST location,
     ast_abstract_statement( "data_statement", location),
     ",\n",
     JSON_KU(
-      "parameters",
+      "data_parameters",
       JSON_ARRAY( parameters)) ); 
 }
 
@@ -1043,7 +1053,7 @@ SXML_TYPE_LIST ast_binary_expression( SXML_TYPE_LIST lhs_expression,
       ast_tag( "binary_expression"),
       JSON_KU_ ( "lhs", lhs_expression),
       JSON_KQ_( "operator", binary_operator),
-      JSON_KU ( "expression", rhs_expression) ));
+      JSON_KU ( "rhs", rhs_expression) ));
 }
 
 /* -------------------------------------------------------------------------

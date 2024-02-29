@@ -861,9 +861,9 @@ $LIST(<7a:other_executable_statement>)
 
 $LIST(<8:program_statement>)
 {
-  $LIST(<8:program_statement>) = ast_program_unit_header (
-    $LIST( <99:symbolic_name>),
-    NULL);
+  $LIST(<8:program_statement>) = ast_mainprogram_unit_header (
+    $LIST( <99:symbolic_name>)
+  );
 }
 
 
@@ -1003,7 +1003,7 @@ $LIST( <10b:scalar_type>)
 $LIST(<10d:function_header>)
 
 {
-  $LIST(<10d:function_header>) = ast_program_unit_header(
+  $LIST(<10d:function_header>) = ast_subprogram_unit_header(
     $LIST(<99:symbolic_name>),
     NULL );
 }
@@ -1015,7 +1015,7 @@ $LIST(<10d:function_header>)
 
 $LIST(<10d:function_header>)
 {
-  $LIST(<10d:function_header>) = ast_program_unit_header(
+  $LIST(<10d:function_header>) = ast_subprogram_unit_header(
     $LIST(<99:symbolic_name>),
     $LIST( <99a:symbolic_name_list>) );
 }
@@ -1048,7 +1048,7 @@ $LIST(<12:subroutine_statement>)
 
 $LIST(<12a:subroutine_header>)
 {
-  $LIST(<12a:subroutine_header>) = ast_program_unit_header(
+  $LIST(<12a:subroutine_header>) = ast_subprogram_unit_header(
     $LIST(<99:symbolic_name>),
     NULL );
 }
@@ -1060,7 +1060,7 @@ $LIST(<12a:subroutine_header>)
 
 $LIST(<12a:subroutine_header>)
 {
-  $LIST(<12a:subroutine_header>) = ast_program_unit_header(
+  $LIST(<12a:subroutine_header>) = ast_subprogram_unit_header(
     $LIST(<99:symbolic_name>),
     NULL );
 }
@@ -1072,7 +1072,7 @@ $LIST(<12a:subroutine_header>)
 
 $LIST(<12a:subroutine_header>)
 {
-  $LIST(<12a:subroutine_header>) = ast_program_unit_header(
+  $LIST(<12a:subroutine_header>) = ast_subprogram_unit_header(
     $LIST(<99:symbolic_name>),
     $LIST (<12b:subroutine_parameter_list> ) );
 }
@@ -1151,7 +1151,7 @@ $LIST( <14:block_data_statement>)
 
 $LIST( <14:block_data_statement>)
 {
-  $LIST( <14:block_data_statement>) = ast_program_unit_header(
+  $LIST( <14:block_data_statement>) = ast_subprogram_unit_header(
     $LIST(<99:symbolic_name>),
     NULL );
 }    
@@ -2089,7 +2089,10 @@ $LIST( <27c:data_statement_name_list>)
 
 $LIST( <27d:data_statement_name>)
 {
-  $LIST( <27d:data_statement_name>) = $LIST(<99:symbolic_name>);
+  $LIST( <27d:data_statement_name>) = ast_variable_declarator(
+  	$LIST(<99:symbolic_name>),
+  	NULL
+  	);
 }
 
 *------------------------------------------------------------------------------
@@ -6271,7 +6274,10 @@ $LIST( <88b:function_reference_or_array_element_name>)
 
 $LIST( <88a:variable_or_array_element_name>)
 {
-  $LIST( <88a:variable_or_array_element_name>) = $LIST(<99:symbolic_name>);
+  $LIST( <88a:variable_or_array_element_name>) = ast_variable_declarator(
+  	$LIST(<99:symbolic_name>), 
+  	NULL
+  );
 }    
 
 *------------------------------------------------------------------------------
