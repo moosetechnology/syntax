@@ -21,7 +21,7 @@
 * This grammar of FORTRAN 77 is based upon the ANSI standard syntax charts
 * Annex F of https://nvlpubs.nist.gov/nistpubs/Legacy/FIPS/fipspub69-1.pdf
 *
-* Il contains a few usual extensions, marked with the word "EXTENSION"
+* Il contains a few usual extensions, marked with the string [[EXTENSION]]
 
 *******************************************************************************
 
@@ -135,7 +135,7 @@ $LIST(<0:F77>)
 
 * ENTRY POINT USED BY THE LOOK-AHEAD MECANISM
 
-* EXTENSION (loop without label)
+* [[EXTENSION]] (loop without label)
 
 <0:F77>		= !DO  <99:symbolic_name>  =  <40b:do_parameters> ;
 
@@ -2729,7 +2729,7 @@ $LIST(<39:end_if_statement>)
 
 *******************************************************************************
 
-* EXTENSION
+* [[EXTENSION]]
 * On introduit la notion de bloc <40a:do_loop> avec un header <40:do_statement>,
 * un corps <2c:statement_list> et une fin de bloc %ENDDO.
 * Ce %ENDDO est un dummy terminal zombie (voir f77.lecl) generique (il 
@@ -2772,7 +2772,8 @@ $LIST(<40a:do_loop>)
 
 *------------------------------------------------------------------------------
 
-* EXTENSION. Ci-apres, on a un vrai "do_block" se terminant par un vrai END DO 
+* [[EXTENSION]]
+* Ci-apres, on a un vrai "do_block" se terminant par un vrai END DO 
 * qui va aussi fermer tous les <40:do_statement> ouverts dans le "do_block".
 
 <40a:do_loop>	= DO  <99:symbolic_name>  =  <40b:do_parameters> %EOL
@@ -2824,7 +2825,7 @@ $LIST(<40:do_statement>)
 
 *******************************************************************************
 
-* EXTENSION
+* [[EXTENSION]]
 <40c:end_do>    = END  DO ;
 
 $LIST(<40c:end_do>)
