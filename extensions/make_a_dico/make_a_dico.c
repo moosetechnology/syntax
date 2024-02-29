@@ -125,7 +125,7 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXMAIN[] = "@(#)SYNTAX - $Id: make_a_dico.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_SXMAIN[] = "@(#)SYNTAX - $Id: make_a_dico.c 3731 2024-02-13 08:56:37Z garavel $" WHAT_DEBUG;
 
 static char ME [] = "make_a_dico.c";
 
@@ -368,6 +368,9 @@ oflw (SXINT old_size, SXINT new_size)
 static void
 make_a_dico_run (char *pathname)
 {
+  int nb_tab;
+  bool begin_count_tab, tabulation_met;
+
   infile = NULL;
 
   source_file_pathname = pathname;
@@ -386,9 +389,7 @@ make_a_dico_run (char *pathname)
       return;
     }
 
-    int nb_tab;
     nb_tab = 0;
-    bool begin_count_tab, tabulation_met;
     begin_count_tab = false;
     tabulation_met = false;
 
@@ -668,6 +669,7 @@ make_a_dico_scanact (SXINT entry, SXINT act_no)
       default:
 	break;
       }
+      /* FALLTHROUGH */
 
     default :
       fputs ("The function \"make_a_dico_scanact\" is out of date w.r.t. its specification.\n", sxstderr);
@@ -742,6 +744,8 @@ action (SXINT action_no)
 
   sxinitialise (top);
   sxinitialise(path), sxuse (path);
+  sxinitialise (proba);
+
   if (is_error)
     return;
 
@@ -1024,6 +1028,12 @@ action (SXINT action_no)
 	ift_code2proba [ift_code] = proba;
 	ift_code2terminal [ift_code] = id;
       }
+    } else {
+       /* assert !is_probabilized */
+       ift_code = 0;
+       /* pour tranquiliser Gcc qui ne sait pas que ift_code n'est utilise que
+        * si is_probabilized == true
+        */
     }
 
     if (case4) {
@@ -1206,9 +1216,11 @@ final (void)
 
       if (with_sxword) {
 	path = sxword_2save (&names, sxstrget (ste), sxstrlen (ste));
+        (void) path;
       }
       else {
 	path = word_tree_add_a_string (&dico_word_tree, sxstrget (ste), sxstrlen (ste), id);
+        (void) path;
       }
     }
 

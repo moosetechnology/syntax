@@ -34,7 +34,20 @@
 #define __USE_LARGEFILE /* tres provisoire */
 #endif
 
+#ifdef __GNUC__
+#define __USE_POSIX 1 /* to get fileno() and fdopen() */
+#define __USE_POSIX2 1 /* to get popen() and pclose() */ 
+#endif
+
 #include <stdio.h>
+
+/* -------------------------------------------------------------------------- */
+
+#ifdef __GNUC__
+#define __USE_XOPEN_EXTENDED /* to get mkstemp() */
+#endif
+
+#include <stdlib.h>
 
 /* -------------------------------------------------------------------------- */
 

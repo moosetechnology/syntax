@@ -27,7 +27,7 @@
 #include "bstr.h"
 #include "put_edit.h"
 
-char WHAT_XCSYNTCSYNT[] = "@(#)SYNTAX - $Id: csynt.c 3652 2023-12-24 09:43:15Z garavel $" WHAT_DEBUG;
+char WHAT_XCSYNTCSYNT[] = "@(#)SYNTAX - $Id: csynt.c 3702 2024-02-07 18:51:13Z garavel $" WHAT_DEBUG;
 
 /*---------------*/
 /*    options    */
@@ -181,7 +181,7 @@ char *get_constructor_name (char *string,
 			    SXINT h,
 			    SXINT k)
 {
-    char H [12], K [12];
+    char H [28], K [28];
 
     if (is_rlr && h > 0)
 	sprintf (H, "R (%ld) ", (SXINT) h);
@@ -235,6 +235,7 @@ static SXINT	csynt_run (void)
 	if (is_force) {
 	    break;
 	}
+        /* FALLTHROUGH */
 
     default:
 	if (sxverbosep && !sxttycol1p) {

@@ -87,11 +87,7 @@
 /* 18-01-95 14:20 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-#define WHAT	"@(#)sxndligpost.c	- SYNTAX [unix] - Lundi 6 Mars 1995"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+char WHAT[] = "@(#)sxndligpost.c	- SYNTAX [unix] - Lundi 6 Mars 1995";
 
 static char	ME [] = "sxndligpost";
 
@@ -110,7 +106,7 @@ static struct sxndlig	sxndlig;
 
 struct sxndlig_common	sxndlig_common; /* Global */
 
-static  SXVOID
+static  void
 addresses_oflw (old_size, new_size)
     int		old_size, new_size;
 {
@@ -120,7 +116,7 @@ addresses_oflw (old_size, new_size)
 }
 
 
-static  SXVOID
+static  void
 hooks_oflw (old_size, new_size)
     int		old_size, new_size;
 {
@@ -228,7 +224,7 @@ bu_action (act_no, pile)
 }
 
 
-static SXBOOLEAN
+static bool
 bu_prdct (prdct_no, pile)
     int prdct_no, pile;
 {
@@ -253,16 +249,16 @@ bu_prdct (prdct_no, pile)
 
     if (pc == pclim)
 	/* ( .. ) */
-	return SXTRUE;
+	return true;
 
     do {
 	if (pile == 0 || XxY_Y (sxndlig.piles, pile) != *pclim)
-	    return SXFALSE;
+	    return false;
 
 	pile = XxY_X (sxndlig.piles, pile);
     } while (pc < --pclim);
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -278,7 +274,7 @@ compute_bu_stacks (item, rhs_rule_no)
     struct rule2attr	*prhs_attr;
     struct rule2attr	*plhs_attr;
     int			lhs_rule_no, act_no, prdct_no, object, pile;
-    SXBOOLEAN		checked;
+    bool		checked;
     int			*pc;
     struct rule		*plhs;
 
@@ -325,10 +321,10 @@ compute_bu_stacks (item, rhs_rule_no)
 
 	if (prdct_no < 10000)
 	    /* Il n'y a pas de pile */
-	    checked = SXTRUE;
+	    checked = true;
 	else
 	{
-	    checked = SXFALSE;
+	    checked = false;
 
 	    if (prhs_attr->pile_nb > 0)
 	    {
@@ -338,7 +334,7 @@ compute_bu_stacks (item, rhs_rule_no)
 
 		if (bu_prdct (prdct_no, prhs_attr->pile))
 		{
-		    checked = SXTRUE;
+		    checked = true;
 
 		    if (*pc == PRIMARY)
 			put_bu_stack (lhs_rule_no, bu_action (act_no - 10000, prhs_attr->pile));
@@ -352,7 +348,7 @@ compute_bu_stacks (item, rhs_rule_no)
 	  
 			if (bu_prdct (prdct_no, pile))
 			{
-			    checked = SXTRUE;
+			    checked = true;
 
 			    if (*pc == PRIMARY)
 				put_bu_stack (lhs_rule_no, bu_action (act_no - 10000, pile));
@@ -461,7 +457,7 @@ td_prdct (prdct_no, pile)
     return pile;
 }
 
-static SXBOOLEAN
+static bool
 td_check_stack (rule_no, pile)
   int rule_no, pile;
 {
@@ -471,28 +467,28 @@ td_check_stack (rule_no, pile)
     int			object;
   
     if (pattr->pile_nb == 0)
-	return SXFALSE;
+	return false;
 
     if ((pattr->pile & LIG_7F) == (unsigned int)pile)
     {
 	/* C'est la pile principale */
 	pattr->pile |= LIG_80;	/* On la marque */
-	return SXTRUE;
+	return true;
     }
 
     if (pattr->pile_nb == 1)
-	return SXFALSE;
+	return false;
 
     /* ce n'est pas la pile principale */
     object = XxY_is_set (&sxndlig.objects, rule_no, pile);
 
     if (object == 0)
-	return SXFALSE;
+	return false;
 
     /* On le marque */
     SXBA_1_bit (sxndlig.object_set, object);
 
-    return SXTRUE;
+    return true;
 }
 
 static void
@@ -553,7 +549,7 @@ compute_td_stacks (rhs_rule_no)
        "rhs_rule_no" en RHS dans "grammar". On calcule les piles associees a toutes les occurrences
        de "rhs_rule_no" en RHS. */
     int			item, next_item, lhs_rule_no, object, pile, prdct_no, act_no;
-    SXBOOLEAN		checked;
+    bool		checked;
     int			*pc;
     struct rule2attr	*plhs_attr;
 
@@ -577,19 +573,19 @@ compute_td_stacks (rhs_rule_no)
 		if (sxndlig.rule2attr [rhs_rule_no].act_no >= 10000)
 		{
 		    /* Il y a des piles */
-		    checked = SXFALSE;
+		    checked = false;
 
 		    if (plhs_attr->pile_nb > 0)
 		    {
 			if (td_check_stack (rhs_rule_no, plhs_attr->pile))
-			    checked = SXTRUE;
+			    checked = true;
 
 			if (plhs_attr->pile_nb > 1)
 			{
 			    XxY_Xforeach (sxndlig.objects, lhs_rule_no, object)
 			    {
 				if (td_check_stack (rhs_rule_no, XxY_Y (sxndlig.objects, object)))
-				    checked = SXTRUE;
+				    checked = true;
 			    }
 			}
 		    }
@@ -625,7 +621,7 @@ compute_td_stacks (rhs_rule_no)
 		    }
 		    else
 		    {
-			checked = SXFALSE;
+			checked = false;
 
 			if (plhs_attr->pile_nb > 0)
 			{
@@ -641,7 +637,7 @@ compute_td_stacks (rhs_rule_no)
 				    if (td_check_stack (rhs_rule_no, pile))
 				    {
 					/* Cette pile a deja ete calculee en bottom-up pour rhs_rule_no */
-					checked = SXTRUE;
+					checked = true;
 				    }
 				}
 			    }
@@ -660,7 +656,7 @@ compute_td_stacks (rhs_rule_no)
 					    {
 						/* Cette pile a deja ete calculee en bottom-up
 						   pour rhs_rule_no */
-						checked = SXTRUE;
+						checked = true;
 					    }
 					}
 				    }
@@ -835,7 +831,7 @@ unfold_rule (rule_no, pile)
     }
 }
 
-static SXBOOLEAN
+static bool
 unfold_check_stack (rule_no, pile)
   int rule_no, pile;
 {
@@ -843,14 +839,14 @@ unfold_check_stack (rule_no, pile)
     struct rule2attr	*pattr = sxndlig.rule2attr + rule_no;
   
     if (pattr->pile_nb == 0)
-	return SXFALSE;
+	return false;
 
     if ((pattr->pile & LIG_7F) == (unsigned int)pile)
 	/* C'est la pile principale */
-	return SXTRUE;
+	return true;
 
     if (pattr->pile_nb == 1)
-	return SXFALSE;
+	return false;
 
     /* ce n'est pas la pile principale */
     return XxY_is_set (&sxndlig.objects, rule_no, pile) > 0;
@@ -1005,7 +1001,7 @@ sxndlig_unfold ()
 
    
     XxY_alloc (&sxndlig.uf.new_symbols, "sxndlig.uf.new_symbols", parse_stack.G.N * 2, 1, 0, 0, NULL, stdout_or_NULL);
-    sxndlig.uf.is_new_symbols = SXTRUE;
+    sxndlig.uf.is_new_symbols = true;
 
     XxY_alloc (&sxndlig.uf.hooks, "sxndlig.uf.hooks", (parse_stack.rule_top - parse_stack.hook_rule + 2) * 2,
 	       1, 0, 0, hooks_oflw, stdout_or_NULL);
@@ -1334,9 +1330,9 @@ sxndligpost (which, arg)
     return 0;
 
   case SXINIT:
-    sxplocals.mode.with_semact = SXFALSE;
-    sxplocals.mode.with_parsact = SXFALSE;
-    sxplocals.mode.with_parsprdct = SXFALSE;
+    sxplocals.mode.with_semact = false;
+    sxplocals.mode.with_parsact = false;
+    sxplocals.mode.with_parsprdct = false;
     (*sxndlig_common.code.parsact) (which, arg);
 
     return 0;

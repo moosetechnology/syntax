@@ -36,11 +36,7 @@
 /* 11-01-88 09:50 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-#define WHAT	"@(#)single.c	- SYNTAX [unix] - 13 octobre 1992"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+char WHAT[] = "@(#)single.c	- SYNTAX [unix] - 13 octobre 1992";
 
 static char	ME [] = "SINGLE";
 
@@ -66,7 +62,7 @@ static int	set_an_xnt (nt, prdct)
     int		nt, prdct;
 {
     register int	x, y, hash;
-    SXBOOLEAN	is_new_xnt = nt > bnf_ag.WS_TBL_SIZE.xntmax;
+    bool	is_new_xnt = nt > bnf_ag.WS_TBL_SIZE.xntmax;
     char	s [12];
 
     for (y = 0, x = xnt_hash [hash = (2 * nt + prdct) % HASH_SIZE]; x != 0; x = xnt_lnk [(y = x) - Delta]) {
@@ -212,7 +208,7 @@ static SXBA	pred (set, temp, lgth)
 }
 
 
-static SXBOOLEAN	create_new_trans (aetat, A, prdct, action)
+static bool	create_new_trans (aetat, A, prdct, action)
     struct nt_etat	*aetat;
     int		A, prdct, action;
 {
@@ -318,7 +314,7 @@ static int	complete_transition (state_set, noyau, temp_set, xnt_set1, xnt_set2, 
     register struct nt_trans	*atrans;
     register struct P_prdct	*pA, *pC;
     int		Aprime, XAprime, nt, predicate, xnt;
-    SXBOOLEAN	hors_noyau, is_xtrans, trans_exists;
+    bool	hors_noyau, is_xtrans, trans_exists;
 
     if (sxba_first_difference (state_set, noyau) == -1 /* state_set == noyau */) {
 	if (xnt_state_set == NULL)
@@ -335,7 +331,7 @@ static int	complete_transition (state_set, noyau, temp_set, xnt_set1, xnt_set2, 
 
 /* On regarde si A convient quand meme */
 
-    trans_exists = SXTRUE;
+    trans_exists = true;
     i = 0;
 
     while ((i = sxba_scan (state_set, i)) > 0) {
@@ -354,7 +350,7 @@ static int	complete_transition (state_set, noyau, temp_set, xnt_set1, xnt_set2, 
 
 	if (xa == 0) {
 	    /* A n'existe pas, on est hors noyau, A convient donc mais il faut creer la transition */
-	    trans_exists = SXFALSE;
+	    trans_exists = false;
 	}
 	else if (hors_noyau) {
 	    if (xa == xc) {
@@ -542,7 +538,7 @@ static int	complete_transition (state_set, noyau, temp_set, xnt_set1, xnt_set2, 
 
 /* On cree, pour l'etat i, les transitions sur Aprime */
 
-	is_xtrans = SXFALSE;
+	is_xtrans = false;
 	aetat = nt_etats + i;
 
 	for (j = 1; j <= xc; j++) {
@@ -550,7 +546,7 @@ static int	complete_transition (state_set, noyau, temp_set, xnt_set1, xnt_set2, 
 	    create_new_trans (aetat, Aprime, pC->prdct, pC->action);
 
 	    if (pC->prdct != -1) {
-		is_xtrans = SXTRUE;
+		is_xtrans = true;
 		xprdct_items++;
 	    }
 	}
@@ -560,7 +556,7 @@ static int	complete_transition (state_set, noyau, temp_set, xnt_set1, xnt_set2, 
 		create_new_trans (aetat, Aprime, prdct, xAs [1].action);
 
 		if (prdct != -1) {
-		    is_xtrans = SXTRUE;
+		    is_xtrans = true;
 		    xprdct_items++;
 		}
 	    }
@@ -570,7 +566,7 @@ static int	complete_transition (state_set, noyau, temp_set, xnt_set1, xnt_set2, 
 		    create_new_trans (aetat, Aprime, pA->prdct, pA->action);
 
 		    if (pA->prdct != -1) {
-			is_xtrans = SXTRUE;
+			is_xtrans = true;
 			xprdct_items++;
 		    }
 		}
@@ -582,7 +578,7 @@ static int	complete_transition (state_set, noyau, temp_set, xnt_set1, xnt_set2, 
 		    create_new_trans (aetat, Aprime, get_xprdct (prdct, pA->prdct), pA->action);
 
 		    if (pA->prdct != -1) {
-			is_xtrans = SXTRUE;
+			is_xtrans = true;
 			xprdct_items++;
 		    }
 		}
@@ -1271,7 +1267,7 @@ partial_spe (single_prod, restriction_set)
     register struct floyd_evans		*afe;
     register int	i, pd, x, xpd;
     SXBA	nt_set;
-    SXBOOLEAN	is_a_single_prod, is_xstate;
+    bool	is_a_single_prod, is_xstate;
 
     nt_set = sxba_calloc (bnf_ag.WS_TBL_SIZE.ntmax + 1);
     pd_set = (int*) sxalloc (bnf_ag.WS_TBL_SIZE.ntmax + 1, sizeof (int));
@@ -1282,16 +1278,16 @@ partial_spe (single_prod, restriction_set)
 
     for (i = 1; i < xac2; i++) {
 	if ((astatei = nt_states + i)->lgth > 0) {
-	    is_a_single_prod = SXFALSE;
+	    is_a_single_prod = false;
 	    bs = (bi = nt_items + astatei->start) + astatei->lgth;
-	    is_xstate = SXFALSE;
+	    is_xstate = false;
 
 	    for (aitem = bs - 1; aitem >= bi; aitem--) {
 		if (aitem->check > bnf_ag.WS_TBL_SIZE.ntmax) {
 		    register int nt;
 
 		    bs = aitem;
-		    is_xstate = SXTRUE;
+		    is_xstate = true;
 		    nt = XNT_TO_NT_CODE (aitem->check);
 		    SXBA_1_bit (nt_set, nt);
 		}
@@ -1300,7 +1296,7 @@ partial_spe (single_prod, restriction_set)
 			 bnf_ag.WS_NBPRO [afe->reduce].bprosimpl &&
 			 restriction_set != NULL &&
 			 !SXBA_bit_is_set (restriction_set, afe->reduce)) {
-		    is_a_single_prod = SXTRUE;
+		    is_a_single_prod = true;
 		    SXBA_1_bit (single_prod, afe->reduce);
 		    pd_set [++xpd] = aitem->check;
 		    pd_to_aitem [aitem->check] = aitem;

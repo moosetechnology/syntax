@@ -22,9 +22,9 @@
 #include "sxunix.h"
 #include "B_tables.h"
 #include "xbnf_vars.h"
-char WHAT_XBNFPRINTBT[] = "@(#)SYNTAX - $Id: print_bt.c 3498 2023-08-20 18:14:09Z garavel $" WHAT_DEBUG;
+char WHAT_XBNFPRINTBT[] = "@(#)SYNTAX - $Id: print_bt.c 3676 2024-02-05 18:17:45Z garavel $" WHAT_DEBUG;
 
-extern SXVOID xbnf_dump (void);
+extern void xbnf_dump (void);
 
 /************************************************************************/
 /* main function */

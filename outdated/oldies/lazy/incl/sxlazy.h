@@ -4,12 +4,12 @@
 # include "XxY.h"
 # include "XxYxZ.h"
 
-extern SXBOOLEAN	sxl_add_rule ();
-extern SXVOID	sxl_clear_rule_from_automaton ();
-extern SXVOID	sxl_clear_rule ();
-extern SXVOID	sxl_add_rule_to_automaton ();
-extern SXVOID	sxl_init_state ();
-extern SXBOOLEAN	sxlazy ();
+extern bool	sxl_add_rule ();
+extern void	sxl_clear_rule_from_automaton ();
+extern void	sxl_clear_rule ();
+extern void	sxl_add_rule_to_automaton ();
+extern void	sxl_init_state ();
+extern bool	sxlazy ();
 extern int	sxl_new_xt ();
 extern int	sxl_new_nt ();
 
@@ -108,7 +108,7 @@ struct grammar {
 
     int		(*desambig) ();
 
-    SXBOOLEAN	is_in_look_ahead;
+    bool	is_in_look_ahead;
 };
 
 

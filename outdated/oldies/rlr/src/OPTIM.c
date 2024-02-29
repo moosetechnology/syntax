@@ -67,11 +67,7 @@
 /* 16-10-87 10:50 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-#define WHAT	"@(#)OPTIM.c - SYNTAX [unix] - Mardi 26 Novembre 1996"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+char WHAT[] = "@(#)OPTIM.c - SYNTAX [unix] - Mardi 26 Novembre 1996";
 
 static char	ME [] = "OPTIM";
 
@@ -83,8 +79,8 @@ static char	ME [] = "OPTIM";
 extern int	equality_sort ();
 extern int	put_in_fe ();
 extern VARSTR	cat_t_string ();
-extern SXVOID	parser_write (), parser_free ();
-extern SXVOID	sxtime ();
+extern void	parser_write (), parser_free ();
+extern void	sxtime ();
 struct xt_to_act {
 	   int	action, lnk;
        };
@@ -100,7 +96,7 @@ static int	t_items_size, nt_items_size, tnt_fe_size;
 static int	prdct_list_size;
 
 
-static SXBOOLEAN	row_le (i, j)
+static bool	row_le (i, j)
     int		i, j;
 {
     register int	li, lj, vali, valj;
@@ -127,12 +123,12 @@ static SXBOOLEAN	row_le (i, j)
 	    return vali < valj;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
 
-static SXBOOLEAN	row_eq (i, j)
+static bool	row_eq (i, j)
     int		i, j;
 {
     register int	li, vali, valj;
@@ -140,10 +136,10 @@ static SXBOOLEAN	row_eq (i, j)
     register struct P_item	*ai, *aj;
 
     if (arowi->hash != arowj->hash)
-	return SXFALSE;
+	return false;
 
     if ((li = arowi->lgth) != arowj->lgth)
-	return SXFALSE;
+	return false;
 
     for (ai = ITEMS + arowi->start, aj = ITEMS + arowj->start; li > 0; ai++, aj++, li--) {
 	while ((vali = ai->action) == 0)
@@ -153,13 +149,13 @@ static SXBOOLEAN	row_eq (i, j)
 	    aj++;
 
 	if (vali != valj)
-	    return SXFALSE;
+	    return false;
 
 	if (ai->check != aj->check)
-	    return SXFALSE;
+	    return false;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -196,7 +192,7 @@ static int	put_in_reductions (hashs, lnks, afe)
 
 
 
-static SXBOOLEAN	is_0_indistinguable (afei, afej)
+static bool	is_0_indistinguable (afei, afej)
     register struct floyd_evans		*afei, *afej;
 {
     /* Regarde si les productions de floyd_evans parametres sont 0_indistinguables */
@@ -205,20 +201,20 @@ static SXBOOLEAN	is_0_indistinguable (afei, afej)
     register struct P_item	*ai, *aj;
 
     if (afei->codop != afej->codop)
-	return SXFALSE;
+	return false;
 
     switch (afei->codop) {
     case Shift:
     case ScanShift:
 	if (afei->pspl == 0 && afej->pspl != 0 || afei->pspl != 0 && afej->pspl == 0)
-	    return SXFALSE;
+	    return false;
 
 	break;
 
     case Reduce:
     case ScanReduce:
 	if (afei->next != afej->next || afei->reduce != afej->reduce || afei->pspl != afej->pspl)
-	    return SXFALSE;
+	    return false;
 
 	break;
 
@@ -227,7 +223,7 @@ static SXBOOLEAN	is_0_indistinguable (afei, afej)
 
     case Error:
 	if (afei->next != afej->next)
-	    return SXFALSE;
+	    return false;
 
 	break;
 
@@ -237,12 +233,12 @@ static SXBOOLEAN	is_0_indistinguable (afei, afej)
 	sxtrap (ME, "is_0_indistinguable");
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
 
-static SXBOOLEAN	is_k_indistinguable (afei, afej)
+static bool	is_k_indistinguable (afei, afej)
     register struct floyd_evans		*afei, *afej;
 {
     /* Regarde (dans le cas [Scan]Shift) si les etats references par les productions de
@@ -262,13 +258,13 @@ static SXBOOLEAN	is_k_indistinguable (afei, afej)
 	return t_state_equiv_class [afei->next] == t_state_equiv_class [afej->next];
 
     default:
-	return SXTRUE;
+	return true;
     }
 }
 
 
 
-static SXVOID	zero_indistinguable (state_no, equiv_class, states, items, fe, partitions, eq_lnks, partition_no)
+static void	zero_indistinguable (state_no, equiv_class, states, items, fe, partitions, eq_lnks, partition_no)
     int		state_no;
     register int	*equiv_class;
     struct state	*states;
@@ -317,7 +313,7 @@ static SXVOID	zero_indistinguable (state_no, equiv_class, states, items, fe, par
 
 
 
-static SXBOOLEAN	is_stable (equiv_class, states, items, fe, partitions, eq_lnks, partition_no)
+static bool	is_stable (equiv_class, states, items, fe, partitions, eq_lnks, partition_no)
     register int	*equiv_class;
     struct state	*states;
     struct P_item	*items;
@@ -328,7 +324,7 @@ static SXBOOLEAN	is_stable (equiv_class, states, items, fe, partitions, eq_lnks,
     register struct state	*astatei;
     register struct P_item	*aitemi, *aitemj;
     int		prev, new_part;
-    SXBOOLEAN	is_a_new_partition = SXFALSE;
+    bool	is_a_new_partition = false;
 
     for (x = 1; x <= *partitions; x++) {
 	astatei = states + (i = partitions [x]);
@@ -369,7 +365,7 @@ static SXBOOLEAN	is_stable (equiv_class, states, items, fe, partitions, eq_lnks,
 		else
 		    partitions [++*partitions] = new_part;
 
-	    is_a_new_partition = SXTRUE;
+	    is_a_new_partition = true;
 	}
     }
 
@@ -378,7 +374,7 @@ static SXBOOLEAN	is_stable (equiv_class, states, items, fe, partitions, eq_lnks,
 
 
 
-static SXVOID	insert_xnt_lnk (xnt, xnt_to_act)
+static void	insert_xnt_lnk (xnt, xnt_to_act)
     register int	xnt;
     register struct xt_to_act	*xnt_to_act;
 {
@@ -396,7 +392,7 @@ static SXVOID	insert_xnt_lnk (xnt, xnt_to_act)
 
 
 
-SXVOID	fe_to_equiv (afe1, afe2)
+void	fe_to_equiv (afe1, afe2)
     register struct floyd_evans		*afe1;
     struct floyd_evans	*afe2;
 {
@@ -508,7 +504,7 @@ static int gen_prdct_seq (hd, links, t_items, fe)
 }
 
 
-static SXVOID compute_action_set (xac1, t_items, action_set)
+static void compute_action_set (xac1, t_items, action_set)
     int			xac1;
     struct P_item	*t_items;
     SXBA		action_set;
@@ -547,7 +543,7 @@ static SXVOID compute_action_set (xac1, t_items, action_set)
     }
 }
 
-static SXVOID reset_germe_to_gr_act ()
+static void reset_germe_to_gr_act ()
 {
     /* germe_to_gr_act a ete modifie' par l'appel precedent de compute_action_set
        afin de ne pas boucler et d'eviter des recalculs. On remet comme avant. */
@@ -597,7 +593,7 @@ int	OPTIM ()
 {
     if (sxverbosep) {
 	fprintf (sxtty, "%s\n", ME);
-	sxttycol1p = SXTRUE;
+	sxttycol1p = true;
     }
 
     stats.t.i.lines = xe1 - 1;
@@ -613,7 +609,7 @@ int	OPTIM ()
 
 	if (sxverbosep) {
 	    fprintf (sxtty, "\tTotal Single Productions Elimination ... ");
-	    sxttycol1p = SXFALSE;
+	    sxttycol1p = false;
 	}
 
 	total_spe (single_prod);
@@ -641,7 +637,7 @@ int	OPTIM ()
 
 	if (sxverbosep) {
 	    sxtime (SXFINAL, "done");
-	    sxttycol1p = SXTRUE;
+	    sxttycol1p = true;
 	}
     }
 
@@ -677,7 +673,7 @@ int	OPTIM ()
 
 	if (sxverbosep) {
 	    fprintf (sxtty, "\tAutomaton Reduction ... ");
-	    sxttycol1p = SXFALSE;
+	    sxttycol1p = false;
 	}
 
 	t_partitions = (int*) sxalloc (xe1 + 1, sizeof (int));
@@ -727,7 +723,7 @@ int	OPTIM ()
 
 	if (sxverbosep) {
 	    sxtime (SXFINAL, "done");
-	    sxttycol1p = SXTRUE;
+	    sxttycol1p = true;
 	}
     }
 
@@ -746,7 +742,7 @@ int	OPTIM ()
 
 	if (sxverbosep) {
 	    fprintf (sxtty, "\tPartial Single Productions Elimination ... ");
-	    sxttycol1p = SXFALSE;
+	    sxttycol1p = false;
 	}
 
 	if (is_non_deterministic_automaton) {
@@ -782,13 +778,13 @@ int	OPTIM ()
 
 	if (sxverbosep) {
 	    sxtime (SXFINAL, "done");
-	    sxttycol1p = SXTRUE;
+	    sxttycol1p = true;
 	}
     }
 
     if (sxverbosep) {
 	fprintf (sxtty, "\tCompaction\n");
-	sxttycol1p = SXTRUE;
+	sxttycol1p = true;
     }
 
 
@@ -797,7 +793,7 @@ int	OPTIM ()
 
     if (sxverbosep) {
 	fprintf (sxtty, "\t\tT_Tables ... ");
-	sxttycol1p = SXFALSE;
+	sxttycol1p = false;
     }
 
     {
@@ -808,23 +804,23 @@ int	OPTIM ()
 		  actions "scan" de l'etat courant */
 
 	int	*state_to_tsr;
-	SXBOOLEAN		is_test_scan_reduce;
+	bool		is_test_scan_reduce;
 
 	state_to_tsr = (int*) sxcalloc (xe1 + 1, sizeof (int));
-	is_test_scan_reduce = SXFALSE;
+	is_test_scan_reduce = false;
 
 	{
 	    /* on remplit state_to_tsr */
 
 	    register int	i, red_act;
-	    register SXBOOLEAN	is_tsr;
+	    register bool	is_tsr;
 	    register struct P_item	*aitem, *lim;
 	    register struct state	*astate;
 	    register struct floyd_evans		*afe;
 
 	    for (i = 1; i < xe1; i++) {
 		if ((astate = t_states + i)->lgth > 0) {
-		    is_tsr = SXTRUE;
+		    is_tsr = true;
 		    red_act = 0;
 
 		    for (lim = (aitem = t_items + astate->start) + astate->lgth - 1; aitem <= lim; aitem++) {
@@ -834,16 +830,16 @@ int	OPTIM ()
 				if (red_act == 0)
 				    red_act = aitem->action;
 				else if (red_act != aitem->action)
-				    is_tsr = SXFALSE;
+				    is_tsr = false;
 			    }
 			    else if (aitem->action != t_error)
-				is_tsr = SXFALSE;
+				is_tsr = false;
 			}
 		    }
 
 		    if (is_tsr) {
 			state_to_tsr [i] = red_act;
-			is_test_scan_reduce = SXTRUE;
+			is_test_scan_reduce = true;
 		    }
 		}
 	    }
@@ -906,7 +902,7 @@ int	OPTIM ()
 
 	if (sxverbosep) {
 	    sxtime (SXFINAL, "done");
-	    sxttycol1p = SXTRUE;
+	    sxttycol1p = true;
 	}
     }
 
@@ -926,7 +922,7 @@ int	OPTIM ()
 
 	if (sxverbosep) {
 	    fprintf (sxtty, "\t\tNT_Tables ... ");
-	    sxttycol1p = SXFALSE;
+	    sxttycol1p = false;
 	}
 
 	tnt_fe = (struct floyd_evans*)
@@ -1137,7 +1133,7 @@ int	OPTIM ()
 
 	{
 	    int		*occur_nb;
-	    SXBOOLEAN	is_nt_to_ad;
+	    bool	is_nt_to_ad;
 
 	    occur_nb = (int*) sxcalloc (nt_fe_size + 1, sizeof (int));
 	    stats.nt.c.lines = stats.nt.r.lines;
@@ -1145,14 +1141,14 @@ int	OPTIM ()
 	    for (i = 1; i < xac2; i++) {
 		if ((k = (astate = nt_states + i)->lgth) != 0) {
 		    action = 0;
-		    is_nt_to_ad = SXFALSE;
+		    is_nt_to_ad = false;
 
 		    for (lim = (aitem = nt_items + astate->start) + k; aitem < lim; aitem++) {
 			if (nt_to_nt [aitem->check] != aitem->check)
 			    aitem->check = aitem->action = 0;
 			else {
 			    if (nt_to_ad [aitem->check] != -1)
-				is_nt_to_ad = SXTRUE;
+				is_nt_to_ad = true;
 
 			    if (action == 0)
 				action = aitem->action;
@@ -1266,7 +1262,7 @@ int	OPTIM ()
 	register struct floyd_evans	*afe;
 	int				l, x, hash_code, action, xlink, old_xlink, old_xlink_lim;
 	int				*reduces, *link, *xt_to_link;
-	SXBOOLEAN				is_force_error;
+	bool				is_force_error;
 
 	t_items = (struct P_item*) sxalloc (xt_items + 1, sizeof (struct P_item));
 	link = (int*) sxalloc (xt_items + 1, sizeof (int));
@@ -1431,19 +1427,19 @@ int	OPTIM ()
 		    xt_to_link [t] = 0;
 		}
 
-		is_force_error = SXFALSE;
+		is_force_error = false;
 
 		if (plulong != 0) {
 		    fe_to_equiv (tnt_fe, t_fe + plulong);
 
 		    if (i > init_state)
-			/* is_non_deterministic_automaton == SXFALSE */
+			/* is_non_deterministic_automaton == false */
 			germe_to_gr_act [i] = 0;
 		}
 		else if (t_fe [lim->action].codop != ForceError)
 		    fe_to_equiv (tnt_fe, t_fe + lim->action);
 		else
-		    is_force_error = SXTRUE;
+		    is_force_error = true;
 
 		aitem = t_items + xt_items++;
 		aitem->check = any;
@@ -1512,7 +1508,7 @@ int	OPTIM ()
 
 	if (sxverbosep) {
 	    sxtime (SXFINAL, "done");
-	    sxttycol1p = SXTRUE;
+	    sxttycol1p = true;
 	}
     }
 
@@ -1526,7 +1522,7 @@ int	OPTIM ()
 
 	if (sxverbosep) {
 	    fprintf (sxtty, "\tMatrix Linearization\n");
-	    sxttycol1p = SXTRUE;
+	    sxttycol1p = true;
 	}
 
 	state_to_state = (int*) sxalloc (xe1 + 1, sizeof (int));
@@ -1545,7 +1541,7 @@ int	OPTIM ()
 
 	    if (sxverbosep) {
 		fprintf (sxtty, "\t\tT_tables ... ");
-		sxttycol1p = SXFALSE;
+		sxttycol1p = false;
 	    }
 
 	    t_bases = (struct P_base*) sxcalloc (xe1 + 1, sizeof (struct P_base));
@@ -1599,7 +1595,7 @@ int	OPTIM ()
 
 	    MIN = MAX = 1;
 	    delta = 0;
-	    algoV (SXFALSE, xe1, -bnf_ag.WS_TBL_SIZE.tmax, xt_items, t_states, t_items, t_bases, &vector, &bases_set, &MIN,
+	    algoV (false, xe1, -bnf_ag.WS_TBL_SIZE.tmax, xt_items, t_states, t_items, t_bases, &vector, &bases_set, &MIN,
 		 &MAX, &delta);
 	    t_vector_size = MAX - MIN + 1;
 	    t_MIN = MIN;
@@ -1619,7 +1615,7 @@ int	OPTIM ()
 
 	    if (sxverbosep) {
 		sxtime (SXFINAL, "done");
-		sxttycol1p = SXTRUE;
+		sxttycol1p = true;
 	    }
 	}
 
@@ -1631,7 +1627,7 @@ int	OPTIM ()
 
 	if (sxverbosep) {
 	    fprintf (sxtty, "\t\tNT_tables ... ");
-	    sxttycol1p = SXFALSE;
+	    sxttycol1p = false;
 	}
 
 	nt_bases = (struct P_base*) sxcalloc (xe1 + 1, sizeof (struct P_base));
@@ -1720,7 +1716,7 @@ int	OPTIM ()
 		    nt_states [k].lgth = 0;
 	    }
 
-	    algoV (SXTRUE, xac2, NTMAX, xnt_items, nt_states, nt_items, nt_bases, &vector, &bases_set, &MIN, &MAX, &delta);
+	    algoV (true, xac2, NTMAX, xnt_items, nt_states, nt_items, nt_bases, &vector, &bases_set, &MIN, &MAX, &delta);
 	    nt_vector_size = MAX - MIN + 1 - t_vector_size;
 	    t_delta = t_MIN - MIN + delta - t_delta;
 
@@ -1739,11 +1735,11 @@ int	OPTIM ()
 
 	if (sxverbosep) {
 	    sxtime (SXFINAL, "done");
-	    sxttycol1p = SXTRUE;
+	    sxttycol1p = true;
 	}
     }
 
-    is_listing_opened = SXFALSE;
+    is_listing_opened = false;
 
     if (is_abstract || is_floyd_evans || is_long_listing)
 	optim_lo (language_name, ME);
@@ -1773,7 +1769,7 @@ int	OPTIM ()
 
 	if (sxverbosep) {
 	    fprintf (sxtty, "\tTables Output ... ");
-	    sxttycol1p = SXFALSE;
+	    sxttycol1p = false;
 	}
 
 	XxY_alloc (&ref_to_ee, "ref_to_ee", 2 * xac2, 4, 0, 0, NULL, NULL);
@@ -2118,7 +2114,7 @@ int	OPTIM ()
 
 	if (sxverbosep) {
 	    sxtime (SXFINAL, "done");
-	    sxttycol1p = SXTRUE;
+	    sxttycol1p = true;
 	}
     }
 
@@ -2140,7 +2136,7 @@ int	OPTIM ()
 	sxfree (predicates), predicates = NULL;
 
     if (is_listing_opened) {
-	is_listing_opened = SXFALSE;
+	is_listing_opened = false;
 	put_edit_finalize ();
     }
 

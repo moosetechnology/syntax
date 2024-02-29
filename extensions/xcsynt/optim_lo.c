@@ -25,11 +25,11 @@
 
 extern struct bstr	*options_text (SXINT kind, struct bstr *bstr);
 
-char WHAT_XCSYNTOPTIMLO[] = "@(#)SYNTAX - $Id: optim_lo.c 3652 2023-12-24 09:43:15Z garavel $" WHAT_DEBUG;
+char WHAT_XCSYNTOPTIMLO[] = "@(#)SYNTAX - $Id: optim_lo.c 3732 2024-02-13 08:57:17Z garavel $" WHAT_DEBUG;
 
 static SXINT	*xt_to_ate;
 static VARSTR	wvstr;
-static char	small_string [12];
+static char	small_string [24];
 
 static void alloc_alpha_table (void)
 {
@@ -406,6 +406,9 @@ void	output_fe (SXINT kind,
     switch (afe->codop) {
     case LaScanShift:
 	put_edit_nnl (30, "*");
+
+        /* FALLTHROUGH */
+        /* car les scans en look-ahead sont symbolisés par "**"  */
 
     case ScanShift:
     case ScanReduce:

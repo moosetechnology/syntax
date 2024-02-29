@@ -24,12 +24,7 @@
 /* 09-08-94 (pb):	Creation					*/
 /************************************************************************/
 
-#define WHAT	"@(#)lig_sact.c\t- SYNTAX [unix] - Mar 9 Aou 1994 10:11:16"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
-
+char WHAT[] = "@(#)lig_sact.c\t- SYNTAX [unix] - Mar 9 Aou 1994 10:11:16";
 
 #include "sxunix.h"
 #include "lig.h"
@@ -69,7 +64,7 @@ unsigned long	lig_get_line_no (rule_no)
 #define ts_null()	(sxsvar.sxlv_s.token_string [sxsvar.sxlv.ts_lgth] = SXNUL)
 
 
-static SXVOID	lig_comment_put (x, str, lgth)
+static void	lig_comment_put (x, str, lgth)
     int		x;
     char	*str;
     int		lgth;
@@ -84,7 +79,7 @@ char *lig_comment_get (x)
     return comments [x];
 }
 
-SXVOID	lig_get_rule_tail (rule_no, tline, tcol)
+void	lig_get_rule_tail (rule_no, tline, tcol)
     unsigned long       rule_no, *tline;
     unsigned int	*tcol;
 {
@@ -94,7 +89,7 @@ SXVOID	lig_get_rule_tail (rule_no, tline, tcol)
 
 
 
-SXVOID	lig_skip_rule ()
+void	lig_skip_rule ()
 {
     register struct tail	*tail_coord;
     register unsigned long	line;
@@ -121,7 +116,7 @@ SXVOID	lig_skip_rule ()
 
 
 
-SXVOID	lig_found_bad_beginning_of_rule ()
+void	lig_found_bad_beginning_of_rule ()
 {
     struct sxsource_coord	less_coord;
 
@@ -133,7 +128,7 @@ SXVOID	lig_found_bad_beginning_of_rule ()
 
 
 
-static SXVOID	gripe ()
+static void	gripe ()
 {
     fputs ("\nThe function \"lig_scan_act\" is out of date with respect to its specification.\n", sxstderr);
     abort ();
@@ -141,7 +136,7 @@ static SXVOID	gripe ()
 
 
 
-SXVOID	(*more_scan_act) ();
+void	(*more_scan_act) ();
 
 
 
@@ -178,7 +173,7 @@ lig_scan_act (code, act_no)
 	}
 
         {
-	    register SXSHORT	c;
+	    register short	c;
 
 	    c = sxsrcmngr.current_char;
 
@@ -211,7 +206,7 @@ lig_scan_act (code, act_no)
 
     case SXACTION:
 	switch (act_no) {
-	    register SXSHORT	c;
+	    register short	c;
 
 	case 1:
 	    {

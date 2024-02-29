@@ -24,18 +24,13 @@
 /* 09-08-94 (pb):	Creation					*/
 /************************************************************************/
 
-#define WHAT	"@(#)xtag_sact.c\t- SYNTAX [unix] - Mer 28 Dec 1994 13:55:26"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
-
+char WHAT[] = "@(#)xtag_sact.c\t- SYNTAX [unix] - Mer 28 Dec 1994 13:55:26";
 
 #include "sxunix.h"
 #include "xtag.h"
 
 
-static SXVOID
+static void
 gripe ()
 {
     fputs ("\nThe function \"xtag_scan_act\" is out of date with respect to its specification.\n", sxstderr);
@@ -44,7 +39,7 @@ gripe ()
 
 
 
-SXVOID	(*more_scan_act) ();
+void	(*more_scan_act) ();
 
 
 

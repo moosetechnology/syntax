@@ -2,13 +2,13 @@
 #define ARN_80		(~ARN_7F)
 
 struct for_postparsact {
-    int		(*action_top) (),
-    		(*action_pop) (),
-    		(*action_bot) (),
-    		(*action_new_top) (),
-    		(*action_final) (),
-    		(*GC) (),
-      		(*post) ();
+    int		(*action_top) (void);
+    int		(*action_pop) (int, int, int);
+    int		(*action_bot) (void);
+    int		(*action_new_top) (void);
+    int		(*action_final) (void);
+    int		(*GC) (void);
+    int		(*post) (void);
 };
 
 struct symbol_set2attr {
@@ -41,7 +41,7 @@ struct path2attr {
 
 struct level_trans2attr {
   int		val;
-  SXBOOLEAN	to_be_kept;
+  bool	to_be_kept;
 };
 
 struct ARN {
@@ -92,7 +92,7 @@ struct ARN {
                         cur_trans,
                         multiple_symbol;
 
-    SXBOOLEAN		is_old_trans;
+    bool		is_old_trans;
 
     struct for_postparsact
 	                for_postparsact;

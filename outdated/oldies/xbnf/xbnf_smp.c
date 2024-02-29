@@ -20,15 +20,15 @@
 #include "sxunix.h"
 #include "B_tables.h"
 #include "xbnf_vars.h"
-char WHAT_XBNFSMP[] = "@(#)SYNTAX - $Id: xbnf_smp.c 3498 2023-08-20 18:14:09Z garavel $" WHAT_DEBUG;
+char WHAT_XBNFSMP[] = "@(#)SYNTAX - $Id: xbnf_smp.c 3676 2024-02-05 18:17:45Z garavel $" WHAT_DEBUG;
 
 
-extern	SXVOID symbol_table_processing (SXNODE *);
-extern	SXVOID property_test (void);
-extern	SXVOID follow_construction (void);
+extern	void symbol_table_processing (SXNODE *);
+extern	void property_test (void);
+extern	void follow_construction (void);
 
 
-SXVOID
+void
 sxxbnfsmp (SXINT what, struct sxtables *sxtables_ptr)
 {
     switch (what) {

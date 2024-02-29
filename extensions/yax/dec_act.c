@@ -22,7 +22,7 @@
 #include "B_tables.h"
 #include "yax_vars.h"
 
-char WHAT_YAXDECACT[] = "@(#)SYNTAX - $Id: dec_act.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_YAXDECACT[] = "@(#)SYNTAX - $Id: dec_act.c 3695 2024-02-07 17:44:37Z garavel $" WHAT_DEBUG;
 
 extern struct sxtables	bnf_tables;
 
@@ -73,6 +73,7 @@ void	dec_scanact (SXINT code, SXINT numact)
 #endif
 	  break;
 	}
+        /* FALLTHROUGH */
 
     default:
 	fputs ("The function \"dec_scanact\" is out of date with respect to its specification.\n", sxstderr);
@@ -158,6 +159,7 @@ void	dec_semact (SXINT code, SXINT numact)
 		if (SXSTACKtoken (SXSTACKtop () - 1).comment != NULL) {
 		    sxfree (SXSTACKtoken (SXSTACKtop () - 1).comment);
 		}
+		/* FALLTHROUGH */
 
 	case /*<nt_list>	= %NT				;*/ 6:
 
@@ -192,6 +194,7 @@ void	dec_semact (SXINT code, SXINT numact)
 #endif
 	  break;
 	}
+	/* FALLTHROUGH */
 
     default:
 	fputs ("The function \"dec_semact\" is out of date with respect to its specification.\n", sxstderr);

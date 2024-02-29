@@ -18,7 +18,7 @@ DEF4= -Dsxtables=earley_tables -Dsxndparser=sxearley_parser -DSEMACT=SXLIG_actio
       -Drecovery=sxbvoid -Dsxndprecovery=sxbvoid -DESAMBIG=sxvoid -DPARSACT_2=sxvoid
 DEF5= -Ddelta_n=0 -Dis_parser=1 -Dis_1LA=1
 
-CC=cc -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
+CC=cc -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS) -DEBUG
 
 ALL=$(TEST)/wcw.out		\
      $(TEST)/wcw_lr.out		\

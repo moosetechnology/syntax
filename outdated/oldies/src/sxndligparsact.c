@@ -47,11 +47,7 @@
 /* 26-08-94 14:06 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-#define WHAT	"@(#)sxndligparsact.c\t- SYNTAX [unix] - Mercredi 26 Avril 1995"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+char WHAT[] = "@(#)sxndligparsact.c\t- SYNTAX [unix] - Mercredi 26 Avril 1995";
 
 static char	ME [] = "sxndligparsact";
 
@@ -338,7 +334,7 @@ sxndlig_action_pop (level, son, father)
 	}
 	else {
 	    if (!sxndlig.is_paths) {
-		sxndlig.is_paths = SXTRUE;
+		sxndlig.is_paths = true;
 		/* On installe le premier */
 		XxY_set (&sxndlig.paths,
 			 XxY_X (sxndlig.main_trans, sxndlig.prev_main_trans),
@@ -389,7 +385,7 @@ sxndlig_action_top (xtriple)
     sxndlig.xtriple = xtriple;
 
     if (sxndlig.is_paths) {
-	sxndlig.is_paths = SXFALSE;
+	sxndlig.is_paths = false;
 	XxY_clear (&sxndlig.paths);
     }
 
@@ -471,7 +467,7 @@ do_action (pile)
 
 
 
-static SXBOOLEAN
+static bool
 do_prdct (pile)
     int pile;
 {
@@ -490,18 +486,18 @@ do_prdct (pile)
     /* Cas general : ([..] a b c ... ) */
     if (sxndlig.pprdct_bot == sxndlig.pprdct_top)
       /* ( .. ) */
-      return SXTRUE;
+      return true;
 
     pclim = sxndlig.pprdct_top;
 
     do {
       if (pile == 0 || XxY_Y (sxndlig.piles, pile) != *pclim)
-	return SXFALSE;
+	return false;
 
       pile = XxY_X (sxndlig.piles, pile);
     } while (sxndlig.pprdct_bot < --pclim);
 
-    return SXTRUE;
+    return true;
 }
 
 static int
@@ -520,7 +516,7 @@ do_action_prdct (old_pile)
 
 
 
-static SXBOOLEAN
+static bool
 perform_action_prdct (main_trans)
     int	main_trans;
 {
@@ -528,7 +524,7 @@ perform_action_prdct (main_trans)
     /* struct aux_trans2attr	*pt; */
     struct main_trans2attr	*pm;
     struct object2attr		*po;
-    SXBOOLEAN			ret_val = SXFALSE;
+    bool			ret_val = false;
 
 #ifdef EBUG
     if (main_trans == 0)
@@ -539,14 +535,14 @@ perform_action_prdct (main_trans)
     pm = sxndlig.main_trans2attr + main_trans;
 
     if ((pm->temp = do_action_prdct (pm->pile)) != SET_NIL)
-	ret_val = SXTRUE;
+	ret_val = true;
 
     if (pm->sigma & LIG_80) {
 	XxY_Xforeach (sxndlig.object, main_trans, object) {
 	    po = sxndlig.object2attr + object;
 
 	    if ((po->temp = do_action_prdct (po->pile)) != SET_NIL)
-		ret_val = SXTRUE;
+		ret_val = true;
 	}
     }
 
@@ -557,14 +553,14 @@ perform_action_prdct (main_trans)
 	    pt = sxndlig.aux_trans2attr + aux_trans;
 
 	    if ((pt->temp = do_action_prdct (pt->pile)) != SET_NIL)
-		ret_val = SXTRUE;
+		ret_val = true;
 
 	    if (pt->sigma & LIG_80) {
 		XxY_Xforeach (sxndlig.object, -aux_trans, object) {
 		    po = sxndlig.object2attr + object;
 
 		    if ((po->temp = do_action_prdct (po->pile)) != SET_NIL)
-			ret_val = SXTRUE;
+			ret_val = true;
 		}
 	    }
 	}
@@ -574,14 +570,14 @@ perform_action_prdct (main_trans)
     return ret_val;
 }
 
-static SXBOOLEAN
+static bool
 REC_perform_action_prdct (main_trans)
     int	main_trans;
 {
     int				rec;
     struct main_trans2attr	*pm;
     struct recognizer2attr	*pr;
-    SXBOOLEAN			ret_val = SXFALSE;
+    bool			ret_val = false;
 
 #ifdef EBUG
     if (main_trans == 0)
@@ -595,7 +591,7 @@ REC_perform_action_prdct (main_trans)
 	pm->temp = SET_NIL;
     else
 	if ((pm->temp = do_action_prdct (pm->pile & LIG_7F)) != SET_NIL)
-	    ret_val = SXTRUE;
+	    ret_val = true;
 
     if (pm->pile & LIG_80) {
 	/* Il y a des piles auxiliaires */
@@ -603,7 +599,7 @@ REC_perform_action_prdct (main_trans)
 	    pr = sxndlig.recognizer2attr + rec;
 
 	    if ((pr->temp = do_action_prdct (XxY_Y (sxndlig.recognizer, rec))) != SET_NIL)
-		ret_val = SXTRUE;
+		ret_val = true;
 	}
     }
 
@@ -611,13 +607,13 @@ REC_perform_action_prdct (main_trans)
 }
 
 
-static SXBOOLEAN
+static bool
 walk_paths (bot, level, f)
     int bot, level;
-    SXBOOLEAN	(*f)();
+    bool	(*f)();
 {
     int			arc, main_trans;
-    SXBOOLEAN		ret_val = SXFALSE;
+    bool		ret_val = false;
 
     if (level == 0) {
 	/* bot est le fils d'un object primaire, on calcule l'union des primaires
@@ -641,7 +637,7 @@ walk_paths (bot, level, f)
 }
 
 
-static SXBOOLEAN
+static bool
 put_in_failed (main_trans)
     int main_trans;
 {
@@ -673,12 +669,12 @@ prdct_failed ()
    si cette valeur verifie l'action/predicat alors on relance une evaluation par
    le parser. */
 
-static SXBOOLEAN
+static bool
 perform_prdct ()
 {
     /* On effectue en une operation la composition parsact, parsprdct. */
     int		*pact_top, *pprdct_top;
-    SXBOOLEAN	ret_val;
+    bool	ret_val;
 
     /* On commence par verifier la compatibilite des push de l'action avec le
        predicat. */
@@ -688,7 +684,7 @@ perform_prdct ()
 	if ((sxndlig.pclim - sxndlig.pc) != 0)
 	  {
 	    prdct_failed ();
-	    return SXFALSE;
+	    return false;
 	  }
       }
     else
@@ -709,7 +705,7 @@ perform_prdct ()
 	  if (*pprdct_top-- != *pact_top--)
 	    {
 	      prdct_failed ();
-	      return SXFALSE;
+	      return false;
 	    }
 	}
 
@@ -718,13 +714,13 @@ perform_prdct ()
 	  /* longueur  incompatibles */)
 	{
 	  prdct_failed ();
-	  return SXFALSE;
+	  return false;
 	}
     }
 
     if (sxndlig.level < 0)
 	/* Le calcul de la pile initiale sera fait ds action_new_top. */
-	return SXTRUE;
+	return true;
 
     ret_val = sxndlig.is_paths ?
 	/* Primaire multiples */ walk_paths (sxndlig.bot, sxndlig.level,
@@ -793,7 +789,7 @@ execute_action (act_no, pile)
     return pile;
 }
 
-static SXBOOLEAN
+static bool
 execute_prdct (prdct_no, pile)
     int prdct_no, pile;
 {
@@ -818,16 +814,16 @@ execute_prdct (prdct_no, pile)
 
     if (pc == pclim)
       /* ( .. ) */
-      return SXTRUE;
+      return true;
 
     do {
       if (pile == 0 || XxY_Y (sxndlig.piles, pile) != *pclim)
-	return SXFALSE;
+	return false;
 
       pile = XxY_X (sxndlig.piles, pile);
     } while (pc < --pclim);
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -877,7 +873,7 @@ propagate (aux_trans, sigma, pile)
 {
     int				main_trans, dependancy, prev_trans, new_object, new_pile, new_sigma, new_new_sigma, prev_symb;
     struct dependancies2attr	*pattr;
-    SXBOOLEAN			start = SXTRUE, is_secondary;
+    bool			start = true, is_secondary;
 #if 0
     int		 prev_main_trans, prev_main_symb, main_symbol;
 #endif
@@ -902,7 +898,7 @@ propagate (aux_trans, sigma, pile)
 
 	if (execute_prdct (pattr->prdct_no, new_pile)) {
 	    if (start) {
-		start = SXFALSE;
+		start = false;
 
 #if 0
 		if (aux_trans < 0) {
@@ -1045,7 +1041,7 @@ install_attr (old_sigma, new_pile)
     int	old_sigma, new_pile;
 {
     int				new_sigma, new_object;
-    SXBOOLEAN			is_secondary;
+    bool			is_secondary;
     struct main_trans2attr	*pm;
     /* struct aux_trans2attr	*pt; */
 #if 0
@@ -1168,7 +1164,7 @@ REC_install_attr (new_pile)
 
 
 
-static SXBOOLEAN
+static bool
 use_action_prdct (main_trans)
     int	main_trans;
 {
@@ -1176,7 +1172,7 @@ use_action_prdct (main_trans)
     /* struct aux_trans2attr	*pt; */
     struct main_trans2attr	*pm;
     int				sigma, dependancy, object, pile;
-    SXBOOLEAN			is_old;
+    bool			is_old;
 #if 0
     int				aux_trans, main_symbol;
 #endif
@@ -1238,13 +1234,13 @@ use_action_prdct (main_trans)
     }
 #endif
 
-    return SXTRUE;
+    return true;
 }
 
 
 
 
-static SXBOOLEAN
+static bool
 REC_use_action_prdct (main_trans)
     int	main_trans;
 {
@@ -1252,7 +1248,7 @@ REC_use_action_prdct (main_trans)
     struct main_trans2attr	*pm;
     struct recognizer2attr	*pr;
     int				dependancy, rec;
-    SXBOOLEAN			is_old;
+    bool			is_old;
 
 #ifdef EBUG
     if (main_trans == 0)
@@ -1290,7 +1286,7 @@ REC_use_action_prdct (main_trans)
 	}
     }
 
-    return SXTRUE;
+    return true;
 }
 
 /* AXIOME: Si une aux_trans est reevaluee, aucun objet precedent ne peut disparaitre.
@@ -1314,7 +1310,7 @@ sxndlig_action_new_top (bot, new_top, symbol)
     /* Si new_top == 0, echec syntaxique. */
     /* Attention, il peut exister le meme "symbol" avec 2 "new_top" differents. */
     int				new_pile, *pc, main_trans;
-    SXBOOLEAN			is_last_main_trans;
+    bool			is_last_main_trans;
     struct main_trans2attr	*pm;
     /* struct aux_trans2attr	*pa; */
 #if 0
@@ -1508,14 +1504,14 @@ exploit_sigma (sigma)
 
 
 
-static SXBOOLEAN
+static bool
 search_in_suffix (lhs_symb, rhs_symb)
     int	lhs_symb, rhs_symb;
 {
-    /* Retourne SXTRUE ssi rhs_symb se trouve en RHS de l'une
+    /* Retourne true ssi rhs_symb se trouve en RHS de l'une
        des regles ayant lhs_symb en LHS. */
     int		rule_no, rhs, tnt;
-    SXBOOLEAN	found = SXFALSE;
+    bool	found = false;
 
     XxY_Xforeach (parse_stack.sf_rule, lhs_symb, rule_no) {
 	rhs = XxY_Y (parse_stack.sf_rule, rule_no);
@@ -1527,7 +1523,7 @@ search_in_suffix (lhs_symb, rhs_symb)
 	    if (tnt == rhs_symb) {
 		/* On l'a trouve' */
 		SXBA_1_bit (should_be_kept, rule_no);
-		found = SXTRUE;
+		found = true;
 		break;
 	    }
 
@@ -1541,7 +1537,7 @@ search_in_suffix (lhs_symb, rhs_symb)
 	    /* On l'explore recursivement */
 	    if (search_in_suffix (tnt, rhs_symb)) {
 		SXBA_1_bit (should_be_kept, rule_no);
-		found = SXTRUE;
+		found = true;
 	    }
 	}
     }
@@ -1950,9 +1946,9 @@ int sxndligparsact (which, arg)
 	return 0;
 
     case SXINIT:
-	sxplocals.mode.with_do_undo = SXTRUE;
+	sxplocals.mode.with_do_undo = true;
 	XxY_clear (&sxndlig.main_trans);
-	sxndlig.is_paths = SXFALSE;
+	sxndlig.is_paths = false;
 	sxndlig.last_main_symb = 0;
 
 	(*sxndlig_common.code.parsact) (which, arg);
@@ -1993,10 +1989,10 @@ int sxndligparsact (which, arg)
 			return (*sxndlig_common.code.parsact) (SXPREDICATE, post_prdct);
 		}
 
-		return SXTRUE;
+		return true;
 	    }
 
-	    return SXFALSE;
+	    return false;
 	}
 	else
 	    return (*sxndlig_common.code.parsact) (which, act_no);

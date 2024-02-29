@@ -26,11 +26,7 @@
 /* 14-12-90 14:30 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-#define WHAT	"@(#)earley.c	- SYNTAX [unix] - 7 juin 1991"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+char WHAT[] = "@(#)earley.c	- SYNTAX [unix] - 7 juin 1991";
 
 static char	ME [] = "earley";
 
@@ -42,11 +38,11 @@ static char	ME [] = "earley";
 #include "RLR.h"
 
 
-extern SXBOOLEAN	is_t_in_first ();
-extern SXBOOLEAN	earley_parse ();
-extern SXBOOLEAN	check_real_conformity ();
-extern SXBOOLEAN	check_level_conformity ();
-extern SXBOOLEAN	make_a_quad ();
+extern bool	is_t_in_first ();
+extern bool	earley_parse ();
+extern bool	check_real_conformity ();
+extern bool	check_level_conformity ();
+extern bool	make_a_quad ();
 
 /* Appeler earley en // avec le calcul de LA. Ca permet de reutiliser les ensembles d'items
    calcules sur les prefixes communs des chaines de pre-vision. */
@@ -92,16 +88,16 @@ static int		LA_init, LA_cur, LA_final;
 static int		*parse_stack;
 
 static int		*EISL_check_stack;
-static SXBOOLEAN		make_a_quad_has_been_called;
+static bool		make_a_quad_has_been_called;
 
 
-static SXVOID	oflw_EI (old_size, new_size)
+static void	oflw_EI (old_size, new_size)
     int		old_size, new_size;
 {
     EI_set = sxba_resize (EI_set, new_size + 1);
 }
 
-static SXVOID EISL_stack_sature ()
+static void EISL_stack_sature ()
 {
     register int new_size, old_size;
 
@@ -115,17 +111,17 @@ static SXVOID EISL_stack_sature ()
 	EISL_check_stack [new_size--] = 0;
 }
 
-SXBOOLEAN ttrue (item, LA_ref, is_prefixe)
+bool ttrue (item, LA_ref, is_prefixe)
     int		item, LA_ref;
-    SXBOOLEAN	is_prefixe;
+    bool	is_prefixe;
 {
     /* Si is_prefixe alors item : A -> alpha .B beta et
        la reconnaissance s'est arretee sur un prefixe strict de B et
        LA_ref designe le prefixe du look-ahead reconnu avant B. */
-    return SXTRUE;
+    return true;
 }
 
-static SXVOID earley_alloc (l)
+static void earley_alloc (l)
     int l;
 {
     if (EI_set == NULL) {
@@ -161,7 +157,7 @@ static SXVOID earley_alloc (l)
     }
 }
 
-SXVOID earley_free ()
+void earley_free ()
 {
     if (EI_set != NULL) {
 	sxfree (EISL_stack);
@@ -184,7 +180,7 @@ SXVOID earley_free ()
 
 
 	
-static SXBOOLEAN check_item (item)
+static bool check_item (item)
     int item;
 {
     /* On s'apprete a mettre un item a la earley qui contient l'item LR(0) "item"
@@ -192,14 +188,14 @@ static SXBOOLEAN check_item (item)
        Si cet item a deja ete mis => OK
        sinon si next_t est dans FIRST1 (beta) et un prefixe de LA est un prefixe
        d'une phrase de beta => OK. */
-    register SXBOOLEAN	result;
+    register bool	result;
     register SXBA	set;
 
     if (SXBA_bit_is_set (item_set, item))
-	return SXTRUE;
+	return true;
 
     if (SXBA_bit_is_set (not_item_set, item))
-	return SXFALSE;
+	return false;
 
     if (result = (bnf_ag.WS_INDPRO [item].lispro == next_t && check_level_conformity (item, LA_cur - LA_init + 1) ||
 		  SXBA_bit_is_set (bnf_ag.NULLABLE, item) ||
@@ -218,7 +214,7 @@ static SXBOOLEAN check_item (item)
 
 static int ei_put (item, d, return_value_needed)
     int	item, d;
-    SXBOOLEAN	return_value_needed;
+    bool	return_value_needed;
 {
     int id, x;
 
@@ -243,12 +239,12 @@ static int ei_put (item, d, return_value_needed)
 
 
 
-static SXBOOLEAN trans (t)
+static bool trans (t)
     int t;
 {
     register int	id, x, item;
     int			z, lim;
-    SXBOOLEAN		not_empty = SXFALSE;
+    bool		not_empty = false;
 
     lim = EISL_disp [list_elem_nb++];
     x = EISL_stack_top;
@@ -259,8 +255,8 @@ static SXBOOLEAN trans (t)
 	item = XxY_X (EI_hd, id);
 
 	if (bnf_ag.WS_INDPRO [item].lispro == t /* && check_item (item + 1) semble inutile */) {
-	    z = ei_put (item + 1, XxY_Y (EI_hd, id), SXTRUE);
-	    not_empty = SXTRUE;
+	    z = ei_put (item + 1, XxY_Y (EI_hd, id), true);
+	    not_empty = true;
 	    /* Conservation de "d" ds les transitions terminales. */
 	    XxY_set (&left_brother_hd, z, x, &unused);
 	}
@@ -272,14 +268,14 @@ static SXBOOLEAN trans (t)
 
 
 
-static SXBOOLEAN new_EI (state, item)
+static bool new_EI (state, item)
     int state, item;
 {
     /* item : lhs -> . gamma dans q */
     /* next_t et zi sont positionnes par l'appelant */
     register int	q, n, q1, z;
     int			d;
-    SXBOOLEAN		checked;
+    bool		checked;
 
     q = state > 0 ? state : XH_list_elem (*stack_hd, -state);
 
@@ -296,17 +292,17 @@ static SXBOOLEAN new_EI (state, item)
 	    check_item (item + 1)) {
 	    /* d = (item, state) */
 	    XxY_set (&EI_hd, item, state, &d);
-	    z = ei_put (item + 1, -d, SXTRUE);
+	    z = ei_put (item + 1, -d, true);
 	    XxY_set (&left_brother_hd, z, 0, &unused); /* bidon */
 	    XxY_set (&right_son_hd, z, zi, &unused);
 	}
     }
 	
-    return SXFALSE;
+    return false;
 }
     
     
-static SXBOOLEAN prev_state (state, item)
+static bool prev_state (state, item)
     int		state, item;
 {
     /* Si state est >0, c'est un etat du LR(0) sinon -state designe dans stack_hd
@@ -314,7 +310,7 @@ static SXBOOLEAN prev_state (state, item)
        predecesseurs. */
     /* item : A -> alpha . beta est dans state.
        Appelle la fonction f pour chaque etat q tel que goto*(q, alpha) = state.
-       new_EI a la possibilite d'interrompre le parcourt en retournant SXTRUE */
+       new_EI a la possibilite d'interrompre le parcourt en retournant true */
     register int	x, cur_state, pred_state, pred_BS2_state;
     int			indice;
 
@@ -324,7 +320,7 @@ static SXBOOLEAN prev_state (state, item)
 	/* item du kernel: A -> alpha X . beta */
 	if (state < 0) {
 	    if ((indice = -state + 1) >= BS2_TOP)
-		return SXFALSE;
+		return false;
 
 	    pred_BS2_state = XH_list_elem (*stack_hd, indice);
 	}
@@ -335,22 +331,22 @@ static SXBOOLEAN prev_state (state, item)
 
 	    if (state > 0 || pred_BS2_state == pred_state) {
 		if (prev_state (state > 0 ? pred_state : -indice, item - 1))
-		    return SXTRUE;
+		    return true;
 
 		if (state < 0)
 		    /* BS2 represente un chemin unique => return dans tous les cas */
-		    return SXFALSE; /* valeur retournee par l'appel precedent de prev_state */
+		    return false; /* valeur retournee par l'appel precedent de prev_state */
 	    }
 	}
     }
     else /* item de la fermeture: A -> . beta */
 	return new_EI (state, item);
 
-    return SXFALSE;
+    return false;
 }
 
 
-static SXBOOLEAN check_bottom (d)
+static bool check_bottom (d)
     int d;
 {
     /* d est un couple (item, q) */
@@ -362,17 +358,17 @@ static SXBOOLEAN check_bottom (d)
 	   pour le niveau courant de look_ahead. */
 	return check_bot_state_conformity (q, LA_cur - LA_init + 1);
 
-    return SXTRUE;
+    return true;
 }
 
-static SXVOID closure ()
+static void closure ()
 {
     register int	id, x, item, y;
     int			xnt, lim, q1, d, z;
-    SXBOOLEAN		hard_case;
+    bool		hard_case;
     
     sxba_empty (xnt_set);
-    hard_case = SXFALSE;
+    hard_case = false;
     
     for (x = EISL_disp [list_elem_nb]; x < EISL_stack_top; x++) {
 	id = EISL_stack [x].id;
@@ -382,11 +378,11 @@ static SXVOID closure ()
 	if ((xnt = bnf_ag.WS_INDPRO [item].lispro) > 0) {
 	    /* item : lhs -> alpha . xnt beta */
 	    if (SXBA_bit_is_set (bnf_ag.BVIDE, xnt) && check_item (item + 1)) {
-		z = ei_put (item + 1, d, SXTRUE);
+		z = ei_put (item + 1, d, true);
 		XxY_set (&left_brother_hd, z, x, &unused);
 		/* impossible de remplir tout de suite "right_son_hd" car on
 		   n'a pas traite les "xnt -> gamma." (gamma =>* epsilon). */
-		hard_case = SXTRUE;
+		hard_case = true;
 		SS_push (left_stack, z);
 	    }
 	    
@@ -399,7 +395,7 @@ static SXVOID closure ()
 		       First1 (gamma). */
 		    
 		    if (check_item (item))
-			ei_put (item, list_elem_nb, SXFALSE);
+			ei_put (item, list_elem_nb, false);
 		}
 	    }
 	}
@@ -427,7 +423,7 @@ static SXVOID closure ()
 			item = XxY_X (EI_hd, id);
 			
 			if (xnt == bnf_ag.WS_INDPRO [item].lispro && check_item (item + 1)) {
-			    z = ei_put (item + 1, XxY_Y (EI_hd, id), SXTRUE);
+			    z = ei_put (item + 1, XxY_Y (EI_hd, id), true);
 			    XxY_set (&left_brother_hd, z, y, &unused);
 			    XxY_set (&right_son_hd, z, x, &unused);
 			}
@@ -471,7 +467,7 @@ static SXVOID closure ()
 
 
 
-static SXBOOLEAN left (x)
+static bool left (x)
     int x;
 {
     register int	y, z, i, xnt;
@@ -479,7 +475,7 @@ static SXBOOLEAN left (x)
 
     if (x == 1) {
 	/* "Remontee" correcte, on vient d'atteindre l'item initial. */
-	make_a_quad_has_been_called = SXTRUE;
+	make_a_quad_has_been_called = true;
 	return make_a_quad (ETAT_CHARNIERE, ITEM_CHARNIERE, items_stack);
     }
     else if ((xnt = bnf_ag.WS_INDPRO [(i = XxY_X (EI_hd, EISL_stack [x].id)) - 1].lispro) == 0) {
@@ -487,13 +483,13 @@ static SXBOOLEAN left (x)
 	x = SS_pop (left_stack);
 
 	if (left (x))
-	    return SXTRUE;
+	    return true;
 
 	SS_push (left_stack, x);
     } else if (xnt < 0) {
 	XxY_Xforeach (left_brother_hd, x, y) {
 	    if (left (XxY_Y (left_brother_hd, y)))
-		return SXTRUE;
+		return true;
 	}
     }
     else /* xnt > 0 */ {
@@ -511,7 +507,7 @@ static SXBOOLEAN left (x)
 		    SS_push (items_stack, i);
 		    
 		    if (left (z))
-			return SXTRUE;
+			return true;
 		    
 		    SS_decr (items_stack);
 		}
@@ -521,13 +517,13 @@ static SXBOOLEAN left (x)
 	}
     }
     
-    return SXFALSE;
+    return false;
 }
 
 
 
 
-static SXVOID build_parse_stack (x)
+static void build_parse_stack (x)
     int x;
 {
     register int	item, z, q1;
@@ -566,13 +562,13 @@ static SXVOID build_parse_stack (x)
 }
 
 
-static SXBOOLEAN up (x)
+static bool up (x)
     register int x;
 {
     /* x est un index dans EISL_stack. */
     register int	id, item, y, nt;
     int			d, bot, top, push_nb;
-    SXBOOLEAN		ret_val;
+    bool		ret_val;
 
     id = EISL_stack [x].id;
     d = XxY_Y (EI_hd, id);
@@ -583,7 +579,7 @@ static SXBOOLEAN up (x)
 	/* On remonte a peut pres au plus court, dans le meme etat */
 	top = EISL_disp [d + 1];
 	bot = EISL_disp [d];
-	ret_val = SXFALSE;
+	ret_val = false;
 
 	if (bnf_ag.WS_INDPRO [item - 1].lispro == 0) {
 	    /* item : nt -> . gamma */
@@ -610,7 +606,7 @@ static SXBOOLEAN up (x)
 	    if (bnf_ag.WS_INDPRO [XxY_X (EI_hd, EISL_stack [y].id)].lispro == nt &&
 		EISL_check_stack [y] == 0) {
 		if (up (y)) {
-		    ret_val =  SXTRUE;
+		    ret_val =  true;
 		    break;
 		}
 	    }
@@ -627,8 +623,8 @@ static SXBOOLEAN up (x)
     build_parse_stack (x);
 
     if (!check_real_conformity (parse_stack))
-    /* Si ce n'est pas une "bonne" parse_stack => return SXFALSE */
-	return SXFALSE;
+    /* Si ce n'est pas une "bonne" parse_stack => return false */
+	return false;
 
     SS_clear_ss (items_stack);
     SS_clear (left_stack);
@@ -646,7 +642,7 @@ static SXBOOLEAN up (x)
 }
 
 
-SXBOOLEAN earley (item, q, LA, LA_lgth, hd, BS2)
+bool earley (item, q, LA, LA_lgth, hd, BS2)
     int 	item, q, LA, LA_lgth, BS2;
     XH_header	*hd;
 {
@@ -655,7 +651,7 @@ SXBOOLEAN earley (item, q, LA, LA_lgth, hd, BS2)
     register int	t, x, i, id;
     int			d, iq;
 
-    make_a_quad_has_been_called = SXFALSE;
+    make_a_quad_has_been_called = false;
     stack_hd = hd;
     LA_length = LA_lgth;
     earley_alloc (LA_length);
@@ -667,7 +663,7 @@ SXBOOLEAN earley (item, q, LA, LA_lgth, hd, BS2)
     sxba_empty (not_item_set);
     XxY_set (&EI_hd, item, BS2 == 0 ? q : -XH_X (*stack_hd, BS2), &d);
     BS2_TOP = BS2 == 0 ? 0 : XH_X (*stack_hd, BS2 + 1);
-    ei_put (item, -d, SXFALSE);
+    ei_put (item, -d, false);
     next_t = XH_list_elem (*stack_hd, LA_init = XH_X (*stack_hd, LA));
     LA_cur = LA_init;
     LA_final = LA_init + LA_length;

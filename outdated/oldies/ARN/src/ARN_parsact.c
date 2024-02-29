@@ -27,11 +27,7 @@
 /* 31-05-95 10:50 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-#define WHAT	"@(#)ARN_parsact.c	- SYNTAX [unix] - Mer 31 Mai 1995 10:50:06"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+char WHAT[] = "@(#)ARN_parsact.c	- SYNTAX [unix] - Mer 31 Mai 1995 10:50:06"
 
 static char	ME [] = "ARN_parsact";
 
@@ -361,7 +357,7 @@ int ARN_parsact (which, arg)
 	return 0;
 
     case SXINIT:
-	sxplocals.mode.with_do_undo = SXTRUE;
+	sxplocals.mode.with_do_undo = true;
 
 	return 0;
 

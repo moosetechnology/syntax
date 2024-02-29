@@ -73,10 +73,7 @@ typedef struct {
 
 
 static void
-pool_alloc (ppool, name, pool_size, elem_size)
-    pool_header	*ppool;
-    char	*name;
-    int 	pool_size, elem_size;
+pool_alloc (pool_header *ppool, char *name, int  pool_size, int elem_size)
 {
     ppool->name = name;
     ppool->hd_top = 0;
@@ -95,8 +92,7 @@ pool_alloc (ppool, name, pool_size, elem_size)
 
 
 static char*
-pool_oflw (ppool)
-    pool_header	*ppool;
+pool_oflw (pool_header	*ppool)
 {
     if (++ppool->hd_top >= ppool->hd_size)
 	ppool->hd = (char**) sxrealloc (ppool->hd, ppool->hd_size *= 2, sizeof (char*));
@@ -118,11 +114,10 @@ pool_oflw (ppool)
 
 
 static void
-pool_free (ppool)
-    pool_header	*ppool;
+pool_free (pool_header	*ppool)
 {
 #if EBUG
-    printf ("Pool %s: used_size = %i bytes, total_size = %i bytes\n",
+    printf ("Pool %s: used_size = %ld bytes, total_size = %ld bytes\n",
 	    ppool->name,
 	    (ppool->used_size + (ppool->cur_bot - ppool->hd [ppool->hd_top]))
 	     + (ppool->hd_top + 1) * sizeof (int),
@@ -145,12 +140,11 @@ struct LC0 {
 };
 
 struct for_parsact {
-    void	(*new_symbol) (),
-                (*Aij_pool_oflw) ();
-
-    SXBOOLEAN	(*action) (),
-    		(*prdct) (),
-                (*constraint) ();
+    void	(*new_symbol) (void);
+    void        (*Aij_pool_oflw) (SXINT, SXINT);
+    bool	(*action) (void);
+    bool	(*prdct) (void);
+    bool        (*constraint) (void);
 };
 
 
@@ -204,7 +198,7 @@ struct for_parsact {
 * @14 :len = S1.len + 1;
 * @15 : len = 0;
 
-* &1 SXFALSE <==> len > 30
+* &1 false <==> len > 30
 
 */
 
@@ -401,7 +395,6 @@ static int prolon [] = {
   117
 };
 
-
 static int lhs [] = 	{
 0,
 
@@ -447,7 +440,7 @@ static int lhs [] = 	{
 4
 };
 
-
+#if 0
 static int parsact [] = 	{
 -1,
 
@@ -492,6 +485,7 @@ static int parsact [] = 	{
 14,
 15
 };
+#endif
 
 static int NKshift [] = {0,
 /* RNA = 26 */
@@ -612,7 +606,6 @@ static int NKshift [] = {0,
 15
 };
 
-
 static struct LC0 LC0 [] ={
               /* 0 */ {0, 0},
 	      /* 1 */ {1, 26},
@@ -633,6 +626,7 @@ static int constraints [] = {-1,
 				 -1
 			 };
 
+#if 0
 static int nt2order [] = {0,
 			      1,
 			      4,
@@ -641,7 +635,7 @@ static int nt2order [] = {0,
 			      2,
 			      3
 			  };
-
+#endif
 static int order2nt [] = {0,
 			      1, /* "RNA" */
 			      5, /* "InternalLoop" */
@@ -660,8 +654,7 @@ static char	*ntstring [] = {"",
 				    "MultipleLoop"
 				};
 
-static int char2tok (c)
-    char c;
+static int char2tok (char c)
 {
     int tok;
 
@@ -800,7 +793,7 @@ typedef struct {
 } bag_header;
 
 
-static SXBOOLEAN		is_parser;
+static bool		is_parser;
 
 typedef struct {
   int			state;
@@ -857,7 +850,7 @@ struct spf /* shared_parse_forest */
     struct lhs
     {
 	int		prolon, reduc, next_lhs, init_prod;
-	SXBOOLEAN		is_erased;
+	bool		is_erased;
     } *lhs;
 };
 
@@ -867,7 +860,7 @@ static int		rhs_stack [rhs_lgth+1];
 
 static struct Aij_pool {
   int		A, i, j, first_lhs, first_rhs;
-  SXBOOLEAN	is_erased;
+  bool	is_erased;
 }			*Aij_pool;
 static int		Aij_top, Aij_size;
 
@@ -891,7 +884,7 @@ static bag_header	reduce_bag;
 
 
 static void
-grammar ()
+grammar (void)
 {
     /* On remplit INIT, NT2CHAIN et FIRST_1 */
     int		prod, state, X, Y, A, B, x, lim, t;
@@ -1025,15 +1018,16 @@ grammar ()
 static    struct chains2attr	*chains2attr;
 
 static  void
-chains_oflw (old_size, new_size)
-    int		old_size, new_size;
+chains_oflw (SXINT old_size, SXINT new_size)
 {
+    (void) old_size;
+    (void) new_size;
     chains2attr = (struct chains2attr*) sxrealloc (chains2attr, new_size+1, sizeof (struct chains2attr));
 }
 
 
 static void
-grammar2 ()
+grammar2 (void)
 {
     /* A chaque production simple r: A -> B on affecte un entier n(r) t.q.
        r1: A -> B et r2: B -> C => n(r1) < n(r2). */
@@ -1041,7 +1035,8 @@ grammar2 ()
     SXBA		chain_set, nb0;
     int			nb [ntmax + 1];
 
-    int			prod, x, A, B, AxB;
+    int			prod, x, A, B;
+    SXINT               AxB;
 
     XxY_alloc (&chains, "chains", prodmax, 1, 1, 0, chains_oflw,
 #ifdef EBUG
@@ -1117,7 +1112,7 @@ grammar2 ()
 }
 
 static void
-grammar_free ()
+grammar_free (void)
 {
     sxbm_free (INIT);
     sxbm_free (NT2CHAIN);
@@ -1128,8 +1123,7 @@ grammar_free ()
 
 
 static void
-OR (lhs_bits_array, rhs_bits_array)
-    SXBA	lhs_bits_array, rhs_bits_array;
+OR (SXBA lhs_bits_array, SXBA rhs_bits_array)
 {
     /* La memoisation de OR par
        if (XxY_set (&include_sets_hd, rhs_bits_array, lhs_bits_array, &dum))
@@ -1155,12 +1149,9 @@ OR (lhs_bits_array, rhs_bits_array)
 
 
 static void
-bag_alloc (pbag, name, size)
-    bag_header	*pbag;
-    char	*name;
-    int 	size;
+bag_alloc (bag_header *pbag, char *name, int size)
 {
-    SXBA_ELT	*ptr;
+    // SXBA_ELT	*ptr;
 
     pbag->name = name;
     pbag->hd_top = 0;
@@ -1181,9 +1172,7 @@ bag_alloc (pbag, name, size)
 
 
 static SXBA
-bag_get (pbag, size)
-    bag_header	*pbag;
-    int		size;
+bag_get (bag_header *pbag, int size)
 {
     int 	slice_nb = NBLONGS (size) + 1;
     SXBA	set;
@@ -1237,11 +1226,10 @@ bag_get (pbag, size)
 
 
 static void
-bag_free (pbag)
-    bag_header	*pbag;
+bag_free (bag_header *pbag)
 {
 #if EBUG
-    printf ("Bag %s: used_size = %i bytes, total_size = %i bytes\n",
+    printf ("Bag %s: used_size = %ld bytes, total_size = %ld bytes\n",
 	    pbag->name,
 	    (pbag->used_size > pbag->prev_used_size ? pbag->used_size : pbag->prev_used_size) *
 	    sizeof (SXBA_ELT) + (pbag->hd_high + 1) * sizeof (struct bag_disp_hd),
@@ -1254,11 +1242,10 @@ bag_free (pbag)
 
     sxfree (pbag->hd);
 }
-    
+
 
 static void
-bag_clear (pbag)
-    bag_header	*pbag;
+bag_clear (bag_header *pbag)
 {
     /* On suppose que les SXBA sont empty. */
     pbag->hd_top = 0;
@@ -1278,8 +1265,7 @@ bag_clear (pbag)
 
 
 static int
-set_symbol (A, i, j)
-    int A, i, j;
+set_symbol (int A, int i, int j)
 {
     struct Aij_pool	*ppool;
     int			old_size;
@@ -1315,8 +1301,7 @@ set_symbol (A, i, j)
 
 #if EBUG
 static void
-output_symb (symb)
-    int	   symb;
+output_symb (int symb)
 {
     struct Aij_pool	*ppool;
 
@@ -1333,8 +1318,7 @@ output_symb (symb)
 
 
 static void
-output_prod (prod)
-    int prod;
+output_prod (int prod)
 {
     int			x, symbol;
     struct lhs		*plhs;
@@ -1355,12 +1339,11 @@ output_prod (prod)
 }
 #endif
 
-
 static int
-set_rule (init_prod, top)
-    int init_prod, top;
+set_rule (int init_prod, int top)
 {
-    int		x, X, Xij, prdct_no, state;
+    int		x, X, Xij, state;
+    // int	prdct_no;
     int		Aik, k, A, i;
     struct lhs	*plhs;
     struct rhs	*prhs;
@@ -1420,7 +1403,7 @@ set_rule (init_prod, top)
     plhs->next_lhs = ppool->first_lhs;
     ppool->first_lhs = spf.G.lhs_top;
     plhs->init_prod = init_prod;
-    plhs->is_erased = SXFALSE;
+    plhs->is_erased = false;
 
     for (x = 1; x <= top; x++)
     {
@@ -1452,19 +1435,18 @@ set_rule (init_prod, top)
 }
 
 
-static SXBOOLEAN
-parse_tree (state, bot, top, j, l)
-    int bot, top, state, j, l;
+static bool
+parse_tree (int state, int bot, int top, int j, int l)
 {
     /* state =  A -> X1  Xh . X  Xp Xp+1
        bot = h+1
        top = p+1
        Cette procedure recursive genere toutes les split-chaines de "X ... Xp"
        qui s'etendent entre j et l et les range entre bot et top-1
-
        Quand c'est complet, appelle set_rule. */
-    int		X, Xjl, Xjk, k, prdct_no;
-    SXBOOLEAN	ret_val;
+    int		X, Xjl, Xjk, k;
+    // int		prdct_no;
+    bool	ret_val;
     int		*pcur, *ptop;
 
 #if EBUG
@@ -1499,7 +1481,7 @@ parse_tree (state, bot, top, j, l)
     }
     else
     {
-	ret_val = SXFALSE;
+	ret_val = false;
 
 	/* X \in N */
 	/* Xj = XxY_is_set (&Ai_hd, X, j); */
@@ -1536,15 +1518,14 @@ parse_tree (state, bot, top, j, l)
 }
 
 
-static SXBOOLEAN
-call_semact (A, i, k)
-    int A, i, k;
+static bool
+call_semact (int A, int i, int k)
 {
     /* Faux si le index_set retourne' n'est pas caracteristique des reductions. */
     /* il faudrait retourner un ensemble de p_uplets. A VOIR */
     int 		hd, d, j, X, Xjk, end, start, nb;
     struct reduce_list	*pred;
-    SXBOOLEAN		ret_val = SXFALSE;
+    bool		ret_val = false;
 
     rhs_stack [0] = RT [i].nt [A].Aij [k-i];
     nb = 0;
@@ -1556,7 +1537,7 @@ call_semact (A, i, k)
 	if (for_parsact.action == NULL ||
 	    (*for_parsact.action) (pred->prod, i, pred->index_set, k, nb)) {
 	    /* Il en reste */
-	    ret_val = SXTRUE;
+	    ret_val = true;
 
 	    start = prolon [pred->prod];
 	    end = prolon [pred->prod + 1] - 1;
@@ -1597,8 +1578,7 @@ call_semact (A, i, k)
 
 
 static void
-install (prod, i, j, k)
-    int prod, i, j, k;
+install (int prod, int i, int j, int k)
 {
     /* is_parser est true.
        i <= j < k
@@ -1639,20 +1619,19 @@ install (prod, i, j, k)
     SXBA_1_bit (pr->index_set, j-i);
 }
 
-
 static void
-reduce (A, j, i)
-    int A, j, i;
+reduce (int A, int j, int i)
 {
     /* Toutes les reductions vers Aj ont ete effectuees
        Cas du reconnaisseur : on fait le "shift" sur A dans la liste "j".
        cas du parser : en plus, on fait les reductions eventuelles B -> alpha Aji */
-    sis		*bot, *top, *pbot, *ptop;
-    int		state, X, Y, B, order, k, prod;
+    sis		*bot, *top;
+    // sis	*pbot, *ptop;
+    int		state, Y, B, k, prod;
     SXBA	index_set, index_set2;
-
-    int 	Aji, Bji, Bki, prdct_no, start, end, constraint_no;
-    SXBOOLEAN	constraint_checked;
+    // int 	X, order, start, end;
+    int 	Aji, Bji, Bki, prdct_no, constraint_no;
+    bool	constraint_checked;
 
     if (is_parser)
     {
@@ -1674,7 +1653,7 @@ reduce (A, j, i)
 	    }
 	    else
 		if (!constraint_checked)
-		    Aij_pool [Aji].is_erased = SXTRUE;
+		    Aij_pool [Aji].is_erased = true;
 	}
 
 	if (!constraint_checked)
@@ -1772,8 +1751,7 @@ reduce (A, j, i)
 
 
 static void
-scan_reduce (i)
-    register int 	i;
+scan_reduce (int i)
 {
     static SXBA		nt_hd [ntmax+1];
 
@@ -1816,18 +1794,17 @@ scan_reduce (i)
 
 
 
-static SXBOOLEAN
-complete (i)
-    int i;
+static bool
+complete (int i)
 {
     static int	shift_state_stack [ntmax + 1] [statemax + 1];
     static int	NT_stack [ntmax+1];
-
-    int		x, state, next_state, X, Y, A, B, j, prdct_no, prod, Aik, start, end;
+    int		x, state, next_state, X, Y, A, j, prdct_no, prod, Aik;
+    // int	B, start, end;
     SXBA	index_set;
-    SXBOOLEAN	is_tok, is_scan_reduce = SXFALSE;
-
-    sis		*psis, *bot, *top;
+    bool	is_tok, is_scan_reduce = false;
+    sis		*psis;
+    // sis	*bot, *top;
     int		*sss;
     /* Le look-ahead est verifie pour tous les state de T1.state_set. */
 
@@ -1864,7 +1841,7 @@ complete (i)
 		 for_parsact.prdct == NULL ||
 		 (*for_parsact.prdct) (-i-1, prdct_no)))
 	    {
-		is_tok = SXTRUE;
+		is_tok = true;
 		Y = lispro [next_state];
 		index_set = T1.index_sets [state];
 
@@ -1877,7 +1854,7 @@ complete (i)
 		else
 		{
 		    /* A -> alpha X . ai+1 */
-		    is_scan_reduce = SXTRUE;
+		    is_scan_reduce = true;
 		    A = lhs [prod = prolis [state]];
 
 		    OR (ntXindex_set [A], index_set);
@@ -1940,7 +1917,7 @@ complete (i)
 		     for_parsact.prdct == NULL ||
 		     (*for_parsact.prdct) (-i-1, prdct_no)))
 		{
-		    is_tok = SXTRUE;
+		    is_tok = true;
 		    Y = lispro [next_state];
 
 		    if (Y != 0)
@@ -1956,7 +1933,7 @@ complete (i)
 		    else
 		    {
 			/* A -> . ai+1, i */
-			is_scan_reduce = SXTRUE;
+			is_scan_reduce = true;
 			A = lhs [prod = prolis [state]];
 
 			SXBA_1_bit (ntXindex_set [A], i);
@@ -2029,11 +2006,11 @@ complete (i)
 
 
 static int
-recognize ()
+recognize (void)
 {
     int			i;
     struct working_item_set	T0;
-    SXBOOLEAN		is_in_LG;
+    bool		is_in_LG;
 
     /* initial_state ne vaut pas toujours 1 (cas ou L(G)={epsilon}). */
 
@@ -2081,7 +2058,7 @@ recognize ()
 
 #if EBUG
 static void
-output_spf ()
+output_spf (void)
 {
     int		prod;
 
@@ -2106,16 +2083,15 @@ output_spf ()
 #endif	
 
 
-erase_elementary_tree (elementary_tree)
-    int elementary_tree;
+erase_elementary_tree (int elementary_tree)
 {
-    int		lhs_symb;
+    // int		lhs_symb;
     int		*p, *q;
     struct lhs	*pet = spf.lhs+elementary_tree;
 
     if (!pet->is_erased)
     {
-	pet->is_erased = SXTRUE;
+	pet->is_erased = true;
 
 	for (q = p = &(Aij_pool [pet->reduc].first_lhs); *p != 0; p = &(spf.lhs [*p].next_lhs))
 	{
@@ -2145,7 +2121,7 @@ erase_elementary_tree (elementary_tree)
 
 
 static void
-useless_symbol_elimination ()
+useless_symbol_elimination (void)
 {
     int		*symbol_stack;
     SXBA	Aij_set;
@@ -2192,7 +2168,7 @@ useless_symbol_elimination ()
 	for (prod = Aij_pool [symbol].first_lhs; prod != 0; prod = spf.lhs [prod].next_lhs)
 	{
 	    /* prod est inaccessible */
-	    spf.lhs [prod].is_erased = SXTRUE;
+	    spf.lhs [prod].is_erased = true;
 	}
 
 	Aij_pool [symbol].first_lhs = Aij_pool [symbol].first_rhs = 0;
@@ -2213,22 +2189,22 @@ static struct ARN_sem	*ARN_sem;
 
 
 static void
-ARN_sem_oflw (old_size, new_size)
-    int old_size, new_size;
+ARN_sem_oflw (SXINT old_size, SXINT new_size)
 {
+    (void) old_size;
+    (void) new_size;
     ARN_sem = (struct ARN_sem*) sxrealloc (ARN_sem, new_size+1, sizeof (struct ARN_sem));
 }
 
 
 static void
-ARN_new_symbol (new_symbol)
-    int new_symbol;
+ARN_new_symbol (int new_symbol)
 {
     ARN_sem [new_symbol].elementary_tree = ARN_sem [new_symbol].len = 0;
 }
 
 #if 0
-static SXBOOLEAN
+static bool
 ARN_parsact (rhs_stack, top, elementary_tree, init_prod)
     int *rhs_stack, top, elementary_tree, init_prod;
 {
@@ -2251,7 +2227,7 @@ ARN_parsact (rhs_stack, top, elementary_tree, init_prod)
     case 11:
     case 12:
     case 13:
-	return SXTRUE;
+	return true;
        
     case 7:
 	new_len = 1;
@@ -2265,10 +2241,10 @@ ARN_parsact (rhs_stack, top, elementary_tree, init_prod)
 
     case 14:
 	psem->len = ARN_sem [rhs_stack [1]].len+1; 
-	return SXTRUE;
+	return true;
     case 15:
 	psem->len = 1;
-	return SXTRUE;
+	return true;
 
     default:
 	fprintf (sxstderr, "The function \"ARN_parsact\" is out of date with respect to its specification.\n");
@@ -2285,7 +2261,7 @@ ARN_parsact (rhs_stack, top, elementary_tree, init_prod)
 	if (psem->len <= new_len)
 	{
 	    /* On conserve la precedente */
-	    return SXFALSE;
+	    return false;
 	    /* erase_elementary_tree (elementary_tree); n'a pas (encore) ete entre'! */
 	}
     else
@@ -2295,22 +2271,20 @@ ARN_parsact (rhs_stack, top, elementary_tree, init_prod)
 	psem->len = new_len;
     }
 
-    return SXTRUE;
+    return true;
 }
 #endif
 
-static SXBOOLEAN
-ARN_parsact (init_prod, i, j_set, k, nb)
-    int 	init_prod, i, k, nb;
-    SXBA	j_set;
+static bool
+ARN_parsact (int init_prod, int i, SXBA j_set, int k, int nb)
 {
     /* A FAIRE */
     /* Pour l'instant, on conserve un seul element ds j_set */
-    int d, prev_d;
-
+    int d;
+    // int prev_d;
     if (nb > 1) {
 	sxba_empty (j_set);
-	return SXFALSE;
+	return false;
     }
 
     d = sxba_scan (j_set, -1);
@@ -2322,13 +2296,12 @@ ARN_parsact (init_prod, i, j_set, k, nb)
 #endif
 
     SXBA_1_bit (j_set, d);
-    return SXTRUE;
+    return true;
 }
 
-
-static SXBOOLEAN
-ARN_constraint (symbol, prdct_no)
-    int symbol, prdct_no;
+#if 0
+static bool
+ARN_constraint (int symbol, int prdct_no)
 {
     if (prdct_no == 1)
     {
@@ -2340,15 +2313,13 @@ ARN_constraint (symbol, prdct_no)
 	abort ();
     }
 }
+#endif
 
-
-main (argc, argv)
-    int		argc;
-    char	*argv [];
+int main (int argc, char *argv [])
 {
-    int l, t, *tok, nt;
+    int l, t, *tok;
+    // int nt;
     char	*s, c;
-
     sxstdout = stdout, sxstderr = stderr;
 
     if (argc != 3)
@@ -2362,10 +2333,10 @@ main (argc, argv)
     c = argv [1] [0];
 
     if (c == 'R' || c == 'r')
-	is_parser = SXFALSE;
+	is_parser = false;
     else
 	if (c == 'P' || c == 'p')
-	    is_parser = SXTRUE;
+	    is_parser = true;
     else
     {
 	printf (Usage, ME);
@@ -2388,7 +2359,7 @@ main (argc, argv)
 	if ((t = char2tok (c)) == 0)
 	{
 	    printf ("\
-\t%s Lexical error at char #%i\n", ME, (TOK - tok) + 1);
+\t%s Lexical error at char #%ld\n", ME, (TOK - tok) + 1);
 	    return 1;
 	}
 

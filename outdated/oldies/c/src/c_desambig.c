@@ -25,7 +25,7 @@ static char ME [] = "Typedef resolution module";
 static int	current_block_level, new_block_level, *levels_stack, *id_stack;
 
 static int	name_def_kind, sub_tree_root;
-static SXBOOLEAN	is_a_typedef_spec, is_a_function_definition, is_a_function_body,
+static bool	is_a_typedef_spec, is_a_function_definition, is_a_function_body,
     is_a_typedef_struct;
 
 
@@ -35,7 +35,7 @@ static int	*id_kind;
 
 static struct attributes {
     int		name_def_kind, sub_tree_root;
-    SXBOOLEAN	is_a_function_body;
+    bool	is_a_function_body;
 } *attributes;
 static int attributes_size, attributes_top;
 
@@ -99,7 +99,7 @@ static void get_attributes ()
     is_a_function_body = pattr->is_a_function_body;
 }
 
-static SXVOID lgjmp ()
+static void lgjmp ()
 {
     /* Abandon du sous-arbre (hook) courant.
        On supprime les id qui y ont ete declares.
@@ -108,7 +108,7 @@ static SXVOID lgjmp ()
     current_block_level = SS_pop (id_stack);
 
     while (!SS_is_empty (id_stack)) {
-	sxsymbol_table_erase (identifiers, new_block_level, SXTRUE);
+	sxsymbol_table_erase (identifiers, new_block_level, true);
 	new_block_level = current_block_level;
 	current_block_level = SS_pop (id_stack);
     }
@@ -124,7 +124,7 @@ static SXVOID lgjmp ()
 
 
 
-static SXVOID pass_inherited ()
+static void pass_inherited ()
 {
     int 		reduce_nb, father_rule, visited_rule;
     int 		id, i, son, kind, lhs_item;
@@ -166,7 +166,7 @@ static SXVOID pass_inherited ()
 	switch (reduce_nb) {
 
 	case 85: /* <storage-class-specifier> = typedef ; */
-	    is_a_typedef_spec = SXTRUE;
+	    is_a_typedef_spec = true;
 	    break;
 
 	case 101: /* <struct-or-union-specifier> = <struct-or-union> <d-identifier> "{" <struct-declaration+> "}" ; */
@@ -209,7 +209,7 @@ static SXVOID pass_inherited ()
 	case 109: /* <struct-declaration> = <specifier-qualifier+-1> <struct-declarator+> ";" ; */
 	    switch (NDVISITED_POSITION) {
 	    case 1:
-		is_a_typedef_spec = SXFALSE;
+		is_a_typedef_spec = false;
 		break;
 
 	    case 2:
@@ -217,7 +217,7 @@ static SXVOID pass_inherited ()
 		break;
 
 	    case 3:
-		is_a_typedef_spec = SXFALSE;
+		is_a_typedef_spec = false;
 		break;
 	    }
 
@@ -258,15 +258,15 @@ static SXVOID pass_inherited ()
 	    if (NDVISITED_POSITION == 1) {
 		enter_block (++new_block_level);
 		sxsymbol_table_open (identifiers, current_block_level);
-		is_a_typedef_spec = SXFALSE;
+		is_a_typedef_spec = false;
 	    }
 	    else if (NDVISITED_POSITION == 3) {
 		if (!is_a_function_definition) {
-		    sxsymbol_table_close (identifiers, current_block_level, SXTRUE);
+		    sxsymbol_table_close (identifiers, current_block_level, true);
 		    quit_block ();
 		}
 
-		is_a_typedef_spec = SXFALSE;
+		is_a_typedef_spec = false;
 	    }
 
 	    break;
@@ -278,7 +278,7 @@ static SXVOID pass_inherited ()
 	case 155: /* <parameter-declaration> = <declaration-specifiers-0> <[abstract-declarator]> ; */
 	case 156: /* <parameter-declaration> = <declaration-specifiers-1> <[abstract-declarator]> ; */
 	    if (NDVISITED_POSITION == 2) {
-		is_a_typedef_spec = SXFALSE;
+		is_a_typedef_spec = false;
 	    }
 
 	    break;
@@ -321,7 +321,7 @@ static SXVOID pass_inherited ()
 
 	    if (name_def_kind == ID_NAME) {
 		int x;
-		SXBOOLEAN is_ok;
+		bool is_ok;
 
 		atok = &(SXGET_TOKEN (-NDVISITED_SYMBOL));
 		is_ok = sxsymbol_table_put (&identifiers,
@@ -359,14 +359,14 @@ static SXVOID pass_inherited ()
 	case 190: /* <compound-statement> = "{" <declaration+> "}" ; */
 	    if (NDVISITED_POSITION == 1) {
 		if (is_a_function_body)
-		    is_a_function_body = SXFALSE;
+		    is_a_function_body = false;
 		else {
 		    enter_block (++new_block_level);
 		    sxsymbol_table_open (identifiers, current_block_level);
 		}
 	    }
 	    else if (NDVISITED_POSITION == 3) {
-		sxsymbol_table_close (identifiers, current_block_level, SXTRUE);
+		sxsymbol_table_close (identifiers, current_block_level, true);
 		quit_block ();
 	    }
 
@@ -375,14 +375,14 @@ static SXVOID pass_inherited ()
 	case 191: /* <compound-statement> = "{" "}" ; */
 	    if (NDVISITED_POSITION == 1) {
 		if (is_a_function_body)
-		    is_a_function_body = SXFALSE;
+		    is_a_function_body = false;
 		else {
 		    enter_block (++new_block_level);
 		    sxsymbol_table_open (identifiers, current_block_level);
 		}
 	    }
 	    else if (NDVISITED_POSITION == 2) {
-		sxsymbol_table_close (identifiers, current_block_level, SXTRUE);
+		sxsymbol_table_close (identifiers, current_block_level, true);
 		quit_block ();
 	    }
 
@@ -391,7 +391,7 @@ static SXVOID pass_inherited ()
 	case 194: /* <internal-declaration> = <declaration-specifiers-0> <init-declarator+> ";" ; */
 	case 195: /* <internal-declaration> = <declaration-specifiers-1> <init-declarator+> ";" ; */
 	    if (NDVISITED_POSITION == 3) {
-		is_a_typedef_spec = SXFALSE;
+		is_a_typedef_spec = false;
 	    }
 
 	    break;
@@ -399,7 +399,7 @@ static SXVOID pass_inherited ()
 	case 196: /* <internal-declaration> = <declaration-specifiers-0> ";" ; */
 	case 197: /* <internal-declaration> = <declaration-specifiers-1> ";" ; */
 	    if (NDVISITED_POSITION == 2) {
-		is_a_typedef_spec = SXFALSE;
+		is_a_typedef_spec = false;
 	    }
 
 	    break;
@@ -413,17 +413,17 @@ static SXVOID pass_inherited ()
 		if (current_block_level != 0)
 		    sxtrap (ME, "Block level error");
 
-		is_a_typedef_spec = SXFALSE;
+		is_a_typedef_spec = false;
 		break;
 
 	    case 2:
-		is_a_function_definition = SXTRUE;
+		is_a_function_definition = true;
 		break;
 
 	    case 3:
-		is_a_typedef_spec = SXFALSE;
-		is_a_function_definition = SXFALSE;
-		is_a_function_body = SXTRUE;
+		is_a_typedef_spec = false;
+		is_a_function_definition = false;
+		is_a_function_body = true;
 		break;
 	    }
 
@@ -435,12 +435,12 @@ static SXVOID pass_inherited ()
 		if (current_block_level != 0)
 		    sxtrap (ME, "Block level error");
 
-		is_a_function_definition = SXTRUE;
+		is_a_function_definition = true;
 	    }
 	    else {
-		is_a_typedef_spec = SXFALSE;
-		is_a_function_definition = SXFALSE;
-		is_a_function_body = SXTRUE;
+		is_a_typedef_spec = false;
+		is_a_function_definition = false;
+		is_a_function_body = true;
 	    }
 
 	    break;
@@ -459,7 +459,7 @@ static SXVOID pass_inherited ()
 
 
 
-static SXVOID pass_derived ()
+static void pass_derived ()
 {
     int			rule;
 
@@ -505,7 +505,7 @@ void c_desambig (kind)
     case SXACTION:
 	current_block_level = new_block_level = 0;
 	name_def_kind = ID_NAME;
-	is_a_typedef_spec = SXFALSE;
+	is_a_typedef_spec = false;
 	sxndtw_walk ();
 
 	if (current_block_level != 0)

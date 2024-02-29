@@ -22,7 +22,7 @@ struct unfold {
 
 /* new_symbol = (symbol, pile) */
   XxY_header		new_symbols;
-  SXBOOLEAN		is_new_symbols;
+  bool		is_new_symbols;
 
 /* hooks = (rhs_symb, rhs_pile) */
   XxY_header		hooks;
@@ -104,7 +104,7 @@ struct sxndlig {
                         cur_main_trans,
                         cur_trans;
 
-    SXBOOLEAN		is_paths,
+    bool		is_paths,
                         is_secondary,
                         is_old_main_trans;
 

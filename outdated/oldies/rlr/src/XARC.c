@@ -37,11 +37,7 @@
 /* 25-04-90 11:32 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-#define WHAT	"@(#)XARC.c	- SYNTAX [unix] - 2 Décembre 1992"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+char WHAT[] = "@(#)XARC.c	- SYNTAX [unix] - 2 Décembre 1992";
 
 static char	ME [] = "XARC";
 
@@ -53,20 +49,20 @@ static char	ME [] = "XARC";
 #include "RLR.h"
 
 
-extern SXVOID	print_bfsa ();
-extern SXVOID	print_pss ();
-extern SXBOOLEAN	ARP_simple_ambiguity ();
-extern SXBOOLEAN	PARTIAL_FSA_ARP_construction ();
+extern void	print_bfsa ();
+extern void	print_pss ();
+extern bool	ARP_simple_ambiguity ();
+extern bool	PARTIAL_FSA_ARP_construction ();
 extern int	TOTAL_FSA_ARP_construction ();
 extern int	UNBOUNDED_ARP_construction ();
-extern SXVOID	put_new_clone ();
-extern SXBOOLEAN	is_old_clone ();
-extern SXBOOLEAN	open_listing ();
-extern SXBOOLEAN	make_inter_pss ();
+extern void	put_new_clone ();
+extern bool	is_old_clone ();
+extern bool	open_listing ();
+extern bool	make_inter_pss ();
 extern char	*conflict_kind_to_string ();
 extern VARSTR	conflict_paths_to_re ();
-extern SXBOOLEAN	bh_mark ();
-extern SXBOOLEAN	bh_unmark ();
+extern bool	bh_mark ();
+extern bool	bh_unmark ();
 
 
 static SXBA		*X_plus;
@@ -78,7 +74,7 @@ static int		fork_work_set_m, fork_work_set_M, final_fork_set_m,
 static XxY_header	XARC_TxXARC_hd;
 static int		*XARC_TxXARC_to_orig;
 
-static SXBOOLEAN		MESSAGE_NEEDED;
+static bool		MESSAGE_NEEDED;
 
 static SXBA		CUR_PSS_SET;
 
@@ -103,18 +99,18 @@ struct back_to_attr {
 };
 static struct back_to_attr	*back_to_attr;
 
-static SXVOID XARC_UNBOUNDED_Q_oflw (old_size, new_size)
+static void XARC_UNBOUNDED_Q_oflw (old_size, new_size)
     int		old_size, new_size;
 {
     ARCs [XARC_UNBOUNDED].attr = (struct ARC_ATTR*) sxrealloc (ARCs [XARC_UNBOUNDED].attr, new_size + 1, sizeof (struct ARC_ATTR));
 }
-static SXVOID XARC_FSA_Q_oflw (old_size, new_size)
+static void XARC_FSA_Q_oflw (old_size, new_size)
     int		old_size, new_size;
 {
     ARCs [XARC_FSA].attr = (struct ARC_ATTR*) sxrealloc (ARCs [XARC_FSA].attr, new_size + 1, sizeof (struct ARC_ATTR));
 }
 
-static SXVOID	oflw_XQ0xXQ0 (old_size, new_size)
+static void	oflw_XQ0xXQ0 (old_size, new_size)
     int		old_size, new_size;
 {
     couples_set = sxba_resize (couples_set, Q0xQ0_top + new_size + 1);
@@ -122,7 +118,7 @@ static SXVOID	oflw_XQ0xXQ0 (old_size, new_size)
 
 
 
-static SXVOID	oflw_forks (old_size, new_size)
+static void	oflw_forks (old_size, new_size)
     int		old_size, new_size;
 {
     fork_work_set = sxba_resize (fork_work_set, new_size + 1);
@@ -130,7 +126,7 @@ static SXVOID	oflw_forks (old_size, new_size)
 }
 
 
-static SXVOID	oflw_FORKxT (old_size, new_size)
+static void	oflw_FORKxT (old_size, new_size)
     int		old_size, new_size;
 {
     FORKxT_to_fks = (int*) sxrealloc (FORKxT_to_fks, new_size + 1, sizeof (int))
@@ -139,7 +135,7 @@ static SXVOID	oflw_FORKxT (old_size, new_size)
 
 
 
-static SXVOID	oflw_bfsa (old_size, new_size)
+static void	oflw_bfsa (old_size, new_size)
     int		old_size, new_size;
 {
     register int i;
@@ -152,21 +148,21 @@ static SXVOID	oflw_bfsa (old_size, new_size)
 
 
 
-static SXVOID	oflw_pss_to_seq (old_size, new_size)
+static void	oflw_pss_to_seq (old_size, new_size)
     int		old_size, new_size;
 {
     ipss_to_attr = (struct ipss_to_attr *) sxrealloc (ipss_to_attr, new_size + 1, sizeof (struct ipss_to_attr));
 }
 
 
-static SXVOID	oflw_back (old_size, new_size)
+static void	oflw_back (old_size, new_size)
     int		old_size, new_size;
 {
     back_to_attr = (struct back_to_attr *) sxrealloc (back_to_attr, new_size + 1, sizeof (struct back_to_attr));
 }
 
 
-static SXVOID	XARC_allocate ()
+static void	XARC_allocate ()
 {
 
 #define to	4
@@ -227,7 +223,7 @@ static SXVOID	XARC_allocate ()
 
 
 
-static SXVOID	fks_to_fork_set (xfks, set, m, M)
+static void	fks_to_fork_set (xfks, set, m, M)
     int		xfks, *m, *M;
     SXBA	set;
 {
@@ -288,7 +284,7 @@ static SXVOID	fks_to_fork_set (xfks, set, m, M)
    les memes piles que precedemment) semble tout de meme impraticable vu le nombre
    de chemins (plus de 2 millions) trouve. */
 
-static SXVOID put_in_fork_work_set (bfsa, pss)
+static void put_in_fork_work_set (bfsa, pss)
     int bfsa, pss;
 {
     int	fork;
@@ -303,7 +299,7 @@ static SXVOID put_in_fork_work_set (bfsa, pss)
     }
 }
 
-static SXVOID LRpi_Next (bfsa, pss)
+static void LRpi_Next (bfsa, pss)
     int bfsa;
     register int	pss;
 {
@@ -329,7 +325,7 @@ static SXVOID LRpi_Next (bfsa, pss)
 }
 
 
-static SXVOID couples_set_to_XH (header)
+static void couples_set_to_XH (header)
     XH_header	*header;
 {
     register int couple = 0;
@@ -338,7 +334,7 @@ static SXVOID couples_set_to_XH (header)
 	XH_push (*header, couple);
 }
 
-static SXVOID XH_to_couples_set (bot, top)
+static void XH_to_couples_set (bot, top)
     register int	*bot, *top;
 {
     register int couple;
@@ -358,7 +354,7 @@ static SXVOID XH_to_couples_set (bot, top)
      - Il y a (entre autre) 253 occurrences differentes du meme etat LR(0) ds
        les chemins du DAG. */
 
-static SXVOID back_to_couples_set (ibfsa, X, Y)
+static void back_to_couples_set (ibfsa, X, Y)
     int ibfsa, X, Y;
 {
 /* Soit X ->ibfsa Y l'element de back labelle' par ibfsa et
@@ -419,7 +415,7 @@ static SXVOID back_to_couples_set (ibfsa, X, Y)
 
 
 
-static SXVOID	process_knot (ipss_set)
+static void	process_knot (ipss_set)
     register SXBA	ipss_set;
 {
     /* ipss_set contient un knot de back. */
@@ -442,18 +438,18 @@ static SXVOID	process_knot (ipss_set)
 
 
 
-static SXBOOLEAN check_loop_on_back (X1)
+static bool check_loop_on_back (X1)
     int		X1;
 {
     /* On sait que back n'est pas un arbre, on regarde si back a un cycle. */
     register int	x, X2;
-    SXBOOLEAN		is_cycle = SXFALSE;
+    bool		is_cycle = false;
 
     PUSH (pss_check_stack, X1);
 
     XxY_Xforeach (back_hd, X1, x) {
 	if (pss_check_stack [X2 = XxY_Y (back_hd, x)] != 0 || check_loop_on_back (X2)) {
-	    is_cycle = SXTRUE;
+	    is_cycle = true;
 	    break;
 	}
     }
@@ -465,21 +461,21 @@ static SXBOOLEAN check_loop_on_back (X1)
 
 
 
-static SXBOOLEAN call_check_loop_on_back ()
+static bool call_check_loop_on_back ()
 {
     register int ipss = 0;
 
     while ((ipss = sxba_scan (pss_work_set, ipss)) > 0) {
 	if (check_loop_on_back (ipss))
-	    return SXTRUE;
+	    return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
-static SXVOID down_occur_nb ();
-static SXVOID up_occur_nb (Y, nb)
+static void down_occur_nb ();
+static void up_occur_nb (Y, nb)
     int Y, nb;
 {
     register int X, i;
@@ -495,7 +491,7 @@ static SXVOID up_occur_nb (Y, nb)
     }
 }
 
-static SXVOID down_occur_nb (X, nb)
+static void down_occur_nb (X, nb)
     int X, nb;
 {
     register int Y, i;
@@ -511,7 +507,7 @@ static SXVOID down_occur_nb (X, nb)
     }
 }
 
-static SXVOID compute_occur_nb (R, N)
+static void compute_occur_nb (R, N)
     int R, N;
 {
 /* On associe a chaque noeud de la relation back un numero.
@@ -601,19 +597,19 @@ static int make_ubfsa_to_ate ()
        mis en jeu sont dans la SS_stack ws */
     register int	top, back_elem, in_nb, ibfsa;
     int			bot, x, X, bfsa;
-    SXBOOLEAN		is_knot, is_first;
+    bool		is_knot, is_first;
     char		s [12];
 
     bot = SS_bot (ws);
     top = SS_top (ws);
-    is_knot = SXFALSE;
+    is_knot = false;
     in_nb = 0;
 
     while (--top >= bot) {
 	x = ipss_to_attr [X = XxY_X (back_hd, back_elem = SS_get (ws, top))].global.repr;
 
 	if (x != 0 && x == ipss_to_attr [XxY_Y (back_hd, back_elem)].global.repr) {
-	    is_knot = SXTRUE;
+	    is_knot = true;
 	    SS_get (ws, top) = -back_elem;
 	}
 	else
@@ -625,7 +621,7 @@ static int make_ubfsa_to_ate ()
     /* On saute les boucles */
     if (in_nb > 0) {
 	top = SS_top (ws);
-	is_first = SXTRUE;
+	is_first = true;
 
 	if (in_nb > 1)
 	    varstr_catenate (vstr, "(");
@@ -635,7 +631,7 @@ static int make_ubfsa_to_ate ()
 		if (!is_first)
 		    varstr_catenate (vstr, "|");
 		else
-		    is_first = SXFALSE;
+		    is_first = false;
 		
 		bfsa = ipss_to_attr [X = XxY_X (back_hd, back_elem)].local.bfsa;
 		sprintf (s, "<%d>", bfsa);
@@ -660,7 +656,7 @@ static int make_ubfsa_to_ate ()
     if (is_knot) {
 	varstr_catenate (vstr, ".{");
 	top = SS_top (ws);
-	is_first = SXTRUE;
+	is_first = true;
 
 	while (--top >= bot) {
 	    if ((back_elem = SS_get (ws, top)) < 0) {
@@ -671,7 +667,7 @@ static int make_ubfsa_to_ate ()
 		if (!is_first)
 		    varstr_catenate (vstr, "|");
 		else
-		    is_first = SXFALSE;
+		    is_first = false;
 		
 		/* On remet en place pour la suite... */
 		SS_get (ws, top) = back_elem = -back_elem;
@@ -759,7 +755,7 @@ static int make_bfsa_to_ate (bfsa_init, local_bfsa, xtnd_local_bfsa, bfsa, ret)
    pour une racine de back donnee. C'est l'ARP qui decidera des intersections. */
    
 
-static SXVOID fork_collecting (bfsa_init, pssxt)
+static void fork_collecting (bfsa_init, pssxt)
     int	bfsa_init, pssxt;
 {
     /* pss_to_seq_hd contient en sequence toutes les images des pss de la relation back
@@ -769,7 +765,7 @@ static SXVOID fork_collecting (bfsa_init, pssxt)
        pour propager les chemins. */
     register int	x, x1, y, i;
     int			N, y1, bfsa, X1, ibfsa, bot, top, init, local_bfsa, ate, ate_init, bfsa_init_ate, final, orig, local_bfsa_init, xtnd_local_bfsa;
-    SXBOOLEAN		couples_set_is_empty, couples_set_has_been_cleared;
+    bool		couples_set_is_empty, couples_set_has_been_cleared;
     char		s [12];
     /* Dans le cas pss_kind == FSA_, les bfsa sont des triplets (i, k, f) ou :
        i est l'etat initial
@@ -828,7 +824,7 @@ static SXVOID fork_collecting (bfsa_init, pssxt)
 	x = ipss_to_attr [x1 = SS_pop (ipss_stack)].global.repr;
 
 	if (x1 != orig) {
-	    couples_set_is_empty = SXTRUE;
+	    couples_set_is_empty = true;
 	    SS_clear (ws);
 	    y1 = x1;
 	    
@@ -839,7 +835,7 @@ static SXVOID fork_collecting (bfsa_init, pssxt)
 			((ibfsa = back_to_attr [i].ibfsa) != 0 ||
 			ipss_to_attr [XxY_X (back_hd, i)].local.local_bfsa != 0)) {
 			if (ibfsa != 0 || !SS_is_empty (ws))
-			    couples_set_is_empty = SXFALSE;
+			    couples_set_is_empty = false;
 
 			SS_push (ws, i);
 		    }
@@ -872,7 +868,7 @@ static SXVOID fork_collecting (bfsa_init, pssxt)
 		}
 	    }
 
-	    couples_set_has_been_cleared = SXFALSE;
+	    couples_set_has_been_cleared = false;
 	    y1 = x1;
 	    
 	    do {
@@ -892,7 +888,7 @@ static SXVOID fork_collecting (bfsa_init, pssxt)
 			else
 			    xtnd_local_bfsa = local_bfsa;
 
-			couples_set_has_been_cleared = SXTRUE;
+			couples_set_has_been_cleared = true;
 		    }
 		    
 		    XH_push (bfsa_hd, init);
@@ -981,9 +977,9 @@ static int	set_to_fks (set, low, high)
 
 
 
-static SXVOID	reached_states (reached_set, couples_set, normal)
+static void	reached_states (reached_set, couples_set, normal)
     SXBA	reached_set, couples_set;
-    SXBOOLEAN	normal;
+    bool	normal;
 {
     /* couples_set contient un ensemble d'element de Q0xQ0.
        reached_set contient init, un etat de Q0.
@@ -992,10 +988,10 @@ static SXVOID	reached_states (reached_set, couples_set, normal)
        de couples_set, soit dans le sens normal (transitions de
        l'automate LR(0), soit dans le sens retrograde. */
     register int	couple, X, Y;
-    register SXBOOLEAN	is_stable = SXFALSE;
+    register bool	is_stable = false;
 
     while (!is_stable) {
-	is_stable = SXTRUE;
+	is_stable = true;
 	couple = 0;
 
 	while ((couple = sxba_scan (couples_set, couple)) > 0) {
@@ -1005,7 +1001,7 @@ static SXVOID	reached_states (reached_set, couples_set, normal)
 		Y = normal ? XxY_Y (Q0xQ0_hd, couple) : XxY_X (Q0xQ0_hd, couple);
 
 		if (SXBA_bit_is_reset_set (reached_set, Y)) {
-		    is_stable = SXFALSE;
+		    is_stable = false;
 		}
 
 		SXBA_0_bit (couples_set, couple);
@@ -1022,25 +1018,25 @@ static SXVOID	reached_states (reached_set, couples_set, normal)
 
 
 
-SXVOID make_inter (bot1, top1, bot2, top2, normal, states_set)
+void make_inter (bot1, top1, bot2, top2, normal, states_set)
     register int	*bot1, *bot2, *top1, *top2;
-    SXBOOLEAN		normal;
+    bool		normal;
     SXBA		states_set;
 {
     /* bot(1|2) et top(1|2) designent des ensembles de couples de Q0xQ0.
        states_set contient init un etat de Q0.
        Calcule dans states_set l'ensemble des etats qu'il est possible d'atteindre
        depuis init par des chemins communs. */
-    register SXBOOLEAN	pushed;
+    register bool	pushed;
     register int	c1, c2;
 
-    pushed = SXFALSE;
+    pushed = false;
     
     /* On calcule les couples communs. */
     while (bot1 < top1 && bot2 < top2) {
 	/* bot1 et bot2 sont corrects */
 	if ((c1 = *bot1) == (c2 = *bot2)) {
-	    pushed = SXTRUE;
+	    pushed = true;
 	    SXBA_1_bit (couples_set, c1);
 	    ++bot1, ++bot2;
 	}
@@ -1057,18 +1053,18 @@ SXVOID make_inter (bot1, top1, bot2, top2, normal, states_set)
 
 
 
-static SXVOID back_to_forest ()
+static void back_to_forest ()
 {
     register int		x, y, i;
     register struct back	*aback;
     register SXBA		set, loop_set;
-    SXBOOLEAN			is_a_forest;
+    bool			is_a_forest;
     int				x1, x2, x1bx2, X1, N, l;
     int				R;
 
     /* les ipss des racines vont de 1 a R = X_top (pss_to_seq_hd). */
     if ((R = X_top (pss_to_seq_hd)) > 0) {
-	is_a_forest = SXTRUE;
+	is_a_forest = true;
 	XxY_clear (&back_hd);
 	sxba_empty (pss_work_set);
 	SS_clear (ws);
@@ -1085,7 +1081,7 @@ static SXVOID back_to_forest ()
 		    }
 		    else {
 			SXBA_1_bit (pss_work_set, x2);
-			is_a_forest = SXFALSE;
+			is_a_forest = false;
 		    }
 		    
 		    XxY_set (&back_hd, x1, x2, &x1bx2);
@@ -1165,15 +1161,15 @@ static SXVOID back_to_forest ()
 }
 
 
-SXBOOLEAN	XARC_state_scan (XARC, qtq, F)
+bool	XARC_state_scan (XARC, qtq, F)
     struct ARC_struct	*XARC;
     int			qtq;
-    SXBOOLEAN		(*F)();
+    bool		(*F)();
 {
     /* Cette procedure parcourt les forks de XARC_state et pour chaque couple
        fork1, fork2 dont les pss sont compatibles avec pss_sets, appelle
        F (fork1, fork2, type1, type2).
-       Si F retourne SXTRUE, la visite est interrompue. */
+       Si F retourne true, la visite est interrompue. */
     register int	y2, y1, x2, x1;
     register SXBA	pss_set1, pss_set2;
     int			lim, top1, top2, fork1, fork2, pss1, pss2, type1, type2;
@@ -1202,7 +1198,7 @@ SXBOOLEAN	XARC_state_scan (XARC, qtq, F)
 
 			if (SXBA_bit_is_set (pss_set2, pss2)) {
 			    if (F (XARC, qtq, fork1, fork2, type1, type2))
-				return SXTRUE;
+				return true;
 			}
 		    }
 		}
@@ -1210,11 +1206,11 @@ SXBOOLEAN	XARC_state_scan (XARC, qtq, F)
 	}
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
-static SXBOOLEAN	FSA_case (XARC, qtq, fork1, fork2, type1, type2)
+static bool	FSA_case (XARC, qtq, fork1, fork2, type1, type2)
     struct ARC_struct	*XARC;
     int			qtq, fork1, fork2, type1, type2;
 {
@@ -1225,7 +1221,7 @@ static SXBOOLEAN	FSA_case (XARC, qtq, fork1, fork2, type1, type2)
 	    PARTIAL_FSA_ARP_construction (XARC, XxY_X (forks, fork1), XxY_X (forks, fork2));
 }
 
-static SXBOOLEAN	fork_equality (XARC, qtq, fork1, fork2, type1, type2)
+static bool	fork_equality (XARC, qtq, fork1, fork2, type1, type2)
     struct ARC_struct	*XARC;
     int			qtq, fork1, fork2, type1, type2;
 {
@@ -1233,16 +1229,16 @@ static SXBOOLEAN	fork_equality (XARC, qtq, fork1, fork2, type1, type2)
      egalites sur les forks. */
 
     if (fork1 == fork2) {
-	XARC->is_clonable = SXFALSE;
+	XARC->is_clonable = false;
 
 	if (pss_kind == UNBOUNDED_ && conflict_message && should_print_conflict (AMBIGUOUS_)) {
 	    sambig_conflict_messages (XARC, qtq, fork1, type1, type2);
 	}
 
-	return SXTRUE;
+	return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
@@ -1290,7 +1286,7 @@ int	is_LRpi (XARC, qtq)
        Dans un premier temps, on lance le LR (NEW_K_VALUE). */
     register int	ck;
 
-    XARC->is_ARP = SXFALSE;
+    XARC->is_ARP = false;
 
     if (XARC_state_scan (XARC, qtq, fork_equality))
 	return pss_kind == UNBOUNDED_ ? AMBIGUOUS_ : NOT_RoxoLR0_;
@@ -1310,7 +1306,7 @@ int	is_LRpi (XARC, qtq)
 
 
 
-SXVOID	XARC_print (XARC)
+void	XARC_print (XARC)
     struct ARC_struct	*XARC;
 {
     /* Conflit sur germe, on imprime l'XARC correspondant a arc_no */
@@ -1319,7 +1315,7 @@ SXVOID	XARC_print (XARC)
     char		c_name [24], string [12];
 
     put_edit_nl (4);
-    get_constructor_name (c_name, SXFALSE, XARC->pss_kind != UNBOUNDED_, XARC->h_value, XARC->k_value);
+    get_constructor_name (c_name, false, XARC->pss_kind != UNBOUNDED_, XARC->h_value, XARC->k_value);
     put_edit_nnl (32, c_name);
     put_edit_ap ("   C O N S T R U C T I O N");
     put_edit_nl (1);
@@ -1353,7 +1349,7 @@ SXVOID	XARC_print (XARC)
     
     for (XARC_state = 1; XARC_state < XH_top (XARC->Q_hd); XARC_state++) {
 	int		from, lim, lim1, type, t;
-	SXBOOLEAN		is_first;
+	bool		is_first;
 	
 	from = XARC->attr [XARC_state].from;
 	y = XARC->attr [XARC_state].primes_nb;
@@ -1424,7 +1420,7 @@ SXVOID	XARC_print (XARC)
 }
 
 
-SXVOID	XARC_free ()
+void	XARC_free ()
 {
     if (fork_work_set != NULL) {
 	XH_free (&fks_hd);
@@ -1496,7 +1492,7 @@ int	n_to_forks (XARC, XARC_state, n, type)
 
 
 
-static SXVOID XARC_init_state_building (XARC)
+static void XARC_init_state_building (XARC)
     struct ARC_struct	*XARC;
 {
     
@@ -1604,19 +1600,19 @@ static SXVOID XARC_init_state_building (XARC)
 	sxtrap (ME, "XARC_construction");
     
     XARC->attr [0].lgth = XARC->attr [1].lgth = 0;
-    XARC->attr [0].is_marked = XARC->attr [1].is_marked = SXFALSE;
+    XARC->attr [0].is_marked = XARC->attr [1].is_marked = false;
     XARC->conflict_kind = XARC->attr [1].conflict_kind = NO_CONFLICT_;
-    XARC->attr [1].is_tree_orig = SXFALSE;
+    XARC->attr [1].is_tree_orig = false;
     XARC->attr [1].from = 1;
     XARC->attr [0].primes_nb = 0;
     XARC->attr [1].primes_nb = 1;
-    XARC->is_clonable = SXTRUE;
-    XARC->is_initiated = SXTRUE;
+    XARC->is_clonable = true;
+    XARC->is_initiated = true;
 } 
 
 
 
-static SXBOOLEAN	XARC_trans (XARC, XARC_state, t, next_XARC_state)
+static bool	XARC_trans (XARC, XARC_state, t, next_XARC_state)
     struct ARC_struct	*XARC;
     int			XARC_state, t, *next_XARC_state;
 {
@@ -1751,17 +1747,17 @@ static SXBOOLEAN	XARC_trans (XARC, XARC_state, t, next_XARC_state)
     if (!XH_set (&(XARC->Q_hd), next_XARC_state)) {
 	XARC->attr [*next_XARC_state].from = next_ARC_state;
 	XARC->attr [*next_XARC_state].primes_nb = ++(XARC->ARC->attr [next_ARC_state].primes_nb);
-	return SXTRUE;
+	return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
 static int XARC_get_conflict_kind (XARC, XARC_state, is_new_arc_state, t)
     struct ARC_struct	*XARC;
     int			XARC_state, t;
-    SXBOOLEAN		is_new_arc_state;
+    bool		is_new_arc_state;
 {
     register int		ck;
     int				xkas;
@@ -1793,7 +1789,7 @@ int call_XARC_building (ARC, qtq)
        pas XARC en entier, mais uniquement le sous automate qui correspond
        a TOUS les chemins de l'ARC courant menant de l'etat initial a l'etat
        impur. XARC est pur ssi tous les etats de XARC correspondant a
-       "impur" sont purs. Dans ce cas la fonction retourne SXTRUE. */
+       "impur" sont purs. Dans ce cas la fonction retourne true. */
     
     /* Classes de grammaires detectables (is_lr_constructor est positionne)
        
@@ -1849,21 +1845,21 @@ int call_XARC_building (ARC, qtq)
 
     /* On remonte dans l'ARC en marquant les etats accessibles. */
     ARC_state = XxYxZ_Z (ARC->QxTxQ_hd, qtq);
-    ARC->attr [ARC_state].is_marked = SXTRUE;
+    ARC->attr [ARC_state].is_marked = true;
     ARC_walk_backward (ARC, qtq, bh_mark, NULL);
 
     ARC_building (XARC, XARC_trans, XARC_get_conflict_kind);
     
     /* On enleve les marques. */
     ARC_walk_backward (ARC, qtq, bh_unmark, NULL);
-    ARC->attr [ARC_state].is_marked = SXFALSE;
+    ARC->attr [ARC_state].is_marked = false;
     ARC->is_clonable = XARC->is_clonable;
 
     return XARC->conflict_kind;
 }
 
 
-SXVOID	XARC_resize (old_xac2, new_non_lalr1_state_nb)
+void	XARC_resize (old_xac2, new_non_lalr1_state_nb)
     int		old_xac2, new_non_lalr1_state_nb;
 {
     /* On est forcement dans le cas is_lr_constructor et des etats ont ete

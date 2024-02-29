@@ -34,7 +34,7 @@ static char	ME [] = "output_semact";
 #include <math.h>
 #include <float.h>
 
-char WHAT_OUTPUT_SEMACT[] = "@(#)SYNTAX - $Id: output_semact.c 3498 2023-08-20 18:14:09Z garavel $" WHAT_DEBUG;
+char WHAT_OUTPUT_SEMACT[] = "@(#)SYNTAX - $Id: output_semact.c 3678 2024-02-06 08:38:24Z garavel $" WHAT_DEBUG;
 
 #ifdef ESSAI
 /* Pour atom_id2local_atom_id_hd */
@@ -87,8 +87,8 @@ char WHAT_OUTPUT_SEMACT[] = "@(#)SYNTAX - $Id: output_semact.c 3498 2023-08-20 1
 #include "dag_scanner.h"
 
 static char             *output_kind;
-static SXBOOLEAN          is_print_headers;
-static SXBOOLEAN          is_print_xml_headers;
+static bool          is_print_headers;
+static bool          is_print_xml_headers;
 
 static int              *spf_count;
 static int              *Pij2out_sentence, *Aij2out_sentence, *Tij2tok_no;
@@ -97,7 +97,7 @@ static int              rec_level, last_f;
 #define SENTENCE_OR     0X40000000
 static XH_header        out_sentence_hd;
 static int              maxxt; /* nb des terminaux instancies Tij, y compris ceux couverts par les nt de la rcvr == -spf.outputG.maxt */
-static SXBOOLEAN          nl_done;
+static bool          nl_done;
 
 static FILE    *weights_file;
 static char    *weights_file_name;
@@ -222,7 +222,7 @@ output_args_usage ()
 
 /* decode les arguments specifiques a output */
 /* l'option argv [*parg_num] est inconnue du parseur earley */
-static SXBOOLEAN
+static bool
 output_args_decode (pargnum, argc, argv)
      int  *pargnum, argc;
      char *argv [];
@@ -232,7 +232,7 @@ output_args_decode (pargnum, argc, argv)
   case XML:
     if (++*pargnum >= argc) {
       fprintf (sxstderr, "%s: a pathname must follow the \"%s\" option;\n", ME, option_get_text (XML));
-      return SXFALSE;
+      return false;
     }
     xml_file_name = argv [*pargnum];
     
@@ -241,7 +241,7 @@ output_args_decode (pargnum, argc, argv)
   case ODAG:
     if (++*pargnum >= argc) {
       fprintf (sxstderr, "%s: a pathname must follow the \"%s\" option;\n", ME, option_get_text (ODAG));
-      return SXFALSE;
+      return false;
     }
     odag_file_name = argv [*pargnum];
     
@@ -250,7 +250,7 @@ output_args_decode (pargnum, argc, argv)
   case WEIGHTS:
     if (++*pargnum >= argc) {
       fprintf (sxstderr, "%s: a pathname must follow the \"%s\" option;\n", ME, option_get_text (WEIGHTS));
-      return SXFALSE;
+      return false;
     }
 	      
     weights_file_name = argv [*pargnum];
@@ -260,23 +260,23 @@ output_args_decode (pargnum, argc, argv)
   case OUTPUT_KIND:
     if (++*pargnum >= argc) {
       fprintf (sxstderr, "%s: an output kind specification string must follow the \"%s\" option;\n", ME, option_get_text (OUTPUT_KIND));
-      return SXFALSE;
+      return false;
     }
 
     output_kind = argv [*pargnum];
     break;
 
   case PRINT_HEADERS:
-    is_print_headers = SXTRUE;
+    is_print_headers = true;
 
   case PRINT_XML_HEADER:
-    is_print_xml_headers = SXTRUE;
+    is_print_xml_headers = true;
 
   case UNKNOWN_ARG:
-    return SXFALSE;
+    return false;
   }
 
-  return SXTRUE;
+  return true;
 }
 
 
@@ -340,13 +340,13 @@ spf_td_walk_incl_terminals (Aij, ntstring2name, ntkind, ntkindshort)
     if (ntstring != SXNUL && Aij2i (Aij) < Aij2j (Aij)) {
       if (!nl_done) {
 	fprintf(xml_file,"\n");
-	nl_done=SXTRUE;
+	nl_done=true;
       }
       for (i = 0; i <= rec_level; i++)
 	fprintf(xml_file,"  ");
       fprintf(xml_file,"<%s type=\"%s\" id=\"E%i%s%i\">", ntkind, ntstring, sentence_id, ntkindshort, cur_snt_id++);
       rec_level++;
-      nl_done=SXFALSE;
+      nl_done=false;
     }
     
     hook = spf.outputG.lhs [spf.outputG.maxxprod+Aij].prolon;
@@ -369,7 +369,7 @@ spf_td_walk_incl_terminals (Aij, ntstring2name, ntkind, ntkindshort)
 	      /* terminal*/
 	      if (!nl_done)
 		fputs("\n",xml_file);
-	      nl_done=SXTRUE;
+	      nl_done=true;
 	      tok_no=spf.outputG.Tij2tok_no [-Xpq];
 
 	      comment = toks_buf [tok_no].comment;
@@ -387,12 +387,12 @@ spf_td_walk_incl_terminals (Aij, ntstring2name, ntkind, ntkindshort)
 		    last_f=local_f;
 		    if (!nl_done)
 		      fputs("\n",xml_file);
-		    nl_done=SXTRUE;
+		    nl_done=true;
 		    for (i = 0; i <= rec_level; i++)
 		      fprintf(xml_file,"  ");
 		    for (comment; *comment != '}'; comment++){
 		      fprintf(xml_file,"%c",*comment);
-		      nl_done=SXFALSE;
+		      nl_done=false;
 		    }
 		  } else {
 		    comment = strchr(comment,(int)'>');
@@ -412,7 +412,7 @@ spf_td_walk_incl_terminals (Aij, ntstring2name, ntkind, ntkindshort)
       rec_level--;
       if (!nl_done)
 	fprintf(xml_file,"\n");
-      nl_done=SXTRUE;
+      nl_done=true;
       for (i = 0; i <= rec_level; i++)
 	fprintf(xml_file,"  ");
       fprintf(xml_file,"</%s>\n",ntkind);
@@ -456,19 +456,19 @@ spf_output_partial_forest (ntstring2name, ntkind, ntkindshort)
 /* Start of the weights_campaign */
 static int *signature_local_stack;
 
-static SXBOOLEAN
+static bool
 push_in_signature_local_stack (int elem, int level)
 {
 #if 0
   /* On sort tous les niveaux, c'est weights2proba qui tronquera eventuellement */
   if (elem == 0 /* appel pour verification */ && MAX_SIGNATURE_DEPTH > 0 /* == 0 => profondeur non bornee */ && level > MAX_SIGNATURE_DEPTH)
-    return SXFALSE;
+    return false;
 #endif /* 0 */
 
   if (elem != 0)	
     DPUSH (signature_local_stack, elem);
 
-  return SXTRUE;
+  return true;
 }
 
 /* Calcule et sort les signatures des f_structures associees a Ppq */
@@ -817,27 +817,27 @@ fill_fs_id_stack (fs_id)
    en erreur, et donc accessibles par Tij_iforeach
    Tpq peut ne pas etre un terminal de la foret (il a pu etre remplace' par un Thk avec h<=0 ou k<=0) */
 /* 0 < i <= j < final_mlstn */
-static SXBOOLEAN
+static bool
 tpath2easy (i, j)
      int i, j;
 {
   int     trans, k, triple, Tij;
-  SXBOOLEAN ret_val;
+  bool ret_val;
 
 #if EBUG
   if (i <= 0 || j < i || j >= final_mlstn)
     sxtrap (ME, "tpath2easy");
 #endif /* EBUG */
 
-  if (i == j) return SXTRUE;
+  if (i == j) return true;
 
-  ret_val = SXFALSE;
+  ret_val = false;
 
   Tij_iforeach (i, Tij) {
     k = Tij2j (Tij); /* k > i */
 
     if (i < k && k <= j && tpath2easy (k, j)) {
-      ret_val = SXTRUE;
+      ret_val = true;
       XxYxZ_set (&easy_Tij_hd, i, Tij, k, &triple);
 
       /* un seul chemin */
@@ -938,9 +938,9 @@ Easy_maximal_constituent ()
 #define Easy_PV_code (-1)
 #define Easy_NV_code (-2)
 static int     VP3_code, VERB_code, PV_code, VP_code; 
-static SXBOOLEAN has_VP3;
+static bool has_VP3;
 static int     *easy_upper_bound;
-static SXBOOLEAN xml_close_tag;
+static bool xml_close_tag;
 
 /* Aii <= maxnt */
 static void
@@ -982,7 +982,7 @@ dummy_easy_bu_walk (prod)
   int            binf, bsup, pos, size, p;
   struct lhs     *plhs;
   struct attr    *attr_ptr;
-  SXBOOLEAN        first_symb;
+  bool        first_symb;
   
   plhs = spf.outputG.lhs+prod;
   Aij = plhs->lhs; /* $$ */
@@ -1004,7 +1004,7 @@ dummy_easy_bu_walk (prod)
 
   size = 0;
   binf = bsup = 0;
-  first_symb = SXTRUE;
+  first_symb = true;
 
   Xpq = spf.outputG.rhs [item++].lispro;
 
@@ -1044,7 +1044,7 @@ dummy_easy_bu_walk (prod)
 	}
 
 	if (first_symb) {
-	  first_symb = SXFALSE;
+	  first_symb = false;
 	  binf = attr_ptr->i;
 	  bsup = attr_ptr->j; /* truc */
 	}
@@ -1451,7 +1451,7 @@ static int
 seek_t (Aij, tstr, is_prefix)
      int     Aij;
      char    *tstr;
-     SXBOOLEAN is_prefix;
+     bool is_prefix;
 {
   int  hook, prod, item, Xpq, ret_val, lstr, ltstr;
   char *str;
@@ -1515,7 +1515,7 @@ static int
 Tpq2href (T, Tpq, is_prefix)
      char    *T;
      int     Tpq;
-     SXBOOLEAN is_prefix;
+     bool is_prefix;
 {
   int  lgth, str_lgth;
   char *str;
@@ -1556,7 +1556,7 @@ seek_Easy_GN_np (Pij)
   int  Aij, href_gn;
 
   if (Aij = seek_prefix_Aij ("Easy_GN", Pij)) {
-    if (href_gn = seek_t (Aij, "np", SXFALSE /* Le terminal "np" */))
+    if (href_gn = seek_t (Aij, "np", false /* Le terminal "np" */))
       return href_gn;
   }
   
@@ -1672,7 +1672,7 @@ seek_VERB_v (Pij)
   
   if ((Aij = seek_prefix_Aij ("Easy_NVS", Pij)) || (Aij = seek_prefix_Aij ("Easy_NVP", Pij))) {
     if (href_verbe = seek_t (Aij, "v", 
-			     SXTRUE /* Un terminal dont le nom commence par "v" */
+			     true /* Un terminal dont le nom commence par "v" */
 			     ))
       return href_verbe;
   }
@@ -1688,7 +1688,7 @@ seek_N_nc (Pij)
   int  Aij, href_verbe;
 
   if (Aij = seek_Aij ("N", Pij)) {
-    if (href_verbe = seek_t (Aij, "nc", SXFALSE /* Le terminal "nc" */))
+    if (href_verbe = seek_t (Aij, "nc", false /* Le terminal "nc" */))
       return href_verbe;
   }
   
@@ -1703,7 +1703,7 @@ seek_WS_csu (Pij)
   int  Aij, href;
 
   if (Aij = seek_Aij ("WS", Pij)) {
-    if (href = seek_t (Aij, "csu", SXFALSE /* Le terminal "csu" */))
+    if (href = seek_t (Aij, "csu", false /* Le terminal "csu" */))
       return href;
   }
   
@@ -1718,7 +1718,7 @@ seek_Easy_PV_prep (Pij)
   int  Aij, href;
 
   if (Aij = seek_prefix_Aij ("Easy_PV", Pij)) {
-    if (href = seek_t (Aij, "prep", SXFALSE /* Le terminal "prep" */))
+    if (href = seek_t (Aij, "prep", false /* Le terminal "prep" */))
       return href;
   }
   
@@ -1733,7 +1733,7 @@ seek_Easy_GA_adj (Pij)
   int  Aij, href;
 
   if (Aij = seek_prefix_Aij ("Easy_GA", Pij)) {
-    if (href = seek_t (Aij, "adj", SXFALSE /* Le terminal "adj" */))
+    if (href = seek_t (Aij, "adj", false /* Le terminal "adj" */))
       return href;
   }
   
@@ -1748,7 +1748,7 @@ seek_Easy_GR_adv (Pij)
   int  Aij, href;
 
   if (Aij = seek_prefix_Aij ("Easy_GR", Pij)) {
-    if (href = seek_t (Aij, "adv", SXFALSE /* Le terminal "adv" */))
+    if (href = seek_t (Aij, "adv", false /* Le terminal "adv" */))
       return href;
   }
   
@@ -1793,7 +1793,7 @@ seek_Easy_GA_or_adj (Pij)
     if (href_gn = Xpq2easy_href [Aij])
       return href_gn;
 
-    return seek_t (Aij, "adj", SXFALSE /* Le terminal "adj" */);
+    return seek_t (Aij, "adj", false /* Le terminal "adj" */);
   }
   
   return 0;
@@ -1895,7 +1895,7 @@ easy_Sujet_Verbe ()
   int     fs_id, sujet_val, atom_id, href_verbe, aij_val, val, cur, top, Pij, Aij, A, item, Xpq, href_sujet, x, v_form_val, atom_val; 
   int     *dpv_ptr, *val_ptr;
   char    *str;
-  SXBOOLEAN has_mode_field, has_v_form_field, is_MOD_N;
+  bool has_mode_field, has_v_form_field, is_MOD_N;
 
   /* Pour chaque f_structure ... */
   for (x = 1; x <= fs_id_stack [0]; x++) {
@@ -2005,7 +2005,7 @@ easy_Sujet_Verbe ()
 		str = (dpv_ptr = seek_pred (sujet_val)) ? lexeme_id2string [dpv_ptr [0] /* lexeme_id */] : NULL;
 
 		if (str && strlen (str) == 3 && strncmp (str, "pro", 3) == 0)
-		  href_sujet = Tpq2href ("cl", dpv_ptr [4], SXTRUE /* is_prefix */);
+		  href_sujet = Tpq2href ("cl", dpv_ptr [4], true /* is_prefix */);
 		else {
 		  if (fs_is_set (sujet_val, aij_id, &val_ptr) && (aij_val = (*val_ptr) >> FS_ID_SHIFT)) {
 		    href_sujet = walk_aij (aij_val, seek_Easy_GN);
@@ -2371,8 +2371,8 @@ call_arg1_arg2 (fs_id, href_verbe)
     str = lexeme_id2string [dpv_ptr [0]];
 
     if (str && strlen (str) == 3 && strncmp (str, "pro", 3) == 0) {
-      if ((href_objet1 = Tpq2href ("cla", dpv_ptr [4], SXFALSE)) == 0) {
-	href_objet1 = Tpq2href ("pri_acc", dpv_ptr [4], SXFALSE);
+      if ((href_objet1 = Tpq2href ("cla", dpv_ptr [4], false)) == 0) {
+	href_objet1 = Tpq2href ("pri_acc", dpv_ptr [4], false);
       }
     }
     else {
@@ -2434,7 +2434,7 @@ call_arg1_arg2 (fs_id, href_verbe)
     str = (dpv_ptr = seek_pred (de_obj_val)) ? lexeme_id2string [dpv_ptr [0] /* lexeme_id */] : NULL;
 
     if (str && strlen (str) == 3 && strncmp (str, "pro", 3) == 0) {
-      if (href_objet2 = Tpq2href ("clg", dpv_ptr [4], SXFALSE)) {
+      if (href_objet2 = Tpq2href ("clg", dpv_ptr [4], false)) {
 	/* On a une relation Objet direct-Verbe  correspondant a un genitif extrait de l'objet */
 	fprintf (xml_file,
 		 "<relation xlink:type=\"extended\" type=\"COD-V\" id=\"E%iR%i\">\n",
@@ -2692,9 +2692,9 @@ call4_arg1_arg2 (fs_id, href_verbe)
     str = lexeme_id2string [dpv_ptr [0]];
 
     if (str && strlen (str) == 3 && strncmp (str, "pro", 3) == 0) {
-      if ((href_objet1 = Tpq2href ("cld", dpv_ptr [4], SXFALSE)) == 0)
-	if ((href_objet1 = Tpq2href ("clg", dpv_ptr [4], SXFALSE)) == 0)
-	  href_objet1 = Tpq2href ("cll", dpv_ptr [4], SXFALSE);
+      if ((href_objet1 = Tpq2href ("cld", dpv_ptr [4], false)) == 0)
+	if ((href_objet1 = Tpq2href ("clg", dpv_ptr [4], false)) == 0)
+	  href_objet1 = Tpq2href ("cll", dpv_ptr [4], false);
     }
     else {
       /* terminal string */
@@ -2855,8 +2855,8 @@ easy_Complement_Verbe ()
 		  str = (dpv_ptr = seek_pred (objet_val)) ? lexeme_id2string [dpv_ptr [0] /* lexeme_id */] : NULL;
 
 		  if (str && strlen (str) == 3 && strncmp (str, "pro", 3) == 0) {
-		    if ((href_objet = Tpq2href ("cld", dpv_ptr [4], SXFALSE)) == 0)
-		      href_objet = Tpq2href ("clg", dpv_ptr [4], SXFALSE);
+		    if ((href_objet = Tpq2href ("cld", dpv_ptr [4], false)) == 0)
+		      href_objet = Tpq2href ("clg", dpv_ptr [4], false);
 		  }
 		  else {
 		    if (fs_is_set (adjunct_val, aij_id, &val_ptr) && (object_aij_val = (*val_ptr) >> FS_ID_SHIFT)) {
@@ -3823,7 +3823,7 @@ easy_Apposition ()
 {
   int     x, fs_id, atom_id, local_atom_id, aij_val, Pij, fs_id2, /* temp4_val, */href1, href2; 
   int     *val_ptr;
-  SXBOOLEAN is_NP_temp;
+  bool is_NP_temp;
 
   /* Pour chaque f_structure ... */
   for (x = 1; x <= fs_id_stack [0]; x++) {
@@ -3843,7 +3843,7 @@ easy_Apposition ()
 	  /* Y'a un champ aij */
 	  /* Ds les sous-arbres referencess par les aij ... */
 	  /* ... On cherche un sous-arbre de racine "PP_temp" */
-	  is_NP_temp = SXFALSE;
+	  is_NP_temp = false;
 
 	  if (Pij = walk_aij (aij_val, seek_PP_tempij)) {
 	    /* On cherche la f_structure associee */
@@ -3855,7 +3855,7 @@ easy_Apposition ()
 	  /* ... ou On cherche un sous-arbre de racine "NP_temp..." */
 	  if (fs_id2 == 0 && (Pij = walk_aij (aij_val, seek_NP_tempij))) {
 	    fs_id2 = seek_fs_id (Pij);
-	    is_NP_temp = SXTRUE; /* Si fs_id2 */
+	    is_NP_temp = true; /* Si fs_id2 */
 	  }
 
 	  if (fs_id2) {
@@ -4459,7 +4459,7 @@ easy_print_ste_path (F, i, j, repair_i)
      int F, i, j, repair_i;
 {
   int     triple, k, Tik, new_F;
-  SXBOOLEAN is_crooked;
+  bool is_crooked;
 
   if (i == j) {
 #if 1
@@ -4474,7 +4474,7 @@ easy_print_ste_path (F, i, j, repair_i)
     if (spf.outputG.has_repair) {
       /* easy_Tij_hd peut etre cyclique ... */
       /* ... mais il y a forcement un chemin de i a j */ 
-      is_crooked = SXFALSE;
+      is_crooked = false;
 
       XxYxZ_Xforeach (easy_Tij_hd, i, triple) {
 	Tik = XxYxZ_Y (easy_Tij_hd, triple);
@@ -4484,7 +4484,7 @@ easy_print_ste_path (F, i, j, repair_i)
 	if (i == k && Tpq2attr [Tik].i >= repair_i) {
 	  /* ... oui */
 	  /* On ne considere que le 1er */
-	  is_crooked = SXTRUE;
+	  is_crooked = true;
 	  PUSH (easy_Tij_stack, Tik);
 	  break;
 	}
@@ -4624,12 +4624,12 @@ easy_print_constituent_path ()
 }
 
 /* On parcourt les constituants consecutifs */
-static SXBOOLEAN
+static bool
 easy_walk (i, repair_i)
      int i, repair_i;
 {
   int     triple, Aij, j, Tij;
-  SXBOOLEAN ret_val, is_crooked;
+  bool ret_val, is_crooked;
 
   if (i == final_mlstn) {
     /* easy_constituent_stack contient un chemin complet (constituants et terminaux de liaison) */
@@ -4650,14 +4650,14 @@ easy_walk (i, repair_i)
 #endif /* no_print_relations*/
 #endif /* 0 */
 
-	xml_close_tag = SXTRUE;
+	xml_close_tag = true;
       }
     }
 
-    return SXTRUE;
+    return true;
   } 
 
-  ret_val = SXFALSE;
+  ret_val = false;
 
   XxYxZ_Xforeach (easy_hd, i, triple) {
     Aij =  XxYxZ_Y (easy_hd, triple);
@@ -4669,7 +4669,7 @@ easy_walk (i, repair_i)
       j = XxYxZ_Z (easy_hd, triple);
 
       if (easy_walk (j, 0))
-	ret_val = SXTRUE;
+	ret_val = true;
 
       POP (easy_constituent_stack);
 
@@ -4699,7 +4699,7 @@ easy_walk (i, repair_i)
 	j = XxYxZ_Z (easy_Tij_hd, triple);
 
 	if (easy_walk (j, 0))
-	  ret_val = SXTRUE;
+	  ret_val = true;
 
 	POP (easy_constituent_stack);
 
@@ -4711,7 +4711,7 @@ easy_walk (i, repair_i)
     }
     else {
       /* repair ... on regarde s'il y a des Tii ... */
-      is_crooked = SXFALSE;
+      is_crooked = false;
 
       XxYxZ_Xforeach (easy_Tij_hd, i, triple) {
 	Tij =  XxYxZ_Y (easy_Tij_hd, triple);
@@ -4720,7 +4720,7 @@ easy_walk (i, repair_i)
 	if (i == XxYxZ_Z (easy_Tij_hd, triple) && Tpq2attr [Tij].i >= repair_i) {
 	  /* ... oui */
 	  /* On ne considere que le 1er */
-	  is_crooked = SXTRUE;
+	  is_crooked = true;
 	  PUSH (easy_constituent_stack, spf.outputG.maxxnt+Tij);
 	  break;
 	}
@@ -4734,7 +4734,7 @@ easy_walk (i, repair_i)
 	  PUSH (easy_constituent_stack, spf.outputG.maxxnt+Tij);
 
 	  if (easy_walk (j, Tpq2attr [Tij].j))
-	    ret_val = SXTRUE;
+	    ret_val = true;
 
 	  POP (easy_constituent_stack);
 
@@ -4760,7 +4760,7 @@ easy_walk (i, repair_i)
 	PUSH (easy_constituent_stack, spf.outputG.maxxnt+Tij);
 
 	if (easy_walk (j, 0))
-	  ret_val = SXTRUE;
+	  ret_val = true;
 
 	POP (easy_constituent_stack);
 
@@ -4788,7 +4788,7 @@ static int
 build_Tpq2attr ()
 {
   int              i, cur_bound, Tpq, Tqr, j, map, ib, p, pb, q, trans2, r, qb, trans, max_bound;
-  SXBOOLEAN          has_cyclic_repair, has_repair;
+  bool          has_cyclic_repair, has_repair;
   struct attr      *attr_ptr;
 
   max_bound = i2lb [1] = 1;
@@ -4798,7 +4798,7 @@ build_Tpq2attr ()
 
     if (cur_bound) {
       /* Il se peut que des Tpq soient sautes */
-      has_cyclic_repair = has_repair = SXFALSE;
+      has_cyclic_repair = has_repair = false;
 
       /* On regarde s'il y a des Tik qui proviennent de la reparation */
       XxYxZ_Xforeach (easy_Tij_hd, i, trans) {
@@ -4811,7 +4811,7 @@ build_Tpq2attr ()
 	  if (i == j) {
 	    if (!has_cyclic_repair) {
 	      /* On ne prend que le 1er */
-	      has_cyclic_repair = SXTRUE;
+	      has_cyclic_repair = true;
 
 	      /* (i, i) => (cur_bound, cur_bound+1) */
 	      attr_ptr = Tpq2attr+Tpq;
@@ -4824,7 +4824,7 @@ build_Tpq2attr ()
 	    }
 	  }
 	  else {
-	    has_repair = SXTRUE;
+	    has_repair = true;
 	  }
 	}
       }
@@ -5287,22 +5287,22 @@ xml_print_unique_tree (int Aij)
   struct lhs *plhs;
   struct rhs *prhs;
   char* ntstring;
-  SXBOOLEAN hide = SXFALSE;
+  bool hide = false;
 
   if (Aij2i (Aij) == Aij2j (Aij) && Aij2i (Aij) > 0)
     return;
 
   ntstring = spf.inputG.ntstring[Aij2A (Aij)];
   if (ntstring[0] == '[')
-    hide = SXTRUE;
+    hide = true;
 
   if (strlen(ntstring) > 6 && strncmp(ntstring, "DISJ__", 6) == 0)
-    hide = SXTRUE;
+    hide = true;
 
   if (strlen(ntstring) > 7 && strncmp(ntstring + strlen(ntstring) - 7, "___PLUS", 7) == 0)
-    hide = SXTRUE;
+    hide = true;
   if (strlen(ntstring) > 7 && strncmp(ntstring + strlen(ntstring) - 7, "___STAR", 7) == 0)
-    hide = SXTRUE;
+    hide = true;
 
   hook = spf.outputG.lhs [spf.outputG.maxxprod+Aij].prolon; 
   while ((Pij = spf.outputG.rhs [hook++].lispro) < 0);
@@ -5439,10 +5439,10 @@ xml_print_f_structure ()
   int             fs_id, bot, top, bot2, cur2, top2, bot3, cur3, top3, orig_field_val;
   int             val, field_id, field_kind, sous_cat_id, atom_id, local_atom_id, x, i, Tpq, id;
   int             *local2atom_id;
-  SXBOOLEAN         is_optional, is_first2;
+  bool         is_optional, is_first2;
   struct pred_val *ptr2;
   unsigned char   static_field_kind;
-  SXBOOLEAN         is_shared;
+  bool         is_shared;
 
   /* traite' comme une queue */
   x = 0; /* indice ds fs_id_stack */
@@ -5502,10 +5502,10 @@ xml_print_f_structure ()
 		
 		if (field_id < 0) {
 		  field_id = -field_id;
-		  is_optional = SXTRUE;
+		  is_optional = true;
 		}
 		else
-		  is_optional = SXFALSE;
+		  is_optional = false;
 		
 		if (field_id > MAX_FIELD_ID) {
 		  field_id -= MAX_FIELD_ID;
@@ -5603,7 +5603,7 @@ xml_print_f_structure ()
 		else {
 		  local2atom_id = field_id2atom_field_id [field_id];
 		  local_atom_id = 0;
-		  is_first2 = SXTRUE;
+		  is_first2 = true;
 		  
 		  while ((val >>= 1) != 0) {
 		    local_atom_id++;
@@ -5704,7 +5704,7 @@ xml_print_f_structures ()
   int        *local_heads_stack;
   struct lhs *plhs;
 #if EBUG
-  SXBOOLEAN    found;
+  bool    found;
 #endif /* EBUG */
 
   fputs ("<f_structures>\n", xml_file); 
@@ -5733,7 +5733,7 @@ xml_print_f_structures ()
 
     /* Le 16/06/04 On associe la production (ou le terminal) qui a produit la f_structure */
 #if EBUG
-    found = SXFALSE;
+    found = false;
 #endif /* EBUG */
 
     for (y = 1; y <= heads_stack [0]; y++) {
@@ -5770,7 +5770,7 @@ xml_print_f_structures ()
 		    /* C'est une bonne */
 		    fprintf (xml_file, "    <main_f_structure idref=\"F%i\"/>\n", fs_id); // rule_id= R_%i_%i, prod, plhs->init_prod
 #if EBUG
-		    found = SXTRUE;
+		    found = true;
 #endif /* EBUG */
 		    break;
 		  }	      
@@ -5791,7 +5791,7 @@ xml_print_f_structures ()
 	  /* head doit etre trouve' */
 	  sxtrap (ME, "xml_print_f_structures");
 	else
-	  found = SXFALSE;
+	  found = false;
 #endif /* EBUG */
       }
     }
@@ -5805,7 +5805,7 @@ xml_print_f_structures ()
 }
 
 static void
-xml_output (SXBOOLEAN print_unique_tree)
+xml_output (bool print_unique_tree)
 {
   int tok_no;
 
@@ -5867,7 +5867,7 @@ dag_output ()
 #ifndef no_lfg
 							 is_unique_parse
 #else /* !no_lfg */
-							 SXTRUE
+							 true
 #endif /* !no_lfg */
 							 ), compact_infos);
 }
@@ -5880,7 +5880,7 @@ chunks_output ()
 {
   fprintf(xml_file,"<E id=\"E%i\">\n",sentence_id);
   fprintf(xml_file,"<constituants>\n");
-  nl_done=SXTRUE;
+  nl_done=true;
   spf_output_partial_forest(ntstring2chunksname, "Groupe", "G", 1);
   //  spf_topological_walk (spf.outputG.start_symbol,NULL,print_chunks);
   fprintf(xml_file,"</constituants>\n");
@@ -5900,7 +5900,7 @@ propositions_output()
 
   fprintf(xml_file,"<E id=\"E%i\">\n",sentence_id);
   fprintf(xml_file,"<propositions>\n");
-  nl_done=SXTRUE;
+  nl_done=true;
   spf_output_partial_forest(ntstring2propsname, "Proposition", "P", 1);
   /*  spf_output_partial_forest(ntstring2propname, "Proposition", "P", 1);*/
   fprintf(xml_file,"</propositions>\n");
@@ -5912,7 +5912,7 @@ static void
 props_output()
 {
   fprintf(xml_file,"<E id=\"E%i\">\n",sentence_id);
-  nl_done=SXTRUE;
+  nl_done=true;
   spf_topological_walk (spf.outputG.start_symbol,NULL,print_props);
   fprintf(xml_file,"</E>\n");
 }
@@ -5925,7 +5925,7 @@ phrases_output()
   rec_level=0;
 
   fprintf(xml_file,"<E id=\"E%i\">\n",sentence_id);
-  nl_done=SXTRUE;
+  nl_done=true;
   spf_output_partial_forest(ntstring2phrasename, "Syntagme", "S", 1);
   fprintf(xml_file,"</E>\n");
 }
@@ -5955,7 +5955,7 @@ output_sem_pass ()
       if ((odag_file = sxfopen (odag_file_name, "w")) == NULL) {
 	fprintf (sxstderr, "%s: Cannot open (create) ", ME);
 	sxperror (odag_file_name);
-	return SXFALSE;
+	return false;
       }
     } else
     odag_file=stdout;
@@ -5965,7 +5965,7 @@ output_sem_pass ()
       if ((xml_file = sxfopen (xml_file_name, "w")) == NULL) {
 	fprintf (sxstderr, "%s: Cannot open (create) ", ME);
 	sxperror (xml_file_name);
-	return SXFALSE;
+	return false;
       }
     } else
       xml_file=stdout;
@@ -6007,10 +6007,10 @@ output_sem_pass ()
     break;
 #endif /* EASY */
   case 'x':
-    xml_output(SXFALSE);
+    xml_output(false);
     break;
   case 'X':
-    xml_output(SXTRUE);
+    xml_output(true);
     break;
   case 'w':
     /* On ne sort les stats que s'il n'y a eu ni erreur de syntaxe ni incoherence */
@@ -6028,7 +6028,7 @@ output_sem_pass ()
 #ifndef no_lfg
 							 is_unique_parse
 #else /* !no_lfg */
-							 SXTRUE
+							 true
 #endif /* !no_lfg */
 							 ));
 #endif /* LOG */

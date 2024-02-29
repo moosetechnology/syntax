@@ -53,27 +53,9 @@
 /* 15-05-86 13:03 (phd):	Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-#ifndef lint
-#ifdef	BUG
-#define WHAT	"@(#)sxmain.d.c	- SYNTAX [unix] - 11 Janvier 1988"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
-
-#else
-#define WHAT	"@(#)sxmain.c	- SYNTAX [unix] - 11 Janvier 1988"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
-
-#endif
-#endif
-
+char WHAT[] = "@(#)sxmain.d.c	- SYNTAX [unix] - 11 Janvier 1988";
 
 #include "sxunix.h"
-
 
 /* On lit a priori sur stdin, et cetera */
 
@@ -84,7 +66,7 @@ FILE	*sxstdout = {NULL}, *sxstderr = {NULL};
 #endif
 
 FILE	*sxtty;
-SXBOOLEAN		sxverbosep = {SXTRUE};
+bool		sxverbosep = {true};
 
 /* On est dans un cas "mono-langage": */
 
@@ -92,9 +74,7 @@ extern struct sxtables	sxtables;
 
 
 
-main (argc, argv)
-    int		argc;
-    char	*argv [];
+int main (int argc, char *argv [])
 {
 #ifndef unix
     if (sxstdout == NULL) {
@@ -187,7 +167,7 @@ main (argc, argv)
 
 
 
-SXVOID	sxvoid ()
+void	sxvoid ()
 /* procedure ne faisant rien */
 {
 }

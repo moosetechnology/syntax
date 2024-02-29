@@ -20,7 +20,7 @@
 #include "sxunix.h"
 #include "sxdico.h"
 
-char WHAT_DICOACT[] = "@(#)SYNTAX - $Id: dico_act.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_DICOACT[] = "@(#)SYNTAX - $Id: dico_act.c 3690 2024-02-07 17:04:15Z garavel $" WHAT_DEBUG;
 
 extern SXINT             optim_kind, process_kind, print_on_sxtty;
 extern char            *dico_name, *prgentname;
@@ -48,6 +48,12 @@ word_list_set_oflw (void)
 {
     word_list_set = sxba_resize (word_list_set, (word_list_set_size *= 2) + 1);
 }
+
+static void     gripe (void)
+#ifdef __GNUC__
+     __attribute__ ((noreturn))
+#endif
+     ;
 
 static void	gripe (void)
 {
@@ -91,6 +97,7 @@ SXINT dico_sem_act (SXINT code, SXINT numact)
   case SXOPEN:
     if (dico_file == NULL)
       dico_file = stdout;
+    /* FALLTHROUGH */
 
   case SXCLOSE:
   case SXSEMPASS:
@@ -227,6 +234,7 @@ SXINT dico_sem_act (SXINT code, SXINT numact)
     default:
       break;
     }
+    /* FALLTHROUGH */
 
   default:
     gripe ();

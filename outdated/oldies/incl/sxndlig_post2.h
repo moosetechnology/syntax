@@ -29,7 +29,7 @@ struct R {
 
 struct memo2attr {
   int		kind;
-  SXBOOLEAN	result;
+  bool	result;
 };
 
 /* Structure "globale" partagee par tous les "ligparsact". */
@@ -63,5 +63,5 @@ struct sxndlig {
   struct for_postparsact
 	                for_postparsact;
 
-  SXBOOLEAN		is_cyclic;
+  bool		is_cyclic;
 };

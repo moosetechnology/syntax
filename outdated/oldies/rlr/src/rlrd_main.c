@@ -31,13 +31,7 @@
 /* 08-02-94 14:52 (pb):	Ajout de cette rubrique				*/
 /************************************************************************/
 
-
-#define WHAT	"@(#)rlrd.c	- SYNTAX [unix] - Lun 28 Avr 2003"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
-
+char  WHAT[] = "@(#)rlrd.c	- SYNTAX [unix] - Lun 28 Avr 2003";
 
 #include "sxdynam_parser.h"
 #include "release.h"
@@ -57,7 +51,7 @@ Usage:\t%s [options] language...\n\
 options=\t-v, -verbose, -nv, -noverbose,\n";
 static long	rlrd_options_set;
 static char	*arg, c;
-static SXBOOLEAN	sxverbosep;
+static bool	sxverbosep;
 
 static int	*state_stack;
 
@@ -105,7 +99,7 @@ static int	rlrd_run ()
 {
     int		file_descr	/* file descriptor */ ;
     char	file_name [128];
-    SXBOOLEAN	is_prio;
+    bool	is_prio;
     int		state, transition, next_state;
 
     sxdp_alloc (200 /* rule_nb */);
@@ -119,8 +113,8 @@ static int	rlrd_run ()
 
 #include "B_tables.h"
 
-      extern SXBOOLEAN	bnf_read (), prio_read ();
-      extern SXVOID	bnf_free (), prio_free ();
+      extern bool	bnf_read (), prio_read ();
+      extern void	bnf_free (), prio_free ();
 
       struct bnf_ag_item	bnf_ag;
       struct priority	*t_priorities, *r_priorities;
@@ -293,7 +287,7 @@ main (argc, argv)
     char	*argv [];
 {
     register int	argnum;
-    static SXBOOLEAN	has_message [SXSEVERITIES];
+    static bool	has_message [SXSEVERITIES];
 
     if (sxstdout == NULL) {
 	sxstdout = stdout;
@@ -312,18 +306,18 @@ main (argc, argv)
 /* valeurs par defaut */
 
     rlrd_options_set = 0;
-    sxverbosep = SXTRUE;
+    sxverbosep = true;
 
 /* Decodage des options */
 
     for (argnum = 1; argnum < argc; argnum++) {
 	switch (option_get_kind (arg = argv [argnum])) {
 	case VERBOSE:
-	    sxverbosep = SXTRUE;
+	    sxverbosep = true;
 	    break;
 
 	case -VERBOSE:
-	    sxverbosep = SXFALSE;
+	    sxverbosep = false;
 	    break;
 
 	case UNKNOWN_ARG:
@@ -345,14 +339,14 @@ run:
     }
 
     do {
-	has_message [rlrd_run (language_name = argv [argnum++])] = SXTRUE;
+	has_message [rlrd_run (language_name = argv [argnum++])] = true;
     } while (argnum < argc);
 
     {
 	register int	severity;
 
 	for (severity = SXSEVERITIES - 1;
-	     severity > 0 && has_message [severity] == SXFALSE;
+	     severity > 0 && has_message [severity] == false;
 	     severity--) {
 	}
 

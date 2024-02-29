@@ -35,7 +35,7 @@ extern int sxgetprdct ();
 
 struct palv {
    int		block_level, struct_level; 
-   SXBOOLEAN	is_typedef; 
+   bool	is_typedef; 
 };
 
 
@@ -54,7 +54,7 @@ static void identifiers_oflw (old_size, new_size)
 }
 
 
-static SXVOID push_palvs ()
+static void push_palvs ()
 {
     if (++palvs_top > palvs_size)
 	palvs = (struct palv*) sxrealloc (palvs, (palvs_size *= 2) + 1, sizeof (struct palv));
@@ -69,11 +69,11 @@ static void parsact (action_nb)
     int action_nb;
 {
     int 	x, tok_no;
-    SXBOOLEAN	is_ok;
+    bool	is_ok;
 
     switch (action_nb) {
     case 1: /* <storage-class-specifier> = @1 typedef ; */
-	palv.is_typedef = SXTRUE;
+	palv.is_typedef = true;
 	return;
 	
     case 2:
@@ -85,7 +85,7 @@ static void parsact (action_nb)
 	  <internal-declaration> = <declaration-specifiers-0> ";" @2 ;
 	  <internal-declaration> = <declaration-specifiers-1> ";" @2 ;
 	  */
-	palv.is_typedef = SXFALSE;
+	palv.is_typedef = false;
 	return;
 	
     case 3:
@@ -97,7 +97,7 @@ static void parsact (action_nb)
 	  <enum-specifier> = enum "{" @3 <enumerator+> "}" @4 ;
 	  */
 	push_palvs ();
-	palv.is_typedef = SXFALSE;
+	palv.is_typedef = false;
 	
 	if (action_nb == 9)
 	    palv.struct_level++;
@@ -151,7 +151,7 @@ static void parsact (action_nb)
 	  <parameter-declaration> = <declaration-specifiers-0> <function-declarator> @8 ;
 	  <parameter-declaration> = <declaration-specifiers-1> <function-declarator> @8 ;
 	  */	    
-	sxsymbol_table_close (&identifiers, palv.block_level + 1, SXTRUE);
+	sxsymbol_table_close (&identifiers, palv.block_level + 1, true);
 	return;
 	
     case 5: /* <d-identifier> = @5 %identifier ; */
@@ -183,7 +183,7 @@ else {
     }
 }
 
-static SXBOOLEAN parsprdct (prdct)
+static bool parsprdct (prdct)
     int prdct;
 {
     int x, tok_no;
@@ -230,7 +230,7 @@ static void open_hook ()
 
 static void close_hook ()
 {
-    sxsymbol_table_close (&identifiers, palv.block_level, SXTRUE);
+    sxsymbol_table_close (&identifiers, palv.block_level, true);
     pop_palvs ();
 }
 
@@ -255,7 +255,7 @@ int ndc_parsact (entry, action_nb)
 
     case SXINIT:
 	palvs_top = 0;
-	palv.is_typedef = SXFALSE;
+	palv.is_typedef = false;
 	palv.struct_level = palv.block_level = 0;
 
 	sxndtw_open (NULL /* pass_inherited */,

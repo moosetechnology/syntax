@@ -1,0 +1,2 @@
+      INTEGER I_ARRAY(10)
+      END

@@ -29,13 +29,13 @@
 #include <sys/stat.h>
 #include <sys/timeb.h>
 
-char WHAT_XBNFMAIN[] = "@(#)SYNTAX - $Id: xbnf_main.c 3369 2023-06-17 10:18:35Z garavel $" WHAT_DEBUG;
+char WHAT_XBNFMAIN[] = "@(#)SYNTAX - $Id: xbnf_main.c 3678 2024-02-06 08:38:24Z garavel $" WHAT_DEBUG;
 
 char	by_mess [] = "the SYNTAX grammar processor BNF";
 
 #include "sxversion.h"
 
-extern SXVOID	no_tables (void), bnf_lo (void);
+extern void	no_tables (void), bnf_lo (void);
 extern struct sxtables	xbnf_tables;
 
 /*---------------*/
@@ -103,7 +103,7 @@ static char	*option_get_text (SXINT kind)
 
 
 
-static SXVOID	extract_language_name (char *path_name)
+static void	extract_language_name (char *path_name)
 {
     char	*p;
 
@@ -121,7 +121,7 @@ static SXVOID	extract_language_name (char *path_name)
 
 
 
-static SXVOID	bnf_run (char *pathname)
+static void	bnf_run (char *pathname)
 {
     FILE	*infile;
 
@@ -202,8 +202,8 @@ int main (int argc, char *argv[])
 /* valeurs par defaut */
 
     options_set = OPTION (SOURCE) | OPTION (VERBOSE) | OPTION (LIST);
-    sxverbosep = SXFALSE;
-    is_source = is_list = SXTRUE;
+    sxverbosep = false;
+    is_source = is_list = true;
     max_RHS = -1; /* Le 16/4/2002, par defaut, pas de verif de la longueur des RHS */
 
 
@@ -212,27 +212,27 @@ int main (int argc, char *argv[])
     for (argnum = 1; argnum < argc; argnum++) {
 	switch (option_get_kind (argv [argnum])) {
 	case SOURCE:
-	    is_source = SXTRUE, options_set |= OPTION (SOURCE);
+	    is_source = true, options_set |= OPTION (SOURCE);
 	    break;
 
 	case -SOURCE:
-	    is_list = is_source = SXFALSE, options_set &= noOPTION (LIST) & noOPTION (SOURCE);
+	    is_list = is_source = false, options_set &= noOPTION (LIST) & noOPTION (SOURCE);
 	    break;
 
 	case VERBOSE:
-	    sxverbosep = SXTRUE, options_set |= OPTION (VERBOSE);
+	    sxverbosep = true, options_set |= OPTION (VERBOSE);
 	    break;
 
 	case -VERBOSE:
-	    sxverbosep = SXFALSE, options_set &= noOPTION (VERBOSE);
+	    sxverbosep = false, options_set &= noOPTION (VERBOSE);
 	    break;
 
 	case LIST:
-	    is_list = is_source = SXTRUE, options_set |= OPTION (LIST) | OPTION (LIST);
+	    is_list = is_source = true, options_set |= OPTION (LIST) | OPTION (LIST);
 	    break;
 
 	case -LIST:
-	    is_list = SXFALSE, options_set &= noOPTION (LIST);
+	    is_list = false, options_set &= noOPTION (LIST);
 	    break;
 
 	case MAX_RIGHT_HAND_SIDE:
@@ -287,7 +287,7 @@ run:
 	fprintf (sxtty, "%s\n", release_mess);
     }
 
-    syntax (SXINIT, &xbnf_tables, SXFALSE /* no includes */);
+    syntax (SXINIT, &xbnf_tables, false /* no includes */);
 
     if (options_set & OPTION (LANGUAGE_NAME)) {
 	bnf_run ((char*)NULL);
@@ -302,7 +302,7 @@ run:
 	} while (argnum < argc);
     }
 
-    syntax (SXFINAL, &xbnf_tables, SXTRUE);
+    syntax (SXFINAL, &xbnf_tables, true);
 
     sxexit (sxerr_max_severity ());
 
@@ -314,14 +314,14 @@ run:
 char	*options_text (char *line)
 {
     SXINT	i;
-    SXBOOLEAN	is_first = SXTRUE;
+    bool	is_first = true;
 
     *line = SXNUL;
 
     for (i = 1; i <= LAST_OPTION; i++)
 	if (options_set & OPTION (i)) {
 	    if (is_first)
-		is_first = SXFALSE;
+		is_first = false;
 	    else
 		strcat (line, ", ");
 

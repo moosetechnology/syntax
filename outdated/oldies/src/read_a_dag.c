@@ -26,7 +26,7 @@ static char ME [] = "read_a_dag";
 #include "dag_scanner.h"
 #include <stdarg.h>
 
-char WHAT_READADAG[] = "@(#)SYNTAX - $Id: read_a_dag.c 3450 2023-07-21 09:19:30Z garavel $" WHAT_DEBUG;
+char WHAT_READADAG[] = "@(#)SYNTAX - $Id: read_a_dag.c 3678 2024-02-06 08:38:24Z garavel $" WHAT_DEBUG;
 
 struct dag_node {
   SXNODE_HEADER_S SXVOID_NAME;
@@ -37,7 +37,7 @@ struct dag_node {
   SXINT             d_seq_nb, lpos, rpos, ltok_no, rtok_no, inside_seq_pos;
   struct dag_node *left_brother;
   SXBA            lpos_set, rpos_set;
-  SXBOOLEAN         is_empty;
+  bool         is_empty;
 };
 /*
 N O D E   N A M E S
@@ -128,7 +128,7 @@ static void dag1_pd (void)
   static struct dag_node *LAST_SON;
   SXINT                    d_seq_nb;
   struct dag_node        *brother;
-  SXBOOLEAN                is_empty;
+  bool                is_empty;
 
   switch (SXVISITED->name) {
 
@@ -136,14 +136,14 @@ static void dag1_pd (void)
     break;
 
   case ALTERNATIVE_S_n :
-    is_empty = SXFALSE;
+    is_empty = false;
     d_seq_nb = 0;
 
     for (brother = SXVISITED->son; brother != NULL; brother = brother->brother) {
       d_seq_nb += brother->d_seq_nb;
 
       if (brother->is_empty)
-	is_empty = SXTRUE;
+	is_empty = true;
     }
 
     SXVISITED->d_seq_nb = d_seq_nb;
@@ -159,7 +159,7 @@ static void dag1_pd (void)
 
   case OPTION_n :
     SXVISITED->d_seq_nb = LAST_SON->d_seq_nb;
-    SXVISITED->is_empty = SXTRUE;
+    SXVISITED->is_empty = true;
     SXVISITED->rtok_no = LAST_SON->rtok_no;
     break;
 
@@ -170,14 +170,14 @@ static void dag1_pd (void)
     break;
 
   case SEQUENCE_S_n :
-    is_empty = SXTRUE;
+    is_empty = true;
     d_seq_nb = 0;
 
     for (brother = SXVISITED->son; brother != NULL; brother = brother->brother) {
       d_seq_nb += brother->d_seq_nb;
 
       if (!brother->is_empty)
-	is_empty = SXFALSE;
+	is_empty = false;
     }
 
     SXVISITED->d_seq_nb = d_seq_nb + SXVISITED->degree - 1;
@@ -193,7 +193,7 @@ static void dag1_pd (void)
 
   case WORD_n :
     SXVISITED->d_seq_nb = 0;
-    SXVISITED->is_empty = SXFALSE;
+    SXVISITED->is_empty = false;
     SXVISITED->rtok_no = SXVISITED->ltok_no+1;
     break;
 
@@ -456,7 +456,7 @@ extern SXINT is_print_time, n;
 SXINT
 sxparser_dag_tcut  (SXINT what_to_do, struct sxtables *arg)
 {
-  SXBOOLEAN ret_val;
+  bool ret_val;
   SXINT     lahead, store_print_time;
   struct sxtoken *ptoken;
   SXINT tmax = -arg->SXP_tables.P_tmax;
@@ -467,9 +467,9 @@ sxparser_dag_tcut  (SXINT what_to_do, struct sxtables *arg)
   switch (what_to_do) {
   case SXACTION:
     /* on fait un "TCUT" sur les fins-de-ligne */
-    ret_val = SXTRUE;
+    ret_val = true;
     store_print_time = is_print_time;
-    //    is_print_time = SXFALSE;
+    //    is_print_time = false;
 
     do {
       do {
@@ -528,7 +528,7 @@ sxparser_dag_tcut  (SXINT what_to_do, struct sxtables *arg)
     arg->SXP_tables.semact = sxivoid; // pour ne pas faire 2 fois semact (i.e. dag_smp) sur le dernier dag
 
     if (store_print_time) {
-      is_print_time = SXTRUE;
+      is_print_time = true;
       sxtime (SXACTION, "\tTotal parse time");
     }
     
@@ -541,5 +541,5 @@ sxparser_dag_tcut  (SXINT what_to_do, struct sxtables *arg)
     break;
   }
   
-  return SXTRUE;
+  return true;
 }

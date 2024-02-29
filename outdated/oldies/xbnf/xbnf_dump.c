@@ -21,9 +21,9 @@
 #include "B_tables.h"
 #include "xbnf_vars.h"
 
-char WHAT_XBNFDUMP[] = "@(#)SYNTAX - $Id: xbnf_dump.c 3369 2023-06-17 10:18:35Z garavel $" WHAT_DEBUG;
+char WHAT_XBNFDUMP[] = "@(#)SYNTAX - $Id: xbnf_dump.c 3676 2024-02-05 18:17:45Z garavel $" WHAT_DEBUG;
 
-SXVOID
+void
 xbnf_dump (void)
 {
     SXINT		i;

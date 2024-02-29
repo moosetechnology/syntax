@@ -22,10 +22,13 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
+#include <stdlib.h>
 #include <stdarg.h>
 #include <errno.h>
 
-char WHAT_SXERR_MNGR[] = "@(#)SYNTAX - $Id: sxerr_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+#include <assert.h>
+
+char WHAT_SXERR_MNGR[] = "@(#)SYNTAX - $Id: sxerr_mngr.c 3762 2024-02-25 11:35:52Z garavel $" WHAT_DEBUG;
 
 /*---------------------------------------------------------------------------*/
 
@@ -43,7 +46,7 @@ static char *sxdelete_suffix (char *NAME)
 
 /* return the maximal severity of the emitted messages */
 
-int sxerr_max_severity ()
+int sxerr_max_severity (void)
 {
   int severity;
 
@@ -147,7 +150,10 @@ void sxhmsg (char *file_name, char *format, ...)
 
   va_start (ap, format);
   arg1 = va_arg (ap, char*);
-  sxerrmngr.nbmess [severity = *arg1++]++;
+  /* l'appelant garantit que arg1 a la forme (...->err_titles [...]+1) */
+  severity = *(arg1 - 1);
+  assert ((0 <= severity) && (severity < SXSEVERITIES));
+  sxerrmngr.nbmess [severity]++;
   va_end (ap);
 
   if (severity != 0) {
@@ -173,7 +179,10 @@ void sxtmsg (char *file_name, char *format, ...)
 
   va_start (ap, format);
   arg1 = va_arg (ap, char*);
-  sxerrmngr.nbmess [severity = *arg1++]++;
+  /* l'appelant garantit que arg1 a la forme (...->err_titles [...]+1) */
+  severity = *(arg1 - 1);
+  assert ((0 <= severity) && (severity < SXSEVERITIES));
+  sxerrmngr.nbmess [severity]++;
   va_end (ap);
 
   if (severity != 0) {
@@ -547,7 +556,10 @@ void sxhmsg (char *file_name, char *format, ...)
     
   va_start (ap, format);
   arg1 = va_arg (ap, char*);
-  sxerrmngr.nbmess [severity = *arg1++]++;
+  /* l'appelant garantit que arg1 a la forme (...->err_titles [...]+1) */
+  severity = *(arg1 - 1);
+  assert ((0 <= severity) && (severity < SXSEVERITIES));
+  sxerrmngr.nbmess [severity]++;
   va_end (ap);
 
   if (sxerrmngr.scratch_file != NULL) {
@@ -583,7 +595,10 @@ void sxtmsg (char *file_name, char *format, ...)
 
   va_start (ap, format);
   arg1 = va_arg (ap, char*);
-  sxerrmngr.nbmess [severity = *arg1++]++;
+  /* l'appelant garantit que arg1 a la forme (...->err_titles [...]+1) */
+  severity = *(arg1 - 1);
+  assert ((0 <= severity) && (severity < SXSEVERITIES));
+  sxerrmngr.nbmess [severity]++;
   va_end (ap);
 
 
@@ -791,8 +806,7 @@ void	sxperror (char *string)
 
 /*---------------------------------------------------------------------------*/
 
-void	sxtrap (caller, message)
-    char	*caller, *message;
+void	sxtrap (char *caller, char *message)
 {
   fprintf (sxstderr, "\nInternal system ERROR in \"%s\" during \"%s\".%c\n", caller, message, sxbell);
 

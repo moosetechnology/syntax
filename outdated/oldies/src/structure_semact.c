@@ -29,7 +29,7 @@ static char	ME [] = "structure_semact";
 #include "varstr.h"
 #include "XH.h"
 
-char WHAT_STRUCTURE_SEMACT[] = "@(#)SYNTAX - $Id: structure_semact.c 3498 2023-08-20 18:14:09Z garavel $" WHAT_DEBUG;
+char WHAT_STRUCTURE_SEMACT[] = "@(#)SYNTAX - $Id: structure_semact.c 3678 2024-02-06 08:38:24Z garavel $" WHAT_DEBUG;
 
 static char	Usage [] = "";
 
@@ -99,7 +99,7 @@ structure_args_usage ()
 
 /* decode les arguments specifiques a structure */
 /* l'option argv [*parg_num] est inconnue du parseur earley */
-static SXBOOLEAN
+static bool
 structure_args_decode (pargnum, argc, argv)
      int  *pargnum, argc;
      char *argv [];
@@ -107,10 +107,10 @@ structure_args_decode (pargnum, argc, argv)
   switch (option_get_kind (argv [*pargnum])) {
 
   case UNKNOWN_ARG:
-    return SXFALSE;
+    return false;
   }
 
-  return SXTRUE;
+  return true;
 }
 
 
@@ -131,7 +131,7 @@ static void (*specific_contribution)();
 static int  tolerance_level;
 
 
-SXBOOLEAN       STRUCTURE_SEM_PASS_ARG;
+bool       STRUCTURE_SEM_PASS_ARG;
 
 static void
 allocate_all ()
@@ -329,10 +329,10 @@ locally_select_optimal_trees (Aij)
 {
   int hook, init_hook, cur_Pij;
   double localmax;
-  SXBOOLEAN found_best_hook;
+  bool found_best_hook;
 
 
-  found_best_hook = SXFALSE;
+  found_best_hook = false;
   init_hook = hook = spf.outputG.lhs [spf.outputG.maxxprod+Aij].prolon;     
   localmax=LONG_MIN; /* on aimerait un DOUBLE_MIN, mais bon, le LONG_MIN va très bien */
 
@@ -354,7 +354,7 @@ locally_select_optimal_trees (Aij)
 
   /* passe 2 */
   hook = init_hook;
-  found_best_hook = SXFALSE;
+  found_best_hook = false;
   while ((cur_Pij = spf.outputG.rhs [hook].lispro) != 0) {
     if (cur_Pij > 0) { /* il ne s'agit pas d'une branche elaguee */
 #if EBUG
@@ -366,12 +366,12 @@ locally_select_optimal_trees (Aij)
 	  /* ou alors on a déjà trouvé une prod optimale, celle-ci l'est aussi mais on ne veut qu'un seul arbre*/
 	  ) { 
 	spf.outputG.rhs [hook].lispro = -cur_Pij; /*...on l'élague ;... */
-	spf.outputG.is_proper = SXFALSE;
+	spf.outputG.is_proper = false;
 #if EBUG
 	fprintf(stdout," - eliminated\n");
 #endif
       } else {
-	found_best_hook = SXTRUE; /* on se souvient qu'on a trouvé au moins une prod optimale */
+	found_best_hook = true; /* on se souvient qu'on a trouvé au moins une prod optimale */
 #if EBUG
 	fprintf(stdout," - kept\n");
 #endif
@@ -450,7 +450,7 @@ structure_sem_pass ()
   double tree_nb,new_tree_nb;
   int maxeid, i;
   char msg[128], qualifier[10];
-  SXBOOLEAN is_not_empty, temp_bool;
+  bool is_not_empty, temp_bool;
 
 #if EBUG
   fprintf(stdout,"\n");
@@ -489,7 +489,7 @@ structure_sem_pass ()
   }
 
   if (is_print_time) {
-    sprintf(msg,"\tStructure filtering (SXTRUE ");
+    sprintf(msg,"\tStructure filtering (true ");
     msg [1] = sxtoupper (msg [1]);
     if (tree_nb < 1.0E6)
       sprintf(msg,"%s%.f -> ",msg,tree_nb);

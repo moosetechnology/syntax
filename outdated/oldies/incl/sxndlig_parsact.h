@@ -95,7 +95,7 @@ struct sxndlig {
                         cur_trans,
                         last_main_symb;
 
-    SXBOOLEAN		is_paths,
+    bool		is_paths,
                         is_secondary,
                         is_old_main_trans;
 

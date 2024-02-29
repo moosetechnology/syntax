@@ -36,7 +36,7 @@ static char     ME [] = "lfg_lex_smp";
 #include "sxversion.h"
 #include "varstr.h"
 #include "sxunix.h"
-char WHAT_LFGLEXSMP[] = "@(#)SYNTAX - $Id: lfg_lex_smp.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_LFGLEXSMP[] = "@(#)SYNTAX - $Id: lfg_lex_smp.c 3715 2024-02-10 07:15:06Z garavel $" WHAT_DEBUG;
 
 extern bool  use_a_dico; /* true => sxdico, false => sxword */
 extern bool  make_proper_will_be_used;
@@ -1557,6 +1557,7 @@ process_named_structure (SXNODE *visited)
   case NAMED_ADJUNCT_n:
     son = brother->son;
     brother = son->brother;
+    /* FALLTHROUGH */
 
   case EMPTY_NAMED_STRUCT_n:
   case EMPTY_NAMED_ATOM_n:
@@ -5561,7 +5562,7 @@ static SXINT if_id2tok_list_id [%ld] = {\n\
 	      *(vstr->current)++ = cur_char;
 	    }
 
-	    varstr_complete (vstr);
+	    (void) varstr_complete (vstr);
 	    printf ("#define %s_id %ld\n",  varstr_tostr (vstr), (SXINT) smppass_id_2);
 	  }
 	}

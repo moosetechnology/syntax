@@ -1,6 +1,7 @@
 Abbreviations
    int		= {DIGIT}+ ;
-   id		= (UPPER | LOWER @6) {UPPER | LOWER @6 | DIGIT} ;
+   id		= (UPPER | LOWER @6 | "_") {UPPER | LOWER @6 | DIGIT | "$" | "_"} ;
+        -- "$" + "_" : extension
 	-- @6 : @Lower_To_Upper + test is_ansi
    R_exp	= ("E" | "e" @6) ["+-"] int ;	
    DP_exp	= ("D" | "d" @6) ["+-"] int ;	
@@ -13,6 +14,10 @@ Tokens
    %label	= DIGIT &0    -- colonne entre 1 et 5?
                    {DIGIT &0} ;
                    @0 ;  -- regarder dans la pile des boucles DO
+   %letter      = LETTER &is_set(1) | "_" &is_set(1) ; @9 ;
+                  -- ajout pour specifier les elements d'une instruction IMPLICIT
+		  -- [[EXTENSION]] : "_" peut commencer un id
+		  -- @9 : Les mots-cles d'une lettre sont aussi reconnus par %letter, on les rechange en %letter
 
    %symbolic_name
 		= id ; @1 ;
@@ -20,6 +25,12 @@ Tokens
 			Priority Shift > Reduce;
 
    %int_id	= int id ; @5 ;
+		  -- ce terminal sert a resoudre des conflits LECL ; %int_id
+		  -- designe un entier suivi d'un identificateur ; il est
+		  -- transforme' par sa post-action lexicale @5 qui le decoupe
+		  -- en une sequence de deux tokens %unsigned_int_constant et
+		  -- %symbolic_name ; le scanner ne retourne donc jamais
+		  -- %int_id ;
 		  -- @5 redecoupage en int id si precede de CHARACTER *
 			Context All But %symbolic_name ;
 
@@ -52,9 +63,11 @@ Tokens
    %character_constant
 		= Union
 		  	apostrophe :	"'" { ^"'\n" | "'" "'" &TRUE} "'" ;
-			double_quote :	quote { ^"\"\n" | quote -quote &TRUE} quote ; @2 ;
+			double_quote :	quote { ^"\"\n" | quote quote &TRUE} quote ; @2 ;
 		  	   -- @2 : traitement des chaines entre quotes
 		  	Hollerith :	(DIGIT |DIGIT&Is_Set(0)) {DIGIT} ("H"&TRUE | "h"&TRUE @6) ; @4 ;
+			   -- Is_Set(0) <=> inside a format statement.
+			   -- @6 : test ansi (pas de minuscules)
 		  	   -- @4 : traitement d'une zone Hollerith
 		  End ;
 
@@ -64,6 +77,12 @@ Tokens
 
    "/"		= -"/" ;
 			Priority Shift > Reduce;
+
+   "("          = -"(" ; @8 ;
+                  -- @8 : si is_implicit_statement => @Set(1)
+
+   ")"          = -")" @Reset(1);
+                  -- ... dans tous les cas
 
    %EOL		= -EOL ; @3 ; -- traitement du ENDDO
 

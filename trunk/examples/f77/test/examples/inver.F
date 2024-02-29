@@ -1,0 +1,149 @@
+      SUBROUTINE INVER (A,M,KK,ISIG,JK)
+C
+C  INVERSION DE MATRICE AVEC RECHERCHE DU PIVOT MAXIMUM
+C @(#)inver.F	1.1  26 Aug 1993
+C  LA MATRICE NE DOIT PAS ETRE SINGULIERE OU MAL CONDITIONNEE
+C  EN CAS CONTRAIRE LE SOUPROGRAMME S'ARRETE ET RETOURNE  ISIG=4
+C
+cm
+cm    auteur  : K. Tchao
+cm    service : PSDS
+cm    date    : 14/03/2005
+cm    origine : Portage sur linux
+cm    but     : Declarer les indices de tableaux avant leurs utilisations
+cm
+      IMPLICIT NONE
+      REAL*8 C, X, Z, zz, HOLD
+      INTEGER M, KK, ISIG, Jk,N, NN, N2, J, I, NJCOL, L, LCOL, KLL, J1
+      INTEGER KIL, KINJ, KLJ, KJIJ, KIJ, KKK, KKI, L1, JCOL, L2
+      REAL*8 A(JK)
+C
+C     LA DIMENSION DE A ICI ET DANS LE PROGRAMME APPELANT
+C     DOIT ETRE LA MEME
+C
+      ISIG = 1
+      N = M
+      NN = KK
+      N2 = N + N
+C
+      DO 20 J=1,N
+C
+      NJCOL = (N + J - 1) * NN
+
+      DO 20 I=1,N
+C
+      KINJ = NJCOL + I
+      IF(I.EQ.J) GO TO 10
+      A(KINJ) = 0.
+      GO TO 20
+   10 A(KINJ) = 1.
+   20 CONTINUE
+C
+C  RECHERCHE DU PIVOT MAXIMUM
+C
+      L = 0
+   30 L = L + 1
+      LCOL = NN*L-NN
+      KLL = LCOL + L
+      IF(L - N) 40,70,1000
+C
+C  RECHERCHE DU MAXIMUM DANS LA COLONNE L
+C
+   40 J1 = L
+      C=  ABS( A(KLL) )
+      L1 = L + 1
+C
+      DO 50 I = L1,N
+C
+      KIL = LCOL + I
+      X=  ABS( A(KIL) )
+      IF (C.GE.X) GO TO 50
+C
+C     ON STOCKE LE NUMERO DE LA LIGNE QUI CONTIENT LE MAXIMUM
+C
+      J1 = I
+
+C     C DEVIENT LE MAXIMUM
+C
+      C  = X
+   50 CONTINUE
+C
+C  ECHANGE DE LA LIGNE J1 AVEC LA LIGNE L. J1 EST LA LIGNE
+C  AVEC L ELEMENT LE PLUS GRAND
+C  ON TESTE SI L'ECHANGE EST NECESSAIRE
+C
+      IF(J1.EQ.L) GO TO 70
+C
+      DO 60 J = L,N2
+C
+      JCOL = NN*J-NN
+      KJIJ = JCOL + J1
+      HOLD = A(KJIJ)
+      KLJ = JCOL + L
+      A(KJIJ) = A(KLJ)
+      A(KLJ) = HOLD
+   60 CONTINUE
+C
+C  SI UNE LIGNE NE CONTIENT QUE DES ZEROS ON A UNE SINGULARITE
+C
+   70 IF( ABS(A(KLL)) .GT. 0.00000001) GO TO 80
+C
+C  ON ANNULLE TOUS LES ELEMENTS DE LA COLONNE L SAUF L'ELEMENT PIVOTAL
+C
+C  DANS INVER L'ELEMENT LE PLUS GRAND D'UNE COLONNE
+C  EST PLUS PETIT QUE 1.0E-08, ON NE PEUT PAS INVERSER
+C
+      ISIG = 4
+      GO TO 1000
+C
+   80 L1 = 1
+      L2 = L - 1
+      IF(L2.GT.0) GO TO 100
+   90 CONTINUE
+      IF(L.EQ.N) GO TO 120
+      L1 = L + 1
+      L2 = N
+C
+  100 CONTINUE
+      DO 110 I = L1,L2
+C
+      KIL = LCOL + I
+      Z = -A(KIL)/A(KLL)
+C
+      DO 110 J = L,N2
+C
+      JCOL = NN*J - NN
+      KIJ = JCOL + I
+      KLJ = JCOL + L
+  110 A(KIJ) = A(KIJ) + Z*A(KLJ)
+C
+      IF(N.LE.L2) GO TO 30
+      GO TO 90
+C  ON DIVISE PAR LES ELEMENTS DIAGONAUX
+C
+  120 CONTINUE
+      DO 130 I = 1,N
+C
+      KKK = NN*I - NN + I
+      ZZ = A(KKK)
+C
+      DO 130 J = 1,N2
+C
+      KKI = NN*J - NN + I
+  130 A(KKI) = A(KKI)/ZZ
+C
+C  RETURN APRES AVOIR MIS L'INVERSE DE A DANS B
+C
+      DO 140 J = 1,N
+C
+      JCOL = NN*J - NN
+      NJCOL = NN * N + JCOL
+C
+      DO 140 I = 1,N
+C
+      KIJ = JCOL + I
+      KINJ = NJCOL + I
+  140 A(KIJ)= A(KINJ)
+ 1000 RETURN
+C
+       END

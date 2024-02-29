@@ -383,8 +383,27 @@ comparaison peut se faire simplement avec la commande "cmp" ou "diff" d'Unix.
 
 ------------------------------------------------------------------------------
 
+Hubert - 26 fevr 2025
 
+Sur macOS, on  peut débugger facilement les accès mémoire
+(malloc/free) en positionnant des variables d'environnement :
+MallocScribble, MallocGuardEdges, etc.
 
+https://developer.apple.com/library/archive/documentation/Performance/Conceptual/ManagingMemory/Articles/MallocDebug.html
 
+puis on lance les binaires SYNTAX : chaque appel de malloc() ou free()
+va être surveillé. Attention, les commandes mac ('ls', etc.) reconnaissent
+aussi ces variables et donc on risque d'être enseveli sous des logs.
+
+Pour SYNTAX, le plus simple est de ne pas positionner ces variables
+soi-même, mais de positionner simplement
+
+    export MALLOC_SCRIBBLE=1
+
+Ensuite, quand on appelles le script trunk/com/lecl, il appellera
+à son tour etc/scribble/malloc_options qui positionnera les
+variables Apple juste pour le binaire SYNTAX.
+
+------------------------------------------------------------------------------
 
 

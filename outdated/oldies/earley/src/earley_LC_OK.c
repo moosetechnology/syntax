@@ -77,7 +77,7 @@
 #include "X.h"
 #include "SS.h"
 
-static SXBOOLEAN		is_default_semantics, is_print_prod, print_time, is_no_semantics;
+static bool		is_default_semantics, is_print_prod, print_time, is_no_semantics;
 static int		max_tree_nb;
 
 #define TIME_INIT	0
@@ -234,12 +234,12 @@ struct for_parsact {
     void	(*sem_init) (),
                 (*sem_final) ();
 
-    SXBOOLEAN	(*prdct) (),
+    bool	(*prdct) (),
                 (*action) (),
                 (*constraint) ();
 };
 
-static SXBOOLEAN	is_action_fun, is_prdct_fun, is_constraint_fun;
+static bool	is_action_fun, is_prdct_fun, is_constraint_fun;
 
 
 
@@ -264,8 +264,8 @@ static SXBOOLEAN	is_action_fun, is_prdct_fun, is_constraint_fun;
 #define	rhs_lgth	3
 /* rhs_maxnt nb max d'occur de nt en rhs */
 #define	rhs_maxnt	3
-#define is_cyclic	SXTRUE
-#define is_epsilon	SXTRUE
+#define is_cyclic	true
+#define is_epsilon	true
 
 
 static int lispro [] = 	{0,
@@ -327,21 +327,21 @@ static int lhs [] = {0,
 			 2
 };
 
-static SXBOOLEAN nt2eps [ntmax+1] = {0,
-			      SXTRUE, /* <S> */
-			      SXTRUE, /* <X> */
-			      SXTRUE /* <A> */
+static bool nt2eps [ntmax+1] = {0,
+			      true, /* <S> */
+			      true, /* <X> */
+			      true /* <A> */
 		      };
 
 
-static SXBOOLEAN item2eps [itemmax+1] = {0,
-				SXFALSE, SXFALSE, SXTRUE,
-				SXTRUE, SXTRUE, SXTRUE, SXTRUE,
-				SXTRUE, SXTRUE,
-				SXTRUE,
-				SXTRUE, SXTRUE, SXTRUE,
-				SXFALSE, SXTRUE,
-				SXTRUE
+static bool item2eps [itemmax+1] = {0,
+				false, false, true,
+				true, true, true, true,
+				true, true,
+				true,
+				true, true, true,
+				false, true,
+				true
 			};
 
 
@@ -470,8 +470,8 @@ static int char2tok (c)
 #define	rhs_lgth	1
 /* rhs_maxnt nb max d'occur de nt en rhs */
 #define	rhs_maxnt	1
-#define is_cyclic	SXTRUE
-#define is_epsilon	SXFALSE
+#define is_cyclic	true
+#define is_epsilon	false
 
 
 static int lispro [] = 	{0,
@@ -508,9 +508,9 @@ static int lhs [] = {0,
 			 2
 };
 
-static SXBOOLEAN nt2eps [ntmax+1];
+static bool nt2eps [ntmax+1];
 
-static SXBOOLEAN item2eps [itemmax+1];
+static bool item2eps [itemmax+1];
 
 static int prod2nbnt [] = {1,
 			       1,
@@ -658,8 +658,8 @@ static int char2tok (c)
 #define	rhs_lgth	3
 /* rhs_maxnt nb max d'occur de nt en rhs */
 #define	rhs_maxnt	2
-#define is_cyclic	SXFALSE
-#define is_epsilon	SXFALSE
+#define is_cyclic	false
+#define is_epsilon	false
 
 static int lispro [] = 	{0,
 1, -5, 0,
@@ -886,9 +886,9 @@ static int lhs [] = 	{
 4
 };
 
-static SXBOOLEAN nt2eps [ntmax+1];
+static bool nt2eps [ntmax+1];
 
-static SXBOOLEAN item2eps [itemmax+1];
+static bool item2eps [itemmax+1];
 
 
 static int item2nbnt [] = {0,
@@ -1350,9 +1350,9 @@ static int lhs [] = 	{0,
 			 };
 
 
-static SXBOOLEAN nt2eps [ntmax+1];
+static bool nt2eps [ntmax+1];
 
-static SXBOOLEAN item2eps [itemmax+1];
+static bool item2eps [itemmax+1];
 
 /* Ne contient pas les transitions "kernel" */
 static struct LC0 LC0 [] = {
@@ -1415,7 +1415,7 @@ static int			item2nbt [itemmax+1];
 static int			order2prod [prodmax+1], prod2order [prodmax+1],
                                 prod_order2next [prodmax+1], parse_order2next [prodmax+1];
 static SXBA                     is_mutual_right_recursive_prod;
-static SXBOOLEAN                  is_mutual_right_recursive;
+static bool                  is_mutual_right_recursive;
 static SXBA			*INIT, *FIRST_1, *NT2CHAIN, RHS_IN_T;
 
 
@@ -1460,7 +1460,7 @@ typedef struct {
 } bag_header;
 
 
-static SXBOOLEAN		is_parser;
+static bool		is_parser;
 
 static struct recognize_item {
     int		shift_NT_hd [ntmax + 1];
@@ -1511,7 +1511,7 @@ struct spf /* shared_parse_forest */
     struct lhs
     {
 	int		prolon, reduc, next_lhs, init_prod;
-	SXBOOLEAN		is_erased;
+	bool		is_erased;
     } *lhs;
 };
 
@@ -1525,7 +1525,7 @@ static ushort		prod_core [rhs_maxnt];
 
 static struct Aij_pool {
   int		A, i, j, first_lhs, first_rhs;
-  SXBOOLEAN	is_erased;
+  bool	is_erased;
 }			*Aij_pool;
 static int		Aij_top, Aij_size;
 
@@ -1698,7 +1698,7 @@ process_cycle (A)
 }
 
 
-static SXBOOLEAN
+static bool
 look_cycle (A, B)
     int A, B;
 {
@@ -1786,7 +1786,7 @@ process_prod_cycle ()
     }
 }
 
-static SXBOOLEAN
+static bool
 look_prod_cycle (q, p)
     int q, p;
 {
@@ -1958,7 +1958,7 @@ static int	prod_nb = prodmax;
 	    static int cycle_nb2card [prodmax+1];
 	    static int cycle2nb [prodmax+1];
 
-	    is_mutual_right_recursive = SXTRUE;
+	    is_mutual_right_recursive = true;
 
 	    prod_cycle = sxba_calloc (prodmax+1);
 	    prod_gset = sxba_calloc (prodmax+1);
@@ -2169,7 +2169,7 @@ static int	prod_nb = prodmax;
 	{
 	    /* ici, cycle ds order_graph car recursivite droite. */
 	    /* on cherche les cycles */
-	    is_mutual_right_recursive = SXTRUE;
+	    is_mutual_right_recursive = true;
 	    A = 0;
 
 	    while ((A = sxba_scan (nyp_gset, A)) > 0)
@@ -2313,7 +2313,7 @@ static int	prod_nb = prodmax;
 	    {
 		SXBA_1_bit (NT2NT [A], X);
 
-		if (nt2eps [X] == SXFALSE)
+		if (nt2eps [X] == false)
 		    break;
 	    }
 	}
@@ -2479,7 +2479,7 @@ grammar_free ()
 
 
 
-static SXBOOLEAN
+static bool
 NON_EQUAL (lhs_bits_array, rhs_bits_array)
     SXBA	lhs_bits_array, rhs_bits_array;
 {
@@ -2491,14 +2491,14 @@ NON_EQUAL (lhs_bits_array, rhs_bits_array)
     while (slices_number-- > 0)
     {
 	if (*lhs_bits_ptr-- != *rhs_bits_ptr--)
-	    return SXTRUE;
+	    return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
-static SXBOOLEAN
+static bool
 IS_INCLUDE (lhs_bits_array, rhs_bits_array)
     SXBA	lhs_bits_array, rhs_bits_array;
 {
@@ -2513,10 +2513,10 @@ IS_INCLUDE (lhs_bits_array, rhs_bits_array)
 	val = *lhs_bits_ptr--;
 
 	if ((val & *rhs_bits_ptr--) != val)
-	    return SXFALSE;
+	    return false;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -2552,14 +2552,14 @@ OR (lhs_bits_array, rhs_bits_array)
 }
 
 
-static SXBOOLEAN
+static bool
 OR_CHANGED (lhs_bits_array, rhs_bits_array)
     SXBA	lhs_bits_array, rhs_bits_array;
 {
     register SXBA	lhs_bits_ptr, rhs_bits_ptr;
     register int	slices_number = NBLONGS (BASIZE (rhs_bits_array));
     register SXBA_ELT	val1, val2;
-    SXBOOLEAN		has_changed = SXFALSE;
+    bool		has_changed = false;
 
 #if EBUG
     if (*lhs_bits_array < *rhs_bits_array)
@@ -2575,7 +2575,7 @@ OR_CHANGED (lhs_bits_array, rhs_bits_array)
 
 	if (val1 != val2)
 	{
-	    has_changed = SXTRUE;
+	    has_changed = true;
 	    *lhs_bits_ptr = val2;
 	}
 
@@ -2607,7 +2607,7 @@ OR_MINUS (bits_array1, bits_array2, bits_array3)
     }
 }
 
-static SXBOOLEAN
+static bool
 OR_AND (bits_array1, bits_array2, bits_array3)
     SXBA	bits_array1, bits_array2, bits_array3;
 {
@@ -2615,7 +2615,7 @@ OR_AND (bits_array1, bits_array2, bits_array3)
     register SXBA	bits_ptr1, bits_ptr2, bits_ptr3;
     register int	slices_number = NBLONGS (BASIZE (bits_array2));
     register SXBA_ELT	val1, val2;
-    SXBOOLEAN		has_changed = SXFALSE;
+    bool		has_changed = false;
 
     bits_ptr1 = bits_array1 + slices_number, bits_ptr2 = bits_array2 + slices_number, bits_ptr3 = bits_array3 + slices_number;
 
@@ -2629,7 +2629,7 @@ OR_AND (bits_array1, bits_array2, bits_array3)
 	    if (val1 != val2)
 	    {
 		*bits_ptr1 = val2;
-		has_changed = SXTRUE;
+		has_changed = true;
 	    }
 	}
 
@@ -2640,7 +2640,7 @@ OR_AND (bits_array1, bits_array2, bits_array3)
 }
 
 
-static SXBOOLEAN
+static bool
 OR_AND_MINUS (bits_array1, bits_array2, bits_array3, bits_array4)
     SXBA	bits_array1, bits_array2, bits_array3, bits_array4;
 {
@@ -2651,7 +2651,7 @@ OR_AND_MINUS (bits_array1, bits_array2, bits_array3, bits_array4)
     /* On change la taille! */
     register int	slices_number = NBLONGS (BASIZE (bits_array4) = BASIZE (bits_array2));
     register SXBA_ELT	val;
-    SXBOOLEAN		is_set = SXFALSE;
+    bool		is_set = false;
 
     bits_ptr1 = bits_array1 + slices_number,
     bits_ptr2 = bits_array2 + slices_number,
@@ -2661,7 +2661,7 @@ OR_AND_MINUS (bits_array1, bits_array2, bits_array3, bits_array4)
     while (slices_number-- > 0)
     {
 	if ((val = *bits_ptr4-- = (*bits_ptr2--) & (*bits_ptr3--) & (~(*bits_ptr1))) != 0L)
-	    is_set = SXTRUE;
+	    is_set = true;
 
 	*bits_ptr1-- |= val;
     }
@@ -2723,14 +2723,14 @@ COPY_RAZ (lhs_bits_array, rhs_bits_array)
     }
 }
 
-static SXBOOLEAN
+static bool
 AND (lhs_bits_array, rhs_bits_array)
     SXBA	lhs_bits_array, rhs_bits_array;
 {
     register SXBA	lhs_bits_ptr, rhs_bits_ptr;
     register int	slices_number = NBLONGS (BASIZE (rhs_bits_array));
     register int	lhs_slices_number = NBLONGS (BASIZE (lhs_bits_array));
-    SXBOOLEAN		ret_val = SXFALSE;
+    bool		ret_val = false;
 
 #if EBUG
     if (*lhs_bits_array < *rhs_bits_array)
@@ -2750,14 +2750,14 @@ AND (lhs_bits_array, rhs_bits_array)
     while (slices_number-- > 0)
     {
 	if (*lhs_bits_ptr-- &= *rhs_bits_ptr--)
-	    ret_val = SXTRUE;
+	    ret_val = true;
     }
 
     return ret_val;
 }
 
 
-static SXBOOLEAN
+static bool
 AND3 (lhs_bits_array, op1_bits_array, op2_bits_array)
     SXBA	lhs_bits_array, op1_bits_array, op2_bits_array;
 {
@@ -2765,7 +2765,7 @@ AND3 (lhs_bits_array, op1_bits_array, op2_bits_array)
 
     register SXBA	lhs_bits_ptr, op1_bits_ptr, op2_bits_ptr;
     register int	slices_number = NBLONGS (BASIZE (op2_bits_array));
-    SXBOOLEAN		ret_val = SXFALSE;
+    bool		ret_val = false;
 
 #if EBUG
     if (*op1_bits_array < *op2_bits_array)
@@ -2779,7 +2779,7 @@ AND3 (lhs_bits_array, op1_bits_array, op2_bits_array)
     while (slices_number-- > 0)
     {
 	if (*lhs_bits_ptr-- = (*op1_bits_ptr-- & *op2_bits_ptr--))
-	    ret_val = SXTRUE;
+	    ret_val = true;
     }
 
     return ret_val;
@@ -2797,7 +2797,7 @@ AND3_SHIFT (lhs_bits_array, op1_bits_array, op2_bits_array, shift)
     int			left_shift = SXBITS_PER_LONG - right_shift;
     SXBA_ELT		filtre = (~(0L)) >> left_shift;
     SXBA_ELT		op2val = 0L, prev_op2val;
-    SXBOOLEAN		ret_val = SXFALSE;
+    bool		ret_val = false;
 
 #if EBUG
     if (*op1_bits_array < *op2_bits_array)
@@ -2814,27 +2814,27 @@ AND3_SHIFT (lhs_bits_array, op1_bits_array, op2_bits_array, shift)
 	op2val = *op2_bits_ptr--;
 
 	if (*lhs_bits_ptr-- = (*op1_bits_ptr-- & ((op2val >> right_shift) | ((prev_op2val & filtre) << left_shift))))
-	    ret_val = SXTRUE;
+	    ret_val = true;
     }
 
     return ret_val;
 }
 
 
-static SXBOOLEAN
+static bool
 MINUS (lhs_bits_array, rhs_bits_array)
     SXBA	lhs_bits_array, rhs_bits_array;
 {
     register SXBA	lhs_bits_ptr, rhs_bits_ptr;
     register int	slices_number = NBLONGS (BASIZE (rhs_bits_array));
-    SXBOOLEAN		ret_val = SXFALSE;
+    bool		ret_val = false;
 
     lhs_bits_ptr = lhs_bits_array + slices_number, rhs_bits_ptr = rhs_bits_array + slices_number;
 
     while (slices_number-- > 0)
     {
 	if (*lhs_bits_ptr-- &= ~(*rhs_bits_ptr--))
-	    ret_val = SXTRUE;
+	    ret_val = true;
     }
 
     return ret_val;
@@ -2842,7 +2842,7 @@ MINUS (lhs_bits_array, rhs_bits_array)
 
 
 
-static SXBOOLEAN
+static bool
 IS_AND (lhs_bits_array, rhs_bits_array)
     SXBA	lhs_bits_array, rhs_bits_array;
 {
@@ -2858,10 +2858,10 @@ IS_AND (lhs_bits_array, rhs_bits_array)
     while (slices_number-- > 0)
     {
 	if (*lhs_bits_ptr-- & *rhs_bits_ptr--)
-	    return SXTRUE;
+	    return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 #if 0
@@ -2905,7 +2905,7 @@ OR_SHIFT_RESET (lhs_bits_array, rhs_bits_array, n)
 }
 
 
-static SXBOOLEAN
+static bool
 IS_AND_MINUS (bits_array1, bits_array2, bits_array3)
     SXBA	bits_array1, bits_array2, bits_array3;
 {
@@ -2926,14 +2926,14 @@ IS_AND_MINUS (bits_array1, bits_array2, bits_array3)
     while (slices_number1-- > 0)
     {
 	if (*bits_ptr1-- & (*bits_ptr2-- & (~(*bits_ptr3--))))
-	    return SXTRUE;
+	    return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
-static SXBOOLEAN
+static bool
 IS_SUBSET (lhs_bits_array, rhs_bits_array)
     SXBA	lhs_bits_array, rhs_bits_array;
 {
@@ -2954,10 +2954,10 @@ IS_SUBSET (lhs_bits_array, rhs_bits_array)
 	rhs = *rhs_bits_ptr--;
 
 	if (lhs != (lhs & rhs))
-	    return SXFALSE;
+	    return false;
     }
 
-    return SXTRUE;
+    return true;
 }
 #endif
 
@@ -3287,13 +3287,13 @@ scan_reduce (i)
 }
 
 
-static SXBOOLEAN
+static bool
 complete (i)
     int i;
 {
     int		hd, state, next_state, X, Y, YY, A, B, j, prdct_no, prod, Aik, start, end;
     SXBA	index_set, index_set2, backward_index_set;
-    SXBOOLEAN	keep, is_tok, is_scan_reduce = SXFALSE;
+    bool	keep, is_tok, is_scan_reduce = false;
 
     /* Le look-ahead est verifie pour tous les state de T1_state_set. */
     /* De plus si A -> \alpha X . ai+1 \beta, le predicat de ai+1 est verifie'
@@ -3302,7 +3302,7 @@ complete (i)
     if ((state = T1_shift_NT_hd [0]) != 0)
     {
 	/* A -> \alpha X . ai+1 \beta */
-	is_tok = SXTRUE;
+	is_tok = true;
 	T1_shift_NT_hd [0] = 0;
 
 	if (i < n)
@@ -3369,7 +3369,7 @@ complete (i)
 		if (Y == 0)
 		{
 		    /* next_state = A -> \alpha X  ai+1 \beta .  et \beta =>* \epsilon */
-		    is_scan_reduce = SXTRUE;
+		    is_scan_reduce = true;
 
 		    A = lhs [prolis [state]];
 		    OR (ntXindex_set [A], index_set);
@@ -3436,7 +3436,7 @@ complete (i)
 		else
 		{
 		    /* X == 0 */
-		    /* is_epsilon == SXTRUE */
+		    /* is_epsilon == true */
 		    /* state = A -> \alpha . et \alpha =>* \epsilon */
 		    /* Pour l'instant, on stocke les contraintes sur le vide
 		       qui seront evaluees et exploitees plus tard. */
@@ -3492,7 +3492,7 @@ complete (i)
 		/* state = A -> \alpha . ai+1 beta et \alpha =>* \epsilon */
 		/* next_state = A -> \alpha ai+1 . beta et \alpha =>* \epsilon */
 		/* le look-ahead de next_state est teste' */
-		is_tok = SXTRUE;
+		is_tok = true;
 
 		while ((Y = lispro [next_state]) != 0)
 		{
@@ -3560,7 +3560,7 @@ complete (i)
 		if (Y == 0)
 		{
 		    /* next_state = A -> \alpha ai+1 \beta .  et \alpha \beta =>* \epsilon */
-		    is_scan_reduce = SXTRUE;
+		    is_scan_reduce = true;
 
 		    A = lhs [prolis [state]];
 		    SXBA_1_bit (ntXindex_set [A], i);
@@ -3600,7 +3600,7 @@ recognize ()
 {
     int			i;
     int			*T0_shift_NT_stack;
-    SXBOOLEAN		is_in_LG;
+    bool		is_in_LG;
     SXBA		index_set;
 
     /* initial_state ne vaut pas toujours 1 (cas ou L(G)={epsilon}). */
@@ -3729,7 +3729,7 @@ erase_elementary_tree (elementary_tree)
 
     if (!pet->is_erased)
     {
-	pet->is_erased = SXTRUE;
+	pet->is_erased = true;
 
 	for (q = p = &(Aij_pool [pet->reduc].first_lhs); *p != 0; p = &(spf.lhs [*p].next_lhs))
 	{
@@ -3806,7 +3806,7 @@ useless_symbol_elimination ()
 	for (prod = Aij_pool [symbol].first_lhs; prod != 0; prod = spf.lhs [prod].next_lhs)
 	{
 	    /* prod est inaccessible */
-	    spf.lhs [prod].is_erased = SXTRUE;
+	    spf.lhs [prod].is_erased = true;
 	}
 
 	Aij_pool [symbol].first_lhs = Aij_pool [symbol].first_rhs = 0;
@@ -3847,7 +3847,7 @@ ARN_sem_final (size)
 }
 
 
-static SXBOOLEAN
+static bool
 ARN_constraint (prdct_no, A, i, j)
     int A, prdct_no, i, j;
 {
@@ -3863,7 +3863,7 @@ ARN_constraint (prdct_no, A, i, j)
 }
 
 
-static SXBOOLEAN
+static bool
 RL_mreduction_item (item_j, I, j)
     int 	item_j, j;
     SXBA	I;
@@ -3874,7 +3874,7 @@ RL_mreduction_item (item_j, I, j)
     SXBA			/* tbp_set, */ ap_set;
     struct recognize_item	*RTj;
     struct parse_item		*PTj;
-    SXBOOLEAN			is_tbp, is_new;
+    bool			is_tbp, is_new;
 
     SXBA			ids, nbis;
 
@@ -3917,7 +3917,7 @@ RL_mreduction_item (item_j, I, j)
     }
     else
     {
-	is_tbp = SXFALSE;
+	is_tbp = false;
 	nbt = item2nbt [item_k];
 	new_item = item_k - nbt;
 
@@ -3949,7 +3949,7 @@ RL_mreduction_item (item_j, I, j)
 		if ((is_new || !SXBA_bit_is_set (ap_set, k)))
 		{
 		    SXBA_1_bit (ap_set, k);
-		    is_tbp = SXTRUE;
+		    is_tbp = true;
 		}
 
 		if (new_item > bot_item)
@@ -3959,7 +3959,7 @@ RL_mreduction_item (item_j, I, j)
 
 		    if (new_k == j)
 		    {
-			/* is_epsilon == SXTRUE */
+			/* is_epsilon == true */
 			if ((ids = PT2 [new_k].index_sets [new_item]) == NULL)
 			    ids = PT2 [new_k].index_sets [new_item] = bag_get (&pt2_bag, j+1);
 
@@ -3970,7 +3970,7 @@ RL_mreduction_item (item_j, I, j)
 			{
 			    /* Il y a du nouveau */
 			    if (RL_mreduction_item (new_item, ids, j))
-				is_tbp = SXTRUE;
+				is_tbp = true;
 			}
 		    }
 		    else
@@ -4003,7 +4003,7 @@ RL_mreduction ()
     int				*PT2j_shift_NT_stack, x, item, new_item, new_j, prod, X;
     SXBA			*PT2j_index_set, *PT2j_backward_index_set, I, B, ids, nbis;
     SXBA			index_set, backward_index_set, new_index_set, red_order_set;
-    SXBOOLEAN			is_good;
+    bool			is_good;
 
     RL_nt_set = sxba_calloc (ntmax+1);
     prod_order_set = sxba_calloc (prodmax+1);
@@ -4054,7 +4054,7 @@ RL_mreduction ()
 	    tnb = item2nbt [item];
 	    ap_set = ap_sets [A];
 
-	    is_good = SXFALSE;
+	    is_good = false;
 				
 	    if (tnb == 0)
 	    {
@@ -4062,7 +4062,7 @@ RL_mreduction ()
 		{
 		    /* item = A -> . */
 		    if (SXBA_bit_is_set (ap_set, j))
-			is_good = SXTRUE;
+			is_good = true;
 		}
 		else
 		{
@@ -4086,7 +4086,7 @@ RL_mreduction ()
 			}
 			/* else order est pris en sequence */
 
-			is_good = SXTRUE;
+			is_good = true;
 		    }
 
 #if 0
@@ -4106,7 +4106,7 @@ RL_mreduction ()
 			    }
 			    /* else order est pris en sequence */
 
-			    is_good = SXTRUE;
+			    is_good = true;
 			}
 		    }
 #endif		    
@@ -4120,7 +4120,7 @@ RL_mreduction ()
 		{
 		    /* Que des t en rhs */
 		    if (SXBA_bit_is_set (ap_set, new_j))
-			is_good = SXTRUE;
+			is_good = true;
 		}
 		else
 		{
@@ -4136,7 +4136,7 @@ RL_mreduction ()
 			}
 
 			if (OR_AND (ids, index_set, ap_set))
-			    is_good = SXTRUE;
+			    is_good = true;
 		    }
 		}
 	    }
@@ -4266,7 +4266,7 @@ ARN_ksem_final (size)
 }
 
 static unsigned long	ksem_vector;
-static SXBOOLEAN
+static bool
 ksem_incr (nbnt, rhs_stack)
     int nbnt, *rhs_stack;
 {
@@ -4284,11 +4284,11 @@ ksem_incr (nbnt, rhs_stack)
 	if (i < max_tree_nb && ARN_disp_ksem [rhs_stack [x+1]][i].val != -1)
 	{
 	    ksem_vector |= (i << shift);
-	    return SXTRUE;
+	    return true;
 	}
     }
 
-    return SXFALSE;
+    return false;
 }
 
 static int
@@ -4383,7 +4383,7 @@ ARN_keval (Aij, i, j, rhs_stack)
 
 #if 0
 static int	ksem_vector [rhs_maxnt];
-static SXBOOLEAN
+static bool
 ksem_incr (nbnt, rhs_stack)
     int nbnt, *rhs_stack;
 {
@@ -4398,11 +4398,11 @@ ksem_incr (nbnt, rhs_stack)
 	else
 	{
 	    ksem_vector [x] = i;
-	    return SXTRUE;
+	    return true;
 	}
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
@@ -4497,7 +4497,7 @@ ARN_keval (prod, i, j, rhs_stack)
 #endif
 
 
-static SXBOOLEAN
+static bool
 ARN_kparsact (i, j, prod_core, rhs_stack)
     int 	i, j;
     ushort	*prod_core;
@@ -4572,10 +4572,10 @@ ARN_kparsact (i, j, prod_core, rhs_stack)
 	    }
 	}
 
-	return SXTRUE;
+	return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
@@ -4722,7 +4722,7 @@ ksem_bu_extract ()
 }
 
 
-static SXBOOLEAN
+static bool
 ARN_eval (prod, i, j, rhs_stack, val)
     int 	prod, i, j, *rhs_stack;
     float	*val;
@@ -4745,12 +4745,12 @@ ARN_eval (prod, i, j, rhs_stack, val)
 
     *val = proba;
 
-    return SXTRUE;
+    return true;
 }
 
 
 
-static SXBOOLEAN
+static bool
 ARN_parsact (i, j, prod_core, rhs_stack)
     int 	i, j;
     ushort	*prod_core;
@@ -4784,10 +4784,10 @@ ARN_parsact (i, j, prod_core, rhs_stack)
 	    } while (p >= prod_core);
 	}
 
-	return SXTRUE;
+	return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
@@ -4820,7 +4820,7 @@ print_SXBA (set)
 #endif
 
 
-static SXBOOLEAN
+static bool
 parse_item (A0k, item, I, i_left, j, k, nbnt)
     int 	A0k, i_left, item, j, k, nbnt;
     SXBA	I;
@@ -4831,7 +4831,7 @@ parse_item (A0k, item, I, i_left, j, k, nbnt)
     /* Si I == NULL, i_left est positionne */
        
     int		i, new_i, nbt, B0j, Bij, Aik, prod, prdct_no;
-    SXBOOLEAN     ret_val = SXFALSE, is_ok, is_prdct;
+    bool     ret_val = false, is_ok, is_prdct;
     SXBA        backward_J, ap_set, index_set;
 
     backward_J = PT2 [j].backward_index_sets [item+1];
@@ -4929,10 +4929,10 @@ parse_item (A0k, item, I, i_left, j, k, nbnt)
 		    is_ok = (*for_parsact.action) (new_i, k, prod_core, rhs_stack);
 		}
 		else
-		    is_ok = SXTRUE;
+		    is_ok = true;
 	    
 		if (is_ok && SXBA_bit_is_reset_set (ap_set, new_i))
-		    ret_val = SXTRUE;
+		    ret_val = true;
 	    }
 
 	    if (index_set != NULL)
@@ -4967,7 +4967,7 @@ parse_item (A0k, item, I, i_left, j, k, nbnt)
 		    rhs_stack [nbnt] = Bij;
 
 		if (parse_item (A0k, item-1, I, i_left, i - nbt, k, nbnt-1))
-		    ret_val = SXTRUE;
+		    ret_val = true;
 	    }
 	}
     }
@@ -5011,11 +5011,11 @@ cyclic_sem (j, init_prod_order, out_prod_order)
 
     PT2j = &(PT2 [j]);
     prod_order = init_prod_order;
-    first_loop = SXTRUE;
+    first_loop = true;
 
     while (first_loop)
     {
-	first_loop = SXFALSE;
+	first_loop = false;
 
 	do
 	{
@@ -5064,13 +5064,13 @@ cyclic_sem (j, init_prod_order, out_prod_order)
 					if (is_ok)
 					{
 					    SXBA_1_bit (cycle_red_order_set, prod_order);
-					    should_loop = SXTRUE;
+					    should_loop = true;
 					}
 					else
 					    SXBA_0_bit (backward_index_set, i);
 				    }
 				    else
-					is_ok = SXTRUE;
+					is_ok = true;
 	    
 				    if (is_ok)
 					SXBA_1_bit (ap_sets [A], i);
@@ -5125,7 +5125,7 @@ cyclic_sem (j, init_prod_order, out_prod_order)
 						if (is_ok)
 						{
 						    SXBA_1_bit (cycle_red_order_set, prod_order);
-						    should_loop = SXTRUE;
+						    should_loop = true;
 						    /* (prod, i) est cyclique, il faut reexecuter
 						       la semantique dessus. */
 						}
@@ -5133,7 +5133,7 @@ cyclic_sem (j, init_prod_order, out_prod_order)
 						    SXBA_0_bit (backward_index_set, i);
 					    }
 					    else
-						is_ok = SXTRUE;
+						is_ok = true;
 	    
 					    if (is_ok)
 						SXBA_1_bit (ap_sets [A], i);
@@ -5143,7 +5143,7 @@ cyclic_sem (j, init_prod_order, out_prod_order)
 					}
 					else
 					    /* sera genere au prochain tour de boucle. */
-					    first_loop = SXTRUE;
+					    first_loop = true;
 				    }
 
 				    /* item = A -> \alpha X . B et B est ds le cycle et (partiellement) calcule */
@@ -5188,7 +5188,7 @@ cyclic_sem (j, init_prod_order, out_prod_order)
     int			next_prod_order, prod_order, prod, item, B, B0j, Bij, A, A0j, Aij, i;
     SXBA 		backward_index_set, red_order_set;
     struct PT2_item	*PT2j;
-    SXBOOLEAN		is_ok, should_loop = SXFALSE;
+    bool		is_ok, should_loop = false;
 
     red_order_set = red_order_sets [j];
     PT2j = &(PT2 [j]);
@@ -5228,13 +5228,13 @@ cyclic_sem (j, init_prod_order, out_prod_order)
 		    if (is_ok)
 		    {
 			SXBA_1_bit (cycle_red_order_set, prod_order);
-			should_loop = SXTRUE;
+			should_loop = true;
 		    }
 		    else
 			SXBA_0_bit (backward_index_set, i);
 		}
 		else
-		    is_ok = SXTRUE;
+		    is_ok = true;
 	    
 		if (is_ok)
 		    SXBA_1_bit (ap_sets [A], i);
@@ -5255,7 +5255,7 @@ cyclic_sem (j, init_prod_order, out_prod_order)
     /* On fait les suivants */
     while (should_loop)
     {
-	should_loop = SXFALSE;
+	should_loop = false;
 	prod_order = init_prod_order+1;
 
 	while ((prod_order = sxba_1_rlscan (cycle_red_order_set, prod_order)) > 0)
@@ -5281,7 +5281,7 @@ cyclic_sem (j, init_prod_order, out_prod_order)
 	    
 		if (is_ok)
 		{
-		    should_loop = SXTRUE;
+		    should_loop = true;
 		    SXBA_1_bit (cycle_red_order_set, prod_order);
 		}
 		else
@@ -5357,13 +5357,13 @@ process_item_cycle ()
     }
 }
 
-static SXBOOLEAN
+static bool
 max_item_cycle (q, p)
     int	q, p;
 {
     /* met ds ritem_cycle_set le cycle maximal autour de q */
     int		ritem;
-    SXBOOLEAN	has_cycle = SXFALSE;
+    bool	has_cycle = false;
     SXBA	ritem_set;
 
     SXBA_1_bit (ritem_gset, p);
@@ -5379,14 +5379,14 @@ max_item_cycle (q, p)
 	    {
 		/* on a trouve un cycle */
 		process_item_cycle ();
-		has_cycle = SXTRUE;
+		has_cycle = true;
 		break;
 	    }
 	    else
 	    {
 		if (!SXBA_bit_is_set (ritem_gset, ritem) && max_item_cycle (q, ritem))
 		{
-		    has_cycle = SXTRUE;
+		    has_cycle = true;
 		    break;
 		}
 	    }
@@ -5414,7 +5414,7 @@ static int	nt2item_stack [ntmax+1] [itemmax+1], *A2item_stack;
                         A, A0j, Aij, B, B0j, Bkj, x, nbnt, l, m, prdct_no;
     int			*p, *q;
     struct PT2_item	*PT2j;
-    SXBOOLEAN		is_high_level, should_loop, is_prdct;
+    bool		is_high_level, should_loop, is_prdct;
     SXBA		ritem_set;
 
     PT2j = &(PT2 [j]);
@@ -5496,7 +5496,7 @@ static int	nt2item_stack [ntmax+1] [itemmax+1], *A2item_stack;
 	    /* ritem_cycle_set contient le cycle maximal autour de item */
 	    /* On regarde si ce cycle est de plus haut niveau */
 
-	    is_high_level = SXTRUE;
+	    is_high_level = true;
 
 	    if (MINUS (k_ritem_set, ritem_cycle_set))
 	    {
@@ -5511,7 +5511,7 @@ static int	nt2item_stack [ntmax+1] [itemmax+1], *A2item_stack;
 		    {
 			if (SXBA_bit_is_set (ritem_cycle_set, ritem3))
 			{
-			    is_high_level = SXFALSE;
+			    is_high_level = false;
 			    break;
 			}
 		    }
@@ -5709,7 +5709,7 @@ static int	nt2item_stack [ntmax+1] [itemmax+1], *A2item_stack;
 		       precedent ont pu faire echouer le calcul! */
 		    do
 		    {
-			should_loop = SXFALSE;
+			should_loop = false;
 
 			for (x = 1; x <= tbp_stack [0]; x++)
 			{
@@ -5725,7 +5725,7 @@ static int	nt2item_stack [ntmax+1] [itemmax+1], *A2item_stack;
 				cur_rhs_stack = &(rhs_stacks [citem][0]);
 
 				if ((*for_parsact.action) (k, j, cur_prod_core, cur_rhs_stack))
-				    should_loop = SXTRUE;
+				    should_loop = true;
 				else
 				    /* point fixe atteint, on l'enleve */
 				    tbp_stack [x] = 0;
@@ -5757,7 +5757,7 @@ mrr_generate (i, h, j, item)
     /* item = Aij -> \alphaih Bhj . \betajj */
     /* Bhj \betajj sont evalues */
     int 	X, prod, A, A0j, Aij, cur_item, nbnt, nbt, k, B, B0j, Bkj, prdct_no;
-    SXBOOLEAN	is_prdct;
+    bool	is_prdct;
 
     if (h == j && lispro [item-2] > 0)
     {
@@ -5858,7 +5858,7 @@ mutual_right_recursive (j, init_prod_order, out_prod_order)
     int			*i_prod_stack;
     struct PT2_item	*PT2j;
     SXBA 		index_set, backward_index_set, red_order_set;
-    SXBOOLEAN 		nothing_has_changed, is_ok;
+    bool 		nothing_has_changed, is_ok;
 
     prod_order = init_prod_order;
     red_order_set = red_order_sets [j];
@@ -5913,7 +5913,7 @@ mutual_right_recursive (j, init_prod_order, out_prod_order)
 
 	while (!IS_EMPTY (tbp_item_stack))
 	{
-	    nothing_has_changed = SXTRUE;
+	    nothing_has_changed = true;
 
 	    do
 	    {
@@ -5935,7 +5935,7 @@ mutual_right_recursive (j, init_prod_order, out_prod_order)
 		    {
 			/* Bij est calcule */
 			mrr_generate (i, i, j, item);
-			nothing_has_changed = SXFALSE;
+			nothing_has_changed = false;
 		    }
 		}
 		else
@@ -5966,7 +5966,7 @@ mutual_right_recursive (j, init_prod_order, out_prod_order)
 				/* Bkj est calcule */
 				/* Si k == j, peut empiler ds tbp_item_stack */
 				mrr_generate (i, k, j, item);
-				nothing_has_changed = SXFALSE;
+				nothing_has_changed = false;
 			    }
 			    else
 			    {
@@ -5978,7 +5978,7 @@ mutual_right_recursive (j, init_prod_order, out_prod_order)
 				{
 				    /* Bij est calcule */
 				    mrr_generate (i, i, j, item);
-				    nothing_has_changed = SXFALSE;
+				    nothing_has_changed = false;
 				}
 			    }
 			}
@@ -6021,7 +6021,7 @@ parse ()
     int                 *PT2j_shift_NT_stack;
     SXBA	        backward_index_set, index_set, red_order_set;
     int		        item, new_item, new_j, j, prod_order, A, A0j, Aij, B, nbt, nbnt, prod, x;
-    SXBOOLEAN             is_ok;
+    bool             is_ok;
     SXBA		lhs_nt_set;
 
     /* On genere toutes les reductions finissant en j */
@@ -6084,7 +6084,7 @@ parse ()
 		    is_ok = (*for_parsact.action) (new_j, j, prod_core, rhs_stack);
 		}
 		else
-		    is_ok = SXTRUE;
+		    is_ok = true;
 
 		if (is_ok)
 		    SXBA_1_bit (ap_sets [A], new_j);
@@ -6256,7 +6256,7 @@ spf_count_final (size)
 }
 
 
-static SXBOOLEAN
+static bool
 spf_count_parsact (i, j, prod_core, rhs_stack)
     int 	i, j;
     ushort	*prod_core;
@@ -6276,7 +6276,7 @@ spf_count_parsact (i, j, prod_core, rhs_stack)
     {
 	/* implique' ds un cycle et 2eme passage */
 	spf_count [Aij] = HUGE_VAL; /* Produces IEEE Infinity. */
-	return SXFALSE;
+	return false;
     }
     else
     {
@@ -6294,7 +6294,7 @@ spf_count_parsact (i, j, prod_core, rhs_stack)
 
 	spf_count [Aij] += val;
 
-	return SXTRUE;
+	return true;
     }
 }
 
@@ -6349,7 +6349,7 @@ spf_count_parsact (i, j, prod_core, rhs_stack)
 
     spf_count [Aij] += val;
 
-    return SXTRUE;
+    return true;
 }
 #endif
 
@@ -6393,10 +6393,10 @@ main (argc, argv)
 
     sxopentty ();
 
-    is_parser = SXFALSE;
-    is_print_prod = SXFALSE;
-    is_no_semantics = SXTRUE;
-    is_default_semantics = SXTRUE;
+    is_parser = false;
+    is_print_prod = false;
+    is_no_semantics = true;
+    is_default_semantics = true;
     max_tree_nb = 1;
 
     l = 0;
@@ -6422,28 +6422,28 @@ main (argc, argv)
 	    switch (c)
 	    {
 	    case 'd':
-		is_default_semantics = SXTRUE;
-		is_no_semantics = SXFALSE;
+		is_default_semantics = true;
+		is_no_semantics = false;
 		break;
 
 	    case 'n':
-		is_no_semantics = SXTRUE;
+		is_no_semantics = true;
 		break;
 
 	    case 'p':
 		if (!is_parser)
-		    is_parser = SXTRUE;
+		    is_parser = true;
 		else
-		    is_print_prod = SXTRUE;
+		    is_print_prod = true;
 		break;
 
 	    case 'r':
-		is_parser = SXFALSE;
+		is_parser = false;
 		break;
 
 	    case 's':
-		is_default_semantics = SXFALSE;
-		is_no_semantics = SXFALSE;
+		is_default_semantics = false;
+		is_no_semantics = false;
 		break;
 
 	    default:
@@ -6454,7 +6454,7 @@ main (argc, argv)
 	}
     }
 
-    print_time = SXTRUE;
+    print_time = true;
 
     s = source = argv [2];
     n = strlen (source);

@@ -212,11 +212,11 @@ static int		*block_level_stack, *type_specifier_stack, *struct_level_stack,
                         *name_id_stack;
 static int		*t_to_class_type, *t_to_decl_spec;
 
-static SXBOOLEAN		has_declarator, is_in_type_name;
+static bool		has_declarator, is_in_type_name;
 static int		where_is_declaration_specifier;
 
 struct operand_type {
-    SXBOOLEAN	is_lvalue;
+    bool	is_lvalue;
     int		name_or_type; /* Si <0 designe une entree ds members. */
     int		indirection_level;
 };
@@ -327,7 +327,7 @@ static int process_tag_name (string_table_entry, kind, struct_level, source_inde
     int		struct_level;
     struct sxsource_coord	*source_index;
 {
-    SXBOOLEAN	is_ok;
+    bool	is_ok;
     int		x;
     struct tags_attr	*attr;
     
@@ -512,11 +512,11 @@ static void dc_pi () {
     case DECLARATION_INTERNAL_n :
 	switch (SXVISITED->position) {
 	case 1 :/* SXVISITED->name = {DECLARATION_SPECIFIERS_0_n, DECLARATION_SPECIFIERS_1_n} */
-	    has_declarator = SXTRUE;
+	    has_declarator = true;
 	    break;
 	    
 	case 2 :/* SXVISITED->name = DECLARATORS_INIT_n */
-	    has_declarator = SXFALSE;
+	    has_declarator = false;
 	    break;
 	    
 	}
@@ -549,11 +549,11 @@ static void dc_pi () {
     case DECLARATION_STRUCT_n :
 	switch (SXVISITED->position) {
 	case 1 :/* SXVISITED->name = {SPECIFIER_QUALIFIERS_0_n, SPECIFIER_QUALIFIERS_1_n} */
-	    has_declarator = SXTRUE;
+	    has_declarator = true;
 	    break;
 	    
 	case 2 :/* SXVISITED->name = DECLARATORS_STRUCT_n */
-	    has_declarator = SXFALSE;
+	    has_declarator = false;
 	    break;
 	    
 	}
@@ -1365,11 +1365,11 @@ static void dc_pi () {
 	case 1 :/* SXVISITED->name = {SPECIFIER_QUALIFIERS_0_n, SPECIFIER_QUALIFIERS_1_n} */
 	    type_specifier = UNDEF_TYPE_SPECIFIER_;
 	    name_id = 0;
-	    is_in_type_name = SXTRUE;
+	    is_in_type_name = true;
 	    break;
 	    
 	case 2 :/* SXVISITED->name = {DECLARATOR_ABSTRACT_n, POINTER_n, VOID_n} */
-	    is_in_type_name = SXFALSE;
+	    is_in_type_name = false;
 	    break;
 	    
 	}
@@ -1452,7 +1452,7 @@ static void dc_pd () {
 	    SXVISITED->father->name != DEFINITION_FUNCTION_NO_DECLARATION_n &&
 	    SXVISITED->father->name != DEFINITION_FUNCTION_NO_SPECIFIER_NO_DECLARATION_n) {
 	    new_block_level++;
-	    sxsymbol_table_close (ids, new_block_level, SXTRUE);
+	    sxsymbol_table_close (ids, new_block_level, true);
 	}
 
 	break;
@@ -1471,7 +1471,7 @@ static void dc_pd () {
 	
     case D_IDENTIFIER_n :
 	if (current_struct_level == 0) {
-	    SXBOOLEAN	is_ok;
+	    bool	is_ok;
 	    int		x;
 	    struct attribute	*attr;
 
@@ -1485,12 +1485,12 @@ static void dc_pd () {
 		if (where_is_declaration_specifier == IN_PARAMETER_DECLARATIONS_) {
 		    /* Nom existant au meme niveau, c'est obligatoirement un
 		       parametre formel. */
-		    is_ok = SXTRUE;
+		    is_ok = true;
 		}
 		else if (attr->type_specifier & FUNCTION_DECLARATION_) {
 		    /* On peut la redeclarer ou la definir. */
 		    if (type_specifier & (FUNCTION_DECLARATION_ | FUNCTION_DEFINITION_))
-			is_ok = SXTRUE;
+			is_ok = true;
 		}
 	    }
 
@@ -1515,7 +1515,7 @@ static void dc_pd () {
 	}
 	else {
 	    /* member definition */
-	    SXBOOLEAN	is_ok;
+	    bool	is_ok;
 	    int		x;
 	    struct attribute	*attr;
 
@@ -1704,7 +1704,7 @@ static void dc_pd () {
 
 	    }
 
-	    operand_type.is_lvalue = SXTRUE;
+	    operand_type.is_lvalue = true;
 	    operand_type.name_or_type = name_id;
 	    operand_type.indirection_level = 0;
 	}
@@ -1851,7 +1851,7 @@ static void dc_pd () {
 	break;
 	
     case STMT_COMPOUND_n :
-	sxsymbol_table_close (ids, current_block_level, SXTRUE);
+	sxsymbol_table_close (ids, current_block_level, true);
 	quit_block ();
 	break;
 	

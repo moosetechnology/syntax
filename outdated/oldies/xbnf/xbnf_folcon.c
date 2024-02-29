@@ -23,7 +23,7 @@
 #include "sxba.h"
 #include "B_tables.h"
 #include "xbnf_vars.h"
-char WHAT_XBNFFOLCON[] = "@(#)SYNTAX - $Id: xbnf_folcon.c 3498 2023-08-20 18:14:09Z garavel $" WHAT_DEBUG;
+char WHAT_XBNFFOLCON[] = "@(#)SYNTAX - $Id: xbnf_folcon.c 3678 2024-02-06 08:38:24Z garavel $" WHAT_DEBUG;
 
 
 static SXBA*
@@ -50,7 +50,7 @@ bmm (SXBA *P, SXBA *Q, SXBA *R, SXINT l/* , m, n */)
     return P;
 }
 
-SXVOID
+void
 follow_construction (void)
 {
 
@@ -274,7 +274,7 @@ static SXINT	nt_debutant (SXINT nt, SXBA set, SXINT level)
     SXINT	l, i, x, xtnt;
     SXINT	*cur_level;
     SXINT		min_level, lim;
-    SXBOOLEAN	is_computed;
+    bool	is_computed;
 
     cur_level = d_levels + nt;
 
@@ -291,7 +291,7 @@ static SXINT	nt_debutant (SXINT nt, SXBA set, SXINT level)
     }
 
     *cur_level = level /* on lance le calcul de debutant (nt) au niveau level */ ;
-    is_computed = SXTRUE;
+    is_computed = true;
     min_level = INFINI;
     lim = WX [nt + 1].npg;
 
@@ -303,7 +303,7 @@ static SXINT	nt_debutant (SXINT nt, SXBA set, SXINT level)
 	    i = nt_debutant (xtnt = XNT_TO_NT (xtnt), line, level + 1);
 
 	    if (i > 0) {
-		is_computed = SXFALSE;
+		is_computed = false;
 
 		if (i < min_level)
 		    min_level = i;
@@ -336,7 +336,7 @@ static SXINT	nt_suivant (SXINT nt, SXBA set, SXINT level)
     SXINT	l, i;
     SXINT	*cur_level;
     SXINT		min_level, lim;
-    SXBOOLEAN	is_computed;
+    bool	is_computed;
 
     cur_level = s_levels + nt;
 
@@ -353,7 +353,7 @@ static SXINT	nt_suivant (SXINT nt, SXBA set, SXINT level)
     }
 
     *cur_level = level /* on lance le calcul de follow (nt) au niveau level (>0) */ ;
-    is_computed = SXTRUE;
+    is_computed = true;
     min_level = INFINI;
     lim = WX [nt + 1].npd;
 
@@ -361,7 +361,7 @@ static SXINT	nt_suivant (SXINT nt, SXBA set, SXINT level)
 	i = suivant (numpd [l], line, level + 1);
 
 	if (i > 0) {
-	    is_computed = SXFALSE;
+	    is_computed = false;
 
 	    if (i < min_level)
 		min_level = i;
@@ -407,7 +407,7 @@ static SXINT	suivant (SXINT x, SXBA set, SXINT level)
 
 
 
-SXVOID	follow_construction (void)
+void	follow_construction (void)
 {
 
 /* Calcul de FIRST et FOLLOW */

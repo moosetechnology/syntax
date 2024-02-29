@@ -39,11 +39,8 @@
 /************************************************************************/
 /* Ven 27 Dec 1996 10:27 (pb):	Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
-#define WHAT	"@(#)dcg_smp.c	- SYNTAX [unix] - Mar 25 Fev 1997 14:45:21"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+
+char WHAT[] = "@(#)dcg_smp.c	- SYNTAX [unix] - Mar 25 Fev 1997 14:45:21";
 
 static char	ME [] = "dcg_smp";
 
@@ -116,7 +113,7 @@ E N D   N O D E   N A M E S
 
 #include "dcg_cst.h"
 
-static SXBOOLEAN		sxttycol1p;
+static bool		sxttycol1p;
 static int		max_ste;
 static int		lhs_functor, ste, lhs_or_rhs, dcg_lhs_part, dcg_rhs_part, bnf_dum_post_act;
 static char		*str, *lhs_functor_string;
@@ -159,10 +156,10 @@ static int		SXDCGmax_gvar, SXDCGmax_gvarppp, gvar_nb, *SXDCG2var_disp, *ste2gvar
 static XH_header	SXDCGvar_names;
 
 /* On a des expression arithmetiques, elles sont stockees comme des termes */
-static SXBOOLEAN		has_integer_op;
+static bool		has_integer_op;
 
 /* Le prolog accepte */
-static SXBOOLEAN		is_prolog, has_prolog, is_dynam_constant, is_prolog_tree;
+static bool		is_prolog, has_prolog, is_dynam_constant, is_prolog_tree;
 static int		Dcg_constant_ste, Dcg_dynam_atom, Dcg_dynam_int;
 static int		*t2kind;
 static int		*DCGprod2dynam_constant;
@@ -301,7 +298,7 @@ static int	plus_ste, minus_ste, uminus_ste, mult_ste, div_ste, mod_ste,
 static void
 process_nt (ste, is_nt)
     int 	ste;
-    SXBOOLEAN	is_nt;
+    bool	is_nt;
 {
     if (is_nt) {
 	if (ste2nt [ste] == 0) {
@@ -517,7 +514,7 @@ dcg_pi ()
 
     case PROLOG_S_n :		/* SXVISITED->name = {IS_n, LESS_n, LESS_EQUAL_n, SUP_n, SUP_EQUAL_n, TERM_n} */
 	tss = 0;
-	is_prolog_tree = SXTRUE;
+	is_prolog_tree = true;
 	break;
 
     case RHS_ITEM_S_n :		/* SXVISITED->name = {MAIN_FUNCTOR_n, PROLOG_S_n, TERMINAL_S_n, VOID_n} */
@@ -651,15 +648,15 @@ dcg_pd ()
 	break;
 
     case IS_n :
-	process_nt (is_ste, SXFALSE);
+	process_nt (is_ste, false);
 	break;
 
     case LESS_n :
-	process_nt (less_ste, SXFALSE);
+	process_nt (less_ste, false);
 	break;
 
     case LESS_EQUAL_n :
-	process_nt (less_equal_ste, SXFALSE);
+	process_nt (less_equal_ste, false);
 	break;
 
     case LHS_n :
@@ -677,7 +674,7 @@ dcg_pd ()
 	break;
 
     case MAIN_FUNCTOR_n :
-	process_nt (SXVISITED->son->token.string_table_entry, SXTRUE);
+	process_nt (SXVISITED->son->token.string_table_entry, true);
 	break;
 
     case MINUS_n :
@@ -709,8 +706,8 @@ dcg_pd ()
 	break;
 
     case PROLOG_S_n :
-	is_prolog = SXTRUE;
-	is_prolog_tree = SXFALSE;
+	is_prolog = true;
+	is_prolog_tree = false;
 	ppp_symb_nb += SXVISITED->degree;
 	break;
 
@@ -751,11 +748,11 @@ dcg_pd ()
 	break;
 
     case SUP_n :
-	process_nt (sup_ste, SXFALSE);
+	process_nt (sup_ste, false);
 	break;
 
     case SUP_EQUAL_n :
-	process_nt (sup_equal_ste, SXFALSE);
+	process_nt (sup_equal_ste, false);
 	break;
 
     case TERM_n :
@@ -768,7 +765,7 @@ dcg_pd ()
 			     "%sThis prolog predicate is not (yet?) implemented.",
 			     sxtab_ptr->err_titles [2]);
 	    else {
-		process_nt (ste, SXFALSE);
+		process_nt (ste, false);
 	    }
 	}
 	else {
@@ -869,7 +866,7 @@ dcg_pd ()
 	if (SXVISITED->father->name == TERMINAL_S_n && SXVISITED->father->father->name == RHS_ITEM_S_n) {
 	    /* Pour l'instant, on ne traite pas les "terminaux" en LHS. */
 	    /* Pour la variable "X", tout se passe comme si on avait trouve le main functor "dcg_constant(X)" */
-	    is_dynam_constant = SXTRUE;
+	    is_dynam_constant = true;
 
 	    if (ste2nt [Dcg_constant_ste] == 0) {
 		ste2nt [Dcg_constant_ste] = ++BNFmaxnt;
@@ -953,7 +950,7 @@ integer_op (op, param_nb)
 {
     int 	bot, x, term, ref;
 
-    has_integer_op = SXTRUE;
+    has_integer_op = true;
 
     ref = KV2REF (INTEGER_OP, op);
     XH_push (term_hd, ref);
@@ -1203,7 +1200,7 @@ dcg_pi2 ()
 
     case PROLOG_S_n :		/* SXVISITED->name = {IS_n, LESS_n, LESS_EQUAL_n, SUP_n, SUP_EQUAL_n, TERM_n} */
     {
-	is_prolog_tree = SXTRUE;
+	is_prolog_tree = true;
 
 	if (SXVISITED->name == IS_n)
 	    ste = is_ste;
@@ -1463,7 +1460,7 @@ dcg_pd2 ()
 	break;
 
     case PROLOG_S_n :
-	is_prolog_tree = SXFALSE;
+	is_prolog_tree = false;
 	break;
 
     case RHS_ITEM_S_n :
@@ -1672,7 +1669,7 @@ dcg_pd2 ()
 #define out_define(str,val)	fprintf(F_dcg, "#define %s\t%i\n",str,val)
 
 
-static SXBOOLEAN
+static bool
 dcg_write ()
 {
     static char		ME [] = "dcg_write";
@@ -1705,12 +1702,12 @@ static char *kind2str [] = {
     if ((F_dcg = fopen (strcat (strcpy (file_name, prgentname), "_dcgt.c"), "w")) == NULL) {
 	if (sxverbosep && !sxttycol1p) {
 	    fputc ('\n', sxtty);
-	    sxttycol1p = SXTRUE;
+	    sxttycol1p = true;
 	}
 
 	fprintf (sxstderr, "%s: cannot open (create) ", ME);
 	sxperror (file_name);
-	return SXFALSE;
+	return false;
     }
 
     vstr = varstr_alloc (64);
@@ -2054,7 +2051,7 @@ case %i:\\\n\
 #endif
 
 	sxbm2c (F_dcg, gvar2pppitem_set, SXDCGmax_gvarppp+1, "SXDCGgvar2ppp_item_set", "",
-		SXTRUE /* is_static */, vstr);
+		true /* is_static */, vstr);
     }
 
     if (has_prolog || has_integer_op) {
@@ -2074,7 +2071,7 @@ case %i:\\\n\
 
     fclose (F_dcg);
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -2190,7 +2187,7 @@ process_ppp ()
 	    /* On fait comme si on avait eu le source :
 	       ppp --> .
 	       */
- 	    has_prolog = SXTRUE;
+ 	    has_prolog = true;
 
 	    DCGlhs2param_nb [BNFprod] = 0;
 	    DCGlhs_functor2param [BNFprod] = 0;
@@ -2232,7 +2229,7 @@ smppass ()
 
     if (sxverbosep) {
 	fputs ("\tSemantic Pass 1, ", sxtty);
-	sxttycol1p = SXFALSE;
+	sxttycol1p = false;
     }
 
     /*   I N I T I A L I S A T I O N S   */
@@ -2303,7 +2300,7 @@ smppass ()
 
     if (sxverbosep) {
 	fputs ("done\n", sxtty);
-	sxttycol1p = SXTRUE;
+	sxttycol1p = true;
     }
 
     if (!IS_ERROR) {
@@ -2402,19 +2399,19 @@ smppass ()
 
 	if (sxverbosep) {
 	    fputs ("done\n", sxtty);
-	    sxttycol1p = SXTRUE;
+	    sxttycol1p = true;
 	}
 
 	if (sxverbosep) {
 	    fprintf (sxtty, "\t%s_dcgt.c file output ... ", prgentname);
-	    sxttycol1p = SXFALSE;
+	    sxttycol1p = false;
 	}
 
 	dcg_write ();
 
 	if (sxverbosep) {
 	    fputs ("done\n", sxtty);
-	    sxttycol1p = SXTRUE;
+	    sxttycol1p = true;
 	}
 
 	sxfree (BNFlhs);

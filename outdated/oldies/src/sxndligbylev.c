@@ -55,16 +55,12 @@
 /* 27-01-95 13:22 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-#define WHAT	"@(#)sxndligbylev.c\t- SYNTAX [unix] - Jeudi 20 Mars 2003"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+char WHAT[] = "@(#)sxndligbylev.c\t- SYNTAX [unix] - Jeudi 20 Mars 2003";
 
 static char	ME [] = "sxndligbylev";
 
-# include 	"sxnd.h"
-# include 	"sxndlig_bylev.h"
+#include 	"sxnd.h"
+#include 	"sxndlig_bylev.h"
 #define sxinitialise(x) (x) = 0
 
 #ifdef EBUG
@@ -108,7 +104,7 @@ dependancies_oflw (old_size, new_size)
 					       sizeof (struct dependancies2attr));
 }
 
-static  SXVOID
+static  void
 addresses_oflw (old_size, new_size)
     int		old_size, new_size;
 {
@@ -118,7 +114,7 @@ addresses_oflw (old_size, new_size)
 }
 
 
-static  SXVOID
+static  void
 hooks_oflw (old_size, new_size)
     int		old_size, new_size;
 {
@@ -188,7 +184,7 @@ sxndlig_action_pop (level, son, father)
 	}
 	else {
 	    if (!sxndlig.is_paths) {
-		sxndlig.is_paths = SXTRUE;
+		sxndlig.is_paths = true;
 		/* On installe le premier */
 		XxY_set (&sxndlig.paths,
 			 XxY_X (sxndlig.main_trans, sxndlig.prev_main_trans),
@@ -237,7 +233,7 @@ sxndlig_action_top (xtriple)
     sxndlig.xtriple = xtriple;
 
     if (sxndlig.is_paths) {
-	sxndlig.is_paths = SXFALSE;
+	sxndlig.is_paths = false;
 	XxY_clear (&sxndlig.paths);
     }
 
@@ -287,13 +283,13 @@ sxndlig_action_top (xtriple)
 
 
 
-static SXBOOLEAN
+static bool
 walk_paths (bot, level, f)
     int bot, level;
-    SXBOOLEAN	(*f)();
+    bool	(*f)();
 {
     int			arc, main_trans;
-    SXBOOLEAN		ret_val = SXFALSE;
+    bool		ret_val = false;
 
     if (level == 0) {
 	/* bot est le fils d'un object primaire, on calcule l'union des primaires
@@ -423,7 +419,7 @@ static void
 fill_symb2attr (symbol, main_trans, pile)
   int symbol, main_trans, pile;
 {
-    /* pile != SET_NIL. Retourne SXTRUE si object est nouveau */
+    /* pile != SET_NIL. Retourne true si object est nouveau */
     struct main_trans2attr	*pattr;
     int				symbXpile, object;
 
@@ -546,13 +542,13 @@ propagate (main_trans, pile)
 
 
 
-static SXBOOLEAN
+static bool
 store_dependancy (prev_main_trans)
     int	prev_main_trans;
 {
     struct dependancies2attr	*pd;
     int				dependancy;
-    SXBOOLEAN			is_old;
+    bool			is_old;
 
 #ifdef EBUG
     if (prev_main_trans == 0)
@@ -582,7 +578,7 @@ store_dependancy (prev_main_trans)
 	    SXBA_1_bit (sxndlig.main_trans_set, prev_main_trans);
     }
 
-    return SXTRUE;
+    return true;
 }
 
 /* AXIOME: Si une aux_trans est reevaluee, aucun objet precedent ne peut disparaitre.
@@ -895,7 +891,7 @@ vanish_trans (son, father)
     else
     {
 	/* father est un dummy parser, c'est un index ds triples */
-	parse_stack.for_reducer.triples [-father].is_valid = SXFALSE;
+	parse_stack.for_reducer.triples [-father].is_valid = false;
     }
 }
 
@@ -1118,7 +1114,7 @@ finalize_current_level ()
 	    parser = parse_stack.for_reducer.triples [x].parser;
 
 	    if (SXBA_bit_is_set (sxndlig.vanished_parser_set, parser))
-		parse_stack.for_reducer.triples [x].is_valid = SXFALSE;
+		parse_stack.for_reducer.triples [x].is_valid = false;
 	}
 
 	/* On s'occupe maintenant des "for_scanner" */
@@ -1271,7 +1267,7 @@ td_prdct (prdct_no, pile)
     return pile;
 }
 
-static SXBOOLEAN
+static bool
 td_check_stack (rule_no, pile)
   int rule_no, pile;
 {
@@ -1287,16 +1283,16 @@ td_check_stack (rule_no, pile)
   symbol = sxndlig.rule2attr [rule_no].symbol;
 
   if ((old_pile = sxndlig.symb2attr [symbol].pile) == SET_NIL)
-    return SXFALSE;
+    return false;
 
   if ((old_pile & LIG_7F) == (unsigned int)pile)
   {
     SXBA_1_bit (sxndlig.symbXpile_set, 0);
-    return SXTRUE;
+    return true;
   }
 
   if ((old_pile & LIG_80) == 0)
-    return SXFALSE;
+    return false;
 
   if ((symbXpile = XxY_is_set (&sxndlig.symbXpile, symbol, pile)) > 0)
   {
@@ -1367,7 +1363,7 @@ compute_td_stacks (rhs_rule_no)
      de "rhs_rule_no" en RHS. */
   int			item, next_item, lhs_rule_no, pile, prdct_no, act_no;
   int			symbXpile, hookXpile, new_pile;
-  SXBOOLEAN		checked;
+  bool		checked;
   int			*pc;
   struct rule2attr	*plhs_attr;
 
@@ -1391,12 +1387,12 @@ compute_td_stacks (rhs_rule_no)
 	if (sxndlig.rule2attr [rhs_rule_no].act_no >= 10000)
 	{
 	  /* Il y a des piles */
-	  checked = SXFALSE;
+	  checked = false;
 
 	  if ((pile = sxndlig.hook2attr [lhs_rule_no].pile) != SET_NIL)
 	  {
 	    if (td_check_stack (rhs_rule_no, pile & LIG_7F))
-	      checked = SXTRUE;
+	      checked = true;
 
 	    if (pile & LIG_80)
 	    {
@@ -1405,7 +1401,7 @@ compute_td_stacks (rhs_rule_no)
 		  pile = XxY_Y (sxndlig.hookXpile, hookXpile);
 
 		  if (td_check_stack (rhs_rule_no, pile))
-		    checked = SXTRUE;
+		    checked = true;
 		}
 	    }
 	  }
@@ -1494,7 +1490,7 @@ compute_td_stacks (rhs_rule_no)
 	    {
 	      if ((pile = sxndlig.symb2attr [plhs_attr->symbol].pile) != SET_NIL)
 	      {
-		checked = SXFALSE;
+		checked = false;
 		act_no = plhs_attr->act_no - 10000; /* PRIMARY */
 
 		if ((new_pile = td_prdct (act_no, pile & LIG_7F)) != SET_NIL)
@@ -1504,7 +1500,7 @@ compute_td_stacks (rhs_rule_no)
 		      if (td_check_stack (rhs_rule_no, new_pile))
 		      {
 			/* Cette pile a deja ete calculee en bottom-up pour rhs_rule_no */
-			checked = SXTRUE;
+			checked = true;
 		      }
 		    }
 		  }
@@ -1522,7 +1518,7 @@ compute_td_stacks (rhs_rule_no)
 			  if (td_check_stack (rhs_rule_no, new_pile))
 			  {
 			    /* Cette pile a deja ete calculee en bottom-up pour rhs_rule_no */
-			    checked = SXTRUE;
+			    checked = true;
 			  }
 			}
 		      }
@@ -1698,7 +1694,7 @@ unfold_rule (rule_no, pile)
     }
 }
 
-static SXBOOLEAN
+static bool
 unfold_check_stack (rule_no, pile)
   int rule_no, pile;
 {
@@ -1713,11 +1709,11 @@ unfold_check_stack (rule_no, pile)
 	pile2 = sxndlig.symb2attr [symbol].pile;
     }
 
-    if (pile2 == SET_NIL) return SXFALSE; /* Pas de pile */
+    if (pile2 == SET_NIL) return false; /* Pas de pile */
 
-    if (pile == (pile2 & LIG_7F)) return SXTRUE; /* C'est la pile principale */
+    if (pile == (pile2 & LIG_7F)) return true; /* C'est la pile principale */
 
-    if ((pile2 & LIG_80) == 0) return SXFALSE; /* pas de pile secondaire */
+    if ((pile2 & LIG_80) == 0) return false; /* pas de pile secondaire */
 
 
     return XxY_is_set ((rule_no >= parse_stack.hook_rule) ? &sxndlig.hookXpile : &sxndlig.symbXpile,
@@ -1876,7 +1872,7 @@ sxndlig_unfold ()
 
    
     XxY_alloc (&sxndlig.uf.new_symbols, "sxndlig.uf.new_symbols", parse_stack.G.N * 2, 1, 0, 0, NULL, stdout_or_NULL);
-    sxndlig.uf.is_new_symbols = SXTRUE;
+    sxndlig.uf.is_new_symbols = true;
 
     XxY_alloc (&sxndlig.uf.hooks, "sxndlig.uf.hooks", (parse_stack.rule_top - parse_stack.hook_rule + 2) * 2,
 	       1, 0, 0, hooks_oflw, stdout_or_NULL);
@@ -2201,9 +2197,9 @@ int sxndligbylev (which, arg)
 	return 0;
 
     case SXINIT:
-	sxplocals.mode.with_do_undo = SXTRUE;
+	sxplocals.mode.with_do_undo = true;
 	XxY_clear (&sxndlig.main_trans);
-	sxndlig.is_paths = SXFALSE;
+	sxndlig.is_paths = false;
 	sxndlig.mttbe_top = sxndlig.mts_top = 0;
 
 	(*sxndlig_common.code.parsact) (which, arg);

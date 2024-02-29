@@ -61,7 +61,7 @@ static char	ME [] = "dag_scanner.c";
 #include "dag_scanner.h"
 #include "sxnd.h"
 
-char WHAT_DAG_SCANNER[] = "@(#)SYNTAX - $Id: dag_scanner.c 3465 2023-07-25 18:10:10Z garavel $" WHAT_DEBUG;
+char WHAT_DAG_SCANNER[] = "@(#)SYNTAX - $Id: dag_scanner.c 3678 2024-02-06 08:38:24Z garavel $" WHAT_DEBUG;
 
 #if 0
 /* !! ce n'est pas vrai ds le cas HUGE ou le code des mots du source est recherche directement ds un dico */
@@ -151,7 +151,7 @@ string2dico_id (str, lgth)
   SXINT id, cur_lgth;
   char c, first_char, first_char_lc, first_char_uc;
   char *cur_str, *cur_wstr, *where;
-  SXBOOLEAN has_changed, is_capitalized_initial;
+  bool has_changed, is_capitalized_initial;
 
 #if USE_A_DICO
   cur_str = str;
@@ -173,13 +173,13 @@ string2dico_id (str, lgth)
     }
 
     cur_wstr = wstr + lgth;
-    has_changed = SXFALSE;
+    has_changed = false;
 
     while (--cur_str >= str) {
       *--cur_wstr = c = sxtolower (*cur_str);
 
       if (c != *cur_str)
-	has_changed = SXTRUE;
+	has_changed = true;
     }
 
     if (has_changed) {
@@ -202,13 +202,13 @@ string2dico_id (str, lgth)
     }
 
     cur_wstr = wstr + lgth;
-    has_changed = SXFALSE;
+    has_changed = false;
 
     while (--cur_str >= str) {
       *--cur_wstr = c = sxtoupper (*cur_str);
 
       if (c != *cur_str)
-	has_changed = SXTRUE;
+	has_changed = true;
     }
 
     if (has_changed) {
@@ -466,7 +466,7 @@ void make_new_dag (f)
 {
   SXINT          delta_new_dag, i, j, k, Tij, Tpq, tok_no, new_triple, left_j, right_j, new_j, nb; 
   SXINT          *i2new_lb;
-  SXBOOLEAN      is_loop;
+  bool      is_loop;
   XxYxZ_header new_dag_hd;
 
   XxYxZ_alloc (new_dag_hd, "new_dag_hd", XxYxZ_top (dag_hd)+1, 1, dag_doreach, 0, statistics);
@@ -497,7 +497,7 @@ void make_new_dag (f)
     /* On regarde s'il y a des ajouts qui partent de j */
     left_j = j+delta_new_dag;
     nb = 0;
-    is_loop = SXFALSE;
+    is_loop = false;
 
     Tij_iforeach (j, Tij) {
       k = Tij2j (Tij);
@@ -506,7 +506,7 @@ void make_new_dag (f)
 	/* Oui */
 	if (k == j) {
 	  /* loop */
-	  is_loop = SXTRUE;
+	  is_loop = true;
 	}
 	else {
 	  do {
@@ -1186,8 +1186,8 @@ SXINT dag_scan_it ()
   /* Pas d'ERROR ds le source */
   /* Pour faire croire a la recuperation d'erreur qu'on est ds la cas d'un (vrai) scanner
      non-deterministe... */
-  sxplocals.sxtables->SXS_tables.S_is_non_deterministic = SXTRUE;
-  sxplocals.sxtables->SXS_tables.S_are_comments_erased = SXTRUE;
+  sxplocals.sxtables->SXS_tables.S_is_non_deterministic = true;
+  sxplocals.sxtables->SXS_tables.S_are_comments_erased = true;
   
   dag2ndtkn ();
 
@@ -1199,7 +1199,7 @@ SXINT dag_scan_it ()
 /* static */ SXINT
 check_dag ()
 {
-  SXBOOLEAN oversized;
+  bool oversized;
   char    mess [32];
   int     severity = 0;
 

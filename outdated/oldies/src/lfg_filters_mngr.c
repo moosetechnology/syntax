@@ -30,7 +30,7 @@ static char	ME [] = "lfg_filter_mngr";
 #include "sxspf.h"
 #include "varstr.h"
 
-char WHAT_LFG_FILTERS_MNGR[] = "@(#)SYNTAX - $Id: lfg_filters_mngr.c 3498 2023-08-20 18:14:09Z garavel $" WHAT_DEBUG;
+char WHAT_LFG_FILTERS_MNGR[] = "@(#)SYNTAX - $Id: lfg_filters_mngr.c 3678 2024-02-06 08:38:24Z garavel $" WHAT_DEBUG;
 
 static struct for_semact weights_for_semact, structure_for_semact, chunker_for_semact, proper_for_semact, nbest_for_semact, lfg_for_semact, output_for_semact;
 static VARSTR            vstr_usage, vstr_ME;
@@ -73,10 +73,10 @@ static char	Usage [] = "\
 #define UNKNOWN_ARG 	   0
 #define MAP 	           1
 
-SXBOOLEAN     weights_sem_pass_arg;
-SXBOOLEAN     structure_sem_pass_arg;
-SXBOOLEAN     chunker_sem_pass_arg;
-SXBOOLEAN     proper_sem_pass_arg;
+bool     weights_sem_pass_arg;
+bool     structure_sem_pass_arg;
+bool     chunker_sem_pass_arg;
+bool     proper_sem_pass_arg;
 char        output_sem_pass_arg;
 
 static char	*option_tbl [] = {
@@ -123,7 +123,7 @@ static char	*option_get_text (kind)
   return option_tbl [i];
 }
 
-static SXBOOLEAN call_sem_pass (call_sem_pass_for_semact)
+static bool call_sem_pass (call_sem_pass_for_semact)
      struct for_semact    *call_sem_pass_for_semact;
 {
   if (call_sem_pass_for_semact->sem_pass) {
@@ -132,17 +132,17 @@ static SXBOOLEAN call_sem_pass (call_sem_pass_for_semact)
     call_sem_pass_for_semact->pass_nb++;
     return (*(call_sem_pass_for_semact->sem_pass)) ();
   }
-  return SXFALSE;
+  return false;
 }
 
-static SXBOOLEAN call_sem_final (call_sem_final_for_semact)
+static bool call_sem_final (call_sem_final_for_semact)
      struct for_semact    *call_sem_final_for_semact;
 {
   if (call_sem_final_for_semact->sem_pass && call_sem_final_for_semact->pass_nb && call_sem_final_for_semact->sem_final) {
     (*(call_sem_final_for_semact->sem_final)) ();
-    return SXTRUE;
+    return true;
   }
-  return SXFALSE;
+  return false;
 }
 
 /* retourne le ME */
@@ -234,7 +234,7 @@ lfg_filter_mngr_args_usage ()
 
 /* decode les arguments specifiques au filtre */
 /* l'option argv [*parg_num] est inconnue du parseur earley */
-static SXBOOLEAN
+static bool
 lfg_filter_mngr_args_decode (pargnum, argc, argv)
      int  *pargnum, argc;
      char *argv [];
@@ -243,7 +243,7 @@ lfg_filter_mngr_args_decode (pargnum, argc, argv)
   case MAP:
     if (++*pargnum >= argc) {
       fprintf (sxstderr, "%s: a map specification string must follow the \"%s\" option;\n", ME, option_get_text (MAP));
-      return SXFALSE;
+      return false;
     }
 
     map_spec = argv [*pargnum];
@@ -251,24 +251,24 @@ lfg_filter_mngr_args_decode (pargnum, argc, argv)
     
   case UNKNOWN_ARG:
     if (weights_for_semact.process_args && (*weights_for_semact.process_args) (pargnum, argc, argv))
-      return SXTRUE;
+      return true;
 
     if (structure_for_semact.process_args && (*structure_for_semact.process_args) (pargnum, argc, argv))
-      return SXTRUE;
+      return true;
 
     if (chunker_for_semact.process_args && (*chunker_for_semact.process_args) (pargnum, argc, argv))
-      return SXTRUE;
+      return true;
 
     if (nbest_for_semact.process_args && (*nbest_for_semact.process_args) (pargnum, argc, argv))
-      return SXTRUE;
+      return true;
 
     if (lfg_for_semact.process_args && (*lfg_for_semact.process_args) (pargnum, argc, argv))
-      return SXTRUE;
+      return true;
 
     if (output_for_semact.process_args && (*output_for_semact.process_args) (pargnum, argc, argv))
-      return SXTRUE;
+      return true;
 
-    return SXFALSE;
+    return false;
   default: /* pour faire taire gcc -Wswitch-default */
 #if EBUG
     sxtrap(ME,"unknown switch case #1");
@@ -276,7 +276,7 @@ lfg_filter_mngr_args_decode (pargnum, argc, argv)
     break;
   }
 
-  return SXTRUE;
+  return true;
 }
 
 static int lfg_filter_mngr_sem_pass ();
@@ -318,7 +318,7 @@ timeout_mngr ()
   char msg [32];
 
   /* Pour avertir qui de droit !! */
-  is_virtual_timeout_signal_raised = SXTRUE;
+  is_virtual_timeout_signal_raised = true;
 
   if (is_print_time) {
     switch (cur_spec) {
@@ -390,7 +390,7 @@ timeout_mngr ()
 	/* Le rattrapage est de continuer ce qu'on etait en train de faire (pour au plus 1s) */
 	map_spec += 2; /* On suppose qu'on a "/r/"
 			  on continuera donc derriere le rattrapage comme si de rien n'etait !! */
-	is_virtual_timeout_signal_raised = SXFALSE;
+	is_virtual_timeout_signal_raised = false;
 
 	return;
       }
@@ -418,15 +418,15 @@ lfg_filter_mngr_semact ()
   /* Ds le cas contraire, on prend les rcvr_spec de SEMANTICS qui a donc priorite' */
   /* On doit remplir rcvr_spec, structure qui dirige la facon dont va proceder la rcvr syntaxique */
   rcvr_spec.range_walk_kind = MIXED_FORWARD_RANGE_WALK_KIND; 
-  rcvr_spec.perform_repair = SXTRUE; /* On fait de la correction d'erreur ... */
+  rcvr_spec.perform_repair = true; /* On fait de la correction d'erreur ... */
   rcvr_spec.repair_kind = 1; /* ... mais on ne genere qu'une chaine de la longueur min */
-  rcvr_spec.perform_repair_parse = SXFALSE; /* On analyse cette chaine ... */
+  rcvr_spec.perform_repair_parse = false; /* On analyse cette chaine ... */
   rcvr_spec.repair_parse_kind = 1; /* ... mais on ne genere qu'une seule analyse */
 
   //  rcvr_spec.try_kind = TRY_MEDIUM; /* temporaire, à supprimer */
 
   /* On change les valeurs par defaut de l'analyseur earley */
-  is_parse_forest = SXTRUE;
+  is_parse_forest = true;
 
   map_spec = map_spec_default; /* default == "l" */
 
@@ -487,12 +487,12 @@ lfg_filter_mngr_sem_pass ()
 {
   int        ret_val [16], if_depth;
   static int status_stack_size;
-  SXBOOLEAN    do_sthg [16], else_passed [16];
+  bool    do_sthg [16], else_passed [16];
   char       msg [30];
   SXBA       sxba_tmp;
   static int skip_next_semantics = 0;
 
-  do_sthg [0] = SXTRUE;
+  do_sthg [0] = true;
   if_depth = 0;
 
   if (cur_spec == '\1') { /* initialisation des sémantiques ; Earley a fini (avant le timeout) */
@@ -535,14 +535,14 @@ lfg_filter_mngr_sem_pass ()
 	if (if_depth>=16)
 	  sxtrap (ME, "lfg_filter_mngr_sem_pass (too much recursion in argument of -m option)");
 
-	else_passed [if_depth] = SXFALSE;
+	else_passed [if_depth] = false;
 	do_sthg [if_depth] = do_sthg [if_depth-1] && ret_val [if_depth-1];
 	ret_val [if_depth] = 0;
 	break;
 
       case ':':
       case '|':
-	else_passed [if_depth] = SXTRUE;
+	else_passed [if_depth] = true;
 	do_sthg [if_depth] = !do_sthg [if_depth] && do_sthg [if_depth-1];
 	break;
       

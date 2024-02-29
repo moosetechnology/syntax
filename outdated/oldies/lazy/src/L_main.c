@@ -29,16 +29,9 @@
 /* 16-09-93 16:35 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-#ifndef lint
-#define WHAT	"@(#)L_main.c	- SYNTAX [unix] - Jeu 3 Mar 1994 11:55:37"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+char WHAT[] = "@(#)L_main.c	- SYNTAX [unix] - Jeu 3 Mar 1994 11:55:37";
 
-#endif
-
-static char	ME [] = "L_main";
+// static char	ME [] = "L_main";
 
 #include "sxunix.h"
 
@@ -52,19 +45,16 @@ FILE	*sxstdout = {NULL}, *sxstderr = {NULL};
 #endif
 
 FILE	*sxtty;
-SXBOOLEAN		sxverbosep = {SXTRUE};
+bool		sxverbosep = {true};
 
 /* On est dans un cas "mono-langage": */
 
 extern struct sxtables	sxtables;
 
-static char	Usage [] = "\
-Usage:\t%s files...\n";
+// static char	Usage [] = "Usage:\t%s files...\n";
 
 
-main (argc, argv)
-    int		argc;
-    char	*argv [];
+int main (int argc, char *argv [])
 {
 #ifndef unix
     if (sxstdout == NULL) {
@@ -159,7 +149,7 @@ main (argc, argv)
 
 
 
-SXVOID	sxvoid ()
+void	sxvoid ()
 /* procedure ne faisant rien */
 {
 }

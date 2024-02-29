@@ -1,0 +1,2 @@
+       END FILE ( UNIT=2, IOSTAT=KODE, ERR=9)
+       END

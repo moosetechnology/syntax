@@ -35,11 +35,7 @@
 /* 25-04-90 11:32 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-#define WHAT	"@(#)ARP.c	- SYNTAX [unix] - 1 Août 1991"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+char WHAT[] = "@(#)ARP.c	- SYNTAX [unix] - 1 Août 1991";
 
 static char	ME [] = "ARP";
 
@@ -50,24 +46,24 @@ static char	ME [] = "ARP";
 #include "SS.h"
 #include "RLR.h"
 
-extern SXBOOLEAN	is_old_clone ();
-extern SXBOOLEAN	foreach_LA ();
-extern SXVOID	ARP_conflict_messages ();
-extern SXBOOLEAN	bh_ARC_one_LA ();
-extern SXBOOLEAN	bs_ARC_one_LA ();
+extern bool	is_old_clone ();
+extern bool	foreach_LA ();
+extern void	ARP_conflict_messages ();
+extern bool	bh_ARC_one_LA ();
+extern bool	bs_ARC_one_LA ();
 
 static SXBA	ARP_items_set;
-static SXBOOLEAN	is_ARP_state_ambig, is_ARP_opened;
+static bool	is_ARP_state_ambig, is_ARP_opened;
 static int	current_ARP_state;
 
 static X_header	X_ARP_new_trans_hd;
 
-static SXVOID	oflw_ARP_items (old_size, new_size)
+static void	oflw_ARP_items (old_size, new_size)
     int		old_size, new_size;
 {
     ARP_items_set = sxba_resize (ARP_items_set, new_size + 1);
 }
-static SXVOID	oflw_ARPxTRANS (old_size, new_size)
+static void	oflw_ARPxTRANS (old_size, new_size)
     int		old_size, new_size;
 {
     ARPxTRANS_to_next = (int*) sxrealloc (ARPxTRANS_to_next, new_size + 1,
@@ -76,10 +72,10 @@ static SXVOID	oflw_ARPxTRANS (old_size, new_size)
 
 
 
-static SXVOID	ARP_open ()
+static void	ARP_open ()
 {
     if (!is_ARP_opened) {
-	is_ARP_opened = SXTRUE;
+	is_ARP_opened = true;
 	XH_alloc (&ARP_states_hd, "ARP_states_hd", xac2, 4, 4, NULL, statistics_file);
 	XH_alloc (&ARP_items_hd, "ARP_items_hd", xac2, 4, 2, NULL, statistics_file);
 	XxY_alloc (&ARPxTRANS_hd, "ARPxTRANS_hd", xac2, 4, 1, 0, oflw_ARPxTRANS, statistics_file);
@@ -97,7 +93,7 @@ static SXVOID	ARP_open ()
 }
 
 
-static SXBOOLEAN	ARP_is_final_state (ARP_state)
+static bool	ARP_is_final_state (ARP_state)
     int		ARP_state;
 {
     /* Si l'etat ARP_state contient (au moins) un item_set negatif,
@@ -109,25 +105,25 @@ static SXBOOLEAN	ARP_is_final_state (ARP_state)
 
     while (bot < top) {
 	if (*bot < 0)
-	    return SXTRUE;
+	    return true;
 
 	bot += 2 /* On saute le type */ ;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
 
 
-static SXVOID	ARP_trans (item_init)
+static void	ARP_trans (item_init)
     int		item_init;
 {
     /* Complete ARP_items_set avec la fermeture de la transition sur state de
        "item" (n, stateN) */
     register int	bfsa, *bot, *top, couple, p, q;
     int			n, state, item, final, unused;
-    SXBOOLEAN		is_XQ0;
+    bool		is_XQ0;
 
     n = XxY_X (ARP_items, item_init);
     state = XxY_Y (ARP_items, item_init);
@@ -187,14 +183,14 @@ static int	ARP_install_items_set ()
    /* ARP_items_set contient un ensemble d'items, on les stocke dans ARP_hd */
     /* Un resultat negatif indique la presence d'un item final */
     register int	item = 0;
-    register SXBOOLEAN	is_final = SXFALSE;
+    register bool	is_final = false;
     int		result;
 
     while ((item = sxba_scan_reset (ARP_items_set, item)) > 0) {
 	XH_push (ARP_items_hd, item);
 
 	if (XxY_Y (ARP_items, item) == 0)
-	    is_final = SXTRUE;
+	    is_final = true;
     }
 
     XH_set (&ARP_items_hd, &result);
@@ -205,14 +201,14 @@ static int	ARP_install_items_set ()
 
 
 
-static	SXVOID ARP_next (ARP_state, trans)
+static	void ARP_next (ARP_state, trans)
     int		ARP_state, trans;
 {
     /* Calcule l'etat atteint depuis ARP_state par transition sur trans. */
     register int	*bot, *ibot;
     register int	is, type_nb, item, q;
     int			*top, *itop, type, next_is, next_ARP_state, xtrans;
-    SXBOOLEAN		ARP_trans_called;
+    bool		ARP_trans_called;
 
     bot = ARP_STATES_BOT (ARP_state);
     top = ARP_STATES_TOP (ARP_state);
@@ -223,7 +219,7 @@ static	SXVOID ARP_next (ARP_state, trans)
 	is = abs (is);
 	ibot = ARP_ITEMS_BOT (is);
 	itop = ARP_ITEMS_TOP (is);
-	ARP_trans_called = SXFALSE;
+	ARP_trans_called = false;
 
 	while (ibot < itop) {
 	    if ((q = XxY_Y (ARP_items, item = *ibot++)) > xac2)
@@ -231,7 +227,7 @@ static	SXVOID ARP_next (ARP_state, trans)
 
 	    if (q == trans) {
 		ARP_trans (item);
-		ARP_trans_called = SXTRUE;
+		ARP_trans_called = true;
 	    }
 	}
 
@@ -262,7 +258,7 @@ static	SXVOID ARP_next (ARP_state, trans)
 }
 
 
-static	SXVOID ARP_sort (ARP_state)
+static	void ARP_sort (ARP_state)
     int		ARP_state;
 {
     /* Cette procedure regarde les transitions possibles depuis ARP_state.
@@ -300,7 +296,7 @@ static	SXVOID ARP_sort (ARP_state)
 
 
 
-static SXVOID	ARP_init (XARC, XARC_state)
+static void	ARP_init (XARC, XARC_state)
     struct ARC_struct	*XARC;
     int		XARC_state;
 {
@@ -337,7 +333,7 @@ static SXVOID	ARP_init (XARC, XARC_state)
 }
 
 
-static SXVOID	PARTIAL_FSA_ARP_init (bfsa1, bfsa2)
+static void	PARTIAL_FSA_ARP_init (bfsa1, bfsa2)
     int		bfsa1, bfsa2;
 {
     register int	bot, is, bfsa;
@@ -365,7 +361,7 @@ static SXVOID	PARTIAL_FSA_ARP_init (bfsa1, bfsa2)
 
 
 
-static SXBOOLEAN	ARP_is_ambiguous (XARC, XARC_state, ARP_state)
+static bool	ARP_is_ambiguous (XARC, XARC_state, ARP_state)
     struct ARC_struct	*XARC;
     int		ARP_state, XARC_state;
 {
@@ -374,7 +370,7 @@ static SXBOOLEAN	ARP_is_ambiguous (XARC, XARC_state, ARP_state)
     register int	item, pss, x, wst;
     register int	*bot, *top, *bot1, *top1;
     int		type, wsb, n_0;
-    SXBOOLEAN	is_first_time, is_ambig;
+    bool	is_first_time, is_ambig;
     SXBA	or_set;
 
     n_0 = 0;
@@ -390,12 +386,12 @@ static SXBOOLEAN	ARP_is_ambiguous (XARC, XARC_state, ARP_state)
     }
 
     if (n_0 < 2)
-	return SXFALSE;
+	return false;
 
     sxba_empty (and_set);
     sxba_empty (or_set = pss_sets [work_set_no]);
-    is_first_time = SXTRUE;
-    is_ambig = SXFALSE;
+    is_first_time = true;
+    is_ambig = false;
     bot = ARP_STATES_BOT (ARP_state);
 
     while (bot < top) {
@@ -426,7 +422,7 @@ static SXBOOLEAN	ARP_is_ambiguous (XARC, XARC_state, ARP_state)
 
 		    if (SXBA_bit_is_set (or_set, pss)) {
 			SXBA_1_bit (and_set, pss);
-			is_ambig = SXTRUE;
+			is_ambig = true;
 		    }
 		}
 
@@ -438,7 +434,7 @@ static SXBOOLEAN	ARP_is_ambiguous (XARC, XARC_state, ARP_state)
 		SXBA_1_bit (or_set, pss);
 	    }
 
-	    is_first_time = SXFALSE;
+	    is_first_time = false;
 	    SS_close (ws);
 	}
 
@@ -451,7 +447,7 @@ static SXBOOLEAN	ARP_is_ambiguous (XARC, XARC_state, ARP_state)
 
 
 
-SXVOID	ARP_alloc ()
+void	ARP_alloc ()
 {
     /* Les "ARP_items" doivent survivre jusqu'a la sortie des messages. */
     XxY_alloc (&ARP_items, "ARP_items", 4 * xac2, 4, 0, 0, oflw_ARP_items, statistics_file);
@@ -460,7 +456,7 @@ SXVOID	ARP_alloc ()
 
 
 
-SXVOID	ARP_realloc ()
+void	ARP_realloc ()
 {
     /* On peut etre sur ARP_realloc sans que ARP_items ait ete alloue */
     if (ARP_items.display != NULL)
@@ -471,7 +467,7 @@ SXVOID	ARP_realloc ()
 
 
 
-SXVOID	ARP_free ()
+void	ARP_free ()
 {
     if (ARP_items_set != NULL) {
 	XxY_free (&ARP_items);
@@ -491,7 +487,7 @@ SXVOID	ARP_free ()
 }
 
 
-SXVOID call_ARP_conflict_messages (XARC, prev_XARC_state, t, next_XARC_state)
+void call_ARP_conflict_messages (XARC, prev_XARC_state, t, next_XARC_state)
     struct ARC_struct	*XARC;
     int			prev_XARC_state, t, next_XARC_state;
 {
@@ -502,7 +498,7 @@ SXVOID call_ARP_conflict_messages (XARC, prev_XARC_state, t, next_XARC_state)
 
 
 
-static SXVOID	ARP_construction ()
+static void	ARP_construction ()
 {
    /* Soit Li le langage defini par les bfsa associes au conflit de type typei
        sur Q0* (les elements du vocabulaire sont les ETATS de l'automate LR(0)).
@@ -538,13 +534,13 @@ static SXVOID	ARP_construction ()
 int UNBOUNDED_ARP_construction (XARC, qtq, message_needed)
     struct ARC_struct	*XARC;
     int		qtq;
-    SXBOOLEAN	message_needed;
+    bool	message_needed;
 {
     register int	XARC_state, ARP_state, x, fsa;
     int			conflict_kind, la_lgth;
     
     XARC_state = XxYxZ_Z (XARC->QxTxQ_hd, qtq);
-    XARC->is_ARP = SXTRUE;
+    XARC->is_ARP = true;
     ARP_init (XARC, XARC_state);
     ARP_construction ();
     ARP_state = 0;
@@ -554,7 +550,7 @@ int UNBOUNDED_ARP_construction (XARC, qtq, message_needed)
 	if (XH_X (ARP_states_hd, ARP_state + 1) - XH_X (ARP_states_hd, ARP_state) > 1 &&
 	    ARP_is_final_state (ARP_state)) {
 	    /* Non clonable, on prepare eventuellement les messages denoncant le conflit */
-	    XARC->is_clonable = SXFALSE;
+	    XARC->is_clonable = false;
 	    la_lgth = XARC->attr [XARC_state].lgth;
 
 	    if (is_ARP_state_ambig = ARP_is_ambiguous (XARC, XARC_state, ARP_state))
@@ -598,7 +594,7 @@ int TOTAL_FSA_ARP_construction (XARC, qtq)
     int			conflict_kind, la_lgth;
     
     XARC_state = XxYxZ_Z (XARC->QxTxQ_hd, qtq);
-    XARC->is_ARP = SXTRUE;
+    XARC->is_ARP = true;
     ARP_init (XARC, XARC_state);
     ARP_construction ();
     ARP_state = 0;
@@ -607,7 +603,7 @@ int TOTAL_FSA_ARP_construction (XARC, qtq)
     while (++ARP_state < XH_top (ARP_states_hd)) {
 	if (XH_X (ARP_states_hd, ARP_state + 1) - XH_X (ARP_states_hd, ARP_state) > 1 &&
 	    ARP_is_final_state (ARP_state)) {
-	    XARC->is_clonable = SXFALSE;
+	    XARC->is_clonable = false;
 	    return NOT_RoxoLRk_;
 	}
     }
@@ -619,13 +615,13 @@ int TOTAL_FSA_ARP_construction (XARC, qtq)
 }
 
 
-SXBOOLEAN PARTIAL_FSA_ARP_construction (XARC, bfsa1, bfsa2)
+bool PARTIAL_FSA_ARP_construction (XARC, bfsa1, bfsa2)
     struct ARC_struct	*XARC;
     int		bfsa1, bfsa2;
 {
     register int	ARP_state, fsa;
     
-    XARC->is_ARP = SXTRUE;
+    XARC->is_ARP = true;
     PARTIAL_FSA_ARP_init (bfsa1, bfsa2);
     ARP_construction ();
     ARP_state = 0;
@@ -633,13 +629,13 @@ SXBOOLEAN PARTIAL_FSA_ARP_construction (XARC, bfsa1, bfsa2)
     while (++ARP_state < XH_top (ARP_states_hd)) {
 	if (XH_X (ARP_states_hd, ARP_state + 1) - XH_X (ARP_states_hd, ARP_state) > 1 &&
 	    ARP_is_final_state (ARP_state)) {
-	    XARC->is_clonable = SXFALSE;
-	    return SXTRUE;
+	    XARC->is_clonable = false;
+	    return true;
 	}
     }
 
     if (XARC->is_clonable)
 	build_UARP ();
 
-    return SXFALSE;
+    return false;
 }

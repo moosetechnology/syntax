@@ -21,7 +21,7 @@
 * This grammar of FORTRAN 77 is based upon the ANSI standard syntax charts
 * Annex F of https://nvlpubs.nist.gov/nistpubs/Legacy/FIPS/fipspub69-1.pdf
 *
-* Il contains a few usual extensions, marked with the word "EXTENSION"
+* Il contains a few usual extensions, marked with the string [[EXTENSION]]
 
 *******************************************************************************
 
@@ -39,7 +39,7 @@
 
 * ENTRY POINT USED BY THE LOOK-AHEAD MECANISM
 
-* EXTENSION (loop without label)
+* [[EXTENSION]] (loop without label)
 
 <0:F77>		= !DO  <99:symbolic_name>  =  <40b:do_parameters> ;
 
@@ -391,11 +391,12 @@
 *******************************************************************************
 
 <10a:type>	= <10b:scalar_type> ;
-* Non standard ANSI
 
 *------------------------------------------------------------------------------
 
-<10a:type>	= <10b:scalar_type> * @0 <22:len_specification> ;
+* [[EXTENSION]]
+
+<10a:type>	= <10b:scalar_type> * <103:nonzero_unsigned_int_constant> ;
 
 *------------------------------------------------------------------------------
 
@@ -403,7 +404,7 @@
 
 *------------------------------------------------------------------------------
 
-<10a:type>	= CHARACTER  * <22:len_specification> ;
+<10a:type>	= CHARACTER * <22:len_specification> ;
 
 *******************************************************************************
 
@@ -684,18 +685,20 @@
 
 <20:type_statement>
 		= <10b:scalar_type>  <20a:scalar_name_list> ;
-* Non standard ANSI
 
 *------------------------------------------------------------------------------
 
+* [[EXTENSION]]
+
 <20:type_statement>
-		= <10b:scalar_type> * @0 <22:len_specification>  <20a:scalar_name_list> ;
-* Non standard ANSI
+		= <10b:scalar_type> * <103:nonzero_unsigned_int_constant>  <20a:scalar_name_list> ;
 
 *------------------------------------------------------------------------------
 
-<20:type_statement>
-		= <10b:scalar_type> * @0 <22:len_specification> ,  <20a:scalar_name_list> ;
+* [[EXTENSION]]
+* semble faux!!
+*<20:type_statement>
+*		= <10b:scalar_type> * <103:nonzero_unsigned_int_constant> ,  <20a:scalar_name_list> ;
 
 *------------------------------------------------------------------------------
 
@@ -757,6 +760,20 @@
 <21:implicit_statement>
 		= IMPLICIT  <21a:implicit_body_list> ;
 
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<21:implicit_statement>
+		= IMPLICIT  NONE ;
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<21:implicit_statement>
+		= IMPLICIT  UNDEFINED  ( <21c:implicit_elem_list> ) ;
+
 *******************************************************************************
 
 <21a:implicit_body_list>
@@ -785,12 +802,14 @@
 *******************************************************************************
 
 <21d:implicit_elem>
-		= <99:symbolic_name> ;
+		= %letter ;
+*		au lieu de = <99:symbolic_name> ;
 
 *------------------------------------------------------------------------------
 
 <21d:implicit_elem>
-		= <99:symbolic_name> - <99:symbolic_name> ;
+		= %letter - %letter ;
+*		au lieu de = <99:symbolic_name> - <99:symbolic_name> ;
 
 *******************************************************************************
 
@@ -803,6 +822,9 @@
 		= <103:nonzero_unsigned_int_constant> ;
 
 *------------------------------------------------------------------------------
+
+* la production ci-dessous n'est jamais reconnue, car le scanner ne retourne
+* jamais le token %int_id (voir commentaire dans f77.lecl) 
 
 <22:len_specification>
 		= %int_id ;
@@ -1175,7 +1197,7 @@
 
 *******************************************************************************
 
-* EXTENSION
+* [[EXTENSION]]
 * On introduit la notion de bloc <40a:do_loop> avec un header <40:do_statement>,
 * un corps <2c:statement_list> et une fin de bloc %ENDDO.
 * Ce %ENDDO est un dummy terminal zombie (voir f77.lecl) generique (il 
@@ -1213,7 +1235,8 @@
 
 *------------------------------------------------------------------------------
 
-* EXTENSION. Ci-apres, on a un vrai "do_block" se terminant par un vrai END DO 
+* [[EXTENSION]]
+* Ci-apres, on a un vrai "do_block" se terminant par un vrai END DO 
 * qui va aussi fermer tous les <40:do_statement> ouverts dans le "do_block".
 
 <40a:do_loop>	= DO  <99:symbolic_name>  =  <40b:do_parameters> %EOL
@@ -1232,7 +1255,7 @@
 
 *******************************************************************************
 
-* EXTENSION
+* [[EXTENSION]]
 <40c:end_do>    = END  DO ;
 
 *------------------------------------------------------------------------------
@@ -2840,8 +2863,10 @@
 
 *------------------------------------------------------------------------------
 
-<99:symbolic_name> 
-		= THEN ;
+* desormais inutile
+*
+* <99:symbolic_name> 
+*		= THEN ;
 
 *******************************************************************************
 

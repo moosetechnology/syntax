@@ -27,12 +27,7 @@
 /* 20030515 14:43 (phd):	Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-
-#define WHAT	"@(#)mix_main.c\t- SYNTAX [unix] - Lundi 12 Janvier 2004"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+char WHAT[] = "@(#)mix_main.c\t- SYNTAX [unix] - Lundi 12 Janvier 2004";
 
 static char	ME [] = "mix";
 
@@ -42,7 +37,7 @@ static char	ME [] = "mix";
 #include <ctype.h>
 
 // FILE	*sxstderr, *sxstdout, *sxtty;
-// SXBOOLEAN	sxverbosep;
+// bool	sxverbosep;
 
 struct t_lines {
     int		xline, max_line_no;
@@ -63,7 +58,7 @@ static char	Zzzz [] = "Z Z Z Z";
 /*    options    */
 /*---------------*/
 
-static SXBOOLEAN	is_c;
+static bool	is_c;
 static char	Usage [] = "Usage:\t%s [-c | -pascal] old_pass new_skeleton\n";
 
 #define OPTION(opt)	(1 << (opt - 1))
@@ -303,7 +298,7 @@ static char	*read_write (struct t_lines *t_lines_ptr, int *xline, FILE *objet, c
 
 
 
-static SXVOID	read_until (FILE *source, char *source_name, char *line, int line_size, char *string)
+static void	read_until (FILE *source, char *source_name, char *line, int line_size, char *string)
 {
     int			line_lgth, string_lgth = strlen (string);
     register int	c;
@@ -320,7 +315,7 @@ static SXVOID	read_until (FILE *source, char *source_name, char *line, int line_
 
 
 
-static SXVOID	copy_until (FILE *source, char *source_name, char *line, int line_size, char *string)
+static void	copy_until (FILE *source, char *source_name, char *line, int line_size, char *string)
 {
     register int	c;
     int			line_lgth, string_lgth = strlen (string);
@@ -379,7 +374,7 @@ static int	copy_until2 (FILE *source, char *source_name, char *line, int line_si
 
 
 
-static SXVOID	read_lines_until (FILE *source, char *source_name, char *string, struct t_lines *t_lines_ptr)
+static void	read_lines_until (FILE *source, char *source_name, char *string, struct t_lines *t_lines_ptr)
 {
     register char	*line;
     register int	string_lgth = strlen (string);
@@ -417,7 +412,7 @@ static SXVOID	read_lines_until (FILE *source, char *source_name, char *string, s
 
 
 
-static SXVOID	free_lines (struct t_lines *t_lines_ptr)
+static void	free_lines (struct t_lines *t_lines_ptr)
 {
     register int	xl;
 
@@ -430,7 +425,7 @@ static SXVOID	free_lines (struct t_lines *t_lines_ptr)
 
 
 
-static SXVOID	process (int kind, struct t_lines *frame_ptr, struct t_lines *cur_old_pass_ptr, SXBA is_kept_arg)
+static void	process (int kind, struct t_lines *frame_ptr, struct t_lines *cur_old_pass_ptr, SXBA is_kept_arg)
 {
     int		xlcop, xlf;
 
@@ -483,7 +478,7 @@ int	main (int argc, char *argv[])
 
 /* valeurs par defaut */
 
-    is_c = SXTRUE;
+    is_c = true;
 
 
 /* Decodage des options */
@@ -491,11 +486,11 @@ int	main (int argc, char *argv[])
     for (argnum = 1; argnum < argc - 2; argnum++) {
 	switch (option_get_kind (argv [argnum])) {
 	case C:
-	    is_c = SXTRUE;
+	    is_c = true;
 	    break;
 
 	case PASCAL:
-	    is_c = SXFALSE;
+	    is_c = false;
 	    break;
 
 	default:

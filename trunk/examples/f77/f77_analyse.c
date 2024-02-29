@@ -89,7 +89,7 @@ static char ME [] = "f77_analyse.c";
 #include "f77_td.h"
 #include <ctype.h>
 
-char WHAT_F77ANALYSE[] = "@(#)SYNTAX - $Id: f77_analyse.c 3633 2023-12-20 18:41:19Z garavel $";
+char WHAT_F77ANALYSE[] = "@(#)SYNTAX - $Id: f77_analyse.c 3776 2024-02-29 14:15:40Z garavel $";
 
 /* Il faudrait INTERDIRE l'insertion d'un EOL par le rattrapage d'erreur
    du scanner. Utiliser sxs_srcvr? */
@@ -99,7 +99,7 @@ char WHAT_F77ANALYSE[] = "@(#)SYNTAX - $Id: f77_analyse.c 3633 2023-12-20 18:41:
    "3" soit %EOL, alors le token en position "4" ne sera pas examiné et ce modèle pourra être validé comme s'il était "X 2 3". */
 
 
-extern bool		is_ansi, is_json, is_pretty_printer, is_input_free_fortran; /* Options d'appel */
+extern bool		is_ansi, is_json, is_pretty_printer, is_input_free_fortran, is_extension; /* Options d'appel */
 
 /* assert: is_json => on execute f77 (reciproque fausse) */
 /* assert: is_pretty_printer <=> on execute ppf77 */
@@ -143,7 +143,9 @@ extern bool		is_ansi, is_json, is_pretty_printer, is_input_free_fortran; /* Opti
 #define PROGRAM_p	32
 #define ELSEIF_p	33
 #define ENDIF_p		34
-#define ENDDO_p		35 /* Extension */
+#define ENDDO_p		35 /* [[EXTENSION]] */
+#define NONE_p		36 /* [[EXTENSION]] */
+#define UNDEFINED_p	37 /* [[EXTENSION]] */
 
 
 static char *kw_prefixes [] = {"", "DO", "ASSIGN", "CALL", "GOTO", "RETURN", "PRINT", "READ",
@@ -152,21 +154,24 @@ static char *kw_prefixes [] = {"", "DO", "ASSIGN", "CALL", "GOTO", "RETURN", "PR
 				   "ENTRY", "SUBROUTINE", "BLOCKDATA", "COMMON",
 				   "PARAMETER", "EXTERNAL", "INTRINSIC", "FUNCTION",
 				   "CONTINUE", "STOP", "PAUSE", "SAVE", "DATA",
-				   "IMPLICIT", "DIMENSION", "PROGRAM", "ELSEIF", "ENDIF", "ENDDO"};
+				   "IMPLICIT", "DIMENSION", "PROGRAM", "ELSEIF", "ENDIF", "ENDDO",
+				   "NONE", "UNDEFINED"};
 static SXINT kw_codes [] = {0, DO_t, ASSIGN_t, CALL_t, GO_t, RETURN_t, PRINT_t, READ_KW_t,
 			      BACKSPACE_KW_t, ENDFILE_KW_t, REWIND_KW_t, INTEGER_t, REAL_t,
 			      DOUBLE_t, COMPLEX_t, LOGICAL_t, CHARACTER_t,
 			      ENTRY_t, SUBROUTINE_t, BLOCK_t, COMMON_t,
 			      PARAMETER_t, EXTERNAL_t, INTRINSIC_t, FUNCTION_t,
 			      CONTINUE_t, STOP_t, PAUSE_t, SAVE_t, DATA_t,
-			      IMPLICIT_t, DIMENSION_t, PROGRAM_t, ELSE_t, END_t, END_t};
+			      IMPLICIT_t, DIMENSION_t, PROGRAM_t, ELSE_t, END_t, END_t,
+			      NONE_t, UNDEFINED_t};
 static SXINT kw_lgth [] = {0, 2, 6, 4, 4, 6, 5, 4,
 			     9, 7, 6, 7, 4,
 			     15, 7, 7, 9,
 			     5, 10, 9, 6,
 			     9, 8, 9, 8,
 			     8, 4, 5, 4, 4,
-			     8, 9, 7, 6, 5, 5};
+			     8, 9, 7, 6, 5, 5,
+			     4, 9};
 
 
 
@@ -211,7 +216,7 @@ static SXINT			source_line_head, source_line_tail;
 
 
 static bool is_tab_already_met, is_hollerith_already_met, is_quoted_string_already_met,
-    is_lower_to_upper_already_met;
+  is_lower_to_upper_already_met, is_implicit_extension_already_met;
 
 /* Pierre le 16/03/2023 : grand chantier, dans le cas pretty-printer, je change tout à la gestion des commentaires.
 
@@ -807,9 +812,6 @@ void f77_process_postponed_comments (struct sxnode_pp *root_ptr) {
 
 
 
-static bool *Tlen;
-static SXINT Tlen_size;
-
 static SXINT	ETAT;
 static SXINT	*stmt_kind;
 static SXINT	main_program_nb;
@@ -1000,7 +1002,6 @@ static void print_sxsvar (void)
 	   sxsvar.sxlv.previous_char,
 	   (unsigned short)sxsvar.sxlv.previous_char);
 }
-
 
 static void print_srcmngr_curchar (void)
 {
@@ -2273,7 +2274,7 @@ static SXINT seek_kw (char *string)
 
 	break;
 
-    case 'E': /* ENDFILE ou ENTRY ou EXTERNAL ou ELSEIF ou ENDIF ou ENDDO (Extension) */
+    case 'E': /* ENDFILE ou ENTRY ou EXTERNAL ou ELSEIF ou ENDIF ou ENDDO ([[EXTENSION]]) */
 	if (strlen (string) > 4) {
 	    c = string [3];
 	    i = c == 'F' ? ENDFILE_p :
@@ -2305,6 +2306,10 @@ static SXINT seek_kw (char *string)
 	i = LOGICAL_p;
 	break;
 
+    case 'N': /* NONE */
+        i = NONE_p;
+        break;
+
     case 'P': /* PRINT or PAUSE or PROGRAM */
 	if (strlen (string) > 4) {
 	    c = string [2];
@@ -2328,6 +2333,11 @@ static SXINT seek_kw (char *string)
 	}
 
 	break;
+
+    case 'U': /* UNDEFINED */
+      i = UNDEFINED_p;
+
+      break;
 
     default:
 	return UNKNOWN_p;
@@ -2410,6 +2420,7 @@ static bool check_inside_FUNCTION (SXINT head_tok_no, SXINT Mtok_no, char *str, 
 
   /* On regarde le préfixe.
      Il semble qu'on ne puisse venir ici que si le préfixe est un <10a:type> de la forme CHARACTER ... */
+  /* Les extensions du type INTEGER*8 FUNCTION myfunct( ont été traitées par "intid" sur le source "8FUNCTIONmyfunct" */
   if (SXGET_TOKEN (head_tok_no).lahead != CHARACTER_t || SXGET_TOKEN (head_tok_no+1).lahead != STAR_t)
     return false;
 
@@ -2417,6 +2428,9 @@ static bool check_inside_FUNCTION (SXINT head_tok_no, SXINT Mtok_no, char *str, 
      On regarde uniquement CHARACTER*(...), sans rentrer dans les parenthèses, à voir */
   if (SXGET_TOKEN (head_tok_no+2).lahead != LEFTP_t || SXGET_TOKEN (Mtok_no).lahead != RIGHTP_t)
     return false;
+  
+  if (sxsrcmngr.current_char != '(')
+   return false;
 
   /* C'est bien FUNCTION ident */
   sxsvar.sxlv.terminal_token.lahead = FUNCTION_t;
@@ -2432,39 +2446,136 @@ static bool check_inside_FUNCTION (SXINT head_tok_no, SXINT Mtok_no, char *str, 
 }
 
 
-static void check_id_lgth (struct sxtoken *tt)
+static void check_id (struct sxtoken *tt)
 {
-    /* is_ansi est vrai et tt refere un ident. */
-    /* Verification de la longueur des id. */
+  static bool is_alnum_already_checked, is_ansi_lgth_already_checked;
 
+  if (!is_alnum_already_checked || !is_ansi_lgth_already_checked) {
+    /* un seul message d'erreur */
     SXINT ste = tt->string_table_entry;
+    char  c, *str = sxstrget (ste);
 
-    if (sxstrlen (ste) > 6) {
-	if (Tlen == NULL)
-	    Tlen = (bool*) sxcalloc ((Tlen_size = SXSTRtop ()) + 1, sizeof (bool));
-	else if (ste > Tlen_size) {
-	    bool	*low = Tlen + Tlen_size, *high;
+    if (!is_extension && !is_alnum_already_checked) {
+      while ((c = *str++) != SXNUL) {
+	if (!isalnum (c))
+	  break;
+      }
 
-	    while (ste > Tlen_size)
-		Tlen_size *= 2;
-
-	    Tlen = (bool*) sxrealloc (Tlen, Tlen_size + 1, sizeof (bool));
-	    high = Tlen + Tlen_size;
-
-	    while (++low <= high)
-		*low = false;
-	}
-
-	if (!Tlen [ste]) {
-	    Tlen [ste] = true;
-
-	    sxerror (tt->source_index,
-		     sxsvar.sxtables->err_titles [1][0] /* warning */,
-		     "%sIn the standard, a symbolic name is a sequence of one to\n\
-six letters or digits, the first of which must be a letter. This name exceeds this limit.",
-		     sxsvar.sxtables->err_titles [1]+1 /* warning */);
-	}
+      if (c != SXNUL) {
+	is_alnum_already_checked = true;
+	sxerror (tt->source_index,
+		 sxsvar.sxtables->err_titles [1][0] /* warning */,
+		 "%sIn standard, the character '%c' cannot be used within symbolic names,\n\
+For extended FORTRAN, use the \"-X\" option. In the sequel, the others extended symbolic names will not be quoted.",
+		 sxsvar.sxtables->err_titles [1]+1 /* warning */,
+		 c);
+      }
     }
+
+    if (is_ansi && !is_ansi_lgth_already_checked) {
+      if (sxstrlen (ste) > 6) {
+	is_ansi_lgth_already_checked = true;
+	sxerror (tt->source_index,
+		 sxsvar.sxtables->err_titles [1][0] /* warning */,
+		 "%sIn ansi standard, a symbolic name is a sequence of one to\n\
+six letters or digits, the first of which must be a letter. This name exceeds this limit.\n\
+In the sequel, the others non ansi symbolic names will not be quoted.",
+		 sxsvar.sxtables->err_titles [1]+1 /* warning */);
+      }
+    }
+  }
+}
+
+
+
+static bool isXalpha (char c)
+{
+  /* En f77 étendu, un id peut commencer par un '_' */
+  return isalpha (c) || c == '_';
+}
+
+/* On est sur un source de la forme INTEGER*8
+   type est INTEGER (ou un autre type) et int_ptok repère un token de lahead INTEGER_t qui contient 8
+   On vérifie que 8 est une bonne taille pour la représentation du type INTEGER.
+   De plus c'est du f77 etendu => message d'erreur eventuel */
+static void check_scalar_type_repr_lgth (SXINT type, struct sxtoken *int_ptok) {
+  static char *default_type_lgth [5] = {
+    "16" /* COMPLEX */,
+    "8" /* INTEGER */,
+    "1" /* LOGICAL */,
+    "8" /* REAL */,
+    "16" /* (DOUBLE) PRECISION */
+  };
+  static bool is_type_extension_already_met;
+
+  char *str;
+  bool is_ok;
+
+  str = sxstrget (int_ptok->string_table_entry);
+
+  switch (type) {
+  case COMPLEX_t :
+    type = 0;
+    is_ok = (strcmp (str, "8") == 0) ||
+      (strcmp (str, "16") == 0) ||
+      (strcmp (str, "32") == 0);
+		
+    break;
+		
+  case INTEGER_t :
+    type = 1;
+    is_ok = (strcmp (str, "2") == 0) ||
+      (strcmp (str, "4") == 0) ||
+      (strcmp (str, "8") == 0);
+		
+    break;
+		
+  case LOGICAL_t :
+    type = 2;
+    is_ok = (strcmp (str, "1") == 0) ||
+      (strcmp (str, "2") == 0) ||
+      (strcmp (str, "4") == 0) ||
+      (strcmp (str, "8") == 0);
+		
+    break;
+		
+  case REAL_t :
+    type = 3;
+    is_ok = (strcmp (str, "4") == 0) ||
+      (strcmp (str, "8") == 0) ||
+      (strcmp (str, "16") == 0);
+		
+    break;
+		
+  case PRECISION_t : /* On est en fait sur DOUBLE PRECISION, on lui permet d'avoir une specif de longueur pour
+			un rattrapage d'erreur + spécifique!! */
+    type = 4;
+    is_ok = (strcmp (str, "16") == 0);
+		
+    break;
+
+  default :
+    is_ok = true;
+    break;
+  }
+
+  if (!is_ok) {
+    sxerror (int_ptok->source_index,
+	     sxsvar.sxtables->err_titles [2][0] /* error */,
+	     "%sIllegal length specification for an extended scalar type, \"%s\" is assumed.",
+	     sxsvar.sxtables->err_titles [2]+1 /* error */,
+	     default_type_lgth [type]);
+    int_ptok->string_table_entry = sxstrsave (default_type_lgth [type]);
+  }
+	  
+  if (type != CHARACTER_t && !is_extension && !is_type_extension_already_met) {
+    is_type_extension_already_met = true;
+    sxerror (int_ptok->source_index,
+	     sxsvar.sxtables->err_titles [1][0] /* warning */,
+	     "%sIn standard, the length of scalar types cannot be specified,\n\
+For extended FORTRAN, use the \"-X\" option. In the sequel, the others extended scalar types will not be quoted.",
+	     sxsvar.sxtables->err_titles [1]+1 /* warning */);
+  }
 }
 
 static bool check_FUNCTION (char *str, SXINT strlgth, SXINT l, SXINT Mtok_no)
@@ -2474,7 +2585,7 @@ static bool check_FUNCTION (char *str, SXINT strlgth, SXINT l, SXINT Mtok_no)
     struct sxtoken	tt [2];
     SXINT	l1 = l+8;
 
-    if (strlgth > l1 && strncmp (str + l, "FUNCTION", 8) == 0 && isalpha (str [l1])) {
+    if (strlgth > l1 && strncmp (str + l, "FUNCTION", 8) == 0 && isXalpha (str [l1])) {
 	PTOK = &(SXGET_TOKEN (Mtok_no));
 	PTOK->string_table_entry = SXEMPTY_STE;
 	tt [0].lahead = FUNCTION_t;
@@ -2488,8 +2599,7 @@ static bool check_FUNCTION (char *str, SXINT strlgth, SXINT l, SXINT Mtok_no)
 	    *get_source_index (&(PTOK->source_index), l1);
 	tt [1].comment = NULL;
 
-	if (is_ansi)
-	    check_id_lgth (&(tt [1]));
+	check_id (&(tt [1]));
 
 	sxtknmdf (&(tt [0]), 2, Mtok_no + 1, 0);
 	return true;
@@ -2498,9 +2608,171 @@ static bool check_FUNCTION (char *str, SXINT strlgth, SXINT l, SXINT Mtok_no)
     return false;
 }
 
+
+/* On est en debut d'instruction
+   sxsvar.sxlv.terminal_token.lahead est un ID_t ou un kw
+   retourne vrai ssi la ligne courante est le debut d'un <21:implicit_statement> donc de la forme
+   IMPLICIT (NONE EOL | xtype ('*' | suffixe) ...)
+   avec
+       xtype = CHARACTER | COMPLEX | DOUBLE PRECISION | INTEGER | LOGICAL | REAL | UNDEFINED
+       suffixe = '(' elem {',' elem} ')'
+       elem = (LETTER | '_') ['-'(LETTER | '_')]
+   
+   Le corps de cette fonction est donc le DFSA
+   
+               --<','------------------------
+               |        |                   |
+   (i)--'('>--(1)--l>--(2)--'-'>--(3)--l>--(4)--')'>--(f)
+                        |                              |
+			-----------------')'>-----------
+
+   qui est code directement en C
+
+   Dans tous les cas, au retour, toutes les variables sont "remises en état"
+ */
+
+static bool check_IMPLICIT_stmt ()
+{
+  short                 save_previous_char, save_current_char;
+  SXINT                 save_bufindex, kw;
+  struct sxsource_coord	save_source_coord;
+  char                  c, *str;
+  bool                  result, extension_met;
+
+  if (sxsvar.sxlv.terminal_token.lahead != ID_t) return false;
+  if (sxsvar.sxlv.ts_lgth < (SXINT)strlen ("IMPLICITNONE" /* Le + petit */)) return false;
+
+  str = sxsvar.sxlv_s.token_string;
+
+  if (seek_kw (str) != IMPLICIT_p) return false;
+
+  str += strlen ("IMPLICIT");
+
+  kw = seek_kw (str);
+
+  if (str [kw_lgth [kw]] != SXNUL)
+      /* L'ID_t str etait de la forme "IMPLICITINTEGERblabla" => id, donc on ne fait rien!! */
+    return false;
+
+  c = (char)sxsrcmngr.current_char;
+
+  if ((c != SXNEWLINE) && (c != '*') && (c != '(')) return false;
+
+  switch (kw) {
+  case NONE_p:
+    if (c != SXNEWLINE) return false;
+    extension_met = true;
+    break;
+    
+  case CHARACTER_p:
+    if (c == SXNEWLINE) return false;
+    extension_met = false;
+    break;
+    
+  case COMPLEX_p:
+  case DOUBLEPRECISION_p:
+  case INTEGER_p:
+  case LOGICAL_p:
+  case REAL_p:
+    if (c == '*' && !isdigit ((char)sxsrcmngr.buffer [sxsrcmngr.bufindex+1])) return false; /* On attendait une spécif de longueur */
+    extension_met = false;
+    break;
+    
+  case UNDEFINED_p:
+    if (c == SXNEWLINE || c == '*') return false;
+    extension_met = true;
+    break;
+
+  default:
+    return false;
+  }
+
+  if (c == '(') {
+    /* On est dans le cas "suffixe", il en faut plus pour valider un implicit statement */
+    /* On se souvient de l'état du source_mngr */
+    /* Normalement, on ne change pas de buffer!! */
+    save_previous_char = sxsrcmngr.previous_char ;
+    save_current_char = sxsrcmngr.current_char;
+    save_bufindex = sxsrcmngr.bufindex;
+    save_source_coord = sxsrcmngr.source_coord;
+
+    result = false;
+
+    /* Codage du DFSA */
+    for (;;) { /* Afin de pouvoir utiliser "break" */
+      /* statei: */
+      if (c != '(') break;
+    state1:
+      c = f77_next_char ();
+      if (!isXalpha (c)) break;
+      /* state2: */
+      c = f77_next_char ();
+      if (c == ')') goto statef;
+      if (c == ',') goto statef;
+      if (c != '-') break;
+      /* state3: */
+      c = f77_next_char ();
+      if (!isXalpha (c)) break;
+      /* state4: */
+      c = f77_next_char ();
+      if (c == ',') goto state1;
+      if (c != ')') break;
+    statef:
+      result = true;
+      break;
+    }
+
+    /* On remet en état... */
+    sxsrcmngr.previous_char = save_previous_char;
+    sxsrcmngr.current_char = save_current_char;
+    sxsrcmngr.bufindex = save_bufindex;
+    sxsrcmngr.source_coord = save_source_coord;
+  }
+  else
+    /* cas IMPLICITINTEGER*digit, on valide */
+    result = true;
+
+  if (!result) return false; /* On considère que ce n'est pas un IMPLICIT stmt */
+
+  /* Ici, on considère qu'on a un IMPLICIT stmt */
+  
+  if (extension_met && !is_extension && !is_implicit_extension_already_met) {
+    is_implicit_extension_already_met = true;
+    sxerror (sxsvar.sxlv.terminal_token.source_index,
+	     sxsvar.sxtables->err_titles [1][0] /* warning */,
+	     "%sIllegal f77 IMPLICIT statement,\n\
+For extended FORTRAN, use the \"-X\" option. In the sequel, the others IMPLICIT statement will not be quoted.",
+	     sxsvar.sxtables->err_titles [1]+1 /* warning */);
+  }
+
+  /* On transforme l'id en IMPLICIT kw */
+  sxsvar.sxlv.terminal_token.lahead = IMPLICIT_t;
+  sxsvar.sxlv.terminal_token.string_table_entry = SXEMPTY_STE;
+  f77put_token (sxsvar.sxlv.terminal_token);
+
+  if (kw == DOUBLEPRECISION_p) {
+    sxsvar.sxlv.terminal_token.lahead = DOUBLE_t;
+    sxsvar.sxlv.terminal_token.source_index =
+      *get_source_index (&(sxsvar.sxlv.terminal_token.source_index), strlen ("IMPLICIT"));
+    sxsvar.sxlv.terminal_token.comment = NULL;
+    f77put_token (sxsvar.sxlv.terminal_token);
+    sxsvar.sxlv.terminal_token.lahead = PRECISION_t;
+  }
+  else
+    sxsvar.sxlv.terminal_token.lahead = kw_codes [kw];
+
+  sxsvar.sxlv.terminal_token.source_index =
+    *get_source_index (&(sxsvar.sxlv.terminal_token.source_index), strlen ("IMPLICIT"));
+  sxsvar.sxlv.terminal_token.comment = NULL;
+
+  return true;
+}
+
+
 static void process_initial_id (SXINT Mtok_no, bool after_if_log)
 {
-    /* L'ident situe en Mtok_no est en debut d'instruction (ou debute une liste dans un IMPLICIT).
+    /* L'ident situe en Mtok_no est en debut d'instruction.
+       On sait que ce n'est pas le debut d'un IMPLICIT statement
        C'est le token ID_t (ce n'est donc pas un kw).
        On sait que ce n'est pas (le debut d') une lhs d'affectation, sauf si cet ID_t commence par les lettres 'D' puis 'O'.
        On sait que sxplocals.Mtok_no > Mtok_no car on a déjà vérifié des tokens du look_ahead par l'appel à check_for_a_lhs().
@@ -2528,32 +2800,6 @@ static void process_initial_id (SXINT Mtok_no, bool after_if_log)
     strlgth = sxstrlen (PTOK->string_table_entry);
     kw = seek_kw (str);
 
-    if (is_implicit_statement) {
-      if (PTOK->lahead == kw_codes [kw]) {
-	/* CHARACTER, COMPLEX, DOUBLEPRECISION, INTEGER, LOGICAL, REAL : on ne change rien */
-	if (kw == DOUBLEPRECISION_p) {
-	  /* On retourne 2 tokens pour DOUBLE PRECISION  */
-	  tt [0].lahead = PRECISION_t;
-	  tt [0].string_table_entry = SXEMPTY_STE;
-	  tt [0].source_index =
-	    *get_source_index (&(PTOK->source_index), 6);
-	  tt [0].comment = NULL;
-	  sxtknmdf (&(tt [0]), 1, Mtok_no+1, 0);
-	}
-	else if (kw == CHARACTER_p) {
-	  /* Si on est dans le cas "CHARACTER*", la suite peut avoir la forme "(...)" où les ... peuvent
-	     contenir des %symbolic_name (donc des kw) qui doivent être des ident.  Pour assurer ça, on
-	     les lit "manuellement" avec is_implicit_statement == false */
-	  if (sxget_token (++Mtok_no)->lahead == STAR_t) {
-	    check_balanced (&Mtok_no); /* On se moque du résultat */
-	  }
-	}
-      }
-      /* else : on laisse le rattrapage d'erreur gérer ça!! */
-
-      return;
-    }
-
     switch (kw) {
     case ASSIGN_p :
 	tok_no = Mtok_no;
@@ -2562,7 +2808,7 @@ static void process_initial_id (SXINT Mtok_no, bool after_if_log)
 	if (((str1 = skip_an_int (str)) > str) && strlen (str1) >= 3) {
 	    /* On a reconnu ASSIGN int */
 	    /* On regarde si on est dans le cas ASSIGN label TO variable_name %eol */
-	    if ((str1 [0] == 'T') && (str1 [1] == 'O') && isalpha (str1 [2])) {
+	    if ((str1 [0] == 'T') && (str1 [1] == 'O') && isXalpha (str1 [2])) {
 		if (sxget_token (++tok_no)->lahead == EOL_t) {
 		    PTOK->lahead = ASSIGN_t;
 		    PTOK->string_table_entry = SXEMPTY_STE;
@@ -2582,8 +2828,7 @@ static void process_initial_id (SXINT Mtok_no, bool after_if_log)
 			*get_source_index (&(PTOK->source_index), 8 + str1 - str);
 		    tt [2].comment = NULL;
 
-		    if (is_ansi)
-			check_id_lgth (&(tt [2]));
+		    check_id (&(tt [2]));
 
 		    sxtknmdf (&(tt [0]), 3, Mtok_no + 1, 0);
 		}
@@ -2617,7 +2862,7 @@ insert_a_token:
 	goto extract_id_int;
 	
     case ELSEIF_p:
-    case ENDDO_p: /* Extension */
+    case ENDDO_p: /* [[EXTENSION]] */
     case ENDIF_p:
         if (str [kw_lgth [kw]] != SXNUL)
 	  /* str est de la forme "KW1KW2blabla" => id, donc on ne fait rien */
@@ -2835,8 +3080,8 @@ this expression is erased.",
 		tt [0].comment = NULL;
 		/* Attention check_for_a_lhs a lu le token suivant et peut-être beaucoup d'autres */
 
-		if (is_ansi && tt [0].lahead == ID_t)
-		    check_id_lgth (&(tt [0]));
+		if (tt [0].lahead == ID_t)
+		    check_id (&(tt [0]));
 
 		sxtknmdf (&(tt [0]), 1, Mtok_no + kw_nb, 0);
 	    }
@@ -2850,7 +3095,7 @@ this expression is erased.",
 		= DO  <110b:label_ref> ,  <99:symbolic_name>  =  <40b:do_parameters> %EOL ;
 	<40:do_statement>
 		= DO  <110b:label_ref>  <99:symbolic_name>  =  <40b:do_parameters> %EOL ;
-	* Extension
+	* [[EXTENSION]]
 	<40:do_statement>
 		= DO  <99:symbolic_name>  =  <40b:do_parameters> %EOL ;
        */
@@ -2881,7 +3126,7 @@ this expression is erased.",
 	    tt [0].comment = NULL;
 	    sxtknmdf (&(tt [0]), 1, Mtok_no + 1, 0); /* l'id est de la forme do SXINT */
 	  }
-	  else if ((isalpha (*str1)) && (PTOK1->lahead == EGAL_t)) {
+	  else if ((isXalpha (*str1)) && (PTOK1->lahead == EGAL_t)) {
 	    /* Ici l'id courant est de la forme "do [int] id", et le token suivant est "=",
 	       ça peut donc être une partie gauche d'affectation ou un <do_statement> */
 	    /* Remarque si "[int]" est vide i.e. "str1 == str" on peut être dans l'extension de f77 */
@@ -3044,8 +3289,7 @@ this expression is erased.",
 	      f77_next_char ();
 
 	      /* On fait cette vérif ici, après validation du do */
-	      if (is_ansi)
-		check_id_lgth (sxget_token (Mtok_no));
+	      check_id (sxget_token (Mtok_no));
 	    }
 	    else {
 	      /* finalement, meme en corrigeant, ce n'est pas un do_stmt, on suppose donc que c'est un %id en lhs */
@@ -3120,41 +3364,9 @@ a CONTINUE statement is gracefully inserted here.",
 	
 	
     case IMPLICIT_p:
-	str += 8;
-
-	switch (kw = seek_kw (str)) {
-	case CHARACTER_p:
-	case COMPLEX_p:
-	case DOUBLEPRECISION_p:
-	case INTEGER_p:
-	case LOGICAL_p:
-	case REAL_p:
-	    is_implicit_statement = true;
-	    PTOK->lahead = IMPLICIT_t;
-	    PTOK->string_table_entry = SXEMPTY_STE;
-	    tt [0].lahead = kw_codes [kw];
-	    tt [0].string_table_entry = SXEMPTY_STE; 
-	    tt [0].source_index = *get_source_index (&(PTOK->source_index), 8);
-	    tt [0].comment = NULL;
-	    sxtknmdf (&(tt [0]), 1, Mtok_no + 1, 0);
-
-	    if (kw == DOUBLEPRECISION_p) {
-		/* On retourne 2 tokens pour DOUBLE PRECISION  */
-		tt [0].lahead = PRECISION_t;
-		tt [0].string_table_entry = SXEMPTY_STE;
-		tt [0].source_index =
-		    *get_source_index (&(PTOK->source_index), 14);
-		tt [0].comment = NULL;
-		sxtknmdf (&(tt [0]), 1, Mtok_no + 2, 0);
-	    }
-
-	    break;
-
-	default:
-	    break;
-	}
-
-	break;
+      /* Ici l'id à la forme "IMPLICITblabla", mais il a ete decide precedemment (ds check_IMPLICIT_stmt()) que
+	 ce n'était pas le début d'une IMPLICIT stmt!! => on ne fait rien, on laisse l'id */
+      break;
 	
     default:
 	break;
@@ -3642,7 +3854,7 @@ SXINT f77_scanact (SXINT code, SXINT act_no) {
 
   case SXINIT:
     is_tab_already_met = is_hollerith_already_met = is_quoted_string_already_met =
-      is_lower_to_upper_already_met = false;
+      is_lower_to_upper_already_met = is_implicit_extension_already_met = false;
     do_stack_mngr_alloc (10);
     tt_stack_mngr_alloc (10);
     t_stack = (SXINT*) sxcalloc (sxeof_code (sxsvar.sxtables) + 1, sizeof (SXINT));
@@ -3706,9 +3918,6 @@ SXINT f77_scanact (SXINT code, SXINT act_no) {
     if (!is_pretty_printer)
       print_toks_buf (sxplocals.min, sxplocals.Mtok_no);
 #endif
-
-    if (Tlen != NULL)
-      sxfree (Tlen), Tlen = NULL;
 
     sxfree (stmt_kind);
     do_stack_mngr_free();
@@ -3804,8 +4013,33 @@ SXINT f77_scanact (SXINT code, SXINT act_no) {
 	sxuse (str);
 
 	prev_lahead = SXGET_TOKEN (sxplocals.Mtok_no).lahead;
+	cur_lahead = sxsvar.sxlv.terminal_token.lahead;
 
-	switch (cur_lahead = sxsvar.sxlv.terminal_token.lahead) {
+	if (cur_lahead == ID_t)
+	  check_id (&sxsvar.sxlv.terminal_token);
+
+	is_leading_symbolic_name = (prev_lahead == EOL_t ||
+				    prev_lahead == LABEL_t ||
+				    prev_lahead == sxeof_code (sxsvar.sxtables));
+
+	if (is_leading_symbolic_name) {
+	  /* C'est + sûr ici que ds @3 qui peut être exécutée en avance */
+	  is_implicit_statement = false;
+	  sxsvar.sxlv_s.counters[0] = 0;
+	  sxsvar.sxlv_s.counters [1] = 0; /* Prudence */
+	}
+
+	switch (cur_lahead) {
+	case THEN_t:
+	  /* En général THEN est un id sauf si le début de la ligne est un [ELSE] IF
+	     et THEN est en fin de ligne */
+	  if (!is_leading_symbolic_name)
+	    /* Voir plus loin */
+	    break;
+	  
+	  /* Ici, c'est un id */
+	  /* FALLTHROUGH */
+
 	case A_t:
 	case B_t:
 	case D_t:
@@ -3822,8 +4056,14 @@ SXINT f77_scanact (SXINT code, SXINT act_no) {
 	case X_t:
 	case Z_t:
 	  /* Ca a ete reconnu par %symbolic_name, on n'est donc pas dans un format
-	     et ce ne sont donc pas les mots_cles. On les change en %symbolic_name. */
-	  /* Ils ont la bonne longueur!. */
+	     et ce ne sont donc pas les mots_cles. On les change en ID_t. */
+	case DOUBLE_t:
+	case IMPLICIT_t:
+	case NONE_t:
+	case PRECISION_t:
+	case UNDEFINED_t:
+	  /* Ces mots-clefs ne sont jamais isolés => ce sont des ids */
+	  
 	  sxsvar.sxlv.terminal_token.lahead = ID_t;
 	  sxsvar.sxlv.terminal_token.string_table_entry =
 	    sxstrsave (sxttext (sxsvar.sxtables, cur_lahead));
@@ -3845,87 +4085,83 @@ SXINT f77_scanact (SXINT code, SXINT act_no) {
 	  break;
 	}
 
-	is_leading_symbolic_name = (prev_lahead == EOL_t ||
-				    prev_lahead == LABEL_t ||
-				    prev_lahead == sxeof_code (sxsvar.sxtables));
-
 	if (is_leading_symbolic_name) {
-	  /* C'est + sûr ici que ds @3 qui peut être exécutée en avance */
-	  is_implicit_statement = false;
-	  sxsvar.sxlv_s.counters[0] = 0;
-	}
-
-	if (is_leading_symbolic_name ||
-	    is_implicit_statement/* on a passé le 1er stmt, on est (peut-être) sur un suivant */
-	    ) {
 	  /* On est en début d'instruction */
+	  is_implicit_statement = check_IMPLICIT_stmt ();
+
+	  if (is_implicit_statement)
+	    /* Ici l'id initial a été transformé, à l'aide du contexte droit considere comme une chaine de caracteres, en les
+	       mots clés IMPLICIT (CHARACTER | COMPLEX | DOUBLE PRECISION | INTEGER | LOGICAL | NONE |REAL | UNDEFINED)
+	       On laisse au scanner le soin de ranger le dernier token */
+	    return 0;
+
+	  /* si on n'est pas (exactement) dans ce cas, on continue... */
+	    
 	  /* On range le token courant reconnu par %symbolic_name.  Ce token peut donc être, pour l'instant,
 	     un mot-clé, car la reconnaissance lexicale leur a donné priorité... */
 	  f77put_token (sxsvar.sxlv.terminal_token);
 	  /* ... en Mtok_no */
 
-	  if (is_leading_symbolic_name) {
-	    if (head_tok_no != 0) {
-	      /* On n'est pas sur le 1er statement */
-	      /* Tout ce qui suit a été déplacé depuis la fin de ce bloc et s'applique donc à la ligne précédente */
-	      lahead = SXGET_TOKEN (head_tok_no).lahead; /* C'est donc le token de tête de la ligne précédente */
+	  if (head_tok_no != 0) {
+	    /* On n'est pas sur le 1er statement */
+	    /* Tout ce qui suit a été déplacé depuis la fin de ce bloc et s'applique donc à la ligne précédente */
+	    lahead = SXGET_TOKEN (head_tok_no).lahead; /* C'est donc le token de tête de la ligne précédente */
 
-	      if (ETAT == ETAT_0) {
-		/* Entree ds un programme principal ou un sous_programme. */
-		ETAT = ETAT_1;
+	    if (ETAT == ETAT_0) {
+	      /* Entree ds un programme principal ou un sous_programme. */
+	      ETAT = ETAT_1;
 
-		if (lahead == BLOCK_t)
-		  program_unit_kind = BLOCK_DATA_SUBPROGRAM;
-		else if (lahead == SUBROUTINE_t)
-		  program_unit_kind = SUBROUTINE_SUBPROGRAM;
-		else if (is_function_stmt) {
-		  program_unit_kind = FUNCTION_SUBPROGRAM ;
-		}
-		else {
-		  /* entree d'un main_program */
-		  program_unit_kind = MAIN_PROGRAM;
-
-		  if (++main_program_nb > 1) {
-		    sxerror (SXGET_TOKEN (head_tok_no).source_index,
-			     sxsvar.sxtables->err_titles [2][0] /* Error */,
-			     "%sThis multiple MAIN program is illegal.",
-			     sxsvar.sxtables->err_titles [2]+1 /* Error */);
-		  }
-		}
+	      if (lahead == BLOCK_t)
+		program_unit_kind = BLOCK_DATA_SUBPROGRAM;
+	      else if (lahead == SUBROUTINE_t)
+		program_unit_kind = SUBROUTINE_SUBPROGRAM;
+	      else if (is_function_stmt) {
+		program_unit_kind = FUNCTION_SUBPROGRAM ;
 	      }
 	      else {
-		if (lahead == ID_t)
-		  lahead = ASSIGN_t;
-		else {
-		  SXINT next_lahead;
+		/* entree d'un main_program */
+		program_unit_kind = MAIN_PROGRAM;
+
+		if (++main_program_nb > 1) {
+		  sxerror (SXGET_TOKEN (head_tok_no).source_index,
+			   sxsvar.sxtables->err_titles [2][0] /* Error */,
+			   "%sThis multiple MAIN program is illegal.",
+			   sxsvar.sxtables->err_titles [2]+1 /* Error */);
+		}
+	      }
+	    }
+	    else {
+	      if (lahead == ID_t)
+		lahead = ASSIGN_t;
+	      else {
+		SXINT next_lahead;
 		
-		  next_lahead = SXGET_TOKEN (head_tok_no + 1).lahead;
+		next_lahead = SXGET_TOKEN (head_tok_no + 1).lahead;
 
-		  if (lahead == END_t && (next_lahead == IF_t || next_lahead == DO_t))
-		    lahead = IF_t; /* pourquoi pas? */
-		}
-
-		if (program_unit_kind == BLOCK_DATA_SUBPROGRAM) {
-		  if (check_block_data_subprogram (lahead, head_tok_no))
-		    check_stmt_sequence (lahead, head_tok_no, 0);
-		}
-		else
-		  check_stmt_sequence (lahead, head_tok_no, 1);
+		if (lahead == END_t && (next_lahead == IF_t || next_lahead == DO_t))
+		  lahead = IF_t; /* pourquoi pas? */
 	      }
 
-	      if (program_unit_kind == MAIN_PROGRAM && (lahead == ENTRY_t || lahead == RETURN_t))
-		entry_or_return_in_main (lahead, head_tok_no);
-		    
-
-	      if (is_ansi && SXGET_TOKEN (head_tok_no).lahead == ID_t)
-		check_id_lgth (&(SXGET_TOKEN (head_tok_no)));
-
+	      if (program_unit_kind == BLOCK_DATA_SUBPROGRAM) {
+		if (check_block_data_subprogram (lahead, head_tok_no))
+		  check_stmt_sequence (lahead, head_tok_no, 0);
+	      }
+	      else
+		check_stmt_sequence (lahead, head_tok_no, 1);
 	    }
 
-	    head_tok_no = sxplocals.Mtok_no;
+	    if (program_unit_kind == MAIN_PROGRAM && (lahead == ENTRY_t || lahead == RETURN_t))
+	      entry_or_return_in_main (lahead, head_tok_no);
+		    
+
+	    if (SXGET_TOKEN (head_tok_no).lahead == ID_t)
+	      check_id (&(SXGET_TOKEN (head_tok_no)));
 	  }
 
+	  head_tok_no = sxplocals.Mtok_no;
+
 	  Mtok_no = sxplocals.Mtok_no;
+
 	  is_function_stmt = false;
 	  is_iokw_allowed = false;
 	  after_logical_if = true;
@@ -4268,7 +4504,7 @@ this expression is erased.",
 #endif
 	}
 	else 
-	  /* Ident ou mot-cle pas en debut d'instruction. */
+	  /* Ident ou mot-cle en milieu d'instruction. */
 	  /* On change les mot-cles en ident quand c'est possible. */
 	  switch (cur_lahead) {
 	    /* "mot_cles" traites lexicalement. */
@@ -4311,8 +4547,7 @@ this expression is erased.",
 	      /* On en fait un %id. */
 	      change_tok (Mtok_no, ID_t, sxttext (sxsvar.sxtables, cur_lahead));
 
-	      if (is_ansi)
-		check_id_lgth (&(SXGET_TOKEN (Mtok_no)));
+	      check_id (&(SXGET_TOKEN (Mtok_no)));
 	    }
 
 	    /* On sort des actions sans retourner aucun token */
@@ -4320,20 +4555,28 @@ this expression is erased.",
 	    sxsvar.sxlv.terminal_token.string_table_entry = SXERROR_STE;
 	    break;
 
+	  case CHARACTER_t:
+	  case COMPLEX_t:
+	  case INTEGER_t:
+	  case LOGICAL_t:
+	  case REAL_t:
+	    if (is_implicit_statement) {
+	      /* DOUBLE PRECISION est traité par ID_t */
+	      break;
+	    }
+
+	    /* FALLTHROUGH */
 
 	  case ASSIGN_t:
 	  case BACKSPACE_t:
 	  case BLOCK_t:
 	  case CALL_t:
-	  case CHARACTER_t:
 	  case CLOSE_t:
 	  case COMMON_t:
-	  case COMPLEX_t:
 	  case CONTINUE_t:
 	  case DATA_t:
 	  case DIMENSION_t:
 	  case DO_t:
-	  case DOUBLE_t:
 	  case ELSE_t:
 	  case ENDFILE_t:
 	  case ENTRY_t:
@@ -4345,50 +4588,92 @@ this expression is erased.",
 	  case IF_t:
 	  case IMPLICIT_t:
 	  case INQUIRE_t:
-	  case INTEGER_t:
 	  case INTRINSIC_t:
-	  case LOGICAL_t:
+	  case NONE_t:
 	  case OPEN_t:
 	  case PARAMETER_t:
 	  case PAUSE_t:
 	  case PRECISION_t:
 	  case PROGRAM_t:
 	  case READ_t:
-	  case REAL_t:
 	  case RETURN_t:
 	  case REWIND_t:
 	  case SAVE_t:
 	  case STOP_t:
 	  case SUBROUTINE_t:
 	  case TO_t:
+	  case UNDEFINED_t:
 	  case WRITE_t:
 	    /* On en fait des idents. */
 	    sxsvar.sxlv.terminal_token.lahead = ID_t;
 	    sxsvar.sxlv.terminal_token.string_table_entry =
 	      sxstrsave (sxttext (sxsvar.sxtables, cur_lahead));
 
-	    if (is_ansi)
-	      check_id_lgth (&(sxsvar.sxlv.terminal_token));
+	      check_id (&(sxsvar.sxlv.terminal_token));
 
 	    break;
 
+	  case THEN_t:
+	    /* On n'est pas en début d'instruction */
+	    /* En général THEN est un id sauf si le début de la ligne est un [ELSE] IF
+	       et THEN est en fin de ligne */
+	    /* Si on est dans le cas ELSE IF, cette action @1 est appelée depuis l'action @1 qui traite l'id ELSEIF_t.
+	       On simplifie la reconnaissance de ce cas (on ne regarde que EOL). Si pb, il faudra améliorer en verifiant
+	       le ELSEIF */
+	    if (sxsrcmngr.current_char != SXNEWLINE) {
+	      /* Ce n'est pas le kw THEN, on le change en id... */
+	      sxsvar.sxlv.terminal_token.lahead = ID_t;
+	      sxsvar.sxlv.terminal_token.string_table_entry =
+		sxstrsave (sxttext (sxsvar.sxtables, cur_lahead));
+	    }	
+#if EBUG
+	    print_sxsvar ();
+	    fputs ("\n", stdout);
+	    print_srcmngr_curchar ();
+	    fprintf (stdout,
+		     "**************** leaving f77_scan_act (@%ld) sxplocals.Mtok_no = %ld ****************\n",
+		     (SXINT) act_no,
+		     (SXINT) sxplocals.Mtok_no);
+#endif
+	    /* ... et on laisse au scanner le soin de ranger cet ID_t */
+
+	  break;
+
 	  case ID_t:
-	    /* id n'est pas en tete de carte, on regarde si cet id a la forme FUNCTIONid( et est précédé d'un <10a:type> */
+	    /* id n'est pas en tete de carte */
 	    {
 	      SXINT ste = sxsvar.sxlv.terminal_token.string_table_entry;
-	    
-	      if (check_inside_FUNCTION (head_tok_no, sxplocals.Mtok_no, sxstrget (ste), sxstrlen (ste))) {
+	      
+	      if (is_implicit_statement) {
+		/* On regarde si on est dans le cas DOUBLE PRECISION */
+		if (strcmp (sxstrget (ste), "DOUBLEPRECISION") == 0)	    {
+		  sxsvar.sxlv.terminal_token.lahead = DOUBLE_t;
+		  sxsvar.sxlv.terminal_token.string_table_entry = SXEMPTY_STE;
+		  /* On range DOUBLE_t... */
+		  f77put_token (sxsvar.sxlv.terminal_token);
+		  /* ... en Mtok_no et ...*/
+		  sxsvar.sxlv.terminal_token.lahead = PRECISION_t;
+		  sxsvar.sxlv.terminal_token.string_table_entry = SXEMPTY_STE;
+		  sxsvar.sxlv.terminal_token.source_index =
+		    *get_source_index (&(sxsvar.sxlv.terminal_token.source_index), strlen ("DOUBLE"));
+		  sxsvar.sxlv.terminal_token.comment = NULL;
+		  /* ... on laisse PRECISION_t au scanner */
+		}
+	      }
+	      else if (check_inside_FUNCTION (head_tok_no, sxplocals.Mtok_no, sxstrget (ste), sxstrlen (ste))) {
+		/* on regarde si cet id a la forme FUNCTIONid( et est précédé d'un <10a:type> */	    
 		/* ... Le token FUNCTION a été sorti, on laisse le scanner sortir l'id suffixe */
 		is_function_stmt = true;
 	      }
-	    }	 
+	    }
+	    
 	    /* On continue en sequence */
 	    /* FALLTHROUGH */
 	
 	  default:
 	    /* "mot_cles" traites syntaxiquement. */
-	    if (is_ansi && sxsvar.sxlv.terminal_token.lahead == ID_t)
-	      check_id_lgth (&(sxsvar.sxlv.terminal_token));
+	    if (sxsvar.sxlv.terminal_token.lahead == ID_t)
+	      check_id (&(sxsvar.sxlv.terminal_token));
 
 	    break;
 	  }
@@ -4396,38 +4681,41 @@ this expression is erased.",
 
       break;
 	
-    case 2: {
-      /* Traitement des chaines entre quotes.
-	 Ce n'est pas de l'ansi standard, dans tous les cas on les change en apostrophe. */
-      char *str;
-      SXINT strlen_local ;
+    case 2:
+      {
+	/* Traitement des chaines entre doubles quotes.
+	   Ce n'est pas de l'ansi standard, dans tous les cas on les change en apostrophe, sauf si on est en f77 étendu. */
+	char *str;
+	SXINT strlen_local ;
 
-      if (is_ansi && !is_quoted_string_already_met)  {
-	is_quoted_string_already_met = true;
-	sxerror (sxsvar.sxlv.terminal_token.source_index,
-		 sxsvar.sxtables->err_titles [1][0] /* warning */,
-		 "%sIn the standard, CHARACTER constants must be enclosed between apostrophes,\n\
+	if ((is_ansi || !is_extension) && !is_quoted_string_already_met)  {
+	  is_quoted_string_already_met = true;
+	  sxerror (sxsvar.sxlv.terminal_token.source_index,
+		   sxsvar.sxtables->err_titles [1][0] /* warning */,
+		   "%sIn the standard, CHARACTER constants must be enclosed between apostrophes,\n\
 This one, and all others in the sequel, are converted into a legal form.",
-		 sxsvar.sxtables->err_titles [1]+1 /* warning */);
-      }
+		   sxsvar.sxtables->err_titles [1]+1 /* warning */);
+	}
 
-      str = sxstrget (sxsvar.sxlv.terminal_token.string_table_entry) + 1; /* apres " */
-      strlen_local = sxstrlen (sxsvar.sxlv.terminal_token.string_table_entry) - 2;
-      sxsvar.sxlv.ts_lgth = 0;
-      ts_put ('\'');
-
-      /* On double les apostrophes. */
-      while (strlen_local-- > 0) {
-	if (*str == '\'')
+	if (!is_extension) {
+	  str = sxstrget (sxsvar.sxlv.terminal_token.string_table_entry) + 1; /* apres " */
+	  strlen_local = sxstrlen (sxsvar.sxlv.terminal_token.string_table_entry) - 2;
+	  sxsvar.sxlv.ts_lgth = 0;
 	  ts_put ('\'');
 
-	ts_put (*str++);
-      }
+	  /* On double les apostrophes. */
+	  while (strlen_local-- > 0) {
+	    if (*str == '\'')
+	      ts_put ('\'');
 
-      ts_put ('\'');
-      sxsvar.sxlv.terminal_token.string_table_entry =
-	sxstr2save (sxsvar.sxlv_s.token_string, sxsvar.sxlv.ts_lgth);
-    }
+	    ts_put (*str++);
+	  }
+
+	  ts_put ('\'');
+	  sxsvar.sxlv.terminal_token.string_table_entry =
+	    sxstr2save (sxsvar.sxlv_s.token_string, sxsvar.sxlv.ts_lgth);
+	}
+      }
 
       break;
 	
@@ -4520,12 +4808,11 @@ This one, and all others in the sequel, are converted into a legal form.",
 	sxsvar.sxlv.terminal_token.source_index =
 	  *get_source_index (&(sxsvar.sxlv.terminal_token.source_index), lgth);
 
-	if (is_ansi)
-	  check_id_lgth (&(sxsvar.sxlv.terminal_token));
+	check_id (&(sxsvar.sxlv.terminal_token));
       }
       else {
-	/* On proteste si is_ansi et si c'est la premiere fois.
-	   Dans tous les cas on change la definition. */
+	/* C'est une chaine Hollerith que l'on va transformer en chaine standard entre apostrophes */
+	/* On proteste si is_ansi et si c'est la premiere fois. */
 	SXINT val;
 
 	if (is_ansi && !is_hollerith_already_met)  {
@@ -4560,79 +4847,100 @@ This one, and all others in the sequel, are converted into a CHARACTER constant.
 
       break;
 
-    case 5: {
+    case 5:
       /* traitement de SXINT||id */
       /* On regarde si le token courant est précédé par "CHARACTER *", on découpe en "int id" */
       /* Sinon, on ne fait rien, si incorrect, on laisse le traitement d'erreur s'en occuper? */
-      TOK_i = sxplocals.Mtok_no - 1;
+      if (SXGET_TOKEN (sxplocals.Mtok_no).lahead == STAR_t) {
+	SXINT prev_Mtok_no_lahead = SXGET_TOKEN (sxplocals.Mtok_no - 1).lahead;
+	
+	if (prev_Mtok_no_lahead == CHARACTER_t ||
+	    prev_Mtok_no_lahead == COMPLEX_t ||
+	    prev_Mtok_no_lahead == INTEGER_t ||
+	    prev_Mtok_no_lahead == LOGICAL_t ||
+	    prev_Mtok_no_lahead == PRECISION_t ||
+	    prev_Mtok_no_lahead == REAL_t) {
+	  /* On accepte la spécif de longueur, même si !is_extension => message d'erreur + précis */
+	  char *str = sxsvar.sxlv_s.token_string;
+	  SXINT lgth, prev_lahead_local, int_tok_no = sxplocals.Mtok_no;
+	  SXINT id_lgth, column_shift;
 
-      if (SXGET_TOKEN (sxplocals.Mtok_no).lahead == STAR_t && SXGET_TOKEN (TOK_i).lahead == CHARACTER_t) {
-	char *str = sxsvar.sxlv_s.token_string;
-	SXINT lgth, prev_lahead_local, id_lgth;
+	  lgth = 0;
 
-	lgth = 0;
+	  while (isdigit (str [lgth]))
+	    lgth++;
 
-	while (isdigit (str [lgth]))
-	  lgth++;
-
-	id_lgth = strlen (str) - lgth;
-
-	switch (prev_lahead_local = sxsvar.sxlv.terminal_token.lahead) {
-	case UDPC_t:
-	  /* SXINT D [+-] SXINT */
-	case URC_t:
-	  /* SXINT E [+-] SXINT */
-	  if (str [lgth+1] == '+' || str [lgth+1] == '-') {
-	    /* Erreur, on "corrige" */
-	    struct sxsource_coord	si;
+	  switch (prev_lahead_local = sxsvar.sxlv.terminal_token.lahead) {
+	  case UDPC_t:
+	    /* SXINT D [+-] SXINT */
+	  case URC_t:
+	    /* SXINT E [+-] SXINT */
+	    if (str [lgth+1] == '+' || str [lgth+1] == '-') {
+	      /* Erreur, on "corrige" */
+	      struct sxsource_coord	si;
 	    
-	    str [lgth+1] = '0'; /* Pourquoi pas? */
-	    si = sxsvar.sxlv.terminal_token.source_index;
-	    si.column += lgth+1; /* sur le '+-' */
+	      str [lgth+1] = '0'; /* Pourquoi pas? */
+	      si = sxsvar.sxlv.terminal_token.source_index;
+	      si.column += lgth+1; /* sur le '+-' */
 
-	    sxerror (si,
-		     sxsvar.sxtables->err_titles [2][0] /* error */,
-		     "%sIllegal character replaced by a '0'.",
-		     sxsvar.sxtables->err_titles [2]+1 /* error */);
-	  }		  
-	  /* FALLTHROUGH */
+	      sxerror (si,
+		       sxsvar.sxtables->err_titles [2][0] /* error */,
+		       "%sIllegal character replaced by a '0'.",
+		       sxsvar.sxtables->err_titles [2]+1 /* error */);
+	    }		  
+	    /* FALLTHROUGH */
 
-	case INT_ID_t:
-	  sxsvar.sxlv.terminal_token.lahead = ENTIER_t;
-	  sxsvar.sxlv.terminal_token.string_table_entry = sxstr2save (str, lgth);
-	  f77put_token(sxsvar.sxlv.terminal_token);
-
-	  if (prev_lahead_local == INT_ID_t
-	      && id_lgth > 8
-	      && strncmp (str + lgth, "FUNCTION", 8) == 0
-	      && isalpha (str [lgth + 8])) {
-	    sxsvar.sxlv.terminal_token.lahead = FUNCTION_t;
-	    sxsvar.sxlv.terminal_token.string_table_entry = SXEMPTY_STE;
-	    sxsvar.sxlv.terminal_token.source_index =
-	      *get_source_index (&(sxsvar.sxlv.terminal_token.source_index), lgth);
+	    case INT_ID_t:
+	    sxsvar.sxlv.terminal_token.lahead = ENTIER_t;
+	    sxsvar.sxlv.terminal_token.string_table_entry = sxstr2save (str, lgth);
+	    /* On ne change pas le source_index */
 	    f77put_token(sxsvar.sxlv.terminal_token);
-	    is_function_stmt = true;
-	    lgth += 8;
+	    int_tok_no = sxplocals.Mtok_no; /* tok_no de l'entier */
+
+	    id_lgth = strlen (str) - lgth;
+
+	    if (prev_lahead_local == INT_ID_t
+		&& id_lgth > 8
+		&& strncmp (str + lgth, "FUNCTION", 8) == 0
+		&& isXalpha (str [lgth + 8])) {
+	      sxsvar.sxlv.terminal_token.lahead = FUNCTION_t;
+	      sxsvar.sxlv.terminal_token.string_table_entry = SXEMPTY_STE;
+	      sxsvar.sxlv.terminal_token.source_index =
+		*get_source_index (&(sxsvar.sxlv.terminal_token.source_index), lgth);
+	      f77put_token(sxsvar.sxlv.terminal_token);
+	      is_function_stmt = true;
+	      column_shift = lgth += 8;
+	    }
+	    else
+	      column_shift = 0;
+
+	    sxsvar.sxlv.terminal_token.lahead = ID_t;
+	    sxsvar.sxlv.terminal_token.string_table_entry = sxstrsave (str + lgth);
+	    sxsvar.sxlv.terminal_token.source_index =
+	      *get_source_index (&(sxsvar.sxlv.terminal_token.source_index), column_shift);
+
+	    check_id (&(sxsvar.sxlv.terminal_token));
+
+	    break;
+
+	  default:
+#if EBUG
+	    sxtrap ("f77_analyse", "unknown switch case #7");
+#endif
+	    break;
 	  }
 
-	  sxsvar.sxlv.terminal_token.lahead = ID_t;
-	  sxsvar.sxlv.terminal_token.string_table_entry = sxstrsave (str + lgth);
-	  sxsvar.sxlv.terminal_token.source_index =
-	    *get_source_index (&(sxsvar.sxlv.terminal_token.source_index), lgth);
-
-	  if (is_ansi)
-	    check_id_lgth (&(sxsvar.sxlv.terminal_token));
-
-	  break;
-
-	default:
-#if EBUG
-	  sxtrap ("f77_analyse", "unknown switch case #7");
-#endif
-	  break;
+	  /* On vérifie les tailles (même si !is_extension) */
+	  check_scalar_type_repr_lgth (prev_Mtok_no_lahead, &(SXGET_TOKEN (int_tok_no)));
+	  
 	}
+	/* else ERROR, on laisse la rcvr se débrouiller avec ça!! */
       }
-    }
+
+#if EBUG
+      fprintf (stdout, "****** @5 ******\n");
+      print_toks_buf (1, sxplocals.Mtok_no);
+#endif
 
       break;
 
@@ -4666,11 +4974,39 @@ This one, and all others in the sequel, are converted into the corresponding upp
 	/* vérifier ls statut des scan/parse act en la/rcvr
 	   les scanact sont exécutées en parse_in_la (dont rcvr), certaines doivent être inhibées
 	   (en particulier celle-ci) */
+#if EBUG
+	print_toks_buf (1, sxplocals.Mtok_no);
+#endif
       }
       /* else on est sur le eof bidon simulant la fin du sous_langage !DO... ou !FORMAT..., on ne fait rien */
 
       break;
 
+    case 8:
+      /* @8 : On est sur "(", si is_implicit_statement => on fait @Set(1) */
+#if EBUG
+      print_srcmngr_curchar ();
+#endif
+
+      if (is_implicit_statement) {
+	sxsvar.sxlv_s.counters [1] = 1;
+      }
+
+      break;
+
+    case 9:
+	/* @9 : On est sur %letter, La lettre a pu etre upgradee en mot-clef, on la retransforme en %letter */
+       {
+	 SXINT cur_lahead;
+	 
+	 if ((cur_lahead = sxsvar.sxlv.terminal_token.lahead) != LETTER_t) {
+	   sxsvar.sxlv.terminal_token.lahead = LETTER_t;
+	   sxsvar.sxlv.terminal_token.string_table_entry =
+	     sxstrsave (sxttext (sxsvar.sxtables, cur_lahead));
+	 }
+       }
+
+       break;
 
     default:
       fprintf (sxstderr, "\"%ld\"is an illegal action number in \"f77_scanact\".\n", (SXINT) act_no);

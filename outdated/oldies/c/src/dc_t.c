@@ -1352,7 +1352,7 @@ static char *err_titles[SXSEVERITIES]={
 };
 static char abstract []= "%d errors and %d warnings are reported.";
 extern int PARSACT();
-extern SXBOOLEAN sxprecovery();
+extern bool sxprecovery();
 
 static unsigned char S_char_to_simple_class[]={
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
@@ -1795,7 +1795,7 @@ static char *S_global_mess[]={
 "%sLexical analysis stops on EOF.",
 };
 extern int sxscan_it();
-extern SXBOOLEAN sxsrecovery();
+extern bool sxsrecovery();
 static int check_keyword();
 static struct SXT_node_info SXT_node_info[]={
 {0,1},{83,2},{82,3},{81,4},{84,5},{0,6},{0,7},{0,8},{0,9},{39,10},{38,12},{37,14},

@@ -17,7 +17,7 @@
  *   can be found at, e.g., http://www.cecill.info
  *****************************************************************************/
 
-char WHAT_XMLBUILD[] = "@(#)SYNTAX - $Id: sxml.h 3546 2023-08-26 07:53:18Z garavel $";
+char WHAT_XMLBUILD[] = "@(#)SYNTAX - $Id: sxml.h 3718 2024-02-10 08:23:15Z garavel $";
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -353,12 +353,12 @@ SXML_TYPE_LIST SXML_LLLL (
 /* ------------------------------------------------------------------------- */
 
 SXML_TYPE_LIST SXML_LLLT (
-		SXML_TYPE_LIST L1,
-		SXML_TYPE_LIST L2,
-		SXML_TYPE_LIST L3,
-		SXML_TYPE_TEXT T4)
+                SXML_TYPE_LIST L1,
+                SXML_TYPE_LIST L2,
+                SXML_TYPE_LIST L3,
+                SXML_TYPE_TEXT T4)
 {
-	return SXML_CONCAT ("LLLT", L1, L2, L3, T4);
+        return SXML_LL (SXML_LLL (L1, L2, L3), SXML_T (T4));
 }
 
 /* ------------------------------------------------------------------------- */
@@ -413,7 +413,7 @@ SXML_TYPE_LIST SXML_LTTL (
 		SXML_TYPE_TEXT T3,
 		SXML_TYPE_LIST L4)
 {
-	return SXML_CONCAT ("LTTL", L1, T2, T3, L4);
+	return SXML_LLL (L1, SXML_TT (T2, T3), L4);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -521,6 +521,18 @@ SXML_TYPE_LIST SXML_LLTLL (
 
 /* ------------------------------------------------------------------------- */
 
+SXML_TYPE_LIST SXML_LTLLL (
+		SXML_TYPE_LIST L1,
+		SXML_TYPE_TEXT T2,
+		SXML_TYPE_LIST L3,
+		SXML_TYPE_LIST L4,
+		SXML_TYPE_LIST L5)
+{
+	return SXML_LLLLL (L1, SXML_T (T2), L3, L4, L5);
+}
+
+/* ------------------------------------------------------------------------- */
+
 SXML_TYPE_LIST SXML_LTLTL (
 		SXML_TYPE_LIST L1,
 		SXML_TYPE_TEXT T2,
@@ -602,7 +614,7 @@ SXML_TYPE_LIST SXML_LTLLLL (
 		SXML_TYPE_LIST L5,
 		SXML_TYPE_LIST L6)
 {
-	return SXML_CONCAT ("LTLLLL", L1, T2, L3, L4, L5, L6);
+	return SXML_LL (SXML_LTL (L1, T2, L3), SXML_LLL (L4, L5, L6));
 }
 
 /* ------------------------------------------------------------------------- */

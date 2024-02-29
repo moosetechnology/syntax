@@ -31,11 +31,7 @@
 /* ??-09-90 ??:?? (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-#define WHAT	"@(#)LR0.c	- SYNTAX [unix] - 13 avril 1992"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+char *WHAT[] = "@(#)LR0.c	- SYNTAX [unix] - 13 avril 1992";
 
 static char	ME [] = "LR (0)";
 
@@ -43,31 +39,28 @@ static char	ME [] = "LR (0)";
 
 #include "rlr_optim.h"
 
-extern SXVOID	sxtime ();
+extern void	sxtime ();
 
 static int	limitem, limt, limnt;
 static int	*tsymb1, *items_list, *nt_stack;
 static SXBA	t_set, nt_set;
-static SXBOOLEAN	is_t_trans, is_nt_trans;
+static bool	is_t_trans, is_nt_trans;
 
 
-static SXVOID	oflw_nucleus (old_size, new_size)
-    int		old_size, new_size;
+static void	oflw_nucleus (int old_size, int new_size)
 {
     Q0 = (struct Q0*) sxrealloc (Q0, new_size + 1, sizeof (struct Q0));
 }
 
 
-static SXVOID	oflw_Q0xV (old_size, new_size)
-    int		old_size, new_size;
+static void	oflw_Q0xV (int old_size, int new_size)
 {
     Q0xV_to_Q0 = (int*) sxrealloc (Q0xV_to_Q0, new_size + 1, sizeof (int));
 }
 
 
 
-static	mettre (item)
-    register int	item;
+static	mettre (int item)
 {
     register int	x, tnt;
     register int	*q;
@@ -79,13 +72,13 @@ static	mettre (item)
 	    /* Nouvelle sous_liste */
 	    if (tnt > 0) {
 		if (SXBA_bit_is_reset_set (nt_set, tnt)) {
-		    is_nt_trans = SXTRUE;
+		    is_nt_trans = true;
 		    nt_stack [(*nt_stack)++] = tnt;
 		}
 	    }
 	    else {
 		SXBA_1_bit (t_set, -tnt);
-		is_t_trans = SXTRUE;
+		is_t_trans = true;
 	    }
 	}
     }
@@ -100,7 +93,7 @@ static	mettre (item)
 
 
 
-SXVOID	LR0 ()
+void	LR0 (void)
 {
     if (sxverbosep)
 	fputs ("\tLR (0) Automaton ... ", sxtty);
@@ -149,7 +142,7 @@ SXVOID	LR0 ()
 	register int	xac1;
 
 	for (xac1 = 1; xac1 < XH_top (nucleus_hd); xac1++) {
-	    is_t_trans = is_nt_trans = SXFALSE;
+	    is_t_trans = is_nt_trans = false;
 	    
 	    {
 		/* Fermeture. */
@@ -231,7 +224,7 @@ SXVOID	LR0 ()
 		    while ((xnt = sxba_scan_reset (nt_set, xnt)) > 0) {
 			if (items_list [item = tsymb1 [xnt]] == limitem /* un seul item */ &&
 			    bnf_ag.WS_INDPRO [item + 1].lispro == 0 /* en position pre_reduce */ &&
-			    (!is_tspe || (red_no = bnf_ag.WS_INDPRO [item].prolis) >= 0 /* SXTRUE */  &&
+			    (!is_tspe || (red_no = bnf_ag.WS_INDPRO [item].prolis) >= 0 /* true */  &&
 			     !SXBA_bit_is_set (s_red_set, red_no) &&
 			     !bnf_ag.WS_NBPRO [red_no].bprosimpl)) {
 			    next_state = -item;
@@ -334,8 +327,7 @@ SXVOID	LR0 ()
 }
 
 
-SXVOID	change_preds (p, q1, q2)
-    int		p, q1, q2;
+void	change_preds (int p, int q1, int q2)
 {
     /* q2 est un clone de q1 et p est un predecesseur de q1.
        On en fait un predecesseur de q2 et on l'enleve des predecesseurs de q1 */
@@ -349,25 +341,23 @@ SXVOID	change_preds (p, q1, q2)
 
 
 
-SXBOOLEAN		pred_card (q)
-    int		q;
+bool		pred_card (int q)
 {
-    /* Retourne SXTRUE ss1 le nombre de predecesseurs de q dans l'automate LR(0) est
+    /* Retourne true ss1 le nombre de predecesseurs de q dans l'automate LR(0) est
        superieur a 1 */
     register int	x, n = 0;
 
     XxY_Yforeach (Q0xQ0_hd, q, x) {
 	if (++n > 1)
-	    return SXTRUE;
+	    return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
 
-int	new_clone (state)
-    int		state;
+int	new_clone (int state)
 {
     register int	clone, StNt, next, n;
     register struct Q0	*aQ0;
@@ -429,8 +419,7 @@ int	new_clone (state)
 
 
 
-SXVOID	create_clone (p, q1)
-    register int	p, q1;
+void	create_clone (int p, int q1)
 {
     /* Cree, si elle n'existe pas deja la transition entre p et q1. */
     register int	X, q;
@@ -455,8 +444,7 @@ SXVOID	create_clone (p, q1)
     }
 }
 
-int	Q0_V_to_next (state, v)
-    int		state, v;
+int	Q0_V_to_next (int state, int v)
 {
     /* Retourne l'etat successeur de "state" par transition sur "v". */
     int		indice;
@@ -465,8 +453,7 @@ int	Q0_V_to_next (state, v)
 }
 
 
-int	nucl_i (state, i)
-    register int	state, i;
+int	nucl_i (int state, int i)
 {
     /* Retourne le predecesseur (item - 1) du ieme item s'il existe (sinon 0) du nucleus
        de l'etat state. */
@@ -487,8 +474,7 @@ int	nucl_i (state, i)
 }
 
 
-SXBOOLEAN		t_in_deriv (t, item)
-    register int	t, item;
+bool		t_in_deriv (int t, int item)
 {
     /* Teste si le terminal "t" appartient a S avec
        S = FIRST (beta) et item == A->alpha . beta */
@@ -498,7 +484,7 @@ SXBOOLEAN		t_in_deriv (t, item)
     while ((tnt = bnf_ag.WS_INDPRO [item++].lispro) > 0) {
 	/* Non terminal */
 	if (SXBA_bit_is_set (bnf_ag.FIRST [XNT_TO_NT_CODE (tnt)], -t))
-	    return SXTRUE;
+	    return true;
 
 	if (!SXBA_bit_is_set (bnf_ag.BVIDE, tnt))
 	    break;
@@ -509,13 +495,11 @@ SXBOOLEAN		t_in_deriv (t, item)
 
 
 
-SXBOOLEAN ante (state, item, f)
-    int		state, item;
-    SXBOOLEAN	(*f)();
+bool ante (int state, int item, bool (*f)(void))
 {
     /* item : A -> alpha . beta est dans state.
        Appelle la fonction f pour chaque etat q tel que goto*(q, alpha) = state.
-       f a la possibilite d'interrompre le parcourt en retournant SXTRUE */
+       f a la possibilite d'interrompre le parcourt en retournant true */
     register int	x;
 
     if (bnf_ag.WS_INDPRO [item - 1].lispro != 0) {
@@ -523,17 +507,16 @@ SXBOOLEAN ante (state, item, f)
 	XxY_Yforeach (Q0xQ0_hd, state, x) {
 	    /* Calcul des etats predecesseurs de state (sur X) */
 	    if (ante (XxY_X (Q0xQ0_hd, x), item - 1, f))
-		return SXTRUE;
+		return true;
 	}
     }
     else /* item de la fermeture: A -> . beta */
 	return f (state, item);
 
-    return SXFALSE;
+    return false;
 }
 
-int	gotostar (state, start, goal)
-    register int	state, start, goal;
+int	gotostar (int state, int start, int goal)
 {
     /* calcule goto*(state,X1 X2 ... Xn) avec
        start : A -> alpha .X1 X2 ... Xn beta
@@ -548,8 +531,7 @@ int	gotostar (state, start, goal)
 
 
 
-SXVOID sornt (xac1)
-    int	xac1;
+void sornt (int xac1)
 {
     register int	StNt, item, next_state, n;
     int			lim;
@@ -573,8 +555,7 @@ SXVOID sornt (xac1)
 
 
 
-SXVOID sort (xac1)
-    int	xac1;
+void sort (int xac1)
 {
     register int	StNt, item, next_state, n;
     int			lim;

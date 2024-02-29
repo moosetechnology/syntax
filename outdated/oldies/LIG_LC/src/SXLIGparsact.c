@@ -29,11 +29,7 @@
 /* Jeu 17 Oct 1996 11:53:35:	Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-#define WHAT	"@(#)SXLIGparsact.c	- SYNTAX [unix] - Jeu 17 Oct 1996 11:53:35"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+char WHAT[] = "@(#)SXLIGparsact.c	- SYNTAX [unix] - Jeu 17 Oct 1996 11:53:35";
 
 static char	ME [] = "SXLIGparsact";
 
@@ -41,7 +37,7 @@ static char	ME [] = "SXLIGparsact";
 #include "XxY.h";
 #include "semact.h";
 
-SXBOOLEAN			is_print_prod, is_print_time;
+bool			is_print_prod, is_print_time;
 #define TIME_INIT	0
 #define TIME_FINAL	1
 
@@ -84,7 +80,7 @@ CTRL_FREE(s,n)
 #define SECONDARY	0
 #define PRIMARY		1
 
-static SXBOOLEAN		is_normal_form;
+static bool		is_normal_form;
 
 static int		*LFprod, *LFprolon, *LFlispro, *LFprod2next;;
 static int		xLFprod_top, xLFprod, xLFlispro_top, xLFlispro;
@@ -197,7 +193,7 @@ EQUAL1_oflw (old_size, new_size)
 }
 
 
-static SXVOID
+static void
 PUSH1_oflw (old_size, new_size)
     int		old_size, new_size;
 {
@@ -205,7 +201,7 @@ PUSH1_oflw (old_size, new_size)
 }
 
 
-static SXVOID
+static void
 POP1_oflw (old_size, new_size)
     int		old_size, new_size;
 {
@@ -213,7 +209,7 @@ POP1_oflw (old_size, new_size)
 }
 
 
-static SXVOID
+static void
 SECONDARY_oflw (old_size, new_size)
     int		old_size, new_size;
 {
@@ -269,7 +265,7 @@ SXLIG_semact_init (size)
     inputG.constraints [1] = 10001;
     inputG.prdct [4] = 10001;
 
-    is_normal_form = SXTRUE;
+    is_normal_form = true;
 
     SXLIGpost_action [0] = -1;
     SXLIGpost_prdct [0] = SXLIGpost_prdct [1] = SXLIGpost_prdct [2] = -1;
@@ -322,7 +318,7 @@ SXLIG_semact_init (size)
 		    }
 
 		    if (type == SECONDARY)
-			is_normal_form = SXFALSE;
+			is_normal_form = false;
 		}
 	    }
 	    else
@@ -384,7 +380,7 @@ SXLIG_semact_init (size)
 			}
 
 			if (type == SECONDARY || type == PRIMARY && pop_nb+push_nb > 1)
-			    is_normal_form = SXFALSE;
+			    is_normal_form = false;
 		    }
 		}
 		else
@@ -562,7 +558,7 @@ SXLIG_semact_final (size)
     }
 }
 
-static SXBOOLEAN
+static bool
 SXLIG_semact (i, j, prod_core, rhs_stack)
     unsigned short	*prod_core;
     int 	i, j, rhs_stack [];
@@ -767,7 +763,7 @@ SXLIG_semact (i, j, prod_core, rhs_stack)
 
     LFprolon [xLFprod] = xLFlispro;
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -907,14 +903,14 @@ gen_LDGrhs (lfprod)
 }
 
 
-static SXBOOLEAN
+static bool
 SXLIG_sem_pass (S0n)
     int S0n;
 {
     int		A, B, C, AB, AC, BC, As, sC, sD, AsB, AsC, BsC, BsD, CsD, ssymb;
 
     int		Aij, secAij, Bkl, secBkl, Bmn, Ckl, Cmn, secCmn, AppC, lim, act_no, lfprod, prod, item;
-    SXBOOLEAN	is_local;
+    bool	is_local;
     
 
     EQUAL1_top = XxY_top (EQUALn_hd);
@@ -1308,7 +1304,7 @@ SXLIG_sem_pass (S0n)
 	sxtime (TIME_FINAL, "\tSemantic Pass: Linear Derivation Grammar");
     }
 
-    return SXTRUE;
+    return true;
 }
 
 int
@@ -1330,8 +1326,8 @@ SXLIG_actions (what, arg)
 	for_semact.sem_pass = SXLIG_sem_pass;
 #if 0
 	/* Ds le cas des LIG, les Aij sont stockes ds le X_header Aij_hd */
-	for_semact.need_Aij2A_i_j = SXFALSE;
-	for_semact.need_pack_unpack = SXFALSE;
+	for_semact.need_Aij2A_i_j = false;
+	for_semact.need_pack_unpack = false;
 #endif
 
 #if 0

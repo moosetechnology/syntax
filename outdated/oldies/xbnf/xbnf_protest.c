@@ -23,7 +23,7 @@
 #include "xbnf_vars.h"
 #include "varstr.h"
 
-char WHAT_XBNFPROTEST[] = "@(#)SYNTAX - $Id: xbnf_protest.c 3369 2023-06-17 10:18:35Z garavel $" WHAT_DEBUG;
+char WHAT_XBNFPROTEST[] = "@(#)SYNTAX - $Id: xbnf_protest.c 3678 2024-02-06 08:38:24Z garavel $" WHAT_DEBUG;
 
 /*--------------------------------------*/
 /*					*/
@@ -39,9 +39,9 @@ char WHAT_XBNFPROTEST[] = "@(#)SYNTAX - $Id: xbnf_protest.c 3369 2023-06-17 10:1
 
 static VARSTR	vstr;
 
-static SXBOOLEAN	prod_equal;
+static bool	prod_equal;
 
-static SXBOOLEAN
+static bool
 is_prod_equal (SXINT prod1, SXINT prod2)
 {
     SXINT l1, l2, xl1, xl2, i, s1, s2;
@@ -50,20 +50,20 @@ is_prod_equal (SXINT prod1, SXINT prod2)
     l2 = WN [prod2 + 1].prolon - (xl2 = WN [prod2].prolon);
 
     if (l1 != l2)
-	return SXFALSE;
+	return false;
 
     for (i = l1-2; i >= 0; i--) {
 	s1 = WI [xl1 + i].lispro;
 	s2 = WI [xl2 + i].lispro;
 
 	if (s1 != s2)
-	    return SXFALSE;
+	    return false;
     }
 
-    return (bnf_ag.RULE_TO_REDUCE != NULL) ? (bnf_ag.RULE_TO_REDUCE [prod1] == bnf_ag.RULE_TO_REDUCE [prod2]) : SXTRUE;
+    return (bnf_ag.RULE_TO_REDUCE != NULL) ? (bnf_ag.RULE_TO_REDUCE [prod1] == bnf_ag.RULE_TO_REDUCE [prod2]) : true;
 }
 
-static SXBOOLEAN
+static bool
 is_prod_less_equal (SXINT prod1, SXINT prod2)
 {
     SXINT l1, l2, xl1, xl2, i, s1, s2;
@@ -91,19 +91,19 @@ is_prod_less_equal (SXINT prod1, SXINT prod2)
 	return post_action1 < post_action2;
     }
 
-    return prod_equal = SXTRUE; /* egalite */
+    return prod_equal = true; /* egalite */
 }
 
 
 
-static SXVOID	error_same_prod (SXINT *sorted, SXINT n)
+static void	error_same_prod (SXINT *sorted, SXINT n)
 {
     /* sorted [1:n] contient des numeros de productions identiques et consecutifs */
     SXINT		prod1, prod2, x;
     char	string [12];
-    SXBOOLEAN	eq;
+    bool	eq;
 		
-    is_proper = SXFALSE;
+    is_proper = false;
     prod2 = sorted [x = 1];
 		
     while (x < n) {
@@ -135,7 +135,7 @@ static SXVOID	error_same_prod (SXINT *sorted, SXINT n)
 
 
 #if 0
-static SXVOID
+static void
 error_same_prod (SXINT x1, SXINT x2)
 {
     sxtmsg (sxsrcmngr.source_coord.file_name,
@@ -244,10 +244,10 @@ static SXINT	get_nt_set_string (SXINT *nt_set, SXINT *null_rhs, SXINT *rhs_size)
 }
 
 
-SXVOID
+void
 property_test (void)
 {
-    is_proper = SXTRUE, proper [1] = NULL, proper [2] = NULL, proper [3] = NULL;
+    is_proper = true, proper [1] = NULL, proper [2] = NULL, proper [3] = NULL;
 
     {
 	/* IS  THE  PRODUCTION  LIST  A  SET ? */
@@ -265,7 +265,7 @@ property_test (void)
 		    sorted [++n] = WN [x1].numpg;
 		} while (++x1 < lim);
 
-		prod_equal = SXFALSE;
+		prod_equal = false;
 		sort_by_tree (sorted, 1, n, is_prod_less_equal);
 
 		/* Dans la version "xbnf", les "post-actions" sont significatives.
@@ -302,7 +302,7 @@ property_test (void)
 		    xl2 = WN [xp2].prolon;
 
 		    if (l == WN [xp2 + 1].prolon - xl2) {
-			SXBOOLEAN		is_same_prod = SXTRUE;
+			bool		is_same_prod = true;
 			SXINT	i;
 
 			for (i = l - 2; i >= 0 && (is_same_prod = WI [xl1 + i].lispro == WI [xl2 + i].lispro); i--)
@@ -310,7 +310,7 @@ property_test (void)
 
 			if (is_same_prod) {
 			    error_same_prod (xp1, xp2);
-			    is_proper = SXFALSE;
+			    is_proper = false;
 			}
 		    }
 		}
@@ -331,7 +331,7 @@ property_test (void)
 	if ((un_used = W.ntmax - get_nt_set_t_or_empty_string (use, rhs_size, null_rhs, F_t)) > 0) {
 	    SXINT	i, j;
 
-	    is_proper = SXFALSE;
+	    is_proper = false;
 	    proper [1] = (SXINT*) /* 0:un_used */ sxalloc (un_used + 1, sizeof (SXINT));
 	    proper [1] [j = 0] = un_used;
 
@@ -387,7 +387,7 @@ property_test (void)
 	if (un_accessible > 0) {
 	    SXINT	property_test_i, j;
 
-	    is_proper = SXFALSE;
+	    is_proper = false;
 	    proper [2] = (SXINT*) /* 0:un_accessible.ntmax */ sxalloc (un_accessible + 1, sizeof (SXINT));
 	    proper [2] [j = 0] = un_accessible;
 
@@ -401,7 +401,7 @@ property_test (void)
 
     {
 	/* bvide */
-	/* bvide[nt]=SXTRUE iff the non terminal symbol nt can generate the empty string */
+	/* bvide[nt]=true iff the non terminal symbol nt can generate the empty string */
 	SXINT	nt, xnt;
 	SXINT	*nt_set_empty_string, *null_rhs;
 	SXINT		*rhs_size;

@@ -211,6 +211,7 @@ amlgm_cmpd_pd (void)
 	string2stack (acc_name_stack, sxstrget (ste), lgth);
 
 	path = word_tree_add_a_word (&lhs_acc_name_tree, acc_name_stack, lhs_id);
+        (void) path;
       }
 
       XH_push (lhs_hd, son->id);
@@ -418,6 +419,7 @@ smppass (void)
     }
       
     path = word_tree_add_a_word (&lhs_tree, word_stack, XH_X (rhs_list_hd, id));
+    (void) path;
   }
 
   XH_free (&lhs_hd);

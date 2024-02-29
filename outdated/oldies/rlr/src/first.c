@@ -26,11 +26,7 @@
 /* 14-12-90 14:30 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-#define WHAT	"@(#)first.c	- SYNTAX [unix] - 7 mars 1991"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+char WHAT[] = "@(#)first.c	- SYNTAX [unix] - 7 mars 1991";
 
 static char	ME [] = "first";
 
@@ -65,21 +61,21 @@ static int		LA_top;
 
 static XH_header	*stack_hd;
 
-static SXBOOLEAN		(*parse_completed)();
+static bool		(*parse_completed)();
 
-static SXVOID	oflw_IxES (old_size, new_size)
+static void	oflw_IxES (old_size, new_size)
     int		old_size, new_size;
 {
     EI_set = sxba_resize (EI_set, new_size + 1);
 }
 
-static SXVOID	oflw_ESxT (old_size, new_size)
+static void	oflw_ESxT (old_size, new_size)
     int		old_size, new_size;
 {
     ES_T_to_ES = (int*) sxrealloc (ES_T_to_ES, new_size + 1, sizeof (int));
 }
 
-static SXVOID first_alloc ()
+static void first_alloc ()
 {
     fit = (int*) sxcalloc (bnf_ag.WS_TBL_SIZE.xntmax + 1, sizeof (int));
     EISL_stack = (int*) sxalloc (xac2 + 1, sizeof (int));
@@ -97,7 +93,7 @@ static SXVOID first_alloc ()
 }
 
 
-SXVOID first_free ()
+void first_free ()
 {
     if (EI_set != NULL) {
 	sxfree (EISL_stack);
@@ -150,7 +146,7 @@ static int closure (nt_init)
 {
     register int	id, x, item, y;
     int			nt, xnt, lim, red_no, q1, d, etat_init;
-    SXBOOLEAN		is_final = SXFALSE;
+    bool		is_final = false;
     
     etat_init = fit [nt_init];
 
@@ -173,7 +169,7 @@ static int closure (nt_init)
 	    
 	    if (nt == nt_init && (d == etat_init || d == -etat_init))
 		/* l'etat initial peut aussi etre final! */
-		is_final = SXTRUE;
+		is_final = true;
 	    
 	    /* On regarde les (A -> alpha . xnt beta, d1) de Id (s'il y en a) */
 	    /* Attention, d peut etre egal a EISL_disp_top.
@@ -213,10 +209,10 @@ static int trans (nt_init, earley_state, t)
 {
     register int	x, item, id;
     int			indice, lim;
-    SXBOOLEAN		is_trans;
+    bool		is_trans;
 
     if (!XxY_set (&ESxT_hd, earley_state, t, &indice)) {
-	is_trans = SXFALSE;
+	is_trans = false;
 	lim = EISL_disp [earley_state + 1];
 	x = EISL_disp [earley_state];
 	sxba_empty (EI_set);
@@ -227,7 +223,7 @@ static int trans (nt_init, earley_state, t)
 	    
 	    if (bnf_ag.WS_INDPRO [item].lispro == t) {
 		ei_put (item + 1, XxY_Y (IxES_hd, id));
-		is_trans = SXTRUE;
+		is_trans = true;
 	    }
 	    
 	    x++;
@@ -261,20 +257,20 @@ static int first_init (xnt)
     return fit [nt];
 }
 
-static SXBOOLEAN prefixe (item, t_ref)
+static bool prefixe (item, t_ref)
     int item, t_ref;
     
 {
     register int	ES, xtnt, next_t, t_ref_init;
 
     if ((xtnt = bnf_ag.WS_INDPRO [item].lispro) == 0 || t_ref == LA_top)
-	return parse_completed (item, t_ref, SXFALSE);
+	return parse_completed (item, t_ref, false);
 
     next_t = XH_list_elem (*stack_hd, t_ref);
     
     if (xtnt < 0) {
 	if (xtnt == next_t && prefixe (item + 1, t_ref + 1))
-	    return SXTRUE;
+	    return true;
     }
     else {
 	t_ref_init = t_ref;
@@ -285,17 +281,17 @@ static SXBOOLEAN prefixe (item, t_ref)
 		/* Etat final, une phrase de xtnt vient d'etre reconnue, on progresse
 		   dans item. */
 		if (prefixe (item + 1, t_ref))
-		    return SXTRUE;
+		    return true;
 		
 		if (next_t == 0)
-		    return SXFALSE;
+		    return false;
 		
 		ES = -ES;
 	    }
 	    
 	    if (next_t == 0)
 		/* Reconnaissance d'un prefixe strict de xtnt */
-		return parse_completed (item, t_ref_init, SXTRUE);
+		return parse_completed (item, t_ref_init, true);
 	    
 	    ES = trans (xtnt, ES, next_t);
 	    next_t = ++t_ref == LA_top ? 0 : XH_list_elem (*stack_hd, t_ref);
@@ -303,13 +299,13 @@ static SXBOOLEAN prefixe (item, t_ref)
     }
     
     
-    return SXFALSE;
+    return false;
 }
 
-SXBOOLEAN earley_parse (LA_init, LA_final, hd, item, F)
+bool earley_parse (LA_init, LA_final, hd, item, F)
     int item, LA_init, LA_final;
     XH_header *hd;
-    SXBOOLEAN	(*F)();
+    bool	(*F)();
 {
     stack_hd = hd;
     LA_top = LA_final;

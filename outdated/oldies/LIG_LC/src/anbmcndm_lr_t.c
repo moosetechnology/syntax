@@ -106,7 +106,7 @@ static char *err_titles[SXSEVERITIES]={
 "\002Error:\t",
 };
 static char abstract []= "%d warnings and %d errors are reported.";
-extern SXBOOLEAN sxndprecovery();
+extern bool sxndprecovery();
 
 static unsigned char S_char_to_simple_class[]={
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
@@ -174,7 +174,7 @@ static char *S_global_mess[]={
 "%sScanning stops on End Of File.",
 };
 extern int sxscan_it();
-extern SXBOOLEAN sxsrecovery();
+extern bool sxsrecovery();
 extern int sxscanner();
 extern int sxndparser();
 extern int ESAMBIG();

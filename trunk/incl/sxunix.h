@@ -35,7 +35,9 @@
 */
 
 #include "SXante.h"
+
 #include "sxcommon.h"
+/* includes stdio.h, stdlib.h, unistd.h, etc. */
 
 #ifndef SXTAB_INTERVAL
 #define SXTAB_INTERVAL 8	/* May be changed for the system */
@@ -66,9 +68,6 @@
 #define SXMAGIC_NUMBER	((SXUINT) 52113)
 extern void sxcheck_magic_number (SXUINT m1, SXUINT m2, char *who);
 
-
-/* "sxba.h" includes <stdio.h> */
-
 #include "sxba.h"
 /*
  * Unless you redefine SXBITS_PER_LONG in "sxba.h",
@@ -78,8 +77,6 @@ extern void sxcheck_magic_number (SXUINT m1, SXUINT m2, char *who);
 #include <sys/fcntl.h> /* pour O_BINARY et O_TEXT */
 #include <string.h>
 #include <sys/time.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include <sys/types.h> /* pour open() */
 #include <sys/stat.h> /* pour open() */
 #include <fcntl.h> /* pour open() */

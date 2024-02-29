@@ -1,0 +1,3 @@
+      PROGRAM SIMPLEMAIN
+      COMMON V1, V2
+      END

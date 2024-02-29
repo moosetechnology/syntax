@@ -6,7 +6,7 @@ SRC=$(EARLEY)/src
 LIB=$(EARLEY)/lib
 INCL=$(EARLEY)/incl
 
-CC=cc -I$(INCL) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
+CC=cc -I$(INCL) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS) -DEBUG
 
 ALL=$(EARLEY)/earley.out	\
      $(EARLEY)/earley_LC_OK.out \

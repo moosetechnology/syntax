@@ -1,0 +1,2 @@
+      PROGRAM SIMPLEMAIN
+      END

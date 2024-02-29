@@ -80,22 +80,16 @@
 /* 30-10-86 15:31 (pb&phd):	Reecriture complete			*/
 /************************************************************************/
 
-
-#define WHAT	"@(#)rlr_main.c	- SYNTAX [unix] - 5 mai 1992"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
-
+char WHAT[] = "@(#)rlr_main.c	- SYNTAX [unix] - 5 mai 1992";
 
 #include "rlr_optim.h"
 
 #include "release.h"
 #include "bstr.h"
 
-extern SXBOOLEAN	bnf_read ();
-extern SXVOID	bnf_free ();
-extern int	LALR1 (), OPTIM ();
+
+
+
 
 /* On lit a priori sur stdin, et cetera */
 
@@ -108,8 +102,8 @@ FILE	*sxtty;
 
 static char	ME [] = "rlr";
 static char	*arg, c;
-static SXBOOLEAN	is_arg_error;
-static int	pre_lgth;
+static bool	is_arg_error;
+// static int	pre_lgth;
 static char	Usage [] = "\
 Usage:\t%s [options] language...\n\
 options=\t-fc, -force, -nfc, -noforce,\n\
@@ -215,8 +209,7 @@ static int	str_to_nb ()
 
 
 
-static int	option_get_kind (arg)
-    register char	*arg;
+static int	option_get_kind (char *arg)
 {
     register char	**opt;
 
@@ -233,8 +226,7 @@ static int	option_get_kind (arg)
 
 
 
-static char	*option_get_text (kind)
-    register int	kind;
+static char	*option_get_text (int kind)
 {
     register int	i;
 
@@ -248,10 +240,7 @@ static char	*option_get_text (kind)
 
 
 
-char *get_constructor_name (string, is_lalr, is_rlr, h, k)
-    char	*string;
-    SXBOOLEAN	is_lalr, is_rlr;
-    int		h, k;
+char *get_constructor_name (char *string, bool is_lalr, bool is_rlr, int h, int k)
 {
     char H [12], K [12];
 
@@ -268,13 +257,11 @@ char *get_constructor_name (string, is_lalr, is_rlr, h, k)
 }
 
 
-struct bstr	*options_text (kind, bstr)
-    int		kind;
-    struct bstr	*bstr;
+struct bstr	*options_text (int kind, struct bstr *bstr)
 {
     register long	*options_set;
     register int	i;
-    SXBOOLEAN	is_first = SXTRUE;
+    bool	is_first = true;
 
     options_set = kind == 1 ? &rlr_options_set : &optim_options_set;
     bstr_raz (bstr);
@@ -282,7 +269,7 @@ struct bstr	*options_text (kind, bstr)
     for (i = 1; i <= LAST_OPTION; i++)
 	if (*options_set & OPTION (i)) {
 	    if (is_first)
-		is_first = SXFALSE;
+		is_first = false;
 	    else
 		bstr_cat_str (bstr, ", ");
 
@@ -294,7 +281,7 @@ struct bstr	*options_text (kind, bstr)
 
 
 
-static int	rlr_run ()
+static int	rlr_run (void)
 {
     register int	code_lalr1, code_optim;
 
@@ -313,7 +300,7 @@ static int	rlr_run ()
     default:
 	if (sxverbosep && !sxttycol1p) {
 	    fputc ('\n', sxtty);
-	    sxttycol1p = SXTRUE;
+	    sxttycol1p = true;
 	}
 
 	fputs ("Optimization phase skipped, no tables generated.\n", sxstderr);
@@ -328,12 +315,10 @@ static int	rlr_run ()
 
 
 
-main (argc, argv)
-    int		argc;
-    char	*argv [];
+main (int argc, char *argv[])
 {
     register int	argnum;
-    static SXBOOLEAN	has_message [SXSEVERITIES];
+    static bool	has_message [SXSEVERITIES];
 
     if (sxstdout == NULL) {
 	sxstdout = stdout;
@@ -348,7 +333,7 @@ main (argc, argv)
     }
 
     sxopentty ();
-    sxttycol1p = SXTRUE;
+    sxttycol1p = true;
 
 /* valeurs par defaut */
 
@@ -356,12 +341,12 @@ main (argc, argv)
     optim_options_set = OPTION (PARTIAL_SPE);
     conflict_derivation_kind = 0;
     is_force = sxverbosep = is_list_system_conflicts = is_pspe =
-	is_unique_derivation_per_conflict = is_unique_conflict_per_state = SXTRUE;
+	is_unique_derivation_per_conflict = is_unique_conflict_per_state = true;
     is_automaton = is_list_user_conflicts = is_list_conflicts = is_abstract =
 	is_floyd_evans = is_long_listing = is_tspe =
 	    is_nspe = is_lr_constructor = is_rlr_constructor = 
 		is_ambiguity_check = is_statistics = is_super_arc = print_time =
-		    is_non_deterministic_automaton = SXFALSE;
+		    is_non_deterministic_automaton = false;
     h_value = k_value = 1;
 
 /* Decodage des options */
@@ -369,100 +354,100 @@ main (argc, argv)
     for (argnum = 1; argnum < argc; argnum++) {
 	switch (option_get_kind (arg = argv [argnum])) {
 	case FORCE:
-	    is_force = SXTRUE;
+	    is_force = true;
 	    break;
 
 	case -FORCE:
-	    is_force = SXFALSE;
+	    is_force = false;
 	    break;
 
 	case VERBOSE:
-	    sxverbosep = SXTRUE;
+	    sxverbosep = true;
 	    break;
 
 	case -VERBOSE:
-	    sxverbosep = SXFALSE;
+	    sxverbosep = false;
 	    break;
 
 	case AUTOMATON:
-	    is_automaton = SXTRUE, rlr_options_set |= OPTION (AUTOMATON);
+	    is_automaton = true, rlr_options_set |= OPTION (AUTOMATON);
 	    break;
 
 	case -AUTOMATON:
-	    is_automaton = SXFALSE, rlr_options_set &= noOPTION (AUTOMATON);
+	    is_automaton = false, rlr_options_set &= noOPTION (AUTOMATON);
 	    break;
 
 	case LIST_USER_CONFLICTS:
-	    is_list_user_conflicts = SXTRUE, rlr_options_set |= OPTION (LIST_USER_CONFLICTS);
+	    is_list_user_conflicts = true, rlr_options_set |= OPTION (LIST_USER_CONFLICTS);
 	    break;
 
 	case -LIST_USER_CONFLICTS:
-	    is_list_user_conflicts = SXFALSE, rlr_options_set &= noOPTION (LIST_USER_CONFLICTS);
+	    is_list_user_conflicts = false, rlr_options_set &= noOPTION (LIST_USER_CONFLICTS);
 	    break;
 
 	case LIST_SYSTEM_CONFLICTS:
-	    is_list_system_conflicts = SXTRUE, rlr_options_set |= OPTION (LIST_SYSTEM_CONFLICTS);
+	    is_list_system_conflicts = true, rlr_options_set |= OPTION (LIST_SYSTEM_CONFLICTS);
 	    break;
 
 	case -LIST_SYSTEM_CONFLICTS:
-	    is_list_system_conflicts = SXFALSE, rlr_options_set &= noOPTION (LIST_SYSTEM_CONFLICTS);
+	    is_list_system_conflicts = false, rlr_options_set &= noOPTION (LIST_SYSTEM_CONFLICTS);
 	    break;
 
 	case LIST_CONFLICTS:
-	    is_list_system_conflicts = is_list_user_conflicts = SXTRUE, rlr_options_set |= OPTION (LIST_CONFLICTS);
+	    is_list_system_conflicts = is_list_user_conflicts = true, rlr_options_set |= OPTION (LIST_CONFLICTS);
 	    break;
 
 	case -LIST_CONFLICTS:
-	    is_list_system_conflicts = is_list_user_conflicts = SXFALSE, rlr_options_set &= noOPTION (LIST_CONFLICTS);
+	    is_list_system_conflicts = is_list_user_conflicts = false, rlr_options_set &= noOPTION (LIST_CONFLICTS);
 	    break;
 
 	case ABSTRACT:
-	    is_abstract = SXTRUE, optim_options_set |= OPTION (ABSTRACT);
+	    is_abstract = true, optim_options_set |= OPTION (ABSTRACT);
 	    break;
 
 	case -ABSTRACT:
-	    is_abstract = SXFALSE, optim_options_set &= noOPTION (ABSTRACT);
+	    is_abstract = false, optim_options_set &= noOPTION (ABSTRACT);
 	    break;
 
 	case FLOYD_EVANS:
-	    is_floyd_evans = SXTRUE, optim_options_set |= OPTION (FLOYD_EVANS);
+	    is_floyd_evans = true, optim_options_set |= OPTION (FLOYD_EVANS);
 	    break;
 
 	case -FLOYD_EVANS:
-	    is_floyd_evans = SXFALSE, optim_options_set &= noOPTION (FLOYD_EVANS);
+	    is_floyd_evans = false, optim_options_set &= noOPTION (FLOYD_EVANS);
 	    break;
 
 	case LONG_LISTING:
-	    is_long_listing = SXTRUE, rlr_options_set |= OPTION (LONG_LISTING), optim_options_set |= OPTION (LONG_LISTING);
+	    is_long_listing = true, rlr_options_set |= OPTION (LONG_LISTING), optim_options_set |= OPTION (LONG_LISTING);
 	    break;
 
 	case -LONG_LISTING:
-	    is_long_listing = SXFALSE, rlr_options_set &= noOPTION (LONG_LISTING), optim_options_set &= noOPTION (LONG_LISTING);
+	    is_long_listing = false, rlr_options_set &= noOPTION (LONG_LISTING), optim_options_set &= noOPTION (LONG_LISTING);
 	    break;
 
 	case PARTIAL_SPE:
-	    is_pspe = SXTRUE, optim_options_set |= OPTION (PARTIAL_SPE);
-	    is_tspe = SXFALSE, optim_options_set &= noOPTION (TOTAL_SPE);
-	    is_nspe = SXFALSE, optim_options_set &= noOPTION (NO_SPE);
+	    is_pspe = true, optim_options_set |= OPTION (PARTIAL_SPE);
+	    is_tspe = false, optim_options_set &= noOPTION (TOTAL_SPE);
+	    is_nspe = false, optim_options_set &= noOPTION (NO_SPE);
 	    break;
 
 	case TOTAL_SPE:
-	    is_pspe = SXFALSE, optim_options_set &= noOPTION (PARTIAL_SPE);
-	    is_tspe = SXTRUE, optim_options_set |= OPTION (TOTAL_SPE);
-	    is_nspe = SXFALSE, optim_options_set &= noOPTION (NO_SPE);
+	    is_pspe = false, optim_options_set &= noOPTION (PARTIAL_SPE);
+	    is_tspe = true, optim_options_set |= OPTION (TOTAL_SPE);
+	    is_nspe = false, optim_options_set &= noOPTION (NO_SPE);
 	    break;
 
 	case NO_SPE:
-	    is_pspe = SXFALSE, optim_options_set &= noOPTION (PARTIAL_SPE);
-	    is_tspe = SXFALSE, optim_options_set &= noOPTION (TOTAL_SPE);
-	    is_nspe = SXTRUE, optim_options_set |= OPTION (NO_SPE);
+	    is_pspe = false, optim_options_set &= noOPTION (PARTIAL_SPE);
+	    is_tspe = false, optim_options_set &= noOPTION (TOTAL_SPE);
+	    is_nspe = true, optim_options_set |= OPTION (NO_SPE);
 	    break;
 
 	case D0:
 	    /* Pas de derivation. */
 	    conflict_derivation_kind = 0, rlr_options_set &= noOPTION (D1) & noOPTION (D2) & noOPTION (UC) & noOPTION (UD), rlr_options_set |= OPTION (D0);
-	    is_unique_conflict_per_state = SXFALSE;
-	    is_unique_derivation_per_conflict = SXFALSE;
+	    is_unique_conflict_per_state = false;
+	    is_unique_derivation_per_conflict = false;
 	    break;
 
 	case D1:
@@ -476,59 +461,59 @@ main (argc, argv)
 	    break;
 
 	case UC:
-	    is_unique_conflict_per_state = SXTRUE, rlr_options_set |= OPTION (UC);
+	    is_unique_conflict_per_state = true, rlr_options_set |= OPTION (UC);
 	    break;
 
 	case -UC:
-	    is_unique_conflict_per_state = SXFALSE, rlr_options_set &= noOPTION (UC);
+	    is_unique_conflict_per_state = false, rlr_options_set &= noOPTION (UC);
 	    break;
 
 	case UD:
-	    is_unique_derivation_per_conflict = SXTRUE, rlr_options_set |= OPTION (UD);
+	    is_unique_derivation_per_conflict = true, rlr_options_set |= OPTION (UD);
 	    break;
 
 	case -UD:
-	    is_unique_derivation_per_conflict = SXFALSE, rlr_options_set &= noOPTION (UD);
+	    is_unique_derivation_per_conflict = false, rlr_options_set &= noOPTION (UD);
 	    break;
 
 	case S:
-	    is_statistics = SXTRUE, rlr_options_set |= OPTION (S);
+	    is_statistics = true, rlr_options_set |= OPTION (S);
 	    break;
 
 	case -S:
-	    is_statistics = SXFALSE, rlr_options_set &= noOPTION (S);
+	    is_statistics = false, rlr_options_set &= noOPTION (S);
 	    break;
 
 	case SA:
-	    is_super_arc = SXTRUE, rlr_options_set |= OPTION (SA);
+	    is_super_arc = true, rlr_options_set |= OPTION (SA);
 	    break;
 
 	case -SA:
-	    is_super_arc = SXFALSE, rlr_options_set &= noOPTION (SA);
+	    is_super_arc = false, rlr_options_set &= noOPTION (SA);
 	    break;
 
 	case TIME:
-	    print_time = SXTRUE, rlr_options_set |= OPTION (TIME);
+	    print_time = true, rlr_options_set |= OPTION (TIME);
 	    break;
 
 	case -TIME:
-	    print_time = SXFALSE, rlr_options_set &= noOPTION (TIME);
+	    print_time = false, rlr_options_set &= noOPTION (TIME);
 	    break;
 
 	case DETERMINISTIC:
-	    is_non_deterministic_automaton = SXFALSE, rlr_options_set |= OPTION (DETERMINISTIC);
+	    is_non_deterministic_automaton = false, rlr_options_set |= OPTION (DETERMINISTIC);
 	    break;
 
 	case -DETERMINISTIC:
-	    is_non_deterministic_automaton = SXTRUE, rlr_options_set &= noOPTION (DETERMINISTIC);
+	    is_non_deterministic_automaton = true, rlr_options_set &= noOPTION (DETERMINISTIC);
 	    break;
 
 	case AMBIGUITY_CHECK:
-	    is_ambiguity_check = SXTRUE, rlr_options_set |= OPTION (AMBIGUITY_CHECK);
+	    is_ambiguity_check = true, rlr_options_set |= OPTION (AMBIGUITY_CHECK);
 	    break;
 
 	case -AMBIGUITY_CHECK:
-	    is_ambiguity_check = SXFALSE, rlr_options_set &= noOPTION (AMBIGUITY_CHECK);
+	    is_ambiguity_check = false, rlr_options_set &= noOPTION (AMBIGUITY_CHECK);
 	    break;
 
 	case UNKNOWN_ARG:
@@ -551,11 +536,11 @@ main (argc, argv)
    r[h][la]lrk 	=> valeur de k. */
 /* initialisation values */
 
-	    is_lr_constructor = SXTRUE;
-	    is_arg_error = SXFALSE;
+	    is_lr_constructor = true;
+	    is_arg_error = false;
 
 	    if (c == 'r') {
-		is_rlr_constructor = SXTRUE;
+		is_rlr_constructor = true;
 		k_value = 10; /* pour l'instant. */
 		c = *arg++;
 		h_value = is_digit (c) ? str_to_nb () : 0;
@@ -567,12 +552,12 @@ main (argc, argv)
 		c = *arg++;
 
 		if (c == 'a') {
-		    is_lr_constructor = SXFALSE;
+		    is_lr_constructor = false;
 
 		    if ((c = *arg++) == 'l')
 			c = *arg++;
 		    else
-			is_arg_error = SXTRUE;
+			is_arg_error = true;
 		}
 
 		if (c == 'r') {
@@ -582,14 +567,14 @@ main (argc, argv)
 			k_value = str_to_nb ();
 		}
 		else
-		    is_arg_error = SXTRUE;
+		    is_arg_error = true;
 	    }
 	    else
-		is_arg_error = SXTRUE;
+		is_arg_error = true;
 	    
 	    if (!is_arg_error) {
 		if (c != SXNUL)
-		    is_arg_error = SXTRUE;
+		    is_arg_error = true;
 		else {
 		    /* On verifie la compatibilite des valeurs de h et k. */
 
@@ -605,11 +590,11 @@ main (argc, argv)
 
 		    if (is_lr_constructor && is_rlr_constructor) {
 			if (h_value != 0)
-			    is_arg_error = SXTRUE;
+			    is_arg_error = true;
 		    }
 		    else
 			if (!is_rlr_constructor && k_value == 0)
-			    is_arg_error = SXTRUE;
+			    is_arg_error = true;
 		}
 	    }
 
@@ -620,7 +605,7 @@ main (argc, argv)
 \t\"r[0]lr[k1] | r[h]lalr[k1] | lr[k] | lalr[k]\",\n\
  with h, k1 >= 0 and k > 0, default values (i.e. \"lalr1\") are retained.\n", ME,
 			 argv [argnum]);
-		is_rlr_constructor = is_lr_constructor = SXFALSE;
+		is_rlr_constructor = is_lr_constructor = false;
 		h_value = k_value = 1;
 	    }
 
@@ -649,7 +634,7 @@ run:
 
     do {
 	language_name = argv [argnum++];
-	has_message [rlr_run ()] = SXTRUE;
+	has_message [rlr_run ()] = true;
     } while (argnum < argc);
 
     varstr_free (vstr), vstr = NULL;
@@ -657,7 +642,7 @@ run:
     {
 	register int	severity;
 
-	for (severity = SXSEVERITIES - 1; severity > 0 && has_message [severity] == SXFALSE; severity--) {
+	for (severity = SXSEVERITIES - 1; severity > 0 && has_message [severity] == false; severity--) {
 	}
 
 	sxexit (severity);
@@ -666,9 +651,7 @@ run:
 
 
 
-SXVOID	sat_mess (name, no, old_size, new_size)
-    char	*name;
-    int		no, old_size, new_size;
+void	sat_mess (char *name, int no, int old_size, int new_size)
 {
     fprintf (statistics_file, "%s: Array %d of size %d overflowed: reallocation with size %d.\n", name, no, old_size, new_size);
 }

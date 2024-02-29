@@ -24,12 +24,12 @@
 /************************************************************************/
 
 
-#define WHAT	"@(#)lig_main.c\t- SYNTAX [unix] - Jeu 16 Fev 1995 13:49:00"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
 
+
+
+
+
+char  WHAT[] =	"@(#)lig_main.c\t- SYNTAX [unix] - Jeu 16 Fev 1995 13:49:00";
 
 #include "sxunix.h"
 #include "lig.h"
@@ -47,7 +47,7 @@ char	by_mess [] = "the SYNTAX grammar processor LIG";
 
 /* On lit a priori sur stdin, et cetera */
 
-FILE	*sxstdout = {stdout}, *sxstderr = {stderr};
+FILE	*sxstdout, *sxstderr;
 FILE	*sxtty;
 
 extern struct sxtables	lig_tables;
@@ -84,8 +84,7 @@ static int	option_kind [] = {UNKNOWN_ARG,
 				      NORMAL_FORM, NORMAL_FORM, -NORMAL_FORM, -NORMAL_FORM,
 				      LANGUAGE_NAME, LANGUAGE_NAME,};
 
-static int	option_get_kind (arg)
-    register char	*arg;
+static int	option_get_kind (char *arg)
 {
     register char	**opt;
 
@@ -102,8 +101,7 @@ static int	option_get_kind (arg)
 
 
 
-static char	*option_get_text (kind)
-    register int	kind;
+static char	*option_get_text (int kind)
 {
     register int	i;
 
@@ -117,8 +115,7 @@ static char	*option_get_text (kind)
 
 
 
-static	language_name (path_name, lang_name)
-    char	*path_name, *lang_name;
+static	language_name (char *path_name, char *lang_name)
 {
     register char	*p;
 
@@ -141,8 +138,7 @@ static	language_name (path_name, lang_name)
 
 
 
-static SXVOID	lig_run (pathname)
-    register char	*pathname;
+static void	lig_run (char *pathname)
 {
     register FILE	*infile;
 
@@ -201,11 +197,12 @@ lost:	    sxperror (pathname);
 
 
 
-main (argc, argv)
-    int		argc;
-    char	*argv [];
+main (int argc, char *argv [])
 {
     register int	argnum;
+
+    sxstdout = stdout;
+    sxstderr = stderr;
 
     if (argc == 1) {
 	fprintf (sxstderr, Usage, ME);
@@ -217,27 +214,27 @@ main (argc, argv)
 /* valeurs par defaut */
 
     options_set = OPTION (VERBOSE) | OPTION(NORMAL_FORM);
-    sxverbosep = SXTRUE;
-    is_normal_form = SXTRUE;
+    sxverbosep = true;
+    is_normal_form = true;
 
 /* Decodage des options */
 
     for (argnum = 1; argnum < argc; argnum++) {
 	switch (option_get_kind (argv [argnum])) {
 	case VERBOSE:
-	    sxverbosep = SXTRUE, options_set |= OPTION (VERBOSE);
+	    sxverbosep = true, options_set |= OPTION (VERBOSE);
 	    break;
 
 	case -VERBOSE:
-	    sxverbosep = SXFALSE, options_set &= noOPTION (VERBOSE);
+	    sxverbosep = false, options_set &= noOPTION (VERBOSE);
 	    break;
 
 	case NORMAL_FORM:
-	    is_normal_form = SXTRUE, options_set |= OPTION (NORMAL_FORM);
+	    is_normal_form = true, options_set |= OPTION (NORMAL_FORM);
 	    break;
 
 	case -NORMAL_FORM:
-	    is_normal_form = SXFALSE, options_set &= noOPTION (NORMAL_FORM);
+	    is_normal_form = false, options_set &= noOPTION (NORMAL_FORM);
 	    break;
 
 	case LANGUAGE_NAME:
@@ -312,18 +309,17 @@ run:
 
 
 
-char	*options_text (line)
-    register char	*line;
+char	*options_text (char *line)
 {
     register int	i;
-    SXBOOLEAN	is_first = SXTRUE;
+    bool	is_first = true;
 
     *line = SXNUL;
 
     for (i = 1; i <= LAST_OPTION; i++)
 	if (options_set & OPTION (i)) {
 	    if (is_first)
-		is_first = SXFALSE;
+		is_first = false;
 	    else
 		strcat (line, ", ");
 
@@ -339,7 +335,7 @@ char	*options_text (line)
 
 
 
-SXVOID	sxvoid ()
+void	sxvoid (void)
 /* procedure ne faisant rien */
 {
 }

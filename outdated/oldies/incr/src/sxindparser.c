@@ -24,16 +24,8 @@
 /* 09-07-92 10:07 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
+char WHAT[] = "@(#)sxindparser.c\t- SYNTAX [unix] - 1 Septembre 1992";
 
-#ifndef lint
-#define WHAT	"@(#)sxindparser.c\t- SYNTAX [unix] - 1 Septembre 1992"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
-
-#endif
-    
     static char	ME [] = "INDPARSER";
     
     
@@ -58,8 +50,8 @@ static struct what {
 #define state_occur_maxnb 10 /* nombre maximal d'occurences d'un etat LR dans la pile */
     
     
-    extern SXBOOLEAN	bnf_read ();
-    extern SXVOID	bnf_free ();
+    extern bool	bnf_read ();
+    extern void	bnf_free ();
     
     
     
@@ -139,13 +131,13 @@ static struct parse_stack {
   
   struct G			G;
   
-  SXBOOLEAN			is_new_links;
+  bool			is_new_links;
 } parse_stack;
 
 
 struct ltd_parse_stack_elem {
   int		state, red_ref, shift_ref, son, symbol;
-  SXBOOLEAN	parse_time_built;
+  bool	parse_time_built;
 };
 
 struct occurence {int number, last};
@@ -186,12 +178,12 @@ static struct ltd_parse_stack {
                                 graph_top,
                                 graph_size;
   
-  SXBOOLEAN			is_new_links; 
+  bool			is_new_links; 
   
 } ltd_parse_stack;
 
 
-static  SXVOID sons_oflw (old_size, new_size)
+static  void sons_oflw (old_size, new_size)
     int		old_size, new_size;
 {
   parse_stack.erasable_sons = sxba_resize (parse_stack.erasable_sons, new_size + 1);
@@ -203,12 +195,12 @@ static  SXVOID sons_oflw (old_size, new_size)
 }
 
 
-static SXVOID GC (p)
+static void GC (p)
     int p;
 {
   register int	x, father, son, lim;
   register SXBA	free_parsers_set, erasable_sons;
-  SXBOOLEAN		is_in_sons = SXFALSE;
+  bool		is_in_sons = false;
   
   sxba_fill (erasable_sons = parse_stack.erasable_sons);
   sxba_fill (free_parsers_set = parse_stack.free_parsers_set);
@@ -270,7 +262,7 @@ static SXVOID GC (p)
       
       if (son < 0) 
 	{
-	  is_in_sons = SXTRUE;
+	  is_in_sons = true;
 	  son = -son;
 	  
 	  if (SXBA_bit_is_set_reset (free_parsers_set, son))
@@ -303,7 +295,7 @@ static SXVOID GC (p)
 
 
 
-static SXBOOLEAN new_symbol (p, k, i, j, symbol)
+static bool new_symbol (p, k, i, j, symbol)
     int p, k, i, j, *symbol;
 {
   int kind, range;
@@ -326,7 +318,7 @@ static SXBOOLEAN new_symbol (p, k, i, j, symbol)
 }
 
 
-static SXVOID output_symbol (symbol)
+static void output_symbol (symbol)
     int symbol;
 {
   /* Assume symbol > 0 => not a terminal string. */
@@ -367,7 +359,7 @@ static SXVOID output_symbol (symbol)
 }
 
 
-static SXVOID output_grammar_rule (rule_no)
+static void output_grammar_rule (rule_no)
     int rule_no;
 {
   int x, lim;
@@ -386,7 +378,7 @@ static SXVOID output_grammar_rule (rule_no)
 }
 
 
-static SXVOID  set_t_rule (symbol)
+static void  set_t_rule (symbol)
     int	symbol;
 {
   int		kind, range, t, rule_no;
@@ -402,7 +394,7 @@ static SXVOID  set_t_rule (symbol)
 }  
 
 
-static SXVOID  set_unit_rule (lhs, rhs)
+static void  set_unit_rule (lhs, rhs)
     int		lhs, rhs;
 {
   int rule_no;
@@ -413,7 +405,7 @@ static SXVOID  set_unit_rule (lhs, rhs)
 }  
 
 
-static SXVOID  set_rule (lhs, rhs)
+static void  set_rule (lhs, rhs)
     int			lhs, rhs;
 {
   int				rule_no;
@@ -436,7 +428,7 @@ static SXVOID  set_rule (lhs, rhs)
 
 
 
-static SXVOID push_rp (ref, p)
+static void push_rp (ref, p)
     int ref, p;
 {
   int		q;
@@ -473,7 +465,7 @@ static SXVOID push_rp (ref, p)
 
 
 
-static SXVOID  set_start_symbol (symbol)
+static void  set_start_symbol (symbol)
     int		symbol;
 {
   int		symb;
@@ -492,12 +484,12 @@ static SXVOID  set_start_symbol (symbol)
 
 
 
-static SXVOID ltd_GC (p)
+static void ltd_GC (p)
     int p;
 {
   register int	x, father, son, lim;
   register SXBA	free_parsers_set, erasable_sons;
-  SXBOOLEAN		is_in_sons = SXFALSE;
+  bool		is_in_sons = false;
   
   sxba_fill (erasable_sons = ltd_parse_stack.erasable_sons);
   sxba_fill (free_parsers_set = ltd_parse_stack.free_parsers_set);
@@ -558,7 +550,7 @@ static SXVOID ltd_GC (p)
       
       if (son < 0) 
 	{
-	  is_in_sons = SXTRUE;
+	  is_in_sons = true;
 	  son = -son;
 	  
 	  if (SXBA_bit_is_set_reset (free_parsers_set, son))
@@ -592,7 +584,7 @@ static SXVOID ltd_GC (p)
 
 
 
-static SXVOID give_father (father, son)
+static void give_father (father, son)
     int	*father, son;
     
 {
@@ -640,7 +632,7 @@ static SXVOID give_father (father, son)
 static int ltd_add_active_parser (parse_time_building, family, son, state, symbol)
     int			son, state, symbol;
     SXBA		family;
-    SXBOOLEAN		parse_time_building;
+    bool		parse_time_building;
 {
   
   int					link, lim, red_no, x, father, ref;
@@ -769,9 +761,9 @@ static int ltd_add_active_parser (parse_time_building, family, son, state, symbo
 }
 
 
-static SXVOID ltd_do_reductions (parse_time_building, complete_item_father, son, is_in_set)
+static void ltd_do_reductions (parse_time_building, complete_item_father, son, is_in_set)
     int		complete_item_father, son;
-    SXBOOLEAN	parse_time_building, is_in_set;
+    bool	parse_time_building, is_in_set;
 {
   /* We want to perform a  reduce_action A -> alpha on p. */
   /* l = length(alpha). */
@@ -783,10 +775,10 @@ static SXVOID ltd_do_reductions (parse_time_building, complete_item_father, son,
   
   int					symb, link, next; 
   struct ltd_parse_stack_elem		*agraph;
-  SXBOOLEAN				is_first_time;
+  bool				is_first_time;
   SXBA					family;
   
-  is_first_time = SXTRUE;
+  is_first_time = true;
   
   do 
     {
@@ -829,7 +821,7 @@ static SXVOID ltd_do_reductions (parse_time_building, complete_item_father, son,
 	  /* if there is no direct link from father to son yet then */
 	  /* add a link from father to son */
 	  /* forall r in (active_parsers - for_actor) do */
-	  ltd_parse_stack.is_new_links = SXTRUE;
+	  ltd_parse_stack.is_new_links = true;
 	  SXBA_1_bit (ltd_parse_stack.current_links, link);
 	}
       
@@ -838,7 +830,7 @@ static SXVOID ltd_do_reductions (parse_time_building, complete_item_father, son,
 	  if (!is_in_set)
 	      break;
 	  
-	  is_first_time = SXFALSE;
+	  is_first_time = false;
 	  son = 0;
 	}
     } while ((son = sxba_scan_reset (ltd_parse_stack.parsers_set [0], son)) > 0);
@@ -846,9 +838,9 @@ static SXVOID ltd_do_reductions (parse_time_building, complete_item_father, son,
 
 
 
-static SXVOID ltd_do_pops (parse_time_building, p, l)
+static void ltd_do_pops (parse_time_building, p, l)
     int		p, l;
-    SXBOOLEAN     parse_time_building;
+    bool     parse_time_building;
 {
   /* We want to perform a  reduce_action A -> alpha on p. */
   /* l = length(alpha). */
@@ -857,9 +849,9 @@ static SXVOID ltd_do_pops (parse_time_building, p, l)
      REDUCER (q, GOTO (state (q), A)). */
   int			x, son, father, next_son, first_son;
   SXBA		fathers_set, sons_set;
-  SXBOOLEAN		is_in_set;
+  bool		is_in_set;
   
-  is_in_set = SXFALSE;
+  is_in_set = false;
   son = p;
   
   while (l-- > 0) 
@@ -880,12 +872,12 @@ static SXVOID ltd_do_pops (parse_time_building, p, l)
 		}
 	      
 	      son = -son;
-	      is_in_set = SXTRUE;
+	      is_in_set = true;
 	    }
 	}
       else 
 	{
-	  is_in_set = SXFALSE;
+	  is_in_set = false;
 	  
 	  if (l & 01) 
 	    {
@@ -900,7 +892,7 @@ static SXVOID ltd_do_pops (parse_time_building, p, l)
 	  
 	  if ((son = ltd_parse_stack.graph [father].son) < 0) 
 	    {
-	      is_in_set = SXTRUE;
+	      is_in_set = true;
 	      son = -son;
 	      
 	      XxY_Xforeach (ltd_parse_stack.sons, father, x) 
@@ -916,7 +908,7 @@ static SXVOID ltd_do_pops (parse_time_building, p, l)
 	    {
 	      if ((first_son = ltd_parse_stack.graph [father].son) < 0) 
 		{
-		  is_in_set = SXTRUE;
+		  is_in_set = true;
 		  first_son = -first_son;
 		  
 		  XxY_Xforeach (ltd_parse_stack.sons, father, x) 
@@ -929,7 +921,7 @@ static SXVOID ltd_do_pops (parse_time_building, p, l)
 	      if (first_son != son) 
 		{
 		  SXBA_1_bit (sons_set, first_son);
-		  is_in_set = SXTRUE;
+		  is_in_set = true;
 		}
 	    }
 	}
@@ -940,9 +932,9 @@ static SXVOID ltd_do_pops (parse_time_building, p, l)
 
 
 
-static SXVOID ltd_do_limited_reductions (parse_time_building, p, l)
+static void ltd_do_limited_reductions (parse_time_building, p, l)
     int 	p, l;
-    SXBOOLEAN	parse_time_building;
+    bool	parse_time_building;
 {
   /* We want to perform a  reduce_action A -> alpha on p  */
   /* l = length(alpha). */
@@ -951,7 +943,7 @@ static SXVOID ltd_do_limited_reductions (parse_time_building, p, l)
      REDUCER (q, GOTO (state (q), A)). */
   /* called with l > 0 */
   register int	x, father, son;
-  SXBOOLEAN		is_no_link, is_sons;
+  bool		is_no_link, is_sons;
   register SXBA	fathers_set, sons_set, fathers_no_link_set, sons_no_link_set;
   SXBA		s;
   
@@ -1009,13 +1001,13 @@ static SXVOID ltd_do_limited_reductions (parse_time_building, p, l)
 }
 
 
-static SXBOOLEAN ltd_shifter (parse_time_building)
-    SXBOOLEAN     parse_time_building;
+static bool ltd_shifter (parse_time_building)
+    bool     parse_time_building;
 {
   int		p, ref, n, y;
   
   if (ltd_parse_stack.for_shifter [0] < 0)
-      return SXFALSE;
+      return false;
   
   /* read next token */
   n = ++sxplocals.ptok_no;
@@ -1053,7 +1045,7 @@ static SXBOOLEAN ltd_shifter (parse_time_building)
 		       p,
 		       -ref - bnf_ag.WS_NBPRO [ltd_parse_stack.red_no = 
 					       bnf_ag.WS_INDPRO [-ref].prolis].prolon);
-	  ltd_parse_stack.is_new_links = SXFALSE;
+	  ltd_parse_stack.is_new_links = false;
 	}
       else
 	  ltd_add_active_parser (parse_time_building,
@@ -1063,12 +1055,12 @@ static SXBOOLEAN ltd_shifter (parse_time_building)
 				 parse_stack.current_symbol);
     } while (!SS_is_empty (ltd_parse_stack.for_scanner));
   
-  return SXTRUE;
+  return true;
 }
 
 
 
-static SXVOID discrimine (shift_ref, parser)
+static void discrimine (shift_ref, parser)
     int	shift_ref, parser;
 {
   int				son, ltd_parser, i, p, ref, lgth, lim, shift_ambiguity, red_no;
@@ -1114,7 +1106,7 @@ static SXVOID discrimine (shift_ref, parser)
   ltd_agraph->son = son;
   ltd_agraph->symbol = agraph->symbol;
   ltd_agraph->state = state;
-  ltd_agraph->parse_time_built = SXTRUE;
+  ltd_agraph->parse_time_built = true;
   sxba_empty (ltd_parse_stack.families [ltd_parser]);
 
   /* Initialisation des familles avec leur premier membre */
@@ -1127,7 +1119,7 @@ static SXVOID discrimine (shift_ref, parser)
     {
       sxba_1_bit (ltd_parse_stack.families [ltd_parser], 1);
       ltd_parse_stack.red_no = red_no;
-      ltd_do_pops (SXFALSE, ltd_parser, LGPROD (red_no));
+      ltd_do_pops (false, ltd_parser, LGPROD (red_no));
       sxba_0_bit (ltd_parse_stack.families [ltd_parser], 1);
     }
   else
@@ -1142,7 +1134,7 @@ static SXVOID discrimine (shift_ref, parser)
 	  sxba_0_bit (ltd_parse_stack.families [ltd_parser], i++);
 	  sxba_1_bit (ltd_parse_stack.families [ltd_parser], i);
 	  ltd_parse_stack.red_no = bnf_ag.WS_INDPRO [-Q0xV_to_Q0 [ref]].prolis;
-	  ltd_do_pops (SXFALSE, ltd_parser, LGPROD (ltd_parse_stack.red_no));
+	  ltd_do_pops (false, ltd_parser, LGPROD (ltd_parse_stack.red_no));
 	} while (++ref < lim);
 
       sxba_0_bit (ltd_parse_stack.families [ltd_parser], i);
@@ -1180,7 +1172,7 @@ static SXVOID discrimine (shift_ref, parser)
 	      if (ref > 0)
 		{
 		  ltd_parse_stack.red_no = ref;
-		  ltd_do_pops (SXFALSE, p, LGPROD (ltd_parse_stack.red_no));
+		  ltd_do_pops (false, p, LGPROD (ltd_parse_stack.red_no));
 		}
 	      else
 		{
@@ -1192,14 +1184,14 @@ static SXVOID discrimine (shift_ref, parser)
 		    {
 		      ltd_parse_stack.red_no = bnf_ag.WS_INDPRO [-Q0xV_to_Q0 [ref]].prolis;
 		      if ((lgth = LGPROD (ltd_parse_stack.red_no)) > 0)
-			  ltd_do_pops (SXFALSE, p, lgth);
+			  ltd_do_pops (false, p, lgth);
 		    } while (++ref < lim);
 		}
 	    } while (!SS_is_empty (ltd_parse_stack.for_actor));
 	  
 	  while (ltd_parse_stack.is_new_links)
 	    {
-	      ltd_parse_stack.is_new_links = SXFALSE;
+	      ltd_parse_stack.is_new_links = false;
 	      sxba_copy (ltd_parse_stack.used_links, ltd_parse_stack.current_links);
 	      sxba_empty (ltd_parse_stack.current_links);
 	      
@@ -1224,7 +1216,7 @@ static SXVOID discrimine (shift_ref, parser)
 		    if ((lgth = LGPROD (ref)) > 0)
 		      {
 			ltd_parse_stack.red_no = ref;
-			ltd_do_limited_reductions (SXTRUE, p, lgth);
+			ltd_do_limited_reductions (true, p, lgth);
 		      }
 		  }
 		else
@@ -1239,7 +1231,7 @@ static SXVOID discrimine (shift_ref, parser)
 			ltd_parse_stack.red_no = bnf_ag.WS_INDPRO [-Q0xV_to_Q0 [ref]].prolis;
 			
 			if ((lgth = LGPROD (ltd_parse_stack.red_no)) > 0)
-			    ltd_do_limited_reductions (SXTRUE, p, lgth);
+			    ltd_do_limited_reductions (true, p, lgth);
 		      } while (++ref < lim);
 		  }
 		
@@ -1249,7 +1241,7 @@ static SXVOID discrimine (shift_ref, parser)
 	  
 	}
 
-      ltd_shifter(SXFALSE);
+      ltd_shifter(false);
       
       sxba_empty (ltd_parse_stack.family_Mb);
       y = 0;
@@ -1494,9 +1486,9 @@ static int push_rhs (symbol, list)
 }
 
 
-static SXVOID do_reductions (son, is_in_set)
+static void do_reductions (son, is_in_set)
     int		son;
-    SXBOOLEAN	is_in_set;
+    bool	is_in_set;
 {
   /* We want to perform a  reduce_action A -> alpha on p. */
   /* l = length(alpha). */
@@ -1507,9 +1499,9 @@ static SXVOID do_reductions (son, is_in_set)
      REDUCER (q, GOTO (state (q), A)). */
   int					symb, link, next; 
   struct parse_stack_elem		*agraph;
-  SXBOOLEAN				is_first_time;
+  bool				is_first_time;
   
-  is_first_time = SXTRUE;
+  is_first_time = true;
   
   do 
     {
@@ -1540,7 +1532,7 @@ static SXVOID do_reductions (son, is_in_set)
 	  /* if there is no direct link from father to son yet then */
 	  /* add a link from father to son */
 	  /* forall r in (active_parsers - for_actor) do */
-	  parse_stack.is_new_links = SXTRUE;
+	  parse_stack.is_new_links = true;
 	  SXBA_1_bit (parse_stack.current_links, link);
 	}
       
@@ -1549,7 +1541,7 @@ static SXVOID do_reductions (son, is_in_set)
 	  if (!is_in_set)
 	      break;
 	  
-	  is_first_time = SXFALSE;
+	  is_first_time = false;
 	  son = 0;
 	}
     } while ((son = sxba_scan_reset (parse_stack.parsers_set [0], son)) > 0);
@@ -1557,7 +1549,7 @@ static SXVOID do_reductions (son, is_in_set)
 
 
 
-static SXVOID do_pops (p, l)
+static void do_pops (p, l)
     int		p, l;
 {
   /* We want to perform a  reduce_action A -> alpha on p. */
@@ -1569,9 +1561,9 @@ static SXVOID do_pops (p, l)
      REDUCER (q, GOTO (state (q), A)). */
   int			x, son, father, next_son, first_son;
   SXBA		fathers_set, sons_set;
-  SXBOOLEAN		is_in_set;
+  bool		is_in_set;
   
-  is_in_set = SXFALSE;
+  is_in_set = false;
   son = p;
   
   while (l-- > 0)
@@ -1592,12 +1584,12 @@ static SXVOID do_pops (p, l)
 		}
 	      
 	      son = -son;
-	      is_in_set = SXTRUE;
+	      is_in_set = true;
 	    }
 	}
       else
 	{
-	  is_in_set = SXFALSE;
+	  is_in_set = false;
 	  
 	  if (l & 01)
 	    {
@@ -1612,7 +1604,7 @@ static SXVOID do_pops (p, l)
 	  
 	  if ((son = parse_stack.graph [father].son) < 0)
 	    {
-	      is_in_set = SXTRUE;
+	      is_in_set = true;
 	      son = -son;
 	      
 	      XxY_Xforeach (parse_stack.sons, father, x)
@@ -1628,7 +1620,7 @@ static SXVOID do_pops (p, l)
 	    {
 	      if ((first_son = parse_stack.graph [father].son) < 0)
 		{
-		  is_in_set = SXTRUE;
+		  is_in_set = true;
 		  first_son = -first_son;
 		  
 		  XxY_Xforeach (parse_stack.sons, father, x)
@@ -1641,7 +1633,7 @@ static SXVOID do_pops (p, l)
 	      if (first_son != son)
 		{
 		  SXBA_1_bit (sons_set, first_son);
-		  is_in_set = SXTRUE;
+		  is_in_set = true;
 		}
 	    }
 	}
@@ -1652,7 +1644,7 @@ static SXVOID do_pops (p, l)
 
 
 
-static SXVOID do_limited_reductions (p, l)
+static void do_limited_reductions (p, l)
     int p, l;
 {
   /* We want to perform a  reduce_action A -> alpha on p which uses link. */
@@ -1664,7 +1656,7 @@ static SXVOID do_limited_reductions (p, l)
      REDUCER (q, GOTO (state (q), A)). */
   /* called with l > 0 */
   register int	x, father, son;
-  SXBOOLEAN		is_no_link, is_sons;
+  bool		is_no_link, is_sons;
   register SXBA	fathers_set, sons_set, fathers_no_link_set, sons_no_link_set;
   SXBA		s;
   
@@ -1727,15 +1719,15 @@ static SXVOID do_limited_reductions (p, l)
 }
 
 
-static SXVOID seek_paths (p, p_trans, is_in_set, l)
+static void seek_paths (p, p_trans, is_in_set, l)
     int		p, p_trans, l;
-    SXBOOLEAN	is_in_set;
+    bool	is_in_set;
 {
   int		x, son, father, symb, first_son;
   SXBA	fathers_set, sons_set, s;
   int		*fathers_rhs_hd, *sons_rhs_hd, *ptr, *son_rhs_ptr;
   int		father_rhs_hd, rhs, first_son_rhs_hd, son_rhs_hd;
-  SXBOOLEAN	is_sons, is_first_time, is_in_sons_set;
+  bool	is_sons, is_first_time, is_in_sons_set;
   
   if (l == 0 && !is_in_set)
     {
@@ -1761,7 +1753,7 @@ static SXVOID seek_paths (p, p_trans, is_in_set, l)
       father = first_son;
       father_rhs_hd = first_son_rhs_hd;
       first_son_rhs_hd = 0;
-      is_first_time = SXTRUE;
+      is_first_time = true;
       
       for (;;)
 	{
@@ -1777,7 +1769,7 @@ static SXVOID seek_paths (p, p_trans, is_in_set, l)
 	      son_rhs_ptr = &first_son_rhs_hd;
 	  else
 	    {
-	      is_in_sons_set = SXTRUE;
+	      is_in_sons_set = true;
 	      son_rhs_ptr = sons_rhs_hd + son;
 	      
 	      if (SXBA_bit_is_reset_set (sons_set, son))
@@ -1814,7 +1806,7 @@ static SXVOID seek_paths (p, p_trans, is_in_set, l)
 		      son_rhs_ptr = &first_son_rhs_hd;
 		  else
 		    {
-		      is_in_sons_set = SXTRUE;
+		      is_in_sons_set = true;
 		      son_rhs_ptr = sons_rhs_hd + son;
 		      
 		      if (SXBA_bit_is_reset_set (sons_set, son))
@@ -1843,7 +1835,7 @@ static SXVOID seek_paths (p, p_trans, is_in_set, l)
 	  
 	  if (is_first_time)
 	    {
-	      is_first_time = SXFALSE;
+	      is_first_time = false;
 	      father = 0;
 	    }
 	  
@@ -1896,7 +1888,7 @@ static SXVOID seek_paths (p, p_trans, is_in_set, l)
 }
 
 
-static SXVOID parse_forest ()
+static void parse_forest ()
 {
   /* The construction of the parse forest is not performed within the
      recognizer in order to avoid the multiple definition of the same
@@ -1922,7 +1914,7 @@ static SXVOID parse_forest ()
 	  /* Shift and reduce parser */
 	  /* Always a one to one mapping between parsers and ref. */
 	  parse_stack.red_no = bnf_ag.WS_INDPRO [parse_stack.graph [p].state].prolis;
-	  seek_paths (p, 0, SXFALSE, LGPROD (parse_stack.red_no));
+	  seek_paths (p, 0, false, LGPROD (parse_stack.red_no));
 	  
 	}
       else 
@@ -1938,7 +1930,7 @@ static SXVOID parse_forest ()
       if ((x = parse_stack.red_parsers_hd [ref]) < 0)
 	{
 	  parse_stack.red_no = ref;
-	  seek_paths (-x, 0, SXFALSE, LGPROD (parse_stack.red_no));
+	  seek_paths (-x, 0, false, LGPROD (parse_stack.red_no));
 	}
       else
 	{
@@ -1951,7 +1943,7 @@ static SXVOID parse_forest ()
 	    } while (x != 0);
 	  
 	  parse_stack.red_no = ref;
-	  seek_paths (p, 0, SXTRUE, LGPROD (parse_stack.red_no));
+	  seek_paths (p, 0, true, LGPROD (parse_stack.red_no));
 	}
     }
   
@@ -1959,7 +1951,7 @@ static SXVOID parse_forest ()
 }
 
 
-static SXBOOLEAN shifter ()
+static bool shifter ()
 {
   int		p, ref, n, lgth;
   
@@ -1967,7 +1959,7 @@ static SXBOOLEAN shifter ()
   /* for_actor == phi */
   
   if (parse_stack.for_shifter [0] < 0)
-      return SXFALSE;
+      return false;
   
   do
     {
@@ -2007,18 +1999,18 @@ static SXBOOLEAN shifter ()
 	  /* in-lining */
 	  do_pops (p,
 		   lgth = -ref - bnf_ag.WS_NBPRO [parse_stack.red_no = bnf_ag.WS_INDPRO [-ref].prolis].prolon);
-	  seek_paths (p, push_rhs (parse_stack.current_symbol, 0), SXFALSE, lgth);
+	  seek_paths (p, push_rhs (parse_stack.current_symbol, 0), false, lgth);
 	}
       else
 	  add_active_parser (p, ref, parse_stack.current_symbol);
     } while (!SS_is_empty (parse_stack.for_scanner));
   
-  return SXTRUE;
+  return true;
 }
 
 
 
-static SXVOID unused_rule_elimination (start_symbol)
+static void unused_rule_elimination (start_symbol)
     int start_symbol;
 {
   /* Let R be the relation : x R y <=> x -> alpha y beta in P.
@@ -2076,7 +2068,7 @@ static SXVOID unused_rule_elimination (start_symbol)
 
 
 
-static SXVOID output_grammar (start_symbol)
+static void output_grammar (start_symbol)
     int start_symbol;
 {
   int lim, rule_no;
@@ -2111,7 +2103,7 @@ static SXVOID output_grammar (start_symbol)
 
 
 
-static SXBOOLEAN sxparse_it ()
+static bool sxparse_it ()
 {
   int				x, p, ref, lgth;
   struct parse_stack_elem	*agraph;
@@ -2158,7 +2150,7 @@ static SXBOOLEAN sxparse_it ()
   /* Premier SHIFT */
 
   shifter ();
-  ltd_shifter (SXTRUE);
+  ltd_shifter (true);
   
   /* in_lining of parseword () */
   do
@@ -2202,7 +2194,7 @@ static SXBOOLEAN sxparse_it ()
 	  
 	  while (parse_stack.is_new_links) 
 	    {
-	      parse_stack.is_new_links = SXFALSE;
+	      parse_stack.is_new_links = false;
 	      sxba_copy (parse_stack.used_links, parse_stack.current_links);
 	      sxba_empty (parse_stack.current_links);
 	      
@@ -2270,7 +2262,7 @@ static SXBOOLEAN sxparse_it ()
 	      if (ref > 0) 
 		{
 		  ltd_parse_stack.red_no = ref;
-		  ltd_do_pops (SXTRUE, p, LGPROD (ltd_parse_stack.red_no));
+		  ltd_do_pops (true, p, LGPROD (ltd_parse_stack.red_no));
 		}
 	      else 
 		{
@@ -2282,14 +2274,14 @@ static SXBOOLEAN sxparse_it ()
 		  while ((x = sxba_1_lrscan (aworthy_red, x)) > 0)
 		    {
 		      ltd_parse_stack.red_no = bnf_ag.WS_INDPRO [-Q0xV_to_Q0 [ref + x]].prolis;
-		      ltd_do_pops (SXTRUE, p, LGPROD (ltd_parse_stack.red_no));
+		      ltd_do_pops (true, p, LGPROD (ltd_parse_stack.red_no));
 		    }
 		}
 	    } while (!SS_is_empty (ltd_parse_stack.for_actor));
 	  
 	  while (ltd_parse_stack.is_new_links) 
 	    {
-	      ltd_parse_stack.is_new_links = SXFALSE;
+	      ltd_parse_stack.is_new_links = false;
 	      sxba_copy (ltd_parse_stack.used_links, ltd_parse_stack.current_links);
 	      sxba_empty (ltd_parse_stack.current_links);
 	      
@@ -2315,7 +2307,7 @@ static SXBOOLEAN sxparse_it ()
 		      if ((lgth = LGPROD (ref)) > 0) 
 			{
 			  ltd_parse_stack.red_no = ref;
-			  ltd_do_limited_reductions (SXTRUE, p, lgth);
+			  ltd_do_limited_reductions (true, p, lgth);
 			}
 		    }
 		  else 
@@ -2329,7 +2321,7 @@ static SXBOOLEAN sxparse_it ()
 			{
 			  ltd_parse_stack.red_no = bnf_ag.WS_INDPRO [-Q0xV_to_Q0 [ref + x]].prolis;
 			  if ((lgth = LGPROD (ltd_parse_stack.red_no)) > 0)
-			      ltd_do_limited_reductions (SXTRUE, p, lgth);
+			      ltd_do_limited_reductions (true, p, lgth);
 			}
 		    }
 		} while (!SS_is_empty (ltd_parse_stack.for_actor));
@@ -2340,7 +2332,7 @@ static SXBOOLEAN sxparse_it ()
 	}
       
       shifter();
-    } while (ltd_shifter (SXTRUE));
+    } while (ltd_shifter (true));
   
   if (parse_stack.start_symbol == 0)
       sxput_error (SXGET_TOKEN (sxplocals.ptok_no).source_index,
@@ -2355,13 +2347,13 @@ static SXBOOLEAN sxparse_it ()
 }
 
 
-SXBOOLEAN sxindparser (what_to_do, arg)
+bool sxindparser (what_to_do, arg)
     int		what_to_do;
     struct sxtables	*arg;
 {
   switch (what_to_do) {
   case SXBEGIN:
-    return SXTRUE;
+    return true;
     
   case SXOPEN:
     /* new language: new tables, new local parser variables */
@@ -2498,7 +2490,7 @@ SXBOOLEAN sxindparser (what_to_do, arg)
     sxplocals.SXP_tables = arg->SXP_tables;
     sxtkn_mngr (SXOPEN, NULL, sxplocals.SXP_tables.P_sizofpts * 8);
     (*sxplocals.SXP_tables.recovery) (SXOPEN);
-    return SXTRUE;
+    return true;
     
   case SXINIT:
     /* on initialise toks_buf avec "EOF" */
@@ -2520,19 +2512,19 @@ SXBOOLEAN sxindparser (what_to_do, arg)
     sxplocals.mode.look_back = 1; 
     sxplocals.mode.kind = SXWITH_RECOVERY;
     sxplocals.mode.errors_nb = 0;
-    sxplocals.mode.is_prefixe = SXFALSE;
-    sxplocals.mode.is_silent = SXFALSE;
-    sxplocals.mode.with_semact = SXTRUE;
-    sxplocals.mode.with_parsact = SXTRUE;
-    sxplocals.mode.with_parsprdct = SXTRUE;
-    return SXTRUE;
+    sxplocals.mode.is_prefixe = false;
+    sxplocals.mode.is_silent = false;
+    sxplocals.mode.with_semact = true;
+    sxplocals.mode.with_parsact = true;
+    sxplocals.mode.with_parsprdct = true;
+    return true;
     
   case SXACTION:
     return sxparse_it ();
     
   case SXFINAL:
     sxtkn_mngr (SXFINAL, NULL, 0);
-    return SXTRUE;
+    return true;
     
   case SXCLOSE:
     /* end of language: free the local arrays */
@@ -2603,11 +2595,11 @@ SXBOOLEAN sxindparser (what_to_do, arg)
     
     sxtkn_mngr (SXCLOSE, NULL, 0);
     bnf_free (&bnf_ag);
-    return SXTRUE;
+    return true;
     
   case SXEND:
     (*sxplocals.SXP_tables.recovery) (SXCLOSE);
-    return SXTRUE;
+    return true;
     
   default:
     fprintf (sxstderr, "The function \"sxindparser\" is out of date with respect to its specification.\n");

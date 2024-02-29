@@ -23,7 +23,7 @@
 #include "xbnf_vars.h"
 #include "varstr.h"
 
-char WHAT_XBNFSYMTAB[] = "@(#)SYNTAX - $Id: xbnf_symtab.c 3369 2023-06-17 10:18:35Z garavel $" WHAT_DEBUG;
+char WHAT_XBNFSYMTAB[] = "@(#)SYNTAX - $Id: xbnf_symtab.c 3678 2024-02-06 08:38:24Z garavel $" WHAT_DEBUG;
 
 /*
 N O D E   N A M E S
@@ -56,7 +56,7 @@ E N D   N O D E   N A M E S
 /* local variables */
 /*-----------------*/
 
-static SXBOOLEAN	is_X_LHS;
+static bool	is_X_LHS;
 static SXINT	st_top, x_rule, act_no, x_act_rule, x_act_lispro, tmax, xtmax, ntmax, xntmax,
                 t_no, xt_no, nt_no, xnt_no;
 static SXBA	t_set, nt_set, act_set, xnt_set, xt_set /* 1:st_top */ ;
@@ -70,7 +70,7 @@ static SXINT	*lhs_to_rule;
 
 
 
-static SXVOID	set_xsymbols (SXNODE *visited)
+static void	set_xsymbols (SXNODE *visited)
 {
     /* Mise en alpha table des symbols etendus par appel recursif de set_xsymbols */
 
@@ -104,7 +104,7 @@ static SXVOID	set_xsymbols (SXNODE *visited)
 }
 
 
-static SXVOID put_LHS (SXINT nt, SXINT rule)
+static void put_LHS (SXINT nt, SXINT rule)
 {
     SXINT *atail, *ahead;
 
@@ -150,10 +150,10 @@ static SXINT	st_get_xnt_code (SXINT ste, SXINT xste, SXINT pste)
 }
 
 
-static SXINT	st_get_t_code (struct sxsource_coord source_index, SXINT ste, SXBOOLEAN is_gene)
+static SXINT	st_get_t_code (struct sxsource_coord source_index, SXINT ste, bool is_gene)
 {
     SXINT	t;
-    SXBOOLEAN		is_old_gene;
+    bool		is_old_gene;
 
     if ((t = ste_to_code [-ste]) == 0) {
 	t = --tmax;
@@ -190,7 +190,7 @@ static SXINT	st_get_xt_code (struct sxsource_coord source_index,
 				SXINT ste, 
 				SXINT xste, 
 				SXINT pste,
-				SXBOOLEAN	is_gene)
+				bool	is_gene)
 {
     SXINT	t, xt, i;
 
@@ -209,7 +209,7 @@ static SXINT	st_get_xt_code (struct sxsource_coord source_index,
 }
 
 
-static	SXVOID fill_symbol_strings (SXINT symbol_code, SXINT ste)
+static	void fill_symbol_strings (SXINT symbol_code, SXINT ste)
 {
     SXINT	longueur = sxstrlen (ste);
 
@@ -227,7 +227,7 @@ static	SXVOID fill_symbol_strings (SXINT symbol_code, SXINT ste)
 
 
 
-static SXVOID	pass_indpro_size (SXNODE *visited)
+static void	pass_indpro_size (SXNODE *visited)
 {
     SXINT ste;
 
@@ -246,7 +246,7 @@ static SXVOID	pass_indpro_size (SXNODE *visited)
 
 	case X_LHS_n:
 	    ste = visited->son->token.string_table_entry;
-	    is_X_LHS = SXTRUE;
+	    is_X_LHS = true;
 	    /* FALLTHROUGH */ /* added by H. Garavel, confirmed by P. Boullier */
 
 	case LHS_NON_TERMINAL_n:
@@ -286,7 +286,7 @@ static SXVOID	pass_indpro_size (SXNODE *visited)
 
 
 
-static SXVOID	pass_derived (void)
+static void	pass_derived (void)
 {
 
 /*
@@ -374,12 +374,12 @@ Check for a missing semi-colon.",
 					  VS.string_table_entry,
 					  visited->father->token.string_table_entry,
 					  visited->brother->token.string_table_entry,
-					  (SXBOOLEAN) (visited->name == GENERIC_TERMINAL_n));
+					  (bool) (visited->name == GENERIC_TERMINAL_n));
 	    }
 	    else {
 		tnt_code = st_get_t_code (VS.source_index,
 					  VS.string_table_entry,
-					  (SXBOOLEAN) (visited->name == GENERIC_TERMINAL_n));
+					  (bool) (visited->name == GENERIC_TERMINAL_n));
 	    }
 
 	    code_to_rhs_nb [tnt_code]++;
@@ -387,7 +387,7 @@ Check for a missing semi-colon.",
 	    WI [indpro_size++].prolis = x_rule;
 	}
 
-	WN [x_rule].bprosimpl = SXFALSE;
+	WN [x_rule].bprosimpl = false;
 	return;
 
     case VOCABULARY_S_n:
@@ -399,7 +399,7 @@ Check for a missing semi-colon.",
 
     case X_NON_TERMINAL_n:
 	    /* Si predicat, il ne faut pas eliminer la production simple */
-        WN [x_rule].bprosimpl = SXFALSE;
+        WN [x_rule].bprosimpl = false;
 	return;
 	
 
@@ -414,7 +414,7 @@ Z Z Z Z
 
 
 
-static SXVOID	pass_inherited (void)
+static void	pass_inherited (void)
 {
 
 /*
@@ -443,7 +443,7 @@ I N H E R I T E D
 /* symbol table processing */
 /*-------------------------*/
 
-SXVOID	symbol_table_processing (SXNODE *adam)
+void	symbol_table_processing (SXNODE *adam)
 {
 
 /*-----------------------------------------------*/

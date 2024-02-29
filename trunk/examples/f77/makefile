@@ -115,6 +115,7 @@ $(LIB)/ppf77_t.o: 	$(SXINCL)/sxunix.h		\
 
 $(LIB)/ppf77_main.o:	$(SXINCL)/sxunix.h		\
 			$(SXINCL)/varstr.h		\
+			f77_td.h			\
 			ppf77_main.c
 	$(CC) -o $@ ppf77_main.c			\
 			$(CFLAGS_PPF77_DEBUG)

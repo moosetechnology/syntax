@@ -61,7 +61,7 @@ static char	ME [] = "LC (1)";
 #include "sxstack.h"
 #include "XH.h"
 #include "sxmatrix2vector.h"
-char WHAT_LC1[] = "@(#)SYNTAX - $Id: LC1.c 3652 2023-12-24 09:43:15Z garavel $" WHAT_DEBUG;
+char WHAT_LC1[] = "@(#)SYNTAX - $Id: LC1.c 3689 2024-02-07 17:02:29Z garavel $" WHAT_DEBUG;
 
 extern struct bstr	*options_text (struct bstr *bstr);
 
@@ -2194,7 +2194,7 @@ static char     star_71 [] = "**************************************************
 
 static SXINT	*xt_to_ate, *xnt_to_ate;
 static VARSTR	wvstr;
-static char	small_string [12];
+static char	small_string [24];
 
 
 static void

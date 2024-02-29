@@ -377,7 +377,7 @@ LOCAL_COMPILE_OLDIE() {
 		cd $OLDIES/$OLDIE
 		$MAKE "ARCH=$ARCH" \
 			"COMPILER=$COMPILER" \
-			"CFLAGS=$CFLAGS -DSXBOOLEAN=bool -DSXFALSE=false -DSXSHORT=short -DSXTRUE=true -DSXVOID=void" \
+			"CFLAGS=$CFLAGS" \
 			"LDFLAGS=$LDFLAGS" \
 			clean all
 	)
@@ -529,7 +529,7 @@ fi
 export EXTRA_CFLAGS
 
 # duplication de trunk/etc/make/gccoptions
-GCC_WARNINGS="-Wall -Wextra -Wswitch-default -Wdeclaration-after-statement -Wundef -Wshadow -Wbad-function-cast -Wcast-qual -Wredundant-decls -Wno-char-subscripts -Wcast-align -fno-common -Wstrict-prototypes -Wformat -Wuninitialized -fstrict-aliasing"
+GCC_WARNINGS="-Wall -Wextra -Wswitch-default -Wdeclaration-after-statement -Wundef -Wshadow -Wbad-function-cast -Wcast-qual -Wredundant-decls -Wno-char-subscripts -Wcast-align -fno-common -Wstrict-prototypes -Wformat -Wuninitialized -fstrict-aliasing -Wold-style-definition -std=c2x"
 
 # ----------------------------------------------------------------------------
 

@@ -152,7 +152,7 @@ struct for_parsact {
     void	(*new_symbol) (),
                 (*Aij_pool_oflw) ();
 
-    SXBOOLEAN	(*action) (),
+    bool	(*action) (),
     		(*prdct) (),
                 (*constraint) ();
 };
@@ -208,7 +208,7 @@ struct for_parsact {
 * @14 :len = S1.len + 1;
 * @15 : len = 0;
 
-* &1 SXFALSE <==> len > 30
+* &1 false <==> len > 30
 
 */
 
@@ -797,7 +797,7 @@ static char	Usage [] = "\
 Usage:\t%s ('R' | 'r' |'P' | 'p') ['p'] \"source string\"\n";
 
 
-static SXBOOLEAN		is_print_prod;
+static bool		is_print_prod;
 static	int		xprod;
 
 static int		n;
@@ -818,7 +818,7 @@ typedef struct {
 } bag_header;
 
 
-static SXBOOLEAN		is_parser;
+static bool		is_parser;
 
 typedef struct {
   int			state;
@@ -923,7 +923,7 @@ struct spf /* shared_parse_forest */
     struct lhs
     {
 	int		prolon, reduc, next_lhs, init_prod;
-	SXBOOLEAN		is_erased;
+	bool		is_erased;
     } *lhs;
 };
 
@@ -933,7 +933,7 @@ static int		rhs_stack [rhs_lgth+1];
 
 static struct Aij_pool {
   int		A, i, j, first_lhs, first_rhs;
-  SXBOOLEAN	is_erased;
+  bool	is_erased;
 }			*Aij_pool;
 static int		Aij_top, Aij_size;
 
@@ -1308,14 +1308,14 @@ OR_SHIFT_RESET (lhs_bits_array, rhs_bits_array, n)
 }
 
 
-static SXBOOLEAN
+static bool
 AND (lhs_bits_array, rhs_bits_array)
     SXBA	lhs_bits_array, rhs_bits_array;
 {
     register SXBA	lhs_bits_ptr, rhs_bits_ptr;
     register int	slices_number = NBLONGS (BASIZE (rhs_bits_array));
     register int	lhs_slices_number = NBLONGS (BASIZE (lhs_bits_array));
-    SXBOOLEAN		ret_val = SXFALSE;
+    bool		ret_val = false;
 
 #if EBUG
     if (*lhs_bits_array < *rhs_bits_array)
@@ -1335,14 +1335,14 @@ AND (lhs_bits_array, rhs_bits_array)
     while (slices_number-- > 0)
     {
 	if (*lhs_bits_ptr-- &= *rhs_bits_ptr--)
-	    ret_val = SXTRUE;
+	    ret_val = true;
     }
 
     return ret_val;
 }
 
 
-static SXBOOLEAN
+static bool
 IS_AND (lhs_bits_array, rhs_bits_array)
     SXBA	lhs_bits_array, rhs_bits_array;
 {
@@ -1358,14 +1358,14 @@ IS_AND (lhs_bits_array, rhs_bits_array)
     while (slices_number-- > 0)
     {
 	if (*lhs_bits_ptr-- & *rhs_bits_ptr--)
-	    return SXTRUE;
+	    return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
-static SXBOOLEAN
+static bool
 IS_AND_MINUS (bits_array1, bits_array2, bits_array3)
     SXBA	bits_array1, bits_array2, bits_array3;
 {
@@ -1386,14 +1386,14 @@ IS_AND_MINUS (bits_array1, bits_array2, bits_array3)
     while (slices_number1-- > 0)
     {
 	if (*bits_ptr1-- & (*bits_ptr2-- & (~(*bits_ptr3--))))
-	    return SXTRUE;
+	    return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
-static SXBOOLEAN
+static bool
 IS_SUBSET (lhs_bits_array, rhs_bits_array)
     SXBA	lhs_bits_array, rhs_bits_array;
 {
@@ -1414,10 +1414,10 @@ IS_SUBSET (lhs_bits_array, rhs_bits_array)
 	rhs = *rhs_bits_ptr--;
 
 	if (lhs != (lhs & rhs))
-	    return SXFALSE;
+	    return false;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -1594,7 +1594,7 @@ print_symb (symb, i, j)
 }
 
 
-static SXBOOLEAN
+static bool
 print_prod (rhs_stack, item, top)
     int rhs_stack[], item, top;
 {
@@ -1615,7 +1615,7 @@ print_prod (rhs_stack, item, top)
 	fputs (";\n", stdout);
     }
 
-    return SXTRUE;
+    return true;
 }
 
 static void
@@ -1780,7 +1780,7 @@ set_rule (init_prod, top)
     plhs->next_lhs = ppool->first_lhs;
     ppool->first_lhs = spf.G.lhs_top;
     plhs->init_prod = init_prod;
-    plhs->is_erased = SXFALSE;
+    plhs->is_erased = false;
 
     for (x = 1; x <= top; x++)
     {
@@ -1812,7 +1812,7 @@ set_rule (init_prod, top)
 }
 
 
-static SXBOOLEAN
+static bool
 parse_tree (state, bot, top, j, l)
     int bot, top, state, j, l;
 {
@@ -1824,7 +1824,7 @@ parse_tree (state, bot, top, j, l)
 
        Quand c'est complet, appelle set_rule. */
     int		X, Xjl, Xjk, k, prdct_no;
-    SXBOOLEAN	ret_val;
+    bool	ret_val;
     int		*pcur, *ptop;
 
 #if EBUG
@@ -1859,7 +1859,7 @@ parse_tree (state, bot, top, j, l)
     }
     else
     {
-	ret_val = SXFALSE;
+	ret_val = false;
 
 	/* X \in N */
 	/* Xj = XxY_is_set (&Ai_hd, X, j); */
@@ -1898,7 +1898,7 @@ parse_tree (state, bot, top, j, l)
 
 
 #if 0
-static SXBOOLEAN
+static bool
 bu_parse_tree (rhs_stack, item, bot, top, i0)
     int rhs_stack[], item, bot, top, i0;
 {
@@ -1909,7 +1909,7 @@ bu_parse_tree (rhs_stack, item, bot, top, i0)
        Quand c'est complet, appelle set_rule. */
     sis		*pbot, *ptop;
     int		ibot, ibotm1, Xbot, state, prod, new_top;
-    SXBOOLEAN	ret_val;
+    bool	ret_val;
     SXBA	index_set, index_set2;
     int		new_rhs_stack [rhs_lgth+1];
 
@@ -1928,20 +1928,20 @@ bu_parse_tree (rhs_stack, item, bot, top, i0)
     {
 	/* X \in T */
 	if (TOK [ibot] != Xbot)
-	    ret_val = SXFALSE;
+	    ret_val = false;
 	else
 	{
 	    if (bot == 0)
 	    {
 		if (ibot-1 != i0)
-		    ret_val = SXFALSE;
+		    ret_val = false;
 		else
 		{
 		    rhs_stack [0] = i0;
 
 		    print_prod (rhs_stack, item, top);
 
-		    ret_val = SXTRUE;
+		    ret_val = true;
 		}
 	    }
 	    else
@@ -1955,7 +1955,7 @@ bu_parse_tree (rhs_stack, item, bot, top, i0)
     {
 	/* On recherche Xbot -> gamma ., I ds les "reduce" de Tibot */
 	/* A ameliorer */
-	ret_val = SXFALSE;
+	ret_val = false;
 
 	for (ptop = RT [ibot].reduce [Xbot].top, pbot = RT [ibot].reduce [Xbot].bot; pbot < ptop; pbot++)
 	{
@@ -1981,7 +1981,7 @@ bu_parse_tree (rhs_stack, item, bot, top, i0)
 		if (SXBA_bit_is_set_reset (index_set, i0) &&
 		    bu_parse_tree (new_rhs_stack, state, new_top, new_top, i0))
 		{
-		    ret_val = SXTRUE;
+		    ret_val = true;
 		    SXBA_1_bit (index_set2, i0);
 		}
 	    }
@@ -1998,14 +1998,14 @@ bu_parse_tree (rhs_stack, item, bot, top, i0)
 
 		    if (bu_parse_tree (new_rhs_stack, state, new_top, new_top, ibotm1))
 		    {
-			ret_val = SXTRUE;
+			ret_val = true;
 			SXBA_1_bit (index_set2, ibotm1);
 		    }
 		}
 	    }
 
 	    if (!ret_val && (ibotm1 = sxba_scan (index_set2, i0-1)) >= i0 && ibotm1 < ibot)
-		ret_val = SXTRUE;
+		ret_val = true;
 	}
 	    
 	if (ret_val)
@@ -2018,7 +2018,7 @@ bu_parse_tree (rhs_stack, item, bot, top, i0)
 	    }
 	    else
 	    {
-		ret_val = SXFALSE;
+		ret_val = false;
 		ibotm1 = ibot;
 
 		while ((ibotm1 = sxba_1_rlscan (index_set2, ibotm1)) >= 0)
@@ -2029,7 +2029,7 @@ bu_parse_tree (rhs_stack, item, bot, top, i0)
 		    rhs_stack [bot] = ibotm1;
 
 		    if (bu_parse_tree (rhs_stack, item, bot, top, i0))
-			ret_val = SXTRUE;
+			ret_val = true;
 		}
 	    }
 	}
@@ -2039,7 +2039,7 @@ bu_parse_tree (rhs_stack, item, bot, top, i0)
 }
 
 
-static SXBOOLEAN
+static bool
 sem (state, I_set, j, k)
     int 	state, j, k;
     SXBA	I_set;
@@ -2059,10 +2059,10 @@ sem (state, I_set, j, k)
 	printf (", %i, %i)\n", j, k);
     }
 
-    return SXTRUE;
+    return true;
 }
 
-static SXBOOLEAN
+static bool
 sem_Xij (X, I_set, j)
     int		X, j;
     SXBA	I_set;
@@ -2081,12 +2081,12 @@ sem_Xij (X, I_set, j)
 	printf (", %i)\n", j);
     }
 
-    return SXTRUE;
+    return true;
 }
 #endif
 
 #if 0
-static SXBOOLEAN
+static bool
 RL_reduce (state, I_set, j, k, H_set)
     int		state, j, k;
     SXBA	I_set, H_set;
@@ -2095,7 +2095,7 @@ RL_reduce (state, I_set, j, k, H_set)
     sis		*pbot, *ptop;
     int		X, Y, l, bot_state, new_state,i, h;
     SXBA	index_set, index_set2, index_set3;
-    SXBOOLEAN	is_empty, is_initial;
+    bool	is_empty, is_initial;
 
 
     X = lispro [state];
@@ -2110,7 +2110,7 @@ RL_reduce (state, I_set, j, k, H_set)
 	index_set = HT [j].nt [X] = bag_get (&shift_bag, j);
 	/* FAIRE QQCHOSE POUR REUTILISER LES index_set3 */
 	index_set3 = bag_get (&shift_bag, j);
-	is_empty = SXTRUE;
+	is_empty = true;
 	is_initial = prolon [prolis [state]] == state;
 
 	for (ptop = RT [j].reduce [X].top, pbot = RT [j].reduce [X].bot; pbot < ptop; pbot++)
@@ -2157,13 +2157,13 @@ RL_reduce (state, I_set, j, k, H_set)
 	    if (Y > 0)
 	    {
 		if (RL_reduce (new_state, index_set3, i, j, index_set))
-		    is_empty = SXFALSE;
+		    is_empty = false;
 	    }
 	    else
 	    {
 		if (sem (bot_state, index_set3, i, j))
 		{
-		    is_empty = SXFALSE;
+		    is_empty = false;
 		    OR (index_set, index_set3);
 		}
 	    }
@@ -2204,13 +2204,13 @@ RL_reduce (state, I_set, j, k, H_set)
 
 		if (X > 0)
 		{
-		    is_empty = SXTRUE;
+		    is_empty = true;
 		    h = -1;
 
 		    while ((h = sxba_scan (index_set, h)) >= 0)
 		    {
 			if (RL_reduce (state, I_set, h-i, k, H_set))
-			    is_empty = SXFALSE;
+			    is_empty = false;
 		    }
 		}
 		else
@@ -2223,7 +2223,7 @@ RL_reduce (state, I_set, j, k, H_set)
 }
 
 
-static SXBOOLEAN
+static bool
 RL_reduce (state, I_set, j, k, H_set)
     int		state, j, k;
     SXBA	I_set, H_set;
@@ -2232,7 +2232,7 @@ RL_reduce (state, I_set, j, k, H_set)
     sir		*pbot, *ptop;
     int		X, Y, l, bot_state, new_bot_state, new_state,i, h;
     SXBA	index_set, index_set2, index_set3;
-    SXBOOLEAN	is_empty, is_initial, processed, is_index_set3_empty;
+    bool	is_empty, is_initial, processed, is_index_set3_empty;
 
 
     X = lispro [state];
@@ -2261,7 +2261,7 @@ RL_reduce (state, I_set, j, k, H_set)
 	    sxtrap (ME, "RL_reduce");
 #endif
 
-	is_empty = processed = SXTRUE;
+	is_empty = processed = true;
 
 	for (ptop = RT [j].reduce [X].top; pbot < ptop; pbot++)
 	{
@@ -2271,7 +2271,7 @@ RL_reduce (state, I_set, j, k, H_set)
 		/* state =  A -> X1 ... .X  ... Xp */
 		/* On verifie que pour l dans pbot->index_set, (A -> X1 ... .X  ... Xp, L)
 		   existe ds Tl. Ds ce cas, L doit etre un sous-ensemble de I_set. */
-		is_index_set3_empty = SXTRUE;
+		is_index_set3_empty = true;
 		l = -1;
 
 		while ((l = sxba_scan (pbot->index_set, l)) >= 0)
@@ -2280,7 +2280,7 @@ RL_reduce (state, I_set, j, k, H_set)
 		    {
 			if (SXBA_bit_is_set (I_set, l))
 			{
-			    is_index_set3_empty = SXFALSE;
+			    is_index_set3_empty = false;
 			    SXBA_1_bit (index_set3, l);
 			    SXBA_0_bit (pbot->index_set, l);
 			}
@@ -2291,7 +2291,7 @@ RL_reduce (state, I_set, j, k, H_set)
 			{
 			    if (IS_AND (index_set2, I_set))
 			    {
-				is_index_set3_empty = SXFALSE;
+				is_index_set3_empty = false;
 				SXBA_1_bit (index_set3, l);
 				SXBA_0_bit (pbot->index_set, l);
 			    }
@@ -2320,14 +2320,14 @@ RL_reduce (state, I_set, j, k, H_set)
 		    {
 			if (RL_reduce (new_state, index_set3, i, j, index_set))
 			{
-			    is_empty = SXFALSE;
+			    is_empty = false;
 			}
 		    }
 		    else
 		    {
 			if (sem (new_bot_state, index_set3, i, j))
 			{
-			    is_empty = SXFALSE;
+			    is_empty = false;
 			    OR (index_set, index_set3);
 			}
 		    }
@@ -2340,11 +2340,11 @@ RL_reduce (state, I_set, j, k, H_set)
 			if (sxba_scan (pbot->index_set, -1) == -1)
 			    pbot->index_set = NULL;
 			else
-			    processed = SXFALSE;
+			    processed = false;
 		    }
 		}
 		else
-		    processed = SXFALSE;
+		    processed = false;
 	    }
 	}
 
@@ -2370,7 +2370,7 @@ RL_reduce (state, I_set, j, k, H_set)
        sinon T_index_sets [l].index_sets [state] != NULL, l \in RT [j].lhs [X] */
 
     if ((index_set = RT [j].lhs [X]) == NULL)
-	return SXFALSE;
+	return false;
 
     if (is_initial)
     {
@@ -2406,13 +2406,13 @@ RL_reduce (state, I_set, j, k, H_set)
 
 	    if (X > 0)
 	    {
-		is_empty = SXTRUE;
+		is_empty = true;
 		h = -1;
 
 		while ((h = sxba_scan_reset (index_set3, h)) >= 0)
 		{
 		    if (RL_reduce (state, I_set, h-i, k, H_set))
-			is_empty = SXFALSE;
+			is_empty = false;
 		}
 	    }
 	    else
@@ -2426,7 +2426,7 @@ RL_reduce (state, I_set, j, k, H_set)
 
 
 
-static SXBOOLEAN
+static bool
 bu_parse_tree (rhs_stack, item, bot, cur, top)
     int rhs_stack[], item, bot, cur, top;
 {
@@ -2439,7 +2439,7 @@ bu_parse_tree (rhs_stack, item, bot, cur, top)
     sir		*pbot, *ptop;
     int		icur, icurm1, Xcur, state, prod, new_top, i0, new_cur, bot_state, cur_state, inew_cur, Xnew_cur;
     int		new_bot, Xnew_bot, inew_bot, ibot;
-    SXBOOLEAN	ret_val, processed, is_first_time;
+    bool	ret_val, processed, is_first_time;
     SXBA	index_set, index_set2, index_set3;
     int		new_rhs_stack [rhs_lgth+1];
 
@@ -2468,13 +2468,13 @@ bu_parse_tree (rhs_stack, item, bot, cur, top)
     {
 	/* On recherche Xcur -> gamma ., I ds les "reduce" de Ticur */
 	/* A ameliorer */
-	ret_val = SXFALSE;
+	ret_val = false;
 	i0 = rhs_stack [0];
 
 	if ((pbot = RT [icur].reduce [Xcur].bot) != NULL)
 	{
 	    /* Non entierement traite' */
-	    processed = SXTRUE;
+	    processed = true;
 
 	    for (ptop = RT [icur].reduce [Xcur].top; pbot < ptop; pbot++)
 	    {
@@ -2484,7 +2484,7 @@ bu_parse_tree (rhs_stack, item, bot, cur, top)
 		    /* item =  A -> X1 ... Xbot ... .Xcur  ... Xtop */
 		    /* On verifie que pour j dans index_set, (A -> X1 ... Xbot ... .Xcur ... Xtop, i0)
 		       est un element de la liste Tj. */
-		    is_first_time = SXTRUE;
+		    is_first_time = true;
 		    
 		    icurm1 = bot == cur ? ibot-1 : ibot;
 
@@ -2500,7 +2500,7 @@ bu_parse_tree (rhs_stack, item, bot, cur, top)
 			    if (is_first_time)
 			    {
 				/* On traite les terminaux aux extremites de gamma. */
-				is_first_time = SXFALSE;
+				is_first_time = false;
 				state = pbot->state;
 				prod = prolis [state];
 
@@ -2539,7 +2539,7 @@ bu_parse_tree (rhs_stack, item, bot, cur, top)
 				    print_prod (new_rhs_stack, bot_state, new_top);
 
 				    SXBA_1_bit (index_set2, inew_cur);
-				    ret_val = SXTRUE;
+				    ret_val = true;
 				    break;
 				}
 			    }
@@ -2562,7 +2562,7 @@ bu_parse_tree (rhs_stack, item, bot, cur, top)
 
 			    if (bu_parse_tree (new_rhs_stack, state, new_bot, new_cur, new_top))
 			    {
-				ret_val = SXTRUE;
+				ret_val = true;
 				SXBA_1_bit (index_set2, icurm1);
 			    }
 
@@ -2575,7 +2575,7 @@ bu_parse_tree (rhs_stack, item, bot, cur, top)
 		    if (sxba_scan (index_set, -1) == -1)
 			pbot->index_set = NULL;
 		    else
-			processed = SXFALSE;
+			processed = false;
 		}
 	    }
 
@@ -2586,7 +2586,7 @@ bu_parse_tree (rhs_stack, item, bot, cur, top)
 	index_set2 = RT [icur].lhs [Xcur];
 
 	if (!ret_val && (icurm1 = sxba_scan (index_set2, ibot-1)) >= ibot && icurm1 < icur)
-	    ret_val = SXTRUE;
+	    ret_val = true;
 
 	if (ret_val)
 	{
@@ -2596,7 +2596,7 @@ bu_parse_tree (rhs_stack, item, bot, cur, top)
 	    }
 	    else
 	    {
-		ret_val = SXFALSE;
+		ret_val = false;
 		icurm1 = ibot;
 
 		while ((icurm1 = sxba_scan (index_set2, icurm1)) >= 0)
@@ -2604,7 +2604,7 @@ bu_parse_tree (rhs_stack, item, bot, cur, top)
 		    rhs_stack [cur] = icurm1;
 
 		    if (bu_parse_tree (rhs_stack, item, bot, cur, top))
-			ret_val = SXTRUE;
+			ret_val = true;
 		}
 	    }
 	}
@@ -2615,7 +2615,7 @@ bu_parse_tree (rhs_stack, item, bot, cur, top)
 #endif
 
 
-static SXBOOLEAN
+static bool
 call_semact (A, i, k)
     int A, i, k;
 {
@@ -2623,7 +2623,7 @@ call_semact (A, i, k)
     /* il faudrait retourner un ensemble de p_uplets. A VOIR */
     int 		hd, d, j, X, Xjk, end, start, nb;
     struct reduce_list	*pred;
-    SXBOOLEAN		ret_val = SXFALSE;
+    bool		ret_val = false;
 
     rhs_stack [0] = RT [i].nt [A].Aij [k-i];
     nb = 0;
@@ -2635,7 +2635,7 @@ call_semact (A, i, k)
 	if (for_parsact.action == NULL ||
 	    (*for_parsact.action) (pred->prod, i, pred->index_set, k, nb)) {
 	    /* Il en reste */
-	    ret_val = SXTRUE;
+	    ret_val = true;
 
 	    start = prolon [pred->prod];
 	    end = prolon [pred->prod + 1] - 1;
@@ -2731,7 +2731,7 @@ reduce (A, j, i)
     SXBA	index_set, index_set2;
 
     int 	Aji, Bji, Bki, prdct_no, start, end, constraint_no;
-    SXBOOLEAN	constraint_checked;
+    bool	constraint_checked;
 
     if (is_parser)
     {
@@ -2753,7 +2753,7 @@ reduce (A, j, i)
 	    }
 	    else
 		if (!constraint_checked)
-		    Aij_pool [Aji].is_erased = SXTRUE;
+		    Aij_pool [Aji].is_erased = true;
 	}
 
 	if (!constraint_checked)
@@ -3230,7 +3230,7 @@ fill_psis (state, index_set, j, k)
 #endif
 
 #if 0
-static SXBOOLEAN
+static bool
 shift (j, A, i)
     int j, A, i;
 {
@@ -3242,7 +3242,7 @@ shift (j, A, i)
 
     if (RT [j].shift [A].bot != NULL)
 	/* deja calcule */
-	return SXTRUE;
+	return true;
 
     for (top = RT [j].nt [A].top, x = bot = RT [j].nt [A].bot; x < top; x++)
     {
@@ -3339,7 +3339,7 @@ shift (j, A, i)
 
     pool_close (sis_pool, sis, RT [j].shift [A].bot, RT [j].shift [A].top);
 
-    return SXFALSE;
+    return false;
 }
 #endif
 
@@ -3565,13 +3565,13 @@ scan_reduce (i)
 #endif
 
 
-static SXBOOLEAN
+static bool
 complete (i)
     int i;
 {
     int		x, state, next_state, X, Y, A, B, j, prdct_no, prod, Aik, start, end;
     SXBA	index_set, backward_index_set;
-    SXBOOLEAN	is_tok, is_scan_reduce = SXFALSE;
+    bool	is_tok, is_scan_reduce = false;
 
     sis		*psis, *bot, *top;
 
@@ -3582,7 +3582,7 @@ complete (i)
     if ((state = RT1->nt_hd [0]) != 0)
     {
 	/* A -> \alpha X . ai+1 \beta */
-	is_tok = SXTRUE;
+	is_tok = true;
 	RT1->nt_hd [0] = 0;
 
 	do
@@ -3618,7 +3618,7 @@ complete (i)
 	    else
 	    {
 		/* A -> \alpha X . ai+1 */
-		is_scan_reduce = SXTRUE;
+		is_scan_reduce = true;
 
 		A = lhs [prolis [state]];
 		OR (ntXindex_set [A], index_set);
@@ -3667,7 +3667,7 @@ complete (i)
 		     for_parsact.prdct == NULL ||
 		     (*for_parsact.prdct) (-i-1, prdct_no)))
 		{
-		    is_tok = SXTRUE;
+		    is_tok = true;
 		    Y = lispro [next_state];
 
 		    if (Y != 0)
@@ -3697,7 +3697,7 @@ complete (i)
 		    else
 		    {
 			/* A -> . ai+1, i */
-			is_scan_reduce = SXTRUE;
+			is_scan_reduce = true;
 
 			A = lhs [prolis [state]];
 			SXBA_1_bit (ntXindex_set [A], i);
@@ -3735,7 +3735,7 @@ recognize ()
     int			i;
     int			*T0_shift_NT_stack;
     SXBA		T0_shift_state_set;
-    SXBOOLEAN		is_in_LG;
+    bool		is_in_LG;
 
     /* initial_state ne vaut pas toujours 1 (cas ou L(G)={epsilon}). */
     T1_shift_NT_stack = shift_NT_stack_1;
@@ -3843,7 +3843,7 @@ erase_elementary_tree (elementary_tree)
 
     if (!pet->is_erased)
     {
-	pet->is_erased = SXTRUE;
+	pet->is_erased = true;
 
 	for (q = p = &(Aij_pool [pet->reduc].first_lhs); *p != 0; p = &(spf.lhs [*p].next_lhs))
 	{
@@ -3920,7 +3920,7 @@ useless_symbol_elimination ()
 	for (prod = Aij_pool [symbol].first_lhs; prod != 0; prod = spf.lhs [prod].next_lhs)
 	{
 	    /* prod est inaccessible */
-	    spf.lhs [prod].is_erased = SXTRUE;
+	    spf.lhs [prod].is_erased = true;
 	}
 
 	Aij_pool [symbol].first_lhs = Aij_pool [symbol].first_rhs = 0;
@@ -3956,7 +3956,7 @@ ARN_new_symbol (new_symbol)
 }
 
 #if 0
-static SXBOOLEAN
+static bool
 ARN_parsact (rhs_stack, top, elementary_tree, init_prod)
     int *rhs_stack, top, elementary_tree, init_prod;
 {
@@ -3979,7 +3979,7 @@ ARN_parsact (rhs_stack, top, elementary_tree, init_prod)
     case 11:
     case 12:
     case 13:
-	return SXTRUE;
+	return true;
        
     case 7:
 	new_len = 1;
@@ -3993,10 +3993,10 @@ ARN_parsact (rhs_stack, top, elementary_tree, init_prod)
 
     case 14:
 	psem->len = ARN_sem [rhs_stack [1]].len+1; 
-	return SXTRUE;
+	return true;
     case 15:
 	psem->len = 1;
-	return SXTRUE;
+	return true;
 
     default:
 	fprintf (sxstderr, "The function \"ARN_parsact\" is out of date with respect to its specification.\n");
@@ -4013,7 +4013,7 @@ ARN_parsact (rhs_stack, top, elementary_tree, init_prod)
 	if (psem->len <= new_len)
 	{
 	    /* On conserve la precedente */
-	    return SXFALSE;
+	    return false;
 	    /* erase_elementary_tree (elementary_tree); n'a pas (encore) ete entre'! */
 	}
     else
@@ -4023,11 +4023,11 @@ ARN_parsact (rhs_stack, top, elementary_tree, init_prod)
 	psem->len = new_len;
     }
 
-    return SXTRUE;
+    return true;
 }
 #endif
 
-static SXBOOLEAN
+static bool
 ARN_parsact (init_prod, i, j_set, k, nb)
     int 	init_prod, i, k, nb;
     SXBA	j_set;
@@ -4038,7 +4038,7 @@ ARN_parsact (init_prod, i, j_set, k, nb)
 
     if (nb > 1) {
 	sxba_empty (j_set);
-	return SXFALSE;
+	return false;
     }
 
     d = sxba_scan (j_set, -1);
@@ -4050,11 +4050,11 @@ ARN_parsact (init_prod, i, j_set, k, nb)
 #endif
 
     SXBA_1_bit (j_set, d);
-    return SXTRUE;
+    return true;
 }
 
 
-static SXBOOLEAN
+static bool
 ARN_constraint (symbol, prdct_no)
     int symbol, prdct_no;
 {
@@ -4110,7 +4110,7 @@ RL_reduction_item (item, i, j, pbot)
     /* item = A -> \alpha . \gamma  et \alpha != \epsilon */
     int		X, Y, bot_state, k, new_j;
     SXBA	index_set, backward_index_set, prev_index_set;
-    SXBOOLEAN	is_reduce;
+    bool	is_reduce;
 
     /* On saute les terminaux a droit de \alpha */
     bot_state = prolon [prolis [item]];
@@ -4119,7 +4119,7 @@ RL_reduction_item (item, i, j, pbot)
 
     while ((Y = lispro [item-1]) < 0)
     {
-	is_reduce = SXFALSE;
+	is_reduce = false;
 	new_j--;
 
 	if (--item == bot_state)
@@ -4233,7 +4233,7 @@ RL_mreduction_item (item, I, j, pbot)
     /* item = A -> \alpha . \gamma  et \alpha != \epsilon */
     int		Y, bot_state, i, k, new_j;
     SXBA	index_set, backward_index_set, prev_index_set;
-    SXBOOLEAN	is_reduce;
+    bool	is_reduce;
 
     /* On saute les terminaux a droite de \alpha */
     bot_state = prolon [prolis [item]];
@@ -4242,7 +4242,7 @@ RL_mreduction_item (item, I, j, pbot)
 
     while ((Y = lispro [item-1]) < 0)
     {
-	is_reduce = SXFALSE;
+	is_reduce = false;
 	new_j--;
 
 	if (--item == bot_state)
@@ -4404,10 +4404,10 @@ sem_item (state, I_set, level)
 	    xprod += sxba_cardinal (I_set);
     }
 
-    return SXTRUE;
+    return true;
 }
 
-static SXBOOLEAN
+static bool
 sem_Xij (X, I_set, j)
     int		X, j;
     SXBA	I_set;
@@ -4424,18 +4424,18 @@ sem_Xij (X, I_set, j)
 	printf (", %i]\n", j);
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
-static SXBOOLEAN
+static bool
 parse_item (item, I, backward_J, level, new_I)
     int 	item, level;
     SXBA	I, backward_J, new_I;
 {
     sir		*pbot, *ptop;
     int		Y, bot_state, j, d, new_j, nbt;
-    SXBOOLEAN	ret_val = SXFALSE;
+    bool	ret_val = false;
     SXBA	index_set, level_index_set, backward_index_set;
 
     level_index_set = level_index_sets [level]; /* empty */
@@ -4473,7 +4473,7 @@ parse_item (item, I, backward_J, level, new_I)
 	if (item == bot_state)
 	{
 	    OR_RAZ (new_I, level_index_set);
-	    ret_val = SXTRUE;
+	    ret_val = true;
 	}
 	else
 	{
@@ -4497,7 +4497,7 @@ parse_item (item, I, backward_J, level, new_I)
 		    }
 
 		    if (parse_item (item-1, I, T_index_sets [new_j].backward_index_sets [item], level-1, new_I))
-			ret_val = SXTRUE;
+			ret_val = true;
 		}
 	    }
 	}
@@ -4507,14 +4507,14 @@ parse_item (item, I, backward_J, level, new_I)
 }
 
 
-static SXBOOLEAN
+static bool
 parse_Xij (X, j)
     int 	X, j;
 {
     sir		*pbot, *ptop;
     SXBA	I, backward_set, backward_index_set, level_index_set, index_set;
     int		level, item, bot_state, new_j, Y;
-    SXBOOLEAN	is_reduce, ret_val = SXFALSE;
+    bool	is_reduce, ret_val = false;
     /* On genere toutes les reductions dont Xij est la partie gauche et i \in backward_set */
     /* backward_set est repositionne' */
 
@@ -4530,12 +4530,12 @@ parse_Xij (X, j)
 	level = item - bot_state;
 	rhs_stack [0] = level;
 	rhs_stack [level] = j;
-	is_reduce = SXTRUE;
+	is_reduce = true;
 	new_j = j;
 
 	while ((Y = lispro [item-1]) < 0)
 	{
-	    is_reduce = SXFALSE;
+	    is_reduce = false;
 	    new_j--;
 	    level--;
 	    item--;
@@ -4553,7 +4553,7 @@ parse_Xij (X, j)
 		    {
 			SXBA_0_bit (level_index_set, new_j);
 			SXBA_1_bit (backward_set, new_j);
-			ret_val = SXTRUE;
+			ret_val = true;
 		    }
 		}
 
@@ -4579,7 +4579,7 @@ parse_Xij (X, j)
 	    if (IS_AND (index_set, I))
 	    {
 		if (parse_item (item-1, I, backward_index_set, level-1, backward_set))
-		    ret_val = SXTRUE;
+		    ret_val = true;
 	    }
 	}
     }
@@ -4638,7 +4638,7 @@ reduce_Delta ()
        => on supprime (i, A-> \alpha .X \beta, j) de Delta */
     int	erased = 0;
     int	j, ixqxj, jxrxk, q, r;
-    SXBOOLEAN	found;
+    bool	found;
 
     for (j = n; j >= 0; j--)
     {
@@ -4648,11 +4648,11 @@ reduce_Delta ()
 
 	    if (lispro [r = q+1] != 0)
 	    {
-		found = SXFALSE;
+		found = false;
 
 		XxYxZ_XYforeach (Delta, j, r, jxrxk)
 		{
-		    found = SXTRUE;
+		    found = true;
 		    break;
 		}
 
@@ -4699,10 +4699,10 @@ main (argc, argv)
     c = argv [1] [0];
 
     if (c == 'R' || c == 'r')
-	is_parser = SXFALSE;
+	is_parser = false;
     else
 	if (c == 'P' || c == 'p')
-	    is_parser = SXTRUE;
+	    is_parser = true;
     else
     {
 	printf (Usage, ME);
@@ -4712,9 +4712,9 @@ main (argc, argv)
     c = argv [1] [1];
 
     if (c == 'p')
-	is_print_prod = SXTRUE;
+	is_print_prod = true;
     else
-	is_print_prod = SXFALSE;
+	is_print_prod = false;
 	    
     s = source = argv [2];
     n = strlen (source);
@@ -4859,7 +4859,7 @@ main (argc, argv)
 	{
 	    sir		*pbot, *ptop;
 	    int		state, i, bot_state, X;
-	    SXBOOLEAN	is_empty;
+	    bool	is_empty;
 	    SXBA	index_set, index_set2;
 
 	    HT = (struct RL_item*) sxcalloc (n+1, sizeof (struct RL_item));
@@ -4868,7 +4868,7 @@ main (argc, argv)
 	    HT [n].nt [1] = index_set = bag_get (&shift_bag, n+1);
 	    index_set2 = bag_get (&shift_bag, n+1);
 	    SXBA_1_bit (index_set2, 0);
-	    is_empty = SXTRUE;
+	    is_empty = true;
 
 	    for (ptop = RT [n].reduce [1].top, pbot = RT [n].reduce [1].bot; pbot < ptop; pbot++)
 	    {
@@ -4886,13 +4886,13 @@ main (argc, argv)
 		    if (X > 0)
 		    {
 			if (RL_reduce (state, index_set2, i, n, index_set))
-			    is_empty = SXFALSE;
+			    is_empty = false;
 		    }
 		    else
 		    {
 			if (sem (bot_state, index_set2, i, n))
 			{
-			    is_empty = SXFALSE;
+			    is_empty = false;
 			    SXBA_1_bit (index_set, 0);
 			}
 		    }
@@ -4930,7 +4930,7 @@ main (argc, argv)
 	{
 	    sis		*pbot, *ptop;
 	    int		state, prod, bot, top, i, cur, bot_state, X;
-	    SXBOOLEAN	ret_val;
+	    bool	ret_val;
 
 	    reduce_Delta ();
 
