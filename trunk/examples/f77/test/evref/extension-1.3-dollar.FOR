@@ -4,14 +4,14 @@
      &                   nmgrp_H, trans , modpil,
      &                   sngrp  , ngrps )
 
-      character*8, intent(in)    modpil, grpenm(ngrp), nmgrp_H,
+      character*8    modpil, grpenm(ngrp), nmgrp_H,
      &                           sngrp(ngrps)
-      integer,     intent(in)    ngrp, nrecgr, ngrps
-      integer,     intent(in)    igrec(nrecgr,2)
-      real,        intent(in)    recgrp(nrecgr), course, coursm
-      real,        intent(in)    totgrp
-      real,        intent(out)   posgrp(ngrp)
-      real,        intent(inout) trans
+      integer   ngrp, nrecgr, ngrps
+      integer   igrec(nrecgr,2)
+      real      recgrp(nrecgr), course, coursm
+      real      totgrp
+      real      posgrp(ngrp)
+      real      trans
 C--------+---------+---------+---------+---------+---------+---------+-|
       character*8 group_name, group_name_format
       logical     lg_H$complex, lg$T_mode,
@@ -97,4 +97,5 @@ C--------+---------+---------+---------+---------+---------+---------+-|
         total = total - recgrpw
       enddo
 
-      end subroutine gng
+      end
+C     end subroutine gng

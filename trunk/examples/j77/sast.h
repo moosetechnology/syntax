@@ -882,7 +882,7 @@ SXML_TYPE_LIST ast_control_info_elem(
     return JSON_MAP(
       SXML_LL(
         JSON_KQ_("name", name),
-        JSON_KU("parameter", parameter))  
+        JSON_KU("info_elem", parameter))  
     );
 }
 

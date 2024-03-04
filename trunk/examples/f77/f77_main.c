@@ -22,7 +22,7 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_F77MAIN[] = "@(#)SYNTAX - $Id: f77_main.c 3770 2024-02-28 14:43:28Z garavel $";
+char WHAT_F77MAIN[] = "@(#)SYNTAX - $Id: f77_main.c 3780 2024-02-29 15:19:53Z garavel $";
 
 bool is_ansi, is_json, is_indent, is_pretty_printer, is_input_free_fortran, is_extension;
 
@@ -160,6 +160,11 @@ int main (int argc, char *argv[])
     }
 
  run:
+    if (is_json == true) {
+       /* L'arbre JSON accepte les extensions a FORTRAN 77 */
+       is_extension = true;
+    }
+
     if (is_json == true && is_indent == true) {
        json_indent_command = "awk '\
 			BEGIN { TAB = 0 } \
