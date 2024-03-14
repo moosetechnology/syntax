@@ -22,18 +22,18 @@
 #include "B_tables.h"
 #include "yax_vars.h"
 
-char WHAT_YAXDECACT[] = "@(#)SYNTAX - $Id: dec_act.c 3364 2023-06-16 16:20:37Z garavel $" WHAT_DEBUG;
+char WHAT_YAXDECACT[] = "@(#)SYNTAX - $Id: dec_act.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 extern struct sxtables	bnf_tables;
 
 
-extern SXVOID    bnf_found_bad_beginning_of_rule (void);
+extern void    bnf_found_bad_beginning_of_rule (void);
 
 
 /* dans yax_put.c */
 
-extern SXVOID	put_prelude (void);
-extern SXVOID	put_deb_act (void);
+extern void	put_prelude (void);
+extern void	put_deb_act (void);
 
 /* dans yax.c */
 
@@ -42,18 +42,18 @@ extern SXINT	placer_attr (SXINT ste);
 
 
 
-SXINLINE static SXVOID prepro_line (SXUINT lineno, char *filename)
+SXINLINE static void prepro_line (SXUINT lineno, char *filename)
 {
     fprintf (sxstdout, "\n#line %lu \"%s\"\n", lineno, filename);
 }
 
 
-SXVOID	dec_scanact (SXINT code, SXINT numact)
+void	dec_scanact (SXINT code, SXINT numact)
 {
     switch (code) {
 
     case SXERROR:
-      is_err = SXTRUE;
+      is_err = true;
     case SXOPEN:
     case SXCLOSE:
     case SXFINAL:
@@ -81,10 +81,10 @@ SXVOID	dec_scanact (SXINT code, SXINT numact)
 }
 
 
-SXVOID	dec_semact (SXINT code, SXINT numact)
+void	dec_semact (SXINT code, SXINT numact)
 {
     switch (code) {
-	static SXBOOLEAN must_init;
+	static bool must_init;
 
     case SXOPEN:
     case SXCLOSE:
@@ -93,11 +93,11 @@ SXVOID	dec_semact (SXINT code, SXINT numact)
 	break;
 
     case SXINIT:
-	must_init = SXTRUE;
+	must_init = true;
 	break;
 
     case SXERROR:
-	is_err = SXTRUE;
+	is_err = true;
 	return;
 
     case SXACTION:
@@ -140,7 +140,7 @@ SXVOID	dec_semact (SXINT code, SXINT numact)
 	    if (must_init) {
 		put_prelude ();
 		prepro_line ((SXINT) 1, sxsrcmngr.source_coord.file_name);
-		must_init = SXFALSE;
+		must_init = false;
 	    }
 
 	    terminal_token = &SXSTACKtoken (SXSTACKtop ());
@@ -178,10 +178,10 @@ SXVOID	dec_semact (SXINT code, SXINT numact)
 				 bnf_tables.err_titles [2][0],
 				 "%sMultiple occurrence of this non-terminal symbol.",
 				 bnf_tables.err_titles [2]+1);
-			is_err = SXTRUE;
+			is_err = true;
 		    }
 		    else
-			attr_nt [xattr] [xnt] = SXTRUE;
+			attr_nt [xattr] [xnt] = true;
 		}
 	    }
 

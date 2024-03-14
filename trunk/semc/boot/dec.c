@@ -22,7 +22,7 @@
 
 static SXINT sx_stack_size;
 
-char WHAT_SEMC_DEC[] = "@(#)SYNTAX - $Id: dec.c 3577 2023-09-10 07:20:53Z garavel $" WHAT_DEBUG;
+char WHAT_SEMC_DEC[] = "@(#)SYNTAX - $Id: dec.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 #include "B_tables.h"
 #include "semc_vars.h"
@@ -30,10 +30,10 @@ char WHAT_SEMC_DEC[] = "@(#)SYNTAX - $Id: dec.c 3577 2023-09-10 07:20:53Z garave
 extern struct sxtables bnf_tables;
 
 /* dans semc_put.c */
-extern SXVOID put_avant_decl (void);
-extern SXVOID put_entre_decl_open (void);
-extern SXVOID put_entre_open_close (void);
-extern SXVOID put_apres_close (void);
+extern void put_avant_decl (void);
+extern void put_entre_decl_open (void);
+extern void put_entre_open_close (void);
+extern void put_apres_close (void);
 
 /* dans semc.c */
 extern SXINT chercher_nt (SXINT ste);
@@ -42,7 +42,7 @@ extern SXINT placer_attr (struct sxtoken ttok);
 static SXINT i, xnt, xattr;
 static char* ptr;
 
-static SXBOOLEAN is_error;
+static bool is_error;
 
 #define skx(x) (x)
 #define pcode(x) (SXSTACKtoken(x).lahead)
@@ -52,7 +52,7 @@ static SXBOOLEAN is_error;
 #define pcomment(x) (SXSTACKtoken(x).comment)
 
 /* A C T I O N */
-SXVOID dec_act(SXINT code, SXINT numact)
+void dec_act(SXINT code, SXINT numact)
 {
 switch (code)
 {
@@ -62,8 +62,8 @@ break;
 case SXCLOSE:
 break;
 
-case SXERROR:is_error=SXTRUE;break;
-case SXINIT:is_error=SXFALSE;break;
+case SXERROR:is_error=true;break;
+case SXINIT:is_error=false;break;
 case SXFINAL:break;
 case SXACTION:
 if(is_error)return;
@@ -180,7 +180,7 @@ case 19:
 		,"%sMultiple occurrence of this non-terminal symbol."
 		,bnf_tables.err_titles[1]+1
 		);
-		is_err = SXTRUE;
+		is_err = true;
 	}
 	else attr_nt[xattr][xnt] = 's';
     }

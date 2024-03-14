@@ -72,7 +72,7 @@ sxbm_free
 	int	bit\|;
 .PP
 .B
-\s-2SXBOOLEAN\s0 sxba_bit_is_set (bits_array, bit)
+bool sxba_bit_is_set (bits_array, bit)
 .B
 	\s-2SXBA\s0	bits_array\|;
 .B
@@ -149,12 +149,12 @@ int sxba_0_rlscan (bits_array, from_bit)
 	\s-2SXBA\s0	bits_array\|;
 .PP
 .B
-\s-2SXBOOLEAN\s0 sxba_is_empty (bits_array)
+bool sxba_is_empty (bits_array)
 .B
 	\s-2SXBA\s0	bits_array\|;
 .PP
 .B
-\s-2SXBOOLEAN\s0 sxba_is_full (bits_array)
+bool sxba_is_full (bits_array)
 .B
 	\s-2SXBA\s0	bits_array\|;
 .PP
@@ -164,14 +164,14 @@ int sxba_first_difference (bits_array_1, bits_array_2)
 	\s-2SXBA\s0	bits_array_1, bits_array_2\|;
 .PP
 .B
-\s-2SXBOOLEAN\s0 sxba_read (file, bits_array)
+bool sxba_read (file, bits_array)
 .B
 	int	file\|;
 .B
 	\s-2SXBA\s0	bits_array\|;
 .PP
 .B
-\s-2SXBOOLEAN\s0 sxba_write (file, bits_array)
+bool sxba_write (file, bits_array)
 
 .B
 	int	file\|;
@@ -191,7 +191,7 @@ int sxba_first_difference (bits_array_1, bits_array_2)
 	int	old_lines_number, new_lines_number, new_bits_number\|;
 .PP
 .B
-\s-2SXVOID\s0 sxbm_free (bits_matrix)
+void sxbm_free (bits_matrix)
 .B
 	\s-2SXBA\s0	*bits_matrix\|;
 .fi
@@ -257,13 +257,13 @@ sets it.
 .I sxba_bit_is_set
 returns
 .SM
-.I SXTRUE
+.I true
 if the bit numbered
 .I bit
 is set in
 .IR bits_array ,
 .SM
-.I SXFALSE
+.I false
 otherwise.
 .PP
 .I sxba_cardinal
@@ -326,10 +326,10 @@ inverts all significant bits of its argument and returns it, modified.
 .IR sxba_is_empty " (" sxba_is_full )
 returns
 .SM
-.I SXFALSE
+.I false
 if any bit is set (reset) in its argument,
 .SM
-.I SXTRUE
+.I true
 otherwise.
 .PP
 .I sxba_first_difference
@@ -350,10 +350,10 @@ the
 \fBbits array\fP \fIbits_array\fP.
 Returns
 .SM
-.I SXTRUE
+.I true
 on success,
 .SM
-.I SXFALSE
+.I false
 otherwise.
 .PP
 .I sxbm_calloc

@@ -21,13 +21,13 @@
 #include "ppada_td.h"
 #include <ctype.h>
 
-char WHAT_PPADASACT[] = "@(#)SYNTAX - $Id: ppada_sact.c 3329 2023-06-04 20:05:18Z garavel $";
+char WHAT_PPADASACT[] = "@(#)SYNTAX - $Id: ppada_sact.c 3633 2023-12-20 18:41:19Z garavel $";
 
 extern struct sxtables	ppada_args_tables, ppada_tables;
 
 
 
-static SXVOID	gripe (struct sxtables *sxtables, SXINT act_no)
+static void	gripe (struct sxtables *sxtables, SXINT act_no)
 {
     sxuse (act_no);
     sxerror (sxsvar.sxlv.terminal_token.source_index,
@@ -38,7 +38,7 @@ static SXVOID	gripe (struct sxtables *sxtables, SXINT act_no)
 }
 
 
-SXBOOLEAN
+bool
 ppada_scan_act (SXINT code, SXINT act_no)
 {
     switch (code) {
@@ -132,11 +132,11 @@ ppada_scan_act (SXINT code, SXINT act_no)
 	case 1:
 	    switch (sxsvar.sxlv.terminal_token.lahead) {
 	    default:
-		return SXFALSE;
+		return false;
 
 	    case IDENTIFIER:
 	    case RP:
-		return SXTRUE;
+		return true;
 	    }
 	default:
 	    gripe (&ppada_tables, act_no);
@@ -144,11 +144,11 @@ ppada_scan_act (SXINT code, SXINT act_no)
 	}
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
-SXVOID
+void
 ppada_args_scan_act (SXINT code, SXINT act_no)
 {
     switch (code) {

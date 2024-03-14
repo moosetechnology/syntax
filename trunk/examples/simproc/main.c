@@ -12,7 +12,7 @@ typedef bool ADT_BOOL;
 extern struct sxtables sxtables;
 
 /* defined and initialized in simproc.semc */
-extern SXBOOLEAN *SYNTAX_ERROR;
+extern bool *SYNTAX_ERROR;
 extern void TREE_DUMP (void);
 extern void CODE_GENERATION (void);
 extern void TREE_DECORATION (void);
@@ -70,7 +70,7 @@ int  main (int argc, char *argv[])
 
      fclose (FILE_SOURCE);
 
-     if (*SYNTAX_ERROR == SXTRUE) {
+     if (*SYNTAX_ERROR == true) {
 	  fprintf (stderr, "simproc: syntax error %d\n", *SYNTAX_ERROR);
 	  exit (1);
      }

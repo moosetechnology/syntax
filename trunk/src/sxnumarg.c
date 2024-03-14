@@ -19,16 +19,16 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXNUMARG[] = "@(#)SYNTAX - $Id: sxnumarg.c 2428 2023-01-18 12:54:10Z garavel $" WHAT_DEBUG;
+char WHAT_SXNUMARG[] = "@(#)SYNTAX - $Id: sxnumarg.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
-SXBOOLEAN	sxnumarg (char *arg, SXINT *nb)
+bool	sxnumarg (char *arg, SXINT *nb)
 {
     SXINT	val = 0;
     char	c;
 
     switch (c = *arg) {
     case SXNUL:
-	return SXFALSE;
+	return false;
 
     case '0':
 	switch (c = *++arg) {
@@ -49,10 +49,10 @@ SXBOOLEAN	sxnumarg (char *arg, SXINT *nb)
 		    else if (c >= 'a' && c <= 'f')
 			val += c - 'a' + 10;
 		    else
-			return SXFALSE;
+			return false;
 		} while ((c = *++arg));
 	    else
-		return SXFALSE;
+		return false;
 
 	    break;
 
@@ -64,7 +64,7 @@ SXBOOLEAN	sxnumarg (char *arg, SXINT *nb)
 		if (c >= '0' && c <= '7')
 		    val += c - '0';
 		else
-		    return SXFALSE;
+		    return false;
 	    } while ((c = *++arg));
 
 	    break;
@@ -80,12 +80,12 @@ SXBOOLEAN	sxnumarg (char *arg, SXINT *nb)
 	    if (c >= '0' && c <= '9')
 		val += c - '0';
 	    else
-		return SXFALSE;
+		return false;
 	} while ((c = *++arg));
 
 	break;
     }
 
     *nb = val;
-    return SXTRUE;
+    return true;
 }

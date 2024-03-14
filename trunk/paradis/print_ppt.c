@@ -24,9 +24,9 @@
 #include "sxunix.h"
 
 #include "PP_tables.h"
-char WHAT_PARADISPRINT[] = "@(#)SYNTAX - $Id: print_ppt.c 3602 2023-09-23 19:50:11Z garavel $" WHAT_DEBUG;
+char WHAT_PARADISPRINT[] = "@(#)SYNTAX - $Id: print_ppt.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
-extern SXBOOLEAN	paradis_read (struct PP_ag_item *PP_ag, char *langname);
+extern bool	paradis_read (struct PP_ag_item *PP_ag, char *langname);
 static struct PP_ag_item	PP_ag;
 
 /************************************************************************/

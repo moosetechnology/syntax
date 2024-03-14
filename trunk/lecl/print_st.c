@@ -28,10 +28,10 @@
 #include "sxsstmt.h"
 #include "S_tables.h"
 
-char WHAT_LECLPRINTST[] = "@(#)SYNTAX - $Id: print_st.c 3603 2023-09-23 20:02:36Z garavel $" WHAT_DEBUG;
+char WHAT_LECLPRINTST[] = "@(#)SYNTAX - $Id: print_st.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
-extern SXBOOLEAN	lecl_read (struct lecl_tables_s *lecl_tables_ptr, char *langname);
-extern SXVOID	lecl_free (struct lecl_tables_s *lecl_tables_ptr);
+extern bool	lecl_read (struct lecl_tables_s *lecl_tables_ptr, char *langname);
+extern void	lecl_free (struct lecl_tables_s *lecl_tables_ptr);
 static transition_matrix_s	*tm;
 static struct action_or_prdct_code_s	*ap;
 static struct S_adrp_s	*ad;

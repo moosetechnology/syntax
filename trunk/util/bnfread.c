@@ -21,7 +21,7 @@
 #include "sxunix.h"
 #include "B_tables.h"
 
-char WHAT_BNFREAD[] = "@(#)SYNTAX - $Id: bnfread.c 3146 2023-05-02 12:21:39Z garavel $" WHAT_DEBUG;
+char WHAT_BNFREAD[] = "@(#)SYNTAX - $Id: bnfread.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 
 #define READ(f,p,l)		\
@@ -32,7 +32,7 @@ char WHAT_BNFREAD[] = "@(#)SYNTAX - $Id: bnfread.c 3146 2023-05-02 12:21:39Z gar
 		goto read_error
 
 
-SXBOOLEAN		bnf_read (B, langname)
+bool		bnf_read (B, langname)
     struct bnf_ag_item		*B;
     char	*langname;
 {
@@ -53,7 +53,7 @@ SXBOOLEAN		bnf_read (B, langname)
 
     if (bt_version != bt_num_version) {
 	fprintf (sxstderr, "tables format has changed : please use the new bnf\n");
-	return (SXFALSE);
+	return (false);
     }
 
     READ (F_bnf, &(B->bnf_modif_time), sizeof (SXINT));
@@ -153,11 +153,11 @@ SXBOOLEAN		bnf_read (B, langname)
     READ (F_bnf, B->NT_STRING = (char*) sxalloc (B->WS_TBL_SIZE.nt_string_length, sizeof (char)), B->WS_TBL_SIZE.
 	 nt_string_length * sizeof (char));
     close (F_bnf);
-    return SXTRUE;
+    return true;
 
 read_error:
     fprintf (sxstderr, "%s: read error on ", ME);
 file_error:
     sxperror (bnf_name);
-    return SXFALSE;
+    return false;
 }

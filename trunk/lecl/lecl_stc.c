@@ -33,7 +33,7 @@
 #include "lecl_ag.h"
 #include "lecl_pcn.h"
 
-char WHAT_LECLSTC[] = "@(#)SYNTAX - $Id: lecl_stc.c 3603 2023-09-23 20:02:36Z garavel $" WHAT_DEBUG;
+char WHAT_LECLSTC[] = "@(#)SYNTAX - $Id: lecl_stc.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 static SXINT	retrieve (SXINT alpha_table_entry,
 			  struct sxsource_coord designator);
@@ -41,45 +41,45 @@ static SXINT	st_octal (char *string);
 static SXINT	node_no, item_no, i, xers, xs, xsl, x_cc_stack, synonym_lgth;
 static SXBA	/* char_max */ *cc_stack /* 1 : max_bucket_no */ ;
 static SXBA	/* char_max */ char_set;
-static SXBOOLEAN	is_class_definition, is_a_predicate_name, is_comments_defined, is_include_defined;
+static bool	is_class_definition, is_a_predicate_name, is_comments_defined, is_include_defined;
 
-SXBOOLEAN		lecl_check_octal_code (SXINT ate, struct sxsource_coord designator, SXINT *val)
+bool		lecl_check_octal_code (SXINT ate, struct sxsource_coord designator, SXINT *val)
 {
     if (ate == 0)
-	return (SXFALSE);
+	return (false);
 
     *val = st_octal (sxstrget (ate));
 
     if (*val <= 255)
-	return (SXTRUE);
+	return (true);
 
     sxerror (designator,
 	     err_titles [2][0] /* error */,
 	     "%sThis internal value cannot exceed 255.",
 	     err_titles [2]+1 /* error */ );
-    return (SXFALSE);
+    return (false);
 }
 
 
 
-static SXBOOLEAN	is_a_son (struct lecl_node *node_ptr,
+static bool	is_a_son (struct lecl_node *node_ptr,
 			  SXINT node_name)
 {
-    /* retourne SXTRUE ssi (au moins) un des fils de "node_ptr" est un noeud de
+    /* retourne true ssi (au moins) un des fils de "node_ptr" est un noeud de
        nom "node_name". */
     struct lecl_node	*son;
 
     for (son = node_ptr->son; son != NULL; son = son->brother) {
 	if (son->name == node_name)
-	    return SXTRUE;
+	    return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
 
-static SXBOOLEAN	check_environments (struct lecl_node *node_ptr,
+static bool	check_environments (struct lecl_node *node_ptr,
 				    SXINT name)
 {
     struct lecl_node	*son;
@@ -90,7 +90,7 @@ static SXBOOLEAN	check_environments (struct lecl_node *node_ptr,
 	case POST_ACTION_n:
 	case PRIORITY_KIND_S_n:
 	    if (son->name == name)
-		return SXFALSE;
+		return false;
 
 	    break;
 
@@ -99,7 +99,7 @@ static SXBOOLEAN	check_environments (struct lecl_node *node_ptr,
 	case UNBOUNDED_CONTEXT_n:
 	case UNBOUNDED_RESTRICTED_CONTEXT_n:
 	    if (name == CONTEXT_n)
-		return SXFALSE;
+		return false;
 
 	    break;
 
@@ -108,12 +108,12 @@ static SXBOOLEAN	check_environments (struct lecl_node *node_ptr,
 	}
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
 
-static SXBOOLEAN	check_component (struct lecl_node *node_ptr,
+static bool	check_component (struct lecl_node *node_ptr,
 				 SXINT *val)
 {
     SXINT		alpha, class_no;
@@ -121,7 +121,7 @@ static SXBOOLEAN	check_component (struct lecl_node *node_ptr,
     alpha = node_ptr->token.string_table_entry;
 
     if (alpha == 0)
-	return (SXFALSE);
+	return (false);
 
     if (node_ptr->name == OCTAL_CODE_n)
 	return (lecl_check_octal_code (node_ptr->token.string_table_entry, node_ptr->token.source_index, val));
@@ -134,7 +134,7 @@ static SXBOOLEAN	check_component (struct lecl_node *node_ptr,
 		     err_titles [2][0] /* error */,
 		     "%sIllegal occurrence of an abbreviation name.",
 		     err_titles [2]+1 /* error */ );
-	    return (SXFALSE);
+	    return (false);
 	}
 
 	if (sxba_cardinal (class_to_char_set [class_no]) != 1) {
@@ -142,11 +142,11 @@ static SXBOOLEAN	check_component (struct lecl_node *node_ptr,
 		     err_titles [2][0] /* error */ ,
 		     "%sThis class name must reference a single character set.",
 		     err_titles [2]+1 /* error */ );
-	    return (SXFALSE);
+	    return (false);
 	}
 
 	*val = sxba_scan (class_to_char_set [class_no], 0) - 1;
-	return (SXTRUE);
+	return (true);
     }
     else {
 	char	*s;
@@ -157,42 +157,42 @@ static SXBOOLEAN	check_component (struct lecl_node *node_ptr,
 	if (sxstrlen (alpha) == 3) {
 	    s = sxstrget (alpha);
 	    *val = ((unsigned char)*++s);
-	    return (SXTRUE);
+	    return (true);
 	}
 
 	sxerror (node_ptr->token.source_index,
 		 err_titles [2][0] /* error */,
 		 "%sOnly a single character set is allowed as component of a slice.",
 		 err_titles [2]+1 /* error */ );
-	return (SXFALSE);
+	return (false);
     }
 }
 
 
 
-static SXBOOLEAN	st_check_slice (struct lecl_node *ptr1, 
+static bool	st_check_slice (struct lecl_node *ptr1, 
 				struct lecl_node *ptr2, 
 				SXINT *bi, 
 				SXINT *bs)
 {
     if (!check_component (ptr1, bi) || !check_component (ptr2, bs))
-	return (SXFALSE);
+	return (false);
 
     if (*bs >= *bi)
-	return (SXTRUE);
+	return (true);
 
     sxerror (ptr1->token.source_index,
 	     err_titles [2][0] /* error */,
 	     "%sEmpty slices are not allowed.",
 	     err_titles [2]+1 /* error */ );
-    return (SXFALSE);
+    return (false);
 }
 
 
 
 static SXINT	look_in_table (SXBA look_in_table_char_set, 
 			       SXINT *alpha_table_entry, 
-			       SXBOOLEAN is_not)
+			       bool is_not)
 {
     if (is_not) {
 	char	s [64];
@@ -225,7 +225,7 @@ static SXINT	look_in_table (SXBA look_in_table_char_set,
 static SXINT	define_class_by_name (SXINT alpha_table_entry,
 				      /* struct sxsource_coord designator, */
 				      SXBA val
-				      /* SXBOOLEAN is_not */)
+				      /* bool is_not */)
 {
     SXINT		define_class_by_name_i;
 
@@ -259,20 +259,20 @@ end define_class_by_name */
 
 static SXINT	define_class_by_string (SXINT *alpha_table_entry, 
 					struct sxsource_coord designator, 
-					SXBOOLEAN is_not)
+					bool is_not)
 {
     SXINT 		car, delta;
     char		*string, *new_string, *old_string;
     char			s [259];
     struct sxsource_coord	pos;
-    SXBOOLEAN			is_warning;
+    bool			is_warning;
 
     if (*alpha_table_entry == 0)
 	return (0);
 
     old_string = string = sxstrget (*alpha_table_entry);
     sxba_empty (char_set);
-    is_warning = SXFALSE;
+    is_warning = false;
     delta = 0;
 
     while (*(++string + 1) != SXNUL) {
@@ -281,7 +281,7 @@ static SXINT	define_class_by_string (SXINT *alpha_table_entry,
 	car = ((unsigned char)*string) + 1;
 
 	if (!SXBA_bit_is_reset_set (char_set, car)) {
-	    is_warning = SXTRUE;
+	    is_warning = true;
 	    pos = designator;
 	    pos.column += delta;
 	    sxerror (pos,
@@ -318,7 +318,7 @@ static SXINT	define_class_by_string (SXINT *alpha_table_entry,
 
 static SXINT	define_class_by_octal_code (SXINT *alpha_table_entry, 
 					    struct sxsource_coord designator, 
-					    SXBOOLEAN is_not)
+					    bool is_not)
 {
     SXINT		codofcar;
 
@@ -336,7 +336,7 @@ static SXINT	define_class_by_octal_code (SXINT *alpha_table_entry,
 static SXINT	define_class_by_slice (struct lecl_node *ptr1, 
 				       struct lecl_node *ptr2, 
 				       SXINT *alpha_table_entry, 
-				       SXBOOLEAN is_not)
+				       bool is_not)
 {
     SXINT	define_class_by_slice_i;
     SXINT		bi, bs;
@@ -356,7 +356,7 @@ static SXINT	define_class_by_slice (struct lecl_node *ptr1,
 
 static SXINT	ref_class_by_name (SXINT *alpha_table_entry, 
 				   SXINT class, 
-				   SXBOOLEAN is_not)
+				   bool is_not)
 {
     /* is_not always true */
     sxba_copy (char_set, class_to_char_set [class]);
@@ -401,7 +401,7 @@ static SXINT	commun (SXINT alpha_table_entry,
     ers_disp_ptr->priority_kind = 0;
     ers_disp_ptr->master_token = tok_no;
     ers_disp_ptr->lex_name_source_index = designator;
-    ers_disp_ptr->is_a_user_defined_context = SXFALSE;
+    ers_disp_ptr->is_a_user_defined_context = false;
     ers_disp_ptr->post_action = 0;
     return (current_token_no);
 }
@@ -524,7 +524,7 @@ static SXINT	define_component_name (SXINT token_no, SXINT alpha_table_entry, str
 
 
 
-static SXVOID	finalize_re (SXINT re_no, SXINT finalize_re_item_no, SXBOOLEAN is_abbrev, struct lecl_node *node_ptr)
+static void	finalize_re (SXINT re_no, SXINT finalize_re_item_no, bool is_abbrev, struct lecl_node *node_ptr)
 {
     SXINT		x;
 
@@ -535,7 +535,7 @@ static SXVOID	finalize_re (SXINT re_no, SXINT finalize_re_item_no, SXBOOLEAN is_
 	x--;
 	xers = abbrev [re_no].pront + finalize_re_item_no + 1;
 	abbrev [x].pront = xers;
-	abbrev [x].is_used = SXFALSE;
+	abbrev [x].is_used = false;
     }
     else {
 	ers_disp [re_no].subtree_ptr = node_ptr;
@@ -547,7 +547,7 @@ static SXVOID	finalize_re (SXINT re_no, SXINT finalize_re_item_no, SXBOOLEAN is_
 
 
 
-static SXINT	set_action_or_prdct (SXBOOLEAN is_action, SXINT alpha_table_entry)
+static SXINT	set_action_or_prdct (bool is_action, SXINT alpha_table_entry)
 {
     SXINT		set_action_or_prdct_i, x;
 
@@ -606,7 +606,7 @@ static SXINT	retrieve (SXINT alpha_table_entry,
 
     for (retrieve_i = current_abbrev_no; retrieve_i <= -1; retrieve_i++) {
 	if (abbrev_or_class_to_ate [retrieve_i] == alpha_table_entry) {
-	    abbrev [retrieve_i].is_used = SXTRUE;
+	    abbrev [retrieve_i].is_used = true;
 	    return (retrieve_i);
 	}
     }
@@ -692,7 +692,7 @@ static char	set_priority_kind (char old, char current, struct sxsource_coord des
 
 
 
-static SXVOID	st_put_in_exclude (SXINT name, SXINT component, struct sxsource_coord designator)
+static void	st_put_in_exclude (SXINT name, SXINT component, struct sxsource_coord designator)
 {
     struct exclude_item		*exclude_ptr;
 
@@ -704,33 +704,33 @@ static SXVOID	st_put_in_exclude (SXINT name, SXINT component, struct sxsource_co
 
 
 
-static SXVOID	st_put_in_kw (SXINT t_code)
+static void	st_put_in_kw (SXINT t_code)
 {
     keyword [xkw++] = t_code;
 }
 
 
 
-static SXVOID	st_finalize_exclude (void)
+static void	st_finalize_exclude (void)
 {
     ers_disp [current_token_no + 1].pexcl = xexclude;
 }
 
 
-static SXVOID	st_finalize_kw (void)
+static void	st_finalize_kw (void)
 {
     ers_disp [current_token_no + 1].pkw = xkw;
 }
 
 
 
-static SXVOID	st_finalize_context (SXBOOLEAN is_unbounded, SXBOOLEAN kind)
+static void	st_finalize_context (bool is_unbounded, bool kind)
 {
     struct ers_disp_item	*ers_disp_ptr;
 
     ers_disp_ptr = ers_disp + current_token_no;
     ers_disp_ptr->restricted_context = kind;
-    ers_disp_ptr->is_a_user_defined_context = SXTRUE;
+    ers_disp_ptr->is_a_user_defined_context = true;
     ers_disp_ptr->is_unbounded_context = is_unbounded;
 }
 
@@ -738,8 +738,8 @@ static SXVOID	st_finalize_context (SXBOOLEAN is_unbounded, SXBOOLEAN kind)
 
 static SXINT	predicate_processing (SXINT ate, 
 				      struct sxsource_coord designator, 
-				      SXBOOLEAN is_in_re, 
-				      SXBOOLEAN is_an_abbrev)
+				      bool is_in_re, 
+				      bool is_an_abbrev)
 {
     SXINT		abbrev_no, prdct_no;
 
@@ -772,7 +772,7 @@ static SXINT	predicate_processing (SXINT ate,
     }
     else {
 	/* occurrence d'un prdct systeme ou utilisateur */
-	prdct_no = set_action_or_prdct (SXFALSE, ate);
+	prdct_no = set_action_or_prdct (false, ate);
 	prdct_to_ers [prdct_no] = 0;
 	/* sera rempli dans lecl.symbol_table */
 	return (prdct_no);
@@ -781,8 +781,8 @@ static SXINT	predicate_processing (SXINT ate,
 
 
 
-static SXVOID	st_ced (struct lecl_node *visited,
-			SXBOOLEAN	is_del)
+static void	st_ced (struct lecl_node *visited,
+			bool	is_del)
 {
     /* collect explicit declarations of abbreviations and tokens */
     struct lecl_node	*brother;
@@ -795,9 +795,9 @@ static SXVOID	st_ced (struct lecl_node *visited,
 
     switch (visited->name) {
     case ABBREVIATION_n:
-	st_ced (sxson (visited, 2), SXFALSE);
-	st_ced (sxson (visited, 1), SXFALSE);
-	finalize_re (visited->item_code, item_no, SXTRUE, sxson (visited, 2));
+	st_ced (sxson (visited, 2), false);
+	st_ced (sxson (visited, 1), false);
+	finalize_re (visited->item_code, item_no, true, sxson (visited, 2));
 	return;
 
     case ABBREVIATION_PRDCT_NAME_n:
@@ -847,7 +847,7 @@ list:	for (brother = sxson (visited, 1); brother != NULL; brother = get_brother 
     case UPPER_TO_LOWER_n:
 	visited->node_no = ++node_no;
 	visited->i_item_no = item_no;
-	visited->item_code = set_action_or_prdct (SXTRUE, visited->token.string_table_entry);
+	visited->item_code = set_action_or_prdct (true, visited->token.string_table_entry);
 	visited->d_item_no = item_no;
 	return;
 
@@ -866,13 +866,13 @@ list:	for (brother = sxson (visited, 1); brother != NULL; brother = get_brother 
 
     case CLASS_n:
 	x_cc_stack = 0;
-	st_ced (sxson (visited, 2), SXFALSE);
-	st_ced (sxson (visited, 1), SXFALSE);
+	st_ced (sxson (visited, 2), false);
+	st_ced (sxson (visited, 1), false);
 	return;
 
     case CLASS_NAME_n:
       visited->item_code = define_class_by_name (visited->token.string_table_entry, /* visited->token.source_index, */
-						 cc_stack [1]/* , SXFALSE */);
+						 cc_stack [1]/* , false */);
 	return;
 
     case COMMENTS_n:
@@ -882,26 +882,26 @@ list:	for (brother = sxson (visited, 1); brother != NULL; brother = get_brother 
 		     "%sIllegal redefinition of \"Comments\".",
 		     err_titles [2]+1 /* error */ );
 	else
-	    is_comments_defined = SXTRUE;
+	    is_comments_defined = true;
 
 	get_father (visited)->item_code = comments_re_no = define_lex_name (t_to_ate [0], visited->token.source_index);
 	return;
 
     case COMPONENT_n:
 	visited->item_code = get_father (visited)->item_code;
-	st_ced (sxson (visited, 1), SXFALSE);
+	st_ced (sxson (visited, 1), false);
 	/* environment_s sera visite depuis component_def */
 	return;
 
     case COMPONENTS_S_n:
 	visited->item_code = get_father (visited)->item_code;
-	finalize_re (visited->item_code, (SXINT)-1, SXFALSE, (struct lecl_node *)NULL);
+	finalize_re (visited->item_code, (SXINT)-1, false, (struct lecl_node *)NULL);
 	goto list;
 
     case COMPONENT_DEF_n:
 	visited->item_code = get_father (visited)->item_code;
 	brother = sxson (visited, 1);
-	st_ced (brother, SXFALSE);
+	st_ced (brother, false);
 
 	/* Les composants "heritent" des specifs d'environnement du "master" si
 	   la specif existe ds le "master" et n'est pas redefinie dans le composant. */
@@ -944,12 +944,12 @@ list:	for (brother = sxson (visited, 1); brother != NULL; brother = get_brother 
 	    }
 	}
 
-	st_ced (get_brother (visited), SXFALSE);
+	st_ced (get_brother (visited), false);
 	/* environment_s */
 	st_finalize_exclude ();
 	st_finalize_kw ();
 	brother = get_brother (brother);
-	st_ced (brother, SXFALSE);
+	st_ced (brother, false);
 	return;
 
     case COMPONENT_NAME_DEF_n:
@@ -986,9 +986,9 @@ list:	for (brother = sxson (visited, 1); brother != NULL; brother = get_brother 
     case UNBOUNDED_RESTRICTED_CONTEXT_n:
 	if (check_environments (visited, CONTEXT_n)) {
 	    xexclude = ers_disp [current_token_no].pexcl;
-	    st_ced (sxson (visited, 1), SXFALSE);
-	    st_finalize_context ((SXBOOLEAN) (visited->name == UNBOUNDED_CONTEXT_n || visited->name == UNBOUNDED_RESTRICTED_CONTEXT_n),
-				 (SXBOOLEAN) (visited->name == RESTRICTED_CONTEXT_n || visited->name == UNBOUNDED_RESTRICTED_CONTEXT_n));
+	    st_ced (sxson (visited, 1), false);
+	    st_finalize_context ((bool) (visited->name == UNBOUNDED_CONTEXT_n || visited->name == UNBOUNDED_RESTRICTED_CONTEXT_n),
+				 (bool) (visited->name == RESTRICTED_CONTEXT_n || visited->name == UNBOUNDED_RESTRICTED_CONTEXT_n));
 	}
 	else
 	    sxerror (visited->token.source_index,
@@ -1009,7 +1009,7 @@ list:	for (brother = sxson (visited, 1); brother != NULL; brother = get_brother 
     case ERASE_n:
 	visited->node_no = ++node_no;
 	visited->i_item_no = item_no;
-	st_ced (sxson (visited, 1), SXTRUE);
+	st_ced (sxson (visited, 1), true);
 	visited->d_item_no = item_no;
 	return;
 
@@ -1017,7 +1017,7 @@ list:	for (brother = sxson (visited, 1); brother != NULL; brother = get_brother 
 
 /* Pour positionner correctement item_code */
 
-	st_ced (get_brother (sxson (visited, 1)), SXFALSE);
+	st_ced (get_brother (sxson (visited, 1)), false);
 #if defined (__GNUC__) && (__GNUC__ - 0 >= 7)
 	/* absence de "break" (probablement intentionnelle) */
 	__attribute__ ((fallthrough));
@@ -1045,7 +1045,7 @@ list:	for (brother = sxson (visited, 1); brother != NULL; brother = get_brother 
 			 "%sThe operator \"^\" cannot be applied to abbreviations.",
 			 err_titles [2]+1 /* error */ );
 	    else
-		st_ced_i = ref_class_by_name (&(visited->token.string_table_entry), st_ced_i, SXTRUE);
+		st_ced_i = ref_class_by_name (&(visited->token.string_table_entry), st_ced_i, true);
 	}
 	visited->item_code = st_ced_i;
 	goto a_leaf;
@@ -1068,7 +1068,7 @@ list:	for (brother = sxson (visited, 1); brother != NULL; brother = get_brother 
 		     "%sIllegal redefinition of \"Include\".",
 		     err_titles [2]+1 /* error */ );
 	else {
-	    is_include_defined = SXTRUE;
+	    is_include_defined = true;
 	    visited->token.string_table_entry = sxstrsave ("Include");
 	    ate_to_t [visited->token.string_table_entry] = 0;
 	}
@@ -1086,19 +1086,19 @@ list:	for (brother = sxson (visited, 1); brother != NULL; brother = get_brother 
     case IS_RESET_n:
     case IS_SET_n:
     case PREDICATE_NO_n:
-	is_a_predicate_name = SXFALSE;
+	is_a_predicate_name = false;
 
 predicate:
 	if (get_father (visited)->name != EXTENDED_CLASS_REF_n) {
 	    visited->node_no = ++node_no;
 	    visited->i_item_no = item_no;
 	    visited->item_code = predicate_processing (visited->token.string_table_entry, visited->token.source_index,
-		 SXFALSE, is_a_predicate_name);
+		 false, is_a_predicate_name);
 	    visited->d_item_no = item_no = wa_set_d_item_no (visited->i_item_no, visited->item_code);
 	}
 	else
 	    visited->item_code = predicate_processing (visited->token.string_table_entry, visited->token.source_index,
-		 SXTRUE, is_a_predicate_name);
+		 true, is_a_predicate_name);
 
 	return;
 
@@ -1120,7 +1120,7 @@ predicate:
 	if (check_environments (visited, KEYWORDS_SPEC_n)) {
 	    struct ers_disp_item	*p1 = ers_disp + current_token_no;
 
-	    p1->is_keywords_spec = SXTRUE;
+	    p1->is_keywords_spec = true;
 	    p1->kw_kind = 0; /* Ca peut etre un "COMPONENT" qui a herite de
 				l'environnement global. */
 
@@ -1134,7 +1134,7 @@ predicate:
 
 	    if (p1->kw_kind & KW_LIST_) {
 		xkw = p1->pkw;
-		st_ced (brother, SXFALSE);
+		st_ced (brother, false);
 	    }
 	}
 	else
@@ -1153,21 +1153,21 @@ predicate:
 
     case MINUS_n:
 	brother = sxson (visited, 1);
-	st_ced (brother, SXFALSE);
-	st_ced (get_brother (brother), SXFALSE);
+	st_ced (brother, false);
+	st_ced (get_brother (brother), false);
 	x_cc_stack--;
 	sxba_minus (cc_stack [x_cc_stack], cc_stack [x_cc_stack + 1]);
 	return;
 
     case OCTAL_CODE_n:
 	visited->item_code = define_class_by_octal_code (&(visited->token.string_table_entry), visited->token.
-							 source_index, (SXBOOLEAN) (get_father (visited)->name == NOT_n));
+							 source_index, (bool) (get_father (visited)->name == NOT_n));
 	goto a_leaf;
 
     case PLUS_n:
 	brother = sxson (visited, 1);
-	st_ced (brother, SXFALSE);
-	st_ced (get_brother (brother), SXFALSE);
+	st_ced (brother, false);
+	st_ced (get_brother (brother), false);
 	x_cc_stack--;
 	sxba_or (cc_stack [x_cc_stack], cc_stack [x_cc_stack + 1]);
 	return;
@@ -1180,7 +1180,7 @@ predicate:
 		     err_titles [1]+1 /* warning */ );
 	else if (check_environments (visited, POST_ACTION_n)) {
 	    post_action_no++;
-	    ers_disp [current_token_no].post_action = set_action_or_prdct (SXTRUE, visited->token.string_table_entry);
+	    ers_disp [current_token_no].post_action = set_action_or_prdct (true, visited->token.string_table_entry);
 	}
 	else
 	    sxerror (visited->token.source_index,
@@ -1195,7 +1195,7 @@ predicate:
 	item_no = 1;
 	visited->node_no = 1;
 	visited->i_item_no = 1;
-	st_ced (sxson (visited, 1), SXFALSE);
+	st_ced (sxson (visited, 1), false);
 	visited->d_item_no = item_no;
 	max_node_no_in_re = max_node_no_in_re < node_no ? node_no : max_node_no_in_re;
 	max_re_lgth = max_re_lgth < item_no + 2 ? item_no + 2 : max_re_lgth;
@@ -1205,12 +1205,12 @@ predicate:
 	/* traite comme is_erased */
 	visited->node_no = ++node_no;
 	visited->i_item_no = item_no;
-	st_ced (sxson (visited, 1), SXTRUE);
+	st_ced (sxson (visited, 1), true);
 	visited->d_item_no = item_no;
 	return;
 
     case PREDICATE_NAME_n:
-	is_a_predicate_name = SXTRUE;
+	is_a_predicate_name = true;
 	goto predicate;
 
     case PRIORITY_KIND_S_n:
@@ -1229,9 +1229,9 @@ predicate:
 
 	brother = sxson (visited, 1);
 	/*  classes */
-	is_class_definition = SXTRUE;
+	is_class_definition = true;
 	st_ced (brother, is_del);
-	is_class_definition = SXFALSE;
+	is_class_definition = false;
 	xers = 1;
 	/* au cas ou il n'y a pas d'abrev */
 
@@ -1272,7 +1272,7 @@ predicate:
 
 	ers_size = xers + terlis_lgth + termax /* gap entre les E.R. */	 + synonym_lgth;
 
-	st_ced (get_brother (brother), SXFALSE);
+	st_ced (get_brother (brother), false);
 	/* REPR_SPEC_s */
 	sxbm_free (cc_stack);
 	return;
@@ -1297,11 +1297,11 @@ predicate:
 
 	visited->node_no = 1;
 	visited->i_item_no = 1;
-	st_ced (sxson (visited, 1), SXFALSE);
+	st_ced (sxson (visited, 1), false);
 	visited->d_item_no = item_no;
 
 	if (get_father (visited)->name != ABBREVIATION_n)
-	    finalize_re (get_father (visited)->item_code, item_no, SXFALSE, visited);
+	    finalize_re (get_father (visited)->item_code, item_no, false, visited);
 
 	max_node_no_in_re = max_node_no_in_re < node_no ? node_no : max_node_no_in_re;
 	max_re_lgth = max_re_lgth < item_no + 2 ? item_no + 2 : max_re_lgth;
@@ -1314,12 +1314,12 @@ predicate:
 
     case SLICE_n:
 	visited->item_code = define_class_by_slice (sxson (visited, 1), sxson (visited, 2),
-						    &(visited->token.string_table_entry), (SXBOOLEAN) (get_father (visited)->name == NOT_n));
+						    &(visited->token.string_table_entry), (bool) (get_father (visited)->name == NOT_n));
 	goto a_leaf;
 
     case STRING_n:
 	visited->item_code = define_class_by_string (&(visited->token.string_table_entry), visited->token.source_index,
-						     (SXBOOLEAN) (get_father (visited)->name == NOT_n));
+						     (bool) (get_father (visited)->name == NOT_n));
 	goto a_leaf;
 
     case SYNONYM_S_n:
@@ -1330,19 +1330,19 @@ predicate:
 	goto list;
 
     case TOKEN_n:
-	st_ced (sxson (visited, 1), SXFALSE);
+	st_ced (sxson (visited, 1), false);
 	/* environment_s sera visite depuis token_def */
 	return;
 
     case TOKEN_DEF_n:
 	brother = sxson (visited, 1);
-	st_ced (brother, SXFALSE);
-	st_ced (get_brother (visited), SXFALSE);
+	st_ced (brother, false);
+	st_ced (get_brother (visited), false);
 	/* environment_s */
 	st_finalize_exclude ();
 	st_finalize_kw ();
 	brother = get_brother (brother);
-	st_ced (brother, SXFALSE);
+	st_ced (brother, false);
 	return;
 
     case ZOMBIE_NAME_n :
@@ -1390,7 +1390,7 @@ a_leaf:
 
 
 
-SXVOID	lecl_ced (struct lecl_node *visited)
+void	lecl_ced (struct lecl_node *visited)
 {
     /* This entrypoint processes the first pass on Abbreviations and Tokens
    It computes:
@@ -1402,8 +1402,8 @@ SXVOID	lecl_ced (struct lecl_node *visited)
    - ers_size
 */
     synonym_lgth = 0;
-    is_include_defined = is_comments_defined = SXFALSE;
+    is_include_defined = is_comments_defined = false;
     char_set = sxba_calloc (char_max + 1);
-    st_ced (visited, SXFALSE);
+    st_ced (visited, false);
     sxfree (char_set);
 }

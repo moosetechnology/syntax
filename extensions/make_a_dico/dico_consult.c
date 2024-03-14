@@ -70,7 +70,7 @@ static char l[MAX_LINE_LENGTH], sentence[MAX_LINE_LENGTH], *line;
 static SXINT id, lgth;
 extern char *t2string[];
 
-static SXVOID
+static void
 dico_consult (void)
 {
   char *c;
@@ -86,7 +86,7 @@ dico_consult (void)
   }
 }
 
-static SXVOID
+static void
 dico_consult_run (char *pathname)
 {
   
@@ -118,7 +118,7 @@ main (int argc, char *argv[])
     {
       /* Tous les arguments sont des noms de fichiers, "-" signifiant stdin */
       int	argnum;
-      SXBOOLEAN   has_unknown_arg = SXFALSE;
+      bool   has_unknown_arg = false;
 
       for (argnum = 1; argnum < argc; argnum++) {
 	switch (option_get_kind (argv [argnum])) {
@@ -128,7 +128,7 @@ main (int argc, char *argv[])
 	  return EXIT_SUCCESS;	  
 
 	case UNKNOWN_ARG:
-	  has_unknown_arg = SXTRUE;
+	  has_unknown_arg = true;
 
 	  if (argnum+1 == argc && argv [argnum] [0] == '-' && argv [argnum] [1] == '\0') {
 	    dico_consult_run (NULL);

@@ -21,13 +21,13 @@
 #include "sxunix.h"
 #include "put_edit.h"
 
-char WHAT_TDEFMAIN[] = "@(#)SYNTAX - $Id: tdef_main.c 3595 2023-09-18 10:32:54Z garavel $" WHAT_DEBUG;
+char WHAT_TDEFMAIN[] = "@(#)SYNTAX - $Id: tdef_main.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 char	by_mess [] = "the SYNTAX \"terminal symbol to #define\" translator TDEF";
 
 extern struct sxtables	tdef_tables;
 SXINT	options_set;
-SXBOOLEAN		is_source, is_c;
+bool		is_source, is_c;
 char	*prgentname;
 
 /*---------------*/
@@ -91,7 +91,7 @@ static char	*option_get_text (SXINT kind)
 
 
 
-static SXVOID	extract_language_name (char *path_name)
+static void	extract_language_name (char *path_name)
 {
     char	*p;
 
@@ -109,7 +109,7 @@ static SXVOID	extract_language_name (char *path_name)
 
 
 
-static SXVOID	tdef_run (char *pathname)
+static void	tdef_run (char *pathname)
 {
     FILE	*infile;
 
@@ -178,31 +178,31 @@ int main (int argc, char *argv[])
   /* valeurs par defaut */
 
   options_set = OPTION (VERBOSE) | OPTION (SOURCE);
-  is_source = SXTRUE;
-  is_c = SXTRUE;
+  is_source = true;
+  is_c = true;
 
   /* Decodage des options */
 
   for (argnum = 1; argnum < argc; argnum++) {
     switch (option_get_kind (argv [argnum])) {
     case VERBOSE:
-      sxverbosep = SXTRUE, options_set |= OPTION (VERBOSE);
+      sxverbosep = true, options_set |= OPTION (VERBOSE);
       break;
 
     case -VERBOSE:
-      sxverbosep = SXFALSE, options_set &= noOPTION (VERBOSE);
+      sxverbosep = false, options_set &= noOPTION (VERBOSE);
       break;
 
     case SOURCE:
-      is_source = SXTRUE, options_set |= OPTION (SOURCE);
+      is_source = true, options_set |= OPTION (SOURCE);
       break;
 
     case -SOURCE:
-      is_source = SXFALSE, options_set &= noOPTION (SOURCE);
+      is_source = false, options_set &= noOPTION (SOURCE);
       break;
 
     case C:
-      is_c = SXTRUE, options_set |= OPTION (C);
+      is_c = true, options_set |= OPTION (C);
       break;
 
     case LANGUAGE_NAME:
@@ -248,7 +248,7 @@ int main (int argc, char *argv[])
     fprintf (sxtty, "%s\n", release_mess);
   }
 
-  syntax (SXINIT, &tdef_tables, SXFALSE /* no includes */);
+  syntax (SXINIT, &tdef_tables, false /* no includes */);
 
   if (options_set & OPTION (LANGUAGE_NAME)) {
     tdef_run ((char*)NULL);
@@ -264,7 +264,7 @@ int main (int argc, char *argv[])
     } while (argnum < argc);
   }
 
-  syntax (SXFINAL, &tdef_tables, SXTRUE);
+  syntax (SXFINAL, &tdef_tables, true);
 
   sxexit (sxerr_max_severity ());
   return EXIT_SUCCESS; /* Jamais atteint !! pour les compilo susceptibles ... */
@@ -275,14 +275,14 @@ int main (int argc, char *argv[])
 char	*options_text (char *line)
 {
     SXINT	i;
-    SXBOOLEAN	is_first = SXTRUE;
+    bool	is_first = true;
 
     *line = SXNUL;
 
     for (i = 1; i <= LAST_OPTION; i++)
 	if (options_set & OPTION (i)) {
 	    if (is_first)
-		is_first = SXFALSE;
+		is_first = false;
 	    else
 		strcat (line, ", ");
 

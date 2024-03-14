@@ -7,10 +7,10 @@ BOOT=$(LECL)/boot
 
 CC=$(COMPILER) -I$(LECL) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
-all: $(SX)/bin/lecl.out				\
+all: $(SXBIN)/lecl.out				\
      $(SXAUX)/print_st.out
 
-$(SX)/bin/lecl.out:	$(LECL)/lecl.out
+$(SXBIN)/lecl.out:	$(LECL)/lecl.out
 	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
 NEEDS=		$(LIB)/gen_check_kw.o		\
@@ -242,4 +242,7 @@ lecl_td.h: lecl.bt lecl.tdef
 
 clean:
 	/bin/rm -f $(LIB)/*.o $(LECL)/lecl.out $(SXAUX)/print_st.out
+	/bin/rm -f lecl.att lecl.bt lecl.pt lecl.rt lecl.st
+	/bin/rm -f lecl.bn.l lecl.lc.l lecl.rc.l lecl.td.l
+	/bin/rm -f lecl.c.skeleton lecl_t.c lecl_td.h
 

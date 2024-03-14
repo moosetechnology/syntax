@@ -22,15 +22,15 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_F77MAIN[] = "@(#)SYNTAX - $Id: f77_main.c 3538 2023-08-25 07:37:12Z garavel $";
+char WHAT_F77MAIN[] = "@(#)SYNTAX - $Id: f77_main.c 3633 2023-12-20 18:41:19Z garavel $";
 
-SXBOOLEAN is_ansi, is_json, is_indent, is_pretty_printer, is_input_free_fortran;
+bool is_ansi, is_json, is_indent, is_pretty_printer, is_input_free_fortran;
 
 /* On est dans un cas "mono-langage": */
 
 extern struct sxtables	f77_tables;
 
-extern SXVOID f77_src_mngr (SXINT what, FILE *infile, char *file_name);
+extern void f77_src_mngr (SXINT what, FILE *infile, char *file_name);
 
 /*---------------*/
 /*    options    */
@@ -88,53 +88,53 @@ int main (int argc, char *argv[])
 
     /* valeurs par defaut */
 
-    is_json = SXFALSE;
-    is_indent = SXTRUE; /* indent the generated JSON code */
-    is_pretty_printer = SXFALSE; /* always false for f77 */
-    sxverbosep = SXFALSE;
-    is_ansi = SXFALSE;
-    is_input_free_fortran = SXFALSE;
+    is_json = false;
+    is_indent = true; /* indent the generated JSON code */
+    is_pretty_printer = false; /* always false for f77 */
+    sxverbosep = false;
+    is_ansi = false;
+    is_input_free_fortran = false;
 
     for (argnum = 1; argnum < argc; argnum++) {
 	switch (option_get_kind (argv [argnum])) {
 	case VERBOSE:
-	    sxverbosep = SXTRUE;
+	    sxverbosep = true;
 	    break;
 
 	case -VERBOSE:
-	    sxverbosep = SXFALSE;
+	    sxverbosep = false;
 	    break;
 
 	case ANSI:
-	    is_ansi = SXTRUE;
+	    is_ansi = true;
 	    break;
 
 	case -ANSI:
-	    is_ansi = SXFALSE;
+	    is_ansi = false;
 	    break;
 
 	case JSON:
-	    is_json = SXTRUE;
+	    is_json = true;
 	    break;
 
 	case -JSON:
-	    is_json = SXFALSE;
+	    is_json = false;
 	    break;
 
 	case INDENT:
-	    is_indent = SXTRUE;
+	    is_indent = true;
 	    break;
 
 	case -INDENT:
-	    is_indent = SXFALSE;
+	    is_indent = false;
 	    break;
 
 	case INPUT_FREE_FORTRAN:
-	    is_input_free_fortran = SXTRUE;
+	    is_input_free_fortran = true;
 	    break;
 
 	case -INPUT_FREE_FORTRAN:
-	    is_input_free_fortran = SXFALSE;
+	    is_input_free_fortran = false;
 	    break;
 
 	case UNKNOWN_ARG:
@@ -148,7 +148,7 @@ int main (int argc, char *argv[])
     }
 
  run:
-    if (is_json == SXTRUE && is_indent == SXTRUE) {
+    if (is_json == true && is_indent == true) {
        json_indent_command = "awk '\
 			BEGIN { TAB = 0 } \
 			function TABULATE() { \
@@ -163,7 +163,7 @@ int main (int argc, char *argv[])
 			{ TABULATE(); print $0 }'";
     }
 
-    syntax (SXINIT, &f77_tables, SXFALSE /* no includes */);
+    syntax (SXINIT, &f77_tables, false /* no includes */);
 
     if (argnum == argc) {
 	/* Pas de fichier source, on lit sur stdin */
@@ -242,7 +242,7 @@ int main (int argc, char *argv[])
 	}
     }
 
-    syntax (SXFINAL, &f77_tables, SXTRUE);
+    syntax (SXFINAL, &f77_tables, true);
 
     sxexit (sxerr_max_severity ());
     return 0;

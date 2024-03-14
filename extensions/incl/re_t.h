@@ -165,7 +165,7 @@ static char *err_titles[SXSEVERITIES]={
 "\002Error:\t",
 };
 static char abstract []= "%ld warnings and %ld errors are reported.";
-extern SXBOOLEAN sxprecovery (SXINT what_to_do, SXINT *at_state, SXINT latok_no);
+extern bool sxprecovery (SXINT what_to_do, SXINT *at_state, SXINT latok_no);
 
 static unsigned char S_char_to_simple_class[]={
 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
@@ -280,7 +280,7 @@ static char *S_global_mess[]={0,
 "%sScanning stops on End Of File.",
 };
 extern SXINT sxscan_it(void);
-extern SXBOOLEAN sxsrecovery (SXINT sxsrecovery_what, SXINT state_no, unsigned char *class);
+extern bool sxsrecovery (SXINT sxsrecovery_what, SXINT state_no, unsigned char *class);
 static struct SXT_node_info SXT_node_info[]={{0,0},
 {6,1},{0,3},{0,4},{0,5},{2,7},{0,9},{0,10},{0,11},{8,13},{0,15},{4,16},{3,17},
 {5,18},{0,19},{0,20},{11,21},{9,22},{0,24},};

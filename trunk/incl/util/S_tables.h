@@ -38,7 +38,7 @@ struct S_tbl_size_s {
 		S_xprod, 
 		S_counters_size;
 	
-	SXBOOLEAN S_are_comments_erased,
+	bool S_are_comments_erased,
 		S_is_user_action_or_prdct,
 		S_is_non_deterministic;
 	};
@@ -49,7 +49,7 @@ struct action_or_prdct_code_s {
 	SXINT	action_or_prdct_no,
 		param;
 
-	SXBOOLEAN	is_system;
+	bool	is_system;
 	char	kind;
 	};
 

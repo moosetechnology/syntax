@@ -21,9 +21,9 @@
 
 
 static SXBA			rcvr_item_set, rcvr_kernel_item_set, rcvr_t_set;
-static SXBOOLEAN			is_recursive_call;
+static bool			is_recursive_call;
 static struct sxsource_coord	error_source_index;
-static SXBOOLEAN			*is_an_S_rule, *is_an_X_rule;
+static bool			*is_an_S_rule, *is_an_X_rule;
 static struct recognize_item	empty_RT, save_RT, save_RTj;
 #if is_parser
 static struct parse_item	empty_PT, save_PT, save_PTj;
@@ -41,7 +41,7 @@ sxp_rcvr_filter (iRT, lbot, ltop)
     SXINT 			a, l, jRT, item, t, k, k_max, d;
     struct recognize_item	*RTj;
     SXINT				*top_ptr, *bot_ptr;
-    SXBOOLEAN			must_go_on, checked;
+    bool			must_go_on, checked;
 
     if (rcvr_t_set == NULL) {
 	rcvr_t_set = sxba_calloc (-tmax+1);
@@ -99,8 +99,8 @@ sxp_rcvr_filter (iRT, lbot, ltop)
 
 		item_set_i2 = t2item_set [t];
 
-		must_go_on = SXTRUE;
-		checked = SXFALSE;
+		must_go_on = true;
+		checked = false;
 		d = 1;
 		k_max = 0;
 
@@ -111,8 +111,8 @@ sxp_rcvr_filter (iRT, lbot, ltop)
 
 			/* La table T[jRT+d] est non vide et lter[l+d-1] est valide */
 			if (l+d-1 == ltop) {
-			    must_go_on = SXFALSE;
-			    checked = SXTRUE;
+			    must_go_on = false;
+			    checked = true;
 			}
 
 			if (must_go_on) {
@@ -167,7 +167,7 @@ sxp_rcvr_filter (iRT, lbot, ltop)
     }
 }
 
-static SXBOOLEAN
+static bool
 local_correction (k)
     SXINT k;
 {
@@ -178,7 +178,7 @@ local_correction (k)
        "0 ... " sont utilisables. */
     SXINT		        *regle;
     SXINT			i, j, l, lregle, v, h, d, k_max, x, t, iRT, lbot, ister_eof, ltop;
-    SXBOOLEAN		checked = SXFALSE, must_go_on, has_eof, reject_rule;
+    bool		checked = false, must_go_on, has_eof, reject_rule;
     struct sxtoken	*p;
 
     /* On remplit sxplocals.rcvr.ster avec les terminaux source :
@@ -214,8 +214,8 @@ local_correction (k)
 		l = -1;
 		j = 0;
 		ltop = -1;
-		has_eof = SXFALSE;
-		reject_rule = SXFALSE;
+		has_eof = false;
+		reject_rule = false;
 
 		while (++j <= lregle) {
 		    if ((v = regle [j]) < 0) {
@@ -232,12 +232,12 @@ local_correction (k)
 				/* C'est la premiere fois qu'on rencontre eof. */
 				if (v != ister_eof) {
 				    /* Ca doit etre le 1er eof de la chaine source */
-				    reject_rule = SXTRUE;
+				    reject_rule = true;
 				    break;
 				}
 
 				ltop = l;
-				has_eof = SXTRUE;
+				has_eof = true;
 			    }
 			}
 		    }
@@ -287,7 +287,7 @@ local_correction (k)
 		T2_shift_NT_hd = &(RT [iRT].shift_NT_hd [0]);
 		T2_items_stack = &(RT [iRT].items_stack [0]);
 
-		must_go_on = SXTRUE;
+		must_go_on = true;
 
 		d = 1;
 		k_max = 0;
@@ -299,8 +299,8 @@ local_correction (k)
 
 			/* La table T[iRT+d] est non vide et lter[lbot+d-1] est valide */
 			if (lbot+d-1 == ltop) {
-			    must_go_on = SXFALSE;
-			    checked = SXTRUE;
+			    must_go_on = false;
+			    checked = true;
 			    sxplocals.atok_no = iRT+d-1; /* on fera complete (iRT+d) */
 			}
 
@@ -331,7 +331,7 @@ local_correction (k)
 	char			*msg_params [5];
 	struct recognize_item	*pRT;
 	SXINT			im, ll, item, t;
-	SXBOOLEAN			is_warning = SXTRUE;
+	bool			is_warning = true;
 
 	if (is_an_X_rule [sxplocals.rcvr.nomod])
 	    sxp_rcvr_filter (iRT, lbot, ltop);
@@ -363,7 +363,7 @@ local_correction (k)
 		msg_params [j] = sxttext (sxplocals.sxtables, t);
 
 		if (sxgenericp (sxplocals.sxtables, t))
-		    is_warning = SXFALSE;
+		    is_warning = false;
 	    }
 	}
 
@@ -488,7 +488,7 @@ local_correction (k)
 
 
 
-static SXBOOLEAN
+static bool
 sxp_rcvr_try_table (k, l)
     SXINT k, l;
 {
@@ -513,7 +513,7 @@ sxp_rcvr_try_table (k, l)
     T2_index_sets = &(RT [l].index_sets [0]);
     T2_non_kernel_item_set = non_kernel_item_sets [l];
 
-    T2_has_non_kernel = SXFALSE;
+    T2_has_non_kernel = false;
 
      /* rcvr_kernel_item_set = {A -> \alpha . \beta | \alpha != \epsilon et \beta != \epsilon} */
     /* Ce calcul peut etre statique */
@@ -572,7 +572,7 @@ sxp_rcvr_try_table (k, l)
 			*ptr2 = &(T2_items_stack [rhs_nt2where [YY]]);
 
 			if (Y > 0) {
-			    T2_has_non_kernel = SXTRUE;
+			    T2_has_non_kernel = true;
 			    sxba_or (T2_non_kernel_item_set, nt2item_set [Y]);
 			}
 		    }
@@ -678,7 +678,7 @@ sxp_error_recovery (k)
 
 
 
-SXBOOLEAN
+bool
 sxp_rcvr_earley_lc (what_to_do, i)
     SXINT		what_to_do, i;
 {
@@ -691,16 +691,16 @@ sxp_rcvr_earley_lc (what_to_do, i)
 
     case SXACTION:
 	if (is_recursive_call)
-	    return SXFALSE;
+	    return false;
 
-	is_recursive_call = SXTRUE;
+	is_recursive_call = true;
 
 	if (rcvr_item_set == NULL) {
 	    SXINT 	nomod, l, i, *regle;
 
 	    rcvr_item_set = sxba_calloc (itemmax+1);
-	    is_an_S_rule = (SXBOOLEAN*) sxcalloc (sxplocals.SXP_tables.P_nbcart+1, sizeof (SXBOOLEAN));
-	    is_an_X_rule = (SXBOOLEAN*) sxcalloc (sxplocals.SXP_tables.P_nbcart+1, sizeof (SXBOOLEAN));
+	    is_an_S_rule = (bool*) sxcalloc (sxplocals.SXP_tables.P_nbcart+1, sizeof (bool));
+	    is_an_X_rule = (bool*) sxcalloc (sxplocals.SXP_tables.P_nbcart+1, sizeof (bool));
 
 	    for (nomod = 1; nomod <= sxplocals.SXP_tables.P_nbcart; nomod++) {
 		regle = sxplocals.SXP_tables.P_lregle [nomod];
@@ -710,10 +710,10 @@ sxp_rcvr_earley_lc (what_to_do, i)
 		    if ((v = regle [i]) == -2 /* S */) {
 			if (v == -2)
 			     /* S */
-			    is_an_S_rule [nomod] = SXTRUE;
+			    is_an_S_rule [nomod] = true;
 			else /* v == -1 */
 			    /* X */
-			    is_an_X_rule [nomod] = SXTRUE;
+			    is_an_X_rule [nomod] = true;
 
 			break;
 		    }
@@ -734,8 +734,8 @@ sxp_rcvr_earley_lc (what_to_do, i)
 
 	sxp_error_recovery (i);
 
-	is_recursive_call = SXFALSE;
-	return SXTRUE;
+	is_recursive_call = false;
+	return true;
 
     case SXCLOSE:
 	if (rcvr_item_set != NULL) {
@@ -761,5 +761,5 @@ sxp_rcvr_earley_lc (what_to_do, i)
 	abort ();
     }
 
-    return SXTRUE;
+    return true;
 }

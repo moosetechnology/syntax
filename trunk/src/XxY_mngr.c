@@ -24,7 +24,7 @@ static char	ME [] = "XxY_mngr";
 #include "XxY.h"
 #include <memory.h>
 
-char WHAT_XXY_MNGR[] = "@(#)SYNTAX - $Id: XxY_mngr.c 2947 2023-03-29 17:06:41Z garavel $" WHAT_DEBUG;
+char WHAT_XXY_MNGR[] = "@(#)SYNTAX - $Id: XxY_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 extern void sxtrap (char *caller, char *message);
 extern SXINT  sxlast_bit (SXINT nb);
@@ -260,12 +260,12 @@ void	XxY_alloc (XxY_header *header, char *name, SXINT init_elem_nb, SXINT averag
 	header->lnk_hd [XY_X][0] = 0 /* Permet, si liste vide, de ne pas executer un "foreach". */;
 	header->lnk [XY_X] = (SXINT*) sxalloc (header->size + 1, sizeof (SXINT));
 	header->lnk [XY_X][0] = 0 /* Permet de quitter un "foreach" en positionnant la variable a 0 */;
-	header->X_hd_is_static [XY_X] = SXFALSE;
+	header->X_hd_is_static [XY_X] = false;
     }
     else {
 	header->X_hd [XY_X] = NULL;
 	header->lnk_hd [XY_X] = header->lnk [XY_X] = NULL;
-	header->X_hd_is_static [XY_X] = SXFALSE;
+	header->X_hd_is_static [XY_X] = false;
     }
 
     if (average_Y_assoc != 0) {
@@ -275,12 +275,12 @@ void	XxY_alloc (XxY_header *header, char *name, SXINT init_elem_nb, SXINT averag
 	header->lnk_hd [XY_Y][0] = 0 /* Permet, si liste vide, de ne pas executer un "foreach". */;
 	header->lnk [XY_Y] = (SXINT*) sxalloc (header->size + 1, sizeof (SXINT));
 	header->lnk [XY_Y][0] = 0 /* Permet de quitter un "foreach" en positionnant la variable a 0 */;
-	header->X_hd_is_static [XY_Y] = SXFALSE;
+	header->X_hd_is_static [XY_Y] = false;
     }
     else {
 	header->X_hd [XY_Y] = NULL;
 	header->lnk_hd [XY_Y] = header->lnk [XY_Y] = NULL;
-	header->X_hd_is_static [XY_Y] = SXFALSE;
+	header->X_hd_is_static [XY_Y] = false;
     }
 }
 
@@ -423,11 +423,11 @@ void	XxY_gc (XxY_header *header)
 }
 
 
-SXBOOLEAN	XxY_set (XxY_header *header, SXINT X, SXINT Y, SXINT *ref)
+bool	XxY_set (XxY_header *header, SXINT X, SXINT Y, SXINT *ref)
 {
     /* Si l'element X-Y de la matrice creuse header existe, cette fonction
-       retourne SXTRUE et ref designe cet element, sinon elle cree un nouvel
-       element, ref le designe et elle retourne SXFALSE */
+       retourne true et ref designe cet element, sinon elle cree un nouvel
+       element, ref le designe et elle retourne false */
 
     if (header->is_locked)
 	sxtrap ("XxY_set", header->name);
@@ -484,21 +484,21 @@ void	XxY_unlock (XxY_header *header)
 	    }
 	}
 
-    header->is_locked = SXFALSE;
+    header->is_locked = false;
 }
 
 
-SXBOOLEAN	XxY_set_and_close (XxY_header *header, SXINT X, SXINT Y, SXINT *ref)
+bool	XxY_set_and_close (XxY_header *header, SXINT X, SXINT Y, SXINT *ref)
 {
     /* Si R est une relation binaire, header contient la fermeture transitive
        R+ de R.
        Complete, si necessaire, R+ par ajout de l'element (X, Y).
        Ref designe ce (nouvel) element.
-       Retourne SXTRUE si ref existait deja, SXFALSE sinon. */
+       Retourne true si ref existait deja, false sinon. */
     SXINT	x, y, X1;
 
     if ((*ref = XxY_is_set (header, X, Y)))
-	return SXTRUE;
+	return true;
 
     if (X != Y) {
 	XxY_Yforeach (*header, X, x) {
@@ -520,7 +520,7 @@ SXBOOLEAN	XxY_set_and_close (XxY_header *header, SXINT X, SXINT Y, SXINT *ref)
 }
 
 
-void	XxY_to_SXBM (XxY_header *header, SXBOOLEAN (*get_couple) (SXINT*, SXINT*, SXINT), SXINT couple_nb, X_header *index_hd, SXBA **M)
+void	XxY_to_SXBM (XxY_header *header, bool (*get_couple) (SXINT*, SXINT*, SXINT), SXINT couple_nb, X_header *index_hd, SXBA **M)
 {
     /* Si header est non NULL, il contient une relation binaire R.
        Sinon, on peut obtenir successivement les couples de cette relation
@@ -533,7 +533,7 @@ void	XxY_to_SXBM (XxY_header *header, SXBOOLEAN (*get_couple) (SXINT*, SXINT*, S
     SXINT	x, n, old_n;
     SXINT			X, Y, ind1, ind2;
     SXBA	*bm;
-    SXBOOLEAN 		OK;
+    bool 		OK;
 
     n = 2 * couple_nb + 1;
 
@@ -560,7 +560,7 @@ void	XxY_to_SXBM (XxY_header *header, SXBOOLEAN (*get_couple) (SXINT*, SXINT*, S
 
     for (x = 1; x <= couple_nb; x++) {
 	if (get_couple != NULL) {
-	    OK = SXTRUE;
+	    OK = true;
 	    get_couple (&X, &Y, x);
 	}
 	else if ((OK = !XxY_is_erased (*header, x))) {
@@ -577,29 +577,29 @@ void	XxY_to_SXBM (XxY_header *header, SXBOOLEAN (*get_couple) (SXINT*, SXINT*, S
 }
 
 
-SXBOOLEAN XxY_write (XxY_header *header, sxfiledesc_t F_XxY /* file descriptor */)
+bool XxY_write (XxY_header *header, sxfiledesc_t F_XxY /* file descriptor */)
 {
     size_t      bytes;
     SXINT	kind;
     X_header	*X_hd;
     SXINT	*lnk_hd, *lnk;
-    SXBOOLEAN 	is_X_hd;
+    bool 	is_X_hd;
 
-#define WRITE(p,l)	if ((bytes = (l)) > 0 && ((size_t)write (F_XxY, p, bytes) != bytes)) return SXFALSE
+#define WRITE(p,l)	if ((bytes = (l)) > 0 && ((size_t)write (F_XxY, p, bytes) != bytes)) return false
 
     if (!X_root_write ((X_root_header*)header, F_XxY))
-	return SXFALSE;
+	return false;
 
     WRITE (header->display, sizeof (struct XxY_elem) * (header->top + 1));
 
     for (kind = 0; kind < 2; kind++) {
 	is_X_hd = (X_hd = header->X_hd [kind]) != NULL;
 
-	WRITE (&(is_X_hd), sizeof (SXBOOLEAN));
+	WRITE (&(is_X_hd), sizeof (bool));
 
 	if (is_X_hd) {
 	    if (!X_write (X_hd, F_XxY))
-		return SXFALSE;
+		return false;
 
 	    lnk_hd = header->lnk_hd [kind];
 	    lnk = header->lnk [kind];
@@ -609,19 +609,19 @@ SXBOOLEAN XxY_write (XxY_header *header, sxfiledesc_t F_XxY /* file descriptor *
 	}
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
-SXBOOLEAN XxY_read (XxY_header *header, sxfiledesc_t F_XxY /* file descriptor */, char *name, void (*user_oflw) (SXINT, SXINT), FILE *stat_file)
+bool XxY_read (XxY_header *header, sxfiledesc_t F_XxY /* file descriptor */, char *name, void (*user_oflw) (SXINT, SXINT), FILE *stat_file)
 {
     size_t       bytes;
     SXINT        kind;
     X_header	*X_hd;
     SXINT		*lnk_hd, *lnk;
-    SXBOOLEAN	is_X_hd	;
+    bool	is_X_hd	;
 
-#define READ(p,l)	if ((bytes=(l))>0&&(((size_t)read (F_XxY, p, bytes)) != bytes)) return SXFALSE
+#define READ(p,l)	if ((bytes=(l))>0&&(((size_t)read (F_XxY, p, bytes)) != bytes)) return false
 
     if (X_root_read ((X_root_header*)header, F_XxY)) {
 	header->display = (struct XxY_elem*) sxalloc (header->size + 1, sizeof (struct XxY_elem));
@@ -636,13 +636,13 @@ SXBOOLEAN XxY_read (XxY_header *header, sxfiledesc_t F_XxY /* file descriptor */
 	header->stat_file = stat_file;
 
 	for (kind = 0; kind < 2; kind++) {
-	    READ (&(is_X_hd), sizeof (SXBOOLEAN));
+	    READ (&(is_X_hd), sizeof (bool));
 
 	    if (is_X_hd) {
 		X_hd = header->X_hd [kind] = (X_header*) sxalloc (1, sizeof (X_header));
 
 		if (!X_read (X_hd, F_XxY, name, XxY_assoc_oflw, stat_file))
-		    return SXFALSE;
+		    return false;
 
 		lnk_hd = header->lnk_hd [kind] = (SXINT*) sxalloc (X_hd->size + 1, sizeof (SXINT));
 		lnk = header->lnk [kind] = (SXINT*) sxalloc (header->size + 1, sizeof (SXINT));
@@ -656,13 +656,13 @@ SXBOOLEAN XxY_read (XxY_header *header, sxfiledesc_t F_XxY /* file descriptor */
 		header->lnk [kind] = NULL;
 	    }
 
-	    header->X_hd_is_static [kind] = SXFALSE;
+	    header->X_hd_is_static [kind] = false;
 	}
 
-	return SXTRUE;
+	return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
@@ -691,7 +691,7 @@ void XxY_array_to_c (XxY_header *header, FILE *F_XxY /* named output stream */, 
 
 	    memcpy (sub_name, name, (size_t)i);
 	    sprintf (sub_name + i, "_X_hd_%ld", (SXINT) kind);
-	    X_to_c (X_hd, F_XxY, sub_name, SXTRUE /* is_static */);
+	    X_to_c (X_hd, F_XxY, sub_name, true /* is_static */);
 
 	    /* lnk_hd [kind] */
 	    fprintf (F_XxY, "\n\nstatic SXINT %s_lnk_hd_%ld [%ld] = {", name, (SXINT) kind, (SXINT) X_hd->size + 1);
@@ -725,7 +725,7 @@ void XxY_array_to_c (XxY_header *header, FILE *F_XxY /* named output stream */, 
 void XxY_header_to_c (XxY_header *header, FILE *F_XxY /* named output stream */, char *name)
 {
     SXINT		kind;
-    SXBOOLEAN	B [2];
+    bool	B [2];
 
     X_root_header_to_c ((X_root_header*)header, F_XxY, name);
 
@@ -743,12 +743,12 @@ void XxY_header_to_c (XxY_header *header, FILE *F_XxY /* named output stream */,
     fprintf (F_XxY, "{%s%s, ", B [0] ? name : "NULL", B [0] ? "_lnk_0" : "");
     fprintf (F_XxY, "%s%s}, /* lnk [2] */\n", B [1] ? name : "NULL", B [1] ? "_lnk_1" : "");
 
-    fprintf (F_XxY, "{SXTRUE, SXTRUE} /* X_hd_is_static [2] */\n");
+    fprintf (F_XxY, "{true, true} /* X_hd_is_static [2] */\n");
 
     fprintf (F_XxY, "}");
 }
 
-void XxY_to_c (XxY_header *header, FILE *F_XxY /* named output stream */, char *name, SXBOOLEAN is_static)
+void XxY_to_c (XxY_header *header, FILE *F_XxY /* named output stream */, char *name, bool is_static)
 {
     XxY_array_to_c (header, F_XxY, name);
     fprintf (F_XxY, "\n\n%sXxY_header %s =\n", is_static ? "static " : "", name);

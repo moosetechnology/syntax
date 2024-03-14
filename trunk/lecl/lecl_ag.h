@@ -79,7 +79,7 @@ SX_GLOBAL_VAR_LECL char	**err_titles,
 
 SX_GLOBAL_VAR_LECL SXINT    options_set;
 
-SX_GLOBAL_VAR_LECL SXBOOLEAN	are_comments_defined,
+SX_GLOBAL_VAR_LECL bool	are_comments_defined,
 	are_comments_erased,
 	fsa_done,
 	is_1la,
@@ -164,14 +164,14 @@ SX_GLOBAL_VAR_LECL VARSTR	check_kw;
 struct abbrev_item {
    struct lecl_node *subtree_ptr;
    SXINT pront, prdct_no;
-   SXBOOLEAN is_empty, is_used;
+   bool is_empty, is_used;
    };
 
 
 struct action_or_prdct_code_item {
    transition_matrix_item	stmt;
    SXINT 			        action_or_prdct_no, param;
-   SXBOOLEAN			is_system;
+   bool			is_system;
    char				kind;
    };
 
@@ -181,7 +181,7 @@ struct ers_disp_item {
    struct lecl_node *subtree_ptr;
    SXINT prolon, reduc, pexcl, pkw, component_no, master_token, post_action;
    struct sxsource_coord lex_name_source_index;
-   SXBOOLEAN restricted_context, is_a_user_defined_context, is_unbounded_context, is_keywords_spec;
+   bool restricted_context, is_a_user_defined_context, is_unbounded_context, is_keywords_spec;
    char /* bit(3) */ kw_kind;
    char /* bit(3) */ priority_kind;
    };
@@ -190,7 +190,7 @@ struct ers_disp_item {
 struct ers_item {
    SXINT lispro, prdct_no, prolis;
    struct sxsource_coord liserindx;
-   SXBOOLEAN is_erased;
+   bool is_erased;
    };
 
 
@@ -208,13 +208,13 @@ struct exclude_item {
 struct fsa_item {
    SXINT item_ref, transition_ref, seed_state, shift_state, else_prdct, lnk, prod_no;
    char state_kind /* bit (7) */;
-   SXBOOLEAN del, scan;
+   bool del, scan;
    };
 
 
 struct fsa_trans_item {
    SXINT		cc_ref, next_state_no;
-   SXBOOLEAN	is_del, is_scan;
+   bool	is_del, is_scan;
    };
 
 

@@ -20,13 +20,13 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXFILECOPY[] = "@(#)SYNTAX - $Id: sxfilecopy.c 2947 2023-03-29 17:06:41Z garavel $" WHAT_DEBUG;
+char WHAT_SXFILECOPY[] = "@(#)SYNTAX - $Id: sxfilecopy.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 
-SXBOOLEAN	sxfile_copy (char *in, char *out, SXINT char_count, char *ME)
+bool	sxfile_copy (char *in, char *out, SXINT char_count, char *ME)
 {
     SXINT	nbread;
     SXINT	cumul;
@@ -40,7 +40,7 @@ SXBOOLEAN	sxfile_copy (char *in, char *out, SXINT char_count, char *ME)
 	if ((fin = open (in, 0 + O_BINARY)) == -1 || fstat (fin, &stat_buf) != 0) {
 	    fprintf (sxstderr, "%s: Unable to open (read) ", ME);
 	    sxperror (in);
-	    return SXFALSE;
+	    return false;
 	}
 
 	if (stat_buf.st_size != (off_t) char_count) {
@@ -51,14 +51,14 @@ SXBOOLEAN	sxfile_copy (char *in, char *out, SXINT char_count, char *ME)
 	    fprintf (stderr, "%s: SEVERE ERROR: %lld bytes have been written\non %s instead of %ld.\n", ME, (long long)stat_buf.st_size, in, char_count);
 #endif
 	    close (fin);
-	    return SXFALSE;
+	    return false;
 	}
 
 	if ((fout = open (out, O_WRONLY + O_CREAT + O_TRUNC + O_BINARY, 0664)) == -1) {
 	    fprintf (sxstderr, "%s: Unable to open (create) ", ME);
 	    sxperror (out);
 	    close (fin);
-	    return SXFALSE;
+	    return false;
 	}
     }
 
@@ -91,10 +91,10 @@ SXBOOLEAN	sxfile_copy (char *in, char *out, SXINT char_count, char *ME)
 	close (fout);
 
 	if (nbread == 0) {
-	    return SXTRUE;
+	    return true;
 	}
 
 	fprintf (sxstderr, "%s: SEVERE ERROR: Only the %ld first bytes have been written\non %s (out of the %ld in %s).\n", ME, cumul, out, char_count, in);
-	return SXFALSE;
+	return false;
     }
 }

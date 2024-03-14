@@ -77,7 +77,7 @@ extern void sxspell_init (  struct sxdfa_comb   *dico,
 			    unsigned char       kind /* 0 => ALL, 1 => BEST ou [2..255] => NBEST */,
 			    SXINT               max_weight /* ne pas depasser cette valeur */,
 			    SXINT               compose_weight /* cout de la composition de fautes */,
-			    SXBOOLEAN             seek_sub_words /* une correction peut etre formee d'une liste de sous-mots */,
+			    bool             seek_sub_words /* une correction peut etre formee d'une liste de sous-mots */,
 			    SXINT               sub_word_weight /* cout d'une telle correction */
 			  );
 
@@ -169,7 +169,7 @@ extern void sxspell_change (
 
 /* Recherche ds dico les chaines du langage FSA qui verifient les contraintes de sxspell_init */
 /* Le resultat est mis ds spell_result */
-extern SXBOOLEAN sxspell_do_it (
+extern bool sxspell_do_it (
 			      struct FSA          *FSA
 			     );
 	
@@ -179,7 +179,7 @@ extern SXBOOLEAN sxspell_do_it (
 
 extern void sxspell_model (unsigned char kind,
 			   SXINT max_weight,
-			   SXBOOLEAN is_sub_word,
+			   bool is_sub_word,
 			   SXINT sub_word_weight,
 			   char *mot,
 			   struct sxdfa_comb *dico);

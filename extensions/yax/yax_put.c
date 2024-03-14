@@ -19,9 +19,9 @@
 #include "sxunix.h"
 #include "B_tables.h"
 #include "yax_vars.h"
-char WHAT_YAXPUT[] = "@(#)SYNTAX - $Id: yax_put.c 3364 2023-06-16 16:20:37Z garavel $" WHAT_DEBUG;
+char WHAT_YAXPUT[] = "@(#)SYNTAX - $Id: yax_put.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
-SXVOID	put_release (void)
+void	put_release (void)
 {
     extern char		by_mess [], release_mess [];
 
@@ -30,7 +30,7 @@ SXVOID	put_release (void)
 
 
 
-SXVOID	put_prelude (void)
+void	put_prelude (void)
 {
     fputs ("\n\
 #line 27 \"yax_pattern\"\n\
@@ -39,13 +39,13 @@ SXVOID	put_prelude (void)
 #define SXSTACK_SIZE 128\n\
 #endif\n\
 static SXINT sx_stack_size=SXSTACK_SIZE;\n\
-static SXBOOLEAN sxerrp;\
+static bool sxerrp;\
 ", sxstdout);
 }
 
 
 
-SXVOID	put_deb_act (void)
+void	put_deb_act (void)
 {
     fputs ("\n\
 #line 37 \"yax_pattern\"\n\
@@ -68,7 +68,7 @@ static YYSTYPE yyval, *yyv;\n\
 ",sxstdout);
     fputs ("\n\
 /* A C T I O N */\n\
-SXVOID\n\
+void\n\
 ", sxstdout);
     fputs (prgentname, sxstdout);
     fputs ("_act(sxcode,sxnact)\n\
@@ -78,8 +78,8 @@ YYSTYPE*yypv;\n\
 switch(sxcode){\n\
 case SXOPEN:yyv=(YYSTYPE*)sxalloc(sx_stack_size+2,sizeof(YYSTYPE));YAXOPEN;break;\n\
 case SXCLOSE:sxfree(yyv);YAXCLOSE;break;\n\
-case SXERROR:sxerrp=SXTRUE;YAXERROR;break;\n\
-case SXINIT:sxerrp=SXFALSE;YAXINIT;break;\n\
+case SXERROR:sxerrp=true;YAXERROR;break;\n\
+case SXINIT:sxerrp=false;YAXINIT;break;\n\
 case SXFINAL:YAXFINAL;break;\n\
 case SXACTION:if(sxerrp)return;\n\
 while(SXSTACKtop()>=sx_stack_size)\n\
@@ -92,7 +92,7 @@ switch(sxnact){\
 
 
 
-SXVOID	put_postlude (void)
+void	put_postlude (void)
 {
     fputs ("\n\
 #line 78 \"yax_pattern\"\n\

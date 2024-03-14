@@ -21,7 +21,7 @@
 #include "sxunix.h"
 #include "T_tables.h"
 
-char WHAT_SEMATWRITE[] = "@(#)SYNTAX - $Id: sematwrite.c 3146 2023-05-02 12:21:39Z garavel $" WHAT_DEBUG;
+char WHAT_SEMATWRITE[] = "@(#)SYNTAX - $Id: sematwrite.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 
 #define WRITE(f,p,l)		\
@@ -29,7 +29,7 @@ char WHAT_SEMATWRITE[] = "@(#)SYNTAX - $Id: sematwrite.c 3146 2023-05-02 12:21:3
 		goto write_error
 
 
-SXBOOLEAN		semat_write (struct T_ag_item *T_ag, char *langname)
+bool		semat_write (struct T_ag_item *T_ag, char *langname)
 {
     SXINT	bytes;
     sxfiledesc_t	/* file descriptor */ F_att;
@@ -57,11 +57,11 @@ SXBOOLEAN		semat_write (struct T_ag_item *T_ag, char *langname)
     WRITE (F_att, T_ag->T_ter_to_node_name, (T_ag->T_constants.T_ter_to_node_name_size + 1) * sizeof (SXINT));
     WRITE (F_att, T_ag->T_node_name_string, T_ag->T_constants.T_node_name_string_lgth * sizeof (char));
     close (F_att);
-    return SXTRUE;
+    return true;
 
 write_error:
     fprintf (sxstderr, "%s: write error on ", ME);
 file_error:
     sxperror (ent_name);
-    return SXFALSE;
+    return false;
 }

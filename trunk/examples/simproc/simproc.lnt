@@ -8,8 +8,8 @@
  *-----------------------------------------------------------------------------
  *   Module             :       simproc.lnt
  *   Auteurs            :       Marc Herbert, Hubert Garavel, Wendelin Serwe
- *   Version            :       1.37
- *   Date               :       2023/07/03 19:05:44
+ *   Version            :       1.38
+ *   Date               :       2023/12/22 13:49:35
  *-----------------------------------------------------------------------------
 *)
 
@@ -31,6 +31,7 @@ type BLOCK is
 	ATTSYMTAB	: S_TABLE,
 	PROCNAME	: ID
 	)
+    with get
 end type
 
 -------------------------------------------------------------------------------
@@ -72,6 +73,7 @@ end type
 type DECL is
     !implementedby "C_TYPE_DECL"
     CONS_DECL (NAME : ID, UPROC : ID, DECL_CHOICE : DECL_UNION)
+    with get
 end type
 
 -------------------------------------------------------------------------------
@@ -111,6 +113,7 @@ end type
 type CALL_STMT is
     !implementedby "C_TYPE_STMT_CALL"
     CALL (PROCID : ID, E:EXPR, REFERENCE : VARIABLE, UPROC : ID)
+    with get
 end type
 
 -------------------------------------------------------------------------------
@@ -162,6 +165,7 @@ end type
 
 type REFVAR is
     CONS_REFVAR (NAME:ID)
+    with get
 end type
 
 -------------------------------------------------------------------------------
@@ -169,6 +173,7 @@ end type
 type NUMBER is
     !implementedby "C_TYPE_NUMBER"
     STRUCT_NUMBER (SXINDEX : NAT, TEXT : STRING, LINE : NAT, VAL : INT)
+    with get
 end type
 
 -------------------------------------------------------------------------------
@@ -189,6 +194,7 @@ type ID is
     !implementedby "C_TYPE_ID"
     STRUCT_ID (SXINDEX : NAT, TEXT : STRING, LINE : NAT)
 	!implementedby "C_STRUCT_ID"
+    with get
 end type	
 
 -------------------------------------------------------------------------------
@@ -227,6 +233,7 @@ end type
 
 type SYMBOL is
 	CONS_SYMBOL (TEXT : STRING, INFO : MODE)
+    with get
 end type
 
 -------------------------------------------------------------------------------

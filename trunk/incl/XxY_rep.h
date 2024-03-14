@@ -48,7 +48,7 @@ typedef struct {
     struct XxY_elem	*display;
     X_header		*X_hd [2];
     SXINT			*lnk_hd [2], *lnk [2];
-    SXBOOLEAN		X_hd_is_static [2];
+    bool		X_hd_is_static [2];
 } XxY_header;
 
 #endif

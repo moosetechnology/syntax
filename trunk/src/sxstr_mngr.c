@@ -23,7 +23,7 @@
 #include "sxunix.h"
 #include <stdarg.h>
 
-char WHAT_SXSTR_MNGR[] = "@(#)SYNTAX - $Id: sxstr_mngr.c 3306 2023-05-26 11:17:40Z serwe $" WHAT_DEBUG;
+char WHAT_SXSTR_MNGR[] = "@(#)SYNTAX - $Id: sxstr_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 /*---------------------------------------------------------------------------*/
 
@@ -46,21 +46,21 @@ char WHAT_SXSTR_MNGR[] = "@(#)SYNTAX - $Id: sxstr_mngr.c 3306 2023-05-26 11:17:4
 /* Compare for equality strings s1 and s2 on their first n characters. */
 /* The strings may contain '\0's and may not be terminated by a '\0'. */
 
-static SXINLINE SXBOOLEAN sxstrequal (char *s1, char *s2, SXUINT n)
+static SXINLINE bool sxstrequal (char *s1, char *s2, SXUINT n)
 {
     do
 	if (n-- == 0)
-	    return SXTRUE;
+	    return true;
     while (*s1++ == *s2++);
 
-    return SXFALSE;
+    return false;
 }
 
 /*---------------------------------------------------------------------------*/
 
 /* Put in s1 first (n-1) chars of s2 and terminate by a '\0' */
 
-static SXINLINE SXVOID sxstrput (char *s1, char *s2, SXUINT n)
+static SXINLINE void sxstrput (char *s1, char *s2, SXUINT n)
 {
     while (--n != 0)
 	*s1++ = *s2++;
@@ -221,7 +221,7 @@ SXINT sxstr_retrieve (sxstrmngr_t *strtable, char *string)
 
 /*---------------------------------------------------------------------------*/
 
-static SXVOID free_strings (sxstrstring_t *string)
+static void free_strings (sxstrstring_t *string)
 {
     while (string != NULL) {
 	sxstrstring_t	*next = string->next;
@@ -233,7 +233,7 @@ static SXVOID free_strings (sxstrstring_t *string)
 
 /*---------------------------------------------------------------------------*/
 
-static SXVOID sxstr_create (sxstrmngr_t *strtable)
+static void sxstr_create (sxstrmngr_t *strtable)
 {
     if (strtable->head == NULL) {
 	/* Allocate */
@@ -268,7 +268,7 @@ static SXVOID sxstr_create (sxstrmngr_t *strtable)
 
 /*---------------------------------------------------------------------------*/
 
-static SXVOID sxstr_delete (sxstrmngr_t *strtable)
+static void sxstr_delete (sxstrmngr_t *strtable)
 {
     free_strings (strtable->string), strtable->string = NULL;
     sxfree (strtable->table), strtable->table = NULL;
@@ -277,7 +277,7 @@ static SXVOID sxstr_delete (sxstrmngr_t *strtable)
 
 /*---------------------------------------------------------------------------*/
 
-SXVOID sxstr_mngr (SXINT sxstr_mngr_what, ...)
+void sxstr_mngr (SXINT sxstr_mngr_what, ...)
 /* si sxstr_mngr_what vaut SXOPEN ou SXCLOSE, on a un second parametre 
  * strtable de type (sxstrmngr_t *) */
 {
@@ -323,7 +323,7 @@ SXVOID sxstr_mngr (SXINT sxstr_mngr_what, ...)
 
 /*---------------------------------------------------------------------------*/
 
-SXVOID sxstr_dump (FILE *f, sxstrmngr_t *strtable)
+void sxstr_dump (FILE *f, sxstrmngr_t *strtable)
 {
     SXINT n, i;
 
@@ -338,7 +338,7 @@ SXVOID sxstr_dump (FILE *f, sxstrmngr_t *strtable)
 
 /*---------------------------------------------------------------------------*/
 
-SXVOID sxstr_save_keywords (sxstrmngr_t *strtable, char *lang)
+void sxstr_save_keywords (sxstrmngr_t *strtable, char *lang)
 {
     if (strcmp (lang, "C") == 0) {
 	sxstr_save (strtable, "asm");

@@ -25,9 +25,9 @@
 #include "sxunix.h"
 #include "put_edit.h"
 
-char WHAT_PUTEDITCUT[] = "@(#)SYNTAX - $Id: puteditcut.c 2428 2023-01-18 12:54:10Z garavel $" WHAT_DEBUG;
+char WHAT_PUTEDITCUT[] = "@(#)SYNTAX - $Id: puteditcut.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
-SXVOID	put_edit_cut_point (char *string, char *cut_chars, size_t max_cut_point, size_t *xcut, SXBOOLEAN *is_ok)
+void	put_edit_cut_point (char *string, char *cut_chars, size_t max_cut_point, size_t *xcut, bool *is_ok)
 {
     char	*s;
     static size_t	l;
@@ -43,7 +43,7 @@ Cette procedure recherche dans la chaine substr(string,1,max_cut_point)
 */
 
     l = strlen (string);
-    *is_ok = SXTRUE;
+    *is_ok = true;
     s = sxindex (string, SXNEWLINE);
 
     if (s == NULL || s >= (string + max_cut_point))
@@ -64,7 +64,7 @@ Cette procedure recherche dans la chaine substr(string,1,max_cut_point)
 	    }
 
 	    *xcut = max_cut_point;
-	    *is_ok = SXFALSE;
+	    *is_ok = false;
 	}
     }
     else

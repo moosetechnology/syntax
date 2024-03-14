@@ -52,12 +52,12 @@ struct spf /* shared_parse_forest */ {
     SXINT               *lispro, *prolis, *prolon, *lhs, *npd, *numpd, *semact, *constraints, *prdct, *prod2nbnt, *npg, *numpg;
     char              **ntstring, **tstring;
     SXBA              BVIDE;
-    SXBOOLEAN	      has_cycles;
+    bool	      has_cycles;
   } inputG;
   
   struct outputG {
     SXINT	maxprod, maxxprod, maxt, maxnt, maxxnt, maxitem, start_symbol, Tpq_repair_nb, repair_mlstn_top;
-    SXBOOLEAN     is_proper, has_repair, is_error_detected;
+    bool     is_proper, has_repair, is_error_detected;
 
     struct rhs {
       SXINT	lispro, prolis;
@@ -116,7 +116,7 @@ struct spf /* shared_parse_forest */ {
     SXINT 	(*pass_inherited) (SXINT) /* variable locale */
 	 , (*pass_derived) (SXINT) /* variable locale */
 	 , (*pre_pass) (SXINT) /* variable locale */
-	 , (*post_pass) (SXINT, SXBOOLEAN) /* variable locale */
+	 , (*post_pass) (SXINT, bool) /* variable locale */
 	 , (*user_filtering_function) (SXINT Pij) /* filtre supplementaire utilisateur sur les Pij */
 	 ;
   } walk;
@@ -153,7 +153,7 @@ struct spf /* shared_parse_forest */ {
     SXINT         *no_sdag_inputG_glbl_source /* ... et le glbl_source s le cas no_sdag */;
 #endif /* 0 */
     
-    SXBOOLEAN           is_allocated, is_eps, is_cycle;
+    bool           is_allocated, is_eps, is_cycle;
   } insideG;
 };
 
@@ -267,9 +267,9 @@ struct spf spf = {
 #endif /* !is_epsilon */
 
 #if is_cyclic
-    SXTRUE,
+    true,
 #else /* !is_cyclic */
-    SXFALSE,
+    false,
 #endif /* !is_cyclic */
   }
 };
@@ -280,7 +280,7 @@ struct spf spf = {
 SX_GLOBAL_VAR void             spf_allocate_Aij (SXINT sxmaxnt, SXINT sxeof);
 SX_GLOBAL_VAR void             spf_allocate_spf (SXINT sxmaxprod);
 SX_GLOBAL_VAR void             spf_reallocate_lhs_rhs (SXINT lhs_size, SXINT rhs_size);
-SX_GLOBAL_VAR void             spf_allocate_insideG (struct insideG *insideG_ptr, SXBOOLEAN has_lex2, SXBOOLEAN has_set_automaton);
+SX_GLOBAL_VAR void             spf_allocate_insideG (struct insideG *insideG_ptr, bool has_lex2, bool has_set_automaton);
 SX_GLOBAL_VAR void             spf_finalize (void);
 SX_GLOBAL_VAR void             spf_free (void);
 SX_GLOBAL_VAR void             spf_free_insideG (struct insideG *insideG_ptr);
@@ -288,7 +288,7 @@ SX_GLOBAL_VAR void             spf_put_an_iprod (SXINT *stack);
 
 /* Ecritures */
 /* Ecriture d'une production instanciee */
-SX_GLOBAL_VAR SXBOOLEAN          spf_print_iprod (FILE *out_file, SXINT prod, char *prefix, char *suffix);
+SX_GLOBAL_VAR bool          spf_print_iprod (FILE *out_file, SXINT prod, char *prefix, char *suffix);
 /* Ecriture d'un symbole instancie */
 SX_GLOBAL_VAR void             spf_print_Xpq (FILE *out_file, SXINT Xpq);
 /* Ecriture en top_down de la sous-foret ancree sur Aij */
@@ -317,7 +317,7 @@ SX_GLOBAL_VAR void             spf_fill_Pij2eval (void);
 
 /* Positionne ds count (et pour chaque Aij ds spf.tree_count.nt2nb [Aij]) le
    nombre d'arbres de la [sous-]foret partagee [de racine Aij] */
-SX_GLOBAL_VAR SXBOOLEAN          spf_tree_count (double *count);
+SX_GLOBAL_VAR bool          spf_tree_count (double *count);
 
 /* Les parcours de la spf */
 /* Ds le cas de la visite heritee (*pi)(Pij), si Pij est une Aij-iprod,
@@ -332,20 +332,20 @@ SX_GLOBAL_VAR SXBOOLEAN          spf_tree_count (double *count);
       toutes les Aij-iprods sont appelees en sequence */
 /* Attention soit pi, soit pd est non NULL (on ne peut par parcourir la foret haut-bas
    gauche-droit avec les contraintes precedentes) */
-SX_GLOBAL_VAR SXBOOLEAN          spf_topological_walk (SXINT root,
+SX_GLOBAL_VAR bool          spf_topological_walk (SXINT root,
 						     SXINT (*pi)(SXINT),
 						     SXINT (*pd)(SXINT));
 /* Permettent des pre et/ou des post visites sur les noeuds Aij des Aij-iprods */
-SX_GLOBAL_VAR SXBOOLEAN          spf_topological_top_down_walk (SXINT root,
+SX_GLOBAL_VAR bool          spf_topological_top_down_walk (SXINT root,
 							      SXINT (*pi)(SXINT),
 							      SXINT (*pre_pass)(SXINT),
-							      SXINT (*post_pass)(SXINT, SXBOOLEAN));
-SX_GLOBAL_VAR SXBOOLEAN          spf_topological_bottom_up_walk (SXINT root,
+							      SXINT (*post_pass)(SXINT, bool));
+SX_GLOBAL_VAR bool          spf_topological_bottom_up_walk (SXINT root,
 							       SXINT (*pd)(SXINT),
 							       SXINT (*pre_pass)(SXINT),
-							       SXINT (*post_pass)(SXINT, SXBOOLEAN));
+							       SXINT (*post_pass)(SXINT, bool));
 /* Les appels des ft arg sont de la forme pi(Pij), pd(Pij), pre_p(Aij),
-   post_p(Aij, kind) ou kind==SXFALSE <=> toutes les Aij-prods ont ete supprimees */
+   post_p(Aij, kind) ou kind==false <=> toutes les Aij-prods ont ete supprimees */
 /* Les valeurs entieres retournees par ces ft arg de l'utilisateur ont 3 formes :
    1  => rien (cas standard)
    0  => la production Pij est saute'e
@@ -353,9 +353,9 @@ SX_GLOBAL_VAR SXBOOLEAN          spf_topological_bottom_up_walk (SXINT root,
 */
 
 /* Elimine les iprods inaccessibles dues aux valeurs -1 retournees */
-SX_GLOBAL_VAR SXBOOLEAN          spf_make_proper (SXINT root_Aij);
+SX_GLOBAL_VAR bool          spf_make_proper (SXINT root_Aij);
 /* Elimine de la foret les Pij de Pij_set */
-SX_GLOBAL_VAR SXBOOLEAN          spf_erase (SXBA Pij_set);
+SX_GLOBAL_VAR bool          spf_erase (SXBA Pij_set);
 
 /* Permet de revenir a un etat precedant de la foret */
 SX_GLOBAL_VAR void             spf_push_status (void); /* calcule l'etat courant de la spf et le sauve ds une SXBA locale (spf.walk.status) */
@@ -365,7 +365,7 @@ SX_GLOBAL_VAR SXBA             spf_save_status (SXBA save_set) /* copie spf.walk
 
 /* Deplie la foret */
 /* Transforme la frontiere de la foret en un DAG minimal */
-SX_GLOBAL_VAR void             spf_yield2dfa (SXBOOLEAN which_form /* SXTRUE => UDAG */);
+SX_GLOBAL_VAR void             spf_yield2dfa (bool which_form /* true => UDAG */);
 SX_GLOBAL_VAR SXINT            spf_unfold (void);
 SX_GLOBAL_VAR SXINT            spf_dag2tree (SXUINT p, SXINT Aij, SXINT (*f)(SXINT));
 #endif /* no_sxspf_function_declarations */

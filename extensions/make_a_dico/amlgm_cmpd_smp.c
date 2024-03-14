@@ -59,7 +59,7 @@ E N D   N O D E   N A M E S
 #include "XxY.h"
 #include "fsa.h"
 
-extern SXBOOLEAN                 is_static;
+extern bool                 is_static;
 extern char                    *LANGUAGE_NAME;
 
 
@@ -316,8 +316,8 @@ smppass (void)
   XH_alloc (&lhs_hd, "lhs_hd", rule_nb, 1, (lhs_component_size/rule_nb)+1, NULL, NULL);
   XH_alloc (&rhs_hd, "rhs_hd", rule_nb, 1, (rhs_component_size/rule_nb)+1, NULL, NULL);
 
-  word_tree_alloc (&lhs_acc_name_tree, "lhs_acc_name_tree", rule_nb*((lhs_component_size/rule_nb)+1), 10, 1 /* Xforeach */, 0 /* Yforeach */, SXTRUE /* from_left_to_right */,
-		   SXTRUE /* with_id */,
+  word_tree_alloc (&lhs_acc_name_tree, "lhs_acc_name_tree", rule_nb*((lhs_component_size/rule_nb)+1), 10, 1 /* Xforeach */, 0 /* Yforeach */, true /* from_left_to_right */,
+		   true /* with_id */,
 		   lhs_acc_name_tree_oflw,
 #if EBUG
 		   stdout
@@ -326,8 +326,8 @@ smppass (void)
 #endif /* EBUG */
 		   );
 
-  word_tree_alloc (&lhs_tree, "lhs_tree", rule_nb, (lhs_component_size/rule_nb)+1, 1 /* Xforeach */, 0 /* Yforeach */, SXTRUE /* from_left_to_right */,
-		   SXTRUE,
+  word_tree_alloc (&lhs_tree, "lhs_tree", rule_nb, (lhs_component_size/rule_nb)+1, 1 /* Xforeach */, 0 /* Yforeach */, true /* from_left_to_right */,
+		   true,
 		   lhs_tree_oflw,
 #if EBUG
 		   stdout
@@ -360,7 +360,7 @@ smppass (void)
 
 
   /* On fabrique un sxdfa minimal */
-  word_tree2sxdfa (&lhs_acc_name_tree, &lhs_acc_name_sxdfa, "lhs_acc_name_sxdfa", NULL, SXTRUE /* make_a_min_dag */);
+  word_tree2sxdfa (&lhs_acc_name_tree, &lhs_acc_name_sxdfa, "lhs_acc_name_sxdfa", NULL, true /* make_a_min_dag */);
 
   /* ...que l'on convertit en comb */
   sxdfa2comb_vector (&lhs_acc_name_sxdfa, 2 /* comb_kind */, 10000 /* comb_vector_threshold */, &lhs_acc_name_comb);
@@ -430,7 +430,7 @@ smppass (void)
   varstr_free (vstr);
 
   /* On fabrique un sxdfa minimal */
-  word_tree2sxdfa (&lhs_tree, &sxdfa_acc_lhs, "sxdfa_acc_lhs", NULL, SXTRUE /* make_a_min_dag */);
+  word_tree2sxdfa (&lhs_tree, &sxdfa_acc_lhs, "sxdfa_acc_lhs", NULL, true /* make_a_min_dag */);
   /* Attention, il est a priori pas possible de le transformer en comb car les transitions sont des ids (et non des chars) */
   /* ... et que l'on sort */
   sxdfa2c (&sxdfa_acc_lhs, stdout, "sxdfa_acc_lhs", is_static);

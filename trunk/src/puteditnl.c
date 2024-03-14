@@ -23,9 +23,9 @@
 #include "sxunix.h"
 #include "put_edit.h"
 
-char WHAT_PUTEDITNL[] = "@(#)SYNTAX - $Id: puteditnl.c 2428 2023-01-18 12:54:10Z garavel $" WHAT_DEBUG;
+char WHAT_PUTEDITNL[] = "@(#)SYNTAX - $Id: puteditnl.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
-SXVOID	put_edit_nl (SXINT n)
+void	put_edit_nl (SXINT n)
 {
     while (n-- > 0)
 	putc (SXNEWLINE, _SXPE_file);

@@ -22,9 +22,9 @@
 #include "varstr.h"
 #include "lecl_ag.h"
 
-char WHAT_LECLSATURE[] = "@(#)SYNTAX - $Id: lecl_sature.c 3603 2023-09-23 20:02:36Z garavel $" WHAT_DEBUG;
+char WHAT_LECLSATURE[] = "@(#)SYNTAX - $Id: lecl_sature.c 3631 2023-12-20 17:16:41Z garavel $" WHAT_DEBUG;
 
-SXVOID	lecl_sature (SXINT nbt)
+void	lecl_sature (SXINT nbt)
 {
     SXINT	old_size, new_size;
 
@@ -35,7 +35,7 @@ SXVOID	lecl_sature (SXINT nbt)
 	if (sxverbosep) {
 	    if (!sxttycol1p) {
 		fputc ('\n', sxtty);
-		sxttycol1p = SXTRUE;
+		sxttycol1p = true;
 	    }
 
 	    fprintf (sxtty, "Array %ld of size %ld overflowed: reallocation with size %ld.\n", (SXINT) nbt, (SXINT) old_size, (SXINT) lgt [nbt]);

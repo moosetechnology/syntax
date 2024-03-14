@@ -38,8 +38,8 @@ typedef struct {
     SXUINT	scrmbl;
     void		(*oflw) (SXINT, SXINT);
     FILE		*stat_file;
-    SXBOOLEAN		is_locked;
-    SXBOOLEAN		is_allocated;
+    bool		is_locked;
+    bool		is_allocated;
 } XH_header;
 
 
@@ -55,14 +55,14 @@ extern void			XH_stat (FILE *stat_file, XH_header *header);
 extern void			XH_clear (XH_header *header);
 extern void			XH_lock (XH_header *header);
 extern SXINT			XH_is_set (XH_header *header);
-extern SXBOOLEAN			XH_set (XH_header *header, SXINT *result);
-extern SXBOOLEAN			XH_oflw (XH_header *header);
+extern bool			XH_set (XH_header *header, SXINT *result);
+extern bool			XH_oflw (XH_header *header);
 extern void			XH_pack (XH_header *header, SXINT local_n, void (*swap_ft) (SXINT, SXINT));
 extern void                     XH2c (
 				      XH_header *header, 
 				      FILE *F_XH, 
 				      char *name, 
-				      SXBOOLEAN is_static);
+				      bool is_static);
 
 /*
   Les anciennes définitions de .._7F et .._80 étaient comme ca :
@@ -82,7 +82,7 @@ extern void                     XH2c (
 #define XH_80 (~XH_7F)
 
 #define XH_push(h,x)		((h).scrmbl+=(h).list[*((h).list)]=x, \
-				 (++*((h).list)>(h).list_size) ? XH_oflw(&(h)) : SXFALSE)
+				 (++*((h).list)>(h).list_size) ? XH_oflw(&(h)) : false)
 #define XH_pop(h,x)		((h).scrmbl-=x=(h).list[--*((h).list)])
 #define XH_raz(h)		((h).scrmbl = 0, \
 				 *((h).list) = (h).display [(h).display->lnk].X)
@@ -90,7 +90,7 @@ extern void                     XH2c (
 #define XH_is_erased(h,x)	((h).display[x].lnk & XH_80)
 #define XH_size(h)		((h).display->X)
 #define XH_top(h)		((h).display->lnk)
-#define XH_unlock(h)		((h).is_locked = SXFALSE)
+#define XH_unlock(h)		((h).is_locked = false)
 #define XH_X(h,x)		((h).display[x].X)
 #define XH_list_top(h)		((h).list[0])
 #define XH_list_size(h)		((h).list_size)

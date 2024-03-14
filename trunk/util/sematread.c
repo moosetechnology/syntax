@@ -21,14 +21,14 @@
 #include "sxunix.h"
 #include "T_tables.h"
 
-char WHAT_SEMATREAD[] = "@(#)SYNTAX - $Id: sematread.c 3146 2023-05-02 12:21:39Z garavel $" WHAT_DEBUG;
+char WHAT_SEMATREAD[] = "@(#)SYNTAX - $Id: sematread.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 #define READ(f,p,l)		\
 	if (bytes = (l), (read (f, p, bytes) != bytes))		\
 		goto read_error
 
 
-SXBOOLEAN		semat_read (struct T_ag_item *T_ag, char *langname)
+bool		semat_read (struct T_ag_item *T_ag, char *langname)
 {
     SXINT	bytes;
     sxfiledesc_t	/* file descriptor */ F_att;
@@ -48,7 +48,7 @@ SXBOOLEAN		semat_read (struct T_ag_item *T_ag, char *langname)
 
     if (att_version != att_num_version) {
 	fprintf (sxstderr, "tables format has changed : please use the new semat\n");
-	return SXFALSE;
+	return false;
     }
 
     READ (F_att, &T_ag->bnf_modif_time, sizeof (SXINT));
@@ -64,11 +64,11 @@ SXBOOLEAN		semat_read (struct T_ag_item *T_ag, char *langname)
     READ (F_att, T_ag->T_node_name_string = sxalloc (T_ag->T_constants.T_node_name_string_lgth, sizeof (char)), (T_ag->
 	 T_constants.T_node_name_string_lgth) * sizeof (char));
     close (F_att);
-    return SXTRUE;
+    return true;
 
 read_error:
     fprintf (sxstderr, "%s: read error on ", ME);
 file_error:
     sxperror (ent_name);
-    return SXFALSE;
+    return false;
 }

@@ -23,18 +23,18 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXSMP[] = "@(#)SYNTAX - $Id: sxsmp.c 2428 2023-01-18 12:54:10Z garavel $" WHAT_DEBUG;
+char WHAT_SXSMP[] = "@(#)SYNTAX - $Id: sxsmp.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
-SXVOID	sxsmp (SXNODE *root, SXVOID (*pass_inherited) (void), SXVOID (*pass_derived) (void))
+void	sxsmp (SXNODE *root, void (*pass_inherited) (void), void (*pass_derived) (void))
 {
     SXNODE	*node_ptr;
-    SXBOOLEAN	done;
+    bool	done;
 
     if (root == NULL)
 	return;
 
-    done = SXFALSE;
-    sxnext_visit.normal = SXTRUE;
+    done = false;
+    sxnext_visit.normal = true;
 
     if ((SXVISITED = root->son) != NULL) {
 	SXVISIT_KIND = SXINHERITED;
@@ -61,7 +61,7 @@ SXVOID	sxsmp (SXNODE *root, SXVOID (*pass_inherited) (void), SXVOID (*pass_deriv
 	    (*pass_derived) ();
 
 	    if (SXVISITED == root) {
-		done = SXTRUE;
+		done = true;
 	    }
 	    else if ((node_ptr = SXVISITED->brother) != NULL) {
 		SXVISIT_KIND = SXINHERITED;
@@ -75,8 +75,8 @@ SXVOID	sxsmp (SXNODE *root, SXVOID (*pass_inherited) (void), SXVOID (*pass_deriv
 	}
 
 	if (!sxnext_visit.normal) {
-	    done = SXFALSE;
-	    sxnext_visit.normal = SXTRUE;
+	    done = false;
+	    sxnext_visit.normal = true;
 	    SXVISITED = sxnext_visit.visited;
 
 	    if ((SXVISIT_KIND = sxnext_visit.visit_kind) == SXINHERITED) {

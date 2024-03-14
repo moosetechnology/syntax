@@ -20,13 +20,13 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXMAIN[] = "@(#)SYNTAX - $Id: amlgm_cmpd_main.c 3361 2023-06-16 16:13:55Z garavel $" WHAT_DEBUG;
+char WHAT_SXMAIN[] = "@(#)SYNTAX - $Id: amlgm_cmpd_main.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 static char ME [] = "amlgm_cmpd.c";
 
 extern struct sxtables	sxtables;
 
-SXBOOLEAN           is_static;
+bool           is_static;
 char              *LANGUAGE_NAME;
 
 /*---------------*/
@@ -89,7 +89,7 @@ amlgm_cmpd_run (char *pathname)
 {
   FILE	 *infile;
     
-  syntax (SXINIT, &sxtables, SXFALSE /* no includes */) /* Initialisation de SYNTAX (mono-langage) */ ;
+  syntax (SXINIT, &sxtables, false /* no includes */) /* Initialisation de SYNTAX (mono-langage) */ ;
 
   if (pathname == NULL) {
     if (sxverbosep) {
@@ -123,7 +123,7 @@ amlgm_cmpd_run (char *pathname)
     fclose (infile);
   }
 
-  syntax (SXFINAL, &sxtables, SXTRUE);
+  syntax (SXFINAL, &sxtables, true);
 }
 
 
@@ -132,17 +132,17 @@ int main (int argc, char *argv[])
     sxopentty ();
 
     /* Valeurs par defaut */
-    is_static = SXTRUE;
+    is_static = true;
 
     {
       /* Tous les arguments sont des noms de fichiers, "-" signifiant stdin */
       int	argnum;
-      SXBOOLEAN   has_unknown_arg = SXFALSE;
+      bool   has_unknown_arg = false;
 
       for (argnum = 1; argnum < argc; argnum++) {
 	switch (option_get_kind (argv [argnum])) {
 	case EXTERN:
-	  is_static = SXFALSE;
+	  is_static = false;
 	  break;
 
 	case HELP:
@@ -150,7 +150,7 @@ int main (int argc, char *argv[])
 	  return EXIT_SUCCESS;	  
 
 	case UNKNOWN_ARG:
-	  has_unknown_arg = SXTRUE;
+	  has_unknown_arg = true;
 
 	  if (argnum+1 == argc && argv [argnum] [0] == '-' && argv [argnum] [1] == '\0') {
 	    amlgm_cmpd_run (NULL);

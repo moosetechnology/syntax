@@ -2,10 +2,13 @@
 
 LANGUAGE	= simproc
 
+SXBIN		= $(SX)/bin
+SXINCL		= $(SX)/incl
+
 # -----------------------------------------------------------------------------
 
 all :
-	if [ ! -f $(SX)/incl/sxunix.h ] ;\
+	if [ ! -f $(SXINCL)/sxunix.h ] ;\
 	then make nosyntax ; \
 	elif [ ! -x $(LNTDIR)/com/traian ] ; \
 	then make notraian ; \
@@ -21,12 +24,12 @@ SYNTAX_OUTPUTS = $(LANGUAGE)_s.c $(LANGUAGE)_t.c
 notraian : $(SYNTAX_OUTPUTS)
 
 $(SYNTAX_OUTPUTS) : $(SYNTAX_INPUTS)
-	$(SX)/bin/semc -rhs 15 $(LANGUAGE).semc > $(LANGUAGE)_s.c
-	$(SX)/bin/lecl $(LANGUAGE).lecl
-	$(SX)/bin/recor $(LANGUAGE).recor
-	$(SX)/bin/prio $(LANGUAGE).prio
-	$(SX)/bin/csynt $(LANGUAGE)
-	$(SX)/bin/tables_c $(LANGUAGE) > $(LANGUAGE)_t.c
+	$(SXBIN)/semc -rhs 15 $(LANGUAGE).semc > $(LANGUAGE)_s.c
+	$(SXBIN)/lecl $(LANGUAGE).lecl
+	$(SXBIN)/recor $(LANGUAGE).recor
+	$(SXBIN)/prio $(LANGUAGE).prio
+	$(SXBIN)/csynt $(LANGUAGE)
+	$(SXBIN)/tables_c $(LANGUAGE) > $(LANGUAGE)_t.c
 	@/bin/rm -f  *.bn.l *.lc.l *.rc.l *.pr.l *.bt *.dt *.pt *.rt *.st 
 
 # -----------------------------------------------------------------------------
@@ -46,7 +49,7 @@ ARCH =`$(LNTDIR)/com/arch`
 CC = cc
 CFLAGS = -O
 LOCAL_CFLAGS = -Wno-strict-prototypes -Wno-switch-default -Wno-bad-function-cast 
-INCL = -I. -I$(LNTDIR)/incl -I$(SX)/incl
+INCL = -I. -I$(LNTDIR)/incl -I$(SXINCL)
 
 $(LANGUAGE) : $(SYNTAX_OUTPUTS) $(TRAIAN_OUTPUTS) main.c
 	$(CC) -c $(CFLAGS) $(LOCAL_CFLAGS) $(INCL) $(LANGUAGE)_s.c

@@ -6,9 +6,9 @@ LIB=$(YSX)/lib
 
 CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
-all: $(SX)/bin/ysx.out
+all: $(SXBIN)/ysx.out
 
-$(SX)/bin/ysx.out:	$(YSX)/ysx.out
+$(SXBIN)/ysx.out:	$(YSX)/ysx.out
 	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
 NEEDS=	$(LIB)/ysx_main.o	\

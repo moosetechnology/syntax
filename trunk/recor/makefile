@@ -7,10 +7,10 @@ BOOT=$(RECOR)/boot
 
 CC=$(COMPILER) -I$(RECOR) -I$(BOOT) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
-all: $(SX)/bin/recor.out	\
+all: $(SXBIN)/recor.out	\
      $(SXAUX)/print_rt.out
 
-$(SX)/bin/recor.out:	$(RECOR)/recor.out
+$(SXBIN)/recor.out:	$(RECOR)/recor.out
 	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
 NEEDS=	$(LIB)/recor_t.o		\
@@ -81,3 +81,8 @@ recor.rt: recor.bt recor.st recor.recor
 
 clean:
 	/bin/rm -f $(LIB)/*.o $(RECOR)/recor.out $(SXAUX)/print_rt.out
+	/bin/rm -f recor.att recor.bt recor.pt recor.rt recor.st
+	/bin/rm -f recor.bn.l recor.lc.l recor.rc.l
+	/bin/rm -f recor.c.skeleton recor_t.c
+
+

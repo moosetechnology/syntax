@@ -53,7 +53,7 @@ struct sxindex_header {
     SXINT		line_nb, column_nb;
     SXINT		free;
     void	(*oflw) (sxindex_header *, SXINT, SXINT);
-    SXBOOLEAN	is_static;
+    bool	is_static;
 } /* sxindex_header */ ;
 
 extern void	sxindex_alloc (sxindex_header *header,
@@ -63,13 +63,13 @@ extern void	sxindex_alloc (sxindex_header *header,
 /* If line_nb equals zero, we are in the Vector case. */
 
 extern SXINT	sxindex_seek (sxindex_header *header);
-extern SXBOOLEAN	sxindex_write (sxindex_header *header, sxfiledesc_t file_descr);
-extern SXBOOLEAN	sxindex_read (sxindex_header *header,
+extern bool	sxindex_write (sxindex_header *header, sxfiledesc_t file_descr);
+extern bool	sxindex_read (sxindex_header *header,
 			      sxfiledesc_t file_descr,
 			      void (*user_oflw) (sxindex_header *, SXINT, SXINT));
 extern void	sxindex_array_to_c (sxindex_header *header, FILE *file, char *name);
 extern void	sxindex_header_to_c (sxindex_header *header, FILE *file, char *name);
-extern void	sxindex_to_c (sxindex_header *header, FILE *file, char *name, SXBOOLEAN is_static);
+extern void	sxindex_to_c (sxindex_header *header, FILE *file, char *name, bool is_static);
 extern void	sxindex_reuse (sxindex_header *header,
 			       void (*oflw) (sxindex_header *, SXINT, SXINT));
 

@@ -2,15 +2,13 @@
 include $(SX)/etc/make/gccoptions
 
 CSYNT=$(SX)/csynt
-SRC=$(CSYNT)/src
 LIB=$(CSYNT)/lib
-INCL=$(CSYNT)/incl
 
-CC=$(COMPILER) -I$(INCL) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
+CC=$(COMPILER) -I$(CSYNT) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
-all: $(SX)/bin/csynt.out
+all: $(SXBIN)/csynt.out
 
-$(SX)/bin/csynt.out:	$(CSYNT)/csynt.out
+$(SXBIN)/csynt.out:	$(CSYNT)/csynt.out
 	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
 NEEDS=	$(LIB)/csynt.o			\
@@ -26,60 +24,60 @@ $(CSYNT)/csynt.out:	$(NEEDS)	$(SXBIBS)
 	@rm -f $@
 	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
-$(LIB)/csynt.o:		$(INCL)/csynt_optim.h		\
+$(LIB)/csynt.o:		csynt_optim.h		\
 			$(SXINCL)/util/B_tables.h		\
 			$(SXINCL)/util/bstr.h		\
 			$(SXINCL)/sxunix.h		\
-			$(SRC)/csynt.c
-	$(CC) -o $@ -c $(SRC)/csynt.c
+			csynt.c
+	$(CC) -o $@ -c csynt.c
 
-$(LIB)/LALR1.o:		$(INCL)/csynt_optim.h		\
+$(LIB)/LALR1.o:		csynt_optim.h		\
 			$(SXINCL)/util/B_tables.h		\
 			$(SXINCL)/util/D_tables.h		\
 			$(SXINCL)/varstr.h		\
 			$(SXINCL)/sxunix.h		\
-			$(SRC)/LALR1.c
-	$(CC) -o $@ -c $(SRC)/LALR1.c
+			LALR1.c
+	$(CC) -o $@ -c LALR1.c
 
-$(LIB)/path.o:		$(INCL)/csynt_optim.h		\
+$(LIB)/path.o:		csynt_optim.h		\
 			$(SXINCL)/util/B_tables.h		\
 			$(SXINCL)/varstr.h		\
 			$(SXINCL)/sxunix.h		\
-			$(SRC)/path.c
-	$(CC) -o $@ -c $(SRC)/path.c
+			path.c
+	$(CC) -o $@ -c path.c
 
-$(LIB)/optim_lo.o:	$(INCL)/csynt_optim.h		\
+$(LIB)/optim_lo.o:	csynt_optim.h		\
 			$(SXINCL)/util/B_tables.h		\
 			$(SXINCL)/util/P_tables.h		\
 			$(SXINCL)/util/bstr.h		\
 			$(SXINCL)/sxunix.h		\
-			$(SRC)/optim_lo.c
-	$(CC) -o $@ -c $(SRC)/optim_lo.c
+			optim_lo.c
+	$(CC) -o $@ -c optim_lo.c
 
 $(LIB)/xprdct_mngr.o:	$(SXINCL)/sxunix.h		\
-			$(SRC)/xprdct_mngr.c
-	$(CC) -o $@ -c $(SRC)/xprdct_mngr.c
+			xprdct_mngr.c
+	$(CC) -o $@ -c xprdct_mngr.c
 
-$(LIB)/single.o:	$(INCL)/csynt_optim.h		\
+$(LIB)/single.o:	csynt_optim.h		\
 			$(SXINCL)/util/B_tables.h		\
 			$(SXINCL)/util/P_tables.h		\
 			$(SXINCL)/sxunix.h		\
-			$(SRC)/single.c
-	$(CC) -o $@ -c $(SRC)/single.c
+			single.c
+	$(CC) -o $@ -c single.c
 
-$(LIB)/algoV.o:		$(INCL)/csynt_optim.h		\
+$(LIB)/algoV.o:		csynt_optim.h		\
 			$(SXINCL)/util/B_tables.h		\
 			$(SXINCL)/util/P_tables.h		\
 			$(SXINCL)/sxunix.h		\
-			$(SRC)/algoV.c
-	$(CC) -o $@ -c $(SRC)/algoV.c
+			algoV.c
+	$(CC) -o $@ -c algoV.c
 
-$(LIB)/OPTIM.o:		$(INCL)/csynt_optim.h		\
+$(LIB)/OPTIM.o:		csynt_optim.h		\
 			$(SXINCL)/util/B_tables.h		\
 			$(SXINCL)/util/P_tables.h		\
 			$(SXINCL)/sxunix.h		\
-			$(SRC)/OPTIM.c
-	$(CC) -o $@ -c $(SRC)/OPTIM.c
+			OPTIM.c
+	$(CC) -o $@ -c OPTIM.c
 
 clean:
 	/bin/rm -f $(LIB)/*.o $(CSYNT)/csynt.out

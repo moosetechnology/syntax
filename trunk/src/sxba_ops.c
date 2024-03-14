@@ -34,7 +34,7 @@
 #include "sxcommon.h"
 #include "sxba.h"
 
-char WHAT_SXBA_OPS[] = "@(#)SYNTAX - $Id: sxba_ops.c 2428 2023-01-18 12:54:10Z garavel $" WHAT_DEBUG;
+char WHAT_SXBA_OPS[] = "@(#)SYNTAX - $Id: sxba_ops.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 SXBA
 sxba_and (SXBA lhs_bits_array, SXBA rhs_bits_array)
@@ -140,11 +140,11 @@ sxba_not (SXBA bits_array)
 
 
 
-SXBOOLEAN
+bool
 sxba_is_empty (SXBA bits_array)
 /*
- * "sxba_is_empty" returns "SXFALSE" if any bit is set in its argument,
- * "SXTRUE" otherwise.
+ * "sxba_is_empty" returns "false" if any bit is set in its argument,
+ * "true" otherwise.
  */
 {
     SXBA	bits_ptr = bits_array + SXNBLONGS (SXBASIZE (bits_array));
@@ -153,20 +153,20 @@ sxba_is_empty (SXBA bits_array)
 
     while (bits_ptr > bits_array) {
 	if (*bits_ptr-- != ((SXBA_ELT)0)) {
-	    return SXFALSE;
+	    return false;
 	}
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
 
-SXBOOLEAN
+bool
 sxba_is_full (SXBA bits_array)
 /*
- * "sxba_is_full" returns "SXFALSE" if any bit is reset in its argument,
- * "SXTRUE" otherwise.
+ * "sxba_is_full" returns "false" if any bit is reset in its argument,
+ * "true" otherwise.
  */
 {
     SXBA	bits_ptr;
@@ -179,7 +179,7 @@ sxba_is_full (SXBA bits_array)
 
     if ((size = MOD (size)) != 0) {
 	if (*bits_ptr-- != ~((~((SXBA_ELT)0)) << size)) {
-	    return SXFALSE;
+	    return false;
 	}
 
 	slices_number--;
@@ -187,11 +187,11 @@ sxba_is_full (SXBA bits_array)
 
     while (slices_number-- > 0) {
 	if (*bits_ptr-- != ~((~((SXBA_ELT)0)) << 1 << (SXBITS_PER_LONG - 1))) {
-	    return SXFALSE;
+	    return false;
 	}
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -227,10 +227,10 @@ sxba_first_difference (SXBA bits_array_1, SXBA bits_array_2)
 }
 
 
-SXBOOLEAN
+bool
 sxba_is_subset (SXBA bits_array_1, SXBA bits_array_2)
 /*
- * "sxba_is_subset" returns SXTRUE iff bits_array_1 is a subset of bits_array_2.
+ * "sxba_is_subset" returns true iff bits_array_1 is a subset of bits_array_2.
  */
 {
     SXBA_ELT slices_number = SXNBLONGS (SXBASIZE (bits_array_1));
@@ -244,10 +244,10 @@ sxba_is_subset (SXBA bits_array_1, SXBA bits_array_2)
 
     while (slices_number-- > 0) {
 	if ((*bits_array_1-- & ~(*bits_array_2--)) != 0)
-	    return SXFALSE;  
+	    return false;  
     }
 
-    return SXTRUE;
+    return true;
 }
 
 /* function sxba_cast() is always exported by the library even if the lint

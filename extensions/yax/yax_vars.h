@@ -40,11 +40,11 @@
 #endif /* #ifndef SX_GLOBAL_VAR_YAX */
 
 SX_GLOBAL_VAR_YAX SXINT	max_attr, nb_definitions, nb_sem_rules, nb_occurrences;
-SX_GLOBAL_VAR_YAX SXBOOLEAN		is_err;
+SX_GLOBAL_VAR_YAX bool		is_err;
 
 /* options de yax */
 
-SX_GLOBAL_VAR_YAX SXBOOLEAN		is_sem_stats;
+SX_GLOBAL_VAR_YAX bool		is_sem_stats;
 SX_GLOBAL_VAR_YAX SXINT	tbl_lgth;
 SX_GLOBAL_VAR_YAX struct sxtoken	*terminal_token;
 SX_GLOBAL_VAR_YAX SXINT	*nt_to_ste /* [1:ntmax] */ ;

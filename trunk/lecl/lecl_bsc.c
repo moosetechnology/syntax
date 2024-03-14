@@ -23,14 +23,14 @@
 #include "sxunix.h"
 #include "sxba.h"
 
-char WHAT_LECLBSC[] = "@(#)SYNTAX - $Id: lecl_bsc.c 3603 2023-09-23 20:02:36Z garavel $" WHAT_DEBUG;
+char WHAT_LECLBSC[] = "@(#)SYNTAX - $Id: lecl_bsc.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
-extern SXINT	equality_sort (SXINT *t, SXINT bi, SXINT bs, SXBOOLEAN (*less_equal) (SXINT, SXINT), SXBOOLEAN (*equal) (SXINT, SXINT));
+extern SXINT	equality_sort (SXINT *t, SXINT bi, SXINT bs, bool (*less_equal) (SXINT, SXINT), bool (*equal) (SXINT, SXINT));
 
 SXBA	/* cmax */ *char_to_class_set /* 1:char_max */ ;
 static SXINT	CMAX;
 
-static SXBOOLEAN	less_equal (SXINT i, SXINT j)
+static bool	less_equal (SXINT i, SXINT j)
 {
     SXBA	bsi, bsj;
     SXINT		x, vi, vj;
@@ -43,24 +43,24 @@ static SXBOOLEAN	less_equal (SXINT i, SXINT j)
 	vj = sxba_bit_is_set (bsj, x);
 
 	if (vi < vj)
-	    return SXTRUE;
+	    return true;
 
 	if (vi > vj)
-	    return SXFALSE;
+	    return false;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
 
-static SXBOOLEAN	equal (SXINT i, SXINT j)
+static bool	equal (SXINT i, SXINT j)
 {
     return sxba_first_difference (char_to_class_set [i], char_to_class_set [j]) == -1;
 }
 
 
-SXVOID lecl_bsc (SXBA *class_to_char_set, 
+void lecl_bsc (SXBA *class_to_char_set, 
 	       SXBA is_class_used_in_re, 
 	       SXINT char_max, 
 	       SXINT cmax, 

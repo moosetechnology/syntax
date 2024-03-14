@@ -9,10 +9,10 @@ CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS) -g
 all: $(LFG)/lfg.out		\
      $(LFG)/lfg_lex.out
 
-# $(SX)/bin/lfg.out:	$(LFG)/lfg.out
+# $(SXBIN)/lfg.out:	$(LFG)/lfg.out
 #	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 #
-# $(SX)/bin/lfg_lex.out:	$(LFG)/lfg_lex.out
+# $(SXBIN)/lfg_lex.out:	$(LFG)/lfg_lex.out
 #	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
 ###############################################################################

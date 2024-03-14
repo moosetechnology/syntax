@@ -22,7 +22,7 @@
 
 #include "PP_tables.h"
 
-char WHAT_PARADISREAD[] = "@(#)SYNTAX - $Id: paradisread.c 3146 2023-05-02 12:21:39Z garavel $" WHAT_DEBUG;
+char WHAT_PARADISREAD[] = "@(#)SYNTAX - $Id: paradisread.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 
 #define READ(f,p,l)		\
@@ -30,7 +30,7 @@ char WHAT_PARADISREAD[] = "@(#)SYNTAX - $Id: paradisread.c 3146 2023-05-02 12:21
 		goto read_error
 
 
-SXBOOLEAN		paradis_read (struct PP_ag_item *PP_ag, char *langname)
+bool		paradis_read (struct PP_ag_item *PP_ag, char *langname)
 {
     SXINT	bytes;
     sxfiledesc_t	/* file descriptor */ F_ppt;
@@ -50,7 +50,7 @@ SXBOOLEAN		paradis_read (struct PP_ag_item *PP_ag, char *langname)
 
     if (ppt_version != ppt_num_version) {
 	fprintf (sxstderr, "tables format has changed : please use the new paradis\n");
-	return (SXFALSE);
+	return (false);
     }
 
     READ (F_ppt, &PP_ag->bnf_modif_time, sizeof (SXINT));
@@ -60,11 +60,11 @@ SXBOOLEAN		paradis_read (struct PP_ag_item *PP_ag, char *langname)
     READ (F_ppt, PP_ag->SXPP_schema = (struct SXPP_schema*) sxalloc (PP_ag->PP_constants.PP_schema_lgth + 1, sizeof (struct
 	 SXPP_schema)), (PP_ag->PP_constants.PP_schema_lgth + 1) * sizeof (struct SXPP_schema));
     close (F_ppt);
-    return SXTRUE;
+    return true;
 
 read_error:
     fprintf (sxstderr, "%s: read error on ", ME);
 file_error:
     sxperror (ent_name);
-    return SXFALSE;
+    return false;
 }

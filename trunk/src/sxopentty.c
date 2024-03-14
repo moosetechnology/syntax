@@ -22,9 +22,9 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXOPENTTY[] = "@(#)SYNTAX - $Id: sxopentty.c 2428 2023-01-18 12:54:10Z garavel $" WHAT_DEBUG;
+char WHAT_SXOPENTTY[] = "@(#)SYNTAX - $Id: sxopentty.c 3632 2023-12-20 17:58:08Z garavel $" WHAT_DEBUG;
 
-SXVOID sxopentty (void)
+void sxopentty (void)
 {
   if (sxstdout == NULL) {
     /* variable non encore initialisee par l'utilisateur */
@@ -39,7 +39,7 @@ SXVOID sxopentty (void)
   if (sxtty == NULL) {
     if ((sxtty = fopen (SX_DEV_TTY, "a")) == NULL || !isatty (fileno (sxtty))) {
       sxtty = fopen (SX_DEV_NUL, "w") ; 
-      /* if (sxtty==NULL) sxverbosep=SXFALSE; */
+      /* if (sxtty==NULL) sxverbosep=false; */
     } else {
 #if O_TEXT
       setmode (fileno (sxtty), O_TEXT);

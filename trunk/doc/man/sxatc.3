@@ -11,7 +11,7 @@ struct sxtables  sxtables\|;
 
 SXNODE ***sxatc_stack ()
 
-SXVOID sxatc (what, sxtables)
+void sxatc (what, sxtables)
 .ta \w'SXVOI'u +\w'struct sxtables 'u
 	int	 what\|;
 	struct sxtables	*sxtables\|;
@@ -44,7 +44,7 @@ and the declarations are close to the following\|:
 	\fBSXINT\fP	 name	/* node name	*/,\\
 		 degree	/* node arity	*/,\\
 		 position	/* \fIposition\fPth son of its father	*/\|;\\
-	\fBSXBOOLEAN\fP	 is_list	/* is this node a list	*/,\\
+	\fBbool\fP	 is_list	/* is this node a list	*/,\\
 		 first_list_element	/* is this node the first element of a list	*/,\\
 		 last_list_element	/* is this node the last element of a list	*/\|;\\
 	\fBstruct\fP sxtoken	 token	/* lexical information	*/
@@ -61,12 +61,12 @@ to its right brother (or NULL), \fIson\fP is a pointer to its first son (or NULL
 i.e. its number of sons (0 for a leaf), \fIposition\fP, only valid for a non
 root node, is the rank as son of its father (1<=\fIposition\fP<=\fIfather\fP->\fIdegree\fP).
 .nr
-If the node represents a list \fIis_list\fP is \fBSXTRUE\fP.
+If the node represents a list \fIis_list\fP is \fBtrue\fP.
 .nr
 If the father of a node is a list and if \fIposition\fP is 1 then \fIfirst_list_element\fP
-is \fBSXTRUE\fP.
+is \fBtrue\fP.
 If its father is a list and if \fIposition\fP is equal to \fIfather\fP->\fIdegree\fP then \fIlast_list_element\fP
-is \fBSXTRUE\fP.
+is \fBtrue\fP.
 .nr
 If the node stands for a (generic) terminal symbol, \fItoken\fP contains its
 lexical attributes.
@@ -85,8 +85,8 @@ terminal symbol if the sentence is empty.
 	\fBSXINT\fP	 node_size	/* \fBsizeof\fP(\fBSXNODE\fP) */\|;
 	\fBSXATC_AREA\fP	*head	/* internal use	*/;
 	\fBSXINT\fP	 areaindex	/* internal use	*/;
-	\fBSXBOOLEAN\fP	 abstract_tree_is_error_node	/* \fBSXTRUE\fP if \fBERROR\fP node	*/;
-	\fBSXBOOLEAN\fP	 are_comments_erased	/* internal use	*/;
+	\fBbool\fP	 abstract_tree_is_error_node	/* \fBtrue\fP if \fBERROR\fP node	*/;
+	\fBbool\fP	 are_comments_erased	/* internal use	*/;
 	};
 
 .fi

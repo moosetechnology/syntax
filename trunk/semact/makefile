@@ -10,9 +10,9 @@ BNFLIB=$(BNF)/lib
 
 CC=$(COMPILER) -I$(BOOT) -I$(BNF) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
-all: $(SX)/bin/semact.out
+all: $(SXBIN)/semact.out
 
-$(SX)/bin/semact.out:	$(ACT)/semact.out
+$(SXBIN)/semact.out:	$(ACT)/semact.out
 	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
 NEEDS=	$(LIB)/semact_main.o		\

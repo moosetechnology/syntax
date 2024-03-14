@@ -21,9 +21,9 @@
 #include "sxunix.h"
 #include "D_tables.h"
 
-char WHAT_PRIOFREE[] = "@(#)SYNTAX - $Id: priofree.c 3146 2023-05-02 12:21:39Z garavel $" WHAT_DEBUG;
+char WHAT_PRIOFREE[] = "@(#)SYNTAX - $Id: priofree.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
-SXVOID	prio_free (struct priority **t_priorities, struct priority **r_priorities)
+void	prio_free (struct priority **t_priorities, struct priority **r_priorities)
 {
     if (*t_priorities != NULL) {
 	sxfree (*t_priorities), *t_priorities = NULL;

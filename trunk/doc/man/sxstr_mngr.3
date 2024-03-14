@@ -23,7 +23,7 @@ SXSTRtop
 \- string manager for SYNTAX.
 .SH SYNOPSIS
 .nf
-.ta \w'\s-2SXVOID\s0  'u +\w'\s-2SXVOID\s0  'u
+.ta \w'void  'u +\w'void  'u
 .B
 #include "sxunix.h"
 .PP
@@ -31,7 +31,7 @@ SXSTRtop
 typedef struct sxstrmngr sxstrmngr_t\|;
 .PP
 .B
-\s-2SXVOID\s0 sxstr_mngr (what, strtable)
+void sxstr_mngr (what, strtable)
 .B
 	int	 what\|;
 .B
@@ -91,14 +91,14 @@ unsigned int sxstr_size (strtable)
 	sxstrmngr_t	 *strtable\|;
 .PP
 .B
-SXVOID sxstr_dump (f, strtable)
+void sxstr_dump (f, strtable)
 .B
 	FILE	 *f\|;
 .B
 	sxstrmngr_t	 *strtable\|;
 .PP
 .B
-SXVOID sxstr_save_keywords (strtable, lang)
+void sxstr_save_keywords (strtable, lang)
 .B
 	sxstrmngr_t	*strtable\|;
 .B

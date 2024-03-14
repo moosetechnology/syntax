@@ -44,7 +44,7 @@
 #include "sxelc.h"
 #include "sxmatrix2vector.h"
 
-char WHAT_ELC_PARSER[] = "@(#)SYNTAX - $Id: ELC_parser.c 2428 2023-01-18 12:54:10Z garavel $" WHAT_DEBUG;
+char WHAT_ELC_PARSER[] = "@(#)SYNTAX - $Id: ELC_parser.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 /* BAG_mngr */
 typedef struct {
@@ -230,7 +230,7 @@ bag_clear (pbag)
 #if is_rfsa 
 #define RFSA_CHECKED(r,i)    (prod2lbs == NULL || SXBA_bit_is_set (prod2lbs [prolis [state2item [r]]], i)) 
 #else
-#define RFSA_CHECKED(r,i)    SXTRUE
+#define RFSA_CHECKED(r,i)    true
 #endif
 
 FILE	*sxstdout, *sxstderr;
@@ -240,7 +240,7 @@ FILE	*sxtty;
 			 par une execution de csynt_lc -elc L */
 
 static SXINT          max_node_set_size /* Estimation de la taille des ensembles node2node_set pour la tranche j */;
-static SXBOOLEAN      membership;
+static bool      membership;
 
 #if EBUG2
 static SXINT  node_hd_calls;
@@ -275,7 +275,7 @@ output (prod, i, j)
 #endif /* is_parse_forest */
 
 #if is_1LA && is_sdag
-static SXBOOLEAN
+static bool
 IS_AND (lhs_bits_array, rhs_bits_array)
     SXBA	lhs_bits_array, rhs_bits_array;
 {
@@ -287,10 +287,10 @@ IS_AND (lhs_bits_array, rhs_bits_array)
     while (lhs_slices_number-- > 0)
     {
 	if (*lhs_bits_ptr-- & *rhs_bits_ptr--)
-	    return SXTRUE;
+	    return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 #endif /* is_1LA && is_sdag */
 
@@ -378,7 +378,7 @@ p_dispatch (j, q, node_jq, node_ip)
      SXINT j, q, node_jq, node_ip;
 {
   SXINT item, Y, prod, t, i, p, p1, q1, base, A, r, bot, top, k, node_kr, node_jr; 
-  SXBOOLEAN new, ntk_trans;
+  bool new, ntk_trans;
   SXBA node_kr2node_set, node_jr2node_set, glbl_source_line;
 
   item = state2item [q];
@@ -391,7 +391,7 @@ p_dispatch (j, q, node_jq, node_ip)
     if (SCAN (j+1, -Y)) {
       if (q == 2)
 	/* j == n */
-	membership = SXTRUE;
+	membership = true;
       else {
 	/* On cree le noeud <j+1, q+1> on lui associe {node_ip} a la 1ere creation de node = <j+1, q+1>, on PUSH node_ip */
 	k = j+1;
@@ -579,7 +579,7 @@ p_dispatch (j, q, node_jq, node_ip)
 	 prod: B -> \beta . avec \beta =>* \epsilon */
       /* On sort "prod: Bii", la transition sur B est traitee statiquement, sauf si B==Y
          cad une des reductions vides que l'on vient de faire a son lhs nt qui est la transition kernel */
-      ntk_trans = SXFALSE;
+      ntk_trans = false;
       bot = eps_red_disp [q];
       top = eps_red_disp [q+1];
 
@@ -602,7 +602,7 @@ p_dispatch (j, q, node_jq, node_ip)
 		output (prod, j, j);
 #endif /* is_parse_forest */
 	      if (lhs [prod] == Y) {
-		ntk_trans = SXTRUE;
+		ntk_trans = true;
 	      }
 	    }
 	} while (++bot < top);
@@ -647,7 +647,7 @@ p_dispatch (j, q, node_jq, node_ip)
 
 
 
-SXBOOLEAN
+bool
 sxelc_parse_it ()
 {
   SXINT j, q, node_00, node_01, node_jq, node_ip, *stack;
@@ -719,7 +719,7 @@ sxelc_parse_it ()
   }
 
 #if EBUG2
-  printf ("Polynomial run (%s): node_calls = %i, nodes = %i\n", membership ? "SXTRUE" : "SXFALSE", node_hd_calls, XxY_top (node_hd));
+  printf ("Polynomial run (%s): node_calls = %i, nodes = %i\n", membership ? "true" : "false", node_hd_calls, XxY_top (node_hd));
 #endif
 
   XxY_free (&node_hd);
@@ -779,7 +779,7 @@ e_dispatch (i, p, chart)
       /* ... et c'est le t du source */
       if (X == -tmax)
 	/* X == eof et p est le seul etat depuis lequel il existe une transition sur eof */
-	membership = SXTRUE;
+	membership = true;
       else
 	e_dispatch (i+1, p+1, chart);
     }
@@ -921,7 +921,7 @@ e_dispatch (i, p, chart)
   }
 }
 
-SXBOOLEAN
+bool
 sxelc_parse_it ()
 {
   SXINT j, q, node_00, node_01, node_jq, node_ip, *stack;
@@ -942,7 +942,7 @@ sxelc_parse_it ()
 
 #if EBUG2
   printf ("Exponential run (%s): charts = %i, top_charts = %i, memo_hit = %i\n",
-	  membership ? "SXTRUE" : "SXFALSE", XxYxZ_top (chart_hd), i2chart_nb [n], memo_hit);
+	  membership ? "true" : "false", XxYxZ_top (chart_hd), i2chart_nb [n], memo_hit);
 
   sxfree (i2chart_nb), i2chart_nb = NULL;
 #endif
@@ -984,7 +984,7 @@ SXBA_OR (lhs_bits_array, rhs_bits_array)
   }
 }
 
-static SXBOOLEAN
+static bool
 SXBA_OR_MINUS (lhs_bits_array, lhs2_bits_array, rhs_bits_array)
     SXBA	lhs_bits_array, lhs2_bits_array, rhs_bits_array;
 /*
@@ -999,7 +999,7 @@ SXBA_OR_MINUS (lhs_bits_array, lhs2_bits_array, rhs_bits_array)
   SXBA	lhs_bits_ptr, lhs2_bits_ptr, rhs_bits_ptr;
   SXINT         rhs_size = SXBASIZE (rhs_bits_array);
   SXINT	        slices_number;
-  SXBOOLEAN ret_val = SXFALSE;
+  bool ret_val = false;
 
   if (rhs_size > SXBASIZE (lhs_bits_array)) {
     SXBASIZE (lhs_bits_array) = rhs_size;
@@ -1013,7 +1013,7 @@ SXBA_OR_MINUS (lhs_bits_array, lhs2_bits_array, rhs_bits_array)
 
   while (slices_number-- > 0) {
     if (*lhs2_bits_ptr = *rhs_bits_ptr-- & ~*lhs_bits_ptr) {
-      ret_val = SXTRUE;
+      ret_val = true;
       *lhs_bits_ptr-- |= *lhs2_bits_ptr--;
     }
     else {
@@ -1105,7 +1105,7 @@ p_dispatch (j, Q, node_jQ, node_ip, node_ip_set)
      SXBA node_ip_set;
 {
   SXINT item, Y, prod, t, i, p, p1, q, q1, base, A, r, bot, top, k, node_kr, node_jr; 
-  SXBOOLEAN new, ntk_trans;
+  bool new, ntk_trans;
   SXBA node_kr2node_set, node_jr2node_set, glbl_source_line, wset;
 
   if (Q <= max_state) {
@@ -1130,7 +1130,7 @@ p_dispatch (j, Q, node_jQ, node_ip, node_ip_set)
       if (SCAN (j+1, -Y)) {
 	if (q == 2)
 	  /* j == n */
-	  membership = SXTRUE;
+	  membership = true;
 	else {
 	  /* On cree le noeud <j+1, q+1> on lui associe {node_ip} a la 1ere creation de node = <j+1, q+1>, on PUSH node_ip */
 	  k = j+1;
@@ -1247,7 +1247,7 @@ p_dispatch (j, Q, node_jQ, node_ip, node_ip_set)
 	      } while (++bot < top);
 	    }
 	  }
-	} while (node_ip_set ? ((node_ip = sxba_scan (node_ip_set, node_ip)) > 0) : SXFALSE);
+	} while (node_ip_set ? ((node_ip = sxba_scan (node_ip_set, node_ip)) > 0) : false);
       }
       else {
 	/* Y est un nt */
@@ -1298,7 +1298,7 @@ p_dispatch (j, Q, node_jQ, node_ip, node_ip_set)
 	   prod: B -> \beta . avec \beta =>* \epsilon */
 	/* On sort "prod: Bii", la transition sur B est traitee statiquement, sauf si B==Y
 	   cad une des reductions vides que l'on vient de faire a son lhs nt qui est la transition kernel */
-	ntk_trans = SXFALSE;
+	ntk_trans = false;
 	bot = eps_red_disp [q];
 	top = eps_red_disp [q+1];
 
@@ -1321,7 +1321,7 @@ p_dispatch (j, Q, node_jQ, node_ip, node_ip_set)
 		  output (prod, j, j);
 #endif /* is_parse_forest */
 		if (lhs [prod] == Y) {
-		  ntk_trans = SXTRUE;
+		  ntk_trans = true;
 		}
 	      }
 	  } while (++bot < top);
@@ -1392,12 +1392,12 @@ p_dispatch (j, Q, node_jQ, node_ip, node_ip_set)
 
 
 
-SXBOOLEAN
+bool
 sxelc_parse_it ()
 {
   SXINT j, q, bot, top, node_00, node_01, node_jq, *stack;
   SXBA node_jq_set;
-  SXBOOLEAN RFSA_CHECK_done;
+  bool RFSA_CHECK_done;
 #if EBUG3
   char str [12];
 #endif /* EBUG3 */
@@ -1454,11 +1454,11 @@ sxelc_parse_it ()
 
     do {
       if ((node_jq = POP (cur_scan_stack)) < 0) {
-	RFSA_CHECK_done = SXFALSE;
+	RFSA_CHECK_done = false;
 	node_jq = -node_jq;
       }
       else
-	RFSA_CHECK_done = SXTRUE;
+	RFSA_CHECK_done = true;
 
       node_jq_set = node2node_set [node_jq];
       q = XxY_Y (node_hd, node_jq);
@@ -1492,7 +1492,7 @@ sxelc_parse_it ()
   }
 
 #if EBUG2
-  printf ("Polynomial run (%s): node_calls = %i, nodes = %i\n", membership ? "SXTRUE" : "SXFALSE", node_hd_calls, XxY_top (node_hd));
+  printf ("Polynomial run (%s): node_calls = %i, nodes = %i\n", membership ? "true" : "false", node_hd_calls, XxY_top (node_hd));
 #endif
 
   XxY_free (&node_hd);

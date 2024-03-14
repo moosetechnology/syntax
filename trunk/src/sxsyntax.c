@@ -23,20 +23,20 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXSYNTAX[] = "@(#)SYNTAX - $Id: sxsyntax.c 2428 2023-01-18 12:54:10Z garavel $" WHAT_DEBUG;
+char WHAT_SXSYNTAX[] = "@(#)SYNTAX - $Id: sxsyntax.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 /*---------------------------------------------------------------------------*/
 
-static SXBOOLEAN sxuses_incl_mngr = SXFALSE;
+static bool sxuses_incl_mngr = false;
 
 /*---------------------------------------------------------------------------*/
 
-SXVOID	syntax (SXINT syntax_what, struct sxtables *tables, ...)
+void	syntax (SXINT syntax_what, struct sxtables *tables, ...)
 {
     va_list ap;
     FILE *file;
     char *filename;
-    SXBOOLEAN sxdelete_str_mngr;
+    bool sxdelete_str_mngr;
 
     switch (syntax_what) {
     case SXOPEN: /* arguments: syntax (SXOPEN, tables) */
@@ -75,7 +75,7 @@ SXVOID	syntax (SXINT syntax_what, struct sxtables *tables, ...)
 
 	/* added by INRIA/CONVECS */
 	va_start (ap, tables);
-        sxuses_incl_mngr = va_arg (ap, SXINT /* SXBOOLEAN */);
+        sxuses_incl_mngr = va_arg (ap, SXINT /* bool */);
 	sxopentty ();
 	sxstr_mngr (SXBEGIN);
 	(*(tables->analyzers.parser)) (SXBEGIN, tables); /* it is unclear if the 'tables' parameter is really needed after SXBEGIN */
@@ -145,7 +145,7 @@ SXVOID	syntax (SXINT syntax_what, struct sxtables *tables, ...)
 
 	/* added by INRIA/CONVECS */
 	va_start (ap, tables);
-	sxdelete_str_mngr = va_arg (ap, SXINT /* SXBOOLEAN */);
+	sxdelete_str_mngr = va_arg (ap, SXINT /* bool */);
 	syntax (SXCLOSE, tables);
 	(*(tables->analyzers.parser)) (SXEND, tables);  /* it is unclear if the 'tables' parameter is really needed after SXEND */
 	if (sxuses_incl_mngr)

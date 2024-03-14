@@ -35,7 +35,7 @@ static char ME [] = "Non deterministic tree walker";
 # include <stdio.h>
 # include "sxnd.h"
 
-char WHAT_SXNDTREE_WALKER[] = "@(#)SYNTAX - $Id: sxndtreewalker.c 2428 2023-01-18 12:54:10Z garavel $" WHAT_DEBUG;
+char WHAT_SXNDTREE_WALKER[] = "@(#)SYNTAX - $Id: sxndtreewalker.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 static SXINT	lgt1;
 
@@ -55,7 +55,7 @@ SXINT sxndtw_is_cycle (SXINT node)
 }
 
 
-static SXVOID paths_oflw (SXINT old_size, SXINT new_size)
+static void paths_oflw (SXINT old_size, SXINT new_size)
 {
 
     sxndtw.is_erased = sxba_resize (sxndtw.is_erased, new_size + 1);
@@ -65,12 +65,12 @@ static SXVOID paths_oflw (SXINT old_size, SXINT new_size)
 }
 
 
-SXVOID	sxndtw_open (SXINT    (*pass_inherited) (void),
+void	sxndtw_open (SXINT    (*pass_inherited) (void),
 		     SXINT    (*pass_derived) (void),
-		     SXBOOLEAN  (*cycle_processing) (void),
-		     SXVOID     (*open_hook) (void), 
-		     SXVOID     (*close_hook) (void), 
-		     SXVOID     (*nodes_oflw) (SXINT, SXINT) )
+		     bool  (*cycle_processing) (void),
+		     void     (*open_hook) (void), 
+		     void     (*close_hook) (void), 
+		     void     (*nodes_oflw) (SXINT, SXINT) )
 {
     sxuse(cycle_processing); /* pour faire taire gcc -Wunused */
     sxndtw.pass_inherited = pass_inherited;
@@ -81,7 +81,7 @@ SXVOID	sxndtw_open (SXINT    (*pass_inherited) (void),
 }
 
 
-SXVOID	sxndtw_init (void)
+void	sxndtw_init (void)
 {
     SXINT item;
 
@@ -118,7 +118,7 @@ SXVOID	sxndtw_init (void)
 }
 
 
-SXVOID	sxndtw_final (void)
+void	sxndtw_final (void)
 {
     if (parse_stack.root > 0) {
 	XxY_free (&sxndtw.paths);
@@ -133,7 +133,7 @@ SXVOID	sxndtw_final (void)
 }
 
 
-SXVOID	sxndtw_close (void)
+void	sxndtw_close (void)
 {
     sxndtw.pass_inherited = NULL;
     sxndtw.pass_derived = NULL;
@@ -143,7 +143,7 @@ SXVOID	sxndtw_close (void)
 }
 
 
-SXVOID	sxndtw_node_erase (SXINT n)
+void	sxndtw_node_erase (SXINT n)
 {
     /* Indique que le sous-arbre "n" est supprime' et "recupere" les
        noeuds INTERNES de ce sous_arbre. */
@@ -168,7 +168,7 @@ SXVOID	sxndtw_node_erase (SXINT n)
 
 
 
-SXVOID	sxndtw_walk (void)
+void	sxndtw_walk (void)
 {
   SXINT p, arity, item, lhs_item;
 
@@ -258,19 +258,19 @@ SXVOID	sxndtw_walk (void)
 
 
 
-static SXBOOLEAN sxndtw_reached_symbol (SXINT node, SXINT symbol)
+static bool sxndtw_reached_symbol (SXINT node, SXINT symbol)
 {
     /* Calcule sxndtw.reached_symbol, l'ensemble des symboles qui sont atteints
        (il existe au moins un chemin) depuis la racine. */
     SXINT		i, arity, son_nb, son, item;
-    SXBOOLEAN	is_a_subtree;
+    bool	is_a_subtree;
 
     if (SXBA_bit_is_reset_set (sxndtw.reached_symbol, symbol)) {
 	if ((arity = sxndtw_symb_to_arity (symbol)) == 0)
-	    return SXTRUE;
+	    return true;
 	
 	item = sxndtw_symb_to_lhsitem (symbol);
-	is_a_subtree = SXTRUE;
+	is_a_subtree = true;
 	
 	if (symbol >= parse_stack.hook_rule) {
 	    /* visited node is the root of a hook. */
@@ -285,11 +285,11 @@ static SXBOOLEAN sxndtw_reached_symbol (SXINT node, SXINT symbol)
 		    son_nb++;
 		    
 		    if (!sxndtw_reached_symbol (son, sxndtw_item_to_symb (item)))
-			is_a_subtree = SXFALSE;
+			is_a_subtree = false;
 		}
 	    }
 	    
-	    return son_nb == 1 && is_a_subtree; /* SXFALSE => ambigu */
+	    return son_nb == 1 && is_a_subtree; /* false => ambigu */
 	}
 	else {
 	    for (i = 1; i <= arity; i++) {
@@ -299,7 +299,7 @@ static SXBOOLEAN sxndtw_reached_symbol (SXINT node, SXINT symbol)
 		    (void) sxndtw_node_to_son (node, item, son);
 		
 		    if (!sxndtw_reached_symbol (son, symbol))
-			is_a_subtree = SXFALSE;
+			is_a_subtree = false;
 		}
 	    }
 	    
@@ -307,11 +307,11 @@ static SXBOOLEAN sxndtw_reached_symbol (SXINT node, SXINT symbol)
 	}
     }
 
-    return SXFALSE; /* ambigu */
+    return false; /* ambigu */
 }
 
 
-SXVOID sxndtw_check_grammar (void)
+void sxndtw_check_grammar (void)
 {
     /* Calcule la (nouvelle) taille de la foret. */
     /* Calcule reached_symbol l'ensemble des symboles accessibles. */
@@ -386,7 +386,7 @@ SXVOID sxndtw_check_grammar (void)
 }
 
 
-static SXVOID sxndtw_execute_actions (SXINT symbol)
+static void sxndtw_execute_actions (SXINT symbol)
 {
     SXINT i, arity, item, red_no, new_top, action;
 
@@ -445,7 +445,7 @@ static SXVOID sxndtw_execute_actions (SXINT symbol)
 
 
 
-SXBOOLEAN sxndtw_sem_calls (void)
+bool sxndtw_sem_calls (void)
 {
     /* Assume grammar is a tree. */
     /* Simulate the calls to the semantics as if the grammar was deterministic. */
@@ -463,18 +463,18 @@ SXBOOLEAN sxndtw_sem_calls (void)
 
     /* final */
     sxfree (sxpglobals.parse_stack), sxpglobals.parse_stack = NULL;
-    return SXTRUE;
+    return true;
 }
 
 
-SXBOOLEAN	sxndrtw_walk (void)
+bool	sxndrtw_walk (void)
 {
     /* recursive walk */
     /* if sxndtw.pass_derived () returns a negative SXINT, the subtree is revisited. */
-    /* Returns SXFALSE iff the walk must go on. */
+    /* Returns false iff the walk must go on. */
     SXINT		father, father_symbol, visited, visited_symbol, visited_pos;
     SXINT		visited_arity, hook_pos, hook, hook_arity, son, son_pos, son_item, lhs_item, hook_item, hook_symbol, father_redno, sxndrtw_walk_what;
-    SXBOOLEAN	quit;
+    bool	quit;
 
     father = NDFATHER;
     father_symbol = NDFATHER_SYMBOL;
@@ -489,7 +489,7 @@ SXBOOLEAN	sxndrtw_walk (void)
 	    if (sxndtw.cycle_processing != NULL)
 		(*sxndtw.cycle_processing) ();
 
-	    return SXTRUE; /* Pour l'instant */
+	    return true; /* Pour l'instant */
 	}
 
 	SXBA_1_bit (sxndtw.reached_symbol, visited_symbol);
@@ -499,7 +499,7 @@ SXBOOLEAN	sxndrtw_walk (void)
 	sxndrtw_walk_what = 0;
 
 	if (sxndtw.pass_inherited != NULL && (*sxndtw.pass_inherited) () > 0)
-	    quit = SXTRUE;
+	    quit = true;
 	else {
 	    NDFATHER = visited;
 	    NDFATHER_SYMBOL = visited_symbol;
@@ -507,7 +507,7 @@ SXBOOLEAN	sxndrtw_walk (void)
 	    
 	    if (visited_symbol >= parse_stack.hook_rule /* a_hook */) {
 		/* A hook is kept iff at least one of its son is kept. */
-		quit = SXTRUE;
+		quit = true;
 		
 		for (hook_pos = 1; hook_pos <= visited_arity; hook_pos++) {
 		    hook_item = lhs_item + (NDVISITED_POSITION = hook_pos);
@@ -545,13 +545,13 @@ SXBOOLEAN	sxndrtw_walk (void)
 			(*sxndtw.close_hook) ();
 		    
 		    if (son_pos > hook_arity)
-			quit = SXFALSE;
+			quit = false;
 		    else
 			sxndtw_node_erase (hook);
 		}
 	    }
 	    else {
-		quit = SXFALSE; /* si visited_arity == 0 */
+		quit = false; /* si visited_arity == 0 */
 
 		for (son_pos = 1; son_pos <= visited_arity; son_pos++) {
 		    son_item = lhs_item + (NDVISITED_POSITION = son_pos);
@@ -574,7 +574,7 @@ SXBOOLEAN	sxndrtw_walk (void)
 	    if (!quit) {
 		if (sxndtw.pass_derived != NULL) {
 		    if ((sxndrtw_walk_what = (*sxndtw.pass_derived) ()) > 0)
-			quit = SXTRUE;
+			quit = true;
 		    /* Si sxndrtw_walk_what < 0 => on reboucle sur le sous arbre */
 		}
 	    }

@@ -21,9 +21,9 @@
 #include "sxunix.h"
 #include "S_tables.h"
 
-char WHAT_LECLFREE[] = "@(#)SYNTAX - $Id: leclfree.c 3146 2023-05-02 12:21:39Z garavel $" WHAT_DEBUG;
+char WHAT_LECLFREE[] = "@(#)SYNTAX - $Id: leclfree.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
-SXVOID	lecl_free (struct lecl_tables_s *lecl_tables_ptr)
+void	lecl_free (struct lecl_tables_s *lecl_tables_ptr)
 {
     SXINT	i;
 

@@ -22,7 +22,7 @@
 #include "sxcommon.h"
 #include "sxba.h"
 
-char WHAT_SXVOID[] = "@(#)SYNTAX - $Id: sxvoid.c 2428 2023-01-18 12:54:10Z garavel $" WHAT_DEBUG;
+char WHAT_SXVOID[] = "@(#)SYNTAX - $Id: sxvoid.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 void
 sxvoid (void)
@@ -30,11 +30,11 @@ sxvoid (void)
 {
 }
 
-SXBOOLEAN
+bool
 sxbvoid (void)
 /* procedure ne faisant rien */
 {
-  return SXFALSE;
+  return false;
 }
 
 SXINT

@@ -25,9 +25,9 @@ static char	ME [] = "NDS_RCVR";
 #include "sxnd.h"
 
 #ifndef VARIANT_32
-char WHAT_SXNDS_RECOVERY[] = "@(#)SYNTAX - $Id: sxnds_rcvr.c 2429 2023-01-18 13:45:40Z garavel $" WHAT_DEBUG;
+char WHAT_SXNDS_RECOVERY[] = "@(#)SYNTAX - $Id: sxnds_rcvr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 #else
-char WHAT_SXNDS_RECOVERY32[] = "@(#)SYNTAX - $Id: sxnds_rcvr.c 2429 2023-01-18 13:45:40Z garavel $ SXNDS_RCVR_32" WHAT_DEBUG;
+char WHAT_SXNDS_RECOVERY32[] = "@(#)SYNTAX - $Id: sxnds_rcvr.c 3633 2023-12-20 18:41:19Z garavel $ SXNDS_RCVR_32" WHAT_DEBUG;
 #endif
 
 extern SXSTMI   predicate_processing (struct SXS_action_or_prdct_code *action_or_prdct_code);
@@ -37,20 +37,20 @@ extern SXINT      clone_active_scanner (SXSTMI stmt);
 #define char_to_class(c) (sxndsvar.SXS_tables.S_char_to_simple_class[c])
 
 
-static SXVOID	allouer_correction (void)
+static void	allouer_correction (void)
 {
     SXINT	nmax;
     static SXINT paths_foreach [] = {0, 0, 1, 0, 0, 0};
 
     if (sxndsvar.rcvr.source_char == NULL) {
 	nmax = sxndsvar.SXS_tables.S_nmax + 1; /* au moins 1 */
-	sxndsvar.rcvr.source_char = (SXSHORT*) sxalloc (nmax + 1, sizeof (SXSHORT));
+	sxndsvar.rcvr.source_char = (short*) sxalloc (nmax + 1, sizeof (short));
 	sxndsvar.rcvr.source_classes = (SXINT*) sxalloc (nmax + 1, sizeof (SXINT));
 	/* place pour 4 X ... */
-	sxndsvar.rcvr.current.string = (SXSHORT*) sxalloc (nmax + 1 + 4, sizeof (SXSHORT));
-	sxndsvar.rcvr.may_be.string = (SXSHORT*) sxalloc (nmax + 1 + 4, sizeof (SXSHORT));
+	sxndsvar.rcvr.current.string = (short*) sxalloc (nmax + 1 + 4, sizeof (short));
+	sxndsvar.rcvr.may_be.string = (short*) sxalloc (nmax + 1 + 4, sizeof (short));
 	sxndsvar.rcvr.class_to_insert =
-	    (SXSHORT*) sxcalloc ((SXUINT)sxndsvar.SXS_tables.S_last_simple_class_no + 1, sizeof (SXSHORT));
+	    (short*) sxcalloc ((SXUINT)sxndsvar.SXS_tables.S_last_simple_class_no + 1, sizeof (short));
 	XxYxZ_alloc (&sxndsvar.rcvr.paths, "paths", 20, 1, paths_foreach, (sxoflw0_t) NULL, NULL);
     }
 
@@ -61,7 +61,7 @@ static SXVOID	allouer_correction (void)
 }
 
 
-static SXVOID	recovery_free (void)
+static void	recovery_free (void)
 {
     if (sxndsvar.rcvr.source_char != NULL) {
 	XxYxZ_free (&sxndsvar.rcvr.paths);
@@ -86,12 +86,12 @@ static SXVOID	recovery_free (void)
 /* CORRECTION  */
 /* *********** */
 
-static SXBOOLEAN	is_insertable (SXSTMI *tm_line, SXSTMI stmt, SXSHORT *sample)
+static bool	is_insertable (SXSTMI *tm_line, SXSTMI stmt, short *sample)
 {
     /* cherche s'il existe un caractere (sample) n'appartenant pas a
        S_dont_insert et ayant une transition vers stmt.
        Memoize function. */
-    SXSHORT     i;
+    short     i;
     SXINT	class_no;
 
     for (class_no = 2; class_no <= sxndsvar.SXS_tables.S_last_simple_class_no; class_no++) {
@@ -112,12 +112,12 @@ static SXBOOLEAN	is_insertable (SXSTMI *tm_line, SXSTMI stmt, SXSHORT *sample)
 
 	    if (i > 0) {
 		*sample = i - 1;
-		return SXTRUE;
+		return true;
 	    }
 	}
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
@@ -333,10 +333,10 @@ static void ndrcvr_one_scan (void)
 
 
 
-static SXBOOLEAN backward_traversal (SXINT node, SXINT stmt, SXINT j)
+static bool backward_traversal (SXINT node, SXINT stmt, SXINT j)
 {
     SXINT triple, source_index;
-    SXSHORT sample, c;
+    short sample, c;
 
     sxinitialise (sample);
 
@@ -351,14 +351,14 @@ static SXBOOLEAN backward_traversal (SXINT node, SXINT stmt, SXINT j)
 	else {
 	    if (sxndsvar.rcvr.is_may_be)
 		/* Deja un on abandonne le chemin */
-		return SXFALSE;
+		return false;
 
 #if 0
-	    /* on met -sample en j */ /* FAUX : sample est non positionne' si is_insertable() retourne SXFALSE ... */
+	    /* on met -sample en j */ /* FAUX : sample est non positionne' si is_insertable() retourne false ... */
 	    sxndsvar.rcvr.current.string [j] = -sample;
 #endif /* 0 */
 	    /* ... mais je ne sais pas le corriger !!  Je fais donc un truc pour que gcc -O -Wuninitialized ne crie pas (a juste titre) */
-	    sxndsvar.rcvr.current.string [j] = -((SXSHORT)(unsigned char)'a');
+	    sxndsvar.rcvr.current.string [j] = -((short)(unsigned char)'a');
 	}
     }
     else {
@@ -373,7 +373,7 @@ static SXBOOLEAN backward_traversal (SXINT node, SXINT stmt, SXINT j)
 	}
 
 	if (j == 0)
-	    return sxndsvar.rcvr.is_done = SXTRUE;
+	    return sxndsvar.rcvr.is_done = true;
 
 	for (j = sxndsvar.rcvr.current.model [0]; j > 0; j--) {
 	    if ((c = sxndsvar.rcvr.current.string [j]) < 0)
@@ -382,8 +382,8 @@ static SXBOOLEAN backward_traversal (SXINT node, SXINT stmt, SXINT j)
 	    sxndsvar.rcvr.may_be.string [j] = c;
 	}
 
-	sxndsvar.rcvr.is_may_be = SXTRUE;
-	return SXFALSE;
+	sxndsvar.rcvr.is_may_be = true;
+	return false;
     }
 
     
@@ -391,10 +391,10 @@ static SXBOOLEAN backward_traversal (SXINT node, SXINT stmt, SXINT j)
 	if (backward_traversal (XxYxZ_X (sxndsvar.rcvr.paths, triple),
 				XxYxZ_Y (sxndsvar.rcvr.paths, triple),
 				j))
-	    return SXTRUE;
+	    return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
@@ -576,11 +576,11 @@ static SXINT	has_dont_delete (void)
 
 
 
-static SXVOID tryacorr (void)
+static void tryacorr (void)
 {
     SXINT j, kind;
 
-    sxndsvar.rcvr.is_done = sxndsvar.rcvr.is_may_be = SXFALSE;
+    sxndsvar.rcvr.is_done = sxndsvar.rcvr.is_may_be = false;
 
     for (sxndsvar.rcvr.current.model_no = 1;
 	 sxndsvar.rcvr.current.model_no <= sxndsvar.SXS_tables.S_nbcart;
@@ -596,7 +596,7 @@ static SXVOID tryacorr (void)
 		if (kind == 1) {
 		    /* Le modele courant a supprimer des caracteres de dont_delete */
 		    if (!sxndsvar.rcvr.is_may_be) {
-			sxndsvar.rcvr.is_may_be = SXTRUE;
+			sxndsvar.rcvr.is_may_be = true;
 			sxndsvar.rcvr.may_be.model = sxndsvar.rcvr.current.model;
 			sxndsvar.rcvr.may_be.model_no = sxndsvar.rcvr.current.model_no;
 			
@@ -605,7 +605,7 @@ static SXVOID tryacorr (void)
 		    }
 		    /* else on conserve l'autre */
 		    
-		    sxndsvar.rcvr.is_done = SXFALSE;
+		    sxndsvar.rcvr.is_done = false;
 		}
 	    }
 	    
@@ -615,7 +615,7 @@ static SXVOID tryacorr (void)
     }
 
     if (sxndsvar.rcvr.is_may_be) {
-	sxndsvar.rcvr.is_done = SXTRUE;
+	sxndsvar.rcvr.is_done = true;
 	sxndsvar.rcvr.current.model = sxndsvar.rcvr.may_be.model;
 	sxndsvar.rcvr.current.model_no = sxndsvar.rcvr.may_be.model_no;
 			
@@ -626,7 +626,7 @@ static SXVOID tryacorr (void)
 
 
 
-static SXBOOLEAN	nds_recovery (void)
+static bool	nds_recovery (void)
 {
     /* Une correction impliquant la suppression d'un caractere dont la classe
        simple est dans S_dont_delete ne peut etre validee que s'il n'existe
@@ -673,11 +673,11 @@ static SXBOOLEAN	nds_recovery (void)
 		     sxndsvar.sxtables->err_titles [2]+1);
 
 	sxlaback (sxndsvar.SXS_tables.S_nmax);
-	return SXFALSE;
+	return false;
     }
 
     if (!sxsvar.sxlv.mode.is_silent) {
-	SXSHORT	sxchar;
+	short	sxchar;
 
 	if (!sxndsvar.rcvr.is_done) {
 	    /* No Correction => Recovery */
@@ -748,12 +748,12 @@ static SXBOOLEAN	nds_recovery (void)
 	sxnext_char ();
     }
 
-    return SXTRUE; /* Ajoute' au pif le 14/05/2003 */
+    return true; /* Ajoute' au pif le 14/05/2003 */
 }
 
 
 
-SXBOOLEAN		sxndsrecovery (SXINT sxndsrecovery_what)
+bool		sxndsrecovery (SXINT sxndsrecovery_what)
 {
     switch (sxndsrecovery_what) {
     case SXACTION:
@@ -773,5 +773,5 @@ SXBOOLEAN		sxndsrecovery (SXINT sxndsrecovery_what)
 	sxexit(1);
     }
 
-    return SXTRUE;
+    return true;
 }

@@ -133,15 +133,15 @@ sxheap	*sxheap_ptr_;
 #define sxheap_seek(h)		(sxheap_ptr_=&(h),sxindex_seek(&((h).indexes)))
 #define sxheap_access(h,x)	(h).buf [sxindex_i((h).indexes,x)][sxindex_j((h).indexes,x)]
 
-extern SXVOID sxheap_oflw (/* sxindex_header* */);
-extern SXVOID sxheap_alloc (/* sxheap_header*, SXINT */);
-extern SXVOID sxheap_free (/* sxheap_header* */);
+extern void sxheap_oflw (/* sxindex_header* */);
+extern void sxheap_alloc (/* sxheap_header*, SXINT */);
+extern void sxheap_free (/* sxheap_header* */);
 
 /* fin INCLUDE	sxheap.h	*/
 
 /* Module sxheap_mngr.c		*/
 
-SXVOID sxheap_oflw (index_header_ptr, old_line_nb, old_size)
+void sxheap_oflw (index_header_ptr, old_line_nb, old_size)
     sxindex_header 	*index_header_ptr;
     SXINT			old_line_nb, old_size;
 {
@@ -157,7 +157,7 @@ SXVOID sxheap_oflw (index_header_ptr, old_line_nb, old_size)
     }
 }
 
-SXVOID sxheap_alloc (header, size)
+void sxheap_alloc (header, size)
     sxheap_header	*header;
     SXINT			size;
 {
@@ -174,7 +174,7 @@ SXVOID sxheap_alloc (header, size)
     }
 }
 
-SXVOID sxheap_free (header)
+void sxheap_free (header)
     sxheap_header	*header;
 {
     SXINT i = sxindex_line_nb (header->indexes);

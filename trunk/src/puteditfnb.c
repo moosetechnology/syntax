@@ -21,9 +21,9 @@
 #include "sxunix.h"
 #include "put_edit.h"
 
-char WHAT_PUTEDITFNB[] = "@(#)SYNTAX - $Id: puteditfnb.c 2947 2023-03-29 17:06:41Z garavel $" WHAT_DEBUG;
+char WHAT_PUTEDITFNB[] = "@(#)SYNTAX - $Id: puteditfnb.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
-SXVOID	put_edit_fnb (SXINT col, SXINT f, SXINT number)
+void	put_edit_fnb (SXINT col, SXINT f, SXINT number)
 {
     size_t	len;
 

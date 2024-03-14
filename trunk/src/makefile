@@ -17,7 +17,6 @@
 
 include $(SX)/etc/make/gccoptions
 
-SRC=$(SX)/src
 BIB=$(SXLIB)/libsx.a
 
 CC=$(COMPILER) -I$(SXINCL)
@@ -107,7 +106,7 @@ PUT_EDIT=		$(BIB)(puteditcut.o)	\
 			$(BIB)(puteditpos.o)
 EQ_SORT=		$(BIB)(eq_sort.o)	\
 			$(BIB)(fermer.o)
-SXVOID=			$(BIB)(sxvoid.o)
+void=			$(BIB)(sxvoid.o)
 
 $(BIB):		$(FORCE)		\
 		$(FSA_MNGR)		\
@@ -144,7 +143,7 @@ $(BIB):		$(FORCE)		\
 		$(XxYxZ_MNGR)		\
 		$(PUT_EDIT)		\
 		$(EQ_SORT)		\
-		$(SXVOID)
+		$(void)
 
 	cd $(SXLIB) ; $(RANLIB) $@
 
@@ -182,7 +181,7 @@ $(XxYxZ_MNGR)		:	$(FORCE)	$(SXINCL)/XxYxZ.h
 $(FSA_MNGR)		:	$(FORCE)        $(SXINCL)/fsa.h
 $(PUT_EDIT)		:	$(FORCE)
 $(EQ_SORT)		:	$(FORCE)	$(SXINCL)/sxba.h	$(SXINCL)/sxstack.h
-$(SXVOID)		:	$(FORCE)
+$(void)		:	$(FORCE)
 
 $(SXINCL)/sxversion.h: 
 	$(SX)/etc/bin/make-sxversion $(SX)
@@ -190,5 +189,5 @@ $(SXINCL)/sxversion.h:
 .PHONY: $(SXINCL)/sxversion.h
 
 clean:
-	/bin/rm -f $(SRC)/*.o
+	/bin/rm -f $(SXSRC)/*.o
 

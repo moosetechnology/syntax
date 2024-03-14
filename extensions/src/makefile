@@ -1,32 +1,32 @@
 
 include $(SX)/etc/make/gccoptions
 
-SRC=$(SX)/src
-
 CC=$(COMPILER) -I$(SXINCL) $(CFLAGS)
 
 FORCE=$(SXINCL)/sxunix.h
 
-all: $(SXLIB)/sxmem_mngr.d.o	\
+ALL= $(SXLIB)/sxmem_mngr.d.o	\
      $(SXLIB)/dbgaction.d.o	\
      $(SXLIB)/sxmain.o		\
      $(SXLIB)/sxscanner.d.o	\
      $(SXLIB)/sxsrc_mngr.d.o
 
-$(SXLIB)/sxmem_mngr.d.o:	$(SRC)/sxmem_mngr.c	$(FORCE)
-	$(CC) -o $@ -c $(SRC)/sxmem_mngr.c
+all: $(ALL)
 
-$(SXLIB)/dbgaction.d.o:	$(SRC)/dbgaction.c	$(FORCE)
-	$(CC) -o $@ -c $(SRC)/dbgaction.c
+$(SXLIB)/sxmem_mngr.d.o:	$(SXSRC)/sxmem_mngr.c	$(FORCE)
+	$(CC) -o $@ -c $(SXSRC)/sxmem_mngr.c
 
-$(SXLIB)/sxmain.o:	$(SRC)/sxmain.c		$(FORCE)
-	$(CC) -o $@ -c $(SRC)/sxmain.c
+$(SXLIB)/dbgaction.d.o:	$(SXSRC)/dbgaction.c	$(FORCE)
+	$(CC) -o $@ -c $(SXSRC)/dbgaction.c
 
-$(SXLIB)/sxscanner.d.o:	$(SRC)/sxscanner.c	$(FORCE)
-	$(CC) -o $@ -c $(SRC)/sxscanner.c
+$(SXLIB)/sxmain.o:	$(SXSRC)/sxmain.c		$(FORCE)
+	$(CC) -o $@ -c $(SXSRC)/sxmain.c
 
-$(SXLIB)/sxsrc_mngr.d.o:	$(SRC)/sxsrc_mngr.c	$(FORCE)
-	$(CC) -o $@ -c $(SRC)/sxsrc_mngr.c
+$(SXLIB)/sxscanner.d.o:	$(SXSRC)/sxscanner.c	$(FORCE)
+	$(CC) -o $@ -c $(SXSRC)/sxscanner.c
+
+$(SXLIB)/sxsrc_mngr.d.o:	$(SXSRC)/sxsrc_mngr.c	$(FORCE)
+	$(CC) -o $@ -c $(SXSRC)/sxsrc_mngr.c
 
 NBEST=                  $(BIB)(nbest_semact.o)
 OUTPUT=                 $(BIB)(output_semact.o)
@@ -124,5 +124,5 @@ sxnds_rcvr32.c	:	sxnds_rcvr.c
 	(echo '#define SXP_MAX (SHRT_MAX+1)';echo '#define SXS_MAX (SHRT_MAX+1)';echo '#define VARIANT_32 1';echo '#include "sxnds_rcvr.c"') > $@
 
 clean:
-	@echo "clean target for src should be provided"
+	rm -f $(ALL)
 

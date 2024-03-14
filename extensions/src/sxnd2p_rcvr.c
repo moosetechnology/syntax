@@ -34,21 +34,21 @@ static char	ME [] = "NDPRECOVERY";
 # include "XH.h"
 # include "sxnd.h"
 
-char WHAT_SXND2P_RECOVERY[] = "@(#)SYNTAX - $Id: sxnd2p_rcvr.c 3233 2023-05-15 16:16:17Z garavel $" WHAT_DEBUG;
+char WHAT_SXND2P_RECOVERY[] = "@(#)SYNTAX - $Id: sxnd2p_rcvr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 extern SXINT			NDP_access ();
 extern SXINT			seek_parser ();
-extern SXVOID			set2_first_trans ();
-extern SXBOOLEAN			set2_next_trans ();
-extern SXVOID			sxndsubparse_a_token ();
-extern SXVOID			reducer ();
+extern void			set2_first_trans ();
+extern bool			set2_next_trans ();
+extern void			sxndsubparse_a_token ();
+extern void			reducer ();
 extern struct sxmilstn_elem	*milestone_new ();
-extern SXVOID                   sxnd2parser_GC ();
+extern void                   sxnd2parser_GC ();
 
 
 /* E R R O R   R E C O V E R Y */
 
-static SXVOID compute_a_trans (parser_seed, head)
+static void compute_a_trans (parser_seed, head)
     SXINT parser_seed, head;
 {
     /* On est en correction, les parser : (state, ref, tok_no) ne doivent pas
@@ -83,7 +83,7 @@ static SXVOID compute_a_trans (parser_seed, head)
     }
 
     *parse_stack.for_scanner.next_hd = 0;
-    sxndsubparse_a_token (parser_seed, XxYxZ_Y (parse_stack.parsers, parser_seed), 0, SXTRUE);
+    sxndsubparse_a_token (parser_seed, XxYxZ_Y (parse_stack.parsers, parser_seed), 0, true);
 
     if (parse_stack.for_reducer.top > 0)
 	reducer ();
@@ -114,7 +114,7 @@ static SXINT	get_tail (binf, bsup)
 
 
 
-static SXBOOLEAN	morgan (c1, c2)
+static bool	morgan (c1, c2)
     char	*c1, *c2;
 
 /* rend vrai si c1 = c2 a une faute d'orthographe pres */
@@ -127,7 +127,7 @@ static SXBOOLEAN	morgan (c1, c2)
     switch ((l1 = strlen (c1)) - (l2 = strlen (c2))) {
     default:
 	/* longueurs trop differentes */
-	return SXFALSE;
+	return false;
 
     case 0:
 	/* longueurs egales: on autorise un remplacement ou une interversion
@@ -139,7 +139,7 @@ static SXBOOLEAN	morgan (c1, c2)
 
 	if (t1 == tmax)
 	    /* egalite */
-	    return SXTRUE;
+	    return true;
 
 	d1 = *t1++, d2 = *t2++ /* caracteres courants, differents */ ;
 	e1 = *t1++, e2 = *t2++ /* caracteres suivants */ ;
@@ -147,7 +147,7 @@ static SXBOOLEAN	morgan (c1, c2)
 	if (e1 != e2 /* caracteres suivants differents */
 		     && (d1 != e2 || e1 != d2))
 	    /* caracteres pas inverses */
-	    return SXFALSE;
+	    return false;
 
 
 /* les restes des chaines doivent etre egaux */
@@ -176,7 +176,7 @@ static SXBOOLEAN	morgan (c1, c2)
 
     if (*t2 == SXNUL)
 	/* egalite au dernier caractere pres */
-	return SXTRUE;
+	return true;
 
     t1++ /* on saute un caractere dans la chaine la plus longue */ ;
 
@@ -202,14 +202,14 @@ static char	*tok_text (tok_no)
 }
 
 
-static SXBOOLEAN validate_submodel (model_no, model, parser, pos, bot, a_la_rigueur)
+static bool validate_submodel (model_no, model, parser, pos, bot, a_la_rigueur)
     SXINT		model_no, parser, pos, bot;
     SXINT 	*model;
-    SXBOOLEAN	a_la_rigueur;
+    bool	a_la_rigueur;
 {
     /* Retourne vrai ssi un modele est trouve'. */
     SXINT		lim, l, x, seed, elem, t;
-    SXBOOLEAN	local_a_la_rigueur;
+    bool	local_a_la_rigueur;
 
     if (pos < bot) {
 	/* lter contient une correction */ 
@@ -226,7 +226,7 @@ static SXBOOLEAN validate_submodel (model_no, model, parser, pos, bot, a_la_rigu
 	    parse_stack.rcvr.best.MS [l] = parse_stack.rcvr.MS [l];
 	}
 
-	return SXTRUE;
+	return true;
     }
 
     XxY_Yforeach (parse_stack.rcvr.seeds, parser, x) {
@@ -246,7 +246,7 @@ static SXBOOLEAN validate_submodel (model_no, model, parser, pos, bot, a_la_rigu
 		&& morgan (tok_text (sxplocals.rcvr.TOK_i), sxttext (sxplocals.sxtables, t))) {
 		if (sxgetbit (sxplocals.SXP_tables.P_no_insert, t)) {
 		    /* On ne peut inserer t */
-		    local_a_la_rigueur = SXTRUE;
+		    local_a_la_rigueur = true;
 		}
 	    }
 	    else
@@ -268,7 +268,7 @@ static SXBOOLEAN validate_submodel (model_no, model, parser, pos, bot, a_la_rigu
 		if (validate_submodel (model_no, model, seed, pos - 1, bot, local_a_la_rigueur))
 		    if (!parse_stack.rcvr.best.a_la_rigueur || a_la_rigueur)
 			/* On ne pourra pas trouver mieux localement. */
-			return SXTRUE;
+			return true;
 	}
     }
 
@@ -276,7 +276,7 @@ static SXBOOLEAN validate_submodel (model_no, model, parser, pos, bot, a_la_rigu
 }
 
 
-static SXBOOLEAN validate_model (model_no, pos)
+static bool validate_model (model_no, pos)
     SXINT		model_no, pos;
 {
     SXINT 	*model = sxplocals.SXP_tables.P_lregle [model_no];
@@ -292,7 +292,7 @@ static SXBOOLEAN validate_model (model_no, pos)
 			       bot, parse_stack.rcvr.dont_delete)) {
 	    if (!parse_stack.rcvr.best.a_la_rigueur)
 		/* On ne pourra pas trouver mieux localement. */
-		return SXTRUE;
+		return true;
 	}
     }
 
@@ -301,7 +301,7 @@ static SXBOOLEAN validate_model (model_no, pos)
 
 
 
-static SXBOOLEAN try_a_model (pos, parser_seed, model_no)
+static bool try_a_model (pos, parser_seed, model_no)
     SXINT		pos, parser_seed, model_no;
 {
     SXINT 		*model = sxplocals.SXP_tables.P_lregle [model_no];
@@ -346,7 +346,7 @@ static SXBOOLEAN try_a_model (pos, parser_seed, model_no)
 	}
 
 	if ((parser_seed = parse_stack.rcvr.prefixes_to_milestones [index].next_for_scanner) == 0)
-	    return SXFALSE;
+	    return false;
     } while (head != tail);
 
     /* Le modele est correct, il faut maintenant le valider vis-a-vis des 
@@ -355,7 +355,7 @@ static SXBOOLEAN try_a_model (pos, parser_seed, model_no)
 }
 
 
-static SXBOOLEAN dont_delete (model_no)
+static bool dont_delete (model_no)
     SXINT model_no;
 {
     /* Retourne vrai si le modele model_no implique au moins un element de dont_delete. */
@@ -378,11 +378,11 @@ static SXBOOLEAN dont_delete (model_no)
 	    
 	    if (sxgetbit (sxplocals.SXP_tables.P_no_delete,
 			  SXGET_TOKEN (sxplocals.rcvr.TOK_i).lahead))
-		return SXTRUE;
+		return true;
 	}
     }
     
-    return SXFALSE;
+    return false;
 }
 
 
@@ -406,7 +406,7 @@ static SXINT is_a_spelling_model (model_no)
 }
 
 
-static SXVOID fill_vt_set (vt_set, parser)
+static void fill_vt_set (vt_set, parser)
     SXBA	vt_set;
     SXINT		parser;
 {
@@ -432,7 +432,7 @@ static compute_vt_set (vt_set, parser)
     *parse_stack.for_scanner.next_hd == 0;
     
     do {
-	sxndsubparse_a_token (parser, XxYxZ_Y (parse_stack.parsers, parser), 0, SXTRUE);
+	sxndsubparse_a_token (parser, XxYxZ_Y (parse_stack.parsers, parser), 0, true);
     } while ((parser = parse_stack.parser_to_attr [parser].next_for_scanner) > 0);
     
     if (parse_stack.for_reducer.top > 0)
@@ -443,10 +443,10 @@ static compute_vt_set (vt_set, parser)
 }
 
 
-static SXVOID local_correction ()
+static void local_correction ()
 {
     SXINT		z, i, model_no, pos;
-    SXBOOLEAN	is_a_0_model;
+    bool	is_a_0_model;
     
     
     /* L'erreur sera marquee (listing) a l'endroit de la detection */
@@ -526,7 +526,7 @@ static SXVOID local_correction ()
 }
 
 
-static SXVOID set_next_shift_state (son, fathers_state, ref, tnt)
+static void set_next_shift_state (son, fathers_state, ref, tnt)
     SXINT		son, fathers_state;
     SXINT		ref, tnt;
 {
@@ -592,7 +592,7 @@ static SXVOID set_next_shift_state (son, fathers_state, ref, tnt)
 }
 
 
-static SXVOID create_path (son, fathers_state)
+static void create_path (son, fathers_state)
     SXINT son, fathers_state;
 {
     /* Attention, les parsers crees ne doivent pas etre GCer... */
@@ -641,7 +641,7 @@ static SXVOID create_path (son, fathers_state)
 
 
 
-static SXVOID process_sons (father, grand_fathers_state)
+static void process_sons (father, grand_fathers_state)
     SXINT		father, grand_fathers_state;
 {
     /* father est un parser du squelette, on initialise les chemins issus
@@ -703,7 +703,7 @@ static char	*ttext (tables, tcode)
 
 
 
-static SXBOOLEAN is_a_right_ctxt (head, tail)
+static bool is_a_right_ctxt (head, tail)
     SXINT head, tail;
 {
     /* On verifie que tokens [TOK_0 + head .. TOK_0 + tail]
@@ -726,7 +726,7 @@ static SXBOOLEAN is_a_right_ctxt (head, tail)
 	for (parser = current;
 	     parser > 0;
 	     parser = parse_stack.parser_to_attr [parser].next_for_scanner) {
-	    sxndsubparse_a_token (parser, XxYxZ_Y (parse_stack.parsers, parser), 0, SXTRUE);
+	    sxndsubparse_a_token (parser, XxYxZ_Y (parse_stack.parsers, parser), 0, true);
 	}
 
 	if (parse_stack.for_reducer.top > 0)
@@ -745,10 +745,10 @@ static SXBOOLEAN is_a_right_ctxt (head, tail)
 
 
 
-static SXVOID nd2_try_a_correction ()
+static void nd2_try_a_correction ()
 {
     SXINT				z, model_no, pos, index, prev_for_scanner, parser_seed;
-    SXBOOLEAN			is_local_correction;
+    bool			is_local_correction;
     struct sxmilstn_elem	*prev_ms_ptr;
 
     XxY_clear (&parse_stack.rcvr.seeds);
@@ -769,7 +769,7 @@ static SXVOID nd2_try_a_correction ()
 	    prev_ms_ptr =
 		&sxmilstn_access (sxndtkn.milestones, parse_stack.rcvr.nd2.prev_ms_nb);
 	    prev_for_scanner = prev_ms_ptr->next_for_scanner;
-	    is_local_correction = SXFALSE;
+	    is_local_correction = false;
 	    
 	    /* On poursuit si le modele courant est meilleur que le modele actuel
 	       ou si le meilleur modele est un "a_la_rigueur" et si le modele courant
@@ -805,7 +805,7 @@ static SXVOID nd2_try_a_correction ()
 			   parser_seed vaut 0. */
 			
 			if (parser_seed > 0 && try_a_model (0, parser_seed, model_no)) {
-			    is_local_correction = SXTRUE;
+			    is_local_correction = true;
 			    break;
 			}
 		    }
@@ -822,7 +822,7 @@ static SXVOID nd2_try_a_correction ()
 
 
 
-static SXVOID nd2_unfold (mstn, n, lim)
+static void nd2_unfold (mstn, n, lim)
     SXINT mstn, n, lim;
 {
     SXINT 			x;
@@ -849,7 +849,7 @@ static SXVOID nd2_unfold (mstn, n, lim)
 
 
 
-static SXBOOLEAN 	global_recovery (parser_seed)
+static bool 	global_recovery (parser_seed)
     SXINT parser_seed;
 {
     SXINT	head, tail, x, top, p;
@@ -907,7 +907,7 @@ static SXBOOLEAN 	global_recovery (parser_seed)
 		sxndsubparse_a_token (XxYxZ_X (parse_stack.rcvr.shifts, x),
 				      XxYxZ_Y (parse_stack.rcvr.shifts, x),
 				      0,
-				      SXTRUE);
+				      true);
 		
 		if (parse_stack.for_reducer.top > 0)
 		    reducer ();
@@ -987,7 +987,7 @@ static SXINT nd2_search_validation_context (parser_seed, mstn_nb, n, lim)
 }
 
 
-static SXBOOLEAN nd2_search_key_terminal (parser_seed, mstn_ptr)
+static bool nd2_search_key_terminal (parser_seed, mstn_ptr)
     SXINT				parser_seed;
     struct sxmilstn_elem 	*mstn_ptr;
 {
@@ -1005,7 +1005,7 @@ static SXBOOLEAN nd2_search_key_terminal (parser_seed, mstn_ptr)
 	mstn_nb = mstn_ptr->my_index;
 
 	if (mstn_nb == sxndtkn.eof_milestone)
-	    return SXFALSE;
+	    return false;
 
 	XxYxZ_Zforeach (sxndtkn.dag, mstn_nb, z) {
 	    tok_no = XxYxZ_Y (sxndtkn.dag, z);
@@ -1033,7 +1033,7 @@ static SXBOOLEAN nd2_search_key_terminal (parser_seed, mstn_ptr)
 
 
 
-static SXVOID modify_dag ()
+static void modify_dag ()
 {
     /* On a trouve une correction (dans rcvr.best), on modifie le dag
        des tokens en consequence. */
@@ -1087,7 +1087,7 @@ static SXVOID modify_dag ()
 	sxtrap (ME, "modify_dag");
 
     x = bot;
-    parse_stack.rcvr.is_warning = SXTRUE;
+    parse_stack.rcvr.is_warning = true;
 
     for (l = bot + 1; l <= lmod; l++) {
 	i = model [l];
@@ -1105,7 +1105,7 @@ static SXVOID modify_dag ()
 	    tok.comment = sxplocals.rcvr.com [l];
 
 	    if (sxgenericp (sxplocals.sxtables, tok.lahead))
-		parse_stack.rcvr.is_warning = SXFALSE;
+		parse_stack.rcvr.is_warning = false;
 
 	    sxput_token (tok);
 	    cur_tok = sxplocals.Mtok_no;
@@ -1139,7 +1139,7 @@ static SXVOID modify_dag ()
 }
 
 
-static SXBOOLEAN	less_equal (z1, z2)
+static bool	less_equal (z1, z2)
     SXINT z1, z2;
 {
     return XxYxZ_X (sxndtkn.dag, z1) <= XxYxZ_X (sxndtkn.dag, z2);
@@ -1148,7 +1148,7 @@ static SXBOOLEAN	less_equal (z1, z2)
 
 
 
-static SXVOID nd2_local_correction ()
+static void nd2_local_correction ()
 {
     /* Dans un premier temps, on s'occupe uniquement de milstn_current.
        Il serait possible de tenter des corrections (meme eventuellement multiples)
@@ -1251,21 +1251,21 @@ static SXVOID nd2_local_correction ()
 
 
 
-static SXBOOLEAN	ndp_recovery ()
+static bool	ndp_recovery ()
 {
     char				*msg_params [5];
     SXINT 				*regle;
     struct SXP_local_mess		*local_mess;
     struct sxtoken			*tok;
 
-    SXBOOLEAN			with_semact = sxplocals.mode.with_semact;
-    SXBOOLEAN			ret_val = SXTRUE;
+    bool			with_semact = sxplocals.mode.with_semact;
+    bool			ret_val = true;
     SXINT				mode = sxplocals.mode.mode;
     SXINT				im, ll, i, j, k, p, x, y, ate;
     SXINT				vt_set_card;
 
-    parse_stack.rcvr.is_up = SXTRUE;
-    sxplocals.mode.with_semact = SXFALSE;
+    parse_stack.rcvr.is_up = true;
+    sxplocals.mode.with_semact = false;
 
     /* + 1 => vt_set_card == 1
        + 2 => vt_set_card > 1
@@ -1366,7 +1366,7 @@ static SXBOOLEAN	ndp_recovery ()
 	    j = sxplocals.SXP_tables.P_right_ctxt_head [parse_stack.rcvr.best.model_no];
 	    l = (regle [1] == 0) ? 2 : 1;
 	    n = 0;
-	    parse_stack.rcvr.is_warning = SXTRUE;
+	    parse_stack.rcvr.is_warning = true;
 	    
 	    for (tok = sxplocals.rcvr.toks; (i = regle [l]) < j; l++, tok++) {
 		if (i < 0) {
@@ -1376,7 +1376,7 @@ static SXBOOLEAN	ndp_recovery ()
 		    tok->source_index = SXGET_TOKEN (sxplocals.rcvr.TOK_i).source_index;
 		    
 		    if (sxgenericp (sxplocals.sxtables, tok->lahead))
-			parse_stack.rcvr.is_warning = SXFALSE;
+			parse_stack.rcvr.is_warning = false;
 		}
 		else {
 		    sxplocals.rcvr.TOK_i = parse_stack.rcvr.TOK [i];
@@ -1579,7 +1579,7 @@ static SXBOOLEAN	ndp_recovery ()
 			/* Les conse'quences de la non re'cupe'ration seront traite'es par
 			   le parser. */
 			sxplocals.ptok_no = sxplocals.rcvr.TOK_0;
-			ret_val = SXFALSE;
+			ret_val = false;
 			break;
 		    }
 		    
@@ -1597,7 +1597,7 @@ static SXBOOLEAN	ndp_recovery ()
 			    parse_stack.rcvr.TOK [i] = sxplocals.rcvr.TOK_0 + i;
 			
 			if (global_recovery (*parse_stack.for_scanner.current_hd)) {
-			    ret_val = SXTRUE;
+			    ret_val = true;
 			    break;
 			}
 		    }
@@ -1657,19 +1657,19 @@ static SXBOOLEAN	ndp_recovery ()
 	}
     }
     else
-	ret_val = SXFALSE;
+	ret_val = false;
     
     sxplocals.mode.mode = mode;
     sxplocals.mode.with_semact = with_semact;
-    parse_stack.rcvr.is_up = SXFALSE;
-    parse_stack.halt_hit = SXFALSE; /* Au cas ou */
+    parse_stack.rcvr.is_up = false;
+    parse_stack.halt_hit = false; /* Au cas ou */
 
     return ret_val;
 }
 
 
 
-SXBOOLEAN		sxndprecovery (SXINT what_to_do)
+bool		sxndprecovery (SXINT what_to_do)
 {
     SXINT		x;
     static SXINT	rcvr_shifts_foreach [] = {0, 0, 0, 0, 0, 0};
@@ -1681,8 +1681,8 @@ SXBOOLEAN		sxndprecovery (SXINT what_to_do)
     case SXINIT:
 	/* valeurs par defaut qui peut etre changee ds les
 	   scan_act ou pars_act. */
-	sxplocals.rcvr.truncate_context = SXTRUE;
-	parse_stack.rcvr.with_parsprdct = SXFALSE;
+	sxplocals.rcvr.truncate_context = true;
+	parse_stack.rcvr.with_parsprdct = false;
 
 	/* Allocation will be done at first call. */
 	break;
@@ -1827,13 +1827,13 @@ SXBOOLEAN		sxndprecovery (SXINT what_to_do)
 	sxexit(1);
     }
 
-    return SXTRUE;
+    return true;
 }
 
-SXBOOLEAN		sxndpsrecovery (SXINT what_to_do)
+bool		sxndpsrecovery (SXINT what_to_do)
 {
     SXINT		kind = sxplocals.mode.kind;
-    SXBOOLEAN	ret_val;
+    bool	ret_val;
 
     sxplocals.mode.kind = SXWITH_RECOVERY;
     ret_val = sxndprecovery (what_to_do);

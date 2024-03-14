@@ -204,12 +204,12 @@ struct main_parse {
 
 static struct main_parse	*main_parses;
 static SXINT			main_parse_nb;
-static SXBOOLEAN			is_pk_pass;
+static bool			is_pk_pass;
 
-static SXBOOLEAN		is_initial_stem_energy, is_self_complementary_energy, is_internal_loop_penalty, is_unpaired_base_increment;
+static bool		is_initial_stem_energy, is_self_complementary_energy, is_internal_loop_penalty, is_unpaired_base_increment;
 
 
-SXBOOLEAN
+bool
 _wc (rho0, ilb, iub)
     SXINT *rho0, *ilb, *iub;
 {
@@ -318,7 +318,7 @@ static float In_Stacking [7][6] = {
 #define INITIAL_STEM_ENERGY		3.4
 #define SELF_COMPLEMENTARY_ENERGY	0.4
 
-static SXBOOLEAN
+static bool
 self_complementary (lsi, lgth)
     SXINT lsi, lgth;
 {
@@ -330,10 +330,10 @@ self_complementary (lsi, lgth)
 	lsi++;
 
 	if (SOURCE (lsi) != base)
-	    return SXFALSE;
+	    return false;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -363,16 +363,16 @@ dl&4 => is_initial_stem_energy\n\
 dl&8 => is_unpaired_base_increment\n", stdout);
 
 	if (debug_level & 8)
-	    is_unpaired_base_increment = SXTRUE;
+	    is_unpaired_base_increment = true;
 
 	if (debug_level & 4)
-	    is_initial_stem_energy = SXTRUE;
+	    is_initial_stem_energy = true;
 
 	if (debug_level & 2)
-	    is_self_complementary_energy = SXTRUE;
+	    is_self_complementary_energy = true;
 
 	if (debug_level & 1)
-	    is_internal_loop_penalty = SXTRUE;
+	    is_internal_loop_penalty = true;
 
 	np1 = n+1;
 	deuxn = 2*n;
@@ -513,17 +513,17 @@ tree (Xtop, i)
 
 
 
-static SXBOOLEAN
+static bool
 _RNA_semact_last_pass (S0n, start_symbol_pid, ret_val)
     SXINT 	S0n, start_symbol_pid;
-    SXBOOLEAN	ret_val;
+    bool	ret_val;
 {
     /* ret_val est vrai ssi l'analyse a marche' */
     /* start_symbol_pid est l'identifiant du module qui contient l'axiome */
     /* S0n est l'identifiant du couple axiome, (vecteur de) range [0..n] */
     SXINT 	main_top, Xtop, i, j, k;
     static SXINT	rho0, zero, top;
-    SXBOOLEAN	ret_val_2;
+    bool	ret_val_2;
     float	free_energy_1, free_energy_2;
     char	c, *s1, *s2;
     struct main_parse	*main_parse, *main_parse_top;
@@ -536,7 +536,7 @@ _RNA_semact_last_pass (S0n, start_symbol_pid, ret_val)
 	st_range_1 = range_1;
 	st_sem_disp0 = sem_disp [0];
 
-	is_pk_pass = SXTRUE; /* modifie _wc () */
+	is_pk_pass = true; /* modifie _wc () */
 
 	main_top = sem_disp [0] [S0n].ntgr;
 	main_parse_nb = 0;
@@ -617,7 +617,7 @@ _RNA_semact_last_pass (S0n, start_symbol_pid, ret_val)
 	    } while ((Xtop = ((next_hd == NULL) ? 0 : next_hd [Xtop])) > 0);
 
 	    /* On remet en etat */
-	    /* Attention, _RNA_semact_final () va etre appele mais is_pk_pass == SXTRUE */
+	    /* Attention, _RNA_semact_final () va etre appele mais is_pk_pass == true */
 	    RNA_first_pass_final ();
 
 	}
@@ -668,7 +668,7 @@ _RNA_semact_last_pass (S0n, start_symbol_pid, ret_val)
 	rhoA_hd = st_rhoA_hd;
 	range_1 = st_range_1;
 	sem_disp [0] = st_sem_disp0;
-	is_pk_pass = SXFALSE;
+	is_pk_pass = false;
 
 	main_parse = main_parses;
 
@@ -701,7 +701,7 @@ debug_print (action_name, rho, Xenergy, Xlgth, is_first, cur_top, son1_top, son2
     char *action_name;
     SXINT *rho, Xlgth, cur_top, son1_top, son2_top;
     float Xenergy;
-    SXBOOLEAN is_first;
+    bool is_first;
 {
     struct Aij_struct	*Aij_struct_ptr;
     
@@ -716,7 +716,7 @@ debug_print (action_name, rho, Xenergy, Xlgth, is_first, cur_top, son1_top, son2
 static SXINT
 where (head_ptr, Xenergy, is_first, nb)
     SXINT		*head_ptr, *nb;
-    SXBOOLEAN	is_first;
+    bool	is_first;
     float	Xenergy;
 {
     SXINT cur_top, prev_top, next_top, prev_last_top, last_top, bnb;
@@ -794,10 +794,10 @@ where (head_ptr, Xenergy, is_first, nb)
 
 
 
-static SXBOOLEAN
+static bool
 share (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     SXINT	Xtop = sem_disp [0] [rho [2]].ntgr;
 
@@ -818,14 +818,14 @@ share (rho, son_nb, sons, is_first)
 }
 
 
-static SXBOOLEAN
+static bool
 copy (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     SXINT 		Xtop, cur_top;
     float		Xenergy;
-    SXBOOLEAN		ret_val = SXFALSE;
+    bool		ret_val = false;
     SXINT			*head_ptr = &(sem_disp [0] [rho [1]].ntgr);
     SXINT			nb = 0;
     SXBA		ss;
@@ -847,7 +847,7 @@ copy (rho, son_nb, sons, is_first)
 	    }
 
 	    head_ptr = (next_hd == NULL) ? NULL : &(next_hd [cur_top]);
-	    ret_val = SXTRUE;
+	    ret_val = true;
 	    free_energy_hd [cur_top] = Xenergy;
 	    left_hd [cur_top] = 0;
 	    right_hd [cur_top] = Xtop;
@@ -865,10 +865,10 @@ copy (rho, son_nb, sons, is_first)
 
 
 
-static SXBOOLEAN
+static bool
 single_strand (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     SXINT		cur_top, lgth;
     SXINT		*head_ptr = &(sem_disp [0] [rho [1]].ntgr);
@@ -900,14 +900,14 @@ single_strand (rho, son_nb, sons, is_first)
 
 
 
-static SXBOOLEAN
+static bool
 left_ss (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     SXINT 		Xtop, Xlgth, cur_top;
     float		Xenergy;
-    SXBOOLEAN		ret_val = SXFALSE;
+    bool		ret_val = false;
     SXINT			*head_ptr = &(sem_disp [0] [rho [1]].ntgr);
     SXINT			nb = 0;
 
@@ -930,7 +930,7 @@ left_ss (rho, son_nb, sons, is_first)
 	    }
 
 	    head_ptr = (next_hd == NULL) ? NULL : &(next_hd [cur_top]);
-	    ret_val = SXTRUE;
+	    ret_val = true;
 	    free_energy_hd [cur_top] = Xenergy;
 	    left_hd [cur_top] = -Xlgth;
 	    right_hd [cur_top] = Xtop;
@@ -947,14 +947,14 @@ left_ss (rho, son_nb, sons, is_first)
 }
 
 
-static SXBOOLEAN
+static bool
 stem_rna (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     SXINT			cur_top, Xtop, Ytop, nb, lsi, rsi, T1, T2, T4, iT4, WC21, Ylgth;
     float		Xenergy, Yenergy, OSenergy;
-    SXBOOLEAN		ret_val = SXFALSE;
+    bool		ret_val = false;
     SXINT			*head_ptr;
     struct Aij_struct	*Aij_struct_ptr;
     SXBA		ss;
@@ -1017,7 +1017,7 @@ stem_rna (rho, son_nb, sons, is_first)
 		sxba_or (ss, bm_hd [Ytop]);
 
 		head_ptr = (next_hd == NULL) ? NULL : &(next_hd [cur_top]);
-		ret_val = SXTRUE;
+		ret_val = true;
 		free_energy_hd [cur_top] = Yenergy;
 		left_hd [cur_top] = Xtop;
 		right_hd [cur_top] = Ytop;
@@ -1034,14 +1034,14 @@ stem_rna (rho, son_nb, sons, is_first)
 }
 
 
-static SXBOOLEAN
+static bool
 ss_stem_rna (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     SXINT			cur_top, Xtop, Ytop, nb, lsi, rsi, T1, T2, T3, iT4, T4, WC12, WC21, Ylgth;
     float		Xenergy, Yenergy, ISenergy, OSenergy;
-    SXBOOLEAN		ret_val = SXFALSE;
+    bool		ret_val = false;
     SXINT			*head_ptr;
     struct Aij_struct	*Aij_struct_ptr;
     SXBA		ss;
@@ -1110,7 +1110,7 @@ ss_stem_rna (rho, son_nb, sons, is_first)
 		sxba_or (ss, bm_hd [Ytop]);
 
 		head_ptr = (next_hd == NULL) ? NULL : &(next_hd [cur_top]);
-		ret_val = SXTRUE;
+		ret_val = true;
 		free_energy_hd [cur_top] = Yenergy;
 		left_hd [cur_top] = Xtop;
 		right_hd [cur_top] = Ytop;
@@ -1128,14 +1128,14 @@ ss_stem_rna (rho, son_nb, sons, is_first)
 
 
 
-static SXBOOLEAN
+static bool
 stem (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     SXINT 		Xtop, cur_top, lsi, rsi, WC12, WC21, lgth, T1, T2, T3, T4;
     float		Xenergy, WCenergy;
-    SXBOOLEAN		stem_end, ret_val = SXFALSE;
+    bool		stem_end, ret_val = false;
     SXINT			*head_ptr = &(sem_disp [0] [rho [1]].ntgr);
     SXINT			nb = 0;
     struct Aij_struct	*Aij_struct_ptr;
@@ -1169,7 +1169,7 @@ stem (rho, son_nb, sons, is_first)
 	stem_end = Watson_Crick [T3][T4] == 0;
     }
     else
-	stem_end = SXFALSE;
+	stem_end = false;
 
     do {
 	Xenergy = free_energy_hd [Xtop] + WCenergy;
@@ -1188,7 +1188,7 @@ stem (rho, son_nb, sons, is_first)
 	    }
 
 	    head_ptr = (next_hd == NULL) ? NULL : &(next_hd [cur_top]);
-	    ret_val = SXTRUE;
+	    ret_val = true;
 	    free_energy_hd [cur_top] = Xenergy;
 	    left_hd [cur_top] = lgth;
 	    right_hd [cur_top] = Xtop;
@@ -1210,14 +1210,14 @@ stem (rho, son_nb, sons, is_first)
 
 
 
-static SXBOOLEAN
+static bool
 copy_stem (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     SXINT 		Xtop, cur_top;
     float		Xenergy;
-    SXBOOLEAN		ret_val = SXFALSE;
+    bool		ret_val = false;
     SXINT			*head_ptr = &(sem_disp [0] [rho [1]].ntgr);
     SXINT			nb = 0;
     SXBA		ss;
@@ -1237,7 +1237,7 @@ copy_stem (rho, son_nb, sons, is_first)
 	    }
 
 	    head_ptr = (next_hd == NULL) ? NULL : &(next_hd [cur_top]);
-	    ret_val = SXTRUE;
+	    ret_val = true;
 	    free_energy_hd [cur_top] = Xenergy;
 	    left_hd [cur_top] = 0;
 	    right_hd [cur_top] = Xtop;
@@ -1256,14 +1256,14 @@ copy_stem (rho, son_nb, sons, is_first)
 
 
 
-static SXBOOLEAN
+static bool
 init_stem (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     SXINT 		Xtop, cur_top, lsi, rsi, T1, T2, T3, T4, WC12, WC21, iT3, iT4;
     float		Xenergy;
-    SXBOOLEAN		ret_val = SXFALSE;
+    bool		ret_val = false;
     SXINT			*head_ptr = &(sem_disp [0] [rho [1]].ntgr);
     SXINT			nb = 0;
     struct Aij_struct	*Aij_struct_ptr;
@@ -1318,7 +1318,7 @@ init_stem (rho, son_nb, sons, is_first)
 	    SXBA_1_bit(ss, rsi);
 
 	    head_ptr = (next_hd == NULL) ? NULL : &(next_hd [cur_top]);
-	    ret_val = SXTRUE;
+	    ret_val = true;
 	    free_energy_hd [cur_top] = Xenergy;
 	    left_hd [cur_top] = -n-1;
 	    right_hd [cur_top] = Xtop;
@@ -1335,14 +1335,14 @@ init_stem (rho, son_nb, sons, is_first)
 
 
 
-static SXBOOLEAN
+static bool
 left_bulge (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     SXINT 		Xtop, SSlgth, cur_top, lsi, rsi, T1, T2, T3, WC12;
     float		Xenergy, Benergy;
-    SXBOOLEAN		ret_val = SXFALSE;
+    bool		ret_val = false;
     SXINT			*head_ptr = &(sem_disp [0] [rho [1]].ntgr);
     SXINT			nb = 0;
     struct Aij_struct	*Aij_struct_ptr;
@@ -1376,7 +1376,7 @@ left_bulge (rho, son_nb, sons, is_first)
 	    }
 
 	    head_ptr = (next_hd == NULL) ? NULL : &(next_hd [cur_top]);
-	    ret_val = SXTRUE;
+	    ret_val = true;
 	    free_energy_hd [cur_top] = Xenergy;
 	    left_hd [cur_top] = -SSlgth;
 	    right_hd [cur_top] = Xtop;
@@ -1393,14 +1393,14 @@ left_bulge (rho, son_nb, sons, is_first)
 }
 
 
-static SXBOOLEAN
+static bool
 right_bulge (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     SXINT 		Xtop, SSlgth, cur_top, lsi, rsi, T1, T2, T4, WC21;
     float		Xenergy, Benergy;
-    SXBOOLEAN		ret_val = SXFALSE;
+    bool		ret_val = false;
     SXINT			*head_ptr = &(sem_disp [0] [rho [1]].ntgr);
     SXINT			nb = 0;
     struct Aij_struct	*Aij_struct_ptr;
@@ -1434,7 +1434,7 @@ right_bulge (rho, son_nb, sons, is_first)
 	    }
 
 	    head_ptr = (next_hd == NULL) ? NULL : &(next_hd [cur_top]);
-	    ret_val = SXTRUE;
+	    ret_val = true;
 	    free_energy_hd [cur_top] = Xenergy;
 	    left_hd [cur_top] = Xtop;
 	    right_hd [cur_top] = -SSlgth;
@@ -1452,10 +1452,10 @@ right_bulge (rho, son_nb, sons, is_first)
 
 
 
-static SXBOOLEAN
+static bool
 hairpin (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     SXINT 		Xlgth, cur_top;
     SXINT			nb = 0;
@@ -1501,7 +1501,7 @@ internal_loop_penalty (BLlgth, SSlgth, rho)
     SXINT			half, M, ILlgth, lsi, rsi, WC1, WC2;
     float		penalty, increment;
     struct Aij_struct	*Aij_struct_ptr;
-    SXBOOLEAN		GC_WC1, GC_WC2;
+    bool		GC_WC1, GC_WC2;
 
 
     half = BLlgth/2;
@@ -1543,14 +1543,14 @@ internal_loop_penalty (BLlgth, SSlgth, rho)
     return penalty;
 }
 
-static SXBOOLEAN
+static bool
 right_loop (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     SXINT 		Xtop, BLlgth, SSlgth, cur_top;
     float		Xenergy;
-    SXBOOLEAN		ret_val = SXFALSE;
+    bool		ret_val = false;
     SXINT			*head_ptr = &(sem_disp [0] [rho [1]].ntgr);
     SXINT			nb = 0;
     /*
@@ -1572,7 +1572,7 @@ right_loop (rho, son_nb, sons, is_first)
 	    }
 
 	    head_ptr = (next_hd == NULL) ? NULL : &(next_hd [cur_top]);
-	    ret_val = SXTRUE;
+	    ret_val = true;
 	    free_energy_hd [cur_top] = Xenergy;
 	    left_hd [cur_top] = Xtop;
 	    right_hd [cur_top] = -SSlgth;
@@ -1590,14 +1590,14 @@ right_loop (rho, son_nb, sons, is_first)
 
 
 
-static SXBOOLEAN
+static bool
 left_loop (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     SXINT 		Xtop, BLlgth, SSlgth, cur_top;
     float		Xenergy;
-    SXBOOLEAN		ret_val = SXFALSE;
+    bool		ret_val = false;
     SXINT			*head_ptr = &(sem_disp [0] [rho [1]].ntgr);
     SXINT			nb = 0;
 
@@ -1621,7 +1621,7 @@ left_loop (rho, son_nb, sons, is_first)
 	    }
 
 	    head_ptr = (next_hd == NULL) ? NULL : &(next_hd [cur_top]);
-	    ret_val = SXTRUE;
+	    ret_val = true;
 	    free_energy_hd [cur_top] = Xenergy;
 	    left_hd [cur_top] = -SSlgth;
 	    right_hd [cur_top] = Xtop;
@@ -1639,14 +1639,14 @@ left_loop (rho, son_nb, sons, is_first)
 
 
 
-static SXBOOLEAN
+static bool
 balanced_loop (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     SXINT 		Xtop, SSlgth, cur_top, lsi, rsi, T1, T2, T3, T4, WC12, WC21, iT4;
     float		Xenergy, Ienergy;
-    SXBOOLEAN		ret_val = SXFALSE;
+    bool		ret_val = false;
     SXINT			*head_ptr = &(sem_disp [0] [rho [1]].ntgr);
     SXINT			nb = 0;
     struct Aij_struct	*Aij_struct_ptr;
@@ -1683,7 +1683,7 @@ balanced_loop (rho, son_nb, sons, is_first)
 	    }
 
 	    head_ptr = (next_hd == NULL) ? NULL : &(next_hd [cur_top]);
-	    ret_val = SXTRUE;
+	    ret_val = true;
 	    free_energy_hd [cur_top] = Xenergy;
 	    left_hd [cur_top] = -deuxn-SSlgth;
 	    right_hd [cur_top] = Xtop;
@@ -1702,14 +1702,14 @@ balanced_loop (rho, son_nb, sons, is_first)
 
 
 
-static SXBOOLEAN
+static bool
 stem_clover (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     SXINT			cur_top, Xtop, Ytop, nb, lsi, rsi, T1, T2, T4, iT4, WC21;
     float		Xenergy, Yenergy, OSenergy;
-    SXBOOLEAN		ret_val = SXFALSE;
+    bool		ret_val = false;
     SXINT			*head_ptr;
     struct Aij_struct	*Aij_struct_ptr;
     SXBA		ss;
@@ -1767,7 +1767,7 @@ stem_clover (rho, son_nb, sons, is_first)
 		sxba_or (ss, bm_hd [Ytop]);
 
 		head_ptr = (next_hd == NULL) ? NULL : &(next_hd [cur_top]);
-		ret_val = SXTRUE;
+		ret_val = true;
 		free_energy_hd [cur_top] = Yenergy;
 		left_hd [cur_top] = Xtop;
 		right_hd [cur_top] = Ytop;
@@ -1784,14 +1784,14 @@ stem_clover (rho, son_nb, sons, is_first)
 }
 
 
-static SXBOOLEAN
+static bool
 ss_stem_clover (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     SXINT			cur_top, Xtop, Ytop, nb, lsi, rsi, T1, T2, T3, T4, iT4, WC12, WC21;
     float		Xenergy, Yenergy, ISenergy, OSenergy;
-    SXBOOLEAN		ret_val = SXFALSE;
+    bool		ret_val = false;
     SXINT			*head_ptr;
     struct Aij_struct	*Aij_struct_ptr;
     SXBA		ss;
@@ -1853,7 +1853,7 @@ ss_stem_clover (rho, son_nb, sons, is_first)
 		sxba_or (ss, bm_hd [Ytop]);
 
 		head_ptr = (next_hd == NULL) ? NULL : &(next_hd [cur_top]);
-		ret_val = SXTRUE;
+		ret_val = true;
 		free_energy_hd [cur_top] = Yenergy;
 		left_hd [cur_top] = Xtop;
 		right_hd [cur_top] = Ytop;

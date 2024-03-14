@@ -21,7 +21,7 @@
 #include "sxunix.h"
 #include "B_tables.h"
 
-char WHAT_BNFWRITE[] = "@(#)SYNTAX - $Id: bnfwrite.c 3146 2023-05-02 12:21:39Z garavel $" WHAT_DEBUG;
+char WHAT_BNFWRITE[] = "@(#)SYNTAX - $Id: bnfwrite.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 
 #define WRITE(f,p,l)		\
@@ -32,7 +32,7 @@ char WHAT_BNFWRITE[] = "@(#)SYNTAX - $Id: bnfwrite.c 3146 2023-05-02 12:21:39Z g
 		goto write_error
 
 
-SXBOOLEAN		bnf_write (B, langname)
+bool		bnf_write (B, langname)
     struct bnf_ag_item		*B;
     char	*langname;
 {
@@ -99,11 +99,11 @@ SXBOOLEAN		bnf_write (B, langname)
     WRITE (F_bnf, B->T_STRING, B->WS_TBL_SIZE.t_string_length * sizeof (char));
     WRITE (F_bnf, B->NT_STRING, B->WS_TBL_SIZE.nt_string_length * sizeof (char));
     close (F_bnf);
-    return SXTRUE;
+    return true;
 
 write_error:
     fprintf (sxstderr, "%s: write error on ", ME);
 file_error:
     sxperror (bnf_name);
-    return SXFALSE;
+    return false;
 }

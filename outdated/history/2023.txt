@@ -1,0 +1,91 @@
+
+Work done on SYNTAX in 2023
+---------------------------
+
+Pierre Boullier, Hubert Garavel, Frederic Lang, Wendelin Serwe
+
+Excerpt from the 2023 Activity Report of the CONVECS Team (INRIA Grenoble)
+
+
+SYNTAX [1] is a compiler-generation tool that generates lexical analyzers
+(scanners) and syntactic analyzers for deterministic and nondeterministic
+context-free grammars. Developed since 1970, SYNTAX is probably the oldest
+software of INRIA that is still actively used and maintained. In particular,
+SYNTAX serves to produce the front-end part of TRAIAN and of most compilers
+of CADP.
+
+Since the closing of the INRIA Gforge in 2021, the SYNTAX code is hosted on
+the RENATER SVN repository [2].
+
+In 2023, the development of SYNTAX has been particularly active in the 
+following directions:
+
+* The overall architecture of SYNTAX evolved, with a division of its code
+  into four parts: "trunk", which gathers tools for deterministic grammars
+  (i.e., computer languages); "extensions", which gathers tools for
+  nondeterministic grammars (i.e., natural languages); and "outdated", which
+  gathers tools that are not longer maintained. The latter part was divided
+  into two sub-parts: "oldies", which contains tools that could be still of
+  interest, and "deleted", which archives abandoned tools.
+
+* Significant cleanup was done, with deletion of duplicated files and
+  archiving of obsolete software components.
+
+* The quality of SYNTAX code improved by removing all warnings emitted by
+  recent versions of the GCC and CLANG compilers. Many useless type casts
+  have also been removed. Redundant macro-definitions (SXBOOLEAN, SXEXIT,
+  SXFALSE, SXSHORT, SXTRUE, SXVOID, etc.) have been eliminated.
+
+* SYNTAX was ported to 64-bit Windows and to recent versions of macOS.
+  Support for obsolete architectures (Sparc, 32-bit Solaris, 32-bit macOS,
+  etc.) has been dropped.
+
+* The build system for SYNTAX, which was a complex mixture of scripts,
+  makefiles, autogenesis/hypergenesis, and autotools has been dismantled, and 
+  merged into a unique script "sxmake" that centralises all operations. All
+  SYNTAX tools have been simplified accordingly. In particular, their local
+  hierarchy ("incl", "src", and "spec" directories) has been flattened, but
+  "boot" directories and skeleton files have been created to highlight places
+  where bootstrapping occurs.
+
+* The LECL tool has been enhanced by P. Boullier, who introduced the notion
+  of "zombie" lexical tokens to suppress warnings about unused tokens.
+
+* The TABC tool, the name of which created confusion with another tool
+  named TABLES_C, was renamed to SEMC.
+
+* The documentation has been carefully enhanced and updated. The SYNTAX
+  distribution has been enriched with published papers, presentation slides,
+  and many README files based on explanations provided by P. Boullier.
+
+* A new SXML library was added by H. Garavel, which helps generating directly
+  an XML or JSON output from an input file, without building an (explicit)
+  abstract syntax tree. This library has a reduced memory footprint due to
+  the use of circular lists.
+
+* The demo examples of SYNTAX have been enhanced. A new demo "simproc" has
+  been added, which uses the LNT language and the TRAIAN compiler to build
+  and traverse the abstract syntax tree. Three rarely used SYNTAX tools
+  (pplecl, pprecor, and pptdef) have been turned into demo examples.
+
+* The "lustre" demo has been enhanced. The grammar has been revised, to be
+  closer to the official LUSTRE grammar. A syntax tree in XML is now
+  produced as output, using the SEMC tool and the SXML library.
+
+* The "f77" demo has been largely rewritten in the framework of a new
+  collaboration with the RMOD/EVREF team of INRIA Lille. P. Boullier adapted
+  the FORTRAN 77 grammar to pass the 192 official NIST tests. The grammar
+  was also modified to factorize duplicated definitions, and to support "DO"
+  loops without labels and loops terminated with "END DO". The lexer and
+  parser were modified to retain the comments present in FORTRAN 77 programs.
+  The FORTRAN 77 pretty-printer was updated and made functional. On this
+  basis, the RMOD/EVREF team started extending the grammar to generate an
+  abstract tree in JSON, using the SEMC tool and the SXML library.
+
+* H. Garavel, F. Lang, and W. Serwe gave various presentations of SYNTAX
+  at ENS Ulm (Paris, France), LIG Grenoble, Saarland University (Germany),
+  and Aix-les-Bains (France).
+
+[1] https://en.wikipedia.org/wiki/SYNTAX
+[2] http://sourcesup.renater.fr/projects/syntax
+

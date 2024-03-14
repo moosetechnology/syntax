@@ -17,9 +17,9 @@
  *   can be found at, e.g., http://www.cecill.info
  *****************************************************************************/
 #include "sxunix.h"
-char WHAT_PPLECLSACT[] = "@(#)SYNTAX - $Id: pplecl_sact.c 3328 2023-06-04 15:32:22Z garavel $" WHAT_DEBUG;
+char WHAT_PPLECLSACT[] = "@(#)SYNTAX - $Id: pplecl_sact.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
-SXVOID	pp_lecl_scan_act (SXINT what, SXINT act_no)
+void	pp_lecl_scan_act (SXINT what, SXINT act_no)
 {
     switch (what) {
     case SXOPEN:

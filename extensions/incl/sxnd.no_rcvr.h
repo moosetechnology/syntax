@@ -95,7 +95,7 @@ struct parse_stack {
 
     struct G			G;
 
-    SXBOOLEAN			is_new_links,
+    bool			is_new_links,
                                 is_ambiguous;
 } parse_stack;
 
@@ -109,7 +109,7 @@ struct sxndtw {
 
     SXBA	is_erased;
 
-    SXVOID	(*pass_inherited) (),
+    void	(*pass_inherited) (),
                 (*pass_derived) (),
                 (*nodes_oflw) ();
 
@@ -178,9 +178,9 @@ SXINT	SXNDTW_;
 
 
 SXINT	sxndtw_is_cycle (/* node */);
-SXVOID	sxndtw_open (/* void (*pass_inherited)(), void (*pass_derived)(), void (*nodes_oflw)() */);
-SXVOID	sxndtw_walk ();
-SXVOID	sxndtw_close ();
-SXVOID	sxndtw_erase (/* node */);
-SXBOOLEAN sxndtw_check_tree (/* node */);
-SXBOOLEAN sxndtw_sem_calls ();
+void	sxndtw_open (/* void (*pass_inherited)(), void (*pass_derived)(), void (*nodes_oflw)() */);
+void	sxndtw_walk ();
+void	sxndtw_close ();
+void	sxndtw_erase (/* node */);
+bool sxndtw_check_tree (/* node */);
+bool sxndtw_sem_calls ();

@@ -69,7 +69,7 @@ static char	ME [] = "sxspell_mngr";
 #include "varstr.h"
 #include "X.h"
 
-char WHAT_SXSPELL_MNGR[] = "@(#)SYNTAX - $Id: sxspell_mngr.c 2464 2023-01-20 17:19:36Z garavel $" WHAT_DEBUG;
+char WHAT_SXSPELL_MNGR[] = "@(#)SYNTAX - $Id: sxspell_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 static struct FSA          *cur_FSA;
 static struct spell_result *cur_spell_result;
@@ -116,9 +116,9 @@ static SXINT                 *fsa_state2lequiv, *fsa_state2requiv, fsa_state2equ
    sinon, on relance le tout comme si c'etait ALL */
 static SXINT                 underflow_nb;
 
-static SXBOOLEAN             FSA_HAS_EPS_TRANS /* ssi sxspell_suppress_all a ete appele */;
+static bool             FSA_HAS_EPS_TRANS /* ssi sxspell_suppress_all a ete appele */;
 static SXINT                 MEMO_BASE /* Nb d'etats initiaux+1 */;
-static SXBOOLEAN             WORD_HAS_SPACES /* Le mot a corrige a-t-il des espaces */;
+static bool             WORD_HAS_SPACES /* Le mot a corrige a-t-il des espaces */;
 
 static SXINT                 *memo_hd;
 static SXINT                 *memo_id_stack, *memo_weight_limit;
@@ -230,7 +230,7 @@ static struct weight       NUL_WEIGHT, total_weight;
 
 
 //static SXUINT        suffix_mask;
-static SXBOOLEAN              is_suffix;
+static bool              is_suffix;
 static SXUINT              base, tooth, base_shift, class_mask, stop_mask, last_final_id;
 static SXUINT              *comb_vector;
 static unsigned char	   *char2class;
@@ -251,7 +251,7 @@ sxspell_init (struct sxdfa_comb *dico,
 	      unsigned char kind,
 	      SXINT max_weight, 
 	      SXINT cmp_weight,
-	      SXBOOLEAN seek_sub_words,
+	      bool seek_sub_words,
 	      SXINT sub_word_weight)
 {
 
@@ -384,7 +384,7 @@ sxspell_init_fsa (char *mot, SXINT lgth, struct FSA *FSA)
   fsa_state2lequiv [FSA->Q_nb] = fsa_state2requiv [FSA->Q_nb] = FSA->Q_nb;
   fsa_state2local_path [FSA->Q_nb] = 0;
 
-  FSA_HAS_EPS_TRANS = SXFALSE;
+  FSA_HAS_EPS_TRANS = false;
 }
 
 
@@ -463,7 +463,7 @@ sxspell_no_repeat (struct FSA *FSA, SXINT p, SXINT nr_weight)
   struct weight cur_weight, weight, *new_char_weight;
   struct trans  trans, new_trans;
   SXBA          new_char_set; 
-  SXBOOLEAN       is_an_old_pair;
+  bool       is_an_old_pair;
 
   if (p <= 1)
     return;
@@ -589,7 +589,7 @@ sxspell_replace_n_p (struct FSA *FSA, unsigned char *R[], SXINT R_size, SXINT re
   SXBA          new_char_set, char_set;
   char          *mot;
   unsigned char true_car, true_rcar, *line, *left_line, *right_line, *replace_line, *r_line;
-  SXBOOLEAN       is_an_old_pair, is_first, is_last, is_ps_done;
+  bool       is_an_old_pair, is_first, is_last, is_ps_done;
   struct weight cur_weight, *char_weight, *new_char_weight;
   struct trans  trans, trans1;
 
@@ -607,20 +607,20 @@ sxspell_replace_n_p (struct FSA *FSA, unsigned char *R[], SXINT R_size, SXINT re
     right_line = line + strlen ((char*) line);
 
     if ((SXINT) *line == '^') {
-      is_first = SXTRUE;
+      is_first = true;
       line++;
     }
     else
-      is_first = SXFALSE;
+      is_first = false;
 
     left_line = line;
 
     if ((SXINT) right_line [-1] == '$') {
       right_line--;
-      is_last = SXTRUE;
+      is_last = true;
     }
     else
-      is_last = SXFALSE;
+      is_last = false;
 
     n = 0;
 
@@ -659,7 +659,7 @@ sxspell_replace_n_p (struct FSA *FSA, unsigned char *R[], SXINT R_size, SXINT re
 
 	mot = FSA->word;
 	j = 0;
-	is_ps_done = SXFALSE;
+	is_ps_done = false;
 	true_n = n; /* vraie longueur du modele (y compris les contextes eventuels) */
 
 	for (;;) {
@@ -734,7 +734,7 @@ sxspell_replace_n_p (struct FSA *FSA, unsigned char *R[], SXINT R_size, SXINT re
 
 		  /* ici n et p ont pour valeur les longueurs du modele et du remplacant, sans compter les longueurs
 		     des prefixes et suffixes */
-		  is_ps_done = SXTRUE;
+		  is_ps_done = true;
 		  /* L'extraction des prefixe et suffixe du modele et du remplacant sont faits */
 		}
 
@@ -799,7 +799,7 @@ sxspell_replace_n_p (struct FSA *FSA, unsigned char *R[], SXINT R_size, SXINT re
 		else {
 		  /* Suppression de n caracteres */
 		  /* On cree une transition epsilon entre new_j+1 et new_j+1+n */
-		  FSA_HAS_EPS_TRANS = SXTRUE;
+		  FSA_HAS_EPS_TRANS = true;
 		
 		  is_an_old_pair = XxY_set (&(FSA->Q_hd), new_j+1, new_j+1+n, &pair);
 
@@ -941,7 +941,7 @@ sxspell_suppress_all (struct FSA *FSA, SXINT sup_weight)
   SXBA          char_set;
   struct trans  trans;
 
-  FSA_HAS_EPS_TRANS = SXTRUE;
+  FSA_HAS_EPS_TRANS = true;
 
   top_pair = FSA->Q_init-1; /* nb de transitions initiales */
 
@@ -970,7 +970,7 @@ sxspell_suppress_i (struct FSA *FSA, SXINT sup_weight, SXINT i)
   SXINT           pair, pair1, car, top_state, n, p;
   struct weight cur_weight, *new_char_weight, *char_weight, weight;
   SXBA          char_set, new_char_set;
-  SXBOOLEAN       is_an_old_pair; 
+  bool       is_an_old_pair; 
   struct trans  trans, trans1;
 
   top_state = FSA->Q_init-2;
@@ -1334,13 +1334,13 @@ spell_result_stack_push (SXINT id)
 /* Le sous mot id de poids weight est stocke' ds spell_result_[id|word]_stack */
 /* On stocke par poids non decroissants */
 static void
-store_sub_word (SXINT id, struct weight weight, SXBOOLEAN is_an_old_id)
+store_sub_word (SXINT id, struct weight weight, bool is_an_old_id)
 {
   SXINT           new_total_weight, old_total_weight, prev_total_weight, cur_total_weight, total_weighti;
   SXINT           id_nb, weight_nb, nb, i, j, insert_point, store_id;
   SXINT           *id_stack;
   struct weight *weight_stack, store_weight;
-  SXBOOLEAN       is_single, unique_insert;
+  bool       is_single, unique_insert;
 
   sxinitialise(weight_nb); /* pour faire taire "gcc -Wuninitialized" */
   /* Si is_an_old_id, on est ds le bloc principal et id a deja ete range'. Il ne doit en rester qu'un seul */
@@ -1409,7 +1409,7 @@ store_sub_word (SXINT id, struct weight weight, SXBOOLEAN is_an_old_id)
   }
  
   /* ALL ou NBEST */
-  is_single = SXFALSE;
+  is_single = false;
 
   if (cur_spell_result->kind) {
     /* NBEST */
@@ -1440,7 +1440,7 @@ store_sub_word (SXINT id, struct weight weight, SXBOOLEAN is_an_old_id)
 	if (is_single) {
 	  if (weight_nb < cur_spell_result->kind)
 	    /* pas plein */
-	    is_single = SXFALSE;
+	    is_single = false;
 
 	  weight_nb--;
 	  TOP (id_stack) -= 1 << WEIGHT_NB_SHIFT;
@@ -1646,7 +1646,7 @@ void store_word (SXINT code)
 
   cur_spell_result->codes [id] = code;
 
-  store_sub_word (id, total_weight, (SXBOOLEAN) (SXWORD_top (cur_spell_result->words) <= top));
+  store_sub_word (id, total_weight, (bool) (SXWORD_top (cur_spell_result->words) <= top));
 }
 
 
@@ -1665,7 +1665,7 @@ get_weight (struct weight weight1, struct weight weight2)
 }
 
 /* Les chemins gauche-droit et droit-gauche se sont-ils rejoints ? */
-static SXBOOLEAN
+static bool
 FSA_walk_done (SXINT p, SXINT q)
 {
 #if 0
@@ -1784,7 +1784,7 @@ FSA_walk (SXINT p, SXINT q)
   SXBA          char_set;
   struct trans  trans;
   unsigned char source_char, char_stack_size, *char_stack_ptr, offset;
-  SXBOOLEAN       p_or_q_in_word;
+  bool       p_or_q_in_word;
 
 #if EBUG
   if (q == 0)
@@ -1996,7 +1996,7 @@ dico_walk (unsigned char cur_char,
   SXUINT	old_tooth, new_tooth, old_base;
   // old_is_suffix
   unsigned char	class;
-  SXBOOLEAN       FSA_walk_complete, stop_mask_hit;
+  bool       FSA_walk_complete, stop_mask_hit;
 
   if (cur_char == SXNUL) {
     /* transition sur epsilon */
@@ -2111,7 +2111,7 @@ merge_spell_result_stack (SXINT top, SXINT x, SXINT y, SXINT additional_cost)
   SXINT           ij_total_weight, top_total_weight, min_total_weight, x_id, y_id, xy_top, cur_bot, cur_top, cur_id; 
   SXINT           *int_ptr;
   struct weight *x_weights, *y_weights, *top_weights, ij_weight, weighti, weightj, top_weight;
-  SXBOOLEAN       done, from_top;
+  bool       done, from_top;
   SXINT           sorted_top, sorted_nb, merge_spell_result_stack_base, j, ij, top_id, cross_size, old_size, new_size, xij, min_cross_weight;
   SXINT           *x_ids, *y_ids, *top_ids;
 
@@ -2223,7 +2223,7 @@ merge_spell_result_stack (SXINT top, SXINT x, SXINT y, SXINT additional_cost)
   y_ids = spell_result_id_stack + y + 1;
   top_ids = spell_result_id_stack + top + 1;
   
-  done = SXFALSE;
+  done = false;
   top_nb = sorted_nb = 0;
   nb = 0; /* nb d'items de poids differents ds cross_weight.  On doit avoir nb <= cur_spell_result->kind */
   greatest_weight = -1;
@@ -2241,12 +2241,12 @@ merge_spell_result_stack (SXINT top, SXINT x, SXINT y, SXINT additional_cost)
       top_weight = top_weights [top_nb];
       top_total_weight = get_total_weight (top_weight);
       min_total_weight = (ij_total_weight == -1)
-	? (from_top = SXTRUE, top_total_weight) :
-	((ij_total_weight < top_total_weight) ? (from_top = SXFALSE, ij_total_weight) : (from_top = SXTRUE, top_total_weight));
+	? (from_top = true, top_total_weight) :
+	((ij_total_weight < top_total_weight) ? (from_top = false, ij_total_weight) : (from_top = true, top_total_weight));
     }
     else {
       min_total_weight = ij_total_weight;
-      from_top = SXFALSE;
+      from_top = false;
     }
 
     if (min_total_weight >= 0) {
@@ -2329,10 +2329,10 @@ merge_spell_result_stack (SXINT top, SXINT x, SXINT y, SXINT additional_cost)
 	}
       }
       else
-	done = SXTRUE;
+	done = true;
     }
     else
-      done = SXTRUE;
+      done = true;
   }
 
   /* ... et on recopie de cross ds spell_result_[id|weight]_stack */
@@ -2376,7 +2376,7 @@ merge_spell_result_stack (SXINT top, SXINT x, SXINT y, SXINT additional_cost)
 
 
 /* On regarde si ce qui a ete memoise' en x est valide vis-a-vis du cur_spell_result->weight_limit courant */
-static SXBOOLEAN
+static bool
 memo_is_valid (SXINT x)
 {
   SXINT           weight_nb;
@@ -2385,7 +2385,7 @@ memo_is_valid (SXINT x)
 
   if (cur_spell_result->kind == 1 /* best */ || ((cur_spell_result->kind > 1) && (cur_spell_result->kind == weight_nb)) /* nbest */)
     /* Plein => OK */
-    return SXTRUE;
+    return true;
 
   return memo_weight_limit [x] >= cur_spell_result->weight_limit;
 }
@@ -2526,7 +2526,7 @@ memo_cut_in_subwords (SXINT p, SXINT q, SXINT cut_nb)
 {
   SXINT           old_size, new_size, top, i=0, j, x, y, k, key_id, costly_cut_nb, space_nb;
   SXINT           local_old_weight_limit, ultra_local_old_weight_limit, x_cut_total_weight, total_cut_weight=0;
-  SXBOOLEAN       is_a_subword;
+  bool       is_a_subword;
   struct weight n_cut_weight, store_SUB_WORD_WEIGHT;
 
   if ((is_a_subword = (p > cur_FSA->q0 || q < cur_FSA->Q_init))) {
@@ -2843,7 +2843,7 @@ call_cut (void)
   cur_spell_result_stack_bot = 1; /* bloc principal */
 }
 
-SXBOOLEAN
+bool
 sxspell_do_it (struct FSA *FSA)
 {
   SXINT           x, cur_total_weight, prev_total_weight, nb, store_nbest, nmemb;
@@ -2857,7 +2857,7 @@ sxspell_do_it (struct FSA *FSA)
   tooth = cur_dico->init_base;
 
   if (/*tooth == 0 || */cur_dico->max == 0)
-    return SXFALSE;
+    return false;
 
   //  suffix_mask = cur_dico->is_suffix_mask;
   base_shift = cur_dico->base_shift;
@@ -3028,7 +3028,7 @@ static unsigned char *Dac [] = {
 void
 sxspell_model (unsigned char kind,
 	       SXINT max_weight,
-	       SXBOOLEAN is_sub_word,
+	       bool is_sub_word,
 	       SXINT sub_word_weight,
 	       char *mot,
 	       struct sxdfa_comb *dico)

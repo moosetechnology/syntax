@@ -26,7 +26,7 @@
 #include "lecl_ag.h"
 #include "put_edit.h"
 
-char WHAT_LECLLO[] = "@(#)SYNTAX - $Id: lecl_lo.c 3603 2023-09-23 20:02:36Z garavel $" WHAT_DEBUG;
+char WHAT_LECLLO[] = "@(#)SYNTAX - $Id: lecl_lo.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 
 
@@ -39,7 +39,7 @@ extern VARSTR	lecl_gen_cc (SXBA *SC_TO_CHAR_SET,
 extern VARSTR	lecl_gen_sc (SXBA *SC_TO_CHAR_SET, 
 			     SXINT simple_class, 
 			     VARSTR varstr_ptr);
-extern SXVOID	equality_sort (SXINT *t, SXINT bi, SXINT bs, SXBOOLEAN (*less_equal) (SXINT, SXINT), SXBOOLEAN (*equal) (SXINT, SXINT));
+extern void	equality_sort (SXINT *t, SXINT bi, SXINT bs, bool (*less_equal) (SXINT, SXINT), bool (*equal) (SXINT, SXINT));
 extern char	by_mess [];
 static SXINT	context_table_slice_size, i, j, k, l, x, max_slice_no, slice_no, tmin, tmax, min_re, origine, prev,
      state_no, resize, maxsize;
@@ -51,7 +51,7 @@ static char	string [64];
 static SXBA	/* max_re_lgth */ next;
 static struct ers_item	*erse_ptr;
 static struct action_or_prdct_code_item		fe;
-static SXBOOLEAN	is_error;
+static bool	is_error;
 static SXINT	*to_be_sorted /* 1:Smax */ ;
 static SXBA	/* Smax */ *sc_to_sc_set /* 1:Smax */ ;
 static SXBA	/* Smax */ sc_set;
@@ -59,7 +59,7 @@ static transition_matrix_item	*transition_matrix_line, stmt;
 
 
 
-static SXVOID	header (void)
+static void	header (void)
 {
     time_t	date_time;
 
@@ -119,7 +119,7 @@ static char	*cv_x (char *cv_x_s, SXINT cv_x_x)
 
 
 
-static char	*cv_delete (char *cv_delete_s, SXBOOLEAN del)
+static char	*cv_delete (char *cv_delete_s, bool del)
 {
     if (del)
 	return strcpy (cv_delete_s, "-");
@@ -180,21 +180,21 @@ static SXINT	cv_to_t_code (SXINT ner)
 
 
 
-static SXBOOLEAN	less_equal (SXINT less_equal_i, SXINT less_equal_j)
+static bool	less_equal (SXINT less_equal_i, SXINT less_equal_j)
 {
     return transition_matrix_line [less_equal_i] <= transition_matrix_line [less_equal_j];
 }
 
 
 
-static SXBOOLEAN	equal (SXINT equal_i, SXINT equal_j)
+static bool	equal (SXINT equal_i, SXINT equal_j)
 {
     return transition_matrix_line [equal_i] == transition_matrix_line [equal_j];
 }
 
 
 
-static SXVOID	put_body (transition_matrix_item put_body_stmt)
+static void	put_body (transition_matrix_item put_body_stmt)
 {
     char	message [64];
     SXINT		put_body_next = NEXT (put_body_stmt);
@@ -428,14 +428,14 @@ static char	*gen_action_or_prdct_name_from_fe (char *gen_action_or_prdct_name_fr
 }
 
 
-static SXBOOLEAN	less_prdct (SXINT less_prdct_i, SXINT less_prdct_j)
+static bool	less_prdct (SXINT less_prdct_i, SXINT less_prdct_j)
 {
     return (prdct_to_ers [less_prdct_i] < prdct_to_ers [less_prdct_j]);
 }
 
 
 
-static SXBOOLEAN	compare_kw (SXINT compare_kw_i, SXINT compare_kw_j)
+static bool	compare_kw (SXINT compare_kw_i, SXINT compare_kw_j)
 {
     char	*si, *sj;
 
@@ -471,7 +471,7 @@ char	*strrevcpy (char *destination, char *source, SXINT size)
 
 
 
-SXVOID	lecl_list_out (void)
+void	lecl_list_out (void)
 {
     VARSTR	varstr_ptr;
     FILE	*listing;
@@ -480,7 +480,7 @@ SXVOID	lecl_list_out (void)
     if (sxverbosep) {
 	if (!sxttycol1p) {
 	    fputc ('\n', sxtty);
-	    sxttycol1p = SXTRUE;
+	    sxttycol1p = true;
 	}
 
 	fputs ("Listing Output\n", sxtty);
@@ -609,7 +609,7 @@ SXVOID	lecl_list_out (void)
 	if (xprdct_to_ate > prdct_false_code) {
 	    SXINT		*lecl_list_out_to_be_sorted /* 1:xprdct_to_ate */ ;
 	    SXINT		prdct_no, lecl_list_out_i;
-	    SXBOOLEAN	done;
+	    bool	done;
 
 	    lecl_list_out_to_be_sorted = (SXINT*) sxalloc ((SXINT) (xprdct_to_ate + 1), sizeof (SXINT));
 
@@ -632,13 +632,13 @@ SXVOID	lecl_list_out (void)
 		origine = prdct_to_ers [prdct_no];
 		put_edit_nl (1);
 		put_edit_nnl (21, sxstrget (action_or_prdct_to_ate [prdct_no]));
-		done = SXFALSE;
+		done = false;
 
 		for (x = origine; !done; x++) {
 		    erse_ptr = ers + x;
 
 		    if (x > origine && erse_ptr->lispro < 0)
-			done = SXTRUE;
+			done = true;
 		    else {
 			put_edit_fnb (35, 4, x);
 
@@ -1076,7 +1076,7 @@ SXVOID	lecl_list_out (void)
 	    SXBA_1_bit (sc_to_sc_set [to_be_sorted [i]], i);
 	}
 
-	is_error = SXFALSE;
+	is_error = false;
 
 	for (i = 1; i <= Smax; i++) {
 	    sc_set = sc_to_sc_set [i];
@@ -1091,7 +1091,7 @@ SXVOID	lecl_list_out (void)
 		    put_body (stmt);
 		}
 		else
-		    is_error = SXTRUE;
+		    is_error = true;
 
 		sxba_empty (sc_set);
 	    }

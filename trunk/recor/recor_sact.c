@@ -24,12 +24,12 @@
 
 #include "sxversion.h"
 #include "sxunix.h"
-char WHAT_RECORSACT[] = "@(#)SYNTAX - $Id: recor_sact.c 3601 2023-09-23 19:44:39Z garavel $" WHAT_DEBUG;
+char WHAT_RECORSACT[] = "@(#)SYNTAX - $Id: recor_sact.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
 #ifdef __GNUC__
 __attribute__ ((noreturn))
 #endif
-static SXVOID	gripe (void)
+static void	gripe (void)
 {
     fputs ("\nThe function \"recor_scan_act\" is out of date with respect to its specification.\n", sxstderr);
     sxexit(1);
@@ -37,7 +37,7 @@ static SXVOID	gripe (void)
 
 
 
-SXVOID	recor_scan_act (SXINT what, SXINT act_no)
+void	recor_scan_act (SXINT what, SXINT act_no)
 {
     switch (what) {
     case SXOPEN:

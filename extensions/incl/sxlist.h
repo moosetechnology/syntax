@@ -84,15 +84,15 @@ extern void			sxlist_alloc (sxlist_header *h,
 					      SXINT (*user_elem_oflw) (SXINT, SXINT),
 					      FILE *stat_file);
 extern void			sxlist_free (sxlist_header*);
-extern SXBOOLEAN			sxlist_set (sxlist_header *h,
+extern bool			sxlist_set (sxlist_header *h,
 					    SXINT scrmbl,
 					    SXINT *elem_stack,
 					    SXINT *result);
     /* Positionne l'identifiant unique result_ptr de la liste contenue ds SS_stack dont
-       le scramble est scrmbl. Retourne SXTRUE ssi la liste est nouvelle. */
+       le scramble est scrmbl. Retourne true ssi la liste est nouvelle. */
 extern void			sxlist_erase (sxlist_header *h, SXINT l);
-extern SXBOOLEAN			sxlist_write (sxlist_header *header, sxfiledesc_t file_descr);
-extern SXBOOLEAN			sxlist_read (sxlist_header *header,
+extern bool			sxlist_write (sxlist_header *header, sxfiledesc_t file_descr);
+extern bool			sxlist_read (sxlist_header *header,
 					     sxfiledesc_t file_descr,
 					     char *name,
 					     SXINT (*list_oflw) (SXINT, SXINT),
@@ -104,7 +104,7 @@ extern void                     sxlist_to_c (
 					     sxlist_header *header, 
 					     FILE *file, 
 					     char *name, 
-					     SXBOOLEAN is_static );
+					     bool is_static );
 extern void			sxlist_reuse (sxlist_header *header,
 					      char *name,
 					      SXINT (*user_list_oflw) (SXINT, SXINT),

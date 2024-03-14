@@ -1397,6 +1397,18 @@ SXML_TYPE_LIST ast_end_if(SXML_TYPE_TEXT label) {
 
 /* -------------------------------------------------------------------------
  */
+SXML_TYPE_LIST ast_end_do(SXML_TYPE_TEXT label) {
+  
+    return JSON_KU(
+      "end_do", JSON_MAP(
+        JSON_KQ("label", label)
+      )
+    );
+}
+
+
+/* -------------------------------------------------------------------------
+ */
 SXML_TYPE_LIST ast_else_statement(SXML_TYPE_TEXT else_label) {
 
     return SXML_LL(

@@ -24,7 +24,7 @@ static char	ME [] = "X_root_mngr";
 #include "X_root.h"
 #include <unistd.h>
 
-char WHAT_X_ROOT_MNGR[] = "@(#)SYNTAX - $Id: X_root_mngr.c 2947 2023-03-29 17:06:41Z garavel $" WHAT_DEBUG;
+char WHAT_X_ROOT_MNGR[] = "@(#)SYNTAX - $Id: X_root_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 extern SXINT sxnext_prime (SXINT germe);
 
@@ -75,7 +75,7 @@ void	X_root_alloc (X_root_header *header,
     header->hash_lnk = (SXINT*) sxalloc (init_elem_nb + 1, sizeof (SXINT));
     header->top = 0;
     header->size = init_elem_nb;
-    header->is_locked = SXFALSE;
+    header->is_locked = false;
     header->free_buckets = X_root_80; /* liste des "erased" vide */
     header->has_free_buckets = 0;
     header->system_oflw = system_oflw;
@@ -85,8 +85,8 @@ void	X_root_alloc (X_root_header *header,
     header->suppress = suppress;
     header->assign = assign;
     header->stat_file = stat_file;
-    header->is_static = SXFALSE;
-    header->is_allocated = SXTRUE;
+    header->is_static = false;
+    header->is_allocated = true;
 }
 
 
@@ -103,7 +103,7 @@ void	X_root_clear (X_root_header *header)
     header->top = 0;
     header->free_buckets = X_root_80; /* liste des "erased" vide */
     header->has_free_buckets = 0;
-    header->is_locked = SXFALSE;
+    header->is_locked = false;
 }
 
 
@@ -153,7 +153,7 @@ void	X_root_free (X_root_header *header)
 
     sxfree (header->hash_display), header->hash_display = NULL;
     sxfree (header->hash_lnk), header->hash_lnk = NULL;
-    header->is_allocated = SXFALSE;
+    header->is_allocated = false;
 }
 
 
@@ -227,33 +227,33 @@ SXINT	X_root_gc (X_root_header *header)
 }
 
 
-SXBOOLEAN	X_root_set (X_root_header *header, SXUINT scramble, SXINT *ref)
+bool	X_root_set (X_root_header *header, SXUINT scramble, SXINT *ref)
 {
     /* Si l'element X[-Y[-Z]] de la matrice creuse header existe, cette fonction
-       retourne SXTRUE et ref designe cet element, sinon elle cree un nouvel
-       element, ref le designe et elle retourne SXFALSE */
+       retourne true et ref designe cet element, sinon elle cree un nouvel
+       element, ref le designe et elle retourne false */
 
     SXINT	x, z;
     SXINT	                old_hash_size, old_size, *old;
-    SXBOOLEAN		overflow;
+    bool		overflow;
 
     sxinitialise(old_size); /* pour faire taire "gcc -Wuninitialized" */
     if ((x = X_root_is_set (header, scramble)) > 0) {
 	SXINT	*alnk;
 
 	if ((*(alnk = header->hash_lnk + (*ref = x)) & X_root_80) == 0)
-	    return SXTRUE;
+	    return true;
 
 	/* erased */
 	/* l'element qui vient d'etre reutilise est celui qui a ete supprime precedemment
 	   on n'a donc rien a faire pour les "foreach". */
 	*alnk &= X_root_7F; /* tant pis pour "has_free_buckets"! */
-	return SXFALSE;
+	return false;
     }
 
 /* Son predecesseur ds le chainage est -x. */
 
-    overflow = SXFALSE;
+    overflow = false;
 
 /* Nouvel item d'indice z */
     if ((z = (header->free_buckets & X_root_7F)) != 0) {
@@ -267,9 +267,9 @@ SXBOOLEAN	X_root_set (X_root_header *header, SXUINT scramble, SXINT *ref)
 	   Attention, le predecesseur ds le chainage (i.e. -x) peut etre
 	   un "erased", si c'est le cas, le "gc" qui suit va le supprimer...
 	   Dans ce cas, on recalcule le predecesseur. */
-	SXBOOLEAN	is_erased;
+	bool	is_erased;
 
-	is_erased = x < 0 ? (header->hash_lnk [-x] & X_root_80) != 0 : SXFALSE;
+	is_erased = x < 0 ? (header->hash_lnk [-x] & X_root_80) != 0 : false;
 
 	if ((z = X_root_gc (header)) > 0) {
 	    if (header->suppress != NULL) {
@@ -302,7 +302,7 @@ SXBOOLEAN	X_root_set (X_root_header *header, SXUINT scramble, SXINT *ref)
 	   Le ratio entre les deux reste a peu pres celui specifie par
 	     average_list_nb_per_bucket. */
 
-	overflow = SXTRUE;
+	overflow = true;
 	z = ++(header->top);
 	header->hash_size = sxnext_prime (old_hash_size = header->hash_size);
 	header->size = 2 * (old_size = header->size);
@@ -384,11 +384,11 @@ SXBOOLEAN	X_root_set (X_root_header *header, SXUINT scramble, SXINT *ref)
 	if (header->user_oflw != NULL)
 	    (*(header->user_oflw)) (old_size, header->size);
 
-	header->is_static = SXFALSE;
+	header->is_static = false;
     }
 
 
-    return SXFALSE;
+    return false;
 }
 
 
@@ -402,7 +402,7 @@ void	X_root_lock (X_root_header *header)
 
     SXINT old_top;
 
-    header->is_locked = SXTRUE;
+    header->is_locked = true;
 
     if (!header->is_static && header->size > (old_top = header->top)) {
 	header->hash_lnk = (SXINT*) sxrealloc (header->hash_lnk,
@@ -418,40 +418,40 @@ void	X_root_lock (X_root_header *header)
 }
 
 
-SXBOOLEAN X_root_write (X_root_header *header, sxfiledesc_t F_X_root /* file descriptor */)
+bool X_root_write (X_root_header *header, sxfiledesc_t F_X_root /* file descriptor */)
 {
     size_t	bytes;
 
-#define WRITE(p,l)	if ((bytes = (l))>0 && ((size_t)write (F_X_root, p, bytes) != bytes)) return SXFALSE
+#define WRITE(p,l)	if ((bytes = (l))>0 && ((size_t)write (F_X_root, p, bytes) != bytes)) return false
 
     WRITE (&(header->hash_size), sizeof (SXINT));
     WRITE (&(header->top), sizeof (SXINT));
     WRITE (&(header->size), sizeof (SXINT));
     WRITE (&(header->free_buckets), sizeof (SXINT));
     WRITE (&(header->has_free_buckets), sizeof (SXINT));
-    WRITE (&(header->is_locked), sizeof (SXBOOLEAN));
+    WRITE (&(header->is_locked), sizeof (bool));
 
     WRITE (header->hash_display, sizeof (SXINT) * header->hash_size);
     WRITE (header->hash_lnk, sizeof (SXINT) * (header->top + 1));
 
-    return SXTRUE;
+    return true;
 }
 
 
-SXBOOLEAN X_root_read (X_root_header *header, sxfiledesc_t F_X_root /* file descriptor */)
+bool X_root_read (X_root_header *header, sxfiledesc_t F_X_root /* file descriptor */)
 {
     size_t	bytes;
 
-#define READ(p,l)	if ((bytes = (l)) > 0 && ((size_t)read (F_X_root, p, bytes) != bytes)) return SXFALSE
+#define READ(p,l)	if ((bytes = (l)) > 0 && ((size_t)read (F_X_root, p, bytes) != bytes)) return false
 
     READ (&(header->hash_size), sizeof (SXINT));
     READ (&(header->top), sizeof (SXINT));
     READ (&(header->size), sizeof (SXINT));
     READ (&(header->free_buckets), sizeof (SXINT));
     READ (&(header->has_free_buckets), sizeof (SXINT));
-    READ (&(header->is_locked), sizeof (SXBOOLEAN));
+    READ (&(header->is_locked), sizeof (bool));
 
-    header->is_static = SXFALSE;
+    header->is_static = false;
 
     header->hash_display = (SXINT*) sxalloc (header->hash_size, sizeof (SXINT));
     READ (header->hash_display, sizeof (SXINT) * header->hash_size);
@@ -459,7 +459,7 @@ SXBOOLEAN X_root_read (X_root_header *header, sxfiledesc_t F_X_root /* file desc
     header->hash_lnk = (SXINT*) sxalloc (header->size + 1, sizeof (SXINT));
     READ (header->hash_lnk, sizeof (SXINT) * (header->top + 1));
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -538,8 +538,8 @@ void X_root_header_to_c (X_root_header *header, FILE *F_X /* named output stream
     fputs ("NULL, /* (*assign) () */\n", F_X);
     fputs ("NULL, /* stat_file */\n", F_X);
     fprintf (F_X, "%ld, /* is_locked */\n", header->is_locked ? (SXINT) 1 : (SXINT) 0);
-    fputs ("SXTRUE, /* is_static */\n", F_X);
-    fputs ("SXTRUE, /* is_allocated */\n", F_X);
+    fputs ("true, /* is_static */\n", F_X);
+    fputs ("true, /* is_allocated */\n", F_X);
 }
 
 

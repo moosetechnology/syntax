@@ -22,18 +22,18 @@
 #include "varstr.h"
 #include "lecl_ag.h"
 
-char WHAT_LECLAGFREE[] = "@(#)SYNTAX - $Id: lecl_ag_free.c 3603 2023-09-23 20:02:36Z garavel $" WHAT_DEBUG;
+char WHAT_LECLAGFREE[] = "@(#)SYNTAX - $Id: lecl_ag_free.c 3631 2023-12-20 17:16:41Z garavel $" WHAT_DEBUG;
 
-extern SXVOID lecl_gen_free (void);
+extern void lecl_gen_free (void);
 
-SXVOID	lecl_ag_free (void)
+void	lecl_ag_free (void)
 {
     SXINT	i;
 
     if (sxverbosep) {
 	if (!sxttycol1p) {
 	    fputc ('\n', sxtty);
-	    sxttycol1p = SXTRUE;
+	    sxttycol1p = true;
 	}
 
 	fputs ("Freeing\n", sxtty);

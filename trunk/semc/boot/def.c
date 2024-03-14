@@ -22,7 +22,7 @@
 
 static SXINT sx_stack_size;
 
-char WHAT_SEMC_DEF[] = "@(#)SYNTAX - $Id: def.c 3577 2023-09-10 07:20:53Z garavel $" WHAT_DEBUG;
+char WHAT_SEMC_DEF[] = "@(#)SYNTAX - $Id: def.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 #include "B_tables.h"
 #include "semc_vars.h"
@@ -32,15 +32,15 @@ char WHAT_SEMC_DEF[] = "@(#)SYNTAX - $Id: def.c 3577 2023-09-10 07:20:53Z garave
 extern struct sxtables bnf_tables;
 
 /* dans semc_put.c */
-extern SXVOID put_case (void);
-extern SXVOID put_identite (SXINT nat1, SXINT nat2, SXINT pos);
-extern SXVOID put_postlude (void);
+extern void put_case (void);
+extern void put_identite (SXINT nat1, SXINT nat2, SXINT pos);
+extern void put_postlude (void);
 
 /* dans semc.c */
-extern SXVOID tilt (SXINT attrno, SXINT ntno, SXINT posp);
-extern SXVOID creer (SXINT attrg, SXINT attrd, SXINT posd);
-extern SXVOID creermilieu (SXINT attrg, SXINT attrd, SXINT posd);
-extern SXVOID creervide (SXINT attrg, SXINT attrd, SXINT posd);
+extern void tilt (SXINT attrno, SXINT ntno, SXINT posp);
+extern void creer (SXINT attrg, SXINT attrd, SXINT posd);
+extern void creermilieu (SXINT attrg, SXINT attrd, SXINT posd);
+extern void creervide (SXINT attrg, SXINT attrd, SXINT posd);
 extern SXINT chercher_attr (SXINT ste);
 extern SXINT chercher_nt (SXINT ste);
 extern SXINT chercher_t (SXINT ste);
@@ -51,7 +51,7 @@ static char* ptr;
 
 /*   --------------------------------------------------------- */
 
-static SXVOID decoder(struct sxtoken ttok)
+static void decoder(struct sxtoken ttok)
 {
     char *p1, *p2, *nom;
 
@@ -69,7 +69,7 @@ construit xattr, xtnt et nbq
 
     if (terminal_token.string_table_entry == SXERROR_STE) {
 	/* entree vide si erreur de syntaxe */
-	is_err = SXTRUE;
+	is_err = true;
 	xattr = 0;
 	xtnt = 0;
 	nbq = 0;
@@ -125,7 +125,7 @@ construit xattr, xtnt et nbq
 	    ,"%sYou must provide a terminal symbol with a terminal attribute."
 			 ,bnf_tables.err_titles[2]+1
 		 );
-	    is_err = SXTRUE;
+	    is_err = true;
 	    xtnt = 0;			/* bidon */
 	    nbq = 0;
 	    pos1 = 0;
@@ -148,7 +148,7 @@ construit xattr, xtnt et nbq
     }
     else /* attribut non trouve */
 	{
-	is_err = SXTRUE;
+	is_err = true;
 	xattr = 0;
 	xtnt = 0;
 	nbq = 0;
@@ -159,7 +159,7 @@ construit xattr, xtnt et nbq
 
 /*   --------------------------------------------------------- */
 
-static SXVOID coder (SXINT coder_xattr, SXINT pos)
+static void coder (SXINT coder_xattr, SXINT pos)
 {
     SXINT  pos2;
 
@@ -190,7 +190,7 @@ static SXVOID coder (SXINT coder_xattr, SXINT pos)
 
 /*   --------------------------------------------------------- */
 
-static SXVOID defauter(void)
+static void defauter(void)
 {
     SXINT ntpd
 	, nbsynv
@@ -371,7 +371,7 @@ return;
 
 /*   --------------------------------------------------------- */
 
-static SXBOOLEAN is_error;
+static bool is_error;
 
 #define skx(x) (x)
 #define pcode(x) (SXSTACKtoken(x).lahead)
@@ -381,7 +381,7 @@ static SXBOOLEAN is_error;
 #define pcomment(x) (SXSTACKtoken(x).comment)
 
 /* A C T I O N */
-SXVOID def_act(SXINT code, SXINT numact)
+void def_act(SXINT code, SXINT numact)
 {
 switch (code)
 {
@@ -391,8 +391,8 @@ break;
 case SXCLOSE:
 break;
 
-case SXERROR:is_error=SXTRUE;break;
-case SXINIT:is_error=SXFALSE;break;
+case SXERROR:is_error=true;break;
+case SXINIT:is_error=false;break;
 case SXFINAL:break;
 case SXACTION:
 if(is_error)return;
@@ -434,13 +434,13 @@ case 5:
     xprod++;
     nb_definitions = 0;
     nt_pg = WN[xprod].reduc;
-    is_empty = SXTRUE;
-    is_ident = SXTRUE;
+    is_empty = true;
+    is_ident = true;
     mod_ident[0] = SXNUL;
 }
 break;
 case 7:
-    is_ident = SXTRUE;
+    is_ident = true;
 break;
 case 8:
      nb_sem_rules ++ ;
@@ -450,7 +450,7 @@ case 9:
 break;
 case 10:
 {
-    is_ident = SXFALSE;
+    is_ident = false;
     terminal_token = ptoken(SXSTACKtop()-1);
     decoder (terminal_token);
     if (!is_err) {
@@ -462,7 +462,7 @@ case 10:
 			 ,"%sThis attribute has not been declared with this non-terminal symbol."
 			 ,bnf_tables.err_titles[2]+1
 		     );
-		is_err = SXTRUE;
+		is_err = true;
 	    }
 	    if (!is_err) {
 		if (xattr != defini[nb_definitions]) {
@@ -472,10 +472,10 @@ case 10:
 			         ,"%sIdentity between attributes of different types."
 				 ,bnf_tables.err_titles[2]+1
 			     );
-			is_err = SXTRUE;
+			is_err = true;
 		    }
 		    else {
-			bident = SXFALSE;
+			bident = false;
 			put_case ();
 			put_identite (defini[nb_definitions], xattr, pos2);
 		    }
@@ -487,7 +487,7 @@ case 10:
 				 ,"%sI beg your pardon!"
 				 ,bnf_tables.err_titles[2]+1
 			     );
-			is_err = SXTRUE;
+			is_err = true;
 		    }
 		    else
 			put_identite (defini[nb_definitions], xattr, pos2);
@@ -500,14 +500,14 @@ case 10:
 		    ,"%sYou may not use a terminal attribute in an identity."
 		    ,bnf_tables.err_titles[2]+1
 		 );
-	    is_err = SXTRUE;
+	    is_err = true;
 	}
     }
-    is_ident = SXTRUE;
+    is_ident = true;
 }
 break;
 case 11:
-     is_ident = SXFALSE;
+     is_ident = false;
 break;
 case 12:
 {
@@ -519,7 +519,7 @@ case 12:
 	    /* sxfree (ptr); */
 	}
     }
-    is_err = SXFALSE;
+    is_err = false;
     decoder (terminal_token);
     if (xattr > 0) {
 	if (!is_err) {
@@ -529,7 +529,7 @@ case 12:
 		         ,"%sIllegal attribute definition of a right side symbol."
 			 ,bnf_tables.err_titles[2]+1
 		     );
-		is_err = SXTRUE;
+		is_err = true;
 	    }
 	}
 	if (!is_err) {
@@ -540,7 +540,7 @@ case 12:
 			     ,"%sThis attribute has already been defined."
 			     ,bnf_tables.err_titles[2]+1
 			 );
-		    is_err = SXTRUE;
+		    is_err = true;
 		}
 	    }
 	}
@@ -551,7 +551,7 @@ case 12:
 			 ,"%sThis non-terminal symbol has not been declared with this attribute."
 			 ,bnf_tables.err_titles[2]+1
 		     );
-		is_err = SXTRUE;
+		is_err = true;
 	    }
 	}
 	if (!is_err) {
@@ -566,7 +566,7 @@ case 12:
 		     ,"%sYou may not use a terminal attribute in an identity."
    		     ,bnf_tables.err_titles[2]+1
 		 );
-	    is_err = SXTRUE;
+	    is_err = true;
 	}
     }
 }
@@ -582,7 +582,7 @@ case 13:
 		    ,"%sIllegal attribute definition of a right side symbol."
 		    ,bnf_tables.err_titles[2]+1
 		     );
-		is_err = SXTRUE;
+		is_err = true;
 	    }
 	}
 	if (!is_err) {
@@ -592,7 +592,7 @@ case 13:
 			 ,"%sThis attribute has already been defined."
 			 ,bnf_tables.err_titles[2]+1
 			 );
-		    is_err = SXTRUE;
+		    is_err = true;
 		}
 	    }
 	}
@@ -602,7 +602,7 @@ case 13:
 			    ,"%sThis non-terminal symbol has not been declared with this attribute."
 			    ,bnf_tables.err_titles[2]+1
 		     );
-		is_err = SXTRUE;
+		is_err = true;
 	    }
 	}
 	if (!is_err) {
@@ -616,7 +616,7 @@ case 13:
 		 ,"%sYou may not use a terminal attribute in an identity."
 		 ,bnf_tables.err_titles[2]+1
 		 );
-	    is_err = SXTRUE;
+	    is_err = true;
 	}
     }
 }
@@ -641,7 +641,7 @@ case 18:
 			 ,"%sThis attribute has not been declared with this non-terminal symbol."
 			 ,bnf_tables.err_titles[2]+1
 		     );
-		is_err = SXTRUE;
+		is_err = true;
 	    }
 	}
     }

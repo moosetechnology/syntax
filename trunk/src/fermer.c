@@ -25,7 +25,7 @@
 #include "sxunix.h"
 #include "sxba.h"
 
-char WHAT_FERMER[] = "@(#)SYNTAX - $Id: fermer.c 2947 2023-03-29 17:06:41Z garavel $" WHAT_DEBUG;
+char WHAT_FERMER[] = "@(#)SYNTAX - $Id: fermer.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 /* Comme sxba_or mais |lhs_bits_array| <= |rhs_bits_array| */
 static SXBA
@@ -99,7 +99,7 @@ FIRST_DIFFERENCE (SXBA bits_array_1, SXBA bits_array_2)
 }
 
 
-SXVOID	fermer (SXBA *R, SXBA_INDEX taille)
+void	fermer (SXBA *R, SXBA_INDEX taille)
 /* Cette procedure realise la fermeture transitive d'une relation			*/
 /* binaire @ sur un ensembe E (|E| = taille).						*/
 /* La relation est representee par une "BitsMatrix" R de				*/
@@ -140,7 +140,7 @@ SXVOID	fermer (SXBA *R, SXBA_INDEX taille)
     struct tl	*axl, *axtl;
     SXBA	ligne_i, ligne_j;
     SXBA	/* taille */ col_non_vides, lignes_pleines, lignes_non_vides, une_ligne_pleine;
-    SXBOOLEAN	is_ligne_j_pleine;
+    bool	is_ligne_j_pleine;
 
     bm = sxbm_calloc (4, taille);
     une_ligne_pleine = bm [0];
@@ -240,7 +240,7 @@ SXVOID	fermer (SXBA *R, SXBA_INDEX taille)
 #include "sxstack.h"
 /* Comme fermer mais + rapide (au moins sur un exemple !!) */
 /* R [0..taille-1, 0..taille-1] contient la relation */
-SXVOID	fermer2 (SXBA *R, SXBA_INDEX taille)
+void	fermer2 (SXBA *R, SXBA_INDEX taille)
 {
   SXBA_INDEX A, B, **tilde_stacks, *area_ptr;
   SXBA_INDEX *tilde_stack, *tilde_stack_top;

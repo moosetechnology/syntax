@@ -10,11 +10,11 @@ SYNTAX.
 .nf
 #include "sxunix.h"
 
-SXVOID sxatedit (node)
+void sxatedit (node)
 .ta \w'SXVOI'u +\w'SXNODE 'u
 	SXNODE	*node\|;
 
-SXVOID sxateditinit (file, md1, md2, pw)
+void sxateditinit (file, md1, md2, pw)
 .ta \w'SXVOI'u +\w'FILE 'u
 	FILE	*file\|;
 	long	md1, md2, pw\|;

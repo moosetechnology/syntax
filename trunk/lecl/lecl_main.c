@@ -27,7 +27,7 @@
 #include "lecl_ag.h"
 #include "put_edit.h"
 
-char WHAT_LECLMAIN[] = "@(#)SYNTAX - $Id: lecl_main.c 3603 2023-09-23 20:02:36Z garavel $" WHAT_DEBUG;
+char WHAT_LECLMAIN[] = "@(#)SYNTAX - $Id: lecl_main.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 char	by_mess [] = "the SYNTAX lexical constructor LECL";
 
@@ -126,7 +126,7 @@ static char	*option_get_text (SXINT kind)
 
 
 
-static SXVOID	extract_language_name (char *path_name)
+static void	extract_language_name (char *path_name)
 {
     char	*p;
 
@@ -144,7 +144,7 @@ static SXVOID	extract_language_name (char *path_name)
 
 
 
-static	SXVOID lecl_run (char *pathname)
+static	void lecl_run (char *pathname)
 {
     FILE	*infile;
 
@@ -210,82 +210,82 @@ int main(int argc, char *argv[])
 	sxexit (3);
     }
 
-    sxttycol1p = SXTRUE;
+    sxttycol1p = true;
 
 /* valeurs par defaut */
 
     options_set = OPTION (SOURCE) | OPTION (VERBOSE) | OPTION (OBJECT) | OPTION (OPTIMIZE);
-    is_source = is_object = is_optimize = is_dico = SXTRUE;
-    is_check = is_ppt = is_table = is_list = is_non_deterministic_automaton = SXFALSE;
+    is_source = is_object = is_optimize = is_dico = true;
+    is_check = is_ppt = is_table = is_list = is_non_deterministic_automaton = false;
 
 /* Decodage des options */
 
     for (argnum = 1; argnum < argc; argnum++) {
 	switch (option_get_kind (argv [argnum])) {
 	case SOURCE:
-	    is_source = SXTRUE, options_set |= OPTION (SOURCE);
+	    is_source = true, options_set |= OPTION (SOURCE);
 	    break;
 
 	case -SOURCE:
-	    is_source = is_object = is_table = is_list = SXFALSE, options_set &= noOPTION (SOURCE) & noOPTION (OBJECT) &
+	    is_source = is_object = is_table = is_list = false, options_set &= noOPTION (SOURCE) & noOPTION (OBJECT) &
 		 noOPTION (TABLE) & noOPTION (LIST);
 	    break;
 
 	case VERBOSE:
-	    sxverbosep = SXTRUE, options_set |= OPTION (VERBOSE);
+	    sxverbosep = true, options_set |= OPTION (VERBOSE);
 	    break;
 
 	case -VERBOSE:
-	    sxverbosep = SXFALSE, options_set &= noOPTION (VERBOSE);
+	    sxverbosep = false, options_set &= noOPTION (VERBOSE);
 	    break;
 
 	case OBJECT:
-	    is_source = is_object = SXTRUE, options_set |= OPTION (SOURCE) | OPTION (OBJECT);
+	    is_source = is_object = true, options_set |= OPTION (SOURCE) | OPTION (OBJECT);
 	    break;
 
 	case -OBJECT:
-	    is_object = SXFALSE, options_set &= noOPTION (OBJECT);
+	    is_object = false, options_set &= noOPTION (OBJECT);
 	    break;
 
 	case TABLE:
-	    is_source = is_table = SXTRUE, options_set |= OPTION (SOURCE) | OPTION (TABLE);
+	    is_source = is_table = true, options_set |= OPTION (SOURCE) | OPTION (TABLE);
 	    break;
 
 	case -TABLE:
-	    is_table = SXFALSE, options_set &= noOPTION (TABLE);
+	    is_table = false, options_set &= noOPTION (TABLE);
 	    break;
 
 	case LIST:
-	    is_source = is_object = is_table = is_list = SXTRUE, options_set |= OPTION (SOURCE) | OPTION (OBJECT) | OPTION
+	    is_source = is_object = is_table = is_list = true, options_set |= OPTION (SOURCE) | OPTION (OBJECT) | OPTION
 		 (TABLE) | OPTION (LIST);
 	    break;
 
 	case -LIST:
-	    is_list = SXFALSE, options_set &= noOPTION (LIST);
+	    is_list = false, options_set &= noOPTION (LIST);
 	    break;
 
 	case OPTIMIZE:
-	    is_optimize = SXTRUE, options_set |= OPTION (OPTIMIZE);
+	    is_optimize = true, options_set |= OPTION (OPTIMIZE);
 	    break;
 
 	case -OPTIMIZE:
-	    is_optimize = SXFALSE, options_set &= noOPTION (OPTIMIZE);
+	    is_optimize = false, options_set &= noOPTION (OPTIMIZE);
 	    break;
 
 	case DICO:
-	    is_dico = SXTRUE, options_set |= OPTION (DICO);
+	    is_dico = true, options_set |= OPTION (DICO);
 	    break;
 
 	case -DICO:
-	    is_dico = SXFALSE, options_set &= noOPTION (DICO);
+	    is_dico = false, options_set &= noOPTION (DICO);
 	    break;
 
 	case -NONDETERMINISTIC:
-	    is_non_deterministic_automaton = SXFALSE, options_set &= noOPTION (NONDETERMINISTIC);
+	    is_non_deterministic_automaton = false, options_set &= noOPTION (NONDETERMINISTIC);
 	    break;
 
 	case NONDETERMINISTIC:
-	    is_non_deterministic_automaton = SXTRUE, options_set |= OPTION (NONDETERMINISTIC);
+	    is_non_deterministic_automaton = true, options_set |= OPTION (NONDETERMINISTIC);
 	    break;
 
 	case LANGUAGE_NAME:
@@ -331,7 +331,7 @@ run:
 	fprintf (sxtty, "%s\n", release_mess);
     }
 
-    syntax (SXINIT, &lecl_tables, SXFALSE /* no includes */);
+    syntax (SXINIT, &lecl_tables, false /* no includes */);
 
     if (options_set & OPTION (LANGUAGE_NAME)) {
 	lecl_run ((char*)NULL);
@@ -347,7 +347,7 @@ run:
 	} while (argnum < argc);
     }
 
-    syntax (SXFINAL, &lecl_tables, SXTRUE);
+    syntax (SXFINAL, &lecl_tables, true);
 
     sxexit (sxerr_max_severity ());
 
@@ -359,14 +359,14 @@ run:
 char	*options_text (char *line)
 {
     SXINT	i;
-    SXBOOLEAN	is_first = SXTRUE;
+    bool	is_first = true;
 
     *line = SXNUL;
 
     for (i = 1; i <= LAST_OPTION; i++)
 	if (options_set & OPTION (i)) {
 	    if (is_first)
-		is_first = SXFALSE;
+		is_first = false;
 	    else
 		strcat (line, ", ");
 

@@ -10,8 +10,10 @@ CFLAGS= -g -DEBUG_ALLOC -DEBUG
 
 CC=cc -I$(INCL) -I$(SXINCL) -I$(SXINCL)/util -I$(SX)/../outdated/oldies/incl $(CFLAGS)
 
-all: $(DCG)/dcg2bnf.out			\
+ALL= $(DCG)/dcg2bnf.out			\
      $(DCG)/dcg_pars.out
+
+all: $(ALL)
 
 NEEDS1= $(LIB)/dcg_main.o		\
 	$(LIB)/dcg_sact.o    		\
@@ -67,5 +69,5 @@ $(LIB)/dcg_nosem_t.o:		$(SXINCL)/sxunix.h 	\
 		-Dsempass=sxvoid -o dcg_nosem_t.o
 
 clean:
-	@echo "clean target for DCG should be provided"
+	rm -f $(ALL) $(NEEDS1) $(PARS)
 

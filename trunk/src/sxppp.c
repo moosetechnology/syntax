@@ -25,7 +25,7 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXPPP[] = "@(#)SYNTAX - $Id: sxppp.c 3558 2023-09-03 06:07:29Z garavel $" WHAT_DEBUG;
+char WHAT_SXPPP[] = "@(#)SYNTAX - $Id: sxppp.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 #if BUG
 #define	BUG_CODE
@@ -89,7 +89,7 @@ static struct saved_info {
 static SXINT	save_stack_index;
 static SXINT	column /* Where shall the next character lay */ ;
 static SXINT	current_column /* Where we are going to write */ ;
-static SXBOOLEAN	this_is_a_new_line /* There is nothing on the current line */ ;
+static bool	this_is_a_new_line /* There is nothing on the current line */ ;
 
 /* Output medium */
 
@@ -98,7 +98,7 @@ static SXINT	dispo_sortie, taille_sortie;
 
 
 
-static SXVOID	vider_sortie (SXBOOLEAN continuer)
+static void	vider_sortie (bool continuer)
 {
     size_t lgth = (size_t)(taille_sortie - dispo_sortie);
   
@@ -119,11 +119,11 @@ static SXVOID	vider_sortie (SXBOOLEAN continuer)
 
 
 
-static SXVOID	vider_sortie_puis_1_car (char c)
+static void	vider_sortie_puis_1_car (char c)
 {
     /* On a failli aller un cran trop loin... */
     dispo_sortie++;
-    vider_sortie (SXTRUE);
+    vider_sortie (true);
     dispo_sortie--;
     *sortie++ = c;
 }
@@ -134,13 +134,13 @@ static SXVOID	vider_sortie_puis_1_car (char c)
 #define sortie_1_car(c)	((dispo_sortie--==0) ? (vider_sortie_puis_1_car(c),1) : ((*sortie++ = (c)),1))
 
 
-static SXVOID	sortie_n_car (char *s, SXINT l)
+static void	sortie_n_car (char *s, SXINT l)
 {
     while (dispo_sortie < l) {
 	SXINT	d = dispo_sortie;
 
 	if (d == 0)
-	    vider_sortie (SXTRUE);
+	    vider_sortie (true);
 	else {
 	    sortie_n_car (s, d);
 	    l -= d;
@@ -160,7 +160,7 @@ static SXVOID	sortie_n_car (char *s, SXINT l)
 #ifdef __GNUC__
 __attribute__ ((noreturn))
 #endif
-static SXVOID     ppabort (char *format, ...)
+static void     ppabort (char *format, ...)
 {
    va_list args;
 
@@ -183,7 +183,7 @@ static struct string_info {
 
 
 
-static SXVOID	string_modify (char *string, SXINT strl, SXCASE its_case, SXBOOLEAN must_darken)
+static void	string_modify (char *string, SXINT strl, SXCASE its_case, bool must_darken)
 {
 
 #define NEEDED_CHARS(l)	(6 * l + 2)	/* l+1 + 5l+1 (normal + dark) */
@@ -263,7 +263,7 @@ static SXVOID	string_modify (char *string, SXINT strl, SXCASE its_case, SXBOOLEA
 /* This procedure fills the global variable "string_info" with information
    concerning the string associated with the parameters "ste" and "lahead" */
 
-static SXVOID	string_manager (SXINT ste, SXINT lahead)
+static void	string_manager (SXINT ste, SXINT lahead)
 {
 #ifdef BUG_STRINGS
   {
@@ -301,7 +301,7 @@ static SXVOID	string_manager (SXINT ste, SXINT lahead)
 
     {
       SXCASE	its_case;
-      SXBOOLEAN	must_darken;
+      bool	must_darken;
 
       its_case = (sxppvariables.terminal_case != NULL ? sxppvariables.terminal_case [lahead] : SXNO_SPECIAL_CASE);
       must_darken = (sxppvariables.terminal_dark != NULL && sxppvariables.terminal_dark [lahead]);
@@ -334,7 +334,7 @@ static SXVOID	string_manager (SXINT ste, SXINT lahead)
 /* This procedure fills the global variable "string_info" with information
    concerning the string associated with the keyword of name "lahead" */
 
-static SXVOID	kw_manager (SXINT lahead)
+static void	kw_manager (SXINT lahead)
 {
 #ifdef BUG_STRINGS
   {
@@ -371,7 +371,7 @@ static SXVOID	kw_manager (SXINT lahead)
 
     {
       SXCASE	its_case;
-      SXBOOLEAN	must_darken;
+      bool	must_darken;
 
       its_case = (sxppvariables.terminal_case != NULL ? sxppvariables.terminal_case [lahead] : (sxkeywordp (sxppvariables.sxtables, lahead) ? sxppvariables.kw_case : SXNO_SPECIAL_CASE));
       must_darken = (sxppvariables.terminal_dark != NULL ? sxppvariables.terminal_dark [lahead] : (sxkeywordp (sxppvariables.sxtables, lahead) && sxppvariables.kw_dark));
@@ -399,7 +399,7 @@ static SXVOID	kw_manager (SXINT lahead)
 
 
 
-static SXVOID	call_put_error (void)
+static void	call_put_error (void)
 {
     struct sxsource_coord	source_index;
     static char		severity [2] = {SXSEVERITIES - 1, 0};
@@ -430,13 +430,13 @@ static SXVOID	call_put_error (void)
     else
 	sxerror (source_index, severity[0], "Paragraphing cannot be done left of first column.");
 
-    sxppvariables.is_error = SXTRUE;
+    sxppvariables.is_error = true;
     column = 0;
 }
 
 
 
-static SXVOID	go_to_column (void)
+static void	go_to_column (void)
 {
     SXINT	nb_spaces;
     SXINT	nb_tabs;
@@ -451,7 +451,7 @@ static SXVOID	go_to_column (void)
 	    sortie_1_car (NEW_LINE);
 	    sxppvariables.char_count++;
 	    current_column = 0;
-	    this_is_a_new_line = SXTRUE;
+	    this_is_a_new_line = true;
 
 	    if (sxverbosep) {
 		fprintf (sxtty, verbose_format, sxppvariables.char_count);
@@ -486,7 +486,7 @@ static SXVOID	go_to_column (void)
 
 
 
-static SXVOID	cadrage (SXINT taille)
+static void	cadrage (SXINT taille)
 {
     if (taille > sxppvariables.line_length)
 	column = 0;
@@ -496,12 +496,12 @@ static SXVOID	cadrage (SXINT taille)
 
 
 
-static SXVOID	impr_commentaire (char *ch_ptr)
+static void	impr_commentaire (char *ch_ptr)
 {
     SXINT	lg, longueur_premiere_ligne /* 0 si lg */ , depart;
     SXINT		nb_NEW_LINEs, nb_NEW_LINEs_en_fin;
     SXINT		sv_column;
-    SXBOOLEAN	sv_this_is_a_new_line;
+    bool	sv_this_is_a_new_line;
 
     if (column < 0)
 	call_put_error ();
@@ -586,7 +586,7 @@ static SXVOID	impr_commentaire (char *ch_ptr)
 		sortie_1_car (FORM_FEED);
 		sxppvariables.char_count++;
 		current_column = sxppvariables.line_length /* On ira a la ligne */ ;
-		this_is_a_new_line = SXFALSE;
+		this_is_a_new_line = false;
 	    }
 
 
@@ -755,7 +755,7 @@ a_la_colonne:
 
 /* This procedure prints the string pointed to by "string_info" */
 
-static SXVOID	impr (void)
+static void	impr (void)
 {
   /* initialise:
      (pas de goto sur ce label, ce qui provoque un warning du compilo icc d'intel) */
@@ -787,7 +787,7 @@ static SXVOID	impr (void)
     {
 	if (string_info.goes_to_column == -1) {
 	    current_column = column += string_info.width;
-	    this_is_a_new_line = SXFALSE;
+	    this_is_a_new_line = false;
 	}
 	else {
 	    current_column = column = string_info.goes_to_column;
@@ -800,7 +800,7 @@ static SXVOID	impr (void)
 
 
 #ifdef BUG_TREE
-static SXVOID	sxppnp (struct sxnode_pp *node)
+static void	sxppnp (struct sxnode_pp *node)
 {
     if (node != NULL) {
 	printf ("Node : cur = %lX (la = %ld)\tnext = %lX\n\t",
@@ -836,11 +836,11 @@ static SXVOID	sxppnp (struct sxnode_pp *node)
 #endif
 
 
-static SXVOID	paragrapheur (struct sxnode_pp *root_ptr)
+static void	paragrapheur (struct sxnode_pp *root_ptr)
 {
     struct SXPP_schema	directive /* current directive */ ;
     struct sxnode_pp	*node_ptr /* last node having been displayed */ ;
-    SXBOOLEAN	inhibit_CR_FF /* Next CR must be inhibited */ ;
+    bool	inhibit_CR_FF /* Next CR must be inhibited */ ;
     static char		consistency_msg [] = "Your tables may be inconsistent...";
 
 
@@ -851,8 +851,8 @@ static SXVOID	paragrapheur (struct sxnode_pp *root_ptr)
     saved_info.marge = 0;
     saved_info.marge_erreur = 5;
     current_column = column = 0;
-    this_is_a_new_line = SXTRUE;
-    inhibit_CR_FF = SXFALSE;
+    this_is_a_new_line = true;
+    inhibit_CR_FF = false;
     sortie = base_sortie = sxalloc (dispo_sortie = taille_sortie = 256 * BUFSIZ, sizeof (*sortie));
 
 #ifdef BUG_TREE
@@ -897,7 +897,7 @@ next_sub_tree:
 	    impr_token (saved_info.noeud->terminal_token.string_table_entry, -node_name);
 	else
 	    /* Noeud erreur */
-	    sxppvariables.is_error = SXTRUE;
+	    sxppvariables.is_error = true;
 
 	goto end_sub_tree;
     }
@@ -935,7 +935,7 @@ decode_directive:
 
     case SKIPs:
 	if (inhibit_CR_FF)
-	    inhibit_CR_FF = SXFALSE;
+	    inhibit_CR_FF = false;
 	else {
 	    SXINT	nb;
 
@@ -945,7 +945,7 @@ decode_directive:
 		sortie_1_car (NEW_LINE);
 
 	    current_column = column = 0;
-	    this_is_a_new_line = SXTRUE;
+	    this_is_a_new_line = true;
 
 	    if (sxverbosep) {
 		fprintf (sxtty, verbose_format, sxppvariables.char_count);
@@ -956,7 +956,7 @@ decode_directive:
 
     case PAGEs:
 	if (inhibit_CR_FF)
-	    inhibit_CR_FF = SXFALSE;
+	    inhibit_CR_FF = false;
 	else {
 	    SXINT	nb;
 
@@ -966,19 +966,19 @@ decode_directive:
 		sortie_1_car (FORM_FEED);
 
 	    current_column = column = 0;
-	    this_is_a_new_line = SXTRUE;
+	    this_is_a_new_line = true;
 	}
 
 	goto next_op;
 
     case SPACEs:
 	column += directive.PP_act;
-	inhibit_CR_FF = SXFALSE;
+	inhibit_CR_FF = false;
 	goto check_column;
 
     case TABs:
 	column = (column / sxppvariables.tabs_interval + directive.PP_act) * sxppvariables.tabs_interval;
-	inhibit_CR_FF = SXFALSE;
+	inhibit_CR_FF = false;
 	goto next_op;
 
     case MARGIN:
@@ -988,12 +988,12 @@ decode_directive:
 	else if (column > sxppvariables.max_margin)
 	    column = sxppvariables.block_margin ? sxppvariables.max_margin : (column % sxppvariables.max_margin);
 
-	inhibit_CR_FF = SXFALSE;
+	inhibit_CR_FF = false;
 	goto check_column;
 
     case CALL:
 	/* Terminal ou non-terminal */
-	inhibit_CR_FF = SXFALSE;
+	inhibit_CR_FF = false;
 
 	{
 	    SXINT	act;
@@ -1054,13 +1054,13 @@ end_sub_tree:
 	fprintf (sxtty, verbose_format, sxppvariables.char_count);
     }
 
-    vider_sortie (SXFALSE);
+    vider_sortie (false);
     sxfree (base_sortie);
 }
 
 
 
-static SXVOID	sxppopen (struct sxtables *sxtables)
+static void	sxppopen (struct sxtables *sxtables)
 {
     if (sxppvariables.line_length <= 1)
 	sxppvariables.line_length = 79;
@@ -1108,7 +1108,7 @@ static SXVOID	sxppopen (struct sxtables *sxtables)
 
 
 
-static SXVOID	sxppclose (void)
+static void	sxppclose (void)
 {
     if (sxppvariables.save_stack != NULL) {
 	sxfree (sxppvariables.save_stack), sxppvariables.save_stack = NULL;
@@ -1119,7 +1119,7 @@ static SXVOID	sxppclose (void)
     }
 }
 
-SXVOID	sxppp (SXINT sxppp_what, struct sxtables *sxtables)
+void	sxppp (SXINT sxppp_what, struct sxtables *sxtables)
 {
   switch (sxppp_what) {
   case SXOPEN:
@@ -1133,7 +1133,7 @@ SXVOID	sxppp (SXINT sxppp_what, struct sxtables *sxtables)
 
   case SXACTION:
     sxppvariables.char_count = 0;
-    sxppvariables.is_error = SXFALSE;
+    sxppvariables.is_error = false;
 
     {
       SXINT	old_top = sxppvariables.tsi_top;
@@ -1195,7 +1195,7 @@ SXVOID	sxppp (SXINT sxppp_what, struct sxtables *sxtables)
       if (fflush (sxstdout) != 0) {
         fprintf (sxstderr, "Cannot fflush the file sxstdout = %s (errno = %s)\n",
 		 sxppvariables.logical_file_name, strerror (errno));
-	sxppvariables.is_error = SXTRUE;
+	sxppvariables.is_error = true;
       }
       else if ((real_size = ftell (sxstdout)) != (long)sxppvariables.char_count) {
 	fprintf (sxstderr, "%s : Only %ld bytes have been written in the file sxstdout = %s (instead of %ld).\n",
@@ -1203,7 +1203,7 @@ SXVOID	sxppp (SXINT sxppp_what, struct sxtables *sxtables)
 		 real_size,
 		 sxppvariables.logical_file_name,
 		 (long) sxppvariables.char_count);
-	sxppvariables.is_error = SXTRUE;
+	sxppvariables.is_error = true;
       }	
     }
 

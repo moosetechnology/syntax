@@ -8,9 +8,11 @@ INCL=$(EARLEY)/incl
 
 CC=cc -I$(INCL) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
-all: $(EARLEY)/earley.out	\
+ALL=$(EARLEY)/earley.out	\
      $(EARLEY)/earley_LC_OK.out \
      $(EARLEY)/earley_LC.out
+
+all: $(ALL)
 
 NEEDS=$(LIB)/earley.o	
 
@@ -40,5 +42,5 @@ $(LIB)/earley_LC_OK.o:	$(SXINCL)/XxY.h	\
 	$(CC) -o $@ -c $(SRC)/earley_LC_OK.c
 
 clean:
-	@echo "clean target for earley should be provided"
+	rm -f $(ALL) $(NEEDS) $(NEEDS1)
 

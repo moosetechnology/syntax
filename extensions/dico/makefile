@@ -7,9 +7,9 @@ LIB=$(DICO)/lib
 
 CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
-all: $(SX)/bin/dico.out	
+all: $(SXBIN)/dico.out	
 
-$(SX)/bin/dico.out:	$(DICO)/dico.out
+$(SXBIN)/dico.out:	$(DICO)/dico.out
 	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
 NEEDED=\

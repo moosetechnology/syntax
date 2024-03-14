@@ -22,7 +22,7 @@ static char	ME [] = "ATCPP";
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXATCPP[] = "@(#)SYNTAX - $Id: sxatcpp.c 3086 2023-04-29 11:38:17Z garavel $" WHAT_DEBUG;
+char WHAT_SXATCPP[] = "@(#)SYNTAX - $Id: sxatcpp.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 /* Gestion dans le tas : */
 
@@ -69,7 +69,7 @@ static struct sxnode_pp	*allocate_area (void)
 
 
 
-static SXVOID	free_areas (void)
+static void	free_areas (void)
 {
     struct sxatcpp_area	*prev, *next;
     next = area;
@@ -108,7 +108,7 @@ static char	*string_cat (char *s1, char *s2)
 
 
 
-static SXVOID	initialize (void)
+static void	initialize (void)
 {
     stack_size = 128;
     area_size = 0;
@@ -123,10 +123,10 @@ static SXVOID	initialize (void)
      de reprendre la main pour le compléter.  C'est par exemple utilisé dans ppf77 pour insérer directement
      les commentaires dans l'arbre (plutôt que par le mécanisme usuel : token -> parse_item -> noeud) en
      utilisant l'option de compilation de sxatcpp.c -DBEFORE_PPTREE_WALK=f77_process_postponed_comments. */
-  extern SXVOID BEFORE_PPTREE_WALK (struct sxnode_pp *);
+  extern void BEFORE_PPTREE_WALK (struct sxnode_pp *);
 #endif
 
-static SXVOID	finalize (void)
+static void	finalize (void)
 {
   /* le commentaire eventuel se trouvant en fin de  */
   /* programme devient le post_comment de la racine */
@@ -155,7 +155,7 @@ static SXVOID	finalize (void)
 
 
 #if BUG
-static SXVOID print_tok (struct sxtoken	*pt)
+static void print_tok (struct sxtoken	*pt)
 {
   fprintf (stdout,
 	   "%s\t\ttoken = (%ld, \"%s\")\n\
@@ -176,7 +176,7 @@ static SXVOID print_tok (struct sxtoken	*pt)
 	  );
 }
 
-static SXVOID	print_atcppnode (struct sxnode_pp *ppnode, SXINT xps)
+static void	print_atcppnode (struct sxnode_pp *ppnode, SXINT xps)
 {
     if (ppnode != NULL) {
         fprintf (stdout, "%s : cur_root_node = %lX (xps = %ld):\tnext = %lX\n\t",
@@ -206,12 +206,12 @@ static SXVOID	print_atcppnode (struct sxnode_pp *ppnode, SXINT xps)
 }
 #endif
 
-static SXVOID	action (void)
+static void	action (void)
 {
     SXINT	top, new_top, xs;
     struct sxtoken	*token;
     struct sxnode_pp	*brother, *son, *father;
-    SXBOOLEAN	is_first = SXTRUE;
+    bool	is_first = true;
 
     top = SXSTACKtop ();
     new_top = SXSTACKnewtop ();
@@ -270,7 +270,7 @@ static SXVOID	action (void)
 		com_ref = cons_com (com_ref, token->comment);
 
 	    prv_ptr = brother;
-	    is_first = SXFALSE;
+	    is_first = false;
 	}
     }
 
@@ -288,7 +288,7 @@ static SXVOID	action (void)
 
 
 
-static SXVOID	error (void)
+static void	error (void)
 {
     root_ptr = allocate_node ();
     root_ptr->name = 0 /* error node */ ;
@@ -297,7 +297,7 @@ static SXVOID	error (void)
 
 
 
-SXVOID	sxatcpp (SXINT sxatcpp_what, struct sxtables *arg /* or action number */)
+void	sxatcpp (SXINT sxatcpp_what, struct sxtables *arg /* or action number */)
 {
     switch (sxatcpp_what) {
     case SXOPEN:

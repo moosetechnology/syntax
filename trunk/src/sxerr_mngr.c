@@ -25,7 +25,7 @@
 #include <stdarg.h>
 #include <errno.h>
 
-char WHAT_SXERR_MNGR[] = "@(#)SYNTAX - $Id: sxerr_mngr.c 3269 2023-05-17 15:18:36Z garavel $" WHAT_DEBUG;
+char WHAT_SXERR_MNGR[] = "@(#)SYNTAX - $Id: sxerr_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 /*---------------------------------------------------------------------------*/
 
@@ -60,7 +60,7 @@ int sxerr_max_severity ()
 
 /* SIMPLE version of sxerror() */
 
-SXVOID sxerror (struct sxsource_coord source_index,
+void sxerror (struct sxsource_coord source_index,
 		 SXINT severity,
 		 char *format,
 #ifdef VFPRINTF_IS_BUGGED
@@ -139,7 +139,7 @@ SXVOID sxerror (struct sxsource_coord source_index,
 
 /*VARARGS2*/
 
-SXVOID sxhmsg (char *file_name, char *format, ...)
+void sxhmsg (char *file_name, char *format, ...)
 {
   SXINT	severity;
   char *arg1;
@@ -165,7 +165,7 @@ SXVOID sxhmsg (char *file_name, char *format, ...)
 
 /*VARARGS2*/
 
-SXVOID sxtmsg (char *file_name, char *format, ...)
+void sxtmsg (char *file_name, char *format, ...)
 {
   SXINT	severity;
   char *arg1;
@@ -189,7 +189,7 @@ SXVOID sxtmsg (char *file_name, char *format, ...)
 
 /* SIMPLE version of sxerrsort() */
 
-SXVOID sxerrsort (void)
+void sxerrsort (void)
 {
 }
 
@@ -197,7 +197,7 @@ SXVOID sxerrsort (void)
 
 /* SIMPLE version of sxerr_mngr() */
 
-SXVOID sxerr_mngr (SXINT what, ...)
+void sxerr_mngr (SXINT what, ...)
 {
   sxuse (what);
 }
@@ -206,17 +206,17 @@ SXVOID sxerr_mngr (SXINT what, ...)
 
 #else					/* <==> #ifndef SIMPLE */
 
-static SXBOOLEAN find_line (FILE *infile, SXUINT line_num)
+static bool find_line (FILE *infile, SXUINT line_num)
 {
   if (isatty (fileno (infile)) || fseeko (infile, (off_t) 0, 0 /* SEEK_SET */) == -1) {
-    return SXFALSE;
+    return false;
   }
 
   while (--line_num > 0) {
     for (;;) {
       switch (getc (infile)) {
       case EOF:
-	return SXFALSE;
+	return false;
 
       case SXNEWLINE:
 	break;
@@ -229,12 +229,12 @@ static SXBOOLEAN find_line (FILE *infile, SXUINT line_num)
     }
   }
 
-  return SXTRUE;
+  return true;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static SXBOOLEAN compute_lines (FILE *infile, SXUINT line_num, SXUINT column_num)
+static bool compute_lines (FILE *infile, SXUINT line_num, SXUINT column_num)
 {
 #define blanks_len	(sizeof (blanks) - 1) /* MUST be >= SXTAB_INTERVAL */
   static char		blanks [] = "               ";
@@ -243,16 +243,16 @@ static SXBOOLEAN compute_lines (FILE *infile, SXUINT line_num, SXUINT column_num
   SXINT	mark_pos /* whitespace length before the marker */ ;
 
   if (!find_line (infile, line_num)) {
-    return SXFALSE;
+    return false;
   }
 
   if (sxerrmngr.scratch_file == NULL) {
-    return SXFALSE;
+    return false;
   }
 
   if (sxerrmngr.sxerr_format == SXERR_FORMAT_EMPTY) {
     /* no error or warning message should be printed */
-    return SXTRUE;
+    return true;
   }
 
   mark_pos = -1, char_count = 0, line_len = 0;
@@ -345,21 +345,21 @@ static SXBOOLEAN compute_lines (FILE *infile, SXUINT line_num, SXUINT column_num
     break;
   }
 
-  return SXTRUE;
+  return true;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static SXBOOLEAN output_marker (void)
+static bool output_marker (void)
 {
   int 	ch;
 
   if (sxerrmngr.scratch_file == NULL) {
-    return SXFALSE;
+    return false;
   }
 
   if (fseeko (sxerrmngr.scratch_file, sxerrmngr.mark, 0 /* SEEK_SET */) == -1) {
-    return SXFALSE;
+    return false;
   }
 
   ch = SXNEWLINE;
@@ -370,19 +370,19 @@ static SXBOOLEAN output_marker (void)
 
   fseeko (sxerrmngr.scratch_file, (off_t) 0, 1 /* SEEK_CUR */);
 
-  return SXTRUE;
+  return true;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static SXBOOLEAN find_source (struct sxsource_coord source_index)
+static bool find_source (struct sxsource_coord source_index)
 {
   char *file_name;
   FILE *infile;
-  SXBOOLEAN code;
+  bool code;
   off_t here;
   
-  SYNTAX_is_in_critical_zone = SXTRUE;
+  SYNTAX_is_in_critical_zone = true;
 
   /* First, try opening the relocated file (if relocation is in effect) */
 
@@ -391,7 +391,7 @@ static SXBOOLEAN find_source (struct sxsource_coord source_index)
     if (file_name [0] != SXNUL && (infile = sxfopen (file_name, "r")) != NULL) {
       code = compute_lines (infile, sxline (source_index), sxcolumn (source_index));
       fclose (infile);
-      SYNTAX_is_in_critical_zone = SXFALSE;
+      SYNTAX_is_in_critical_zone = false;
       return code;
     }
   }
@@ -402,7 +402,7 @@ static SXBOOLEAN find_source (struct sxsource_coord source_index)
   if (file_name [0] != SXNUL && (infile = sxfopen (file_name, "r")) != NULL) {
     code = compute_lines (infile, source_index.line, source_index.column);
     fclose (infile);
-    SYNTAX_is_in_critical_zone = SXFALSE;
+    SYNTAX_is_in_critical_zone = false;
     return code;
   }
 
@@ -411,19 +411,19 @@ static SXBOOLEAN find_source (struct sxsource_coord source_index)
   if (file_name == sxsrcmngr.source_coord.file_name && (infile = sxsrcmngr.infile) != NULL && (here = ftello (infile)) != -1) {
     code = compute_lines (infile, source_index.line, source_index.column);
     fseeko (infile, here, 0 /* SEEK_SET */);
-    SYNTAX_is_in_critical_zone = SXFALSE;
+    SYNTAX_is_in_critical_zone = false;
     return code;
   }
 
   /* No more ideas? */
 
-  SYNTAX_is_in_critical_zone = SXFALSE;
-  return SXFALSE;
+  SYNTAX_is_in_critical_zone = false;
+  return false;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static SXVOID keep_message (struct sxsource_coord source_index, SXINT severity)
+static void keep_message (struct sxsource_coord source_index, SXINT severity)
 {
   struct sxerr_info	err_info;
 
@@ -450,7 +450,7 @@ static SXVOID keep_message (struct sxsource_coord source_index, SXINT severity)
 
 /*---------------------------------------------------------------------------*/
 
-SXVOID sxerror (struct sxsource_coord source_index,
+void sxerror (struct sxsource_coord source_index,
 		 SXINT severity,
 		 char *format,
 #ifdef VFPRINTF_IS_BUGGED
@@ -539,7 +539,7 @@ SXVOID sxerror (struct sxsource_coord source_index,
 
 /*VARARGS2*/
 
-SXVOID sxhmsg (char *file_name, char *format, ...)
+void sxhmsg (char *file_name, char *format, ...)
 {
   SXINT	severity;
   char *arg1;
@@ -575,7 +575,7 @@ SXVOID sxhmsg (char *file_name, char *format, ...)
 
 /*VARARGS2*/
 
-SXVOID sxtmsg (char *file_name, char *format, ...)
+void sxtmsg (char *file_name, char *format, ...)
 {
   SXINT	severity;
   char *arg1;
@@ -612,7 +612,7 @@ SXVOID sxtmsg (char *file_name, char *format, ...)
 
 /* Function to compare two positions of error messages */
 
-static SXBOOLEAN errlessp (SXINT i1, SXINT i2)
+static bool errlessp (SXINT i1, SXINT i2)
 {
   struct sxerr_info	*r1, *r2;
 
@@ -635,7 +635,7 @@ static SXBOOLEAN errlessp (SXINT i1, SXINT i2)
 
 /* Procedure which sorts in place all error messages by position */
 
-SXVOID sxerrsort (void)
+void sxerrsort (void)
 {
   SXINT	*sorted /* temporary array */ ;
 
@@ -699,7 +699,7 @@ SXVOID sxerrsort (void)
 
 /*---------------------------------------------------------------------------*/
 
-SXVOID sxerr_mngr (SXINT sxerr_mngr_what, ...)
+void sxerr_mngr (SXINT sxerr_mngr_what, ...)
 {
   SXUINT sxerr_format, severity;
   va_list ap;
@@ -784,14 +784,14 @@ SXVOID sxerr_mngr (SXINT sxerr_mngr_what, ...)
 
 /*---------------------------------------------------------------------------*/
 
-SXVOID	sxperror (char *string)
+void	sxperror (char *string)
 {
     fprintf (sxstderr, "%s: %s.\n", string, strerror (errno));
 }
 
 /*---------------------------------------------------------------------------*/
 
-SXVOID	sxtrap (caller, message)
+void	sxtrap (caller, message)
     char	*caller, *message;
 {
   fprintf (sxstderr, "\nInternal system ERROR in \"%s\" during \"%s\".%c\n", caller, message, sxbell);

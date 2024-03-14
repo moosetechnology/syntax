@@ -31,10 +31,10 @@ static char	ME [] = "sdag_scanact.c";
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SDAG_SCANACT[] = "@(#)SYNTAX - $Id: sdag_scanact.c 2428 2023-01-18 12:54:10Z garavel $" WHAT_DEBUG;
+char WHAT_SDAG_SCANACT[] = "@(#)SYNTAX - $Id: sdag_scanact.c 3631 2023-12-20 17:16:41Z garavel $" WHAT_DEBUG;
 
 
-static SXVOID	gripe (void)
+static void	gripe (void)
 {
     fputs ("\nA function of \"sdag\" is out of date with respect to its specification.\n", sxstderr);
     sxexit(1);
@@ -54,7 +54,7 @@ sdag_scanact (SXINT entry, SXINT act_no)
   case SXACTION:
     switch (act_no) {
     case 2:
-      /* %SEMLEX = -"[" -"|" {ANY | "\"&SXTRUE ANY"}* "|" -"]"&SXTRUE ; @2 ; */
+      /* %SEMLEX = -"[" -"|" {ANY | "\"&TRUE ANY"}* "|" -"]"&TRUE ; @2 ; */
       /* enleve le "|" final (avec des @Mark et @Release on a 2 car de look-ahead) puis @1 */
       sxsvar.sxlv_s.token_string [--sxsvar.sxlv.ts_lgth] = SXNUL;
 

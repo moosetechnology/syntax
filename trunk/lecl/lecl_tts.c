@@ -28,7 +28,7 @@
 #include "lecl_node.h"
 #include "lecl_nn.h"
 
-char WHAT_LECLTTS[] = "@(#)SYNTAX - $Id: lecl_tts.c 3603 2023-09-23 20:02:36Z garavel $" WHAT_DEBUG;
+char WHAT_LECLTTS[] = "@(#)SYNTAX - $Id: lecl_tts.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
 static VARSTR	varstr_ptr;
 static char	*mark;
@@ -36,7 +36,7 @@ static SXINT	item_no;
 static struct lecl_node		*node_ptr;
 
 
-static SXVOID	tree_to_string (struct lecl_node *visited)
+static void	tree_to_string (struct lecl_node *visited)
 {
     switch (visited->name) {
     case ERROR_n :

@@ -8,8 +8,10 @@ INCL=$(RLR)/incl
 
 CC=cc -I$(INCL) -I$(SXINCL) -I$(SXINCL)/util -I$(SX)/../outdated/oldies/incl $(CFLAGS)
 
-all: $(SX)/bin/rlr.out			\
+ALL=$(SX)/bin/rlr.out			\
      $(RLR)/primes_nb.out
+
+all: $(ALL)
 
 $(SX)/bin/rlr.out:	$(RLR)/rlr.out
 	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
@@ -286,5 +288,6 @@ $(LIB)/primes_nb.o:	$(SX)/incl/sxunix.h		\
 	$(CC) -o $@ -c $(SRC)/primes_nb.c
 
 clean:
-	@echo "clean target for rlr should be provided"
+	rm -f $(ALL) $(NEEDS) $(NEEDS2) $(NEEDS3)
+	rm -f $(RLR)/rlrd.out $(RLR)/rlrd.out
 

@@ -24,10 +24,10 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXBATRAP[] = "@(#)SYNTAX - $Id: sxbatrap.c 2428 2023-01-18 12:54:10Z garavel $" WHAT_DEBUG;
+char WHAT_SXBATRAP[] = "@(#)SYNTAX - $Id: sxbatrap.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
 
-SXVOID	sxbatrap (char *caller)
+void	sxbatrap (char *caller)
 {
 
     fprintf (sxstderr, "\nERROR detected in parameters during \"SXBA_%s\".\n", caller);

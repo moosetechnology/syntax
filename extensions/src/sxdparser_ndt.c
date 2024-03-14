@@ -36,7 +36,7 @@ static char	ME [] = "PARSER";
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXDPARSER_NDT[] = "@(#)SYNTAX - $Id: sxdparser_ndt.c 2428 2023-01-18 12:54:10Z garavel $" WHAT_DEBUG;
+char WHAT_SXDPARSER_NDT[] = "@(#)SYNTAX - $Id: sxdparser_ndt.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 /*   V A R I A B L E S   */
 
@@ -95,7 +95,7 @@ sxP_access (struct SXP_bases *abase, SXP_SHORT j)
 	       : abase->defaut))
 #endif
 
-static SXVOID	sxpsature (void)
+static void	sxpsature (void)
 {
     sxpglobals.parse_stack = (struct sxparstack*) sxrealloc (sxpglobals.parse_stack,
 							     (lgt1 *= 2) + 1,
@@ -150,14 +150,14 @@ SXINT	ARC_traversal (ref, latok_no)
 #endif
 
 
-static SXBOOLEAN
+static bool
 la_recognizer (SXINT xps, SXINT tok_no, SXP_SHORT ref)
 {
     struct SXP_reductions	*ared;
     struct SXP_prdct		*aprdct;
     SXP_SHORT			nt, prev_state, state;
     SXINT			*pstack, lahead;
-    SXBOOLEAN			ret_val;
+    bool			ret_val;
 #if 0
     struct SXP_bases		*abase;
     struct SXP_item		*ajvector, *ajrefvector; /* pour P_ACCESS() */
@@ -210,11 +210,11 @@ la_recognizer (SXINT xps, SXINT tok_no, SXP_SHORT ref)
     if (ref <= sxplocals.SXP_tables.Mred /* Reduce, Error or Halt */ ) {
 	if (ref == 0)
 	    /* error */
-	    return SXFALSE;
+	    return false;
 
 	if ((ared = sxplocals.SXP_tables.reductions + ref)->reduce == 0)
 	    /* Halt */
-	    return SXTRUE;
+	    return true;
 
 	/* Reduce */
 	xps -= ared->lgth;
@@ -244,11 +244,11 @@ la_recognizer (SXINT xps, SXINT tok_no, SXP_SHORT ref)
 #endif
 	    if (aprdct->action && la_recognizer (xps, tok_no, aprdct->action)){
 		PUSH (la_ref_stack, ref);
-		return SXTRUE;
+		return true;
 	    }
 
 	    if (aprdct->prdct == 20000)
-		return SXFALSE;
+		return false;
 		    
 	    aprdct++;
 	    ref++;
@@ -268,12 +268,12 @@ la_recognizer (SXINT xps, SXINT tok_no, SXP_SHORT ref)
 
 
 
-static SXBOOLEAN	sxparse_it (void)
+static bool	sxparse_it (void)
 {
     SXP_SHORT			ref, lahead, nt, state;
     struct SXP_reductions	*ared;
     struct SXP_prdct		*aprdct;
-    SXBOOLEAN			is_semact, is_scan;
+    bool			is_semact, is_scan;
     SXINT 			n;
 #if 0
     struct SXP_bases		*abase;
@@ -357,11 +357,11 @@ restart:
 		(*(sxplocals.SXP_tables.scanit)) ();
 
 	    lahead = SXGET_TOKEN (n).lahead;
-	    is_scan = SXTRUE;
+	    is_scan = true;
 	}
 	else {
 	    ref = -ref;
-	    is_scan = SXFALSE;
+	    is_scan = false;
 	}
 
 	if ((state = ref - sxplocals.SXP_tables.Mprdct) > 0) {
@@ -383,7 +383,7 @@ restart:
 	    /* Reduce, Error or Halt */
 	    if (ref == 0) {
 		/* Error : no error recovery */
-		return SXFALSE;
+		return false;
 	    }
 	    
 	    if ((sxpglobals.reduce = (ared = sxplocals.SXP_tables.reductions + ref)->reduce) == 0) {
@@ -461,7 +461,7 @@ restart:
 			if (aprdct->prdct == 20000) {
 			    /* echec total => error */
 			    sxplocals.atok_no = max_la_tok_no;
-			    return SXFALSE;
+			    return false;
 			}
 		    
 			aprdct++;
@@ -485,7 +485,7 @@ restart:
 	}
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -500,7 +500,7 @@ error_message (void)
 }
 
 
-SXBOOLEAN sxdparser_ndt (SXINT what_to_do, struct sxtables *arg)
+bool sxdparser_ndt (SXINT what_to_do, struct sxtables *arg)
 {
     switch (what_to_do) {
     case SXBEGIN:
@@ -517,7 +517,7 @@ SXBOOLEAN sxdparser_ndt (SXINT what_to_do, struct sxtables *arg)
 	sxpglobals.stack_bot = 0;
 	la_ref_stack = (SXP_SHORT*) sxalloc (lgt2+2, sizeof (SXP_SHORT))+1;
 	la_ref_stack [-1 /* size */] = lgt2;
-	return SXTRUE;
+	return true;
 
     case SXOPEN:
 	/* new language: new tables, new local parser variables */
@@ -533,7 +533,7 @@ SXBOOLEAN sxdparser_ndt (SXINT what_to_do, struct sxtables *arg)
 	sxplocals.SXP_tables = arg->SXP_tables;
 	sxtkn_mngr (SXOPEN, 2);
 	(*sxplocals.SXP_tables.recovery) (SXOPEN);
-	return SXTRUE;
+	return true;
 
     case SXINIT:
 	/* on initialise toks_buf avec "EOF" */
@@ -557,13 +557,13 @@ SXBOOLEAN sxdparser_ndt (SXINT what_to_do, struct sxtables *arg)
 	sxplocals.mode.kind = SXWITH_RECOVERY;
 	sxplocals.mode.local_errors_nb = 0;
 	sxplocals.mode.global_errors_nb = 0;
-	sxplocals.mode.is_prefixe = SXFALSE;
-	sxplocals.mode.is_silent = SXFALSE;
-	sxplocals.mode.with_semact = SXTRUE;
-	sxplocals.mode.with_parsact = SXTRUE;
-	sxplocals.mode.with_parsprdct = SXTRUE;
-	sxplocals.mode.with_do_undo = SXFALSE;
-	return SXTRUE;
+	sxplocals.mode.is_prefixe = false;
+	sxplocals.mode.is_silent = false;
+	sxplocals.mode.with_semact = true;
+	sxplocals.mode.with_parsact = true;
+	sxplocals.mode.with_parsprdct = true;
+	sxplocals.mode.with_do_undo = false;
+	return true;
 
     case SXACTION:
 	{
@@ -573,7 +573,7 @@ SXBOOLEAN sxdparser_ndt (SXINT what_to_do, struct sxtables *arg)
 	    SXP_SHORT	old_stack_bot = sxpglobals.stack_bot;
 	    SXP_SHORT	reduce = sxpglobals.reduce;
 	    SXP_SHORT	pspl = sxpglobals.pspl;
-	    SXBOOLEAN	ret_val = SXTRUE;
+	    bool	ret_val = true;
 	    SXINT		lahead;
 
 	    if ((sxpglobals.stack_bot = sxpglobals.xps + 5) > lgt1)
@@ -594,7 +594,7 @@ SXBOOLEAN sxdparser_ndt (SXINT what_to_do, struct sxtables *arg)
 
 		if (!sxparse_it ()) {
 		    error_message ();
-		    ret_val = SXFALSE;
+		    ret_val = false;
 		}
 			
 		if (lahead == TCUT)
@@ -605,7 +605,7 @@ SXBOOLEAN sxdparser_ndt (SXINT what_to_do, struct sxtables *arg)
 #else
 	    if (!sxparse_it ()) {
 		error_message ();
-		ret_val = SXFALSE;
+		ret_val = false;
 	    }
 #endif
 
@@ -622,19 +622,19 @@ SXBOOLEAN sxdparser_ndt (SXINT what_to_do, struct sxtables *arg)
 
     case SXFINAL:
 	sxtkn_mngr (SXFINAL, 0);
-	return SXTRUE;
+	return true;
 
     case SXCLOSE:
 	/* end of language: free the local arrays */
 	sxtkn_mngr (SXCLOSE, 0);
 	(*sxplocals.SXP_tables.recovery) (SXCLOSE);
-	return SXTRUE;
+	return true;
 
     case SXEND:
 	/* free everything */
 	sxfree (la_ref_stack - 1), la_ref_stack = NULL;
 	sxfree (sxpglobals.parse_stack), sxpglobals.parse_stack = NULL;
-	return SXTRUE;
+	return true;
 
     default:
 	fprintf (sxstderr, "The function \"sxdparser_ndt\" is out of date with respect to its specification.\n");

@@ -35,7 +35,7 @@ struct drcg_struct {
 struct drcg_struct	drcg [];
 
 void		DRCGsem_fun_init(), DRCGsem_fun_final();
-SXBOOLEAN		DRCGsem_fun(), DRCGsem_fun_post();
+bool		DRCGsem_fun(), DRCGsem_fun_post();
 
 /* Pour le traitement d'erreur depuis RCG_parser.c */
 struct drcg_tree2attr {

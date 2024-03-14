@@ -4,19 +4,17 @@ include $(SX)/etc/make/gccoptions
 ND=$(SX)/../extensions
 
 NDCSYNT=$(ND)/xcsynt
-NDSRC=$(NDCSYNT)/src
 NDLIB=$(NDCSYNT)/lib
-NDINCL=$(NDCSYNT)/incl
 
-CC=$(COMPILER) -I$(NDINCL) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
+CC=$(COMPILER) -I$(NDCSYNT) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
 CC2=$(COMPILER) -I$(ND)/incl -I$(ND)/incl/util $(CFLAGS)
 
-all: $(SX)/bin/xcsynt.out	\
+all: $(SXBIN)/xcsynt.out	\
 	$(NDCSYNT)/lc.out
 #	$(NDCSYNT)/csyntd.out	\
 
-$(SX)/bin/xcsynt.out:	$(NDCSYNT)/csynt.out
+$(SXBIN)/xcsynt.out:	$(NDCSYNT)/csynt.out
 	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
 NEEDS=	$(NDLIB)/csynt.o		\
@@ -52,206 +50,206 @@ $(NDCSYNT)/csynt.out:	$(NEEDS)	$(SXBIBS)
 	@rm -f $@
 	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
-$(NDLIB)/csynt.o:	$(NDINCL)/csynt_optim.h		\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
+$(NDLIB)/csynt.o:	csynt_optim.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
 			$(SXINCL)/util/bstr.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
-			$(NDSRC)/csynt.c
-	$(CC) -o $@ -c $(NDSRC)/csynt.c
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
+			csynt.c
+	$(CC) -o $@ -c csynt.c
 
-$(NDLIB)/LR0.o:	$(NDINCL)/csynt_optim.h			\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
+$(NDLIB)/LR0.o:	csynt_optim.h			\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxYxZ.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/SS.h			\
+			$(SXINCL)/XxYxZ.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/SS.h			\
 			$(SXINCL)/util/P_tables.h	\
-			$(NDSRC)/LR0.c
-	$(CC) -o $@ -c $(NDSRC)/LR0.c
+			LR0.c
+	$(CC) -o $@ -c LR0.c
 
-$(NDLIB)/LALR1.o:	$(NDINCL)/csynt_optim.h		\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
+$(NDLIB)/LALR1.o:	csynt_optim.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
 			$(SXINCL)/util/bstr.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
 			$(SXINCL)/util/D_tables.h	\
-			$(NDSRC)/LALR1.c
-	$(CC) -o $@ -c $(NDSRC)/LALR1.c
+			LALR1.c
+	$(CC) -o $@ -c LALR1.c
 
-$(NDLIB)/ARC.o:	$(NDINCL)/csynt_optim.h			\
-			$(NDINCL)/RLR.h			\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
+$(NDLIB)/ARC.o:	csynt_optim.h			\
+			RLR.h			\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
 			$(SXINCL)/util/D_tables.h	\
-			$(NDSRC)/ARC.c
-	$(CC) -o $@ -c $(NDSRC)/ARC.c
+			ARC.c
+	$(CC) -o $@ -c ARC.c
 
-$(NDLIB)/OPTIM.o:	$(NDINCL)/csynt_optim.h		\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
+$(NDLIB)/OPTIM.o:	csynt_optim.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
 			$(SXINCL)/util/P_tables.h	\
-			$(NDSRC)/OPTIM.c
-	$(CC) -o $@ -c $(NDSRC)/OPTIM.c
+			OPTIM.c
+	$(CC) -o $@ -c OPTIM.c
 
-$(NDLIB)/xprdct_mngr.o:	$(NDINCL)/csynt_optim.h		\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
+$(NDLIB)/xprdct_mngr.o:	csynt_optim.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
 			$(SXINCL)/util/P_tables.h	\
-			$(NDSRC)/xprdct_mngr.c
-	$(CC) -o $@ -c $(NDSRC)/xprdct_mngr.c
+			xprdct_mngr.c
+	$(CC) -o $@ -c xprdct_mngr.c
 
-$(NDLIB)/optim_lo.o:	$(NDINCL)/csynt_optim.h		\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
+$(NDLIB)/optim_lo.o:	csynt_optim.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
 			$(SXINCL)/util/bstr.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
 			$(SXINCL)/util/P_tables.h	\
-			$(NDSRC)/optim_lo.c
-	$(CC) -o $@ -c $(NDSRC)/optim_lo.c
+			optim_lo.c
+	$(CC) -o $@ -c optim_lo.c
 
-$(NDLIB)/single.o:	$(NDINCL)/csynt_optim.h		\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
+$(NDLIB)/single.o:	csynt_optim.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxYxZ.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
-			$(SX)/incl/SS.h			\
+			$(SXINCL)/XxYxZ.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
+			$(SXINCL)/SS.h			\
 			$(SXINCL)/util/P_tables.h	\
-			$(NDSRC)/single.c
-	$(CC) -o $@ -c $(NDSRC)/single.c
+			single.c
+	$(CC) -o $@ -c single.c
 
-$(NDLIB)/ambig.o:	$(NDINCL)/csynt_optim.h		\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
+$(NDLIB)/ambig.o:	csynt_optim.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
 			$(SXINCL)/util/bstr.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
-			$(SX)/incl/SS.h			\
-			$(NDINCL)/RLR.h			\
-			$(NDSRC)/ambig.c
-	$(CC) -o $@ -c $(NDSRC)/ambig.c
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
+			$(SXINCL)/SS.h			\
+			RLR.h			\
+			ambig.c
+	$(CC) -o $@ -c ambig.c
 
-$(NDLIB)/XARC.o:	$(NDINCL)/csynt_optim.h		\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
+$(NDLIB)/XARC.o:	csynt_optim.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
-			$(SX)/incl/SS.h			\
-			$(NDINCL)/RLR.h			\
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
+			$(SXINCL)/SS.h			\
+			RLR.h			\
 			$(SXINCL)/util/P_tables.h	\
-			$(NDSRC)/XARC.c
-	$(CC) -o $@ -c $(NDSRC)/XARC.c
+			XARC.c
+	$(CC) -o $@ -c XARC.c
 
-$(NDLIB)/ARP.o:		$(NDINCL)/csynt_optim.h		\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
+$(NDLIB)/ARP.o:		csynt_optim.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
-			$(SX)/incl/SS.h			\
-			$(NDINCL)/RLR.h			\
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
+			$(SXINCL)/SS.h			\
+			RLR.h			\
 			$(SXINCL)/util/P_tables.h	\
-			$(NDSRC)/ARP.c
-	$(CC) -o $@ -c $(NDSRC)/ARP.c
+			ARP.c
+	$(CC) -o $@ -c ARP.c
 
-$(NDLIB)/RARP.o:	$(NDINCL)/csynt_optim.h		\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
+$(NDLIB)/RARP.o:	csynt_optim.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
-			$(SX)/incl/SS.h			\
-			$(NDINCL)/RLR.h			\
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
+			$(SXINCL)/SS.h			\
+			RLR.h			\
 			$(SXINCL)/util/P_tables.h	\
-			$(NDSRC)/RARP.c
-	$(CC) -o $@ -c $(NDSRC)/RARP.c
+			RARP.c
+	$(CC) -o $@ -c RARP.c
 
-$(NDLIB)/earley.o:	$(NDINCL)/csynt_optim.h		\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
+$(NDLIB)/earley.o:	csynt_optim.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
-			$(SX)/incl/SS.h			\
-			$(NDINCL)/RLR.h			\
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
+			$(SXINCL)/SS.h			\
+			RLR.h			\
 			$(SXINCL)/util/P_tables.h	\
-			$(NDSRC)/earley.c
-	$(CC) -o $@ -c $(NDSRC)/earley.c
+			earley.c
+	$(CC) -o $@ -c earley.c
 
-$(NDLIB)/first.o:	$(NDINCL)/csynt_optim.h		\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
+$(NDLIB)/first.o:	csynt_optim.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
-			$(SX)/incl/SS.h			\
-			$(NDINCL)/RLR.h			\
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
+			$(SXINCL)/SS.h			\
+			RLR.h			\
 			$(SXINCL)/util/P_tables.h	\
-			$(NDSRC)/first.c
-	$(CC) -o $@ -c $(NDSRC)/first.c
+			first.c
+	$(CC) -o $@ -c first.c
 
-$(NDLIB)/messages_mngr.o:	$(NDINCL)/csynt_optim.h	\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
+$(NDLIB)/messages_mngr.o:	csynt_optim.h	\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
 			$(SXINCL)/util/bstr.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
-			$(SX)/incl/SS.h			\
-			$(NDINCL)/RLR.h			\
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
+			$(SXINCL)/SS.h			\
+			RLR.h			\
 			$(SXINCL)/util/P_tables.h	\
-			$(NDSRC)/messages_mngr.c
-	$(CC) -o $@ -c $(NDSRC)/messages_mngr.c
+			messages_mngr.c
+	$(CC) -o $@ -c messages_mngr.c
 
-$(NDLIB)/super_FSA.o:	$(SX)/incl/XxY.h		\
-			$(SX)/incl/X.h			\
-			$(SX)/incl/sxba.h		\
-			$(NDSRC)/super_FSA.c
-	$(CC) -o $@ -c $(NDSRC)/super_FSA.c
+$(NDLIB)/super_FSA.o:	$(SXINCL)/XxY.h		\
+			$(SXINCL)/X.h			\
+			$(SXINCL)/sxba.h		\
+			super_FSA.c
+	$(CC) -o $@ -c super_FSA.c
 
-$(NDLIB)/algoV.o:	$(NDINCL)/csynt_optim.h		\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
+$(NDLIB)/algoV.o:	csynt_optim.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
 			$(SXINCL)/util/P_tables.h	\
-			$(NDSRC)/algoV.c
-	$(CC) -o $@ -c $(NDSRC)/algoV.c
+			algoV.c
+	$(CC) -o $@ -c algoV.c
 
 $(NDCSYNT)/csyntd.out:	$(NEEDS2)	$(SXBIBS)
 	@rm -f $@
@@ -259,34 +257,34 @@ $(NDCSYNT)/csyntd.out:	$(NEEDS2)	$(SXBIBS)
 
 $(NDLIB)/csyntd_main.o:	$(ND)/incl/sxunix.h		\
 		$(ND)/incl/sxdynam_parser.h		\
-		$(NDSRC)/csyntd_main.c
-	$(CC2) -o $@ -c $(NDSRC)/csyntd_main.c
+		csyntd_main.c
+	$(CC2) -o $@ -c csyntd_main.c
 
 $(NDCSYNT)/lc.out:	$(NEEDS3)	$(SXBIBS)
 	@rm -f $@
 	$(COMPILER) -o $@ $(NEEDS3) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
-$(NDLIB)/left_corner.o:	$(NDINCL)/csynt_optim.h		\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
+$(NDLIB)/left_corner.o:	csynt_optim.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
 			$(SXINCL)/util/bstr.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
-			$(NDSRC)/left_corner.c
-	$(CC) -o $@ -c $(NDSRC)/left_corner.c
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
+			left_corner.c
+	$(CC) -o $@ -c left_corner.c
 
-$(NDLIB)/LC0.o:	$(NDINCL)/csynt_optim.h			\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
+$(NDLIB)/LC0.o:	csynt_optim.h			\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxYxZ.h		\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/SS.h			\
+			$(SXINCL)/XxYxZ.h		\
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/SS.h			\
 			$(SXINCL)/util/P_tables.h	\
-			$(NDSRC)/LC0.c
-	$(CC) -o $@ -c $(NDSRC)/LC0.c
+			LC0.c
+	$(CC) -o $@ -c LC0.c
 
 clean:
 	/bin/rm -f $(NDLIB)/*.o $(NDCSYNT)/lc.out $(NDCSYNT)/csynt.out

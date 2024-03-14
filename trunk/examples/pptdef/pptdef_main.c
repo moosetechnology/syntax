@@ -21,7 +21,7 @@
 
 #include "sxunix.h"
 
-char WHAT_TDEFPPTDEFMAIN[] = "@(#)SYNTAX - $Id: pptdef_main.c 3327 2023-06-04 15:18:00Z garavel $" WHAT_DEBUG;
+char WHAT_TDEFPPTDEFMAIN[] = "@(#)SYNTAX - $Id: pptdef_main.c 3632 2023-12-20 17:58:08Z garavel $" WHAT_DEBUG;
 
 extern struct sxtables	pptdef_tables;
 
@@ -66,7 +66,7 @@ static SXINT	option_get_kind (char *arg)
 
 
 
-static SXVOID	pptdef_run (char *pathname)
+static void	pptdef_run (char *pathname)
 {
     FILE	*infile;
     char		un_nom [20];
@@ -134,13 +134,13 @@ int main (int argc, char *argv[])
 
   /* valeurs par defaut */
 
-  sxverbosep = SXFALSE;
+  sxverbosep = false;
   sxppvariables.kw_case = SXCAPITALISED_INITIAL /* How should keywords be written */ ;
   sxppvariables.terminal_case = NULL;
-  sxppvariables.kw_dark = SXFALSE /* keywords are not artificially darkened */ ;
+  sxppvariables.kw_dark = false /* keywords are not artificially darkened */ ;
   sxppvariables.terminal_dark = NULL /* Same as kw_dark, but for each type of terminal */ ;
-  sxppvariables.no_tabs = SXFALSE /* optimize spaces into tabs */ ;
-  sxppvariables.block_margin = SXFALSE /* preserve structure when deeply nested */ ;
+  sxppvariables.no_tabs = false /* optimize spaces into tabs */ ;
+  sxppvariables.block_margin = false /* preserve structure when deeply nested */ ;
   sxppvariables.line_length = 80 /* What it says */ ;
   sxppvariables.max_margin = 60 /* Do not indent lines further than that */ ;
   sxppvariables.tabs_interval = SXTAB_INTERVAL /* number of columns between two tab positions */ ;
@@ -151,11 +151,11 @@ int main (int argc, char *argv[])
   for (argnum = 1; argnum < argc; argnum++) {
     switch (option_get_kind (argv [argnum])) {
     case VERBOSE:
-      sxverbosep = SXTRUE;
+      sxverbosep = true;
       break;
 
     case -VERBOSE:
-      sxverbosep = SXFALSE;
+      sxverbosep = false;
       break;
 
     case LINE_LENGTH:
@@ -169,11 +169,11 @@ int main (int argc, char *argv[])
       break;
 
     case TABS:
-      sxppvariables.no_tabs = SXFALSE;
+      sxppvariables.no_tabs = false;
       break;
 
     case -TABS:
-      sxppvariables.no_tabs = SXTRUE;
+      sxppvariables.no_tabs = true;
       break;
 
     case EVERY:
@@ -200,7 +200,7 @@ int main (int argc, char *argv[])
     setbuf (stdout, NULL);
   }
 
-  syntax (SXINIT, &pptdef_tables, SXFALSE /* no include */);
+  syntax (SXINIT, &pptdef_tables, false /* no include */);
 
   if (argnum == argc) {
     pptdef_run ((char*)NULL);
@@ -215,7 +215,7 @@ int main (int argc, char *argv[])
     } while (argnum < argc);
   }
 
-  syntax (SXFINAL, &pptdef_tables, SXTRUE);
+  syntax (SXFINAL, &pptdef_tables, true);
 
   sxexit (sxerr_max_severity ());
   return EXIT_SUCCESS; /* Jamais atteint !! pour les compilo susceptibles ... */

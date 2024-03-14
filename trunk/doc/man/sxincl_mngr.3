@@ -15,30 +15,30 @@ sxincl_depend_but
 \- include manager for SYNTAX.
 .SH SYNOPSIS
 .nf
-.ta \w'\s-2SXVOID\s0  'u +\w'\s-2SXVOID\s0  'u
+.ta \w'void  'u +\w'void  'u
 .PP
 .B
-\s-2SXVOID\s0 sxincl_mngr (what)
+void sxincl_mngr (what)
 .B
 	int	 what\|;
 .PP
 .B
-\s-2SXBOOLEAN\s0 sxpush_incl (pathname)
+bool sxpush_incl (pathname)
 .B
 	char	*pathname\|;
 .PP
 .B
-\s-2SXBOOLEAN\s0 sxpush_recincl (pathname)
+bool sxpush_recincl (pathname)
 .B
 	char	*pathname\|;
 .PP
 .B
-\s-2SXBOOLEAN\s0 sxpush_uniqincl (pathname)
+bool sxpush_uniqincl (pathname)
 .B
 	char	*pathname\|;
 .PP
 .B
-\s-2SXBOOLEAN\s0 sxpop_incl ()
+bool sxpop_incl ()
 .PP
 .B
 \s-2SXINT\s0 sxincl_depth ()
@@ -65,14 +65,14 @@ sxincl_depend_but
 	char	*pathname\|;
 .PP
 .B
-\s-2SXVOID\s0 sxincl_depend (f)
+void sxincl_depend (f)
 .B
 	\s-2FILE	 *f\|;
 .B
 	\s-2SXINT	 order\|;
 .PP
 .B
-\s-2SXVOID\s0 sxincl_depend_but (f)
+void sxincl_depend_but (f)
 .B
 	\s-2FILE	 *f\|;
 .B
@@ -146,9 +146,9 @@ It stores the current value of the structure sxsrcmngr (see
 and opens a new input (include) file whose name is
 .I pathname
 and returns 
-.B SXTRUE
+.B true
 on success\|; otherwise, it returns
-.B SXFALSE
+.B false
 if the include file
 .I pathname
 cannot be opened or if it is a recursive call.
@@ -164,9 +164,9 @@ is similar to
 but does not include any file more than once. When invoked on a file named
 .I pathname
 that has already been included, it ignores this file and returns
-.B SXTRUE
+.B true
 (unless if the inclusion is recursive, in which case
-.B SXFALSE
+.B false
 is returned). This function only works when
 .I sxincl_mngr (\s-2SXSEPARATE\s0, ...)
 has been called before.
@@ -175,9 +175,9 @@ has been called before.
 must be call at the end of each include file.
 It closes the file and restores the context of its caller.
 Returns
-.B SXTRUE
+.B true
 on success and
-.B SXFALSE
+.B false
 otherwise (cannot close the include file or there is no caller).
 .PP
 .I sxincl_depth

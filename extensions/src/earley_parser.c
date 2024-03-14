@@ -107,11 +107,11 @@ static char	ME [] = "earley_parser";
 #include "sxba_bag.h"
 #include <math.h>
 
-char WHAT_EARLEY_PARSER[] = "@(#)SYNTAX - $Id: earley_parser.c 2958 2023-03-31 14:08:27Z garavel $" WHAT_DEBUG;
+char WHAT_EARLEY_PARSER[] = "@(#)SYNTAX - $Id: earley_parser.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 SXUINT          maximum_input_size; /* Pour udag_scanner */
-SXBOOLEAN       tmp_file_for_stdin; /* Pour read_a_re */
-SXBOOLEAN       sxtty_is_stderr;
+bool       tmp_file_for_stdin; /* Pour read_a_re */
+bool       sxtty_is_stderr;
 
 #ifdef LC_TABLES_H
 /* On compile les tables "left_corner" ... */
@@ -356,7 +356,7 @@ static SXINT          Tpq_repair_nb, Pij_repair_nb;
 static SXINT          *repair_Tpq2tok_no;
 
 static SXINT          working_rcvr_mlstn, rcvr_detection_table;
-static SXBOOLEAN      rcvr_detection_table_cleared;
+static bool      rcvr_detection_table_cleared;
 
 static SXBA         ilex_compatible_item_set;
 
@@ -391,7 +391,7 @@ static char sa_rcvr_resume_point [] = "%sParsing resumes on \"%s\".";
 
 static struct rcvr_spec rcvr_spec_default = {INSERTION, SUPPRESSION, CHANGEMENT, DEPLACEMENT, MIXED_FORWARD_RANGE_WALK_KIND,
 					     1 /* 1 seule chaine */, 1 /* 1 seule analyse de cette chaine */, TRY_MAX /* precision max */,
-					     SXTRUE /* REPAIR */, SXTRUE /* PARSE */};
+					     true /* REPAIR */, true /* PARSE */};
 /* Les symboles d'une correction sont de la forme Xpq avec p et q negatifs
    Si -p ou -q <= final_mlstn, -p ou -q sont des  mlstn normaux
    Si -p ou -q > final_mlstn (et <= repair_mlstn_top) -p  ou -q sont des  mlstn normaux
@@ -405,7 +405,7 @@ static struct rcvr_spec rcvr_spec_default = {INSERTION, SUPPRESSION, CHANGEMENT,
 */
    
 static SXINT              repair_mlstn_top /* indice max atteint par les symboles impliques ds une correction */ ;
-static SXBOOLEAN          perform_copy_local_repair_prod_stack /* pour savoir si on recopie ou non le résultat du
+static bool          perform_copy_local_repair_prod_stack /* pour savoir si on recopie ou non le résultat du
 							      rcvr local dans la pile globale de rcvr */ ;
 
 /*
@@ -574,12 +574,12 @@ lrprod_filtering (main_item_set, MAIN_KIND, secondary_item_set, SECONDARY_KIND)
 
 static SXBA clause_val_set, prod_checked_set, prod_val_set, Lex_prod_item_set;
 
-static SXBOOLEAN
+static bool
 check_Lex (prod)
      SXINT prod;
 {
   SXINT     clause, bot, top, t;
-  SXBOOLEAN ret_val;
+  bool ret_val;
   SXBA    Lex_set;
   
   if (SXBA_bit_is_reset_set (prod_checked_set, prod)) {
@@ -609,10 +609,10 @@ check_Lex (prod)
 
       if (t <= 0) {
 	SXBA_1_bit (clause_val_set, clause);
-	ret_val = SXTRUE;
+	ret_val = true;
       }
       else
-	ret_val = SXFALSE;
+	ret_val = false;
 
       do {
 	clause = clause2identical [bot];
@@ -626,7 +626,7 @@ check_Lex (prod)
 	}
 
 	if (t <= 0)
-	  ret_val = SXTRUE;
+	  ret_val = true;
 	else
 	  clause2identical [bot] = 0;
       } while (++bot < top);
@@ -638,7 +638,7 @@ check_Lex (prod)
     }
 
     SXBA_1_bit (prod_val_set, prod);
-    return SXTRUE;
+    return true;
   }
 
   return SXBA_bit_is_set (prod_val_set, prod);
@@ -788,7 +788,7 @@ static SXBA loop_clause_set;
 
 /* visible par tout le monde parceque + pratique ... */
 static SXBA    *i2rl_supertagger_item_set;
-static SXBOOLEAN is_mlstn2non_lexicalized_look_ahead_t_set, is_mlstn2lexicalized_look_ahead_t_set, is_lex_compatible_item_sets;
+static bool is_mlstn2non_lexicalized_look_ahead_t_set, is_mlstn2lexicalized_look_ahead_t_set, is_lex_compatible_item_sets;
 
 
 /* C'est lexicalizer_mngr qui fait les alloc */
@@ -798,7 +798,7 @@ extern SXBA basic_item_set, basic_nt_set;
 extern SXBA *mlstn2lex_la_tset;
 extern SXBA *mlstn2la_tset;
 
-extern SXBOOLEAN lexicalizer2basic_item_set (SXBOOLEAN is_mlstn2lex_la_tset, SXBOOLEAN is_mlstn2la_tset, SXBOOLEAN is_smallest_insideG);
+extern bool lexicalizer2basic_item_set (bool is_mlstn2lex_la_tset, bool is_mlstn2la_tset, bool is_smallest_insideG);
 static SXBA *mlstn2lexicalized_look_ahead_t_set; /* contiendra, pour chaque mlstn du source l'ensemble des
 						    terminaux valides (au sens de la lexicalisation) qui ont une transition depuis ce mlstn */
 #else /* is_lex */
@@ -897,7 +897,7 @@ print_glbl_out_source ()
   SXINT tok, t, ste, t_nb;
   char *str;
   char mess [32];
-  SXBOOLEAN is_first;
+  bool is_first;
   SXBA line;
     
   if (is_print_time) {
@@ -920,11 +920,11 @@ print_glbl_out_source ()
     printf ("%s {", str);
     line = glbl_out_source [tok];
     t = 0;
-    is_first = SXTRUE;
+    is_first = true;
 
     while ((t = sxba_scan (line, t)) > 0) {
       if (is_first)
-	is_first = SXFALSE;
+	is_first = false;
       else
 	fputs (" ", stdout);
 
@@ -979,7 +979,7 @@ static void sxearley_raz (void);
 /* Cas ou` le supertagger est appele' directement depuis set_automaton_parser */
 /* L'autre possibilite est que set_automaton_parser sert de guide au reconnaisseur earley
    qui lui appelle le supertagger */
-SXBOOLEAN
+bool
 sxearley_parse_it (void)
 {
   SXINT i, item, prod;
@@ -1056,14 +1056,14 @@ sxearley_parse_it (void)
 
 #else /* !(is_supertagging && !is_recognizer) */
 
-static SXBOOLEAN      is_semact_fun, is_constraint_fun, is_prdct_fun, is_output_full_guide;
+static bool      is_semact_fun, is_constraint_fun, is_prdct_fun, is_output_full_guide;
 
 
 /* Si une erreur est detectee, quand on reevalue une table, on ne le fait que sur les nouveaux items */
 #if is_rcvr
-static SXBOOLEAN      is_during_error_rcvr_processing, is_during_reduce_rcvr_validation;
+static bool      is_during_error_rcvr_processing, is_during_reduce_rcvr_validation;
 static SXBA	      *store_non_kernel_item_sets, T2_store_non_kernel_item_set;
-static SXBOOLEAN        no_la_check;
+static bool        no_la_check;
 
 #ifdef MAKE_INSIDEG
 static SXBA           rcvr_w2titem_set;
@@ -1184,7 +1184,7 @@ static	  double **nt2nt_max_suffix_proba;
 # endif /* (BEAM_KIND & suffix_beam) && (BEAM_KIND & recognizer_beam) */
 #endif /* (BEAM_KIND & inside_right_beam) && (BEAM_KIND & recognizer_beam) */
 static SXINT     ei, AxI_J;
-static SXBOOLEAN is_AxI_J_set, is_ei_set;
+static bool is_AxI_J_set, is_ei_set;
 static struct AxI_J_proba_struct *max_proba_ptr;
 
 #define ei2set_proba_ptr(i,pq,ptr)   (is_ei_set = XxY_set(&ei_hd, i, pq, &ei), ptr=&(probas [ei]), is_ei_set)
@@ -1225,7 +1225,7 @@ output_Apq_probas (char *prefix, SXINT A, SXINT p, SXINT q, struct AxI_J_proba_s
 
 static double    chouia; /* chouia = log10(1.000001) */
 static double    d1_minus_d2;
-static SXBOOLEAN d1_less_d2;
+static bool d1_less_d2;
 #define cmp_double(d1,d2)  ((d1_less_d2 = ((d1_minus_d2 = (d1)-(d2)) < 0)) \
                              ? d1_minus_d2 = -d1_minus_d2 : 0 /* d1_minus_d2 = d1_minus_d2 */,\
                              d1_minus_d2 < chouia \
@@ -1330,7 +1330,7 @@ set_forward_proba (SXINT i, SXINT p, SXINT q, SXINT item_p, SXINT item_q, SXINT 
   SXINT                 pq, pqt;
   double                old_proba, new_proba, new_prefix_proba, new_suffix_proba, X_inside_proba;
   struct proba_struct   *p_proba_ptr, *q_proba_ptr;
-  SXBOOLEAN             bool;
+  bool             b;
 
 #if EBUG
   if (!beam_value_is_set)
@@ -1364,11 +1364,11 @@ set_forward_proba (SXINT i, SXINT p, SXINT q, SXINT item_p, SXINT item_q, SXINT 
     }
   }
 
-  bool = ei2set_proba_ptr (item_q, p_q2pq (i, q), q_proba_ptr);
+  b = ei2set_proba_ptr (item_q, p_q2pq (i, q), q_proba_ptr);
 
   ei2get_proba_ptr (item_p, p_q2pq (i, p), p_proba_ptr);
 
-  if (bool) {
+  if (b) {
     /* l'item [item_q, i, q] a deja ete vu */
     /* On ne tient pas compte de item2max_right_inside_proba [item_q] qui est independant des i */
     old_proba = 
@@ -1447,7 +1447,7 @@ set_forward_proba (SXINT i, SXINT p, SXINT q, SXINT item_p, SXINT item_q, SXINT 
 
 #if BEAM_KIND && ((BEAM_KIND & recognizer_beam) && (BEAM_KIND & inside_right_beam) || is_rcvr)
 static void
-fill_tnt_max_inside_probas (SXBOOLEAN fill_item2max_right_inside_proba)
+fill_tnt_max_inside_probas (bool fill_item2max_right_inside_proba)
 {
   /* pour chaque item A -> \alpha . \beta on calcule item2max_right_inside_proba la proba max du suffixe \beta
      ATTENTION: item2max_right_inside_proba ne contient pas la proba de la prod associee a l'item */
@@ -1628,25 +1628,25 @@ static struct recognize_item {
 #endif /* !MAKE_INSIDEG */
 
 /* Connu meme si !is_rcvr */
-static SXBOOLEAN               is_error_detected;
+static bool               is_error_detected;
 
 #if is_rcvr
 static struct recognize_item empty_RT;
 static SXINT                   rcvr_on_super_rule_stack [16]; /* au plus 3 quintuplets */
-static SXBOOLEAN               is_potential_orphan_rule, is_rcvr_can_be_cyclic, is_rcvr_on_site;
+static bool               is_potential_orphan_rule, is_rcvr_can_be_cyclic, is_rcvr_on_site;
 #endif /* is_rcvr */
 
-static SXBOOLEAN
+static bool
 is_in_reduce (bot, top, item)
      SXINT *bot, *top, item;
 {
   while (--top >= bot) {
     if (*top == item) {
-      return SXTRUE;
+      return true;
     }
   }
 
-  return SXFALSE;
+  return false;
 }
 
 static SXBA             T2_look_ahead_t_set;
@@ -1689,13 +1689,13 @@ static SXBA		nt_hd [inputG_MAXNT+1];
    sxba_2op (lhs_bits_array, SXBA_OP_COPY, op1_bits_array, SXBA_OP_AND, op2_bits_array)
    car les 3 operandes peuvent avoir des longueurs differentes !!
 */
-static SXBOOLEAN
+static bool
 AND3 (SXBA lhs_bits_array, SXBA op1_bits_array, SXBA op2_bits_array)
 {
   /* On suppose que lhs_bits_array est vide au-dela de op2_bits_array */
   SXBA	lhs_bits_ptr, op1_bits_ptr, op2_bits_ptr;
   SXINT	        slices_number = SXNBLONGS (SXBASIZE (op2_bits_array)), x;
-  SXBOOLEAN	ret_val = SXFALSE;
+  bool	ret_val = false;
 
 #if EBUG
   sxbassert (*lhs_bits_array >= *op1_bits_array, "AND3 (|X|<|Y|)");
@@ -1713,7 +1713,7 @@ AND3 (SXBA lhs_bits_array, SXBA op1_bits_array, SXBA op2_bits_array)
 
   while (slices_number-- > 0) {
     if (*lhs_bits_ptr-- = (*op1_bits_ptr-- & *op2_bits_ptr--))
-      ret_val = SXTRUE;
+      ret_val = true;
   }
 
   return ret_val;
@@ -1796,7 +1796,7 @@ clear_table (p)
     /* On note si la table sur laquelle l'erreur courante a ete detectee a ete razee */
     /* car il faudra peut etre la restaurer a partir de la valeur sauvegardee ds T[working_rcvr_mlstn]
        par copy_table () */
-    rcvr_detection_table_cleared = SXTRUE;
+    rcvr_detection_table_cleared = true;
 
 #ifdef MAKE_INSIDEG
  {
@@ -1965,7 +1965,7 @@ copy_table (p, q)
    car les 2 operandes peuvent avoir des tailles differentes et l'intersection n'est
    testee que sur leurs prefixes communs
 */
-static SXBOOLEAN
+static bool
 IS_AND (SXBA lhs_bits_array, SXBA rhs_bits_array)
 {
   SXBA	        lhs_bits_ptr, rhs_bits_ptr;
@@ -1984,24 +1984,24 @@ IS_AND (SXBA lhs_bits_array, SXBA rhs_bits_array)
 
   while (slices_number-- > 0) {
     if (*lhs_bits_ptr-- & *rhs_bits_ptr--)
-      return SXTRUE;
+      return true;
   }
 
-  return SXFALSE;
+  return false;
 }
 #endif /* is_parser || is_rcvr */
 
 
 #if is_parser
 /* bits_array1 or (bits_array2 & bits_array3) */
-/* Retourne SXTRUE ssi bits_array1 a change' */
-static SXBOOLEAN
+/* Retourne true ssi bits_array1 a change' */
+static bool
 OR_AND (SXBA bits_array1, SXBA bits_array2, SXBA bits_array3)
 {
   SXBA	        bits_ptr1, bits_ptr2, bits_ptr3;
   SXINT	        slices_number = SXNBLONGS (SXBASIZE (bits_array2));
   SXBA_ELT	val1, val2;
-  SXBOOLEAN	has_changed = SXFALSE;
+  bool	has_changed = false;
 
 #if EBUG
   sxbassert (*bits_array1 >= *bits_array2, "OR_AND (|X|<|Y|)");
@@ -2019,7 +2019,7 @@ OR_AND (SXBA bits_array1, SXBA bits_array2, SXBA bits_array3)
 
       if (val1 != val2) {
 	*bits_ptr1 = val2;
-	has_changed = SXTRUE;
+	has_changed = true;
       }
     }
 
@@ -2030,7 +2030,7 @@ OR_AND (SXBA bits_array1, SXBA bits_array2, SXBA bits_array3)
 }
 
 
-static SXBOOLEAN
+static bool
 OR_AND_MINUS (SXBA bits_array1, SXBA bits_array2, SXBA bits_array3, SXBA bits_array4)
 {
   /* bits_array4 =  bits_array2 & bits_array3 - bits_array1
@@ -2040,7 +2040,7 @@ OR_AND_MINUS (SXBA bits_array1, SXBA bits_array2, SXBA bits_array3, SXBA bits_ar
   /* On change la taille! |bits_array4| == |bits_array2| */
   SXINT	        slices_number = SXNBLONGS (SXBASIZE (bits_array4) = SXBASIZE (bits_array2));
   SXBA_ELT	val;
-  SXBOOLEAN	is_set = SXFALSE;
+  bool	is_set = false;
 
 #if EBUG
   sxbassert (*bits_array1 >= *bits_array2, "OR_AND_MINUS (|X|<|Y|)");
@@ -2058,7 +2058,7 @@ OR_AND_MINUS (SXBA bits_array1, SXBA bits_array2, SXBA bits_array3, SXBA bits_ar
 
   while (slices_number-- > 0) {
     if ((val = *bits_ptr4-- = (*bits_ptr2--) & (*bits_ptr3--) & (~(*bits_ptr1)))) {
-      is_set = SXTRUE;
+      is_set = true;
       *bits_ptr1-- |= val;
     }
     else
@@ -2077,7 +2077,7 @@ COPY (SXBA lhs_bits_array, SXBA rhs_bits_array)
   SXBA	        lhs_bits_ptr, rhs_bits_ptr;
   SXINT	        rhs_slices_number = SXNBLONGS (SXBASIZE (rhs_bits_array));
   SXINT	        lhs_slices_number = SXNBLONGS (SXBASIZE (lhs_bits_array));
-  SXBOOLEAN	ret_val = SXFALSE;
+  bool	ret_val = false;
     
   lhs_bits_ptr = lhs_bits_array + lhs_slices_number, rhs_bits_ptr = rhs_bits_array + rhs_slices_number;
 
@@ -2097,7 +2097,7 @@ COPY (SXBA lhs_bits_array, SXBA rhs_bits_array)
 }
 
 /* Retourne vrai ssi la lhs change */
-static SXBOOLEAN
+static bool
 OR (SXBA lhs_bits_array, SXBA rhs_bits_array)
 {
   /* La memoisation de OR par
@@ -2114,7 +2114,7 @@ OR (SXBA lhs_bits_array, SXBA rhs_bits_array)
   SXBA	              lhs_bits_ptr, rhs_bits_ptr;
   SXINT	              slices_number = SXNBLONGS (SXBASIZE (rhs_bits_array));
   SXBA_ELT            lwork, work;
-  SXBOOLEAN             ret_val = SXFALSE;
+  bool             ret_val = false;
     
   lhs_bits_ptr = lhs_bits_array + slices_number, rhs_bits_ptr = rhs_bits_array + slices_number;
 
@@ -2129,7 +2129,7 @@ OR (SXBA lhs_bits_array, SXBA rhs_bits_array)
 
     if (lwork /* ancienne valeur */ != work /* nouvelle valeur */) {
       /* A change' */
-      ret_val = SXTRUE;
+      ret_val = true;
       *lhs_bits_ptr = work;
     }
 
@@ -2313,24 +2313,24 @@ static SXINT lb [inputG_MAXRHSLGTH+1], ub [inputG_MAXRHSLGTH+1];
 #endif /* !MAKE_INSIDEG */
 
 #if has_streq
-static SXBOOLEAN
+static bool
 check_streq (clause)
      SXINT clause;
 {
   SXINT x, *p, j, h;
   SXINT	*src1, *src2, *lim1;
-  SXBOOLEAN is_Streqlen;
+  bool is_Streqlen;
 
   if (x = clause2streq [clause]) {
     p = streq_list+x;
 
     while (j = *p++) {
       if (j > 0) {
-	is_Streqlen = SXTRUE;
+	is_Streqlen = true;
 	h = *p++;
       }
       else {
-	is_Streqlen = SXFALSE;
+	is_Streqlen = false;
 	j = -j;
 	h = -*p++;
       }
@@ -2362,7 +2362,7 @@ check_streq (clause)
     return j==0;
   }
 
-  return SXTRUE;
+  return true;
 }
 #endif /* has_streq */
 
@@ -2449,7 +2449,7 @@ output_full_guide (rhs_stack)
       }
     } while (++bot < top);
 
-    return SXTRUE;
+    return true;
   }
 #endif /* has_Lex */
 
@@ -2475,7 +2475,7 @@ output_full_guide (rhs_stack)
     } while (++bot < top);
   }
  
-  return SXTRUE;
+  return true;
 }
 
 #endif /* is_full_guide */
@@ -2495,12 +2495,12 @@ static void output_table (SXINT p);
 
 #if BEAM_KIND
 /* beam demande' */
-static SXBOOLEAN
+static bool
 fill_Axpq2max_proba_ptr (SXINT item_q, SXINT A, SXINT i, SXINT q)
 {
   SXINT                 iq;
   double                complete_inside_proba, *max_inside_proba_ptr;
-  SXBOOLEAN             ret_val = SXTRUE;
+  bool             ret_val = true;
   struct proba_struct   *iq_proba_ptr;
 
   iq = p_q2pq (i, q);
@@ -2527,7 +2527,7 @@ fill_Axpq2max_proba_ptr (SXINT item_q, SXINT A, SXINT i, SXINT q)
 #endif /* LLOG */
     }
     else
-      ret_val = SXFALSE;
+      ret_val = false;
   }
 
   return ret_val;
@@ -2829,7 +2829,7 @@ output_item (SXINT item_j, SXBA index_set_j, SXINT i, SXINT j)
   SXINT prod, A, top_item, bot_item, X;
 
 #if BEAM_KIND
-  SXBOOLEAN is_init_item;
+  bool is_init_item;
   double                i_r;
   struct proba_struct   *proba_ptr;
 #endif /* BEAM_KIND */
@@ -3032,8 +3032,8 @@ check_proba (struct proba_struct   *proba_ptr, SXINT item, SXINT i, SXINT j)
 
 
 #if BEAM_KIND
-static SXBOOLEAN
-beam_shift (SXINT A, SXINT p, SXINT q, SXBOOLEAN *has_reduce, SXBOOLEAN from_cyclic_stack)
+static bool
+beam_shift (SXINT A, SXINT p, SXINT q, bool *has_reduce, bool from_cyclic_stack)
 {
   /*
     Realise la transition Apq
@@ -3046,7 +3046,7 @@ beam_shift (SXINT A, SXINT p, SXINT q, SXBOOLEAN *has_reduce, SXBOOLEAN from_cyc
   SXBA			index_set_p, index_set_q, prev_index_set_q, backward_index_set_q;
   struct recognize_item	*RTp;
   SXINT			*top_ptr, *bot_ptr;
-  SXBOOLEAN		ret_val;
+  bool		ret_val;
   SXINT                 pq, iq;
   struct proba_struct   *p_proba_ptr, *q_proba_ptr;
   double                inside_proba, max_proba, old_proba, new_proba, complete_inside_proba, *max_inside_proba_ptr, prod_proba, p_proba;
@@ -3058,7 +3058,7 @@ beam_shift (SXINT A, SXINT p, SXINT q, SXBOOLEAN *has_reduce, SXBOOLEAN from_cyc
 #endif /* BEAM_KIND & recognizer_beam */
 
 
-  ret_val = *has_reduce = SXFALSE;
+  ret_val = *has_reduce = false;
 
   pq = (p > 0) ? p_q2pq(p, q) : 0 /* transition entre 0 et 1 sur le eof */;
 
@@ -3069,7 +3069,7 @@ beam_shift (SXINT A, SXINT p, SXINT q, SXBOOLEAN *has_reduce, SXBOOLEAN from_cyc
 #if is_lex
   if (top_ptr == NULL && A > 0)
     /* La lexicalisation a pu invalider la "preparation" de transitions nt */
-    return SXFALSE;
+    return false;
 #endif /* is_lex */
 
 #if EBUG
@@ -3248,7 +3248,7 @@ beam_shift (SXINT A, SXINT p, SXINT q, SXBOOLEAN *has_reduce, SXBOOLEAN from_cyc
 
 
   while (--top_ptr >= bot_ptr) {
-    ret_val = SXTRUE; /* Le 21/11/06 */
+    ret_val = true; /* Le 21/11/06 */
     item_p = *top_ptr;
 
 #if is_rcvr
@@ -3412,7 +3412,7 @@ beam_shift (SXINT A, SXINT p, SXINT q, SXBOOLEAN *has_reduce, SXBOOLEAN from_cyc
 
 #if 0
       /* Le 17/07/2003 */
-      ret_val = SXTRUE; /* On va ajouter qqchose a Tq */
+      ret_val = true; /* On va ajouter qqchose a Tq */
 #endif /* 0 */
 
       if (index_set_q == NULL) {
@@ -3648,7 +3648,7 @@ beam_shift (SXINT A, SXINT p, SXINT q, SXBOOLEAN *has_reduce, SXBOOLEAN from_cyc
     if (Y != 0)
       continue;
 #else /* !is_epsilon */
-    /* is_epsilon == SXFALSE */
+    /* is_epsilon == false */
     if (Y != 0) {
 #if is_rcvr
       /* Le 11/10/06 */
@@ -3709,7 +3709,7 @@ beam_shift (SXINT A, SXINT p, SXINT q, SXBOOLEAN *has_reduce, SXBOOLEAN from_cyc
 
 #if 0
       /* Le 17/07/2003 */
-      ret_val = SXTRUE; /* On va ajouter qqchose a Tq */
+      ret_val = true; /* On va ajouter qqchose a Tq */
 #endif /* 0 */
 
       if (index_set_q == NULL) {
@@ -4124,7 +4124,7 @@ beam_shift (SXINT A, SXINT p, SXINT q, SXBOOLEAN *has_reduce, SXBOOLEAN from_cyc
       {
       if (index_set_p == NULL) {
 	/* item_q = B -> A .  */
-	SXBOOLEAN has_changed = fill_Axpq2max_proba_ptr (item_q, B, p, q);
+	bool has_changed = fill_Axpq2max_proba_ptr (item_q, B, p, q);
 
 #if 0
 	SXBA_1_bit (ntXindex_set [B], p);
@@ -4153,7 +4153,7 @@ beam_shift (SXINT A, SXINT p, SXINT q, SXBOOLEAN *has_reduce, SXBOOLEAN from_cyc
 	/* item_q = B -> \alpha A \beta .
 	   et \beta =>* \epsilon
 	   et \alpha \not =>* \epsilon */
-	SXBOOLEAN has_changed = SXFALSE;
+	bool has_changed = false;
 	SXINT     i = -1;
 
 	/* OR (ntXindex_set [B], index_set_p); */
@@ -4247,7 +4247,7 @@ beam_shift (SXINT A, SXINT p, SXINT q, SXBOOLEAN *has_reduce, SXBOOLEAN from_cyc
       {
 	if (index_set_p == NULL) {
 	  /* item_q = B -> A .  */
-	  SXBOOLEAN has_changed = fill_Axpq2max_proba_ptr (item_q, B, p, q);
+	  bool has_changed = fill_Axpq2max_proba_ptr (item_q, B, p, q);
 
 #if 0
 	  SXBA_1_bit (ntXindex_set [B], p);
@@ -4277,7 +4277,7 @@ beam_shift (SXINT A, SXINT p, SXINT q, SXBOOLEAN *has_reduce, SXBOOLEAN from_cyc
 	  /* item_q = B -> \alpha A \beta .
 	     et \beta =>* \epsilon
 	     et \alpha \not =>* \epsilon */
-	  SXBOOLEAN has_changed = SXFALSE;
+	  bool has_changed = false;
 	  SXINT     i = -1;
 
 	  /* OR (ntXindex_set [B], index_set_p); */
@@ -4310,7 +4310,7 @@ beam_shift (SXINT A, SXINT p, SXINT q, SXBOOLEAN *has_reduce, SXBOOLEAN from_cyc
     SXBA_1_bit (lhs_order_set, order);
 #endif /* !MAKE_INSIDEG */
 
-    *has_reduce = SXTRUE;		/* reduce */
+    *has_reduce = true;		/* reduce */
   }
 
   return ret_val;
@@ -4324,10 +4324,10 @@ beam_shift (SXINT A, SXINT p, SXINT q, SXBOOLEAN *has_reduce, SXBOOLEAN from_cyc
    Arg supplementaire qui indique s'il y a eu un reduce
    Retourne vrai ssi la table Tq a change' */
 /* Le 21/11/06  Retourne vrai ssi il y a depuis p une transition sur A */
-static SXBOOLEAN
+static bool
 shift (A, p, q, has_reduce, from_cyclic_stack)
     SXINT A, p, q;
-    SXBOOLEAN *has_reduce, from_cyclic_stack;
+    bool *has_reduce, from_cyclic_stack;
 {
   /*
     Realise la transition Apq
@@ -4340,9 +4340,9 @@ shift (A, p, q, has_reduce, from_cyclic_stack)
   SXBA			index_set_p, index_set_q, prev_index_set_q, backward_index_set_q;
   struct recognize_item	*RTp;
   SXINT			*top_ptr, *bot_ptr;
-  SXBOOLEAN		ret_val;
+  bool		ret_val;
 
-  ret_val = *has_reduce = SXFALSE;
+  ret_val = *has_reduce = false;
 
   RTp = &(RT [p]);
 
@@ -4351,7 +4351,7 @@ shift (A, p, q, has_reduce, from_cyclic_stack)
 #if is_lex
   if (top_ptr == NULL && A > 0)
     /* La lexicalisation a pu invalider la "preparation" de transitions nt */
-    return SXFALSE;
+    return false;
 #endif /* is_lex */
 
 #if EBUG
@@ -4365,7 +4365,7 @@ shift (A, p, q, has_reduce, from_cyclic_stack)
     bot_ptr += RHS_NT2WHERE (A);
 
   while (--top_ptr >= bot_ptr) {
-    ret_val = SXTRUE; /* Le 21/11/06 */
+    ret_val = true; /* Le 21/11/06 */
     item_p = *top_ptr;
 
     if (A == 0) {
@@ -4495,7 +4495,7 @@ shift (A, p, q, has_reduce, from_cyclic_stack)
 
 #if 0
       /* Le 17/07/2003 */
-      ret_val = SXTRUE; /* On va ajouter qqchose a Tq */
+      ret_val = true; /* On va ajouter qqchose a Tq */
 #endif /* 0 */
 
       if (index_set_q == NULL) {
@@ -4648,7 +4648,7 @@ shift (A, p, q, has_reduce, from_cyclic_stack)
     if (Y != 0)
       continue;
 #else /* !is_epsilon */
-    /* is_epsilon = SXFALSE */
+    /* is_epsilon = false */
     if (Y != 0) {
 #if is_rcvr
       /* Le 11/10/06 */
@@ -4709,7 +4709,7 @@ shift (A, p, q, has_reduce, from_cyclic_stack)
 
 #if 0
       /* Le 17/07/2003 */
-      ret_val = SXTRUE; /* On va ajouter qqchose a Tq */
+      ret_val = true; /* On va ajouter qqchose a Tq */
 #endif /* 0 */
 
       if (index_set_q == NULL) {
@@ -5051,7 +5051,7 @@ shift (A, p, q, has_reduce, from_cyclic_stack)
     SXBA_1_bit (lhs_order_set, order);
 #endif /* !MAKE_INSIDEG */
 
-    *has_reduce = SXTRUE;		/* reduce */
+    *has_reduce = true;		/* reduce */
   }
 
   return ret_val;
@@ -5070,7 +5070,7 @@ scan_reduce (p, q)
 {
   SXINT	      j, next_j, k, A, next_A;
   SXBA        index_set_A;
-  SXBOOLEAN     has_reduce;
+  bool     has_reduce;
 
   j = p;
   A = sxba_1_rlscan (lhs_order_set, MAXNT+1);
@@ -5081,10 +5081,10 @@ scan_reduce (p, q)
 	/* ... oui pour Ajq */
 #if BEAM_KIND
 	if (beam_value_is_set)
-	  beam_shift (A, j, q, &has_reduce, SXFALSE /* from_cyclic_stack */);
+	  beam_shift (A, j, q, &has_reduce, false /* from_cyclic_stack */);
 	else
 #endif /* BEAM_KIND */
-	  shift (A, j, q, &has_reduce, SXFALSE /* from_cyclic_stack */);
+	  shift (A, j, q, &has_reduce, false /* from_cyclic_stack */);
       }
     } while ((A = sxba_1_rlscan (lhs_order_set, A)) > 0);
 
@@ -5101,10 +5101,10 @@ scan_reduce (p, q)
       /* ... oui pour Ajq */
 #if BEAM_KIND
 	if (beam_value_is_set)
-	  beam_shift (A, j, q, &has_reduce, SXTRUE /* from_cyclic_stack */);
+	  beam_shift (A, j, q, &has_reduce, true /* from_cyclic_stack */);
 	else
 #endif /* BEAM_KIND */
-	  shift (A, j, q, &has_reduce, SXTRUE /* from_cyclic_stack */);
+	  shift (A, j, q, &has_reduce, true /* from_cyclic_stack */);
     }
 #endif /* is_cyclic || is_rcvr */
 
@@ -5140,7 +5140,7 @@ scan_reduce (p, q)
 {
   SXBA_ELT    filtre;
   SXINT	      j, indice, order, A;
-  SXBOOLEAN     has_reduce;
+  bool     has_reduce;
 
   filtre = ((SXBA_ELT)1) << MOD (p);
   indice = DIV (p) + 1;
@@ -5161,10 +5161,10 @@ scan_reduce (p, q)
       if (*(nt_hd [A]) & filtre) {
 #if BEAM_KIND
 	if (beam_value_is_set)
-	  beam_shift (A, j, q, &has_reduce, SXFALSE /* from_cyclic_stack */);
+	  beam_shift (A, j, q, &has_reduce, false /* from_cyclic_stack */);
 	else
 #endif /* BEAM_KIND */
-	  shift (A, j, q, &has_reduce, SXFALSE /* from_cyclic_stack */);
+	  shift (A, j, q, &has_reduce, false /* from_cyclic_stack */);
       }
     }
 
@@ -5179,10 +5179,10 @@ scan_reduce (p, q)
 	    
 #if BEAM_KIND
 	if (beam_value_is_set)
-	  beam_shift (A, j, q, &has_reduce, SXTRUE /* from_cyclic_stack */);
+	  beam_shift (A, j, q, &has_reduce, true /* from_cyclic_stack */);
 	else
 #endif /* BEAM_KIND */
-	  shift (A, j, q, &has_reduce, SXTRUE /* from_cyclic_stack */);
+	  shift (A, j, q, &has_reduce, true /* from_cyclic_stack */);
     }
 #endif /* is_cyclic || is_rcvr */
 
@@ -5355,7 +5355,7 @@ process_non_kernel (q)
   SXINT		**ptr2;
   SXINT		item, A, X, XX, prdct_no, next_item, prod;
   SXBA	        index_set;
-  SXBOOLEAN       is_new_item;
+  bool       is_new_item;
 #if is_parser
   SXBA	        backward_index_set;
 #endif /* is_parser */
@@ -5488,7 +5488,7 @@ process_non_kernel (q)
 #endif /* LOG */
       }
 #else /* !is_epsilon */
-      /* is_epsilon == SXFALSE */
+      /* is_epsilon == false */
       /* On est obligatoirement en debut de partie droite */
       /* X > 0 et T2_index_sets [item] == NULL */
       if (*(ptr2 = &(T2_shift_NT_hd [X])) == NULL) {
@@ -5587,7 +5587,7 @@ static XxY_header gen_tntXmaxlgth_repair_hd;
 static SXINT        *gen_proto_stack; /* DSTACK */
 static SXBA       gen_tntXmaxlgth_repair_set;
 static SXINT        *local_repair_prod_stack, *glbl_repair_prod_stacks;
-static SXBOOLEAN    gen_empty_repair_string;
+static bool    gen_empty_repair_string;
 static SXBA       repair_gen_nyp;
 static struct     gen_repair2attr_struct {
   SXINT  i, delta_i, delta_j, anchor, distance;
@@ -5602,7 +5602,7 @@ static SXBA       sub_dag_t_set, sub_dag_state_set, sub_dag_state_set2, *sub_dag
 static SXINT        sub_dag_delta_init;
 static VARSTR     sub_dag_vstr;
 
-static SXBOOLEAN generate ();
+static bool generate ();
 
 static void
 XxY_gen_repair_hd_oflw (old_size, new_size)
@@ -5630,22 +5630,22 @@ gen_tntXmaxlgth_repair_hd_oflw (old_size, new_size)
    p est le mlstn sur lequel l'erreur est detectee.
    Pour l'instant on a soit m==p==n soit m<=p<n
    Si for_parsact.rcvr_range_walk, on appelle une fonction de l'utilisateur
-   retourne SXFALSE ssi aucun nouveau range ne peut etre calcule'
+   retourne false ssi aucun nouveau range ne peut etre calcule'
 */
 static SXINT delta;
 
-static SXBOOLEAN
+static bool
 range_walk (p, q, r, m, n)
      SXINT p, q, r, *m, *n;
 {
   SXINT      init_state, final_state;
-  SXBOOLEAN    ret_val;
+  bool    ret_val;
 
   init_state = idag.init_state;
   final_state = idag.final_state;
 
   if (q == init_state && r == final_state)
-    return SXFALSE;
+    return false;
 
   if (for_semact.rcvr_range_walk)
     ret_val = (*for_semact.rcvr_range_walk) (p, q, r, m, n);
@@ -5754,7 +5754,7 @@ range_walk (p, q, r, m, n)
       }
     }
 
-    ret_val = SXTRUE;
+    ret_val = true;
   }
     
 #if EBUG
@@ -5857,7 +5857,7 @@ call_generate_best_proba_string (SXINT litem, SXINT ritem, SXINT *gen_lgth_ptr)
   if (new_prefix)
     DPUSH (gen_valid_repair_string_stack, new_prefix);
   else
-    gen_empty_repair_string = SXTRUE;
+    gen_empty_repair_string = true;
 
   if (perform_copy_local_repair_prod_stack) {
     gen_repair2attr2 [new_prefix].prod_stack = 0; /* chaine corrigee unique */
@@ -5872,16 +5872,16 @@ call_generate_best_proba_string (SXINT litem, SXINT ritem, SXINT *gen_lgth_ptr)
 /* Nelle version /* 11/12/06
    Test de cycles grace a gen_tntXmaxlgth_repair_hd et gen_tntXmaxlgth_repair_set.  Les elements sont des couples
    (A, max_lgth) ou max_lgth est la taille maximale de la chaine terminale qui doit etre generee par A.
-   Si on retombe sur (A, max_lgth) au cours du traitement d'un (A, max_lgth) => cycle (return SXFALSE) */
+   Si on retombe sur (A, max_lgth) au cours du traitement d'un (A, max_lgth) => cycle (return false) */
 /* min_proto est la taille minimale des phrases generees par la protophrase contenue ds gen_proto_stack (on a min_proto <= lgth) */
-static SXBOOLEAN
+static bool
 call_generate (bot_item, top_item, old_prefix, lgth, kind, min_proto)
      SXINT     bot_item, top_item, old_prefix, lgth, kind, min_proto;
 {
   SXINT     X, gen_lgth, cur_item;
-  SXBOOLEAN ret_val;
+  bool ret_val;
 
-  ret_val = SXFALSE;
+  ret_val = false;
 
   if (top_item > bot_item) {
     /* On verifie que ca peut marcher */
@@ -5897,7 +5897,7 @@ call_generate (bot_item, top_item, old_prefix, lgth, kind, min_proto)
 	gen_lgth += NT2MIN_GEN_LGTH (X);
 
       if (gen_lgth > lgth)
-	return SXFALSE;
+	return false;
     }
 
     cur_item = top_item;
@@ -5933,12 +5933,12 @@ call_generate (bot_item, top_item, old_prefix, lgth, kind, min_proto)
 /* gen_proto_stack contient la protophrase a generer sur la longueur lgth si kind == 0 ou <= lgth si kind == 1 . 
    min_proto contient la taille min du genere' de cette protophrase.
    old_prefix est l'identifiant du prefixe de la chaine generee jusqu'ici */
-static SXBOOLEAN
+static bool
 generate (old_prefix, lgth, kind, min_proto)
      SXINT     old_prefix, lgth, kind, min_proto;
 {
   SXINT     X, X_max, new_prefix, item, prod, top_item, bot, top, x, size, parse_nb;
-  SXBOOLEAN is_new, ret_val;
+  bool is_new, ret_val;
 
   
   if (IS_EMPTY (gen_proto_stack)) {
@@ -5948,7 +5948,7 @@ generate (old_prefix, lgth, kind, min_proto)
       /* On ne la met pas ds gen_valid_repair_string_stack car elle pourrait se calculer de plusieurs fac,ons */
       /* ... ou ne pas etre bonne (kind == 0 && lgth > 0) */
       if (old_prefix == 0)
-	gen_empty_repair_string = SXTRUE;
+	gen_empty_repair_string = true;
 
       if (rcvr_spec.perform_repair_parse && perform_copy_local_repair_prod_stack) {
 	copy_local_repair_prod_stack (old_prefix);
@@ -5957,7 +5957,7 @@ generate (old_prefix, lgth, kind, min_proto)
   }
   else {
     /* gen_proto_stack est non vide */
-    ret_val = SXFALSE;
+    ret_val = false;
     X = DPOP (gen_proto_stack);
 
     if (X < 0) {
@@ -6009,7 +6009,7 @@ generate (old_prefix, lgth, kind, min_proto)
 #endif /* 0 */
 	    }
 
-	    ret_val = SXTRUE;
+	    ret_val = true;
 	  }
 	}
 	else
@@ -6047,7 +6047,7 @@ generate (old_prefix, lgth, kind, min_proto)
 	    top_item = PROLON (prod+1)-1;
       
 	    if (call_generate (item, top_item, old_prefix, lgth, kind, min_proto)) {
-	      ret_val = SXTRUE;
+	      ret_val = true;
 	    }
 
 	    if (rcvr_spec.perform_repair_parse) DTOP (local_repair_prod_stack)--;
@@ -6273,7 +6273,7 @@ make_repair_prod (prod, i, j, rhs_stack)
 	}
       }
       if (cur_item >= top_item)
-	is_rcvr_can_be_cyclic = SXTRUE;
+	is_rcvr_can_be_cyclic = true;
     }
   }
   
@@ -6658,7 +6658,7 @@ call_td_repair_parses (lmlstn, rmlstn, litem, ritem, top, xprod_stack)
 
 
 static void
-print_gen_string (SXINT symb, SXBOOLEAN is_last_call)
+print_gen_string (SXINT symb, bool is_last_call)
 {
   if (!is_last_call)
     putchar (' ');
@@ -6667,7 +6667,7 @@ print_gen_string (SXINT symb, SXBOOLEAN is_last_call)
 }
 
 static void
-get_gen_string (SXINT symb, SXBOOLEAN is_last_call)
+get_gen_string (SXINT symb, bool is_last_call)
 {
   if (!is_last_call)
     varstring = varstr_catchar (varstring, ' ');
@@ -6681,7 +6681,7 @@ gen_deplacement (SXINT sub_string)
   SXINT   symb, prefix, i, q, best_delta, top, trans, Y, delta, anchor, dij;
   SXINT   *t_stack, *t_stack_top;
   SXBA    anchor_set, set;
-  SXBOOLEAN is_in_source;
+  bool is_in_source;
 
   if (SXBA_bit_is_reset_set (repair_gen_nyp, sub_string)) {
     /* C'est la 1ere fois qu'on visite sub_string */
@@ -6708,11 +6708,11 @@ gen_deplacement (SXINT sub_string)
 	  /* trans est un pq */
 	  t_stack = idag.t_stack + idag.pq2t_stack_hd [trans]; /* Pile des terminaux associes aux transitions pq */
 	  t_stack_top = t_stack + *t_stack;
-	  is_in_source = SXFALSE;
+	  is_in_source = false;
 
 	  while (++t_stack <= t_stack_top) {
 	    if (*t_stack == symb) {
-	      is_in_source = SXTRUE;
+	      is_in_source = true;
 	      break;
 	    }
 	  }
@@ -6884,11 +6884,11 @@ rcvr_distance ()
 
 
 /* genere ds path_stack les chemins du dag */
-static SXBOOLEAN
+static bool
 rcvr_gen_dag_paths (SXINT ldag_state, SXINT rdag_state, void (*f)())
 {
   SXINT   triple, pq_bot, pq_top;
-  SXBOOLEAN ret_val;
+  bool ret_val;
 
   if (ldag_state >= rdag_state) {
     if (ret_val = (ldag_state == rdag_state))
@@ -6897,7 +6897,7 @@ rcvr_gen_dag_paths (SXINT ldag_state, SXINT rdag_state, void (*f)())
     return ret_val;
   }
 
-  ret_val = SXFALSE;
+  ret_val = false;
 
   /* Ds cette vision on met ds repair_path_stack des pq (si on a besoin de recuperer p a partir de pq il faudra rajouter ds idag une correspondance pq --> p) */
   pq_bot = idag.p2pq_hd [ldag_state];
@@ -6907,7 +6907,7 @@ rcvr_gen_dag_paths (SXINT ldag_state, SXINT rdag_state, void (*f)())
     if (f) PUSH (repair_path_stack, pq_bot);
 
     if (rcvr_gen_dag_paths (idag.pq2q [pq_bot], rdag_state, f))
-      ret_val = SXTRUE;
+      ret_val = true;
 
     if (f) TOP (repair_path_stack)--;
 
@@ -7017,12 +7017,12 @@ Soit l = rmlstn-lmlstn et ... litem \alpha ritem ... tq \alpha =>* x (si litem=r
 static SXINT
 earley_glbl_rcvr_message (litem, lmlstn, ritem, rmlstn, kind, store_rcvr_string)
      SXINT     litem, lmlstn, ritem, rmlstn, kind;
-     SXBOOLEAN store_rcvr_string;
+     bool store_rcvr_string;
 {
   SXINT                   cur_item, X, top, x, ldag_state, rdag_state, lgth, xbuf, lgth_tried, trans, xtok, triple, min_gen_lgth, gen_lgth, parse_id;
   struct sxsource_coord	lsource_index, rsource_index;
   char                  int_str [12];
-  SXBOOLEAN               has_a_nt, really_store;
+  bool               has_a_nt, really_store;
     
   ldag_state = mlstn2dag_state (lmlstn);
   rdag_state = mlstn2dag_state (rmlstn);
@@ -7140,7 +7140,7 @@ earley_glbl_rcvr_message (litem, lmlstn, ritem, rmlstn, kind, store_rcvr_string)
       /* Dans ce cas, on genere la chaine de proba max */
       /* Le travail est deja pre'mache' car nt2max_inside_proba, t2max_inside_proba et
 	 nt2prod_that_generates_the_best_proba_t_string sont calcule; */
-      gen_empty_repair_string = SXFALSE, TOP (gen_valid_repair_string_stack) = 0;
+      gen_empty_repair_string = false, TOP (gen_valid_repair_string_stack) = 0;
       call_generate_best_proba_string (litem, ritem, &gen_lgth);
     }
     else
@@ -7167,7 +7167,7 @@ earley_glbl_rcvr_message (litem, lmlstn, ritem, rmlstn, kind, store_rcvr_string)
 	/* On essaie de generer les chaines de longueur lgth_tried */
 	if ((lgth_tried = rmlstn-lmlstn) >= min_gen_lgth && (rcvr_spec.suppression == -1 || rcvr_spec.insertion == -1)) {
 	  /* gen_proto_stack contient une proto-phrase inverse initialisee a vide */
-	  gen_empty_repair_string = SXFALSE, TOP (gen_valid_repair_string_stack) = 0, DTOP (gen_proto_stack) = 0;
+	  gen_empty_repair_string = false, TOP (gen_valid_repair_string_stack) = 0, DTOP (gen_proto_stack) = 0;
 
 	  if (!call_generate (litem, ritem, 0 /* old_prefix */, lgth_tried /* lgth */, 0 /* kind => |chaines| == lgth */,
 			      0 /* taille min des phrases generees par la proto-phrase de gen_proto_stack */)) {
@@ -7185,7 +7185,7 @@ earley_glbl_rcvr_message (litem, lmlstn, ritem, rmlstn, kind, store_rcvr_string)
 	if (gen_lgth == -1) {
 	  /* On genere la/les chaines de taille min */
 	  /* gen_proto_stack contient une proto-phrase inverse initialisee a vide */
-	  gen_empty_repair_string = SXFALSE, TOP (gen_valid_repair_string_stack) = 0, DTOP (gen_proto_stack) = 0;
+	  gen_empty_repair_string = false, TOP (gen_valid_repair_string_stack) = 0, DTOP (gen_proto_stack) = 0;
 
 	  if (!call_generate (litem, ritem, 0 /* old_prefix */, min_gen_lgth, 0 /* kind => |chaines| == lgth */,
 			      0 /* taille min des phrases generees par la proto-phrase de gen_proto_stack */))
@@ -7314,12 +7314,12 @@ earley_glbl_rcvr_message (litem, lmlstn, ritem, rmlstn, kind, store_rcvr_string)
     }
   }
 
-  has_a_nt = SXFALSE;
+  has_a_nt = false;
 
   if (litem < ritem) {
     for (cur_item = litem; cur_item < ritem; cur_item++) {
       if (LISPRO (cur_item) > 0) {
-	has_a_nt = SXTRUE;
+	has_a_nt = true;
 	break;
       }
     }
@@ -7369,7 +7369,7 @@ earley_glbl_rcvr_message (litem, lmlstn, ritem, rmlstn, kind, store_rcvr_string)
   
   /* Analyse de la chaine corrigee */
   if (perform_copy_local_repair_prod_stack && best_repair >= 0) {
-    spf.outputG.has_repair = SXTRUE; /* spf.outputG sert de structure meme si !is_parse_forest */
+    spf.outputG.has_repair = true; /* spf.outputG sert de structure meme si !is_parse_forest */
 
     if (ritem > litem /* Le 09/01/07 Sinon suppression d'une chaine qui se fait sans analyse */
 	/* && has_a_nt Enleve' le 28/02/06 pour avoir ces terminaux ds Tpq_rcvr_set */) {
@@ -7399,12 +7399,12 @@ earley_glbl_rcvr_message (litem, lmlstn, ritem, rmlstn, kind, store_rcvr_string)
    item = [A -> \alpha X \beta . \gamma] est un item droit non reduce >= a left_item
 */
 /* item ne peut plus etre ni en position reduce ni en position initiale */
-static SXBOOLEAN
+static bool
 earley_glbl_rcvr_set (SXINT left_mlstn, SXINT left_item, SXINT right_mlstn, SXINT right_item)
 {
   SXINT     X, **ptr2, cur_item, resume, triple; 
   SXBA    index_set, left_index_set, backward_index_set;
-  SXBOOLEAN ret_val;
+  bool ret_val;
 
   X = LISPRO (right_item);
 
@@ -7417,7 +7417,7 @@ earley_glbl_rcvr_set (SXINT left_mlstn, SXINT left_item, SXINT right_mlstn, SXIN
   /* L'utilisateur peut interdire la suppression */
   if (rcvr_spec.suppression == -1 && left_item == right_item && left_mlstn < right_mlstn)
     /* suppression de left_mlstn .. right_mlstn pour matcher la chaine vide entre left_item && right_item */
-    return SXFALSE;
+    return false;
 
   /* Il peut ne pas y avoir de chemin ds le dag entre left_mlstn et right_mlstn */
 
@@ -7547,7 +7547,7 @@ earley_glbl_rcvr_set (SXINT left_mlstn, SXINT left_item, SXINT right_mlstn, SXIN
 
 #if LOG
     fputs ("\n", stdout);
-    earley_glbl_rcvr_message (left_item, left_mlstn, right_item, right_mlstn, 1 /* warning */, SXFALSE);
+    earley_glbl_rcvr_message (left_item, left_mlstn, right_item, right_mlstn, 1 /* warning */, false);
 #endif /* LOG */
   }
 
@@ -7561,12 +7561,12 @@ earley_glbl_rcvr_set (SXINT left_mlstn, SXINT left_item, SXINT right_mlstn, SXIN
 
 /* item_p : A -> \alpha . \beta
    On simule une transition entre p et q sur "\beta" */
-static SXBOOLEAN
+static bool
 earley_glbl_rcvr_reduce_pre (SXINT p, SXINT item_p, SXINT q, SXBA rcvr_w2titem_set)
 {
   SXINT                   prod, A, order;
   SXBA                  index_set_p;
-  SXBOOLEAN               ret_val;
+  bool               ret_val;
 
   /* Les "T2" sont positionnes */
   prod = PROLIS (item_p);
@@ -7626,7 +7626,7 @@ earley_glbl_rcvr_reduce_pre (SXINT p, SXINT item_p, SXINT q, SXBA rcvr_w2titem_s
     SXINT                 iq, i, item_q = PROLON (prod+1)-1;
     SXBA                  index_set = ntXindex_set [A];
     struct proba_struct   *p_proba_ptr, *q_proba_ptr;
-    SXBOOLEAN             exists;
+    bool             exists;
     double                old_proba, new_proba, rcvr_inside_proba = get_max_inside_rcvr_proba (item_p, item_q),
       rcvr_proba = rcvr_inside_proba + prod2proba (prod);
 
@@ -7798,7 +7798,7 @@ earley_glbl_rcvr_reduce_post (p, item_p, q)
   XxYxZ_set (&glbl_dag_rcvr_start_kitems, p, item_p, resume, &triple);
 
 #if LOG
-  earley_glbl_rcvr_message (item_p, p, item_q, q, 1 /* warning */, SXFALSE);
+  earley_glbl_rcvr_message (item_p, p, item_q, q, 1 /* warning */, false);
 #endif /* LOG */
 }
 
@@ -7816,7 +7816,7 @@ static SXINT            rcvr_reduce_item_stack[itemmax+1];
 /* la borne (p=mlstn, q=next_mlstn) est impose' de l'exterieur par la strategie de rattrapage utilisee */
 /* On ne traite pas les cas reduce [A -> \alpha ., i] car on a i <= p. Si i==p, le reduce B -> \beta . A \gamma
    a ete ou sera localement, si i < p, ce cas sera traite' par une autre borne */
-static SXBOOLEAN        working_rcvr_mlstn_tables_must_be_cleared;
+static bool        working_rcvr_mlstn_tables_must_be_cleared;
 static SXINT
 earley_glbl_rcvr (mlstn, next_mlstn)
      SXINT mlstn, next_mlstn;
@@ -7824,7 +7824,7 @@ earley_glbl_rcvr (mlstn, next_mlstn)
   SXINT                   top_mlstn, next_dag_state, trans, X, Y, t, A, B, save_try_kind, flip_flop;
   SXINT                   item, prod, top_item, bot_item, cur_item, titem, prev_mlstn, prev_prod;
   SXBA                  lex_compatible_item_set, *index_sets_mlstn, *index_sets_next_mlstn;
-  SXBOOLEAN               local_ret_val = SXFALSE, call_process_non_kernel_mlstn;
+  bool               local_ret_val = false, call_process_non_kernel_mlstn;
   SXINT                   ret_val = 0;
   struct recognize_item	*RTq;
   SXINT		        *bot_ptr, *top_ptr, *bot_ptr2, *X_top_ptr;
@@ -8036,7 +8036,7 @@ earley_glbl_rcvr (mlstn, next_mlstn)
 	if (item < top_item) {
 	  /* Non reduce */
 	  if (earley_glbl_rcvr_set (mlstn, item, next_mlstn, item))
-	    local_ret_val = SXTRUE;
+	    local_ret_val = true;
 	}
 
 	/* Il peut y avoir plusieurs items kernel de la meme prod ...
@@ -8057,7 +8057,7 @@ earley_glbl_rcvr (mlstn, next_mlstn)
       if (item < top_item) {
 	/* Non reduce */
 	if (earley_glbl_rcvr_set (mlstn, item, next_mlstn, item))
-	  local_ret_val = SXTRUE;
+	  local_ret_val = true;
       }
     
       /* Il peut y avoir plusieurs items kernel de la meme prod ...
@@ -8089,7 +8089,7 @@ earley_glbl_rcvr (mlstn, next_mlstn)
 
 	if (index_sets_next_mlstn [cur_item] == NULL /* Le 28/09/05 cet item est nouveau */) {
 	  if (earley_glbl_rcvr_set (mlstn, item, next_mlstn, cur_item)) {
-	    local_ret_val = SXTRUE;
+	    local_ret_val = true;
 
 	    if (mlstn == next_mlstn)
 	      /* Une correction unique (voir pave' du debut) */
@@ -8121,7 +8121,7 @@ earley_glbl_rcvr (mlstn, next_mlstn)
 	for (cur_item = item+1; cur_item < top_item; cur_item++) {
 	  if (index_sets_next_mlstn [cur_item]/* index_set */ == NULL) {
 	    if (earley_glbl_rcvr_set (mlstn, item, next_mlstn, cur_item)) {
-	      local_ret_val = SXTRUE;
+	      local_ret_val = true;
 
 	      if (mlstn == next_mlstn)
 		/* Une correction unique (voir pave' du debut) */
@@ -8146,7 +8146,7 @@ earley_glbl_rcvr (mlstn, next_mlstn)
       for (cur_item = item+1; cur_item < top_item; cur_item++) {
 	if (index_sets_next_mlstn [cur_item]/* index_set */ == NULL) {
 	  if (earley_glbl_rcvr_set (mlstn, item, next_mlstn, cur_item)) {
-	    local_ret_val = SXTRUE;
+	    local_ret_val = true;
 
 	    if (mlstn == next_mlstn)
 	      /* Une correction unique (voir pave' du debut) */
@@ -8178,21 +8178,21 @@ earley_glbl_rcvr (mlstn, next_mlstn)
 	      /* item jamais essaye' ds les tables de travail */
 	      if (!working_rcvr_mlstn_tables_must_be_cleared) {
 		/* On travaille donc ds une table speciale qui est vide initialement,  A razer en fin */
-		working_rcvr_mlstn_tables_must_be_cleared = SXTRUE;
+		working_rcvr_mlstn_tables_must_be_cleared = true;
 		/* Il faut peut-etre faire un set_T2 specifique (on n'a pas besoin de tout!!) */
 		set_T2 (working_rcvr_mlstn+1);
 		/* petite correction, il faut prendre le look_ahead de next_mlstn */
 		T2_look_ahead_t_set = mlstn2look_ahead_t_set [next_mlstn];
 	      }
 
-	      is_during_reduce_rcvr_validation = SXTRUE; /* On previent shift () ... */
+	      is_during_reduce_rcvr_validation = true; /* On previent shift () ... */
 	    
 	      if (earley_glbl_rcvr_reduce_pre (mlstn, item, next_mlstn, rcvr_w2titem_set)) {
-		local_ret_val = SXTRUE;
+		local_ret_val = true;
 		PUSH (rcvr_reduce_item_stack, item);
 	      }
 
-	      is_during_reduce_rcvr_validation = SXFALSE;
+	      is_during_reduce_rcvr_validation = false;
 
 	      if (mlstn == next_mlstn && local_ret_val )
 		/* Une correction unique (voir pave' du debut) */
@@ -8245,21 +8245,21 @@ earley_glbl_rcvr (mlstn, next_mlstn)
 	    /* item jamais essaye' ds les tables de travail */
 	    if (!working_rcvr_mlstn_tables_must_be_cleared) {
 	      /* On travaille donc ds une table speciale qui est vide initialement,  A razer en fin */
-	      working_rcvr_mlstn_tables_must_be_cleared = SXTRUE;
+	      working_rcvr_mlstn_tables_must_be_cleared = true;
 	      /* Il faut peut-etre faire un set_T2 specifique (on n'a pas besoin de tout!!) */
 	      set_T2 (working_rcvr_mlstn+1);
 	      /* petite correction, il faut prendre le look_ahead de next_mlstn */
 	      T2_look_ahead_t_set = mlstn2look_ahead_t_set [next_mlstn];
 	    }
 
-	    is_during_reduce_rcvr_validation = SXTRUE; /* On previent shift () ... */
+	    is_during_reduce_rcvr_validation = true; /* On previent shift () ... */
 	    
 	    if (earley_glbl_rcvr_reduce_pre (mlstn, item, next_mlstn, rcvr_w2titem_set)) {
-	      local_ret_val = SXTRUE;
+	      local_ret_val = true;
 	      PUSH (rcvr_reduce_item_stack, item);
 	    }
 
-	    is_during_reduce_rcvr_validation = SXFALSE;
+	    is_during_reduce_rcvr_validation = false;
 
 	    if (mlstn == next_mlstn && local_ret_val )
 	      /* Une correction unique (voir pave' du debut) */
@@ -8294,7 +8294,7 @@ earley_glbl_rcvr (mlstn, next_mlstn)
   }
 
   if (working_rcvr_mlstn_tables_must_be_cleared) {
-    working_rcvr_mlstn_tables_must_be_cleared = SXFALSE;
+    working_rcvr_mlstn_tables_must_be_cleared = false;
     clear_table (working_rcvr_mlstn+1);
   }
 
@@ -8303,9 +8303,9 @@ earley_glbl_rcvr (mlstn, next_mlstn)
     /* item, l'origine de la rcvr ne fait pas partie de la table T[mlstn], il faut donc l'y mettre
        (avec tous les items non kernel qui l'ont produits)
        on appelle donc process_non_kernel (mlstn) */
-    no_la_check = SXTRUE;
+    no_la_check = true;
     set_T2 (mlstn);
-    no_la_check = SXFALSE;
+    no_la_check = false;
 
     /* le process_non_kernel sur non_kernel_item_sets [next_mlstn] sera fait a l'exterieur */
     /* Il faut enlever les items terminaux, ils ne sont pas bons et ne doivent pas etre stockes */
@@ -8368,7 +8368,7 @@ earley_no_dag_rcvr (p)
     /* pas calcule', on le fait */
     nt2prod_that_generates_the_best_proba_t_string = (SXINT*) sxalloc (MAXNT+1, sizeof (SXINT))
       , nt2prod_that_generates_the_best_proba_t_string [0] = 0;
-    fill_tnt_max_inside_probas (SXFALSE /* On ne remplit pas item2max_right_inside_proba */);
+    fill_tnt_max_inside_probas (false /* On ne remplit pas item2max_right_inside_proba */);
   }
 #endif /* BEAM_KIND */
 
@@ -8377,12 +8377,12 @@ earley_no_dag_rcvr (p)
     /* 1ere detection d'erreur */
     ilex_compatible_item_set = NULL;
     /* Recalcul du look-ahead au cas ou ... */
-    fill_mlstn2look_ahead_item_set (SXFALSE);
+    fill_mlstn2look_ahead_item_set (false);
   }
 #endif /* is_1la
 
   /* On previent... */
-  is_during_error_rcvr_processing = is_error_detected = SXTRUE;
+  is_during_error_rcvr_processing = is_error_detected = true;
   /* ... et on passe immediatement les ensembles de look-ahead au cas non lexicalise' */
   mlstn2look_ahead_t_set = mlstn2non_lexicalized_look_ahead_t_set;
 
@@ -8390,7 +8390,7 @@ earley_no_dag_rcvr (p)
      autre tentative [p]..[s] */
   copy_table (working_rcvr_mlstn, p);
   rcvr_detection_table = p;
-  rcvr_detection_table_cleared = SXFALSE;
+  rcvr_detection_table_cleared = false;
 
   rcvr_q = q = r = 0;
 
@@ -8435,7 +8435,7 @@ earley_no_dag_rcvr (p)
 #endif
   
   /* On previent... */
-  is_during_error_rcvr_processing = SXFALSE;
+  is_during_error_rcvr_processing = false;
 
 #if LOG
   fputs ("\t*** Leaving Error Recovery ***\n", stdout);
@@ -8735,14 +8735,14 @@ merge_table (SXINT p, SXINT q)
 }
 #endif /* 0 */
 
-static SXBOOLEAN
+static bool
 complete (dag_statep, mlstnp)
      SXINT dag_statep, mlstnp;
 {
   SXINT	                dag_stateq, mlstnq, Y, t, trans, trans2;
   SXINT                 bot_pq, top_pq;
   SXINT                 *t_stack, *t_stack_top;
-  SXBOOLEAN             shift_has_succeeded, has_reduce, has_changed = SXFALSE, has_locally_changed, /*eps_trans_to_final_state,*/ trans_to_final_state;
+  bool             shift_has_succeeded, has_reduce, has_changed = false, has_locally_changed, /*eps_trans_to_final_state,*/ trans_to_final_state;
   SXBA                  index_set;
 
   /* dag_statep est un dag_state et mlstnp est son milestone associe' */
@@ -8809,11 +8809,11 @@ complete (dag_statep, mlstnp)
     
 	if (RT [mlstnp].shift_NT_hd [0] == NULL)
 	  /* Echec */
-	  return SXFALSE;
+	  return false;
       }
       else
 #endif /* is_rcvr */
-	return SXFALSE;
+	return false;
     }
     /* fIN essai du 25/09/06*/
   }
@@ -8823,7 +8823,7 @@ complete (dag_statep, mlstnp)
 #endif /* LLOG */
 
     if (RT [mlstnp].shift_NT_hd [0] == NULL)
-      return SXFALSE;
+      return false;
   }
 
   /* mlstnp est non vide et a des transitions terminales correctes */
@@ -8838,13 +8838,13 @@ complete (dag_statep, mlstnp)
 
 #if BEAM_KIND
     if (beam_value_is_set)
-      shift_has_succeeded = beam_shift (0, mlstnp, mlstnq, &has_reduce, SXFALSE /* from_cyclic_stack */);
+      shift_has_succeeded = beam_shift (0, mlstnp, mlstnq, &has_reduce, false /* from_cyclic_stack */);
     else
 #endif /* BEAM_KIND */
-      shift_has_succeeded = shift (0, mlstnp, mlstnq, &has_reduce, SXFALSE /* from_cyclic_stack */);
+      shift_has_succeeded = shift (0, mlstnp, mlstnq, &has_reduce, false /* from_cyclic_stack */);
     
     if (shift_has_succeeded) {
-      has_changed = SXTRUE;
+      has_changed = true;
       SXBA_1_bit (mlstn_active_set, mlstnq);
       
       if (has_reduce)
@@ -8864,7 +8864,7 @@ complete (dag_statep, mlstnp)
 
     while (bot_pq < top_pq) {
       mlstnq = dag_stateq = idag.pq2q [bot_pq];
-      /*      eps_trans_to_final_state = SXFALSE;*/
+      /*      eps_trans_to_final_state = false;*/
       t_stack = idag.t_stack + idag.pq2t_stack_hd [bot_pq]; /* Pile des terminaux associes aux transitions pq */
       t_stack_top = t_stack + *t_stack;
 
@@ -8876,7 +8876,7 @@ complete (dag_statep, mlstnp)
 
 #if 0
 	if (t == inputG_SXEOF) {
-	  eps_trans_to_final_state = SXTRUE;
+	  eps_trans_to_final_state = true;
 #if EBUG
 	  if (dag_stateq != idag.final_state)
 	    sxtrap (ME, "complete");
@@ -8906,13 +8906,13 @@ complete (dag_statep, mlstnp)
 
 #if BEAM_KIND
 	if (beam_value_is_set)
-	  shift_has_succeeded = beam_shift (0, mlstnp, mlstnq, &has_reduce, SXFALSE /* from_cyclic_stack */);
+	  shift_has_succeeded = beam_shift (0, mlstnp, mlstnq, &has_reduce, false /* from_cyclic_stack */);
 	else
 #endif /* BEAM_KIND */
-	  shift_has_succeeded = shift (0, mlstnp, mlstnq, &has_reduce, SXFALSE /* from_cyclic_stack */);
+	  shift_has_succeeded = shift (0, mlstnp, mlstnq, &has_reduce, false /* from_cyclic_stack */);
 
 	if (shift_has_succeeded) {
-	  has_changed = SXTRUE;
+	  has_changed = true;
 	  SXBA_1_bit (mlstn_active_set, mlstnq);
 	
 	  if (has_reduce)
@@ -8924,7 +8924,7 @@ complete (dag_statep, mlstnp)
     }
   }
 
-  return has_changed; /* SXTRUE <=> Y'a eu au moins une transition terminale depuis mlstnp (vers une autre table) */
+  return has_changed; /* true <=> Y'a eu au moins une transition terminale depuis mlstnp (vers une autre table) */
 }
 
 
@@ -8932,7 +8932,7 @@ complete (dag_statep, mlstnp)
 /* Cette procedure remplit mlstn2look_ahead_item_set, le *SXBA qui a chaque mlstn associe l'ensemble des items
    A -> \alpha . \beta t.q. t \in First(\beta) et t est une transition valide'e par la lexicalisation depuis mlstn */
 /* Si une erreur a ete detectee, le test du lokk_ahead est inhibee !! */
-fill_mlstn2look_ahead_item_set (SXBOOLEAN is_first_time)
+fill_mlstn2look_ahead_item_set (bool is_first_time)
 {
   SXINT  mlstn, t;
   SXBA look_ahead_item_set, look_ahead_t_set;
@@ -9024,11 +9024,11 @@ earley_dag_rcvr ()
 
 
 /* Cas is_dag */
-static SXBOOLEAN
+static bool
 recognize ()
 {
   SXINT		i, j, mlstn, dag_state;
-  SXBOOLEAN	is_in_LG, ret_val;
+  bool	is_in_LG, ret_val;
   SXBA		index_set, t_set;
 
   pass_number = 1; /* reconnaisseur */
@@ -9135,7 +9135,7 @@ recognize ()
 
 #if is_rcvr
   if (is_error_detected)
-    is_in_LG = SXFALSE;
+    is_in_LG = false;
 #endif /* is_rcvr */  
 
   if (is_print_time) {
@@ -9253,8 +9253,8 @@ unfold ()
     - pass_inherited (item_or_hook)
     - pass_derived (hook)
    de spf.dag
-   Si pass_inherited retourne SXFALSE, le sous_arbre n'est pas visite'.
-   Si pass_derived retourne SXFALSE, le sous_arbre est revisite'.
+   Si pass_inherited retourne false, le sous_arbre n'est pas visite'.
+   Si pass_derived retourne false, le sous_arbre est revisite'.
 
    Si l'utilisateur veut profiter de la gestion des attributs proposee, il doit appeler spf_dag_alloc ()
    et spf_dag_free () en fin de for_semact.sem_pass
@@ -9389,7 +9389,7 @@ put_in_shared_parse_forest (rhs_stack)
 {
   SXINT	           prod, init_prod, h, i, j, k, A, Aij, bot_item, top_item, X, init_X, couple, bot_bot_item, *bot_rhs_stack;
   SXINT              *cur_iprod_top;
-  SXBOOLEAN          has_error;
+  bool          has_error;
 
   prod = *rhs_stack++;
 
@@ -9438,7 +9438,7 @@ put_in_shared_parse_forest (rhs_stack)
 <VP2[4..7]> 	= <VP[4..7]> ;
 */
   if (is_error_detected) {
-    has_error = SXFALSE;
+    has_error = false;
     bot_rhs_stack = rhs_stack;
     bot_bot_item = bot_item;
 
@@ -9449,14 +9449,14 @@ put_in_shared_parse_forest (rhs_stack)
 
       if (h < -idag.final_state) {
 	/* repair */
-	has_error = SXTRUE;
+	has_error = true;
 	/* cas particulier ou k est lui-meme le symbole deja instancie' */
 	Aij = k;
 	X = 0;
       }
       else {
 	if  (!is_rcvr_can_be_cyclic && (h < 0 || k < 0))
-	  has_error = SXTRUE;
+	  has_error = true;
       }
 
       if (X != 0) {
@@ -9527,7 +9527,7 @@ put_in_shared_parse_forest (rhs_stack)
       }
 
       if (bot_bot_item >= top_item)
-	is_rcvr_can_be_cyclic = SXTRUE;
+	is_rcvr_can_be_cyclic = true;
     }
   }
   else 
@@ -9828,13 +9828,13 @@ RL_mreduction_item (SXINT item_j, SXBA I, SXINT j, SXINT level)
   struct recognize_item	        *RTj;
   struct parse_item		*PTj;
   struct PT2_item		*PT2j;
-  SXBOOLEAN                     is_ap_set_empty, is_item_k_valid, is_item_k_new_and_valid, is_Ykj_new_or_better, is_brand_new_ids, is_k_valid;
+  bool                     is_ap_set_empty, is_item_k_valid, is_item_k_new_and_valid, is_Ykj_new_or_better, is_brand_new_ids, is_k_valid;
 
   SXBA			        ids, PT2j_backward_index_set, level_index_set;
   SXINT				*top_ptr, *bot_ptr;
 #if is_rcvr
   SXINT                         resume, triple, kept_triple, top_item;
-  SXBOOLEAN                     is_item_j_a_glbl_rcvr_kernel_item, is_item_k_a_glbl_rcvr_kernel_item;
+  bool                     is_item_j_a_glbl_rcvr_kernel_item, is_item_k_a_glbl_rcvr_kernel_item;
 #endif /* is_rcvr */
   SXINT                         k_proba_changed; /* utilise pour faire de la factorisation avec le cas non beam */
 #if BEAM_KIND & reducer_beam
@@ -9894,7 +9894,7 @@ RL_mreduction_item (SXINT item_j, SXBA I, SXINT j, SXINT level)
 
   PT2j_backward_index_set = PT2j->backward_index_sets [item_j];
 
-  is_ap_set_empty = SXTRUE;
+  is_ap_set_empty = true;
 
   if (item_k == bot_item
 #if is_rcvr
@@ -9946,7 +9946,7 @@ RL_mreduction_item (SXINT item_j, SXBA I, SXINT j, SXINT level)
 	is_item_k_a_glbl_rcvr_kernel_item = XxY_is_allocated (glbl_dag_rcvr_resume_kitems) &&
 	  ((resume = XxY_is_set (&glbl_dag_rcvr_resume_kitems, k, bot_item)) > 0);
 
-	is_k_valid = SXFALSE;
+	is_k_valid = false;
 
 	if (is_item_k_a_glbl_rcvr_kernel_item) {
 	  i = -1;
@@ -9967,7 +9967,7 @@ RL_mreduction_item (SXINT item_j, SXBA I, SXINT j, SXINT level)
 #endif /* is_parser && !is_guide && !is_supertagging */
 
 #if LOG
-	      earley_glbl_rcvr_message (bot_item, i, bot_item, k, 1 /* warning */, SXFALSE);
+	      earley_glbl_rcvr_message (bot_item, i, bot_item, k, 1 /* warning */, false);
 #endif /* LOG */
 
 #if BEAM_KIND & reducer_beam
@@ -9994,7 +9994,7 @@ RL_mreduction_item (SXINT item_j, SXBA I, SXINT j, SXINT level)
 	    }
 
 	    if (k_proba_changed >= 0)
-	      is_k_valid = SXTRUE;
+	      is_k_valid = true;
 	  }
 	}
 	else {
@@ -10005,11 +10005,11 @@ RL_mreduction_item (SXINT item_j, SXBA I, SXINT j, SXINT level)
 	      k_proba_changed = set_backward_proba (k, k, j, item_k, item_j, Y, &kj);
 
 	      if (k_proba_changed >= 0)
-		is_k_valid = SXTRUE;
+		is_k_valid = true;
 	    }
 	    else
 #endif /* BEAM_KIND & reducer_beam */
-	      is_k_valid = SXTRUE;
+	      is_k_valid = true;
 	  }
 	}
 
@@ -10019,7 +10019,7 @@ RL_mreduction_item (SXINT item_j, SXBA I, SXINT j, SXINT level)
 	  if (ap_set) {
 	    if (SXBA_bit_is_reset_set (ap_set, k)) {
 	      /* A change' */
-	      is_ap_set_empty = SXFALSE;
+	      is_ap_set_empty = false;
 	      SXBA_1_bit (RL_nt_set, Y);
 	    }
 	  }
@@ -10049,7 +10049,7 @@ RL_mreduction_item (SXINT item_j, SXBA I, SXINT j, SXINT level)
 		if (ap_set) {
 		  if (SXBA_bit_is_reset_set (ap_set, k)) {
 		    /* A change' */
-		    is_ap_set_empty = SXFALSE;
+		    is_ap_set_empty = false;
 		    SXBA_1_bit (RL_nt_set, Y);
 		  }
 		}
@@ -10063,7 +10063,7 @@ RL_mreduction_item (SXINT item_j, SXBA I, SXINT j, SXINT level)
 	    if (ap_set && OR (ap_set, I)) {
 	      /* A change' */
 	      /* On ne doit pas remplir backward qui est partage avec index */
-	      is_ap_set_empty = SXFALSE;
+	      is_ap_set_empty = false;
 	      SXBA_1_bit (RL_nt_set, Y);
 	    }
 	  }
@@ -10167,7 +10167,7 @@ RL_mreduction_item (SXINT item_j, SXBA I, SXINT j, SXINT level)
 #endif /* is_parser && !is_guide && !is_supertagging */
 
 #if LOG
-	  earley_glbl_rcvr_message (new_item, k, item_j, j, 1 /* warning */, SXFALSE);
+	  earley_glbl_rcvr_message (new_item, k, item_j, j, 1 /* warning */, false);
 #endif /* LOG */
 
 	  /* Attention : Si la recuperation se fait par transition sur l'axiome 1 ( 0: 0 -> $ 1 $), il n'y aura
@@ -10217,7 +10217,7 @@ RL_mreduction_item (SXINT item_j, SXBA I, SXINT j, SXINT level)
 	      level_index_set [0] = j+1; /* On change la taille */
 	    }
 
-	    is_item_k_new_and_valid = is_item_k_valid = SXFALSE;
+	    is_item_k_new_and_valid = is_item_k_valid = false;
 	    kj = p_q2pq (k, j);
 
 	    i = -1;
@@ -10228,10 +10228,10 @@ RL_mreduction_item (SXINT item_j, SXBA I, SXINT j, SXINT level)
 
 		if (k_proba_changed >= 0) {
 		  /* Pas de Ykj en rcvr */
-		  is_item_k_valid = SXTRUE;
+		  is_item_k_valid = true;
 
 		  if (SXBA_bit_is_reset_set (ids, i)) {
-		    is_item_k_new_and_valid = SXTRUE;
+		    is_item_k_new_and_valid = true;
 
 		    if (k == j) {
 		      /* Pour le RL_mreduction_item recursif */
@@ -10249,7 +10249,7 @@ RL_mreduction_item (SXINT item_j, SXBA I, SXINT j, SXINT level)
 	  else /* ! beam_value_is_set */
 #endif /* BEAM_KIND & reducer_beam */
 	    {
-	      is_item_k_valid = SXTRUE; /* pas de beam, donc item_k et Ykj sont forcement valides */
+	      is_item_k_valid = true; /* pas de beam, donc item_k et Ykj sont forcement valides */
 
 	      if (k == j) {
 		level_index_set [0] = j+1; /* On change la taille */
@@ -10357,12 +10357,12 @@ RL_mreduction_item (SXINT item_j, SXBA I, SXINT j, SXINT level)
 	}
 	else
 #endif /* BEAM_KIND & reducer_beam */
-	  is_Ykj_new_or_better = SXTRUE;
+	  is_Ykj_new_or_better = true;
 
 	SXBA_1_bit (PT2j_backward_index_set, k);
 	      
 	if (ap_set && SXBA_bit_is_reset_set (ap_set, k) && is_Ykj_new_or_better) {
-	  is_ap_set_empty = SXFALSE;
+	  is_ap_set_empty = false;
 	  SXBA_1_bit (RL_nt_set, Y);
 	}
       }
@@ -10400,7 +10400,7 @@ RL_mreduction_item (SXINT item_j, SXBA I, SXINT j, SXINT level)
 	  }
 #endif /* is_epsilon || is_rcvr */
 
-	  is_item_k_new_and_valid = is_Ykj_new_or_better = is_item_k_valid = SXFALSE;
+	  is_item_k_new_and_valid = is_Ykj_new_or_better = is_item_k_valid = false;
 	  kj = p_q2pq (k, j);
 
 	  i = -1;
@@ -10410,10 +10410,10 @@ RL_mreduction_item (SXINT item_j, SXBA I, SXINT j, SXINT level)
 	      k_proba_changed = set_backward_proba (i, k, j, item_k, item_j, Y, &kj);
 
 	      if (k_proba_changed >= 0) {
-		is_item_k_valid = SXTRUE;
+		is_item_k_valid = true;
 
 		if (SXBA_bit_is_reset_set (ids, i)) {
-		  is_item_k_new_and_valid = SXTRUE;
+		  is_item_k_new_and_valid = true;
 
 #if is_epsilon || is_rcvr
 		  if (k == j) {
@@ -10424,7 +10424,7 @@ RL_mreduction_item (SXINT item_j, SXBA I, SXINT j, SXINT level)
 		}
 
 		if (k_proba_changed < 2)
-		  is_Ykj_new_or_better = SXTRUE;
+		  is_Ykj_new_or_better = true;
 	      }
 	    }
 	  }
@@ -10436,7 +10436,7 @@ RL_mreduction_item (SXINT item_j, SXBA I, SXINT j, SXINT level)
 	else /* ! beam_value_is_set */
 #endif /* BEAM_KIND & reducer_beam */
 	  {
-	    is_item_k_valid = is_Ykj_new_or_better = SXTRUE; /* pas de beam, donc item_k et Ykj sont forcement valides */
+	    is_item_k_valid = is_Ykj_new_or_better = true; /* pas de beam, donc item_k et Ykj sont forcement valides */
 
 #if is_epsilon || is_rcvr
 	    if (k == j) {
@@ -10478,7 +10478,7 @@ RL_mreduction_item (SXINT item_j, SXBA I, SXINT j, SXINT level)
 	  }
 	      
 	  if (ap_set && SXBA_bit_is_reset_set (ap_set, k) && is_Ykj_new_or_better) {
-	    is_ap_set_empty = SXFALSE;
+	    is_ap_set_empty = false;
 	    SXBA_1_bit (RL_nt_set, Y);
 	  }
 	}
@@ -10549,10 +10549,10 @@ make_axiom ()
 {
   SXINT     i, j, j_prime, k, resume, Aij;
   SXBA    backward_index_set;
-  SXBOOLEAN is_1_a_glbl_rcvr_kernel_item, is_2_a_glbl_rcvr_kernel_item, triple;
+  bool is_1_a_glbl_rcvr_kernel_item, is_2_a_glbl_rcvr_kernel_item, triple;
 
 #if is_rcvr
-  if (SXTRUE) {
+  if (true) {
     if (!is_error_detected)
       MAKE_Aij (Aij, 1, 1, n+1);
     else {
@@ -10655,13 +10655,13 @@ RL_mreduction ()
   SXINT				*PT2j_shift_NT_stack, x, item, new_item, new_j, prod, X;
   SXBA			        *PT2j_index_set, *PT2j_backward_index_set, I, B, ids;
   SXBA			        index_set, new_index_set, red_order_set, wis;
-  SXBOOLEAN			is_good, is_wis_empty;
+  bool			is_good, is_wis_empty;
 #if is_rcvr
   SXBA                          tmp_rcvr_order_set;
 #endif /* is_rcvr */
 #if is_right_recursive
   SXINT				maxo, new_order, k_proba_changed;
-  SXBOOLEAN			must_loop;
+  bool			must_loop;
 #endif /* is_right_recursive */
 #if BEAM_KIND & reducer_beam
   struct proba_struct   *proba_ptr;
@@ -10679,7 +10679,7 @@ RL_mreduction ()
 
   if (is_parse_forest
 #if is_guide || is_supertagging || EBUG
-      || SXTRUE
+      || true
 #endif /* is_guide || is_supertagging || EBUG */
       )
     new_item_set = sxba_calloc(MAXITEM+1);
@@ -10768,7 +10768,7 @@ RL_mreduction ()
     }
 
 #if is_right_recursive
-    must_loop = SXFALSE;
+    must_loop = false;
 #endif /* is_right_recursive */
     red_order_set = red_order_sets [j];
 
@@ -10796,7 +10796,7 @@ RL_mreduction ()
 
 	  ap_set = ap_sets [A]; /* prod est une Akj-prod avec k \in ap_set */
 
-	  is_good = SXFALSE;
+	  is_good = false;
 				
 	  if (tnb == 0) {
 #if is_epsilon
@@ -10804,7 +10804,7 @@ RL_mreduction ()
 	      /* item = A -> . */
 	      if (SXBA_bit_is_set (ap_set, j)) {
 		/* Le 22/02/06, on ne fait TOUTE la suite que si le test est avere */
-		is_good = SXTRUE;
+		is_good = true;
 
 #if BEAM_KIND & reducer_beam
 		if (beam_value_is_set) {
@@ -10814,7 +10814,7 @@ RL_mreduction ()
 
 		  if (j_proba_changed <= 0)
 		    /* Echec car hors du beam, doit etre supprimee */
-		    is_good = SXFALSE;
+		    is_good = false;
 		}
 #endif /* BEAM_KIND & reducer_beam */
 
@@ -10854,7 +10854,7 @@ RL_mreduction ()
 		  new_index_set = sxba_bag_get (&pt2_bag, j+1);
 		}
 
-		is_wis_empty = SXTRUE;
+		is_wis_empty = true;
 
 		if (OR_AND_MINUS (new_index_set, index_set, ap_set, wis)) {
 		  /* calcule wis = (index_set & ap_set) - new_index_set
@@ -10878,13 +10878,13 @@ RL_mreduction ()
 			SXBA_0_bit (new_index_set, i);
 		      }
 		      else {
-			is_wis_empty = SXFALSE;
+			is_wis_empty = false;
 		      }
 		    }
 		  }
 		  else
 #endif /* BEAM_KIND & reducer_beam */
-		    is_wis_empty = SXFALSE;
+		    is_wis_empty = false;
 		}
 
 #if BEAM_KIND & reducer_beam
@@ -10902,7 +10902,7 @@ RL_mreduction ()
 		      if (j_proba_changed > 0) {
 			/* c'est le cas ici ... */
 			SXBA_1_bit (wis, i); /* On va recommencer */
-			is_wis_empty = SXFALSE;
+			is_wis_empty = false;
 #if LLOG
 			printf ("  reexecution of this reducer item kept by beaming for indexes [%ld..%ld]: ", i, j);
 			output_item (item, NULL, i, j);
@@ -10920,11 +10920,11 @@ RL_mreduction ()
 
 		  /* MODIF: c'est wis qui decide l'arret des boucles */
 		  RL_mreduction_item (item, wis, j, 0);
-		  is_good = SXTRUE;
+		  is_good = true;
 
 		  if (is_parse_forest
 #if is_guide || is_supertagging || EBUG
-		      || SXTRUE
+		      || true
 #endif /* is_guide || is_supertagging || EBUG */
 		      ) {
 		    SXBA_1_bit (new_item_set, item);
@@ -10946,7 +10946,7 @@ RL_mreduction ()
 	    if (PROLON (prod) == (new_item = item - tnb)) {
 	      /* Que des t en rhs */
 	      if (SXBA_bit_is_set (ap_set, new_j))
-		is_good = SXTRUE;
+		is_good = true;
 
 	      /* Le 08/02/06 */
 	      /* Majorant du nb de Aij */ 
@@ -10977,11 +10977,11 @@ RL_mreduction ()
 		}
 
 		if (OR_AND (ids, index_set, ap_set)) {
-		  is_good = SXTRUE;
+		  is_good = true;
 
 		  if (is_parse_forest
 #if is_guide || is_supertagging || EBUG
-		      || SXTRUE
+		      || true
 #endif /* is_guide || is_supertagging || EBUG */
 		      )
 		    SXBA_1_bit (new_item_set, new_item);
@@ -11010,7 +11010,7 @@ RL_mreduction ()
 
 	    if (is_good) {
 	      /* La sequence sera reexecutee */
-	      must_loop = SXTRUE;
+	      must_loop = true;
 	      /* Le 19/08/05 deplace la */
 	      /* SXBA_1_bit (prod_order_set, order); */
 	    }
@@ -11022,7 +11022,7 @@ RL_mreduction ()
 	      if (must_loop) {
 		/* On recommence */
 		order = prod_order2min [order]-1; /* ordre du debut de boucle-1 */
-		must_loop = SXFALSE;
+		must_loop = false;
 	      }
 	      else {
 		/* Le 22/08/05 */
@@ -11047,7 +11047,7 @@ RL_mreduction ()
 
 	    if (
 #if is_guide || is_supertagging || EBUG
-		SXTRUE
+		true
 #else /* is_guide || is_supertagging || EBUG */
 		is_parse_forest
 #endif /* is_guide || is_supertagging || EBUG */
@@ -11084,7 +11084,7 @@ RL_mreduction ()
       /* Le 28/08/2003 */
       if (is_parse_forest
 #if is_guide || is_supertagging || LOG
-	  || SXTRUE
+	  || true
 #endif /* is_guide || is_supertagging || EBUG */
 	  ) {
 	/* Ici, normalement, toutes les lhs instanciees des prod que l'on trouve sont reliees a l'axiome
@@ -11159,7 +11159,7 @@ RL_mreduction ()
 
   if (is_parse_forest
 #if is_guide || is_supertagging || EBUG
-      || SXTRUE
+      || true
 #endif /* is_guide || is_supertagging || EBUG */
       )
     sxfree (new_item_set);
@@ -11210,14 +11210,14 @@ rcvr_bu_walk (prod)
 
 
 
-static SXBOOLEAN    use_a_single_rcvr_string;
+static bool    use_a_single_rcvr_string;
 static XxY_header rcvr_out_range_memo;
 
 /* A cause de la rcvr, on reconstruit un source fictif qui remplace le source entre lb et ub */
 /* Ce source est (pre-)concatene aux commentaires des tokens commencant en ub */
 /* Retourne le nb de terminaux de la chaine corrigee */
 /* Pour un [lb..ub] donne' si cette ft est appelee plusieurs fois, les 2eme et suivantes, elle retourne un varstr vide (le 21/02/08) */
-static SXBOOLEAN
+static bool
 is_rcvr_out_range_first_call (SXINT lb, SXINT ub)
 {
   SXINT range;
@@ -11238,7 +11238,7 @@ rcvr_out_range (VARSTR wvstr, SXINT lb, SXINT ub)
   SXINT          *tok_no_stack, *top_tok_no_stack;
   char           *str, *str2;
   SXBA           t_set;
-  SXBOOLEAN        has_empty_ste;
+  bool        has_empty_ste;
   struct sxtoken *ptoken;
 
   varstr_raz (wvstr);
@@ -11260,13 +11260,13 @@ rcvr_out_range (VARSTR wvstr, SXINT lb, SXINT ub)
     if (XxYxZ_is_allocated (store_rcvr_string_hd)) {
       /* On n'est pas ds le cas correction, on va donc prendre les terminaux de la rcvr ds store_rcvr_string_hd */
       /* maintenant, on recupere les corrections */
-      has_empty_ste = SXFALSE;
+      has_empty_ste = false;
 
       XxYxZ_YZforeach (store_rcvr_string_hd, lb, ub, triple) {
 	ste = XxYxZ_X (store_rcvr_string_hd, triple);
 
 	if (ste == SXEMPTY_STE)
-	  has_empty_ste = SXTRUE;
+	  has_empty_ste = true;
 
 	if (nb++ > 0)
 	  break;
@@ -11490,11 +11490,11 @@ special_Tpq_name (char *string, SXINT lgth)
   return which_case;
 }
 
-SXBOOLEAN
+bool
 sxearley_parse_it (SXINT what)
 {
   SXINT 	  t, nt, size, S1n;
-  SXBOOLEAN ret_val = SXTRUE, insideG_kind;
+  bool ret_val = true, insideG_kind;
   SXBA    t_set;
 
   switch (what) {
@@ -11533,10 +11533,10 @@ sxearley_parse_it (SXINT what)
       is_semact_fun = for_semact.semact != NULL;
 
       /* Finalement le 20/09/06 on construit tj la foret partagee !! */
-      is_parse_forest = SXTRUE;
+      is_parse_forest = true;
 
 #if is_full_guide
-      /* is_print_prod = SXTRUE; ESSAI */
+      /* is_print_prod = true; ESSAI */
 #ifdef MAKE_INSIDEG
       lb = (SXINT*) sxcalloc (MAXRHSLGTH+1, sizeof (SXINT));
       ub = (SXINT*) sxcalloc (MAXRHSLGTH+1, sizeof (SXINT));
@@ -11586,23 +11586,23 @@ sxearley_parse_it (SXINT what)
 #endif /* MEASURES */
 
     /* Traitement de la lexicalisation */
-    is_mlstn2non_lexicalized_look_ahead_t_set = SXTRUE;
+    is_mlstn2non_lexicalized_look_ahead_t_set = true;
 #if is_lex
-    is_mlstn2lexicalized_look_ahead_t_set = SXTRUE;
+    is_mlstn2lexicalized_look_ahead_t_set = true;
 #endif /* is_lex */
 
 
 #if is_lex  
     /* Le dernier arg insideG_kind a ete ajoute le 20/04/07
-       Si lexicalizer2basic_item_set est SXTRUE, il indique :
-       SXTRUE  => Que insideG est la + petite grammaire reduite possible (ca depend des options du lexicalizer) construite
+       Si lexicalizer2basic_item_set est true, il indique :
+       true  => Que insideG est la + petite grammaire reduite possible (ca depend des options du lexicalizer) construite
        Dans ce cas basic_item_set est inutile (il est plein)
-       SXFALSE => insideG est la 1ere construite et basic_item_set la filtre
+       false => insideG est la 1ere construite et basic_item_set la filtre
 	
-       A priori si SXTRUE, l'analyse est + rapide et prend moins de place mais le rattrapage d'erreur eventuel ne se fera
+       A priori si true, l'analyse est + rapide et prend moins de place mais le rattrapage d'erreur eventuel ne se fera
        que sur cette grammaire restreinte et pourrait donc etre moins bon/pertinent.
     */
-    insideG_kind = SXTRUE; /* Faut-il en faire une option de compil ou un arg de l'appel de earley ? */
+    insideG_kind = true; /* Faut-il en faire une option de compil ou un arg de l'appel de earley ? */
 
     if (lexicalizer2basic_item_set (is_mlstn2lexicalized_look_ahead_t_set, is_mlstn2non_lexicalized_look_ahead_t_set, insideG_kind)) {
       if (insideG_kind) sxfree (basic_item_set), basic_item_set = NULL; /*inutile */
@@ -11617,7 +11617,7 @@ sxearley_parse_it (SXINT what)
     }
     else {	/* ... et rien ds le suffixe n'a ete calcule. */
       /* Echec du lexicalizer => le source n'est pas ds le langage */
-      ret_val = SXFALSE;
+      ret_val = false;
 
 #if !is_rcvr
       /* ... et pas de rattrapage, il est donc inutile de lancer l'analyse */
@@ -11643,7 +11643,7 @@ sxearley_parse_it (SXINT what)
 
 #if is_1la
     mlstn2look_ahead_item_set = sxbm_calloc (final_mlstn+1+1, MAXITEM+1);
-    fill_mlstn2look_ahead_item_set (SXTRUE /* first_time */);
+    fill_mlstn2look_ahead_item_set (true /* first_time */);
 #endif /* is_1la */
 
     sxba_bag_alloc (&shift_bag, "shift_bag", (working_rcvr_mlstn+2) * MAXPROD * SXNBLONGS (working_rcvr_mlstn + 1), statistics);
@@ -11721,7 +11721,7 @@ sxearley_parse_it (SXINT what)
        est la longueur attendue.  Il faut donc appeler le predicat earley_strlen () */
     /* meme si on n'est pas ds le cas parseur */
     for_semact.prdct = earley_strlen;
-    is_prdct_fun = SXTRUE;
+    is_prdct_fun = true;
 #endif /* (is_guide || is_full_guide || is_supertagging) && has_strlen */
 
 #if has_Lex
@@ -11760,7 +11760,7 @@ sxearley_parse_it (SXINT what)
     if (
 #if is_rcvr
 #ifndef HUGE_CFG
-	SXTRUE ||
+	true ||
 #endif /* HUGE_CFG */
 #endif /* is_rcvr */
 	ret_val) {
@@ -11834,7 +11834,7 @@ sxearley_parse_it (SXINT what)
 	{
 	  SXINT     X, Y, top, bot, prod, prod1, prod2, reduce_item, item, x;
 	  SXINT     *sorted_nullable_prod;
-	  SXBOOLEAN is_null;
+	  bool is_null;
 	  SXBA      line_X, empty_prod_set, column_prod2, line_prod1;
 	  SXBA      *nt2null_prod, *lesser, *greater;
 	  double    pr;
@@ -11877,13 +11877,13 @@ sxearley_parse_it (SXINT what)
 	    while ((prod = sxba_scan (line_X, prod)) > 0) {
 	      item = PROLON (prod);
 	      reduce_item = PROLON (prod+1)-1;
-	      is_null = SXTRUE;
+	      is_null = true;
 
 	      while (item < reduce_item) {
 		Y = LISPRO (item);
 
 		if (Y != X) {
-		  is_null = SXFALSE;
+		  is_null = false;
 		  sxba_or (lesser [prod], nt2null_prod [Y]);
 		}
 
@@ -11961,7 +11961,7 @@ sxearley_parse_it (SXINT what)
 	  SXINT     *null_item2item;
 	  double    *item2nullable_proba, *double_ptr, proba, new_proba, *old_proba_ptr;
 	  SXBA      *ntXnull_item_set, null_item_set;
-	  SXBOOLEAN done;
+	  bool done;
 
 	  item2null_item = (SXINT *) sxalloc (MAXITEM+1, sizeof (SXINT));
 	  null_item2item = (SXINT *) sxalloc (MAXITEM+1, sizeof (SXINT));
@@ -12003,10 +12003,10 @@ sxearley_parse_it (SXINT what)
 	    nt2null_item_max_proba [A] [null_item] = item2nullable_proba [item];
 	  }
 
-	  done = SXFALSE;
+	  done = false;
 
 	  while (!done) {
-	    done = SXTRUE;
+	    done = true;
 
 	    for (null_item = 1; null_item <= max_null_item; null_item++) {
 	      item = null_item2item [null_item];
@@ -12025,7 +12025,7 @@ sxearley_parse_it (SXINT what)
 		  old_proba_ptr = &(nt2null_item_max_proba [A] [null_item2]);
 
 		  if (SXBA_bit_is_reset_set (ntXnull_item_set [A], null_item2) || *old_proba_ptr < new_proba) {
-		    done = SXFALSE;
+		    done = false;
 		    *old_proba_ptr = new_proba;
 		  }
 		}
@@ -12046,7 +12046,7 @@ sxearley_parse_it (SXINT what)
 	    , nt2prod_that_generates_the_best_proba_t_string [0] = 0;
 #endif /* is_rcvr */
 
-	  fill_tnt_max_inside_probas (SXTRUE /* On cree et on remplit item2max_right_inside_proba */);
+	  fill_tnt_max_inside_probas (true /* On cree et on remplit item2max_right_inside_proba */);
 	}
 
 
@@ -12468,7 +12468,7 @@ sxearley_parse_it (SXINT what)
 
       if (is_print_time) {
 #if is_rcvr
-	if (SXTRUE) {
+	if (true) {
 	  if (is_error_detected)
 	    sxtime (TIME_FINAL, "\tEarley Parser (FALSE)");
 	  else
@@ -12608,12 +12608,12 @@ sxearley_parse_it (SXINT what)
 
 	if (is_tagged_dag)
 	  /* On imprime le source selectionne par la foret sous forme de udag */
-	  spf_yield2dfa (SXTRUE /* udag */);
+	  spf_yield2dfa (true /* udag */);
 #if LOG
 	else {
 	  /* A voir, la version precedente etait beaucoup trop longue */
 	  puts ("\n\n ******* Tagged input sentence in minimal UDAG form:");
-	  spf_yield2dfa (SXTRUE /* udag */);
+	  spf_yield2dfa (true /* udag */);
 	}
 #endif /* LOG */
       }
@@ -12854,7 +12854,7 @@ parse_item (item_k, Aij_stack, i_set, i, k, j)
 #if is_rcvr
   SXINT        resume, triple, kept_triple, cur_item, A, symb_nb, *local_Aij_stack;
   SXINT        couple, RHSij, bot, top, cur, Xpq;
-  SXBOOLEAN    is_item_k_a_glbl_rcvr_kernel_item, has_rcvr, is_OK;
+  bool    is_item_k_a_glbl_rcvr_kernel_item, has_rcvr, is_OK;
 #endif /* is_rcvr */
 
   prod = PROLIS (item_k);
@@ -12879,7 +12879,7 @@ parse_item (item_k, Aij_stack, i_set, i, k, j)
       while (i >= 0) {
 	triple = XxYxZ_is_set (&glbl_dag_rcvr_start_kitems, i, item_k, resume);
 
-	is_OK = SXFALSE;
+	is_OK = false;
 
 	if (triple && SXBA_bit_is_set (glbl_dag_rcvr_start_kitems_set, triple)) {
 	  if (SXBA_bit_is_reset_set (glbl_dag_rcvr_messages_set, triple))
@@ -12897,14 +12897,14 @@ parse_item (item_k, Aij_stack, i_set, i, k, j)
 	  *Aij_stack-- = i;
 	  /* Le 05/01/06 Les bornes du nt en lhs sont positives */
 	
-	  is_OK = SXTRUE;
+	  is_OK = true;
 	}
 	else {
 	  if (i == k) {
 	    *Aij_stack-- = j; /* ajout */
 	    *Aij_stack-- = k;
 	  
-	    is_OK = SXTRUE;
+	    is_OK = true;
 	  }
 	}
 
@@ -13101,11 +13101,11 @@ parse_item (item_k, Aij_stack, i_set, i, k, j)
 static void
 sxearley_raz (void)
 {
-  is_error_detected = rcvr_detection_table_cleared = SXFALSE;
+  is_error_detected = rcvr_detection_table_cleared = false;
   Tpq_repair_nb = Pij_repair_nb = working_rcvr_mlstn = rcvr_detection_table = 0;
 #if rcvr
   repair_mlstn_top = 0;
-  perform_copy_local_repair_prod_stack = SXFALSE;
+  perform_copy_local_repair_prod_stack = false;
 #ifndef MAKE_INSIDEG
   sxba_empty (rcvr_non_kernel_item_set);
 #endif /* MAKE_INSIDEG */
@@ -13117,11 +13117,11 @@ sxearley_raz (void)
 #endif /* lrprod_list_include_file */
   Lex_prod_item_set = Lex2prod_item_set_0;
 #endif /* has_Lex */
-  is_mlstn2non_lexicalized_look_ahead_t_set = is_mlstn2lexicalized_look_ahead_t_set = is_lex_compatible_item_sets = SXFALSE;
+  is_mlstn2non_lexicalized_look_ahead_t_set = is_mlstn2lexicalized_look_ahead_t_set = is_lex_compatible_item_sets = false;
 #if !(is_supertagging && !is_recognizer)
-  is_semact_fun = is_constraint_fun = is_prdct_fun = is_output_full_guide = SXFALSE;
+  is_semact_fun = is_constraint_fun = is_prdct_fun = is_output_full_guide = false;
 #if rcvr
-  no_la_check = SXFALSE;
+  no_la_check = false;
 #ifndef MAKE_INSIDEG
   sxba_empty (rcvr_w2titem_set);
   sxba_empty (rcvr_store_unfiltered_non_kernel_item_set);
@@ -13129,9 +13129,9 @@ sxearley_raz (void)
 #endif /* rcvr */
 #endif /* !(is_supertagging && !is_recognizer)*/
 #if is_rcvr
-  is_during_error_rcvr_processing = is_during_reduce_rcvr_validation = SXFALSE;
+  is_during_error_rcvr_processing = is_during_reduce_rcvr_validation = false;
   rcvr_on_super_rule_stack [0] = 0;
-  is_potential_orphan_rule = is_rcvr_can_be_cyclic = is_rcvr_on_site = SXFALSE;
+  is_potential_orphan_rule = is_rcvr_can_be_cyclic = is_rcvr_on_site = false;
   if (varstring)
     varstr_raz (varstring);
   if (sub_dag_vstr)
@@ -13161,12 +13161,12 @@ sxearley_raz (void)
   xprod = 0;
 #if is_rcvr
   best_repair = best_distance = sub_dag_delta_init = 0;
-  gen_empty_repair_string = SXFALSE;
+  gen_empty_repair_string = false;
   delta = 0;
   cur_error_string_lbound = cur_error_string_rbound /* lmlstn = rmlstn */ = cur_repair_string_rbound /* lgth+1 de la chaine corrigee */ = 0;
   repair_result_stack [0] = 0;
-  working_rcvr_mlstn_tables_must_be_cleared = SXFALSE;
-  use_a_single_rcvr_string = SXFALSE;
+  working_rcvr_mlstn_tables_must_be_cleared = false;
+  use_a_single_rcvr_string = false;
 #endif /* is_rcvr */
   iprod_stack [0] = 0;
 }
@@ -13179,10 +13179,10 @@ int
 main (int argc, char *argv[])
 {
 #if SXTTY_IS_SXSTDERR
-  sxtty_is_stderr = SXTRUE;
+  sxtty_is_stderr = true;
 #endif /* SXTTY_IS_STDERR */
 
   return sxearley_main (argc, argv);
 }
 
-SXBOOLEAN        (*main_parser)(SXINT what) = sxearley_parse_it;
+bool        (*main_parser)(SXINT what) = sxearley_parse_it;

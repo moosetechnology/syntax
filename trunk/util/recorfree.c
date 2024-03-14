@@ -21,10 +21,10 @@
 #include "sxunix.h"
 #include "R_tables.h"
 
-char WHAT_RECORFREE[] = "@(#)SYNTAX - $Id: recorfree.c 3146 2023-05-02 12:21:39Z garavel $" WHAT_DEBUG;
+char WHAT_RECORFREE[] = "@(#)SYNTAX - $Id: recorfree.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
 
-SXVOID	recor_free (struct R_tables_s *R_tables)
+void	recor_free (struct R_tables_s *R_tables)
 {
     SXINT	i;
 

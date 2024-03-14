@@ -37,13 +37,13 @@
 #include "varstr.h"
 #include "sxalloc.h"
 
-char WHAT_SXREG_EXP_MNGR[] = "@(#)SYNTAX - $Id: sxreg_exp_mngr.c 3305 2023-05-26 09:00:36Z garavel $" WHAT_DEBUG;
+char WHAT_SXREG_EXP_MNGR[] = "@(#)SYNTAX - $Id: sxreg_exp_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 struct reg_exp_node {
     SXNODE_HEADER_S SXVOID_NAME;
     SXINT item_no,
 	node_no /* init 0 */ ;
-    SXBOOLEAN is_empty;
+    bool is_empty;
    };
 
 static struct {
@@ -172,7 +172,7 @@ reg_exp_pcn_alloc (void)
     SXDS->char_sets_size = SXWORD_size (SXDS->sc_names);
     SXDS->char_sets_top = -1;
     SXDS->char_sets = sxbm_calloc (SXDS->char_sets_size, 1/*EOF*/+256);
-    SXDS->is_char_sets_static = SXFALSE;
+    SXDS->is_char_sets_static = false;
 
     /* SXNUL et ANY sont des cas particuliers */
     ste = sxword_2save (&SXDS->sc_names, "NUL", 3);
@@ -212,7 +212,7 @@ char_sets_oflw (void)
 	*/
 	SXDS->char_sets = sxbm_calloc (SXDS->char_sets_size, 257);
 	memcpy (SXDS->char_sets, old_cs, SXBA_total_sizeof (old_cs [0]) * SXDS->char_sets_size);
-	SXDS->is_char_sets_static = SXFALSE;
+	SXDS->is_char_sets_static = false;
     }
 
     SXDS->char_sets = sxbm_resize (SXDS->char_sets,
@@ -373,7 +373,7 @@ sxre_alloc (void)
 
     SXDS->item_to_attr = (struct item_to_attr*) sxalloc (SXDS->item_size = 500,
 							 sizeof (struct item_to_attr));
-    SXDS->is_item_to_attr_static = SXFALSE;
+    SXDS->is_item_to_attr_static = false;
     SXDS->item_top = 0;
 
     XxY_alloc (&SXDS->nfsa, "nfsa", 500, 1, 1, 0, (sxoflw0_t) NULL, NULL);
@@ -427,7 +427,7 @@ sxre_process_eof (SXINT eof_code)
     pitattr->reg_exp_no = eof_name;
     pitattr->val = 0;
     pitattr->param = 0;
-    pitattr->is_erased = SXFALSE;
+    pitattr->is_erased = false;
     pitattr->kind = KEMPTY;
 
     XxY_set (&SXDS->nfsa, SXDS->item_top - 1, SXDS->item_top, &couple);
@@ -438,7 +438,7 @@ sxre_process_eof (SXINT eof_code)
     pitattr->val = char_sets_incr ();
     SXBA_1_bit (SXDS->char_sets [pitattr->val], EOF_char);
     pitattr->param = 0;
-    pitattr->is_erased = SXTRUE;
+    pitattr->is_erased = true;
     pitattr->kind = KCLASS;
 
     XxY_set (&SXDS->nfsa, SXDS->item_top - 1, SXDS->item_top, &couple);
@@ -448,7 +448,7 @@ sxre_process_eof (SXINT eof_code)
     pitattr->reg_exp_no = eof_name;
     pitattr->val = 0;
     pitattr->param = 0;
-    pitattr->is_erased = SXFALSE;
+    pitattr->is_erased = false;
     pitattr->kind = KREDUCE;
 
     return SXDS->eof_reg_exp_name = eof_name;
@@ -462,10 +462,10 @@ sxre_doit (FILE *infile, char *file_name_or_source_string)
 	/* Non encore allouees */
 	/* Allocation des variables globales du parser */
 	(*(reg_exp_tables.analyzers.parser)) (SXBEGIN) ;
-	SXDS->begin_parser = SXTRUE;
+	SXDS->begin_parser = true;
     }
     else
-	SXDS->begin_parser = SXFALSE;
+	SXDS->begin_parser = false;
 
     if (SXDS->tfirst == NULL)
 	/* Toujours dynamique */
@@ -478,7 +478,7 @@ sxre_doit (FILE *infile, char *file_name_or_source_string)
     /* sxstr_mngr (SXBEGIN); Fait depuis l'exterieur */
     syntax (SXOPEN, &reg_exp_tables) /* Initialisation de SYNTAX */ ;
 
-    SXDS->is_smp_error = SXFALSE;
+    SXDS->is_smp_error = false;
 
     /* sxerr_mngr (SXBEGIN); Fait depuis l'exterieur */
     sxsrc_mngr (SXINIT, infile, file_name_or_source_string);
@@ -493,7 +493,7 @@ sxre_doit (FILE *infile, char *file_name_or_source_string)
 
     if (SXDS->begin_parser)
     {
-	SXDS->begin_parser = SXFALSE;
+	SXDS->begin_parser = false;
 	(*(reg_exp_tables.analyzers.parser)) (SXEND);
     }
 }
@@ -558,7 +558,7 @@ initialize_reg_exp (SXINT init_item, SXBA first)
 
 
 static void
-set_new_item (SXINT kind, SXINT set_new_item_item_no, SXINT val, SXINT param, SXBA next, SXBOOLEAN is_erased)
+set_new_item (SXINT kind, SXINT set_new_item_item_no, SXINT val, SXINT param, SXBA next, bool is_erased)
 {
     SXINT new_item_no, next_item, couple;
     struct item_to_attr	*pattr;
@@ -582,7 +582,7 @@ set_new_item (SXINT kind, SXINT set_new_item_item_no, SXINT val, SXINT param, SX
 }
 
 static void
-insert_abbrev (SXINT abbrev_no, SXINT insert_abbrev_item_no, SXBA next, SXBOOLEAN is_erased)
+insert_abbrev (SXINT abbrev_no, SXINT insert_abbrev_item_no, SXBA next, bool is_erased)
 {
     SXINT			init_item, final_item, new_item, delta, item, next_item,
                         couple, new_couple;
@@ -656,14 +656,14 @@ error (char *string, struct reg_exp_node *visited)
    - node_no
    - is_empty
 */
-static	SXBOOLEAN
-first_pass (struct reg_exp_node *visited, SXBOOLEAN *is_action)
+static	bool
+first_pass (struct reg_exp_node *visited, bool *is_action)
 {
     /* collect explicit declarations of abbreviations and tokens */
     struct reg_exp_node	*son_1, *son_2;
     char	*name;
     SXINT		ste;
-    SXBOOLEAN	is_action_1, is_action_2;
+    bool	is_action_1, is_action_2;
 
     switch (visited->name) {
     case PUT_n:
@@ -681,8 +681,8 @@ first_pass (struct reg_exp_node *visited, SXBOOLEAN *is_action)
     case UPPER_TO_LOWER_n:
 	visited->item_no = ++item_no;
 	visited->node_no = ++node_no;
-	visited->is_empty = SXFALSE;
-	*is_action = SXTRUE;
+	visited->is_empty = false;
+	*is_action = true;
 
 	break;
 
@@ -702,18 +702,18 @@ first_pass (struct reg_exp_node *visited, SXBOOLEAN *is_action)
     case PREDICATE_NAME_n:
 	visited->item_no = ++item_no;
 	visited->node_no = ++node_no;
-	visited->is_empty = SXFALSE;
-	*is_action = SXFALSE;
+	visited->is_empty = false;
+	*is_action = false;
 
 	break;
 
     case ID_n  :
 	visited->item_no = ++item_no;
 	visited->node_no = ++node_no;
-	*is_action = SXFALSE;
+	*is_action = false;
 
 	if (visited->token.string_table_entry == SXERROR_STE)
-	    return SXFALSE /* Correction d'erreur du parser */;
+	    return false /* Correction d'erreur du parser */;
 
 	name = sxstrget (visited->token.string_table_entry);
 	ste = sxword_retrieve (&SXDS->abbrev_names, name);
@@ -730,18 +730,18 @@ first_pass (struct reg_exp_node *visited, SXBOOLEAN *is_action)
 	else
 	    if (sxword_retrieve (&SXDS->sc_names, name) != SXERROR_STE)
 	    {
-		visited->is_empty = SXFALSE;
+		visited->is_empty = false;
 
 		break;
 	    }
 
-	return error ("undefined", visited), SXFALSE;
+	return error ("undefined", visited), false;
 
     case ALTERNATIVE_n:
-	if (!first_pass (son_1 = sxson (visited, 1), &is_action_1)) return SXFALSE;
-	if (!first_pass (son_2 = son_1->brother, &is_action_2)) return SXFALSE;
+	if (!first_pass (son_1 = sxson (visited, 1), &is_action_1)) return false;
+	if (!first_pass (son_2 = son_1->brother, &is_action_2)) return false;
 	if (is_action_1 && is_action_2)
-	    return error ("alternative involving only actions", visited), SXFALSE;
+	    return error ("alternative involving only actions", visited), false;
 	visited->is_empty = son_1->is_empty || son_2->is_empty;
 	*is_action = is_action_1 || is_action_2;
 	visited->node_no = ++node_no;
@@ -749,8 +749,8 @@ first_pass (struct reg_exp_node *visited, SXBOOLEAN *is_action)
 	break;
 
     case SEQUENCE_n:
-	if (!first_pass (son_1 = sxson (visited, 1), &is_action_1)) return SXFALSE;
-	if (!first_pass (son_2 = son_1->brother, &is_action_2)) return SXFALSE;
+	if (!first_pass (son_1 = sxson (visited, 1), &is_action_1)) return false;
+	if (!first_pass (son_2 = son_1->brother, &is_action_2)) return false;
 	visited->is_empty = son_1->is_empty && son_2->is_empty;
 	*is_action = is_action_1 && is_action_2;
 	visited->node_no = son_1->is_empty ? ++node_no : son_1->node_no;
@@ -759,50 +759,50 @@ first_pass (struct reg_exp_node *visited, SXBOOLEAN *is_action)
 
     case ERASE_n:
     case EXPRESSION_n:
-	if (!first_pass (son_1 = sxson (visited, 1), is_action)) return SXFALSE;
+	if (!first_pass (son_1 = sxson (visited, 1), is_action)) return false;
 	visited->is_empty = son_1->is_empty;
 	visited->node_no = son_1->node_no;
 
 	break;
 
     case EXTENDED_CLASS_REF_n:
-	if (!first_pass (son_1 = sxson (visited, 1), is_action)) return SXFALSE;
-	if (!first_pass (son_2 = son_1->brother, is_action)) return SXFALSE;
-	visited->is_empty = SXFALSE;
-	*is_action = SXFALSE;
+	if (!first_pass (son_1 = sxson (visited, 1), is_action)) return false;
+	if (!first_pass (son_2 = son_1->brother, is_action)) return false;
+	visited->is_empty = false;
+	*is_action = false;
 	visited->node_no = son_1->node_no;
 
 	break;
 
     case OPTION_n:
-	if (!first_pass (son_1 = sxson (visited, 1), is_action)) return SXFALSE;
-	if (*is_action) return error ("optional action", visited), SXFALSE;
-	visited->is_empty = SXTRUE;
+	if (!first_pass (son_1 = sxson (visited, 1), is_action)) return false;
+	if (*is_action) return error ("optional action", visited), false;
+	visited->is_empty = true;
 	visited->node_no = son_1->node_no;
 
 	break;
 
     case REF_TRANS_CLOSURE_n:
-	if (!first_pass (son_1 = sxson (visited, 1), is_action)) return SXFALSE;
-	if (*is_action) return error ("unbounded action sequence", visited), SXFALSE;
-	visited->is_empty = SXTRUE;
+	if (!first_pass (son_1 = sxson (visited, 1), is_action)) return false;
+	if (*is_action) return error ("unbounded action sequence", visited), false;
+	visited->is_empty = true;
 	visited->node_no = ++node_no;
 
 	break;
 
     case TRANS_CLOSURE_n:
-	if (!first_pass (son_1 = sxson (visited, 1), is_action)) return SXFALSE;
-	if (*is_action) return error ("unbounded action sequence", visited), SXFALSE;
+	if (!first_pass (son_1 = sxson (visited, 1), is_action)) return false;
+	if (*is_action) return error ("unbounded action sequence", visited), false;
 	visited->is_empty = son_1->is_empty;
 	visited->node_no = ++node_no;
 
 	break;
 
     default:
-	return error ("not yet implemented", visited), SXFALSE;
+	return error ("not yet implemented", visited), false;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -810,7 +810,7 @@ first_pass (struct reg_exp_node *visited, SXBOOLEAN *is_action)
    It computes SXDS->tfirst
 */
 
-static	SXBOOLEAN
+static	bool
 second_pass (struct reg_exp_node *visited)
 {
     struct reg_exp_node	*son_1, *son_2;
@@ -866,16 +866,16 @@ second_pass (struct reg_exp_node *visited)
 	break;
 
     case ALTERNATIVE_n:
-	if (!second_pass (son_1 = sxson (visited, 1))) return SXFALSE;
-	if (!second_pass (son_2 = son_1->brother)) return SXFALSE;
+	if (!second_pass (son_1 = sxson (visited, 1))) return false;
+	if (!second_pass (son_2 = son_1->brother)) return false;
 	sxba_copy (SXDS->tfirst [visited->node_no], SXDS->tfirst [son_1->node_no]);
 	sxba_or (SXDS->tfirst [visited->node_no], SXDS->tfirst [son_2->node_no]);
 
 	break;
 
     case SEQUENCE_n:
-	if (!second_pass (son_1 = sxson (visited, 1))) return SXFALSE;
-	if (!second_pass (son_2 = son_1->brother)) return SXFALSE;
+	if (!second_pass (son_1 = sxson (visited, 1))) return false;
+	if (!second_pass (son_2 = son_1->brother)) return false;
 
 	if (son_1->is_empty)
 	{	
@@ -888,33 +888,33 @@ second_pass (struct reg_exp_node *visited)
     case OPTION_n:
     case ERASE_n:
     case EXPRESSION_n:
-	if (!second_pass (sxson (visited, 1))) return SXFALSE;
+	if (!second_pass (sxson (visited, 1))) return false;
 
 	break;
 
     case REF_TRANS_CLOSURE_n:
     case TRANS_CLOSURE_n:
-	if (!second_pass (son_1 = sxson (visited, 1))) return SXFALSE;
+	if (!second_pass (son_1 = sxson (visited, 1))) return false;
 	sxba_copy (SXDS->tfirst [visited->node_no], SXDS->tfirst [son_1->node_no]);
 
 	break;
 
     case EXTENDED_CLASS_REF_n:
-	if (!second_pass (son_1 = sxson (visited, 1))) return SXFALSE;
-	if (!second_pass (son_2 = son_1->brother)) return SXFALSE;
+	if (!second_pass (son_1 = sxson (visited, 1))) return false;
+	if (!second_pass (son_2 = son_1->brother)) return false;
 
 	break;
 
     default:
-	return error ("not yet implemented", visited), SXFALSE;
+	return error ("not yet implemented", visited), false;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
 
-static SXBOOLEAN
+static bool
 class_denotations (struct reg_exp_node *visited)
 {
     struct reg_exp_node	*son_1;
@@ -926,7 +926,7 @@ class_denotations (struct reg_exp_node *visited)
     switch (visited->name) {
     case ID_n  :
 	if (visited->token.string_table_entry == SXERROR_STE)
-	    return SXFALSE /* Correction d'erreur du parser */;
+	    return false /* Correction d'erreur du parser */;
 
 	name = sxstrget (visited->token.string_table_entry);
 	ste = sxword_retrieve (&SXDS->sc_names, name);
@@ -940,11 +940,11 @@ class_denotations (struct reg_exp_node *visited)
 	    break;
 	}
 
-	return error ("undefined class denotation", visited), SXFALSE;
+	return error ("undefined class denotation", visited), false;
 
     case OCTAL_CODE_n  :
 	if (visited->token.string_table_entry == SXERROR_STE)
-	    return SXFALSE;
+	    return false;
 
         name = sxstrget (visited->token.string_table_entry) + 1 /* On saute le "#". */;
         value = 0;
@@ -957,7 +957,7 @@ class_denotations (struct reg_exp_node *visited)
 
 	/* Les codes des caracteres sont decales de 1, EOF a le code 0 */
 	if (++value > 256)
-	    return error ("octal codes must range between 0 and 255", visited), SXFALSE;
+	    return error ("octal codes must range between 0 and 255", visited), false;
 
 	SXBA_1_bit (sxba_empty (SXDS->char_sets [char_sets_incr ()]), value);
 	
@@ -965,9 +965,9 @@ class_denotations (struct reg_exp_node *visited)
 
 
     case SLICE_n  :
-	if (!class_denotations (son_1 = sxson (visited, 1))) return SXFALSE;
+	if (!class_denotations (son_1 = sxson (visited, 1))) return false;
 
-	if (!class_denotations (son_1->brother)) return SXFALSE;
+	if (!class_denotations (son_1->brother)) return false;
 
 	char_set2 = SXDS->char_sets [SXDS->char_sets_top--];
 	char_set1 = SXDS->char_sets [SXDS->char_sets_top];
@@ -984,13 +984,13 @@ class_denotations (struct reg_exp_node *visited)
 	    }
 	}
 
-	return error ("erroneous slice denotation", visited), SXFALSE;
+	return error ("erroneous slice denotation", visited), false;
 	    
 
 
     case STRING_n  :
 	if (visited->token.string_table_entry == SXERROR_STE)
-	    return SXFALSE;
+	    return false;
 
 	/* On "saute" les doubles quotes. */
 	name = sxstrget (visited->token.string_table_entry) + 1;
@@ -1006,14 +1006,14 @@ class_denotations (struct reg_exp_node *visited)
 	break;
 
     default :
-	return error ("not yet implemented", visited), SXFALSE;
+	return error ("not yet implemented", visited), false;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
-static	SXBOOLEAN
+static	bool
 process_action (struct reg_exp_node *visited, SXINT *action, SXINT *param)
 {
     SXBA	char_set;
@@ -1024,13 +1024,13 @@ process_action (struct reg_exp_node *visited, SXINT *action, SXINT *param)
     case PUT_n:
 	*action = Put;
 	
-	if (!class_denotations (visited->son)) return SXFALSE;
+	if (!class_denotations (visited->son)) return false;
 
 	char_set = SXDS->char_sets [SXDS->char_sets_top--];
 	*param = sxba_scan (char_set, -1);
 
 	if (*param == -1 || sxba_scan (char_set, *param) != -1)
-	    return error ("erroneous parameter", visited), SXFALSE;
+	    return error ("erroneous parameter", visited), false;
 
 	(*param)--;
 
@@ -1106,11 +1106,11 @@ process_action (struct reg_exp_node *visited, SXINT *action, SXINT *param)
       break;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
-static	SXBOOLEAN
+static	bool
 process_predicate (struct reg_exp_node *visited, SXINT *action, SXINT *param)
 {
     *param = 0;
@@ -1148,7 +1148,7 @@ process_predicate (struct reg_exp_node *visited, SXINT *action, SXINT *param)
 	break;
 
     case PREDICATE_NAME_n:
-	return error ("not yet implemented", visited), SXFALSE;
+	return error ("not yet implemented", visited), false;
     default: /* pour faire taire gcc -Wswitch-default */
 #if EBUG
       sxtrap("sxreg_exp_mngr","unknown switch case #2");
@@ -1156,7 +1156,7 @@ process_predicate (struct reg_exp_node *visited, SXINT *action, SXINT *param)
       break;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -1165,8 +1165,8 @@ process_predicate (struct reg_exp_node *visited, SXINT *action, SXINT *param)
 */
 
 
-static	SXBOOLEAN
-third_pass (struct reg_exp_node *visited, SXBA next, SXBOOLEAN is_del)
+static	bool
+third_pass (struct reg_exp_node *visited, SXBA next, bool is_del)
 {
     struct reg_exp_node	*son_1, *son_2;
     char		*name;
@@ -1188,14 +1188,14 @@ third_pass (struct reg_exp_node *visited, SXBA next, SXBOOLEAN is_del)
     case SET_n:
     case UPPER_CASE_n:
     case UPPER_TO_LOWER_n:
-	if (!process_action (visited, &action, &param)) return SXFALSE;
+	if (!process_action (visited, &action, &param)) return false;
 
 	set_new_item ((SXINT)KACTION, visited->item_no, action, param, next, is_del);
 	break;
 
     case NOT_n:
 	/* ANY - top == ~top & ANY */
-	if (!class_denotations (sxson (visited, 1))) return SXFALSE;
+	if (!class_denotations (sxson (visited, 1))) return false;
 
 	char_set1 = SXDS->char_sets [SXDS->char_sets_top];
 	sxba_not (char_set1);
@@ -1208,7 +1208,7 @@ third_pass (struct reg_exp_node *visited, SXBA next, SXBOOLEAN is_del)
     case OCTAL_CODE_n  :
     case SLICE_n  :
     case STRING_n  :
-	if (!class_denotations (visited)) return SXFALSE;
+	if (!class_denotations (visited)) return false;
 
 	set_new_item ((SXINT)KCLASS, visited->item_no, SXDS->char_sets_top, (SXINT)0,
 		      next, is_del);
@@ -1222,7 +1222,7 @@ third_pass (struct reg_exp_node *visited, SXBA next, SXBOOLEAN is_del)
     case IS_SET_n:
     case PREDICATE_NO_n:
     case PREDICATE_NAME_n:
-	if (!process_predicate (visited, &action, &param)) return SXFALSE;
+	if (!process_predicate (visited, &action, &param)) return false;
 
 	set_new_item ((SXINT)KPREDICATE, visited->item_no, action, param, next, is_del);
 	break;
@@ -1237,7 +1237,7 @@ third_pass (struct reg_exp_node *visited, SXBA next, SXBOOLEAN is_del)
 	    if (ste == SXDS->current_reg_exp_or_abbrev_no ||
 		ste == -SXDS->current_reg_exp_or_abbrev_no)
 		/* Utilisation recursive */
-		return error ("recursive usage", visited), SXFALSE;
+		return error ("recursive usage", visited), false;
 
 	    insert_abbrev (ste, visited->item_no, next, is_del);
 	}
@@ -1252,8 +1252,8 @@ third_pass (struct reg_exp_node *visited, SXBA next, SXBOOLEAN is_del)
 	break;
 
     case ALTERNATIVE_n:
-	if (!third_pass (son_1 = sxson (visited, 1), next, is_del)) return SXFALSE;
-	if (!third_pass (son_2 = son_1->brother, next, is_del)) return SXFALSE;
+	if (!third_pass (son_1 = sxson (visited, 1), next, is_del)) return false;
+	if (!third_pass (son_2 = son_1->brother, next, is_del)) return false;
 
 	break;
 
@@ -1262,18 +1262,18 @@ third_pass (struct reg_exp_node *visited, SXBA next, SXBOOLEAN is_del)
 	son_2 = son_1->brother;
 
 	/* On commence par le dernier composant afin de pouvoir reutiliser SXDS->tfirst. */
-	if (!third_pass (son_2, next, is_del)) return SXFALSE;
+	if (!third_pass (son_2, next, is_del)) return false;
 
 	if (son_2->is_empty)
 	    sxba_or (SXDS->tfirst [son_2->node_no], next);
 
-	if (!third_pass (son_1, SXDS->tfirst [son_2->node_no], is_del)) return SXFALSE;
+	if (!third_pass (son_1, SXDS->tfirst [son_2->node_no], is_del)) return false;
 
 	break;
 
     case ERASE_n:
 	son_1 = sxson (visited, 1);
-	if (!third_pass (son_1, next, SXTRUE)) return SXFALSE;
+	if (!third_pass (son_1, next, true)) return false;
 
 	break;
 
@@ -1281,7 +1281,7 @@ third_pass (struct reg_exp_node *visited, SXBA next, SXBOOLEAN is_del)
     case OPTION_n:
     case EXPRESSION_n:
 	son_1 = sxson (visited, 1);
-	if (!third_pass (son_1, next, is_del)) return SXFALSE;
+	if (!third_pass (son_1, next, is_del)) return false;
 
 	break;
 
@@ -1289,7 +1289,7 @@ third_pass (struct reg_exp_node *visited, SXBA next, SXBOOLEAN is_del)
     case TRANS_CLOSURE_n:
 	son_1 = sxson (visited, 1);
 	if (!third_pass (son_1, sxba_or (SXDS->tfirst [son_1->node_no], next), is_del))
-	    return SXFALSE;
+	    return false;
 
 	break;
 
@@ -1298,20 +1298,20 @@ third_pass (struct reg_exp_node *visited, SXBA next, SXBOOLEAN is_del)
 	son_1 = sxson (visited, 1);
 	son_2 = son_1->brother;
 
-	if (!third_pass (son_1, SXDS->tfirst [son_2->node_no], is_del)) return SXFALSE;
-	if (!third_pass (son_2, next, is_del)) return SXFALSE;
+	if (!third_pass (son_1, SXDS->tfirst [son_2->node_no], is_del)) return false;
+	if (!third_pass (son_2, next, is_del)) return false;
 
 	break;
 
     default:
-	return error ("not yet implemented", visited), SXFALSE;
+	return error ("not yet implemented", visited), false;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
-static SXBOOLEAN
+static bool
 classes (struct reg_exp_node *visited)
 {
     struct reg_exp_node	*son_1, *son_2;
@@ -1325,17 +1325,17 @@ classes (struct reg_exp_node *visited)
 	son_1 = sxson (visited, 1); /* CLASS_NAME_n */
 	son_2 = son_1->brother; /* <CLASS_EXP> */
 
-	if (!classes (son_2)) return SXFALSE;
+	if (!classes (son_2)) return false;
 
 	if (son_1->token.string_table_entry == SXERROR_STE)
-	    return SXFALSE;
+	    return false;
 
 	name = sxstrget (son_1->token.string_table_entry);
 	lgth = sxstrlen (son_1->token.string_table_entry);
 
 	if (sxword_2retrieve (&SXDS->abbrev_names, name, (SXUINT) lgth) != SXERROR_STE)
 	    /* C'est une abbrev */
-	    return error ("illegal usage of an abbreviation name", son_1), SXFALSE;
+	    return error ("illegal usage of an abbreviation name", son_1), false;
 
 	/* On peut redefinir une classe simple */
 	ste = sxword_2save (&SXDS->sc_names, name, (SXUINT) lgth);
@@ -1348,7 +1348,7 @@ classes (struct reg_exp_node *visited)
 
     case CLASS_S_n  :
 	for (son_1 = sxson (visited, 1); son_1 != NULL; son_1 = son_1->brother)
-	    if (!classes (son_1)) return SXFALSE;
+	    if (!classes (son_1)) return false;
 
 	break;
 
@@ -1362,11 +1362,11 @@ classes (struct reg_exp_node *visited)
     case PLUS_n  :
 	son_1 = sxson (visited, 1);
 
-	if (!classes (son_1)) return SXFALSE;
+	if (!classes (son_1)) return false;
 
 	son_2 = son_1->brother;
 
-	if (!classes (son_2)) return SXFALSE;
+	if (!classes (son_2)) return false;
 
 	char_set2 = SXDS->char_sets [SXDS->char_sets_top--];
 	char_set1 = SXDS->char_sets [SXDS->char_sets_top];
@@ -1379,10 +1379,10 @@ classes (struct reg_exp_node *visited)
 	break;
 
     default:
-	return error("Internal error in function \"classes\", please report.", visited), SXFALSE;
+	return error("Internal error in function \"classes\", please report.", visited), false;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -1407,7 +1407,7 @@ re_maj_item_top (SXINT n)
 	    SXDS->item_to_attr = (struct item_to_attr*) sxalloc (SXDS->item_size,
 								 sizeof (struct item_to_attr));
 	    memcpy (SXDS->item_to_attr, old, sizeof (struct item_to_attr) * old_size);
-	    SXDS->is_item_to_attr_static = SXFALSE;
+	    SXDS->is_item_to_attr_static = false;
 	}
 	else
 	    SXDS->item_to_attr =
@@ -1420,8 +1420,8 @@ re_maj_item_top (SXINT n)
 }
 
 
-static SXBOOLEAN
-regular_expression (struct reg_exp_node *visited, SXBOOLEAN *is_action)
+static bool
+regular_expression (struct reg_exp_node *visited, bool *is_action)
 {
     /* visited->name == REGULAR_EXPRESSION_n */
 
@@ -1430,7 +1430,7 @@ regular_expression (struct reg_exp_node *visited, SXBOOLEAN *is_action)
     node_no = -1;
     item_no = -1;
 
-    if (!first_pass (son_1, is_action)) return SXFALSE;
+    if (!first_pass (son_1, is_action)) return false;
 
     visited->node_no = ++node_no;
     visited->item_no = ++item_no; /* etat final */
@@ -1454,7 +1454,7 @@ regular_expression (struct reg_exp_node *visited, SXBOOLEAN *is_action)
 	
     re_maj_item_top (item_no + 2 /* items initial et final */);
 
-    if (!second_pass (son_1)) return SXFALSE;
+    if (!second_pass (son_1)) return false;
 
     initialize_reg_exp (SXDS->current_reg_exp_or_abbrev_no >= 0
 		      ? SXDS->reg_exp_to_attr [SXDS->current_reg_exp_or_abbrev_no].init_item
@@ -1463,26 +1463,26 @@ regular_expression (struct reg_exp_node *visited, SXBOOLEAN *is_action)
 
     SXBA_1_bit (sxba_empty (SXDS->tfirst [node_no]), item_no);
 
-    if (!third_pass (son_1, SXDS->tfirst [node_no], SXFALSE)) return SXFALSE;
+    if (!third_pass (son_1, SXDS->tfirst [node_no], false)) return false;
 
-    return SXTRUE;
+    return true;
 }
 
 
-static SXBOOLEAN
+static bool
 abbreviations (struct reg_exp_node *visited)
 {
     struct reg_exp_node	*son_1, *son_2;
     char		*name;
     SXINT			lgth;
-    SXBOOLEAN		is_action;
+    bool		is_action;
 
 
 /* Visite recursive des ABBREVIATIONS */
     switch (visited->name) {
     case ABBREVIATION_S_n  :
 	for (son_1 = sxson (visited, 1); son_1 != NULL; son_1 = son_1->brother)
-	    if (!abbreviations (son_1)) return SXFALSE;
+	    if (!abbreviations (son_1)) return false;
 
 	break;
 
@@ -1491,10 +1491,10 @@ abbreviations (struct reg_exp_node *visited)
 
 	if (son_1->name == ABBREVIATION_PRDCT_NAME_n)
 	    /* Pour le moment */
-	    return error ("sorry, not implemented", son_1), SXFALSE;
+	    return error ("sorry, not implemented", son_1), false;
 
 	if (son_1->token.string_table_entry == SXERROR_STE)
-	    return SXFALSE;
+	    return false;
 
 	son_2 = son_1->brother; /* <REGULAR_EXPRESSION> or <&_EXPRESSION> */
 
@@ -1503,17 +1503,17 @@ abbreviations (struct reg_exp_node *visited)
 
 	if (sxword_2retrieve (&SXDS->sc_names, name, (SXUINT) lgth) != SXERROR_STE)
 	    /* C'est une classe simple */
-	    return error ("already defined as a class name", son_1), SXFALSE;
+	    return error ("already defined as a class name", son_1), false;
 	
 	if (sxword_2retrieve (&SXDS->abbrev_names, name, (SXUINT) lgth) != SXERROR_STE)
 	    /* Double definition */
-	    return error ("already defined", son_1), SXFALSE;
+	    return error ("already defined", son_1), false;
 
 	SXDS->current_reg_exp_or_abbrev_no = -sxword_2save (&SXDS->abbrev_names, name, (SXUINT) lgth);
 	SXDS->abbrev_to_attr [-SXDS->current_reg_exp_or_abbrev_no].init_item =
 	    SXDS->item_top;
 
-	if (!regular_expression (son_2, &is_action /* unused */)) return SXFALSE;
+	if (!regular_expression (son_2, &is_action /* unused */)) return false;
 
 	SXDS->abbrev_to_attr [-SXDS->current_reg_exp_or_abbrev_no].is_empty = son_2->is_empty;
 	SXDS->abbrev_to_attr [-SXDS->current_reg_exp_or_abbrev_no].final_item =
@@ -1527,25 +1527,25 @@ abbreviations (struct reg_exp_node *visited)
       break;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
-static SXBOOLEAN
+static bool
 set_priority_kind (struct reg_exp_node *visited, char current)
 {
     char *p = &(SXDS->reg_exp_to_attr [SXDS->current_reg_exp_or_abbrev_no].priority_kind);
 
     if ((*p & current) ||
 	((current != ReduceReduce) && (*p & (ShiftReduce + ReduceShift))))
-	return error ("illegal priority clause", visited), SXFALSE;
+	return error ("illegal priority clause", visited), false;
 
     *p |= current;
 
-    return SXTRUE;
+    return true;
 }
 
-static SXBOOLEAN
+static bool
 environment (struct reg_exp_node *visited)
 {
     struct reg_exp_node	*son_1;
@@ -1559,7 +1559,7 @@ environment (struct reg_exp_node *visited)
 	SXDS->reg_exp_to_attr [SXDS->current_reg_exp_or_abbrev_no].context_kind = 
 	    Context;
 
-	if (!environment (son_1)) return SXFALSE;
+	if (!environment (son_1)) return false;
 
 	break;
 
@@ -1569,7 +1569,7 @@ environment (struct reg_exp_node *visited)
 	SXDS->reg_exp_to_attr [SXDS->current_reg_exp_or_abbrev_no].context_kind = 
 	    (son_1->name == VOID_n) ? ContextAll : ContextAllBut;
 
-	if (!environment (son_1)) return SXFALSE;
+	if (!environment (son_1)) return false;
 
 	break;
 
@@ -1579,7 +1579,7 @@ environment (struct reg_exp_node *visited)
 	SXDS->reg_exp_to_attr [SXDS->current_reg_exp_or_abbrev_no].context_kind = 
 	    UnboundedContext;
 
-	if (!environment (son_1)) return SXFALSE;
+	if (!environment (son_1)) return false;
 
 	break;
 
@@ -1589,7 +1589,7 @@ environment (struct reg_exp_node *visited)
 	SXDS->reg_exp_to_attr [SXDS->current_reg_exp_or_abbrev_no].context_kind = 
 	    (son_1->name == VOID_n) ? UnboundedContextAll : UnboundedContextAllBut;
 
-	if (!environment (son_1)) return SXFALSE;
+	if (!environment (son_1)) return false;
 
 	break;
 
@@ -1598,7 +1598,7 @@ environment (struct reg_exp_node *visited)
 	break;
 
     case COMPONENT_REF_n:
-	if (!environment (sxson (visited, 1))) return SXFALSE;
+	if (!environment (sxson (visited, 1))) return false;
 	/* Le deuxieme fils est traite' depuis son frere gauche. */
 
 	break;
@@ -1620,7 +1620,7 @@ environment (struct reg_exp_node *visited)
 
     case CONTEXT_NAME_n:
 	if (visited->token.string_table_entry == SXERROR_STE)
-	    return SXFALSE;
+	    return false;
 
 	name = sxstrget (visited->token.string_table_entry);
 	lgth = sxstrlen (visited->token.string_table_entry);
@@ -1631,7 +1631,7 @@ process_context:
 	if (son_1->name == COMPONENT_NAME_REF_n)
 	{
 	    if (son_1->token.string_table_entry == SXERROR_STE)
-		return SXFALSE;
+		return false;
 
 	    varstr_raz (vstr);
 	    varstr_catenate (vstr, name);
@@ -1670,13 +1670,13 @@ process_context:
     case KEYWORDS_n:
     case NOT_KEYWORDS_n:
 	for (son_1 = sxson (visited, 1); son_1 != NULL; son_1 = son_1->brother)
-	    if (!environment (son_1)) return SXFALSE;
+	    if (!environment (son_1)) return false;
 
 	break;
 
     case KEYWORD_NAME_n:
 	if (visited->token.string_table_entry == SXERROR_STE)
-	    return SXFALSE;
+	    return false;
 
 	name = sxstrget (visited->token.string_table_entry);
 	lgth = sxstrlen (visited->token.string_table_entry);
@@ -1690,8 +1690,8 @@ process_context:
 
 	    p->token_no = -1;
 	    p->next_syno = -1;
-	    p->is_kw = SXTRUE;
-	    p->is_generic = SXFALSE;
+	    p->is_kw = true;
+	    p->is_generic = false;
 	}
 
 	break;
@@ -1703,7 +1703,7 @@ process_context:
 	{
 	    SXDS->reg_exp_to_attr [SXDS->current_reg_exp_or_abbrev_no].kw_kind = KW_YES;
 
-	    if (!environment (son_1->brother->brother)) return SXFALSE;
+	    if (!environment (son_1->brother->brother)) return false;
 	}
 	else
 	    SXDS->reg_exp_to_attr [SXDS->current_reg_exp_or_abbrev_no].kw_kind = KW_NO | KW_PROHIB;
@@ -1716,17 +1716,17 @@ process_context:
 	break;
 
     case SHIFT_REDUCE_n:
-	if (!set_priority_kind (visited, ShiftReduce)) return SXFALSE; 
+	if (!set_priority_kind (visited, ShiftReduce)) return false; 
 
 	break;
 
     case REDUCE_REDUCE_n:
-	if (!set_priority_kind (visited, ReduceReduce)) return SXFALSE; 
+	if (!set_priority_kind (visited, ReduceReduce)) return false; 
 
 	break;
 
     case REDUCE_SHIFT_n:
-	if (!set_priority_kind (visited, ReduceShift)) return SXFALSE; 
+	if (!set_priority_kind (visited, ReduceShift)) return false; 
 
 	break;
 	
@@ -1739,7 +1739,7 @@ process_context:
       break;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -1777,14 +1777,14 @@ GetReduceId (SXINT re1)
 } 
 
 
-static SXBOOLEAN
+static bool
 reg_exps (struct reg_exp_node *visited)
 {
     struct reg_exp_node	*son_1, *son_2;
     struct reg_exp_to_attr	*p;
     char		*name;
     SXINT			lgth, init_item, couple, new_couple, cur_reg_exp;
-    SXBOOLEAN		is_action;
+    bool		is_action;
 
     sxinitialise(lgth); /* pour faire taire "gcc -Wuninitialized" */
     sxinitialise(name); /* pour faire taire "gcc -Wuninitialized" */
@@ -1793,19 +1793,19 @@ reg_exps (struct reg_exp_node *visited)
     case COMPONENTS_S_n  :
     case TOKEN_S_n  :
 	for (son_1 = sxson (visited, 1); son_1 != NULL; son_1 = son_1->brother)
-	    if (!reg_exps (son_1)) return SXFALSE;
+	    if (!reg_exps (son_1)) return false;
 
 	break;
 
     case COMPONENT_n  :
 	son_1 = sxson (visited, 1); /* <COMPONENT_DEF> */
-	son_2 = son_1->brother; /* <SXVOID> or <ENVIRONMENT_LIST> */
+	son_2 = son_1->brother; /* <VOID> or <ENVIRONMENT_LIST> */
 
 	/* On visite <COMPONENT_NAME_DEF> depuis COMPONENT_n */
 	son_1 = sxson (son_1, 1); /* COMPONENT_NAME_DEF_n */
 
 	if (son_1->token.string_table_entry == SXERROR_STE)
-	    return SXFALSE;
+	    return false;
 
 	varstr_raz (vstr);
 	varstr_catenate (vstr, SXWORD_get (SXDS->reg_exp_names, master_reg_exp_no));
@@ -1821,7 +1821,7 @@ reg_exps (struct reg_exp_node *visited)
 
 	if (SXDS->current_reg_exp_or_abbrev_no != SXERROR_STE && p->init_item != -1)
 	    /* Double definition */
-	    return error ("redefinition", son_1), SXFALSE;
+	    return error ("redefinition", son_1), false;
 
 	/* Un nom de token peut etre une abreviation ou une classe simple */
 	if (SXDS->current_reg_exp_or_abbrev_no == SXERROR_STE)
@@ -1838,9 +1838,9 @@ reg_exps (struct reg_exp_node *visited)
 	}
 
 	/* On commence par traiter l'environement */
-	if (!environment (son_2)) return SXFALSE;
+	if (!environment (son_2)) return false;
 
-	if (!reg_exps (sxson (visited, 1))) return SXFALSE;
+	if (!reg_exps (sxson (visited, 1))) return false;
 
 	p = &(SXDS->reg_exp_to_attr [SXDS->current_reg_exp_or_abbrev_no]);
 
@@ -1859,11 +1859,11 @@ reg_exps (struct reg_exp_node *visited)
 	p = &(SXDS->reg_exp_to_attr [SXDS->current_reg_exp_or_abbrev_no]);
 	p->init_item = SXDS->item_top;
 
-	if (!regular_expression (son_2, &is_action)) return SXFALSE;
+	if (!regular_expression (son_2, &is_action)) return false;
 
-	if (is_action) return error ("illegal action usage in a regular expression", son_2), SXFALSE;
+	if (is_action) return error ("illegal action usage in a regular expression", son_2), false;
 	
-	set_new_item ((SXINT)KREDUCE, item_no, (SXINT)0, (SXINT)0, (SXBA)NULL, SXFALSE);
+	set_new_item ((SXINT)KREDUCE, item_no, (SXINT)0, (SXINT)0, (SXBA)NULL, false);
 
 	p = &(SXDS->reg_exp_to_attr [SXDS->current_reg_exp_or_abbrev_no]);
 	init_item = SXDS->reg_exp_to_attr [master_reg_exp_no].init_item;
@@ -1877,7 +1877,7 @@ reg_exps (struct reg_exp_node *visited)
 
     case TOKEN_n  :
 	son_1 = sxson (visited, 1); /* <TOKEN_DEF> */
-	son_2 = son_1->brother; /* <SXVOID> or <ENVIRONMENT_LIST> */
+	son_2 = son_1->brother; /* <VOID> or <ENVIRONMENT_LIST> */
 
 	/* On visite <LEXICAL_UNIT_NAME> depuis TOKEN_n */
 	son_1 = sxson (son_1, 1); /* <LEXICAL_UNIT_NAME> */
@@ -1912,7 +1912,7 @@ reg_exps (struct reg_exp_node *visited)
 	else
 	{
 	    if (son_1->token.string_table_entry == SXERROR_STE)
-		return SXFALSE;
+		return false;
 
 	    name = sxstrget (son_1->token.string_table_entry);
 	    lgth = sxstrlen (son_1->token.string_table_entry);
@@ -1925,7 +1925,7 @@ reg_exps (struct reg_exp_node *visited)
 
 	if (SXDS->current_reg_exp_or_abbrev_no != SXERROR_STE && p->init_item != -1)
 	    /* Double definition */
-	    return error ("redefinition", son_1), SXFALSE;
+	    return error ("redefinition", son_1), false;
 
 	/* Un nom de token peut etre une abreviation ou une classe simple */
 	if (SXDS->current_reg_exp_or_abbrev_no == SXERROR_STE)
@@ -1948,9 +1948,9 @@ reg_exps (struct reg_exp_node *visited)
 	cur_reg_exp = SXDS->current_reg_exp_or_abbrev_no; /* Le 13/04/07 */
 
 	/* On commence par traiter l'environment */
-	if (!environment (son_2)) return SXFALSE;
+	if (!environment (son_2)) return false;
 
-	if (!reg_exps (sxson (visited, 1))) return SXFALSE;
+	if (!reg_exps (sxson (visited, 1))) return false;
 
 	p = &(SXDS->reg_exp_to_attr [cur_reg_exp]);
 
@@ -1974,19 +1974,19 @@ reg_exps (struct reg_exp_node *visited)
 	    re_maj_item_top ((SXINT)1);
 	    master_reg_exp_no = SXDS->current_reg_exp_or_abbrev_no;
 
-	    if (!reg_exps (son_2)) return SXFALSE;
+	    if (!reg_exps (son_2)) return false;
  	}
 	else
 	{
 	    p->init_item = SXDS->item_top;
 	    master_reg_exp_no = -1;
 
-	    if (!regular_expression (son_2, &is_action)) return SXFALSE;
+	    if (!regular_expression (son_2, &is_action)) return false;
 
 	    if (is_action)
-		return error ("illegal action usage in a regular expression", son_2), SXFALSE;
+		return error ("illegal action usage in a regular expression", son_2), false;
 	
-	    set_new_item ((SXINT)KREDUCE, item_no, (SXINT)0, (SXINT)0, (SXBA)NULL, SXFALSE);
+	    set_new_item ((SXINT)KREDUCE, item_no, (SXINT)0, (SXINT)0, (SXBA)NULL, false);
 	}
 
 	break;
@@ -1997,11 +1997,11 @@ reg_exps (struct reg_exp_node *visited)
       break;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
-static SXBOOLEAN
+static bool
 synonyms (struct reg_exp_node *visited, SXINT *prev_ste)
 {
     struct reg_exp_node		*son_1;
@@ -2014,14 +2014,14 @@ synonyms (struct reg_exp_node *visited, SXINT *prev_ste)
     case SYNONYM_S_n  :
     case DENOTATION_S_n  :
 	for (son_1 = sxson (visited, 1); son_1 != NULL; son_1 = son_1->brother)
-	    if (!synonyms (son_1, prev_ste)) return SXFALSE;
+	    if (!synonyms (son_1, prev_ste)) return false;
 
 	break;
 
     case ID_DENOTATION_n:
     case STRING_DENOTATION_n:
 	if (visited->token.string_table_entry == SXERROR_STE)
-	    return SXFALSE;
+	    return false;
 
 	name = sxstrget (visited->token.string_table_entry);
 	lgth = sxstrlen (visited->token.string_table_entry);
@@ -2034,8 +2034,8 @@ synonyms (struct reg_exp_node *visited, SXINT *prev_ste)
 
 	p->token_no = -1;
 	p->next_syno = -1;
-	p->is_kw = SXTRUE;
-	p->is_generic = SXFALSE;
+	p->is_kw = true;
+	p->is_generic = false;
 
 	if (visited->position != 1)
 	    SXDS->terminal_to_attr [*prev_ste].next_syno = ste;
@@ -2050,7 +2050,7 @@ synonyms (struct reg_exp_node *visited, SXINT *prev_ste)
       break;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -2059,7 +2059,7 @@ sxre_smp (SXINT sxre_smp_what, struct reg_exp_tables *sxtables_ptr)
 {
     struct reg_exp_node	*son;
     SXINT			old_counters_size, prev_ste;
-    SXBOOLEAN             b_ret;
+    bool             b_ret;
 
     sxuse(sxtables_ptr); /* pour faire taire gcc -Wunused */
     switch (sxre_smp_what) {
@@ -2071,7 +2071,7 @@ sxre_smp (SXINT sxre_smp_what, struct reg_exp_tables *sxtables_ptr)
 	old_counters_size = SXDS->counters_size;
 
 	if ( sxatcvar.atc_lv.abstract_tree_is_error_node ) {
-	  SXDS->is_smp_error = SXTRUE;
+	  SXDS->is_smp_error = true;
 	} else {
 	  b_ret =  ( ((son = sxatcvar.atc_lv.abstract_tree_root->son)->name == VOID_n || classes (son)) &&
 		     ((son = son->brother)->name == VOID_n || abbreviations (son)) &&
@@ -2080,7 +2080,7 @@ sxre_smp (SXINT sxre_smp_what, struct reg_exp_tables *sxtables_ptr)
 	  if ( b_ret ) {
 	    if ( (son = son->brother)->name != VOID_n ) {
 	      error ("representation specification clause is not implemented", son);
-	      b_ret = SXFALSE;
+	      b_ret = false;
 	    }
 	  }
 	  SXDS->is_smp_error = !b_ret;
@@ -2124,7 +2124,7 @@ sxre_smp (SXINT sxre_smp_what, struct reg_exp_tables *sxtables_ptr)
 
 
 SXINT
-sxre_string_to_re (char *string, SXINT t_code, SXBOOLEAN is_a_generic_terminal)
+sxre_string_to_re (char *string, SXINT t_code, bool is_a_generic_terminal)
 {
     /* string est cense etre un nom de terminal de la grammaire du niveau
        syntaxique.
@@ -2148,14 +2148,14 @@ sxre_string_to_re (char *string, SXINT t_code, SXBOOLEAN is_a_generic_terminal)
 
     pteattr->token_no = t_code;
     pteattr->is_generic = is_a_generic_terminal;
-    pteattr->is_kw = SXFALSE; /* a priori */
+    pteattr->is_kw = false; /* a priori */
 
     if (SXDS->token_no_to_terminal_size == 0)
     {
 	SXDS->token_no_to_terminal_size = t_code < 100 ? 100 : t_code + 100;
 	SXDS->token_no_to_terminal =
 	    (SXINT*) sxalloc (SXDS->token_no_to_terminal_size, sizeof (SXINT));
-	SXDS->is_token_no_to_terminal_static = SXFALSE;
+	SXDS->is_token_no_to_terminal_static = false;
     }
     else
 	if ((old_size = SXDS->token_no_to_terminal_size) <= t_code)
@@ -2170,7 +2170,7 @@ sxre_string_to_re (char *string, SXINT t_code, SXBOOLEAN is_a_generic_terminal)
 		    (SXINT*) sxalloc (SXDS->token_no_to_terminal_size, sizeof (SXINT));
 
 		memcpy (SXDS->token_no_to_terminal, old, sizeof (SXINT) * old_size);
-		SXDS->is_token_no_to_terminal_static = SXFALSE;
+		SXDS->is_token_no_to_terminal_static = false;
 	    }
 	    else
 		SXDS->token_no_to_terminal =
@@ -2236,12 +2236,12 @@ sxre_string_to_re (char *string, SXINT t_code, SXBOOLEAN is_a_generic_terminal)
 	    SXBA_1_bit (SXDS->ctxt_set, ste);
     }
 
-    pconfigs = sxds_string_to_token (string, SXTRUE);
+    pconfigs = sxds_string_to_token (string, true);
 
     if (pconfigs->conflict_kind & FirstReduce)
     {
 	/* Mot-cle' */
-	pteattr->is_kw = SXTRUE;
+	pteattr->is_kw = true;
 
 	/* On met a jour la liste des synonymes. */
 	while ((ste = pteattr->next_syno) != -1)
@@ -2266,8 +2266,8 @@ sxre_string_to_re (char *string, SXINT t_code, SXBOOLEAN is_a_generic_terminal)
 
 		pteattr->token_no = t_code;
 		pteattr->next_syno = -1;
-		pteattr->is_generic = is_a_generic_terminal; /* SXFALSE!! */
-		pteattr->is_kw = SXTRUE;
+		pteattr->is_generic = is_a_generic_terminal; /* false!! */
+		pteattr->is_kw = true;
 	    }
 
 	    if (SXDS->item_to_attr [pconfig->current.state].kind == KREDUCE)
@@ -2307,7 +2307,7 @@ sxre_string_to_re (char *string, SXINT t_code, SXBOOLEAN is_a_generic_terminal)
     pitattr->reg_exp_no = re_no;
     pitattr->val = 0;
     pitattr->param = 0;
-    pitattr->is_erased = SXFALSE;
+    pitattr->is_erased = false;
     pitattr->kind = KEMPTY;
 
     XxY_set (&SXDS->nfsa, SXDS->item_top - 1, SXDS->item_top, &couple);
@@ -2320,7 +2320,7 @@ sxre_string_to_re (char *string, SXINT t_code, SXBOOLEAN is_a_generic_terminal)
 	pitattr->val = char_sets_incr ();
 	SXBA_1_bit (SXDS->char_sets [pitattr->val], *pc);
 	pitattr->param = 0;
-	pitattr->is_erased = SXTRUE;
+	pitattr->is_erased = true;
 	pitattr->kind = KCLASS;
 
 	XxY_set (&SXDS->nfsa, SXDS->item_top - 1, SXDS->item_top, &couple);
@@ -2331,14 +2331,14 @@ sxre_string_to_re (char *string, SXINT t_code, SXBOOLEAN is_a_generic_terminal)
     pitattr->reg_exp_no = re_no;
     pitattr->val = 0;
     pitattr->param = 0;
-    pitattr->is_erased = SXFALSE;
+    pitattr->is_erased = false;
     pitattr->kind = KREDUCE;
 
     return string_ste;
 }
 
 
-SXBOOLEAN
+bool
 sxre_write (sxfiledesc_t file_descr /* file descriptor */)
 {
 #define WRITE(p,l)	((bytes=(l))>0&&(write(file_descr, p, (size_t) bytes) == bytes))
@@ -2376,24 +2376,24 @@ sxre_write (sxfiledesc_t file_descr /* file descriptor */)
 	  && WRITE (&SXDS->token_no_to_terminal_size, sizeof (SXINT))
 	  && (SXDS->token_no_to_terminal_size > 0
 	      ? WRITE (SXDS->token_no_to_terminal, sizeof (SXINT) * SXDS->token_no_to_terminal_size)
-	      : SXTRUE)
+	      : true)
 
 	  && WRITE (&SXDS->counters_size, sizeof (SXINT))
 	  && WRITE (&SXDS->eof_code, sizeof (SXINT))
 	  && WRITE (&SXDS->eof_reg_exp_name, sizeof (SXINT))
 
-	  && WRITE (&SXDS->is_smp_error, sizeof (SXBOOLEAN))
+	  && WRITE (&SXDS->is_smp_error, sizeof (bool))
 	  );
 }
 
 
-SXBOOLEAN
+bool
 sxre_read (sxfiledesc_t file_descr /* file descriptor */)
 {
 #define READ(p,l)	((bytes=(l))>0&&(read (file_descr, p, (size_t)bytes) == bytes)) 
   SXINT	        bytes;
   
-  SXBOOLEAN b_ret = (sxword_read (&(SXDS->sc_names), file_descr, "simple_class_names",
+  bool b_ret = (sxword_read (&(SXDS->sc_names), file_descr, "simple_class_names",
 				sxcont_malloc, sxcont_alloc, sxcont_realloc, (sxresize_t) NULL, sxcont_free, reg_exp_pcn_oflw, NULL)
 		   && READ (SXDS->sc_names_to_char_sets =
 			    (SXINT*) sxalloc (SXWORD_size (SXDS->sc_names), sizeof (SXINT)),
@@ -2464,7 +2464,7 @@ sxre_read (sxfiledesc_t file_descr /* file descriptor */)
     b_ret = READ (&SXDS->counters_size, sizeof (SXINT))
          && READ (&SXDS->eof_code, sizeof (SXINT))
          && READ (&SXDS->eof_reg_exp_name, sizeof (SXINT))
-         && READ (&SXDS->is_smp_error, sizeof (SXBOOLEAN)) ;
+         && READ (&SXDS->is_smp_error, sizeof (bool)) ;
   }
   return b_ret;
 }
@@ -2566,7 +2566,7 @@ sxre_array_to_c (FILE *file, char *name)
     sc_names_total_lgth = sxword_array_to_c (&SXDS->sc_names, file, re_cat ("_sc_names"));
     re_out_tab_int (file, name, "_sc_names_to_char_sets", SXDS->sc_names_to_char_sets,
 		 SXWORD_size (SXDS->sc_names), SXWORD_top (SXDS->sc_names));
-    sxbm_to_c (file, SXDS->char_sets, SXDS->char_sets_size, name, "_char_sets", SXTRUE);
+    sxbm_to_c (file, SXDS->char_sets, SXDS->char_sets_size, name, "_char_sets", true);
     abbrev_names_total_lgth = sxword_array_to_c (&SXDS->abbrev_names, file, re_cat ("_abbrev_names"));
     re_out_tab_struct (file, "struct abbrev_to_attr", name, "_abbrev_to_attr",
 		    re_print_abbrev_to_attr, SXWORD_size (SXDS->abbrev_names),
@@ -2576,7 +2576,7 @@ sxre_array_to_c (FILE *file, char *name)
 		    re_print_reg_exp_to_attr, SXWORD_size (SXDS->reg_exp_names),
 		    SXWORD_top (SXDS->reg_exp_names));
     sxbm_to_c (file, SXDS->context_sets, (SXINT) SXWORD_size (SXDS->reg_exp_names),
-	       name, "_context_sets", SXTRUE);
+	       name, "_context_sets", true);
     re_out_tab_struct (file, "struct item_to_attr", name, "_item_to_attr",
 		    re_print_item_to_attr, SXDS->item_size, SXDS->item_top + 1);
     XxY_array_to_c (&SXDS->nfsa, file, re_cat ("_nfsa"));
@@ -2649,10 +2649,10 @@ sxre_header_to_c (FILE *file, char *name)
     fprintf (file, "%ld /* SXINT counters_size */,\n", (SXINT) SXDS->counters_size);
     fprintf (file, "%ld /* SXINT eof_code */,\n", (SXINT) SXDS->eof_code);
     fprintf (file, "%ld /* SXINT eof_reg_exp_name */,\n", (SXINT) SXDS->eof_reg_exp_name);    
-    fprintf (file, "SXTRUE /* is_char_sets_static */,\n");
-    fprintf (file, "SXTRUE /* is_item_to_attr_static */,\n");
-    fprintf (file, "SXTRUE /* is_token_no_to_terminal_static */,\n");
-    fprintf (file, "%i /* SXBOOLEAN is_smp_error */,\n", SXDS->is_smp_error);
+    fprintf (file, "true /* is_char_sets_static */,\n");
+    fprintf (file, "true /* is_item_to_attr_static */,\n");
+    fprintf (file, "true /* is_token_no_to_terminal_static */,\n");
+    fprintf (file, "%i /* bool is_smp_error */,\n", SXDS->is_smp_error);
 
     fprintf (file, "/* ... */\n");
 
@@ -2662,7 +2662,7 @@ sxre_header_to_c (FILE *file, char *name)
 
 
 void
-sxre_to_c (FILE *file, char *name, SXBOOLEAN is_static)
+sxre_to_c (FILE *file, char *name, bool is_static)
 {
     sxre_array_to_c (file, name);
 

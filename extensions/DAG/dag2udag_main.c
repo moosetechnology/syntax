@@ -28,7 +28,7 @@
 #include "XxY.h"
 #include "udag_scanner.h"
 
-char WHAT_DAG2UDAG_MAIN[] = "@(#)SYNTAX - $Id: dag2udag_main.c 3358 2023-06-16 14:49:15Z garavel $" WHAT_DEBUG;
+char WHAT_DAG2UDAG_MAIN[] = "@(#)SYNTAX - $Id: dag2udag_main.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 #if LOG
 static char mess [128];
@@ -43,9 +43,9 @@ void             (*main_parser)(void); /* NULL pas de earley ou autre */
 VARSTR cur_input_vstr; /* unused */
 SXINT SEMLEX_lahead;
 
-SXBOOLEAN		output_udag;
-static SXBOOLEAN  is_help;
-SXBOOLEAN tmp_file_for_stdin;
+bool		output_udag;
+static bool  is_help;
+bool tmp_file_for_stdin;
 static char	ME [] = "dag2udag_main";
 static char	Usage [] = "\
 Usage:\t%s [options] [files]\n\
@@ -122,7 +122,7 @@ static char	*option_get_text (SXINT kind)
 static struct fa {
   SXINT          fsa_kind, init_state, final_state, sigma_card, eof_ste, transition_nb;
   XxYxZ_header fsa_hd;
-  SXBOOLEAN      has_epsilon_trans;
+  bool      has_epsilon_trans;
 } dfa, *cur_fsa;
 
 
@@ -133,13 +133,13 @@ static SXINT        fsa_trans_nb;
 
 /* Cette procedure est appelee depuis read_a_re à la fin de la 1ere passe sur l'arbre abstrait */
 /* Les arguments sont 
-   - SXTRUE => OK
+   - true => OK
    - ste des transitions vers l'etat final
    - le nb de noeuds de cet arbre et 
    - le nb d'operande (dont eof + 1 bidon de fin) */
 /* Peut servir a faire des alloc + ciblees */
 static void
-prelude_re (SXBOOLEAN is_OK, SXINT eof_ste, SXINT node_nb, SXINT operand_nb, SXINT fsa_kind)
+prelude_re (bool is_OK, SXINT eof_ste, SXINT node_nb, SXINT operand_nb, SXINT fsa_kind)
 {
   SXINT *fsa_foreach;
 #if EBUG
@@ -193,7 +193,7 @@ store_re (SXINT state, struct sxtoken **ptok_ptr, struct sxtoken **semlex_ptok_p
 
   if (ptok_ptr == NULL && ste == 0) {
     /* Transition epsilon */
-    cur_fsa->has_epsilon_trans = SXTRUE;
+    cur_fsa->has_epsilon_trans = true;
     XxYxZ_set (&(cur_fsa->fsa_hd), state, 0, next_state, &triple);
 #if EBUG
     printf ("%ld\t\"<EPSILON>\"\t\t%ld\n", (SXINT) state, (SXINT) next_state);
@@ -273,12 +273,12 @@ DFA_extract_trans (SXINT dfa_state, void (*output_trans) (SXINT, SXINT, SXINT))
 static XxYxZ_header minDFA_hd;
 static SXINT          minDFA_foreach [] = {1 /* X pour minDFA_extract_trans */, 0, 0, 0, 1 /* XZ pour minDFA_edges */, 0};
 static SXINT          minDFA_final_state;
-static SXBOOLEAN        is_a_dag;
+static bool        is_a_dag;
 
 static void
 minDFA_alloc (void)
 {
-  is_a_dag = SXTRUE; /* A priori */
+  is_a_dag = true; /* A priori */
   XxYxZ_alloc (&minDFA_hd, "minDFA_hd", fsa_trans_nb+1, 1, minDFA_foreach, NULL, NULL);
 }
 
@@ -319,7 +319,7 @@ minDFA_fill_trans (SXINT dfa_state, SXINT triple, SXINT next_dfa_state)
 	XxYxZ_set (&minDFA_hd, dfa_state, triple, next_dfa_state, &triple);
       
       if (next_dfa_state < dfa_state)
-	is_a_dag = SXFALSE;
+	is_a_dag = false;
     }
   }
 }
@@ -368,7 +368,7 @@ postlude_re (SXINT fsa_kind)
 #endif /* !EBUG */
     puts ("##DAG BEGIN");
 
-  dfa_minimize (1, cur_fsa->final_state, cur_fsa->transition_nb, DFA_extract_trans, minDFA_fill_trans, SXTRUE /* to_be_normalized */
+  dfa_minimize (1, cur_fsa->final_state, cur_fsa->transition_nb, DFA_extract_trans, minDFA_fill_trans, true /* to_be_normalized */
 #ifdef ESSAI_INVERSE_MAPPING
 		     , NULL
 #endif /* ESSAI_INVERSE_MAPPING */
@@ -428,55 +428,55 @@ int
 main (int argc, char *argv[])
 {
   int           argnum;
-  SXBOOLEAN	in_options, is_source_file, is_stdin;
+  bool	in_options, is_source_file, is_stdin;
 
   sxopentty ();
 
   /* valeurs par defaut */
-  output_udag = is_stdin = SXTRUE;
-  is_help = SXFALSE;
+  output_udag = is_stdin = true;
+  is_help = false;
   argnum = 0;
 
-  is_source_file = SXFALSE;
-  tmp_file_for_stdin = SXFALSE;
+  is_source_file = false;
+  tmp_file_for_stdin = false;
 
   if (argc > 1) {
     /* Decodage des options */
-    in_options = SXTRUE;
+    in_options = true;
 
     while (in_options && ++argnum < argc) {
       switch (option_get_kind (argv [argnum])) {
       case VERBOSE:
-	sxverbosep = SXTRUE;
+	sxverbosep = true;
 	break;
 
       case -VERBOSE:
-	sxverbosep = SXFALSE;
+	sxverbosep = false;
 	break;
 
       case UNFOLD:
-	output_udag = SXTRUE;
+	output_udag = true;
 	break;
 
       case -UNFOLD:
-	output_udag = SXFALSE;
+	output_udag = false;
 	break;
 
       case HELP:
-	is_help = SXTRUE;
+	is_help = true;
 	break;
 
       case TMP_FILE_FOR_STDIN:
-	tmp_file_for_stdin = SXTRUE;
+	tmp_file_for_stdin = true;
 	break;
 
       case SOURCE_FILE:
 	if (is_stdin) {
-	  is_stdin = SXFALSE;
+	  is_stdin = false;
 	}
 
-	is_source_file = SXTRUE;
-	in_options = SXFALSE;
+	is_source_file = true;
+	in_options = false;
 	break;
 
       case UNKNOWN_ARG:
@@ -507,9 +507,9 @@ main (int argc, char *argv[])
     DALLOC_STACK (input_transition_stack, 10);
 
     if (is_stdin)
-      severity = re_reader (NULL, SXTRUE, fsa_processor);
+      severity = re_reader (NULL, true, fsa_processor);
     else
-      severity = re_reader (argv [argnum], SXTRUE, fsa_processor);
+      severity = re_reader (argv [argnum], true, fsa_processor);
 
     XxYxZ_free (&input_transitions_hd);
     DFREE_STACK (input_transition_stack);

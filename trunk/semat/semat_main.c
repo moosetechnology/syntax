@@ -27,7 +27,7 @@
 #include "bnf_vars.h"
 #include "put_edit.h"
 
-char WHAT_SEMATMAIN[] = "@(#)SYNTAX - $Id: semat_main.c 3598 2023-09-18 11:39:54Z garavel $" WHAT_DEBUG;
+char WHAT_SEMATMAIN[] = "@(#)SYNTAX - $Id: semat_main.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 /* These include files for date/time manipulation: */
 #include <sys/types.h>
@@ -38,16 +38,16 @@ char	by_mess [] = "the SYNTAX grammar & abstract tree processor SEMAT";
 extern  SXINT	semat_scan_act (SXINT code, SXINT act_no);
 SXINT	(*more_scan_act) (SXINT code, SXINT act_no) = {semat_scan_act};
 
-extern SXVOID	no_tables (void), bnf_lo (void);
-extern SXBOOLEAN	semat_sem (void);
-extern SXVOID     semat_lo (void);
+extern void	no_tables (void), bnf_lo (void);
+extern bool	semat_sem (void);
+extern void     semat_lo (void);
 extern struct sxtables	bnf_tables;
 
 /*---------------*/
 /*    options    */
 /*---------------*/
 
-SXBOOLEAN		is_check, is_c;
+bool		is_check, is_c;
 SXINT		max_line_length;
 static char	ME [] = "semat";
 static char	Usage [] = "\
@@ -117,7 +117,7 @@ static char	*option_get_text (SXINT kind)
 
 
 
-static SXVOID	extract_language_name (char *path_name)
+static void	extract_language_name (char *path_name)
 {
     char	*p;
 
@@ -135,7 +135,7 @@ static SXVOID	extract_language_name (char *path_name)
 
 
 
-static SXVOID	bnf_run (char *pathname)
+static void	bnf_run (char *pathname)
 {
     FILE	*infile;
 
@@ -223,10 +223,10 @@ int main (int argc, char *argv[])
   /* valeurs par defaut */
 
   options_set = OPTION (SOURCE) | OPTION (VERBOSE) | OPTION (LIST);
-  sxverbosep = SXFALSE;
-  is_source = is_list = SXTRUE;
-  is_check = SXFALSE;
-  is_c = SXTRUE;
+  sxverbosep = false;
+  is_source = is_list = true;
+  is_check = false;
+  is_c = true;
   max_RHS = -1; /* Le 16/4/2002, par defaut, pas de verif de la longueur des RHS */
   max_line_length = 128;
 
@@ -236,27 +236,27 @@ int main (int argc, char *argv[])
   for (argnum = 1; argnum < argc; argnum++) {
     switch (option_get_kind (argv [argnum])) {
     case SOURCE:
-      is_source = SXTRUE, options_set |= OPTION (SOURCE);
+      is_source = true, options_set |= OPTION (SOURCE);
       break;
 
     case -SOURCE:
-      is_list = is_source = SXFALSE, options_set &= noOPTION (SOURCE) & noOPTION (LIST);
+      is_list = is_source = false, options_set &= noOPTION (SOURCE) & noOPTION (LIST);
       break;
 
     case VERBOSE:
-      sxverbosep = SXTRUE, options_set |= OPTION (VERBOSE);
+      sxverbosep = true, options_set |= OPTION (VERBOSE);
       break;
 
     case -VERBOSE:
-      sxverbosep = SXFALSE, options_set &= noOPTION (VERBOSE);
+      sxverbosep = false, options_set &= noOPTION (VERBOSE);
       break;
 
     case LIST:
-      is_list = is_source = SXTRUE, options_set |= OPTION (LIST) | OPTION (SOURCE);
+      is_list = is_source = true, options_set |= OPTION (LIST) | OPTION (SOURCE);
       break;
 
     case -LIST:
-      is_list = SXFALSE, options_set &= noOPTION (LIST);
+      is_list = false, options_set &= noOPTION (LIST);
       break;
 
     case MAX_RIGHT_HAND_SIDE:
@@ -269,11 +269,11 @@ int main (int argc, char *argv[])
       break;
 
     case CHECK:
-      is_check = SXTRUE, options_set |= OPTION (CHECK);
+      is_check = true, options_set |= OPTION (CHECK);
       break;
 
     case C:
-      is_c = SXTRUE, options_set |= OPTION (C);
+      is_c = true, options_set |= OPTION (C);
       break;
 
     case MAX_LINE_LENGTH:
@@ -329,7 +329,7 @@ int main (int argc, char *argv[])
     fprintf (sxtty, "%s\n", release_mess);
   }
 
-  syntax (SXINIT, &bnf_tables, SXFALSE /* no includes */ );
+  syntax (SXINIT, &bnf_tables, false /* no includes */ );
 
   if (options_set & OPTION (LANGUAGE_NAME)) {
     bnf_run ((char*)NULL);
@@ -345,7 +345,7 @@ int main (int argc, char *argv[])
     } while (argnum < argc);
   }
 
-  syntax (SXFINAL, &bnf_tables, SXTRUE);
+  syntax (SXFINAL, &bnf_tables, true);
 
   sxexit (sxerr_max_severity ());
   return EXIT_SUCCESS; /* Jamais atteint !! pour les compilo susceptibles ... */
@@ -356,14 +356,14 @@ int main (int argc, char *argv[])
 char	*options_text (char *line)
 {
     SXINT	i;
-    SXBOOLEAN	is_first = SXTRUE;
+    bool	is_first = true;
 
     *line = SXNUL;
 
     for (i = 1; i <= LAST_OPTION; i++)
 	if (options_set & OPTION (i)) {
 	    if (is_first)
-		is_first = SXFALSE;
+		is_first = false;
 	    else
 		strcat (line, ", ");
 

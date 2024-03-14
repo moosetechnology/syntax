@@ -42,14 +42,14 @@
 
 typedef SXINT (*sxaction_new_top_t) (SXINT, SXINT, SXINT);
 
-extern SXBOOLEAN	sxndparse_in_la (SXINT ep_la, SXINT Ttok_no, SXINT *Htok_no, struct sxparse_mode *mode_ptr);
-extern SXBOOLEAN	sxnd2parser (SXINT what_to_do, struct sxtables *arg);
-extern SXBOOLEAN	sxndparser (SXINT what_to_do, struct sxtables *arg);
-extern SXBOOLEAN	sxndparse_clean_forest (void);
+extern bool	sxndparse_in_la (SXINT ep_la, SXINT Ttok_no, SXINT *Htok_no, struct sxparse_mode *mode_ptr);
+extern bool	sxnd2parser (SXINT what_to_do, struct sxtables *arg);
+extern bool	sxndparser (SXINT what_to_do, struct sxtables *arg);
+extern bool	sxndparse_clean_forest (void);
 extern void	sxndparse_pack_forest (void);
 extern void	sxndparse_erase_hook_item (SXINT item);
 extern void     sxndtkn_put (SXBA set);
-extern SXVOID     sxndtkn_mngr (SXINT sxndtkn_mngr_what, SXINT size);
+extern void     sxndtkn_mngr (SXINT sxndtkn_mngr_what, SXINT size);
 
 
 /*      C T R L - S T A C K   M A N A G E R      	*/
@@ -168,7 +168,7 @@ static SXINT XxY_layer_put (header, X, Y)
 {
     struct XxY_elem	*eptr;
     SXINT			index;
-    SXBOOLEAN		is_new;
+    bool		is_new;
 
     _LAYER_HEADER_PTR = header;
     is_new = !XxY_set (&(header->local), X, Y, &index);
@@ -236,9 +236,9 @@ typedef struct {
 #define sxmilstn_seek(h)	sxindex_seek(&((h).indexes))
 #define sxmilstn_access(h,x)	(h).buf [sxindex_i((h).indexes,x)][sxindex_j((h).indexes,x)]
 
-extern SXVOID sxmilstn_oflw (sxindex_header *index_header_ptr, SXINT old_line_nb, SXINT old_size);
-extern SXVOID sxmilstn_alloc (sxmilstn_header *header, SXINT size);
-extern SXVOID sxmilstn_free (sxmilstn_header *header);
+extern void sxmilstn_oflw (sxindex_header *index_header_ptr, SXINT old_line_nb, SXINT old_size);
+extern void sxmilstn_alloc (sxmilstn_header *header, SXINT size);
+extern void sxmilstn_free (sxmilstn_header *header);
 
 /* fin INCLUDE	sxmilstn.h	*/
 
@@ -272,7 +272,7 @@ struct grammar {
 
 struct triple {
     SXINT		parser, ref, tok_no, link, symbol, re_do;
-    SXBOOLEAN	is_shift_reduce, is_valid;
+    bool	is_shift_reduce, is_valid;
 };
 
 struct for_reducer {
@@ -349,7 +349,7 @@ struct ndrcvr {
 
     SXINT			index_0X;
 
-    SXBOOLEAN		is_up,
+    bool		is_up,
 	                with_parsprdct,
 	                is_warning,
 	                all_corrections,
@@ -362,7 +362,7 @@ struct ndrcvr {
 	SXBA		vt_set;
 	SXINT		model_no,
 	                single_la;
-	SXBOOLEAN		a_la_rigueur;
+	bool		a_la_rigueur;
     } best;
 
     struct repair	*repair_list;
@@ -380,7 +380,7 @@ struct ndrcvr {
 struct  parsers_attr {
     SXINT		son, milestone, symbol, next_for_scanner, scan_ref;
     SXINT		rhs_i [2];
-    SXBOOLEAN	is_already_processed;
+    bool	is_already_processed;
 };
 
 
@@ -453,7 +453,7 @@ struct parse_stack {
     SXBA			useful_ntset,
                                 useful_tset;
 
-    SXBOOLEAN			is_new_links,
+    bool			is_new_links,
                                 is_token_dag,
                                 parsact_seen,
                                 parsprdct_seen,
@@ -485,9 +485,9 @@ struct sxndtw {
     SXINT		(*pass_inherited) (void),
                 (*pass_derived) (void);
 
-    SXBOOLEAN     (*cycle_processing) (void);
+    bool     (*cycle_processing) (void);
 
-    SXVOID	(*open_hook) (void),
+    void	(*open_hook) (void),
                 (*close_hook) (void),
                 (*nodes_oflw) (SXINT, SXINT);
 
@@ -577,20 +577,20 @@ SX_GLOBAL_VAR_ND SXINT	SXNDTW_;
 
 
 SX_GLOBAL_VAR_ND SXINT	sxndtw_is_cycle (SXINT node);
-SX_GLOBAL_VAR_ND SXVOID	sxndtw_open (SXINT    (*pass_inherited) (void),
+SX_GLOBAL_VAR_ND void	sxndtw_open (SXINT    (*pass_inherited) (void),
 		     SXINT    (*pass_derived) (void),
-		     SXBOOLEAN  (*cycle_processing) (void),
-		     SXVOID     (*open_hook) (void), 
-		     SXVOID     (*close_hook) (void), 
-		     SXVOID     (*nodes_oflw) (SXINT, SXINT));
-SX_GLOBAL_VAR_ND SXVOID	sxndtw_init (void);
-SX_GLOBAL_VAR_ND SXVOID	sxndtw_walk (void);
-SX_GLOBAL_VAR_ND SXBOOLEAN sxndrtw_walk (void);
-SX_GLOBAL_VAR_ND SXVOID	sxndtw_final (void);
-SX_GLOBAL_VAR_ND SXVOID	sxndtw_close (void);
-SX_GLOBAL_VAR_ND SXVOID	sxndtw_node_erase (SXINT node);
-SX_GLOBAL_VAR_ND SXVOID	sxndtw_check_grammar (void);
-SX_GLOBAL_VAR_ND SXBOOLEAN sxndtw_sem_calls (void);
+		     bool  (*cycle_processing) (void),
+		     void     (*open_hook) (void), 
+		     void     (*close_hook) (void), 
+		     void     (*nodes_oflw) (SXINT, SXINT));
+SX_GLOBAL_VAR_ND void	sxndtw_init (void);
+SX_GLOBAL_VAR_ND void	sxndtw_walk (void);
+SX_GLOBAL_VAR_ND bool sxndrtw_walk (void);
+SX_GLOBAL_VAR_ND void	sxndtw_final (void);
+SX_GLOBAL_VAR_ND void	sxndtw_close (void);
+SX_GLOBAL_VAR_ND void	sxndtw_node_erase (SXINT node);
+SX_GLOBAL_VAR_ND void	sxndtw_check_grammar (void);
+SX_GLOBAL_VAR_ND bool sxndtw_sem_calls (void);
 
 
 
@@ -605,7 +605,7 @@ struct ndincl_elem {
 struct ndsrcvr_probe {
     SXINT 	*model;
     SXINT		model_no;
-    SXSHORT	*string;
+    short	*string;
 };
 
 struct ndsrcvr {
@@ -613,13 +613,13 @@ struct ndsrcvr {
                         state_set;
     X_header		stmt_set;
     XxYxZ_header	paths;
-    SXSHORT		*source_char,
+    short		*source_char,
 	                *class_to_insert;
     SXINT			*source_classes;
     struct ndsrcvr_probe
 	                current,
 	                may_be;
-    SXBOOLEAN		is_done,
+    bool		is_done,
                         is_may_be;
 };
 
@@ -647,7 +647,7 @@ struct sxndlv {
     SXINT		current_state_no /*		etat courant du scanner			*/ ;
     SXINT		milestone /*			noeud du tokens_dag			*/ ;
     struct sxtoken	terminal_token /*	structure passee au parser		*/ ;
-    SXSHORT	previous_char /*		precedent le token courant		*/ ;
+    short	previous_char /*		precedent le token courant		*/ ;
     struct mark mark /* 			pour l'action @mark			*/ ;
     SXSTMI	stmt /*				0 ou next stmt				*/ ;
 };
@@ -681,7 +681,7 @@ SX_GLOBAL_VAR_ND struct sxndtkn {
 #define MS_COMPLETE	16
 #define MS_EXHAUSTED	32
 
-extern SXVOID 	ndlv_clear (struct sxndlv *ndlv, SXBOOLEAN keep_comments);
-extern SXVOID	sxndscan_it (void);
+extern void 	ndlv_clear (struct sxndlv *ndlv, bool keep_comments);
+extern void	sxndscan_it (void);
 
 #endif

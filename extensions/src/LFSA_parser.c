@@ -23,7 +23,7 @@
 
 #include "sxversion.h"
 #include "sxunix.h"
-char WHAT_LFSA_PARSER[] = "@(#)SYNTAX - $Id: LFSA_parser.c 2428 2023-01-18 12:54:10Z garavel $" WHAT_DEBUG;
+char WHAT_LFSA_PARSER[] = "@(#)SYNTAX - $Id: LFSA_parser.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 static char	ME [] = "LFSA_parser";
 /* A FAIRE
@@ -54,7 +54,7 @@ struct trans {
 /* Memoization */
 static SXBA *already_processed, *ret_vals;
 
-static SXBOOLEAN lfsa_process_p_i ();
+static bool lfsa_process_p_i ();
 static void lfsa_final ();
 
 void
@@ -90,13 +90,13 @@ lfsa_final ()
 
 /* Le source est traite de gauche a droite */
 /* L'appel initial depuis RCG_parser est de la forme lfsa_process_p_i (1, 0) */
-static SXBOOLEAN
+static bool
 lfsa_process_p_i (p, i)
      SXINT p, i;
 {
   SXINT j, top, t, q, prod, k, bot, cur, bot2, cur2, top2, base;
   SXBA in_source_set, out_source_set, laq;
-  SXBOOLEAN ret_val, is_first, done;
+  bool ret_val, is_first, done;
   struct trans *ptrans;
 
 #if EBUG
@@ -106,13 +106,13 @@ lfsa_process_p_i (p, i)
 
   if (!SXBA_bit_is_reset_set (already_processed [p], i)) {
 #if EBUG
-    printf ("out_memo(%i): %s\n", call_level, SXBA_bit_is_set (ret_vals [p], i) ? "SXTRUE" : "SXFALSE");
+    printf ("out_memo(%i): %s\n", call_level, SXBA_bit_is_set (ret_vals [p], i) ? "true" : "false");
     call_level--;
 #endif
     return SXBA_bit_is_set (ret_vals [p], i);
   }
 
-  ret_val = SXFALSE;
+  ret_val = false;
 
   /* On traite les transitions terminales sur le terminal ti+1 */
   if ((base = vector_base (fsa_shift, p)) != 0) {
@@ -134,21 +134,21 @@ lfsa_process_p_i (p, i)
 	  /* Comme il n'y a pas de cycles, aucune chaine de reduce ne peut marcher, on peut sortir */
 	  SXBA_1_bit (ret_vals [p], i);
 #if EBUG
-	  printf ("out(%i): SXTRUE\n", call_level);
+	  printf ("out(%i): true\n", call_level);
 	  call_level--;
 #endif
-	  return SXTRUE;
+	  return true;
 	}
 	
 	if (lfsa_process_p_i (q, j)) {
-	  ret_val = SXTRUE;
+	  ret_val = true;
 
 	  SXBA_1_bit (out_source_set, t);
 	}
       }
 #if EBUG
       else {
-	printf ("\t%i -->%i SXFALSE\n", p, -t);
+	printf ("\t%i -->%i false\n", p, -t);
       }
 #endif
     }
@@ -175,7 +175,7 @@ lfsa_process_p_i (p, i)
 	    printf ("%i[?..%i]\n", prod, i); 
 #endif /* EBUG3 */ 
 	    if ((G.Lex == NULL || SXBA_bit_is_set (G.Lex, prod)) && lfsa_process_p_i (q, i)) {
-	      ret_val = SXTRUE;
+	      ret_val = true;
 
 	      if (G.fsa_valid_prod_set) SXBA_1_bit (G.fsa_valid_prod_set, prod);
 
@@ -192,13 +192,13 @@ lfsa_process_p_i (p, i)
 #if EBUG3
 	    printf ("%i={", prod); 
 	    k = prod-last_prod;
-	    is_first = SXTRUE;
+	    is_first = true;
 
 	    for (top2 = mtrans_disp [k+1], cur2 = mtrans_disp [k]; cur2 < top2; cur2++) {
 	      k = mtrans_list [cur2];
 
 	      if (is_first)
-		is_first = SXFALSE;
+		is_first = false;
 	      else
 		fputs (", ", stdout);
 
@@ -240,7 +240,7 @@ lfsa_process_p_i (p, i)
 		prod = mtrans_list [cur2];
 
 		if (G.Lex == NULL || SXBA_bit_is_set (G.Lex, prod)) {
-		  ret_val = SXTRUE;
+		  ret_val = true;
 
 		  if (G.fsa_valid_prod_set) SXBA_1_bit (G.fsa_valid_prod_set, prod);
 
@@ -267,7 +267,7 @@ lfsa_process_p_i (p, i)
 		}
 	      }
 		
-	      ret_val = SXTRUE;
+	      ret_val = true;
 #endif /* !is_semantics */
 	    }
 	  }
@@ -280,7 +280,7 @@ lfsa_process_p_i (p, i)
     SXBA_1_bit (ret_vals [p], i);
 
 #if EBUG
-    printf ("out(%i): %s\n", call_level, ret_val ? "SXTRUE" : "SXFALSE");
+    printf ("out(%i): %s\n", call_level, ret_val ? "true" : "false");
     call_level--;
 #endif
 

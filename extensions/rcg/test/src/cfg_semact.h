@@ -6,10 +6,10 @@
 #define _cfg_semact_final		sxvoid
 #define _cfg_semact_last_pass		sxbvoid
 
-static SXBOOLEAN
+static bool
 mess (rho, son_nb, sons, is_first)
     SXINT 	*rho, son_nb, sons[];
-    SXBOOLEAN	is_first;
+    bool	is_first;
 {
     /* axiome(X Y) --> &StrLen(2, X) !d(X) . @mess */
     call_put_error (1,
@@ -38,5 +38,5 @@ input = \"['1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9'|'10'|'11'|'12'|'13'|'14'|'15'|'16
 '21' as '20' in \sqrt{n}\n\
 ");
 
-    return SXTRUE;
+    return true;
 }  

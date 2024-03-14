@@ -28,14 +28,14 @@
 #include "sxcommon.h"
 #include "sxba.h"
 
-char WHAT_SXBA_2OP[] = "@(#)SYNTAX - $Id: sxba_2op.c 3264 2023-05-16 08:29:29Z garavel $" WHAT_DEBUG;
+char WHAT_SXBA_2OP[] = "@(#)SYNTAX - $Id: sxba_2op.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 extern void sxtrap (char *caller, char *message);
 
 /* Realise lhs op1= rhs1 op2 rhs2 */
-/* Retourne SXTRUE ssi lhs est non vide */
+/* Retourne true ssi lhs est non vide */
 /* Attention, on peut avoir lhs == rhs1 */
-SXBOOLEAN
+bool
 sxba_2op (SXBA lhs, SXINT op1, SXBA rhs1, SXINT op2, SXBA rhs2)
 {
   SXBA	   lhs_bits_ptr, rhs_bits_ptr1, rhs_bits_ptr2;
@@ -97,7 +97,7 @@ sxba_2op (SXBA lhs, SXINT op1, SXBA rhs1, SXINT op2, SXBA rhs2)
     case SXBA_OP_NULL:
     case SXBA_OP_COPY:
     case SXBA_OP_IS:
-      sxbassert (SXFALSE, "2op (bad op2)");
+      sxbassert (false, "2op (bad op2)");
       break;
 #endif /* EBUG */
     default: /* pour faire taire gcc -Wswitch-default */
@@ -177,7 +177,7 @@ sxba_2op (SXBA lhs, SXINT op1, SXBA rhs1, SXINT op2, SXBA rhs2)
 /* lhs = {i+incr | i \in rhs} 
    On peut avoir lhs == rhs
 */
-SXBOOLEAN
+bool
 sxba_incr (SXBA lhs, SXBA rhs, SXBA_INDEX incr)
 {
   SXBA	                source_bits_ptr, object_bits_ptr;
@@ -223,7 +223,7 @@ sxba_incr (SXBA lhs, SXBA rhs, SXBA_INDEX incr)
 /* lhs = {i-decr | i \in rhs} 
    On peut avoir lhs == rhs
 */
-SXBOOLEAN
+bool
 sxba_decr (SXBA lhs, SXBA rhs, SXBA_INDEX decr)
 {
   SXBA	                source_bits_ptr, object_bits_ptr;
@@ -271,13 +271,13 @@ sxba_decr (SXBA lhs, SXBA rhs, SXBA_INDEX decr)
 
 
 /* Analogue a sxba_or mais retourne vrai ssi la lhs change */
-SXBOOLEAN
+bool
 sxba_or_with_test (SXBA lhs_bits_array, SXBA rhs_bits_array)
 {
   SXBA	              lhs_bits_ptr, rhs_bits_ptr;
   SXBA_ELT            slices_number = SXNBLONGS (SXBASIZE (rhs_bits_array));
   SXBA_ELT            lwork, work;
-  SXBOOLEAN             ret_val = SXFALSE;
+  bool             ret_val = false;
     
   lhs_bits_ptr = lhs_bits_array + slices_number, rhs_bits_ptr = rhs_bits_array + slices_number;
 
@@ -292,7 +292,7 @@ sxba_or_with_test (SXBA lhs_bits_array, SXBA rhs_bits_array)
 
     if (lwork /* ancienne valeur */ != work /* nouvelle valeur */) {
       /* A change' */
-      ret_val = SXTRUE;
+      ret_val = true;
       *lhs_bits_ptr = work;
     }
 

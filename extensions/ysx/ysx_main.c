@@ -26,7 +26,7 @@
 #include "ysx_vars.h"
 #include "put_edit.h"
 
-char WHAT_YSXMAIN[] = "@(#)SYNTAX - $Id: ysx_main.c 3365 2023-06-16 16:38:56Z garavel $" WHAT_DEBUG;
+char WHAT_YSXMAIN[] = "@(#)SYNTAX - $Id: ysx_main.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 extern struct sxtables	ysx_tables;
 
@@ -94,14 +94,14 @@ static char	*option_get_text (SXINT kind)
 static char	*options_text (char *line)
 {
     SXINT	i;
-    SXBOOLEAN	is_first = SXTRUE;
+    bool	is_first = true;
 
     *line = SXNUL;
 
     for (i = 1; i <= LAST_OPTION; i++)
 	if (options_set & OPTION (i)) {
 	    if (is_first)
-		is_first = SXFALSE;
+		is_first = false;
 	    else
 		strcat (line, ", ");
 
@@ -117,7 +117,7 @@ static char	*options_text (char *line)
 
 
 
-static SXVOID	extract_language_name (char *path_name)
+static void	extract_language_name (char *path_name)
 {
     char	*p;
 
@@ -135,7 +135,7 @@ static SXVOID	extract_language_name (char *path_name)
 
 #include "varstr.h"
 
-static SXVOID	ysx_list_out (void)
+static void	ysx_list_out (void)
 {
     FILE	*listing;
     VARSTR vstr;
@@ -183,7 +183,7 @@ static SXVOID	ysx_list_out (void)
 
 
 
-static SXVOID	ysx_run (char *pathname)
+static void	ysx_run (char *pathname)
 {
     FILE	*infile;
 
@@ -252,8 +252,8 @@ int main (int argc, char *argv[])
   /* valeurs par defaut */
 
   options_set = OPTION (SOURCE) | OPTION (VERBOSE);
-  sxverbosep = SXFALSE;
-  is_source = SXTRUE;
+  sxverbosep = false;
+  is_source = true;
 
 
   /* Decodage des options */
@@ -261,19 +261,19 @@ int main (int argc, char *argv[])
   for (argnum = 1; argnum < argc; argnum++) {
     switch (option_get_kind (argv [argnum])) {
     case SOURCE:
-      is_source = SXTRUE, options_set |= OPTION (SOURCE);
+      is_source = true, options_set |= OPTION (SOURCE);
       break;
 
     case -SOURCE:
-      is_source = SXFALSE, options_set &= noOPTION (SOURCE);
+      is_source = false, options_set &= noOPTION (SOURCE);
       break;
 
     case VERBOSE:
-      sxverbosep = SXTRUE, options_set |= OPTION (VERBOSE);
+      sxverbosep = true, options_set |= OPTION (VERBOSE);
       break;
 
     case -VERBOSE:
-      sxverbosep = SXFALSE, options_set &= noOPTION (VERBOSE);
+      sxverbosep = false, options_set &= noOPTION (VERBOSE);
       break;
 
     case LANGUAGE_NAME:
@@ -318,7 +318,7 @@ int main (int argc, char *argv[])
     fprintf (sxtty, "%s\n", release_mess);
   }
 
-  syntax (SXINIT, &ysx_tables, SXFALSE /* no includes */);
+  syntax (SXINIT, &ysx_tables, false /* no includes */);
 
   if (options_set & OPTION (LANGUAGE_NAME)) {
     ysx_run ((char*)NULL);
@@ -333,7 +333,7 @@ int main (int argc, char *argv[])
     } while (argnum < argc);
   }
 
-  syntax (SXFINAL, &ysx_tables, SXTRUE);
+  syntax (SXFINAL, &ysx_tables, true);
 
   sxexit (sxerr_max_severity ());
 

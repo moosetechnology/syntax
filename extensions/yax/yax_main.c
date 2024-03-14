@@ -32,7 +32,7 @@
 /* These include files for date/time manipulation: */
 #include <sys/types.h>
 #include <sys/stat.h>
-char WHAT_YAXMAIN[] = "@(#)SYNTAX - $Id: yax_main.c 3364 2023-06-16 16:20:37Z garavel $" WHAT_DEBUG;
+char WHAT_YAXMAIN[] = "@(#)SYNTAX - $Id: yax_main.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 char	by_mess [] = "the SYNTAX attribute processor YAX";
 
@@ -40,11 +40,11 @@ char	by_mess [] = "the SYNTAX attribute processor YAX";
 
 SXINT (*more_scan_act) (SXINT code, SXINT act_no) ;
 
-extern SXVOID	no_tables (void);
-extern SXVOID	bnf_lo (void);
-extern SXBOOLEAN	yax_sem (void);
-extern SXVOID	yax_lo (void);
-extern SXVOID	yax_free (void);
+extern void	no_tables (void);
+extern void	bnf_lo (void);
+extern bool	yax_sem (void);
+extern void	yax_lo (void);
+extern void	yax_free (void);
 extern struct sxtables	bnf_tables;
 
 /*---------------*/
@@ -124,7 +124,7 @@ static char	*option_get_text (SXINT kind)
 
 /*-------------------------------------------------------------------*/
 
-static SXVOID	extract_language_name (char *path_name)
+static void	extract_language_name (char *path_name)
 {
     char	*p;
 
@@ -145,7 +145,7 @@ static SXVOID	extract_language_name (char *path_name)
 
 /*-------------------------------------------------------------------*/
 
-static SXVOID	bnf_run (char *pathname)
+static void	bnf_run (char *pathname)
 {
     FILE	*infile;
 
@@ -241,7 +241,7 @@ int main (int argc, char *argv[])
   /* valeurs par defaut */
 
   options_set = OPTION (SOURCE) | OPTION (VERBOSE) | OPTION (LIST) | OPTION (SEM_STATS);
-  is_source = is_list = is_sem_stats = SXTRUE;
+  is_source = is_list = is_sem_stats = true;
   tbl_lgth = 10;
   max_RHS = -1; /* Le 16/4/2002, par defaut, pas de verif de la longueur des RHS */
 
@@ -251,35 +251,35 @@ int main (int argc, char *argv[])
   for (argnum = 1; argnum < argc; argnum++) {
     switch (option_get_kind (argv [argnum])) {
     case SOURCE:
-      is_source = SXTRUE, options_set |= OPTION (SOURCE);
+      is_source = true, options_set |= OPTION (SOURCE);
       break;
 
     case -SOURCE:
-      is_source = SXFALSE, options_set &= noOPTION (SOURCE);
+      is_source = false, options_set &= noOPTION (SOURCE);
       break;
 
     case VERBOSE:
-      sxverbosep = SXTRUE, options_set |= OPTION (VERBOSE);
+      sxverbosep = true, options_set |= OPTION (VERBOSE);
       break;
 
     case -VERBOSE:
-      sxverbosep = SXFALSE, options_set &= noOPTION (VERBOSE);
+      sxverbosep = false, options_set &= noOPTION (VERBOSE);
       break;
 
     case LIST:
-      is_list = SXTRUE, options_set |= OPTION (LIST);
+      is_list = true, options_set |= OPTION (LIST);
       break;
 
     case -LIST:
-      is_list = SXFALSE, options_set &= noOPTION (LIST);
+      is_list = false, options_set &= noOPTION (LIST);
       break;
 
     case SEM_STATS:
-      is_sem_stats = SXTRUE, options_set |= OPTION (SEM_STATS);
+      is_sem_stats = true, options_set |= OPTION (SEM_STATS);
       break;
 
     case -SEM_STATS:
-      is_sem_stats = SXFALSE, options_set &= noOPTION (SEM_STATS);
+      is_sem_stats = false, options_set &= noOPTION (SEM_STATS);
       break;
 
     case MAX_RIGHT_HAND_SIZE:
@@ -333,7 +333,7 @@ int main (int argc, char *argv[])
     fprintf (sxtty, "%s\n", release_mess);
   }
 
-  syntax (SXINIT, &bnf_tables, SXFALSE /* no includes */);
+  syntax (SXINIT, &bnf_tables, false /* no includes */);
 
   if (options_set & OPTION (LANGUAGE_NAME)) {
     bnf_run ((char*)NULL);
@@ -349,7 +349,7 @@ int main (int argc, char *argv[])
     } while (argnum < argc);
   }
 
-  syntax (SXFINAL, &bnf_tables, SXTRUE);
+  syntax (SXFINAL, &bnf_tables, true);
 
   sxexit (sxerr_max_severity ());
 
@@ -364,14 +364,14 @@ int main (int argc, char *argv[])
 char	*options_text (char *line)
 {
     SXINT	i;
-    SXBOOLEAN	is_first = SXTRUE;
+    bool	is_first = true;
 
     *line = SXNUL;
 
     for (i = 1; i <= LAST_OPTION; i++)
 	if (options_set & OPTION (i)) {
 	    if (is_first)
-		is_first = SXFALSE;
+		is_first = false;
 	    else
 		strcat (line, ", ");
 

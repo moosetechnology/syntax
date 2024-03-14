@@ -21,10 +21,10 @@
 #include "sxunix.h"
 #include "P_tables.h"
 
-char WHAT_PARSERFREE[] = "@(#)SYNTAX - $Id: parserfree.c 3146 2023-05-02 12:21:39Z garavel $" WHAT_DEBUG;
+char WHAT_PARSERFREE[] = "@(#)SYNTAX - $Id: parserfree.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
 
-SXVOID	parser_free (struct parser_ag_item *parser_ag_ptr)
+void	parser_free (struct parser_ag_item *parser_ag_ptr)
 {
     if (parser_ag_ptr->prdct_list != NULL)
 	sxfree (parser_ag_ptr->prdct_list);

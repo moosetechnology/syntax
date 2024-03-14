@@ -26,9 +26,9 @@
 #include "sxcommon.h"
 
 #ifndef VARIANT_32
-char WHAT_SXNDP_RECOVERY[] = "@(#)SYNTAX - $Id: sxndp_rcvr.c 3233 2023-05-15 16:16:17Z garavel $" WHAT_DEBUG;
+char WHAT_SXNDP_RECOVERY[] = "@(#)SYNTAX - $Id: sxndp_rcvr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 #else
-char WHAT_SXNDP_RECOVERY32[] = "@(#)SYNTAX - $Id: sxndp_rcvr.c 3233 2023-05-15 16:16:17Z garavel $ SXNDP_RCVR_32" WHAT_DEBUG;
+char WHAT_SXNDP_RECOVERY32[] = "@(#)SYNTAX - $Id: sxndp_rcvr.c 3633 2023-12-20 18:41:19Z garavel $ SXNDP_RCVR_32" WHAT_DEBUG;
 #endif
 
 #if EBUG
@@ -47,32 +47,32 @@ extern SXINT			NDP_access (struct SXP_bases *abase, SXINT j);
 
 extern SXINT			new_parser (SXINT son, SXINT state, SXINT symbol);
 
-extern SXVOID			set_first_trans (struct SXP_bases *abase, 
+extern void			set_first_trans (struct SXP_bases *abase, 
 						 SXINT *check, 
 						 SXINT *action, 
 						 SXINT Max, 
 						 SXINT *next_action_kind);
 
-extern SXBOOLEAN			set_next_trans (struct SXP_bases *abase, 
+extern bool			set_next_trans (struct SXP_bases *abase, 
 						SXINT *check, 
 						SXINT *action, 
 						SXINT Max, 
 						SXINT *next_action_kind);
 
-extern SXBOOLEAN		sxndsubparse_a_token (SXINT parser, SXINT ref, SXINT symbol, sxaction_new_top_t f);
+extern bool		sxndsubparse_a_token (SXINT parser, SXINT ref, SXINT symbol, sxaction_new_top_t f);
 
-extern SXVOID			reducer (void);
+extern void			reducer (void);
 
 extern struct sxmilstn_elem	*milestone_new (struct sxmilstn_elem *prev_milstn_ptr, SXINT my_milestone, SXINT kind);
 
-extern SXINT                      mreds_push (SXINT parser, SXINT ref, SXINT tok_no, SXBOOLEAN is_new_triple, SXBOOLEAN is_shift_reduce, SXINT symbol);
+extern SXINT                      mreds_push (SXINT parser, SXINT ref, SXINT tok_no, bool is_new_triple, bool is_shift_reduce, SXINT symbol);
 
-extern SXVOID                   sxndparser_GC (SXINT current_parser);
+extern void                   sxndparser_GC (SXINT current_parser);
 
 
 /* E R R O R   R E C O V E R Y */
 
-static SXVOID compute_a_trans (SXINT parser_seed, SXINT head)
+static void compute_a_trans (SXINT parser_seed, SXINT head)
 {
     /* On est en correction, les parser : (state, tok_no) ne doivent pas
        etre confondus entre eux lorsque le meme token est utilise dans des modeles
@@ -154,7 +154,7 @@ static SXINT	get_tail (SXINT binf, SXINT bsup)
 
 
 
-static SXBOOLEAN	morgan (char *c1, char *c2)
+static bool	morgan (char *c1, char *c2)
 
 /* rend vrai si c1 = c2 a une faute d'orthographe pres */
 
@@ -166,7 +166,7 @@ static SXBOOLEAN	morgan (char *c1, char *c2)
     switch ((l1 = strlen (c1)) - (l2 = strlen (c2))) {
     default:
 	/* longueurs trop differentes */
-	return SXFALSE;
+	return false;
 
     case 0:
 	/* longueurs egales: on autorise un remplacement ou une interversion
@@ -178,7 +178,7 @@ static SXBOOLEAN	morgan (char *c1, char *c2)
 
 	if (t1 == tmax)
 	    /* egalite */
-	    return SXTRUE;
+	    return true;
 
 	d1 = *t1++, d2 = *t2++ /* caracteres courants, differents */ ;
 	e1 = *t1++, e2 = *t2++ /* caracteres suivants */ ;
@@ -186,7 +186,7 @@ static SXBOOLEAN	morgan (char *c1, char *c2)
 	if (e1 != e2 /* caracteres suivants differents */
 		     && (d1 != e2 || e1 != d2))
 	    /* caracteres pas inverses */
-	    return SXFALSE;
+	    return false;
 
 
 /* les restes des chaines doivent etre egaux */
@@ -215,7 +215,7 @@ static SXBOOLEAN	morgan (char *c1, char *c2)
 
     if (*t2 == SXNUL)
 	/* egalite au dernier caractere pres */
-	return SXTRUE;
+	return true;
 
     t1++ /* on saute un caractere dans la chaine la plus longue */ ;
 
@@ -249,7 +249,7 @@ static char	*ttext (struct sxtables *tables, SXINT tcode)
 
 
 
-static SXVOID nd2_modify_dag (void)
+static void nd2_modify_dag (void)
 {
     /* On a trouve une correction (dans rcvr.best), on modifie le dag
        des tokens en consequence. */
@@ -293,7 +293,7 @@ static SXVOID nd2_modify_dag (void)
 
     last_ms = parse_stack.rcvr.best.MS [rch + 1];
     x = pos;
-    parse_stack.rcvr.is_warning = SXTRUE;
+    parse_stack.rcvr.is_warning = true;
 
     do {
 	elem = model [++pos];
@@ -311,7 +311,7 @@ static SXVOID nd2_modify_dag (void)
 	    tok.comment = sxplocals.rcvr.com [pos];
 
 	    if (sxgenericp (sxplocals.sxtables, tok.lahead))
-		parse_stack.rcvr.is_warning = SXFALSE;
+		parse_stack.rcvr.is_warning = false;
 	}
 	else {
 	    x = elem + 1; /* approximatif */
@@ -353,7 +353,7 @@ static SXVOID nd2_modify_dag (void)
 
 
 
-static SXVOID put_in_repair_list (SXINT repair_tok_no, 
+static void put_in_repair_list (SXINT repair_tok_no, 
 				  SXINT	error_tok_no, 
 				  SXINT	model_no, 
 				  SXINT kind,
@@ -404,7 +404,7 @@ static SXVOID put_in_repair_list (SXINT repair_tok_no,
 }
 
 
-SXVOID output_repair_string (SXINT output_repair_string_index)
+void output_repair_string (SXINT output_repair_string_index)
 {
     SXINT			i;
     struct repair	*pelem = parse_stack.rcvr.repair_list + output_repair_string_index;
@@ -427,7 +427,7 @@ SXVOID output_repair_string (SXINT output_repair_string_index)
 }
 
 
-SXVOID output_repair_list (void)
+void output_repair_list (void)
 {
     SXINT i;
 
@@ -436,8 +436,8 @@ SXVOID output_repair_list (void)
 }
 
 
-static SXINT set_token_dag (SXBOOLEAN to_be_cloned, 
-			    SXBOOLEAN is_copy,
+static SXINT set_token_dag (bool to_be_cloned, 
+			    bool is_copy,
 			    struct sxtoken *ptok,
 			    SXINT  tok_no, 
 			    SXINT ms1, 
@@ -483,7 +483,7 @@ static SXINT set_token_dag (SXBOOLEAN to_be_cloned,
 }
 
 
-static SXVOID one_correction_message (void)
+static void one_correction_message (void)
 {
     /* OK ca a marche */
     char				*msg_params [5];
@@ -493,7 +493,7 @@ static SXVOID one_correction_message (void)
     
     SXINT		n, l, x, y, x1, y1, im, ll, j, i, ate, carac_tok_no;
     SXINT		*mm;
-    SXBOOLEAN	do_put_error, is_copy, is_carac;
+    bool	do_put_error, is_copy, is_carac;
     SXBA	back_bone;
     
     sxinitialise(back_bone); /* pour faire taire "gcc -Wuninitialized" */
@@ -610,8 +610,8 @@ static SXVOID one_correction_message (void)
 	    back_bone = parse_stack.rcvr.back_bone [parse_stack.rcvr.best.model_no];
 
 	    if (regle [1] == 0)
-		set_token_dag (SXFALSE,
-			       SXTRUE,
+		set_token_dag (false,
+			       true,
 			       (struct sxtoken*) NULL, /* creation du triplet */
 			       sxplocals.rcvr.TOK_0,
 			       mm [1],
@@ -620,14 +620,14 @@ static SXVOID one_correction_message (void)
 	    parse_stack.rcvr.milstn_elems [mm [2]].my_milestone = -1;
 
 	    /* Le futur token rencontre' sera caracteristique */
-	    is_carac = SXTRUE;
+	    is_carac = true;
 	}
 
 	l = (regle [1] == 0) ? 2 : 1;
 	x = l - 1;
 	n = 0;
 
-	parse_stack.rcvr.is_warning = SXTRUE;
+	parse_stack.rcvr.is_warning = true;
 	
 	for (tok = sxplocals.rcvr.toks; (i = regle [l]) < j; l++, tok++) {
 	    if (i < 0) {
@@ -638,12 +638,12 @@ static SXVOID one_correction_message (void)
 		tok->comment = sxplocals.rcvr.com [l];
 		
 		if (sxgenericp (sxplocals.sxtables, tok->lahead))
-		    parse_stack.rcvr.is_warning = SXFALSE;
+		    parse_stack.rcvr.is_warning = false;
 
 		if (x < j)
 		    ++x;
 
-		is_copy = SXFALSE;
+		is_copy = false;
 	    }
 	    else {
 		sxplocals.rcvr.TOK_i = parse_stack.rcvr.best.TOK [i];
@@ -651,7 +651,7 @@ static SXVOID one_correction_message (void)
 		
 		if (tok->comment != sxplocals.rcvr.com [l]) {
 		    tok->comment = sxplocals.rcvr.com [l];
-		    is_copy = SXFALSE;
+		    is_copy = false;
 		}
 		else
 		    if (parse_stack.rcvr.all_corrections)
@@ -675,7 +675,7 @@ static SXVOID one_correction_message (void)
 
 		/* noeud utilise'. */
 		parse_stack.rcvr.milstn_elems [mm [l + 1]].my_milestone = -1;
-		is_carac = SXFALSE;
+		is_carac = false;
 	    }
 	    
 	    n++;
@@ -691,7 +691,7 @@ static SXVOID one_correction_message (void)
 		
 	    if (tok->comment != sxplocals.rcvr.com [l]) {
 		tok->comment = sxplocals.rcvr.com [l];
-		is_copy = SXFALSE;
+		is_copy = false;
 	    }
 	    else
 		is_copy = SXBA_bit_is_set (back_bone, l);
@@ -736,8 +736,8 @@ static SXVOID one_correction_message (void)
 		if (pos != 0) {
 		    while (++elem <= lim) {
 			++pos;
-			set_token_dag (SXFALSE,
-			       SXTRUE,
+			set_token_dag (false,
+			       true,
 			       (struct sxtoken*) NULL, /* creation du triplet */
 			       parse_stack.rcvr.best.TOK [elem],
 			       mm [pos],
@@ -799,7 +799,7 @@ static SXVOID one_correction_message (void)
 #if EBUG
 	do_put_error = !sxplocals.mode.is_silent
 #else
-	do_put_error = SXFALSE
+	do_put_error = false
 #endif
 	;
     }
@@ -825,7 +825,7 @@ static SXVOID one_correction_message (void)
 }
 
 
-static SXBOOLEAN correction_already_found (SXINT *model, SXINT lim)
+static bool correction_already_found (SXINT *model, SXINT lim)
 {
     /* On considere que deux corrections sont identiques si les chaines corrigees
        sont identiques jusqu'au token de validation max. */
@@ -852,11 +852,11 @@ static SXBOOLEAN correction_already_found (SXINT *model, SXINT lim)
     return XxY_set (&parse_stack.rcvr.correction_strings, hd, 0, &correction_already_found_index);
 }
 
-static SXBOOLEAN validate_submodel (SXINT model_no, SXINT *model, SXINT parser, SXINT pos, SXINT bot, SXBOOLEAN a_la_rigueur)
+static bool validate_submodel (SXINT model_no, SXINT *model, SXINT parser, SXINT pos, SXINT bot, bool a_la_rigueur)
 {
     /* Retourne vrai ssi un modele est trouve'. */
     SXINT		lim, l, x, seed, elem, t;
-    SXBOOLEAN	local_a_la_rigueur;
+    bool	local_a_la_rigueur;
 
     if (pos < bot) {
 	/* lter contient une correction */ 
@@ -869,7 +869,7 @@ static SXBOOLEAN validate_submodel (SXINT model_no, SXINT *model, SXINT parser, 
 	if (parse_stack.rcvr.all_corrections
 	    && correction_already_found (/* model_no, */model, lim))
 	    /* deja trouve'. */
-	    return SXFALSE;
+	    return false;
 
 	parse_stack.rcvr.best.model_no = model_no;
 	parse_stack.rcvr.best.a_la_rigueur = a_la_rigueur;
@@ -890,7 +890,7 @@ static SXBOOLEAN validate_submodel (SXINT model_no, SXINT *model, SXINT parser, 
 	if (parse_stack.rcvr.all_corrections)
 	    one_correction_message ();
 
-	return SXTRUE;
+	return true;
     }
 
     XxY_Yforeach (parse_stack.rcvr.seeds, parser, x) {
@@ -918,7 +918,7 @@ static SXBOOLEAN validate_submodel (SXINT model_no, SXINT *model, SXINT parser, 
 		&& morgan (tok_text (sxplocals.rcvr.TOK_i), sxttext (sxplocals.sxtables, t)))) {
 		if (sxgetbit (sxplocals.SXP_tables.P_no_insert, t)) {
 		    /* On ne peut inserer t */
-		    local_a_la_rigueur = SXTRUE;
+		    local_a_la_rigueur = true;
 		}
 	    }
 	    else
@@ -947,7 +947,7 @@ static SXBOOLEAN validate_submodel (SXINT model_no, SXINT *model, SXINT parser, 
 					   bot, local_a_la_rigueur))
 			if (!parse_stack.rcvr.best.a_la_rigueur || a_la_rigueur)
 			    /* On ne pourra pas trouver mieux localement. */
-			    return SXTRUE;
+			    return true;
 	    }
 	}
     }
@@ -956,7 +956,7 @@ static SXBOOLEAN validate_submodel (SXINT model_no, SXINT *model, SXINT parser, 
 }
 
 
-static SXBOOLEAN validate_model (SXINT parser, SXINT model_no, SXINT pos)
+static bool validate_model (SXINT parser, SXINT model_no, SXINT pos)
 {
     /* Si parser < 0 (-model_no), on a execute' l'instruction halt sur fin de fichier. */
     SXINT 	*model = sxplocals.SXP_tables.P_lregle [model_no];
@@ -970,7 +970,7 @@ static SXBOOLEAN validate_model (SXINT parser, SXINT model_no, SXINT pos)
 	    if (!parse_stack.rcvr.all_corrections)
 		if (!parse_stack.rcvr.best.a_la_rigueur)
 		    /* On ne pourra pas trouver mieux localement. */
-		    return SXTRUE;
+		    return true;
 	}
     } while (parser > 0 && (parser = parse_stack.parser_to_attr [parser].next_for_scanner) > 0);
     
@@ -979,12 +979,12 @@ static SXBOOLEAN validate_model (SXINT parser, SXINT model_no, SXINT pos)
 
 
 
-static SXBOOLEAN try_a_model (SXINT pos, SXINT parser_seed, SXINT model_no, SXBOOLEAN check_first_trans, SXINT tok_no_to_be_checked)
+static bool try_a_model (SXINT pos, SXINT parser_seed, SXINT model_no, bool check_first_trans, SXINT tok_no_to_be_checked)
 {
     SXINT 		*model = sxplocals.SXP_tables.P_lregle [model_no];
     SXINT 		lmod = model [0];
     SXINT			head, tail, try_a_model_index, parser, seed, prev_parser;
-    SXBOOLEAN		ret_val, is_halt_hit;
+    bool		ret_val, is_halt_hit;
 
     tail = get_tail (sxplocals.SXP_tables.P_right_ctxt_head [model_no], model [lmod]);
 
@@ -1000,8 +1000,8 @@ static SXBOOLEAN try_a_model (SXINT pos, SXINT parser_seed, SXINT model_no, SXBO
 	    parse_stack.rcvr.milstn_head =
 		&(parse_stack.rcvr.prefixes_to_milestones [try_a_model_index]);
 	    
-	    is_halt_hit = SXFALSE;
-	    parse_stack.halt_hit = SXFALSE;
+	    is_halt_hit = false;
+	    parse_stack.halt_hit = false;
 
 	    do {
 		/* On calcule la transition. */
@@ -1010,11 +1010,11 @@ static SXBOOLEAN try_a_model (SXINT pos, SXINT parser_seed, SXINT model_no, SXBO
 		    compute_a_trans (parser_seed, head);
 		    
 		    if (parse_stack.halt_hit) {
-			parse_stack.halt_hit = SXFALSE;
+			parse_stack.halt_hit = false;
 			
 			if (*parse_stack.for_scanner.next_hd == 0 && head == tail) {
 			    /* Si *parse_stack.for_scanner.next_hd != 0, on le privilegie */
-			    is_halt_hit = SXTRUE; 
+			    is_halt_hit = true; 
 			    XxY_set (&parse_stack.rcvr.seeds, parser_seed, -model_no, &seed); 
 			}
 		    }
@@ -1048,18 +1048,18 @@ static SXBOOLEAN try_a_model (SXINT pos, SXINT parser_seed, SXINT model_no, SXBO
 	    if (SXBA_bit_is_set (parse_stack.rcvr.halt_hit_set, try_a_model_index))
 		parser_seed = -model_no;
 	    else
-		return SXFALSE;
+		return false;
 	}
 
-	check_first_trans = SXFALSE;
+	check_first_trans = false;
     } while (head != tail);
 
     /* Le modele est correct, il faut maintenant le valider vis-a-vis des 
        dont-delete, dont-insert et des fautes d'orthographe. */
     ret_val = validate_model (parser_seed, model_no, pos);
-    /* Ex: modele 0 S 2 marche, ou 2 est eof (=> parse_stack.halt_hit == SXTRUE) mais
+    /* Ex: modele 0 S 2 marche, ou 2 est eof (=> parse_stack.halt_hit == true) mais
        modele invalide' (pas de faute d'orthographe sur un mot-cle'). */
-    /* parse_stack.halt_hit = SXFALSE; deja fait */
+    /* parse_stack.halt_hit = false; deja fait */
     return ret_val;
 }
 
@@ -1099,9 +1099,9 @@ static SXINT dont_delete (SXINT model_no)
 }
 
 
-static SXBOOLEAN check_for_spelling (SXINT model_no)
+static bool check_for_spelling (SXINT model_no)
 {
-    /* Retourne SXTRUE ssi ce n'est pas un modele de correction de faute d'orthographe
+    /* Retourne true ssi ce n'est pas un modele de correction de faute d'orthographe
        ou si la correction semble possible (vu les renseignements dont on dispose). */
     /* Si le modele est un modele de correction de faute d'orthographe
        on ne continue que si le langage definit des mot-cles et si la chaine de
@@ -1125,11 +1125,11 @@ static SXBOOLEAN check_for_spelling (SXINT model_no)
 	}
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
-static SXVOID fill_vt_set (SXBA vt_set, SXINT parser)
+static void fill_vt_set (SXBA vt_set, SXINT parser)
 {
     SXINT t;
 
@@ -1142,7 +1142,7 @@ static SXVOID fill_vt_set (SXBA vt_set, SXINT parser)
 }
 
 
-static SXVOID compute_vt_set (SXBA vt_set, SXINT parser)
+static void compute_vt_set (SXBA vt_set, SXINT parser)
 {
     SXINT xmscan, scan_ref;
 
@@ -1176,10 +1176,10 @@ static SXVOID compute_vt_set (SXBA vt_set, SXINT parser)
 }
 
 
-static SXVOID local_correction (void)
+static void local_correction (void)
 {
     SXINT		z, i, model_no, parser, parser_seed;
-    SXBOOLEAN	is_a_0_model;
+    bool	is_a_0_model;
     
     /* Si parse_stack.rcvr.all_corrections, les elements de dont-insert, dont-delete
        deviennent obligatoires (aucune correction les impliquant ne peut etre choisie).
@@ -1226,7 +1226,7 @@ static SXVOID local_correction (void)
 			if (parser_seed > 0 && try_a_model (is_a_0_model ? (SXINT)1 : (SXINT)0,
 							    parser_seed,
 							    model_no,
-							    SXFALSE,
+							    false,
 							    (SXINT)0))
 			    if (!parse_stack.rcvr.all_corrections &&
 				!parse_stack.rcvr.best.a_la_rigueur)
@@ -1265,7 +1265,7 @@ static SXVOID local_correction (void)
 }
 
 
-static SXVOID set_next_shift_state (SXINT son, SXINT fathers_state, SXINT ref, SXINT tnt)
+static void set_next_shift_state (SXINT son, SXINT fathers_state, SXINT ref, SXINT tnt)
 {
     /* On ne cree le pere de son que s'il est interessant. */
     SXINT			father, state, x;
@@ -1310,7 +1310,7 @@ static SXVOID set_next_shift_state (SXINT son, SXINT fathers_state, SXINT ref, S
 #endif
 		
 	    father = new_parser (son, state, 0 /* symbol */);
-	    mreds_push (father, 0 /* ref */, parse_stack.current_token, SXFALSE, SXFALSE, 0);
+	    mreds_push (father, 0 /* ref */, parse_stack.current_token, false, false, 0);
 #if 0
 	    father = seek_parser (son, state, 0 /* ref */, 0 /* symbol */);
 	    /* Si "father" est nouveau, mreds_push (father, -0); a ete appele' */
@@ -1334,7 +1334,7 @@ static SXVOID set_next_shift_state (SXINT son, SXINT fathers_state, SXINT ref, S
 }
 
 
-static SXVOID create_path (SXINT son, SXINT fathers_state)
+static void create_path (SXINT son, SXINT fathers_state)
 {
     /* Attention, les parsers crees ne doivent pas etre GCer... */
     /* On range les intermediaires par mreds_push et les feuilles ds rcvr.shifts. */
@@ -1382,7 +1382,7 @@ static SXVOID create_path (SXINT son, SXINT fathers_state)
 
 
 
-static SXVOID process_sons (SXINT father, SXINT grand_fathers_state)
+static void process_sons (SXINT father, SXINT grand_fathers_state)
 {
     /* father est un parser du squelette, on initialise les chemins issus
        de ses fils sans creer de "clone" de father. */
@@ -1469,7 +1469,7 @@ static SXINT clone (SXINT father, SXINT ref)
 
 
 
-static SXBOOLEAN is_a_right_ctxt (SXINT head, SXINT tail)
+static bool is_a_right_ctxt (SXINT head, SXINT tail)
 {
     /* On verifie que tokens [TOK_0 + head .. TOK_0 + tail]
        est un contexte droit valide. */
@@ -1524,10 +1524,10 @@ static SXBOOLEAN is_a_right_ctxt (SXINT head, SXINT tail)
 
 
 
-static SXVOID nd2_try_a_correction (void)
+static void nd2_try_a_correction (void)
 {
     SXINT				z, dd, model_no, parser_seed, p2_ms;
-    SXBOOLEAN			is_local_correction;
+    bool			is_local_correction;
     struct sxmilstn_elem	*prev_ms_ptr;
 
     XxY_clear (&parse_stack.rcvr.seeds);
@@ -1542,7 +1542,7 @@ static SXVOID nd2_try_a_correction (void)
 	    break;
 
 	if (check_for_spelling (model_no)) {
-	    is_local_correction = SXFALSE;
+	    is_local_correction = false;
 	    
 	    /* On poursuit si le modele courant est meilleur que le modele actuel
 	       ou si le meilleur modele est un "a_la_rigueur" et si le modele courant
@@ -1557,7 +1557,7 @@ static SXVOID nd2_try_a_correction (void)
 			 || !parse_stack.rcvr.dont_delete))
 			is_local_correction =
 			    try_a_model ((SXINT)1, prev_ms_ptr->next_for_scanner, model_no,
-					 SXTRUE, parse_stack.rcvr.TOK [0]);
+					 true, parse_stack.rcvr.TOK [0]);
 		}
 	    }
 	    else {
@@ -1575,8 +1575,8 @@ static SXVOID nd2_try_a_correction (void)
 			    /* On ne considere que les milestones non vides */
 			    if (parser_seed > 0
 				&& try_a_model ((SXINT)0, parser_seed, model_no,
-						SXTRUE, XxYxZ_Y (sxndtkn.dag, z))) {
-				is_local_correction = SXTRUE;
+						true, XxYxZ_Y (sxndtkn.dag, z))) {
+				is_local_correction = true;
 				break;
 			    }
 			}
@@ -1594,7 +1594,7 @@ static SXVOID nd2_try_a_correction (void)
 
 
 
-static SXVOID nd2_unfold (SXINT prev_tok_no, SXINT mstn, SXINT n, SXINT lim)
+static void nd2_unfold (SXINT prev_tok_no, SXINT mstn, SXINT n, SXINT lim)
 {
     SXINT 			xyz, tok_no;
     struct sxmilstn_elem 	*mstn_ptr;
@@ -1628,7 +1628,7 @@ static SXVOID nd2_unfold (SXINT prev_tok_no, SXINT mstn, SXINT n, SXINT lim)
 }
 
 
-static SXBOOLEAN 	global_recovery (void)
+static bool 	global_recovery (void)
 {
     SXINT	tail, x, top, p, current_milestone;
 
@@ -1750,9 +1750,9 @@ static SXINT nd2_search_validation_context (struct sxmilstn_elem *orig_mstn_ptr,
 	}
 
 	if (global_recovery ())
-	    return SXTRUE;
+	    return true;
 	else
-	    return SXFALSE;
+	    return false;
     }
 
     mstn_ptr = &sxmilstn_access (sxndtkn.milestones, mstn_nb);
@@ -1842,7 +1842,7 @@ static SXINT nd2_search_key_terminal (void)
 
 
 
-static SXBOOLEAN	less_equal (SXINT z1, SXINT z2)
+static bool	less_equal (SXINT z1, SXINT z2)
 {
     return XxYxZ_X (sxndtkn.dag, z1) <= XxYxZ_X (sxndtkn.dag, z2);
 }
@@ -1850,7 +1850,7 @@ static SXBOOLEAN	less_equal (SXINT z1, SXINT z2)
 
 
 
-static SXVOID nd2_local_correction (void)
+static void nd2_local_correction (void)
 {
     /* Dans un premier temps, on s'occupe uniquement de milstn_current.
        Il serait possible de tenter des corrections (meme eventuellement multiples)
@@ -1949,7 +1949,7 @@ static SXVOID nd2_local_correction (void)
 
 
 
-static SXVOID sort_milestones (void)
+static void sort_milestones (void)
 {
     /* On lie les milestones afin que le parser execute ca ds le bon ordre. */
 
@@ -2039,14 +2039,14 @@ static SXVOID sort_milestones (void)
 
 
 
-static SXBOOLEAN	ndp_recovery (void)
+static bool	ndp_recovery (void)
 {
     char				*msg_params [5];
     struct SXP_local_mess		*local_mess;
     struct sxtoken			*tok;
     
-    SXBOOLEAN			with_semact = sxplocals.mode.with_semact;
-    SXBOOLEAN			ret_val = SXTRUE;
+    bool			with_semact = sxplocals.mode.with_semact;
+    bool			ret_val = true;
     SXINT				mode = sxplocals.mode.mode;
     SXINT				i, j, ate;
     SXINT				vt_set_card;
@@ -2070,8 +2070,8 @@ static SXBOOLEAN	ndp_recovery (void)
        corrections multiples afin de prendre en compte les corrections (eventuelles)
        sur le token zero (voir sort_milestones). */
 
-    parse_stack.rcvr.is_up = SXTRUE;
-    sxplocals.mode.with_semact = SXFALSE;
+    parse_stack.rcvr.is_up = true;
+    sxplocals.mode.with_semact = false;
     parse_stack.delta_generator = 0;
 
     /* + 1 => vt_set_card == 1
@@ -2229,10 +2229,10 @@ static SXBOOLEAN	ndp_recovery (void)
 		    /* on a trouve la fin du fichier */
 		    /* "Error: Parsing stops on End of File." */
 		    tok = &(SXGET_TOKEN (-i));
-		    ret_val = SXFALSE;
+		    ret_val = false;
 		}
 		else
-		  ret_val = SXTRUE;
+		  ret_val = true;
 	    }
 	    else {
 		for (;;) {
@@ -2246,7 +2246,7 @@ static SXBOOLEAN	ndp_recovery (void)
 			/* Les conse'quences de la non re'cupe'ration seront traite'es par
 			   le parser. */
 			sxplocals.ptok_no = sxplocals.rcvr.TOK_0;
-			ret_val = SXFALSE;
+			ret_val = false;
 			break;
 		    }
 		    
@@ -2277,7 +2277,7 @@ static SXBOOLEAN	ndp_recovery (void)
 			}
 
 			if (global_recovery ()) {
-			    ret_val = SXTRUE;
+			    ret_val = true;
 			    break;
 			}
 		    }
@@ -2331,7 +2331,7 @@ static SXBOOLEAN	ndp_recovery (void)
 	}
     }
     else
-	ret_val = SXFALSE;
+	ret_val = false;
     
     /* Il FAUT lancer le GC avant de retourner :
        - les etats crees par is_a_right_ctxt ne peuvent etre reutilises : puisqu'ils
@@ -2349,29 +2349,29 @@ static SXBOOLEAN	ndp_recovery (void)
     parse_stack.delta_generator = 0;
     sxplocals.mode.mode = mode;
     sxplocals.mode.with_semact = with_semact;
-    parse_stack.rcvr.is_up = SXFALSE;
-    parse_stack.halt_hit = SXFALSE; /* Au cas ou */
+    parse_stack.rcvr.is_up = false;
+    parse_stack.halt_hit = false; /* Au cas ou */
 
     return ret_val;
 }
 
 
 
-SXBOOLEAN		sxndprecovery (SXINT what_to_do)
+bool		sxndprecovery (SXINT what_to_do)
 {
     static SXINT	rcvr_shifts_foreach [] = {0, 0, 0, 0, 0, 0};
     
     switch (what_to_do) {
     case SXOPEN:
-	parse_stack.rcvr.all_corrections = SXFALSE;
+	parse_stack.rcvr.all_corrections = false;
 	sxplocals.rcvr.vt_set = NULL;
 	break;
 
     case SXINIT:
 	/* valeurs par defaut qui peuvent etre changees ds les
 	   scan_act ou pars_act. */
-	sxplocals.rcvr.truncate_context = SXTRUE;
-	parse_stack.rcvr.with_parsprdct = SXTRUE;
+	sxplocals.rcvr.truncate_context = true;
+	parse_stack.rcvr.with_parsprdct = true;
 
 	/* Allocation will be done at first call. */
 	break;
@@ -2518,12 +2518,12 @@ SXBOOLEAN		sxndprecovery (SXINT what_to_do)
 	sxexit(1);
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
 /* Tout ca peut etre construit statiquement... */
-static SXVOID models_dag (void)
+static void models_dag (void)
 {
     /* On construit le dag (pas de boucle!) des modeles
        Les noeuds sont des milestones
@@ -2729,15 +2729,15 @@ static SXVOID models_dag (void)
 
 
 
-SXBOOLEAN		sxndpallcorrections (SXINT what_to_do)
+bool		sxndpallcorrections (SXINT what_to_do)
 {
     SXINT i;
 
     switch (what_to_do) {
     case SXOPEN:
 	parse_stack.rcvr.back_bone = NULL;
-	parse_stack.rcvr.all_corrections = SXTRUE;
-	return SXTRUE;
+	parse_stack.rcvr.all_corrections = true;
+	return true;
 
     case SXACTION:
 	if (parse_stack.rcvr.back_bone == NULL)
@@ -2781,10 +2781,10 @@ SXBOOLEAN		sxndpallcorrections (SXINT what_to_do)
     return sxndprecovery (what_to_do);
 }
 
-SXBOOLEAN		sxndpsrecovery (SXINT what_to_do)
+bool		sxndpsrecovery (SXINT what_to_do)
 {
     SXINT		kind = sxplocals.mode.kind;
-    SXBOOLEAN	ret_val;
+    bool	ret_val;
 
     sxplocals.mode.kind = SXWITH_RECOVERY;
     ret_val = sxndprecovery (what_to_do);

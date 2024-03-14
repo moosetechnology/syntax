@@ -24,32 +24,32 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SORT_BY_TREE[] = "@(#)SYNTAX - $Id: sort_by_tree.c 2428 2023-01-18 12:54:10Z garavel $" WHAT_DEBUG;
+char WHAT_SORT_BY_TREE[] = "@(#)SYNTAX - $Id: sort_by_tree.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 static SXINT	*val;
 
 
 
-static SXBOOLEAN	is_less_or_equal (SXINT	left, SXINT right, SXBOOLEAN (*less_equal) (SXINT, SXINT))
+static bool	is_less_or_equal (SXINT	left, SXINT right, bool (*less_equal) (SXINT, SXINT))
 {
     SXINT	gauche, droit;
 
     if ((gauche = val [left]) == SXINT_MAX)
-	return SXFALSE;
+	return false;
 
     if ((droit = val [right]) == SXINT_MAX)
-	return SXTRUE;
+	return true;
 
     return (*less_equal) (gauche, droit);
 }
 
 
 
-SXVOID sort_by_tree (
+void sort_by_tree (
 		     SXINT *t,
 		     SXINT bi,
 		     SXINT bs,
-		     SXBOOLEAN (*less_equal) (SXINT, SXINT))
+		     bool (*less_equal) (SXINT, SXINT))
 
 /*
    Procedure triant par ordre croissant au sens large (la nature du tri

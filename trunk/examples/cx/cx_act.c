@@ -23,7 +23,7 @@
 #include "sxunix.h"
 #include "put_edit.h"
 
-char WHAT_CXACT[] = "@(#)SYNTAX - $Id: cx_act.c 3320 2023-06-04 06:52:42Z garavel $";
+char WHAT_CXACT[] = "@(#)SYNTAX - $Id: cx_act.c 3633 2023-12-20 18:41:19Z garavel $";
 
 /*  E X T E R N A L   E N T R I E S  */
 
@@ -66,14 +66,14 @@ static struct area {
 
 /*   P R O C E D U R E S   */
 
-static SXBOOLEAN	compare_less (SXINT ate1, SXINT ate2)
+static bool	compare_less (SXINT ate1, SXINT ate2)
 {
     return strcmp (sxstrget (ate1), sxstrget (ate2)) < 0;
 }
 
 
 
-static SXVOID	listing_output (void)
+static void	listing_output (void)
 {
     SXINT		mls;
 
@@ -108,7 +108,7 @@ static SXVOID	listing_output (void)
 
     {
 	SXINT	i, margin, col, id, l;
-	SXBOOLEAN		is_first;
+	bool		is_first;
 	struct area_item	*area_item;
 
 	sxinitialise (col); /* pour faire taire gcc -Wuninitialized */
@@ -131,11 +131,11 @@ static SXVOID	listing_output (void)
 
 	    if (area_item != NULL) {
 		put_edit_nnl (1, sxstrget (id));
-		is_first = SXTRUE;
+		is_first = true;
 
 		for (; area_item != NULL; area_item = area_item->next) {
 		    if (is_first) {
-			is_first = SXFALSE;
+			is_first = false;
 			col = margin;
 		    }
 		    else {
@@ -176,7 +176,7 @@ static struct area_item		*fetch_item (void)
 
 
 
-static SXVOID	open_act (void)
+static void	open_act (void)
 {
     area_head = area = (struct area*) sxcalloc (1, sizeof (struct area));
     area->lnk = NULL;
@@ -185,7 +185,7 @@ static SXVOID	open_act (void)
 
 
 
-static SXVOID	initialize_act (void)
+static void	initialize_act (void)
 {
     area = area_head;
     ID_max = line_no = 0;
@@ -194,7 +194,7 @@ static SXVOID	initialize_act (void)
 
 
 
-static SXVOID	action_act (SXINT act)
+static void	action_act (SXINT act)
 {
     SXINT	id;
     struct sxtoken	*tok;
@@ -233,7 +233,7 @@ static SXVOID	action_act (SXINT act)
 
 
 
-static SXVOID	close_act (void)
+static void	close_act (void)
 {
     struct area	*p;
 
@@ -246,7 +246,7 @@ static SXVOID	close_act (void)
 }
 
 
-SXVOID
+void
 cx_act (SXINT what, SXINT arg)
 {
     switch (what) {

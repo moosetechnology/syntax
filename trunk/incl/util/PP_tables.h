@@ -32,5 +32,5 @@ struct PP_ag_item {
 	struct SXPP_schema	*SXPP_schema;	/* 1:PP_schema_lgth */
 	};
 
-extern SXBOOLEAN paradis_write(struct PP_ag_item *PP_ag, char *langname);
-extern SXVOID    paradis_free (struct PP_ag_item *PP_ag);
+extern bool paradis_write(struct PP_ag_item *PP_ag, char *langname);
+extern void    paradis_free (struct PP_ag_item *PP_ag);

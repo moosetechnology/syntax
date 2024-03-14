@@ -24,22 +24,22 @@
 #include "put_edit.h"
 #include "B_tables.h"
 
-char WHAT_TDEFACTION[] = "@(#)SYNTAX - $Id: tdef_action.c 3595 2023-09-18 10:32:54Z garavel $" WHAT_DEBUG;
+char WHAT_TDEFACTION[] = "@(#)SYNTAX - $Id: tdef_action.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 /*   E X T E R N S   */
 
-extern SXBOOLEAN	is_source, is_c;
+extern bool	is_source, is_c;
 extern char	by_mess [], *prgentname;
 
 /*  S T A T I C     V A R I A B L E S   */
 
 static char	**err_titles;
-static SXBOOLEAN	is_error;
+static bool	is_error;
 static struct bnf_ag_item	bnf_ag;
 
 /*   P R O C E D U R E S   */
 
-static SXVOID	header (void)
+static void	header (void)
 {
     put_edit_nnl (9, "Listing of:");
     put_edit_nnl (25, sxsrcmngr.source_coord.file_name);
@@ -68,7 +68,7 @@ static SXVOID	header (void)
 
 #include "varstr.h"
 
-static SXVOID	listing_output (void)
+static void	listing_output (void)
 {
   VARSTR vstr;
   FILE	*listing;
@@ -114,7 +114,7 @@ struct codes {
 static struct codes *codes;
 static SXINT codes_size;
 
-static SXVOID	init (void)
+static void	init (void)
 {
   SXINT	i, ste;
 
@@ -153,12 +153,12 @@ static SXVOID	init (void)
      verifs eventuelles qui assurent que les tdef sont a jour */
   gen_header ();
 
-  is_error = SXFALSE;
+  is_error = false;
 }
 
 
 
-static SXVOID	action (SXINT action_no)
+static void	action (SXINT action_no)
 {
     SXINT	code, ste;
 
@@ -207,7 +207,7 @@ static SXVOID	action (SXINT action_no)
 
 
 
-static SXVOID	final (void)
+static void	final (void)
 {
     bnf_free (&bnf_ag);
     sxfree (codes);
@@ -236,7 +236,7 @@ tdef_action (SXINT what, struct sxtables *arg)
 	break;
 
     case SXERROR:
-	is_error = SXTRUE;
+	is_error = true;
 	break;
 
     case SXFINAL:

@@ -35,7 +35,7 @@
 #include <ctype.h>
 #include <string.h>
 
-char WHAT_RCGGENBNF[] = "@(#)SYNTAX - $Id: rcg_gen_bnf.c 3492 2023-08-20 15:43:18Z garavel $" WHAT_DEBUG;
+char WHAT_RCGGENBNF[] = "@(#)SYNTAX - $Id: rcg_gen_bnf.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 #define	Tstar_		0
 #define	S_		1
@@ -48,7 +48,7 @@ extern SXINT is_in_Tstar (SXINT, SXINT);
 static FILE		*bnf_file;
 static SXINT		*arg_stack, *lhs_param_stack, *rhs_pos2Ak, *rhs_pos2bot3, *rhs_pos2top3;
 static SXBA		rhs_pos_set, spcl_pos_set;
-static SXBOOLEAN		Tstar_is_needed;
+static bool		Tstar_is_needed;
 static XH_header	XH_bnf;
 
 static void
@@ -99,7 +99,7 @@ gen_bnf_rule (void)
 			break;
 
 		    case Tstar_:
-			Tstar_is_needed = SXTRUE;
+			Tstar_is_needed = true;
 			fputs ("<T*> ", bnf_file);
 			break;
 		    default:
@@ -121,7 +121,7 @@ gen_bnf_rule (void)
 		    }
 		    else {
 			/* C'est un vrai externe, on produit T* */
-			Tstar_is_needed = SXTRUE;
+			Tstar_is_needed = true;
 			fputs ("<T*> ", bnf_file);
 		    }
 		}
@@ -140,7 +140,7 @@ static void
 substitute (SXINT lhs_bot3, SXINT lhs_top3)
 {
     SXINT		lgth, rhs_pos, rhs_bot3, rhs_cur3, rhs_top3, lhs_cur3, symb, x;
-    SXBOOLEAN	has_a_substitution;
+    bool	has_a_substitution;
 
     if (lhs_bot3 == lhs_top3) {
 	/* la substitution est faite */
@@ -148,7 +148,7 @@ substitute (SXINT lhs_bot3, SXINT lhs_top3)
 	gen_bnf_rule ();
     }
     else {
-	has_a_substitution = SXFALSE;
+	has_a_substitution = false;
 	lgth = lhs_top3-lhs_bot3;
 	rhs_pos = -1;
 
@@ -165,7 +165,7 @@ substitute (SXINT lhs_bot3, SXINT lhs_top3)
 		 if (rhs_cur3 == rhs_top3) {
 		     /* rhs_pos marche */
 		     PUSH (arg_stack, rhs_pos2Ak [rhs_pos]+predef_nt_nb);
-		     has_a_substitution = SXTRUE;
+		     has_a_substitution = true;
 		     substitute (lhs_bot3+rhs_top3-rhs_bot3, lhs_top3);
 		     TOP (arg_stack)--;
 		 }
@@ -193,10 +193,10 @@ substitute (SXINT lhs_bot3, SXINT lhs_top3)
 }
 
 static void
-pre_substitute (SXINT lhs_bot3, SXINT lhs_top3, SXBOOLEAN is_spcl)
+pre_substitute (SXINT lhs_bot3, SXINT lhs_top3, bool is_spcl)
 {
     SXINT		lhs_lgth, rhs_lgth, rhs_pos, rhs_bot3, rhs_cur3, rhs_top3, lhs_cur3, symb;
-    SXBOOLEAN	has_a_substitution;
+    bool	has_a_substitution;
 
     lhs_lgth = lhs_top3-lhs_bot3;
 
@@ -207,7 +207,7 @@ pre_substitute (SXINT lhs_bot3, SXINT lhs_top3, SXBOOLEAN is_spcl)
     }
     else {
 	if (is_spcl) {
-	    has_a_substitution = SXFALSE;
+	    has_a_substitution = false;
 	    rhs_pos = -1;
 
 	    while ((rhs_pos = sxba_scan (spcl_pos_set, rhs_pos)) >= 0) {
@@ -231,7 +231,7 @@ pre_substitute (SXINT lhs_bot3, SXINT lhs_top3, SXBOOLEAN is_spcl)
 			    S1_push (lhs_param_stack, XH_list_elem (rcg_parameters, rhs_cur3));
 			}
 
-			has_a_substitution = SXTRUE;
+			has_a_substitution = true;
 			pre_substitute (lhs_bot3+rhs_lgth, lhs_top3, is_spcl);
 			S1_top (lhs_param_stack) -= rhs_top3-rhs_bot3;
 		    }
@@ -263,7 +263,7 @@ process_clause (SXINT clause)
     SXINT		rhs_cur, rhs_top, rhs_bot, rhs_prdct, rhs_bot2, rhs_cur2, rhs_nt, rhs_top2, k, rhs_param, rhs_bot3,
                 rhs_cur3, rhs_top3, rhs_pos, rhs, lsymb, rsymb;
     SXINT		max_rhs_pos, Ak;
-    SXBOOLEAN	has_component, is_spcl;
+    bool	has_component, is_spcl;
 
     lhs_prdct = XxY_X (rcg_clauses, clause) & lhs_prdct_filter;
     lhs_bot2 = XH_X (rcg_predicates, lhs_prdct);
@@ -273,8 +273,8 @@ process_clause (SXINT clause)
     rhs = XxY_Y (rcg_clauses, clause);
     rhs_top = XH_X (rcg_rhs, rhs+1);
     rhs_bot = XH_X (rcg_rhs, rhs);
-    has_component = SXFALSE;
-    is_spcl = SXFALSE;
+    has_component = false;
+    is_spcl = false;
 
     /* On commence par glaner qq renseignements sur la RHS */
     sxba_empty (rhs_pos_set);
@@ -313,7 +313,7 @@ process_clause (SXINT clause)
 			/* pas de "..." */
 			SXBA_1_bit (rhs_pos_set, rhs_pos);
 		    else
-			has_component = SXTRUE;
+			has_component = true;
 		}
 	    }
 	}
@@ -324,7 +324,7 @@ process_clause (SXINT clause)
 
 		if (rhs_param == 0 ||
 		    is_in_Tstar (XH_X (rcg_parameters, rhs_param), XH_X (rcg_parameters, rhs_param+1)) == 1) {
-		    is_spcl = SXTRUE;
+		    is_spcl = true;
 
 		    if (rhs_param) {
 			rhs_pos2bot3 [rhs_pos] = XH_X (rcg_parameters,  rhs_param);
@@ -375,7 +375,7 @@ process_clause (SXINT clause)
 	   L'idee est d'analyser <B[1]> avec la bonne sous-chaine du source.
 	   Par exemple B(\alpha ...) derive ds un suffixe du source.
 	   Le source (<S>) est donc forme d'un prefixe <T*> suivi de <B[1]>. */
-	Tstar_is_needed = SXTRUE;
+	Tstar_is_needed = true;
 
 	for (rhs_pos = lhs_arity; rhs_pos < max_rhs_pos; rhs_pos++) {
 	    if (!SXBA_bit_is_set (rhs_pos_set, rhs_pos)) {
@@ -443,7 +443,7 @@ gen_bnf (void)
 
     if (sxverbosep) {
 	fputs ("\tgen bnf .... ", sxtty);
-	sxttycol1p = SXFALSE;
+	sxttycol1p = false;
     }
 
     if ((bnf_file = fopen (strcat (strcpy (lst_name, prgentname), ".bnf"), "w")) == NULL) {
@@ -454,7 +454,7 @@ gen_bnf (void)
 
     gen_header ();
 
-    Tstar_is_needed = SXFALSE;
+    Tstar_is_needed = false;
 
     if (is_CF_parser) {
 	/* Allocations */
@@ -525,6 +525,6 @@ gen_bnf (void)
 
     if (sxverbosep) {
 	fputs ("done\n", sxtty);
-	sxttycol1p = SXTRUE;
+	sxttycol1p = true;
     }
 }

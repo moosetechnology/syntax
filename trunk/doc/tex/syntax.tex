@@ -4195,7 +4195,7 @@ int     bnf_get_line_no (rule_no)
 
 
 
-SXVOID  bnf_skip_rule ()
+void  bnf_skip_rule ()
 {
     register struct tail        *tail_coord;
     register SXUINT             line;
@@ -4222,7 +4222,7 @@ SXVOID  bnf_skip_rule ()
 
 
 
-SXVOID  bnf_found_bad_beginning_of_rule ()
+void  bnf_found_bad_beginning_of_rule ()
 {
     struct sxsource_coord       less_coord;
 
@@ -4239,7 +4239,7 @@ the head of a new grammar rule is assumed.",
 
 
 
-static SXVOID     gripe ()
+static void     gripe ()
 {
     fputs ("\nThe function \"bnf_scan_act\" is out of date \
 with respect to its specification.\n", sxstderr);
@@ -4248,7 +4248,7 @@ with respect to its specification.\n", sxstderr);
 
 
 
-SXVOID  (*more_scan_act) ();
+void  (*more_scan_act) ();
 
 
 
@@ -4285,7 +4285,7 @@ bnf_scan_act (code, act_no)
         }
 
         {
-            register SXSHORT      c;
+            register short      c;
 
             c = sxsrcmngr.current_char;
 
@@ -4312,7 +4312,7 @@ See you later.\n");
 
     case SXACTION:
         switch (act_no) {
-            register SXSHORT      c;
+            register short      c;
 
         case 1:
             coords [xprod].tail.line = sxsrcmngr.source_coord.line;
@@ -4811,7 +4811,7 @@ prédicat) associées à la description lexicale de {\LECL}.
 \begin{verbatim}
 #include "sxunix.h"
 
-SXVOID    lecl_scan_act (entry, act_no)
+void    lecl_scan_act (entry, act_no)
     int         entry, act_no;
 {
     switch (entry) {
@@ -5506,9 +5506,9 @@ int     XNT_parsact (entry, action_no)
         case 1:
             if (sxget_token (sxplocals.ptok_no)->lahead == c_code &&
                 sxget_token (sxplocals.ptok_no + 1)->lahead == a_code)
-                return SXTRUE;
+                return true;
 
-            return SXFALSE;
+            return false;
 
         default:
             break;
@@ -5791,7 +5791,7 @@ source erroné.
 \begin{verbatim}
 #include "sxunix.h"
 
-SXVOID    your_scan_act (entry, act_no)
+void    your_scan_act (entry, act_no)
     int         entry, act_no;
 {
     switch (entry) {

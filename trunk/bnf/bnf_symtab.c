@@ -24,12 +24,12 @@
 #include "bnf_vars.h"
 #include "varstr.h"
 
-char WHAT_BNFSYMTAB[] = "@(#)SYNTAX - $Id: bnf_symtab.c 3605 2023-09-24 05:36:48Z garavel $" WHAT_DEBUG;
+char WHAT_BNFSYMTAB[] = "@(#)SYNTAX - $Id: bnf_symtab.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
-static SXINT	st_get_nt_code (SXINT ste, SXBOOLEAN has_prdct);
-static SXINT	st_get_t_code (struct sxsource_coord source_index, SXINT ste, SXBOOLEAN is_gene, SXBOOLEAN has_prdct);
+static SXINT	st_get_nt_code (SXINT ste, bool has_prdct);
+static SXINT	st_get_t_code (struct sxsource_coord source_index, SXINT ste, bool is_gene, bool has_prdct);
 static SXINT	st_get_xnt_code (SXINT ste, SXINT xste, SXINT pste);
-static SXINT	st_get_xt_code (struct sxsource_coord source_index, SXINT ste, SXINT xste, SXINT pste, SXBOOLEAN is_gene);
+static SXINT	st_get_xt_code (struct sxsource_coord source_index, SXINT ste, SXINT xste, SXINT pste, bool is_gene);
 
 /*
 N O D E   N A M E S
@@ -65,7 +65,7 @@ static SXINT	x_rule, act_no, t_no, xt_no, nt_no, xnt_no, x_act_rule, x_act_lispr
 static SXBA	t_set, nt_set, act_set, xt_set, xnt_set /* 1:st_top */ ;
 static VARSTR	vstr;
 static SXINT	*ste_to_code, *code_to_ste, *code_to_rhs_nb;
-static SXBOOLEAN	is_X_NON_TERMINAL;
+static bool	is_X_NON_TERMINAL;
 static SXINT	*NT_to_lhs_nb, *NT_to_rhs_lgth, *XNT_to_ntste;
 static SXINT	xnt_rules_nb, xnt_rhs_lgth;
 static struct lhs_disp {
@@ -74,7 +74,7 @@ static struct lhs_disp {
 static SXINT	*lhs_to_rule;
 
 
-static SXVOID put_LHS (SXINT nt, SXINT rule)
+static void put_LHS (SXINT nt, SXINT rule)
 {
     SXINT *atail, *ahead;
 
@@ -86,7 +86,7 @@ static SXVOID put_LHS (SXINT nt, SXINT rule)
     
 
 
-static SXVOID	set_xsymbols (SXNODE *visited)
+static void	set_xsymbols (SXNODE *visited)
 {
 
 /*
@@ -109,7 +109,7 @@ D E R I V E D
 	    return;
 
 	case X_NON_TERMINAL_n:
-	    is_X_NON_TERMINAL = SXTRUE;
+	    is_X_NON_TERMINAL = true;
 #if defined (__GNUC__) && (__GNUC__ - 0 >= 7)
 	    /* absence de "break" (intentionnelle ?) */
 	    __attribute__ ((fallthrough));
@@ -128,7 +128,7 @@ D E R I V E D
 
 
 
-static SXVOID	pass_indpro_size (SXNODE *visited)
+static void	pass_indpro_size (SXNODE *visited)
 {
     SXINT ste;
 /*
@@ -194,7 +194,7 @@ D E R I V E D
 
 
 
-static SXVOID	pass_derived (void)
+static void	pass_derived (void)
 {
 
 /*
@@ -212,7 +212,7 @@ D E R I V E D
 
     case ACTION_n:
 	tnt_code = WI [W.indpro].lispro =
-	  st_get_nt_code (/* VS.source_index, */ste = VS.string_table_entry, SXFALSE);
+	  st_get_nt_code (/* VS.source_index, */ste = VS.string_table_entry, false);
 	code_to_rhs_nb [tnt_code]++;
 	WI [W.indpro++].prolis = x_rule;
 
@@ -232,7 +232,7 @@ D E R I V E D
     case LHS_NON_TERMINAL_n:
       put_LHS (WN [x_rule].reduc = st_get_nt_code (/* VS.source_index, */
 						     VS.string_table_entry,
-						     SXFALSE),
+						     false),
 		    x_rule);
 
 	if (max_RHS != -1 && visited->father->degree > max_RHS + 1)
@@ -254,7 +254,7 @@ Check for a missing semi-colon.",
 				      visited->brother->token.string_table_entry);
 	}
 	else {
-	  tnt_code = st_get_nt_code (/* VS.source_index, */VS.string_table_entry, SXFALSE);
+	  tnt_code = st_get_nt_code (/* VS.source_index, */VS.string_table_entry, false);
 	}
 	
 	WI [W.indpro].lispro = tnt_code;
@@ -276,11 +276,11 @@ Check for a missing semi-colon.",
 	    if (visited->father->name == X_TERMINAL_n) {
 		tnt_code = st_get_xt_code (VS.source_index, VS.string_table_entry, visited->father->token.
 					   string_table_entry, visited->brother->token.string_table_entry,
-					   (SXBOOLEAN) (visited->name == GENERIC_TERMINAL_n));
+					   (bool) (visited->name == GENERIC_TERMINAL_n));
 	    }
 	    else {
 	      tnt_code = st_get_t_code (VS.source_index, VS.string_table_entry,
-					(SXBOOLEAN) (visited->name == GENERIC_TERMINAL_n), SXFALSE);
+					(bool) (visited->name == GENERIC_TERMINAL_n), false);
 	    }
 
 	    code_to_rhs_nb [tnt_code]++;
@@ -288,7 +288,7 @@ Check for a missing semi-colon.",
 	    WI [W.indpro++].prolis = x_rule;
 	}
 
-	WN [x_rule].bprosimpl = SXFALSE;
+	WN [x_rule].bprosimpl = false;
 	return;
 
     case VOCABULARY_S_n:
@@ -307,7 +307,7 @@ Z Z Z Z
 
 
 
-static SXVOID	pass_inherited (void)
+static void	pass_inherited (void)
 {
 
 /*
@@ -340,7 +340,7 @@ I N H E R I T E D
 
 
 
-static SXINT	st_get_nt_code (SXINT ste, SXBOOLEAN has_prdct)
+static SXINT	st_get_nt_code (SXINT ste, bool has_prdct)
      /* struct sxsource_coord	source_index; */
          		    
            	          
@@ -357,7 +357,7 @@ static SXINT	st_get_nt_code (SXINT ste, SXBOOLEAN has_prdct)
 
 
 
-static SXINT	st_get_t_code (struct sxsource_coord source_index, SXINT ste, SXBOOLEAN is_gene, SXBOOLEAN has_prdct)
+static SXINT	st_get_t_code (struct sxsource_coord source_index, SXINT ste, bool is_gene, bool has_prdct)
 {
     SXINT	t;
 
@@ -371,7 +371,7 @@ static SXINT	st_get_t_code (struct sxsource_coord source_index, SXINT ste, SXBOO
     }
     else {
 	/* Il est interdit d'utiliser dans la meme grammaire le terminal %blabla (generique) et "%blabla". */
-        /* Ds le cas d'un XT, On ne fait le test que sur l'appel avec has_prdct==SXFALSE */
+        /* Ds le cas d'un XT, On ne fait le test que sur l'appel avec has_prdct==false */
 	if (!has_prdct && (SXBA_bit_is_set (is_a_generic, -t) != is_gene)) {
 	    sxerror (source_index,
 		     sxtab_ptr->err_titles [2][0] /* error */ ,
@@ -404,8 +404,8 @@ static SXINT	st_get_xnt_code (SXINT ste, SXINT xste, SXINT pste)
 {
     SXINT	nt, xnt, i;
 
-    nt = st_get_nt_code (/* source_index, */ste, SXFALSE);
-    xnt = st_get_nt_code (/* source_index, */xste, SXTRUE);
+    nt = st_get_nt_code (/* source_index, */ste, false);
+    xnt = st_get_nt_code (/* source_index, */xste, true);
     i = xnt - nt_no;
     bnf_ag.XNT_TO_NT_PRDCT [i].v_code = nt;
     bnf_ag.XNT_TO_NT_PRDCT [i].prdct_no = atoi (sxstrget (pste) + 1);
@@ -414,12 +414,12 @@ static SXINT	st_get_xnt_code (SXINT ste, SXINT xste, SXINT pste)
 
 
 
-static SXINT	st_get_xt_code (struct sxsource_coord source_index, SXINT ste, SXINT xste, SXINT pste, SXBOOLEAN is_gene)
+static SXINT	st_get_xt_code (struct sxsource_coord source_index, SXINT ste, SXINT xste, SXINT pste, bool is_gene)
 {
     SXINT	t, xt, i;
 
-    t = st_get_t_code (source_index, ste, is_gene, SXFALSE);
-    xt = st_get_t_code (source_index, xste, is_gene, SXTRUE);
+    t = st_get_t_code (source_index, ste, is_gene, false);
+    xt = st_get_t_code (source_index, xste, is_gene, true);
     i = -xt - t_no;
     bnf_ag.XT_TO_T_PRDCT [i].v_code = -t;
     bnf_ag.XT_TO_T_PRDCT [i].prdct_no = atoi (sxstrget (pste) + 1);
@@ -428,7 +428,7 @@ static SXINT	st_get_xt_code (struct sxsource_coord source_index, SXINT ste, SXIN
 
 
 
-static SXVOID	fill_symbol_strings (SXINT symbol_code, SXINT ste)
+static void	fill_symbol_strings (SXINT symbol_code, SXINT ste)
 {
     SXINT	longueur = sxstrlen (ste);
 
@@ -451,7 +451,7 @@ static SXVOID	fill_symbol_strings (SXINT symbol_code, SXINT ste)
 /* symbol table processing */
 /*-------------------------*/
 
-SXVOID	symbol_table_processing (SXNODE *adam)
+void	symbol_table_processing (SXNODE *adam)
 {
     SXINT		st_top;
 
@@ -461,7 +461,7 @@ SXVOID	symbol_table_processing (SXNODE *adam)
 /*-----------------------------------------------*/
 
     vstr = varstr_alloc (64);
-    is_X_NON_TERMINAL = SXFALSE;
+    is_X_NON_TERMINAL = false;
 
     if (is_predicate /* Le scanner a trouve des predicats */ )
 	set_xsymbols (adam);

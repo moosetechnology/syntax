@@ -21,7 +21,7 @@
 #include "sxunix.h"
 #include "sxdico.h"
 
-char WHAT_SXDICO_PROCESS[] = "@(#)SYNTAX - $Id: sxdico_process.c 2947 2023-03-29 17:06:41Z garavel $" WHAT_DEBUG;
+char WHAT_SXDICO_PROCESS[] = "@(#)SYNTAX - $Id: sxdico_process.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
 static struct mot2 mot2;
 
@@ -54,16 +54,16 @@ static SXBA_INDEX *state2trans_nb;
 static SXINT      *sorted_by_state, start_state;
 
 
-static SXBOOLEAN	state_by_lgth (SXINT i, SXINT j)
+static bool	state_by_lgth (SXINT i, SXINT j)
 {
     return state2trans_nb [i] > state2trans_nb [j];
 }
 
 
 
-static SXBOOLEAN	prefix_is_chosen;
+static bool	prefix_is_chosen;
 
-static SXBOOLEAN	less (SXINT i, SXINT j)
+static bool	less (SXINT i, SXINT j)
 {
     SXINT x, y, x_min, x_max, y_min, y_max, x_char, y_char;
 
@@ -73,7 +73,7 @@ static SXBOOLEAN	less (SXINT i, SXINT j)
 
     if (x_min > x_max)
 	/* mot vide */
-	return SXTRUE;
+	return true;
 
     y = sorted [j];
     y_min = mot2.min [y];
@@ -81,7 +81,7 @@ static SXBOOLEAN	less (SXINT i, SXINT j)
 
     if (y_min > y_max)
 	/* mot vide */
-	return SXFALSE;
+	return false;
 
     if (prefix_is_chosen) {
 	x_char = x_min;
@@ -98,7 +98,7 @@ static SXBOOLEAN	less (SXINT i, SXINT j)
 
 
 
-static SXVOID	sort (SXINT bi, SXINT bf)
+static void	sort (SXINT bi, SXINT bf)
 {
     SXINT	i;
 
@@ -193,7 +193,7 @@ unpack_kw (unsigned char *kw, SXINT kwl)
     /* Recherche kw ds le dico et retourne le code de kw ou 0 si kw n'existe pas */
     SXINT			base;
     unsigned char	*pbi, *pbs, class;
-    SXBOOLEAN		is_prefix;
+    bool		is_prefix;
     SXBA		line_set;
     SXINT			*line;
 
@@ -212,11 +212,11 @@ unpack_kw (unsigned char *kw, SXINT kwl)
     for (;;) {
 	if (base > 0) {
 	    base -= mot2.nb;
-	    is_prefix = SXTRUE;
+	    is_prefix = true;
 	}
 	else {
 	    base = -base;
-	    is_prefix = SXFALSE;
+	    is_prefix = false;
 	}
 
 	line_set = automaton_signature [base];
@@ -256,7 +256,7 @@ unpack_kw (unsigned char *kw, SXINT kwl)
 }
 #endif
 
-static SXBOOLEAN
+static bool
 get_best (SXINT bi, SXINT bf)
 {
     /* entre bi et bf, on a deja reconnu *pref_nb caracteres du prefixe et
@@ -291,11 +291,11 @@ get_best (SXINT bi, SXINT bf)
       break;
 
     case PREFIX_BOUND:
-      prefix_is_chosen = SXTRUE;
+      prefix_is_chosen = true;
       break;
 
     case SUFFIX_BOUND:
-      prefix_is_chosen = SXFALSE;
+      prefix_is_chosen = false;
       break;
     default: /* pour faire taire gcc -Wswitch-default */
 #if EBUG
@@ -347,7 +347,7 @@ gen (SXINT bi, SXINT bf)
 {
     SXINT			cur_state, next_state, x, y, kw, kw2, min, max, min2, max2;
     unsigned char	car, class;
-    SXBOOLEAN		is_prefix;
+    bool		is_prefix;
 
     if (bi > bf)
 	return 0;
@@ -715,7 +715,7 @@ sxdico_process (struct mot2 input, struct dico *output)
 }
 
 void
-sxdico2c (struct dico *sxdico2c_dico, FILE *file, char *dico_name, SXBOOLEAN is_static)
+sxdico2c (struct dico *sxdico2c_dico, FILE *file, char *dico_name, bool is_static)
 {
   unsigned char	class;
   SXUINT i;

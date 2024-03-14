@@ -131,7 +131,7 @@ exact_nbest_args_usage (void)
 
 /* decode les arguments specifiques a lfg */
 /* l'option argv [*parg_num] est inconnue du parseur earley */
-static SXBOOLEAN
+static bool
 exact_nbest_args_decode (int *pargnum, int argc, char *argv[])
 {
   exact_nbest = nbest; /* par défaut, valeur de nbest_semact, qui a déjà lu ses options avant exact_nbest_semact.c (cf sxsem_mngr.c) */
@@ -140,7 +140,7 @@ exact_nbest_args_decode (int *pargnum, int argc, char *argv[])
   case EXACT_NBEST:
     if (++*pargnum >= argc) {
       fprintf (stderr, "%s: an SXINTeger number must follow the \"%s\" option;\n", ME, option_get_text (EXACT_NBEST));
-      return SXFALSE;
+      return false;
     }
 
     exact_nbest = atoi (argv [*pargnum]);
@@ -153,7 +153,7 @@ exact_nbest_args_decode (int *pargnum, int argc, char *argv[])
     break;
 
   case UNKNOWN_ARG:
-    return SXFALSE;
+    return false;
   default: /* pour faire taire gcc -Wswitch-default */
 #if EBUG
     sxtrap(ME,"unknown switch case #1");
@@ -161,12 +161,12 @@ exact_nbest_args_decode (int *pargnum, int argc, char *argv[])
     break;
   }
 
-  return SXTRUE;
+  return true;
 }
 
-#define pb SXTRUE
-#define an SXTRUE
-#define print_forest SXTRUE
+#define pb true
+#define an true
+#define print_forest true
 
 
 static SXBA       Pij_set;
@@ -257,7 +257,7 @@ static SXINT exact_nbest_sem_pass (void);
 static void exact_nbest_sem_init (void);
 static void exact_nbest_sem_final (void);
 static void exact_nbest_sem_close (void);
-static SXBOOLEAN Aij_or_item_kth_best (SXINT Aij_or_item, SXINT k);
+static bool Aij_or_item_kth_best (SXINT Aij_or_item, SXINT k);
 
 
 void
@@ -1196,7 +1196,7 @@ generate_top_down_nbest_forest (SXINT Pij)
 
 /* Toutes les Aij-prods sont ds Aij_Pij_set */
 static SXINT
-generate_top_down_nbest_forest_post (SXINT Aij, SXBOOLEAN must_be_kept)
+generate_top_down_nbest_forest_post (SXINT Aij, bool must_be_kept)
 {
   SXINT Aij_id, id, bot, top, cur, i, Pij, Pij_set_id, prev_Aij_id, prev_id, new_id, new_Aij_id;
 
@@ -1270,7 +1270,7 @@ static SXINT
 generate_nbest_Pij (SXINT Pij, SXINT lhs_id, SXBA nbest_set)
 {
   SXINT      Aij, Aij_id, id, item, Xpq, rhs_Xpq, rhs, prod, i, bot, cur, top, rhs_id, couple;
-  SXBOOLEAN  is_empty;
+  bool  is_empty;
 
   Aij = spf.outputG.lhs [Pij].lhs;
 
@@ -1279,7 +1279,7 @@ generate_nbest_Pij (SXINT Pij, SXINT lhs_id, SXBA nbest_set)
     id = XxY_Y (AijXid, Aij_id);
 
     /* On doit faire l'intersection entre id et nbest_set */
-    is_empty = SXTRUE;
+    is_empty = true;
     bot = XH_X (XH_nbest_set_hd, id);
     top = XH_X (XH_nbest_set_hd, id+1);
 
@@ -1287,7 +1287,7 @@ generate_nbest_Pij (SXINT Pij, SXINT lhs_id, SXBA nbest_set)
       i = XH_list_elem (XH_nbest_set_hd, cur);
 
       if (SXBA_bit_is_set (nbest_set, i)) {
-	is_empty = SXFALSE;
+	is_empty = false;
 	XH_push (XH_nbest_set_hd, i);
       }
     }

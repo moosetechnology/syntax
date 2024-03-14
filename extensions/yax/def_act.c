@@ -21,18 +21,18 @@
 #include "B_tables.h"
 #include "yax_vars.h"
 
-char WHAT_TAXDEFACT[] = "@(#)SYNTAX - $Id: def_act.c 3364 2023-06-16 16:20:37Z garavel $" WHAT_DEBUG;
+char WHAT_TAXDEFACT[] = "@(#)SYNTAX - $Id: def_act.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
 
-static SXBOOLEAN	has_defining_occurrence = SXFALSE, has_semantics = SXFALSE;
+static bool	has_defining_occurrence = false, has_semantics = false;
 static SXINT	attribute_needed = 0;
 static struct sxsource_coord	RULE_source_coord;
 static SXINT	xprod = 0;
 extern struct sxtables	bnf_tables;
-extern SXVOID    bnf_found_bad_beginning_of_rule (void);
-extern SXVOID    bnf_skip_rule (void);
+extern void    bnf_found_bad_beginning_of_rule (void);
+extern void    bnf_skip_rule (void);
 
 /* dans yax_put.c : */
-extern SXVOID      put_postlude (void);
+extern void      put_postlude (void);
 
 /* dans yax.c : */
 
@@ -40,7 +40,7 @@ extern SXINT	chercher_attr (SXINT ste);
 
 /*   --------------------------------------------------------- */
 
-static SXBOOLEAN	pos_ok (SXINT pos, SXBOOLEAN is_typed)
+static bool	pos_ok (SXINT pos, bool is_typed)
 {
     if (pos > LGPROD (xprod) || (pos <= 0 && !is_typed)) {
 	sxerror (sxsvar.sxlv.terminal_token.source_index,
@@ -49,11 +49,11 @@ static SXBOOLEAN	pos_ok (SXINT pos, SXBOOLEAN is_typed)
 		 bnf_tables.err_titles [2]+1,
 		 pos <= 0 ?
 		 "This attribute must be typed" : "No such symbol in this rule");
-	is_err = SXTRUE;
-	return SXFALSE;
+	is_err = true;
+	return false;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -61,7 +61,7 @@ static SXBOOLEAN	pos_ok (SXINT pos, SXBOOLEAN is_typed)
 
 /*   --------------------------------------------------------- */
 
-static SXBOOLEAN	nt_ok (SXINT nt)
+static bool	nt_ok (SXINT nt)
 {
     if (nt <= 0 || IS_A_PARSACT (nt) /* action */ ) {
 	sxerror (sxsvar.sxlv.terminal_token.source_index,
@@ -69,11 +69,11 @@ static SXBOOLEAN	nt_ok (SXINT nt)
 		 "%sThis refers to \"%s\", which is not a non-terminal.",
 		 bnf_tables.err_titles [2]+1,
 		 sxstrget (nt <= 0 ? t_to_ste [-nt] : nt_to_ste [nt]));
-	is_err = SXTRUE;
-	return SXFALSE;
+	is_err = true;
+	return false;
     }
  
-    return SXTRUE;
+    return true;
 }
 
 
@@ -81,7 +81,7 @@ static SXBOOLEAN	nt_ok (SXINT nt)
 
 /*   --------------------------------------------------------- */
 
-static SXVOID	put_named_type (SXINT ste)
+static void	put_named_type (SXINT ste)
 {
     nb_occurrences++;
     /* LINTED this cast from long to int is needed by printf() */
@@ -90,7 +90,7 @@ static SXVOID	put_named_type (SXINT ste)
 
 
 
-static SXVOID	put_type (SXINT nt)
+static void	put_type (SXINT nt)
 {
     SXINT	attr;
 
@@ -106,7 +106,7 @@ static SXVOID	put_type (SXINT nt)
 	     "%sNo attribute has been declared for %s.",
 	     bnf_tables.err_titles[2]+1,
 	     sxstrget (nt_to_ste [nt]));
-    is_err = SXTRUE;
+    is_err = true;
 }
 
 
@@ -114,10 +114,10 @@ static SXVOID	put_type (SXINT nt)
 
 /*   --------------------------------------------------------- */
 
-static SXVOID	found_text (void)
+static void	found_text (void)
 {
     if (!has_semantics) {
-	has_semantics = SXTRUE;
+	has_semantics = true;
 	fprintf (sxstdout, "\n#line 73 \"yax_pattern\"\ncase %ld:\n#line %lu \"%s\"\n", (SXINT) xprod, sxsvar.sxlv.terminal_token.source_index.line, sxsvar.
 	     sxlv.terminal_token.source_index.file_name);
     }
@@ -128,7 +128,7 @@ static SXVOID	found_text (void)
 
 /*   --------------------------------------------------------- */
 
-static SXVOID	default_identity (void)
+static void	default_identity (void)
 {
     SXINT	nt;
 
@@ -143,7 +143,7 @@ static SXVOID	default_identity (void)
 	else {
 	    fmt = "%sThe default \"$$ = $1\" action does not define the <%s attribute of this non-terminal.";
 	    rtx = 2;
-	    is_err = SXTRUE;
+	    is_err = true;
 	}
 
 	sxerror (RULE_source_coord,
@@ -159,7 +159,7 @@ static SXVOID	default_identity (void)
 
 /*   --------------------------------------------------------- */
 
-static SXVOID	found_rule (void)
+static void	found_rule (void)
 {
     SXINT	nt;
     SXINT	attr;
@@ -173,15 +173,15 @@ static SXVOID	found_rule (void)
 
     if (has_semantics) {
 	if (has_defining_occurrence) {
-	    has_defining_occurrence = SXFALSE;
+	    has_defining_occurrence = false;
 	    nb_definitions++;
 	}
 
 	nb_sem_rules++;
 	fputs ("\n#line 76 \"yax_pattern\"\nbreak;", sxstdout);
 	WN [xprod].action = xprod;
-	WN [xprod].bprosimpl = SXFALSE;
-	has_semantics = SXFALSE;
+	WN [xprod].bprosimpl = false;
+	has_semantics = false;
     }
 
     nt = WN [++xprod].reduc;
@@ -200,7 +200,7 @@ static SXVOID	found_rule (void)
 
 /*   --------------------------------------------------------- */
 
-static SXVOID	gripe (void)
+static void	gripe (void)
 {
     fputs ("\nThe function \"def_act\" is out of date with respect to its specification.\n", sxstderr);
     sxexit(1);
@@ -214,7 +214,7 @@ static SXVOID	gripe (void)
 /*     A C T I O N     */
 
 
-SXVOID	def_scanact (SXINT code, SXINT numact)
+void	def_scanact (SXINT code, SXINT numact)
 {
     switch (code) {
     default:
@@ -228,7 +228,7 @@ SXVOID	def_scanact (SXINT code, SXINT numact)
 	return;
 
     case SXERROR:
-	is_err = SXTRUE;
+	is_err = true;
 	return;
 
     case SXACTION:
@@ -262,7 +262,7 @@ SXVOID	def_scanact (SXINT code, SXINT numact)
 	case 5:
 	    /* $$ */
 	    found_text ();
-	    has_defining_occurrence = SXTRUE;
+	    has_defining_occurrence = true;
 	    fputs ("yyval", sxstdout);
 	    put_type (WN [xprod].reduc);
 	    break;
@@ -274,7 +274,7 @@ SXVOID	def_scanact (SXINT code, SXINT numact)
 	    found_text ();
 	    fprintf (sxstdout, "yypv[%s]", sxsvar.sxlv_s.token_string + 1);
 
-	    if (pos_ok (pos = atoi (sxsvar.sxlv_s.token_string + 1), SXFALSE) && nt_ok (nt = WI [WN [xprod].prolon + pos -
+	    if (pos_ok (pos = atoi (sxsvar.sxlv_s.token_string + 1), false) && nt_ok (nt = WI [WN [xprod].prolon + pos -
 		 1].lispro)) {
 		put_type (XNT_TO_NT (nt));
 	    }
@@ -283,7 +283,7 @@ SXVOID	def_scanact (SXINT code, SXINT numact)
 
 	case 8:
 	    /* $ TYPE $ */
-	    has_defining_occurrence = SXTRUE;
+	    has_defining_occurrence = true;
 	    fputs ("yyval", sxstdout);
 
 	    if (xattr >= 0) {
@@ -294,7 +294,7 @@ SXVOID	def_scanact (SXINT code, SXINT numact)
 			 bnf_tables.err_titles [2][0],
 			 "%sIllegal use of a terminal attribute.",
 			 bnf_tables.err_titles [2]+1);
-		is_err = SXTRUE;
+		is_err = true;
 	    }
 
 	    break;
@@ -304,7 +304,7 @@ SXVOID	def_scanact (SXINT code, SXINT numact)
 	    fprintf (sxstdout, xattr >= 0 ? "yypv[%s]" : "SXSTACKtoken(SXSTACKnewtop()+(%s-1))", sxsvar.sxlv_s.
 		 token_string);
 
-	    if (pos_ok (pos = atoi (sxsvar.sxlv_s.token_string), SXTRUE)) {
+	    if (pos_ok (pos = atoi (sxsvar.sxlv_s.token_string), true)) {
 		if (xattr >= 0) {
 		    if (pos <= 0 || nt_ok (WI [WN [xprod].prolon + pos - 1].lispro)) {
 			put_named_type (type_ste);
@@ -339,14 +339,14 @@ SXVOID	def_scanact (SXINT code, SXINT numact)
 }
 
 
-SXVOID	def_semact (SXINT code, SXINT numact)
+void	def_semact (SXINT code, SXINT numact)
 {
     switch (code) {
     default:
 	gripe ();
 
     case SXERROR:
-      is_err = SXTRUE;
+      is_err = true;
     case SXOPEN:
     case SXCLOSE:
     case SXINIT:

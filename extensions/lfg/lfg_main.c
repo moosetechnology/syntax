@@ -20,7 +20,7 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_LFGMAIN[] = "@(#)SYNTAX - $Id: lfg_main.c 3352 2023-06-12 11:52:07Z garavel $" WHAT_DEBUG;
+char WHAT_LFGMAIN[] = "@(#)SYNTAX - $Id: lfg_main.c 3632 2023-12-20 17:58:08Z garavel $" WHAT_DEBUG;
 
 FILE              *bnf_file, *vocabulary_file;
 char              *bnf_file_name, *vocabulary_file_name, *path_name, *prgent_name;
@@ -124,7 +124,7 @@ suffixname (char *pathname)
 #include <sys/timeb.h>
 
 
-static SXVOID	lfg_run (char *pathname)
+static void	lfg_run (char *pathname)
 {
     FILE	*infile;
 
@@ -204,11 +204,11 @@ int main (int argc, char *argv[])
       return EXIT_SUCCESS;
 
     case VERBOSE:
-      sxverbosep = SXTRUE;
+      sxverbosep = true;
       break;
 
     case -VERBOSE:
-      sxverbosep = SXFALSE;
+      sxverbosep = false;
       break;
 
     case BNF:
@@ -262,7 +262,7 @@ int main (int argc, char *argv[])
     fprintf (sxtty, "%s\n", release_mess);
   }
 
-  syntax (SXINIT, &lfg_tables, SXFALSE /* no includes */);
+  syntax (SXINIT, &lfg_tables, false /* no includes */);
 
   if (argnum == argc /* stdin (sans -) */ ||
       strcmp (argv [argnum], "-") == 0) {
@@ -273,7 +273,7 @@ int main (int argc, char *argv[])
     lfg_run (path_name = argv [argnum]);
   }
 
-  syntax (SXFINAL, &lfg_tables, SXTRUE);
+  syntax (SXFINAL, &lfg_tables, true);
 
   sxexit (sxerr_max_severity ());
   return EXIT_SUCCESS; /* Jamais atteint !! pour les compilo susceptibles ... */
