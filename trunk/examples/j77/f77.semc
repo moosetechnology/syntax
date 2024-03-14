@@ -877,9 +877,9 @@ $LIST(<7a:other_executable_statement>)
 
 $LIST(<8:program_statement>)
 {
-  $LIST(<8:program_statement>) = ast_program_unit_header (
-    $LIST( <99:symbolic_name>),
-    NULL);
+  $LIST(<8:program_statement>) = ast_mainprogram_unit_header (
+    $LIST( <99:symbolic_name>)
+  );
 }
 
 
@@ -924,7 +924,8 @@ $LIST( <10a:type>)
 {
   $LIST( <10a:type>) = ast_type_reference(
       $LIST( <10b:scalar_type>),
-      NULL);
+      NULL
+  );
 }
 
 *------------------------------------------------------------------------------
@@ -933,13 +934,14 @@ $LIST( <10a:type>)
 
 <10a:type>	= <10b:scalar_type> * <103:nonzero_unsigned_int_constant> ;
 
-!! OLD RULE: <10a:type>	= <10b:scalar_type> * @0 <22:len_specification> ;
+* OLD RULE: <10a:type>	= <10b:scalar_type> * @0 <22:len_specification> ;
 
 $LIST( <10a:type>)
 {
-!!  $LIST( <10a:type>) = ast_type_reference(
-!!      $LIST( <10b:scalar_type>),
-!!      $LIST(<22:len_specification>));
+  $LIST( <10a:type>) = ast_type_reference(
+    $LIST( <10b:scalar_type>),
+    $LIST(<103:nonzero_unsigned_int_constant>)
+  );
 }
 
 *------------------------------------------------------------------------------
@@ -961,7 +963,8 @@ $LIST( <10a:type>)
 {
   $LIST( <10a:type>) = ast_type_reference(
       SXML_T("CHARACTER"),
-      $LIST(<22:len_specification>));
+      $LIST(<22:len_specification>)
+  );
 }
 
 *******************************************************************************
@@ -1022,7 +1025,7 @@ $LIST( <10b:scalar_type>)
 $LIST(<10d:function_header>)
 
 {
-  $LIST(<10d:function_header>) = ast_program_unit_header(
+  $LIST(<10d:function_header>) = ast_subprogram_unit_header(
     $LIST(<99:symbolic_name>),
     NULL );
 }
@@ -1034,7 +1037,7 @@ $LIST(<10d:function_header>)
 
 $LIST(<10d:function_header>)
 {
-  $LIST(<10d:function_header>) = ast_program_unit_header(
+  $LIST(<10d:function_header>) = ast_subprogram_unit_header(
     $LIST(<99:symbolic_name>),
     $LIST( <99a:symbolic_name_list>) );
 }
@@ -1067,7 +1070,7 @@ $LIST(<12:subroutine_statement>)
 
 $LIST(<12a:subroutine_header>)
 {
-  $LIST(<12a:subroutine_header>) = ast_program_unit_header(
+  $LIST(<12a:subroutine_header>) = ast_subprogram_unit_header(
     $LIST(<99:symbolic_name>),
     NULL );
 }
@@ -1079,7 +1082,7 @@ $LIST(<12a:subroutine_header>)
 
 $LIST(<12a:subroutine_header>)
 {
-  $LIST(<12a:subroutine_header>) = ast_program_unit_header(
+  $LIST(<12a:subroutine_header>) = ast_subprogram_unit_header(
     $LIST(<99:symbolic_name>),
     NULL );
 }
@@ -1091,7 +1094,7 @@ $LIST(<12a:subroutine_header>)
 
 $LIST(<12a:subroutine_header>)
 {
-  $LIST(<12a:subroutine_header>) = ast_program_unit_header(
+  $LIST(<12a:subroutine_header>) = ast_subprogram_unit_header(
     $LIST(<99:symbolic_name>),
     $LIST (<12b:subroutine_parameter_list> ) );
 }
@@ -1170,7 +1173,7 @@ $LIST( <14:block_data_statement>)
 
 $LIST( <14:block_data_statement>)
 {
-  $LIST( <14:block_data_statement>) = ast_program_unit_header(
+  $LIST( <14:block_data_statement>) = ast_subprogram_unit_header(
     $LIST(<99:symbolic_name>),
     NULL );
 }    
@@ -1569,28 +1572,25 @@ $LIST(<20:type_statement>)
 <20:type_statement>
 		= <10b:scalar_type> * <103:nonzero_unsigned_int_constant>  <20a:scalar_name_list> ;
 
-!! OLD RULE supprimee
-!!	 = <10b:scalar_type> * @0 <22:len_specification>  <20a:scalar_name_list> ;
+* OLD RULE supprimee
+*	 = <10b:scalar_type> * @0 <22:len_specification>  <20a:scalar_name_list> ;
 
 $LIST(<20:type_statement>)
 {
-!!  $LIST(<20:type_statement>) = ast_type_statement(
-!!    ast_type_reference(
-!!      $LIST( <10b:scalar_type>),
-!!      $LIST( <22:len_specification>)),
-!!    LOCATION(0), 
-!!    $LIST( <20a:scalar_name_list>));
-
+  $LIST(<20:type_statement>) = ast_type_statement(
+    ast_type_reference(
+      $LIST( <10b:scalar_type>),
+      $LIST( <103:nonzero_unsigned_int_constant>)
+    ),
+    LOCATION(0), 
+    $LIST( <20a:scalar_name_list>)
+  );
 }
 
 *------------------------------------------------------------------------------
 
-!! la regle suivante a ete supprimee par Pierre Boullier et remplacee par
-!! le commentaire suivant. L'action @0 semble avoir disparu. Je lui ai ecrit 
-!! pour lui demander de confirmer cette suppression.
-
 * [[EXTENSION]]
-* semble faux!!
+* semble faux
 * <20:type_statement>
 *		= <10b:scalar_type> * <103:nonzero_unsigned_int_constant> ,  <20a:scalar_name_list> ;
 
@@ -1605,8 +1605,8 @@ $LIST(<20:type_statement>)
       $LIST(<10b:scalar_type>),
       $LIST( <22:len_specification>)),
     LOCATION(0), 
-    $LIST( <20a:scalar_name_list>));
-
+    $LIST( <20a:scalar_name_list>)
+  );
 }
 
 *------------------------------------------------------------------------------
@@ -1764,9 +1764,10 @@ $LIST(<21:implicit_statement>)
 
 $LIST(<21:implicit_statement>)
 {
-  $LIST(<21:implicit_statement>) = 
-!! a completer
-    );
+  $LIST(<21:implicit_statement>) = ast_implicit_statement(
+    LOCATION(0),
+    NULL
+  );
 }    
 
 *------------------------------------------------------------------------------
@@ -1778,8 +1779,10 @@ $LIST(<21:implicit_statement>)
 
 $LIST(<21:implicit_statement>)
 {
-  $LIST(<21:implicit_statement>) =
-!! a completer
+  $LIST(<21:implicit_statement>) = ast_implicit_statement(
+    LOCATION(0),
+    $LIST(<21c:implicit_elem_list>)
+    );
 }    
 
 *******************************************************************************
@@ -1821,8 +1824,8 @@ $LIST(<21b:implicit_body>)
 
 *------------------------------------------------------------------------------
 
-!! Pierre Boullier n'a pris pas la regle suivante dans sa grammaire
-!! Je suggere de detruire ce qui suit de la def de <21b:implicit_body>
+* Pierre Boullier na pris pas la regle suivante dans sa grammaire
+* Je suggere de detruire ce qui suit de la def de <21b:implicit_body>
 
 <21b:implicit_body>
 		= NONE ;
@@ -1865,8 +1868,8 @@ $LIST(<21c:implicit_elem_list>)
 $LIST(<21d:implicit_elem>)
 {
   $LIST(<21d:implicit_elem>) = ast_implicit_element(
-!!    $LIST(<99:symbolic_name>),
-!!    ast_empty_map()
+    $ptext ("%letter"),
+    ""
   );
 }
 
@@ -1879,8 +1882,8 @@ $LIST(<21d:implicit_elem>)
 $LIST(<21d:implicit_elem>)
 {
   $LIST(<21d:implicit_elem>) = ast_implicit_element(
-!!    $LIST(<99:symbolic_name>),
-!!    $LIST(<99:symbolic_name>')
+    $ptext ("%letter"),
+    $ptext ("%letter")
   );
 }    
 
@@ -1914,8 +1917,8 @@ $LIST( <22:len_specification>)
 
 $LIST( <22:len_specification>)
 {
-!! Hubert : ici je mettrais un assert (false) 
-!! car ce bloc d'instructions ne doit jamais etre execute 
+* Hubert : ici je mettrais un assert (false) 
+* car ce bloc dinstructions ne doit jamais etre execute 
   $LIST( <22:len_specification>) = SXML_T($ptext ("%int_id"));
 }
 
@@ -6512,11 +6515,6 @@ $LIST(<99:symbolic_name>)
 *
 * <99:symbolic_name> 
 *		= THEN ;
-
-!! a supprimer
-$LIST(<99:symbolic_name>)
-
-	$LIST(<99:symbolic_name>) = ast_symbolic_name(LOCATION(0), "THEN");
 
 *******************************************************************************
 

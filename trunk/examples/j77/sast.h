@@ -1489,14 +1489,14 @@ SXML_TYPE_LIST ast_block_if_statement(
 /* -------------------------------------------------------------------------
  */
 SXML_TYPE_LIST ast_implicit_element(
-              SXML_TYPE_LIST left,
-              SXML_TYPE_LIST right
+              SXML_TYPE_TEXT left,
+              SXML_TYPE_TEXT right
               ) {
   return JSON_MAP(
     SXML_LLL(
       ast_tag("implicit_element"),
-      JSON_KU_("left", left),
-      JSON_KU("right", right)
+      JSON_KQ_("left", left),
+      JSON_KQ("right", right)
       )
   );
 }
