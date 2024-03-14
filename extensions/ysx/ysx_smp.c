@@ -28,7 +28,7 @@ static char	ME [] = "ysx_smp";
 #include "varstr.h"
 #include "ysx_vars.h"
 
-char WHAT_YSXSMP[] = "@(#)SYNTAX - $Id: ysx_smp.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_YSXSMP[] = "@(#)SYNTAX - $Id: ysx_smp.c 3696 2024-02-07 17:54:34Z garavel $" WHAT_DEBUG;
 
 struct ysx_node {
     SXNODE_HEADER_S	SXVOID_NAME;
@@ -92,7 +92,13 @@ N O D E   N A M E S
 E N D   N O D E   N A M E S
 */
 
-SXINLINE static void	gripe (char *who)
+static void	gripe (char *who)
+#ifdef __GNUC__
+     __attribute__ ((noreturn))
+#endif
+     ;
+
+static void	gripe (char *who)
 {
     fprintf (sxstderr, "The function \"%s\" does not correspond to its specification.\n", who);
     sxexit(1);

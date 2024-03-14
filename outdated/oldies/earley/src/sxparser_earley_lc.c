@@ -23,14 +23,7 @@
 /* Jul 23 1996 11:08:		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-#define WHAT_SXPARSER_EARLEY "@(#)sxparser_earley_lc.c	- SYNTAX [unix] -  Jul 23 1996 11:08:56"
-
-#if 0
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT_SXPARSER_EARLEY)];
-} what = {&what, WHAT_SXPARSER_EARLEY};
-#endif
+char WHAT_SXPARSER_EARLEY[] = "@(#)sxparser_earley_lc.c	- SYNTAX [unix] -  Jul 23 1996 11:08:56";
 
 static char	ME [] = "sxparser_earley_lc";
 
@@ -127,7 +120,7 @@ static char	ME [] = "sxparser_earley_lc";
 #endif
 
 
-static SXBOOLEAN		is_default_semantics, is_print_prod, print_time, is_no_semantics;
+static bool		is_default_semantics, is_print_prod, print_time, is_no_semantics;
 static int		max_tree_nb;
 
 #include <stdio.h>
@@ -145,7 +138,7 @@ FILE	*sxtty, *sxstdout, *sxstderr;
 #define TIME_INIT	0
 #define TIME_FINAL	1
 
-SXVOID
+void
 sxtime (SXINT what, char *str)
 {
 static struct rusage prev_usage, next_usage;
@@ -163,7 +156,7 @@ else {
     fputs (str, sxtty);
 
     if (print_time)
-	fprintf (sxtty, " (%dms)\n", t);
+	fprintf (sxtty, " (%ldms)\n", t);
     else
 	putc ('\n', sxtty);
     }
@@ -203,15 +196,14 @@ static int	LASTBIT [] = {0, 1, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4};
 
 
 struct for_parsact {
-    void	(*sem_init) (),
-                (*sem_final) ();
-
-    SXBOOLEAN	(*prdct) (),
-                (*action) (),
-                (*constraint) ();
+    void	(*sem_init) (void);
+    void 	(*sem_final) (void);
+    bool	(*prdct) (void);
+    bool	(*action) (void);
+    bool	(*constraint) (void);
 };
 
-static SXBOOLEAN	is_action_fun, is_prdct_fun, is_constraint_fun;
+static bool	is_action_fun, is_prdct_fun, is_constraint_fun;
 
 
 
@@ -257,7 +249,7 @@ typedef struct {
 } bag_header;
 
 
-// static SXBOOLEAN		is_parser;
+// static bool		is_parser;
 
 static struct recognize_item {
     int		shift_NT_hd [ntmax + 1];
@@ -308,21 +300,21 @@ struct spf /* shared_parse_forest */
     struct lhs
     {
 	int		prolon, reduc, next_lhs, init_prod;
-	SXBOOLEAN		is_erased;
+	bool		is_erased;
     } *lhs;
 };
 
-static struct spf	spf;
+// static struct spf	spf;
 
 static int		rhs_stack [rhs_lgth+1];
 
 typedef unsigned short	ushort;
 static ushort		prod_core [rhs_maxnt];
 
-
+#if 0
 static struct Aij_pool {
   int		A, i, j, first_lhs, first_rhs;
-  SXBOOLEAN	is_erased;
+  bool	is_erased;
 }			*Aij_pool;
 static int		Aij_top, Aij_size;
 
@@ -337,7 +329,7 @@ static struct reduce_list {
     SXBA	index_set;
 }			*reduce_list;
 static int		reduce_list_cur, reduce_list_top;
-
+#endif
 
 static struct parse_item {
   SXBA			backward_index_sets [itemmax + 1];
@@ -398,7 +390,7 @@ static SXBA     Aij_sem_lhs_set;
 
 
 
-static SXBOOLEAN
+static bool
 NON_EQUAL (SXBA lhs_bits_array, SXBA rhs_bits_array)
 {
     register SXBA	lhs_bits_ptr, rhs_bits_ptr;
@@ -409,14 +401,14 @@ NON_EQUAL (SXBA lhs_bits_array, SXBA rhs_bits_array)
     while (slices_number-- > 0)
     {
 	if (*lhs_bits_ptr-- != *rhs_bits_ptr--)
-	    return SXTRUE;
+	    return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
-
-static SXBOOLEAN
+#if 0
+static bool
 IS_INCLUDE (SXBA lhs_bits_array, SXBA rhs_bits_array)
 {
     register SXBA	lhs_bits_ptr, rhs_bits_ptr;
@@ -430,12 +422,12 @@ IS_INCLUDE (SXBA lhs_bits_array, SXBA rhs_bits_array)
 	val = *lhs_bits_ptr--;
 
 	if ((val & *rhs_bits_ptr--) != val)
-	    return SXFALSE;
+	    return false;
     }
 
-    return SXTRUE;
+    return true;
 }
-
+#endif
 
 static void
 OR (SXBA lhs_bits_array, SXBA rhs_bits_array)
@@ -468,13 +460,13 @@ OR (SXBA lhs_bits_array, SXBA rhs_bits_array)
 }
 
 
-static SXBOOLEAN
+static bool
 OR_CHANGED (SXBA lhs_bits_array, SXBA rhs_bits_array)
 {
     register SXBA	lhs_bits_ptr, rhs_bits_ptr;
     register int	slices_number = SXNBLONGS (SXBASIZE (rhs_bits_array));
     register SXBA_ELT	val1, val2;
-    SXBOOLEAN		has_changed = SXFALSE;
+    bool		has_changed = false;
 
 #if EBUG
     if (*lhs_bits_array < *rhs_bits_array)
@@ -490,7 +482,7 @@ OR_CHANGED (SXBA lhs_bits_array, SXBA rhs_bits_array)
 
 	if (val1 != val2)
 	{
-	    has_changed = SXTRUE;
+	    has_changed = true;
 	    *lhs_bits_ptr = val2;
 	}
 
@@ -500,7 +492,7 @@ OR_CHANGED (SXBA lhs_bits_array, SXBA rhs_bits_array)
     return has_changed;
 }
 
-
+#if 0
 static void
 OR_MINUS (SXBA bits_array1, SXBA bits_array2, SXBA bits_array3)
 {
@@ -520,15 +512,16 @@ OR_MINUS (SXBA bits_array1, SXBA bits_array2, SXBA bits_array3)
 	*bits_ptr1-- |= (*bits_ptr2-- & (~(*bits_ptr3--)));
     }
 }
+#endif
 
-static SXBOOLEAN
+static bool
 OR_AND (SXBA bits_array1, SXBA bits_array2, SXBA bits_array3)
 {
     /* bits_array1 or (bits_array2 - bits_array3) */
     register SXBA	bits_ptr1, bits_ptr2, bits_ptr3;
     register int	slices_number = SXNBLONGS (SXBASIZE (bits_array2));
     register SXBA_ELT	val1, val2;
-    SXBOOLEAN		has_changed = SXFALSE;
+    bool		has_changed = false;
 
     bits_ptr1 = bits_array1 + slices_number, bits_ptr2 = bits_array2 + slices_number, bits_ptr3 = bits_array3 + slices_number;
 
@@ -542,7 +535,7 @@ OR_AND (SXBA bits_array1, SXBA bits_array2, SXBA bits_array3)
 	    if (val1 != val2)
 	    {
 		*bits_ptr1 = val2;
-		has_changed = SXTRUE;
+		has_changed = true;
 	    }
 	}
 
@@ -552,8 +545,7 @@ OR_AND (SXBA bits_array1, SXBA bits_array2, SXBA bits_array3)
     return has_changed;
 }
 
-
-static SXBOOLEAN
+static bool
 OR_AND_MINUS (SXBA bits_array1, SXBA bits_array2, SXBA bits_array3, SXBA bits_array4)
 {
     /* bits_array4 =  bits_array2 & bits_array3 - bits_array1
@@ -563,7 +555,7 @@ OR_AND_MINUS (SXBA bits_array1, SXBA bits_array2, SXBA bits_array3, SXBA bits_ar
     /* On change la taille! */
     register int	slices_number = SXNBLONGS (SXBASIZE (bits_array4) = SXBASIZE (bits_array2));
     register SXBA_ELT	val;
-    SXBOOLEAN		is_set = SXFALSE;
+    bool		is_set = false;
 
     bits_ptr1 = bits_array1 + slices_number,
     bits_ptr2 = bits_array2 + slices_number,
@@ -573,7 +565,7 @@ OR_AND_MINUS (SXBA bits_array1, SXBA bits_array2, SXBA bits_array3, SXBA bits_ar
     while (slices_number-- > 0)
     {
 	if ((val = *bits_ptr4-- = (*bits_ptr2--) & (*bits_ptr3--) & (~(*bits_ptr1))) != 0L)
-	    is_set = SXTRUE;
+	    is_set = true;
 
 	*bits_ptr1-- |= val;
     }
@@ -581,7 +573,7 @@ OR_AND_MINUS (SXBA bits_array1, SXBA bits_array2, SXBA bits_array3, SXBA bits_ar
     return is_set;
 }
 
-
+#if 0
 static void
 OR_RAZ (SXBA lhs_bits_array, SXBA rhs_bits_array)
 {
@@ -599,6 +591,7 @@ OR_RAZ (SXBA lhs_bits_array, SXBA rhs_bits_array)
     }
 }
 
+
 static void
 COPY (SXBA lhs_bits_array, SXBA rhs_bits_array)
 {
@@ -612,8 +605,6 @@ COPY (SXBA lhs_bits_array, SXBA rhs_bits_array)
 	*lhs_bits_ptr-- = *rhs_bits_ptr--;
     }
 }
-
-
 
 static void
 COPY_RAZ (SXBA lhs_bits_array, SXBA rhs_bits_array)
@@ -631,14 +622,15 @@ COPY_RAZ (SXBA lhs_bits_array, SXBA rhs_bits_array)
 	*rhs_bits_ptr-- = 0L;
     }
 }
+#endif
 
-static SXBOOLEAN
+static bool
 AND (SXBA lhs_bits_array, SXBA rhs_bits_array)
 {
     register SXBA	lhs_bits_ptr, rhs_bits_ptr;
     register int	slices_number = SXNBLONGS (SXBASIZE (rhs_bits_array));
     register int	lhs_slices_number = SXNBLONGS (SXBASIZE (lhs_bits_array));
-    SXBOOLEAN		ret_val = SXFALSE;
+    bool		ret_val = false;
 
 #if EBUG
     if (*lhs_bits_array < *rhs_bits_array)
@@ -658,21 +650,21 @@ AND (SXBA lhs_bits_array, SXBA rhs_bits_array)
     while (slices_number-- > 0)
     {
 	if (*lhs_bits_ptr-- &= *rhs_bits_ptr--)
-	    ret_val = SXTRUE;
+	    ret_val = true;
     }
 
     return ret_val;
 }
 
 
-static SXBOOLEAN
+static bool
 AND3 (SXBA lhs_bits_array, SXBA op1_bits_array, SXBA op2_bits_array)
 {
     /* On suppose que lhs_bits_array est vide au-dela de op2_bits_array */
 
     register SXBA	lhs_bits_ptr, op1_bits_ptr, op2_bits_ptr;
     register int	slices_number = SXNBLONGS (SXBASIZE (op2_bits_array));
-    SXBOOLEAN		ret_val = SXFALSE;
+    bool		ret_val = false;
 
 #if EBUG
     if (*op1_bits_array < *op2_bits_array)
@@ -686,13 +678,14 @@ AND3 (SXBA lhs_bits_array, SXBA op1_bits_array, SXBA op2_bits_array)
     while (slices_number-- > 0)
     {
 	if (*lhs_bits_ptr-- = (*op1_bits_ptr-- & *op2_bits_ptr--))
-	    ret_val = SXTRUE;
+	    ret_val = true;
     }
 
     return ret_val;
 }
-AND3_SHIFT (lhs_bits_array, op1_bits_array, op2_bits_array, shift)
-    SXBA	lhs_bits_array, op1_bits_array, op2_bits_array;
+
+static bool
+AND3_SHIFT (SXBA lhs_bits_array, SXBA op1_bits_array, SXBA op2_bits_array, int shift)
 {
     /* Identique a AND3 excepte' que op2_bits_array est decale a droite de shift */
     /* Shift > 0 */
@@ -704,7 +697,7 @@ AND3_SHIFT (lhs_bits_array, op1_bits_array, op2_bits_array, shift)
     int			left_shift = SXBITS_PER_LONG - right_shift;
     SXBA_ELT		filtre = (~(0L)) >> left_shift;
     SXBA_ELT		op2val = 0L, prev_op2val;
-    SXBOOLEAN		ret_val = SXFALSE;
+    bool		ret_val = false;
 
 #if EBUG
     if (*op1_bits_array < *op2_bits_array)
@@ -721,34 +714,34 @@ AND3_SHIFT (lhs_bits_array, op1_bits_array, op2_bits_array, shift)
 	op2val = *op2_bits_ptr--;
 
 	if (*lhs_bits_ptr-- = (*op1_bits_ptr-- & ((op2val >> right_shift) | ((prev_op2val & filtre) << left_shift))))
-	    ret_val = SXTRUE;
+	    ret_val = true;
     }
 
     return ret_val;
 }
 
-
-static SXBOOLEAN
+#if 0
+static bool
 MINUS (SXBA lhs_bits_array, SXBA rhs_bits_array)
 {
     register SXBA	lhs_bits_ptr, rhs_bits_ptr;
     register int	slices_number = SXNBLONGS (SXBASIZE (rhs_bits_array));
-    SXBOOLEAN		ret_val = SXFALSE;
+    bool		ret_val = false;
 
     lhs_bits_ptr = lhs_bits_array + slices_number, rhs_bits_ptr = rhs_bits_array + slices_number;
 
     while (slices_number-- > 0)
     {
 	if (*lhs_bits_ptr-- &= ~(*rhs_bits_ptr--))
-	    ret_val = SXTRUE;
+	    ret_val = true;
     }
 
     return ret_val;
 }
+#endif
 
 
-
-static SXBOOLEAN
+static bool
 IS_AND (SXBA lhs_bits_array, SXBA rhs_bits_array)
 {
     register SXBA	lhs_bits_ptr, rhs_bits_ptr;
@@ -763,17 +756,17 @@ IS_AND (SXBA lhs_bits_array, SXBA rhs_bits_array)
     while (slices_number-- > 0)
     {
 	if (*lhs_bits_ptr-- & *rhs_bits_ptr--)
-	    return SXTRUE;
+	    return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
 static void
 bag_alloc (bag_header *pbag, char *name, int size)
 {
-    SXBA_ELT	*ptr;
+    // SXBA_ELT	*ptr;
 
     pbag->name = name;
     pbag->hd_top = 0;
@@ -851,7 +844,7 @@ static void
 bag_free (bag_header *pbag)
 {
 #if EBUG
-    printf ("Bag %s: used_size = %i bytes, total_size = %i bytes\n",
+    printf ("Bag %s: used_size = %ld bytes, total_size = %ld bytes\n",
 	    pbag->name,
 	    (pbag->used_size > pbag->prev_used_size ? pbag->used_size : pbag->prev_used_size) *
 	    sizeof (SXBA_ELT) + (pbag->hd_high + 1) * sizeof (struct bag_disp_hd),
@@ -865,7 +858,7 @@ bag_free (bag_header *pbag)
     sxfree (pbag->hd);
 }
     
-
+#if 0
 static void
 bag_clear (bag_header *pbag)
 {
@@ -882,7 +875,7 @@ bag_clear (bag_header *pbag)
     pbag->used_size = 0;
 #endif
 }
-    
+#endif
 
 
 static SXBA	item_set_i1, item_set_i2, item_set_i3; 
@@ -1046,8 +1039,8 @@ scan_reduce (int i)
     register SXBA_ELT	filtre;
     register int	j, indice, order, A;
 
-    int			state;
-    SXBA		index_set, index_set2;
+    // int			state;
+    // SXBA		index_set, index_set2;
 
     filtre = 1 << MOD (i);
     indice = DIV (i) + 1;
@@ -1092,14 +1085,14 @@ scan_reduce (int i)
 }
 
 
-
-static SXBOOLEAN
+static bool
 complete (int i)
 {
-    int		hd, state, next_state, X, Y, YY, A, B, j, prdct_no, prod, Aik, start, end;
+    int		hd, state, next_state, X, Y, YY, A, prdct_no;
+    // int	B, j, prod, Aik, start, end;
     SXBA	index_set, index_set2, backward_index_set;
-    SXBOOLEAN	keep, is_tok = SXFALSE, is_scan_reduce = SXFALSE;
-
+    bool	is_tok = false, is_scan_reduce = false;
+    // bool	keep;
 
     /* Le look-ahead est verifie pour tous les state de T1_state_set. */
     /* De plus si A -> \alpha X . ai+1 \beta, le predicat de ai+1 est verifie'
@@ -1112,7 +1105,7 @@ complete (int i)
     if ((state = T1_shift_NT_hd [0]) != 0)
     {
 	/* A -> \alpha X . ai+1 \beta */
-	is_tok = SXTRUE;
+	is_tok = true;
 	T1_shift_NT_hd [0] = 0;
 
 	if (i < n)
@@ -1179,7 +1172,7 @@ complete (int i)
 		if (Y == 0)
 		{
 		    /* next_state = A -> \alpha X  ai+1 \beta .  et \beta =>* \epsilon */
-		    is_scan_reduce = SXTRUE;
+		    is_scan_reduce = true;
 
 		    A = lhs [prolis [state]];
 		    OR (ntXindex_set [A], index_set);
@@ -1246,7 +1239,7 @@ complete (int i)
 		else
 		{
 		    /* X == 0 */
-		    /* is_epsilon == SXTRUE */
+		    /* is_epsilon == true */
 		    /* state = A -> \alpha . et \alpha =>* \epsilon */
 		    /* Pour l'instant, on stocke les contraintes sur le vide
 		       qui seront evaluees et exploitees plus tard. */
@@ -1302,7 +1295,7 @@ complete (int i)
 		/* state = A -> \alpha . ai+1 beta et \alpha =>* \epsilon */
 		/* next_state = A -> \alpha ai+1 . beta et \alpha =>* \epsilon */
 		/* le look-ahead de next_state est teste' */
-		is_tok = SXTRUE;
+		is_tok = true;
 
 		while ((Y = lispro [next_state]) != 0)
 		{
@@ -1370,7 +1363,7 @@ complete (int i)
 		if (Y == 0)
 		{
 		    /* next_state = A -> \alpha ai+1 \beta .  et \alpha \beta =>* \epsilon */
-		    is_scan_reduce = SXTRUE;
+		    is_scan_reduce = true;
 
 		    A = lhs [prolis [state]];
 		    SXBA_1_bit (ntXindex_set [A], i);
@@ -1410,7 +1403,7 @@ recognize (void)
 {
     int			i;
     int			*T0_shift_NT_stack;
-    SXBOOLEAN		is_in_LG;
+    bool		is_in_LG;
     SXBA		index_set;
 
     /* initial_state ne vaut pas toujours 1 (cas ou L(G)={epsilon}). */
@@ -1528,7 +1521,7 @@ ARN_sem_final (int size)
 }
 
 
-static SXBOOLEAN
+static bool
 ARN_constraint (int prdct_no, int A, int i, int j)
 {
     if (prdct_no == 1)
@@ -1542,17 +1535,17 @@ ARN_constraint (int prdct_no, int A, int i, int j)
     }
 }
 
-
-static SXBOOLEAN
+static bool
 RL_mreduction_item (int item_j, SXBA I, int j)
 {
     /* item_j = A -> \alpha . \gamma  et \alpha != \epsilon */
-    int				Y, bot_item, i, k, Z, new_k, nbt, new_item, item_k, item, order;
+    int				Y, bot_item, k, new_k, nbt, new_item, item_k, item, order;
+    // int			i, Z;
     SXBA			backward_index_set, prev_index_set;
     SXBA			/* tbp_set, */ ap_set;
     struct recognize_item	*RTj;
     struct parse_item		*PTj;
-    SXBOOLEAN			is_tbp, is_new;
+    bool			is_tbp, is_new;
 
     SXBA			ids, nbis;
 
@@ -1595,7 +1588,7 @@ RL_mreduction_item (int item_j, SXBA I, int j)
     }
     else
     {
-	is_tbp = SXFALSE;
+	is_tbp = false;
 	nbt = item2nbt [item_k];
 	new_item = item_k - nbt;
 
@@ -1624,7 +1617,7 @@ RL_mreduction_item (int item_j, SXBA I, int j)
 		if ((is_new || !SXBA_bit_is_set (ap_set, k)))
 		{
 		    SXBA_1_bit (ap_set, k);
-		    is_tbp = SXTRUE;
+		    is_tbp = true;
 		}
 
 		if (new_item > bot_item)
@@ -1634,7 +1627,7 @@ RL_mreduction_item (int item_j, SXBA I, int j)
 
 		    if (new_k == j)
 		    {
-			/* is_epsilon == SXTRUE */
+			/* is_epsilon == true */
 			if ((ids = PT2 [new_k].index_sets [new_item]) == NULL)
 			    ids = PT2 [new_k].index_sets [new_item] = bag_get (&pt2_bag, j+1);
 
@@ -1642,7 +1635,7 @@ RL_mreduction_item (int item_j, SXBA I, int j)
 			{
 			    /* Il y a du nouveau */
 			    if (RL_mreduction_item (new_item, ids, j))
-				is_tbp = SXTRUE;
+				is_tbp = true;
 			}
 		    }
 		    else
@@ -1666,16 +1659,16 @@ RL_mreduction_item (int item_j, SXBA I, int j)
 static void
 RL_mreduction (void)
 {
-    int				i, j, A, order, tnb;
-    SXBA			ap_set, reduce_set;
+    int				j, A, order, tnb;
+    SXBA			ap_set;
     struct parse_item		*PTj;
     struct recognize_item	*RTj;
     struct PT2_item		*PT2j;
-
-    int				*PT2j_shift_NT_stack, x, item, new_item, new_j, prod, X;
-    SXBA			*PT2j_index_set, *PT2j_backward_index_set, I, B, ids, nbis;
-    SXBA			index_set, backward_index_set, new_index_set, red_order_set;
-    SXBOOLEAN			is_good;
+    int				*PT2j_shift_NT_stack, x, item, new_item, new_j, prod;
+    SXBA			*PT2j_index_set, *PT2j_backward_index_set, I, ids;
+    SXBA			index_set, new_index_set, red_order_set;
+    // SXBA			B, nbis, backward_index_set;
+    bool			is_good;
 
     RL_nt_set = sxba_calloc (ntmax+1);
     prod_order_set = sxba_calloc (prodmax+1);
@@ -1721,7 +1714,7 @@ RL_mreduction (void)
 	    tnb = item2nbt [item];
 	    ap_set = ap_sets [A];
 
-	    is_good = SXFALSE;
+	    is_good = false;
 				
 	    if (tnb == 0)
 	    {
@@ -1729,7 +1722,7 @@ RL_mreduction (void)
 		{
 		    /* item = A -> . */
 		    if (SXBA_bit_is_set (ap_set, j))
-			is_good = SXTRUE;
+			is_good = true;
 		}
 		else
 		{
@@ -1753,7 +1746,7 @@ RL_mreduction (void)
 			}
 			/* else order est pris en sequence */
 
-			is_good = SXTRUE;
+			is_good = true;
 		    }
 		}
 	    }
@@ -1765,7 +1758,7 @@ RL_mreduction (void)
 		{
 		    /* Que des t en rhs */
 		    if (SXBA_bit_is_set (ap_set, new_j))
-			is_good = SXTRUE;
+			is_good = true;
 		}
 		else
 		{
@@ -1781,7 +1774,7 @@ RL_mreduction (void)
 			}
 
 			if (OR_AND (ids, index_set, ap_set))
-			    is_good = SXTRUE;
+			    is_good = true;
 		    }
 		}
 	    }
@@ -1907,7 +1900,7 @@ ARN_ksem_final (int size)
 
 static unsigned long	ksem_vector;
 
-static SXBOOLEAN
+static bool
 ksem_incr (int nbnt, int *rhs_stack)
 {
     int x, i, shift;
@@ -1924,11 +1917,11 @@ ksem_incr (int nbnt, int *rhs_stack)
 	if (i < max_tree_nb && ARN_disp_ksem [rhs_stack [x+1]][i].val != -1)
 	{
 	    ksem_vector |= (i << shift);
-	    return SXTRUE;
+	    return true;
 	}
     }
 
-    return SXFALSE;
+    return false;
 }
 
 static int
@@ -2020,7 +2013,7 @@ ARN_keval (int Aij, int i, int j, int *rhs_stack)
 }
 
 
-static SXBOOLEAN
+static bool
 ARN_kparsact (int i, int j, ushort *prod_core, int rhs_stack [])
 {
     int			Aij, nbnt, x, top, prod;
@@ -2092,10 +2085,10 @@ ARN_kparsact (int i, int j, ushort *prod_core, int rhs_stack [])
 	    }
 	}
 
-	return SXTRUE;
+	return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
@@ -2241,7 +2234,7 @@ ksem_bu_extract (void)
 }
 
 
-static SXBOOLEAN
+static bool
 ARN_eval (int prod, int i, int j, int *rhs_stack, float *val)
 {
     int		Aij, nbnt, Bhk;
@@ -2262,12 +2255,12 @@ ARN_eval (int prod, int i, int j, int *rhs_stack, float *val)
 
     *val = proba;
 
-    return SXTRUE;
+    return true;
 }
 
 
 
-static SXBOOLEAN
+static bool
 ARN_parsact (int i, int j, ushort *prod_core, int rhs_stack[])
 {
     int 	Aij, prod;
@@ -2298,14 +2291,14 @@ ARN_parsact (int i, int j, ushort *prod_core, int rhs_stack[])
 	    } while (p >= prod_core);
 	}
 
-	return SXTRUE;
+	return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
-static SXBOOLEAN
+static bool
 parse_item (int A0k, int item, SXBA I, int i_left, int j, int k, int nbnt)
 {
     /* A0k n'est significatif que ds le cas "EBUG" ou for_parsact.action != NULL. */
@@ -2314,7 +2307,7 @@ parse_item (int A0k, int item, SXBA I, int i_left, int j, int k, int nbnt)
     /* Si I == NULL, i_left est positionne */
        
     int		i, new_i, nbt, B0j, Bij, Aik, prod, prdct_no;
-    SXBOOLEAN     ret_val = SXFALSE, is_ok, is_prdct;
+    bool     ret_val = false, is_ok, is_prdct;
     SXBA        backward_J, ap_set, index_set;
 
     backward_J = PT2 [j].backward_index_sets [item+1];
@@ -2412,10 +2405,10 @@ parse_item (int A0k, int item, SXBA I, int i_left, int j, int k, int nbnt)
 		    is_ok = (*for_parsact.action) (new_i, k, prod_core, rhs_stack);
 		}
 		else
-		    is_ok = SXTRUE;
+		    is_ok = true;
 	    
 		if (is_ok && SXBA_bit_is_reset_set (ap_set, new_i))
-		    ret_val = SXTRUE;
+		    ret_val = true;
 	    }
 
 	    if (index_set != NULL)
@@ -2450,7 +2443,7 @@ parse_item (int A0k, int item, SXBA I, int i_left, int j, int k, int nbnt)
 		    rhs_stack [nbnt] = Bij;
 
 		if (parse_item (A0k, item-1, I, i_left, i - nbt, k, nbnt-1))
-		    ret_val = SXTRUE;
+		    ret_val = true;
 	    }
 	}
     }
@@ -2476,13 +2469,13 @@ static int	rhs_stacks [prodmax+1][rhs_lgth+1];
 static ushort	prod_cores [prodmax+1][rhs_lgth];
 static int	tbp_stack [prodmax+1], citem2nb [itemmax+1],
                 cur_item2next [itemmax+1], nt2cur_item [ntmax+1];
-
     int			*cur_rhs_stack;
     ushort		*cur_prod_core;
     int 		item, citem, cur_item, right_item, prod, cur_prod,
                         A, A0j, Aij, B, B0j, Bkj, x, nbnt, l, m, prdct_no, max, cycle_nb;
-    int			*p, *q;
-    SXBOOLEAN		is_high_level, should_loop, is_prdct;
+    int			*p;
+    bool		should_loop, is_prdct;
+    // bool		is_high_level;
 
     max = 0;
 
@@ -2691,7 +2684,7 @@ static int	tbp_stack [prodmax+1], citem2nb [itemmax+1],
 	   precedent ont pu faire echouer le calcul! */
 	do
 	{
-	    should_loop = SXFALSE;
+	    should_loop = false;
 
 	    for (x = 1; x <= tbp_stack [0]; x++)
 	    {
@@ -2705,7 +2698,7 @@ static int	tbp_stack [prodmax+1], citem2nb [itemmax+1],
 		    cur_rhs_stack = &(rhs_stacks [prod][0]);
 
 		    if ((*for_parsact.action) (k, j, cur_prod_core, cur_rhs_stack))
-			should_loop = SXTRUE;
+			should_loop = true;
 		    else
 			/* point fixe atteint, on l'enleve */
 			tbp_stack [x] = 0;
@@ -2723,8 +2716,8 @@ mrr_generate (int i, int h, int j, int item)
 {
     /* item = Aij -> \alphaih Bhj . \betajj */
     /* Bhj \betajj sont evalues */
-    int 	X, prod, A, A0j, Aij, cur_item, nbnt, nbt, k, B, B0j, Bkj, prdct_no;
-    SXBOOLEAN	is_prdct;
+    int 	prod, A, A0j, Aij, cur_item, nbnt, nbt, k, B, B0j, Bkj, prdct_no;
+    bool	is_prdct;
 
     if (h == j && lispro [item-2] > 0)
     {
@@ -2824,7 +2817,7 @@ mutual_right_recursive (int j, int init_prod_order, int *out_prod_order)
     int			*i_prod_stack;
     struct PT2_item	*PT2j;
     SXBA 		index_set, backward_index_set, red_order_set;
-    SXBOOLEAN 		nothing_has_changed, is_ok;
+    bool 		nothing_has_changed, is_ok;
 
     prod_order = init_prod_order;
     red_order_set = red_order_sets [j];
@@ -2879,7 +2872,7 @@ mutual_right_recursive (int j, int init_prod_order, int *out_prod_order)
 
 	while (!IS_EMPTY (tbp_item_stack))
 	{
-	    nothing_has_changed = SXTRUE;
+	    nothing_has_changed = true;
 
 	    do
 	    {
@@ -2901,7 +2894,7 @@ mutual_right_recursive (int j, int init_prod_order, int *out_prod_order)
 		    {
 			/* Bij est calcule */
 			mrr_generate (i, i, j, item);
-			nothing_has_changed = SXFALSE;
+			nothing_has_changed = false;
 		    }
 		}
 		else
@@ -2932,7 +2925,7 @@ mutual_right_recursive (int j, int init_prod_order, int *out_prod_order)
 				/* Bkj est calcule */
 				/* Si k == j, peut empiler ds tbp_item_stack */
 				mrr_generate (i, k, j, item);
-				nothing_has_changed = SXFALSE;
+				nothing_has_changed = false;
 			    }
 			    else
 			    {
@@ -2944,7 +2937,7 @@ mutual_right_recursive (int j, int init_prod_order, int *out_prod_order)
 				{
 				    /* Bij est calcule */
 				    mrr_generate (i, i, j, item);
-				    nothing_has_changed = SXFALSE;
+				    nothing_has_changed = false;
 				}
 			    }
 			}
@@ -2984,15 +2977,15 @@ mutual_right_recursive (int j, int init_prod_order, int *out_prod_order)
 }
 
 
-
 static void
 parse (void)
 {
     struct PT2_item	*PT2j;
     int                 *PT2j_shift_NT_stack;
-    SXBA	        backward_index_set, index_set, red_order_set;
+    SXBA	        index_set, red_order_set;
+    // SXBA	        backward_index_set;
     int		        item, new_item, new_j, j, prod_order, A, A0j, Aij, B, nbt, nbnt, prod, x;
-    SXBOOLEAN             is_ok;
+    bool             is_ok;
     SXBA		lhs_nt_set;
 
     /* On genere toutes les reductions finissant en j */
@@ -3055,7 +3048,7 @@ parse (void)
 		    is_ok = (*for_parsact.action) (new_j, j, prod_core, rhs_stack);
 		}
 		else
-		    is_ok = SXTRUE;
+		    is_ok = true;
 
 		if (is_ok)
 		    SXBA_1_bit (ap_sets [A], new_j);
@@ -3215,7 +3208,7 @@ spf_count_final (int size)
 }
 
 
-static SXBOOLEAN
+static bool
 spf_count_parsact (int i,  int j, ushort *prod_core, int rhs_stack [])
 {
     int		Aij;
@@ -3229,7 +3222,7 @@ spf_count_parsact (int i,  int j, ushort *prod_core, int rhs_stack [])
     {
 	/* implique' ds un cycle et 2eme passage */
 	spf_count [Aij] = HUGE_VAL; /* Produces IEEE Infinity. */
-	return SXFALSE;
+	return false;
     }
     else
     {
@@ -3247,7 +3240,7 @@ spf_count_parsact (int i,  int j, ushort *prod_core, int rhs_stack [])
 
 	spf_count [Aij] += val;
 
-	return SXTRUE;
+	return true;
     }
 }
 
@@ -3272,11 +3265,9 @@ set_A2A0j (void)
 }
 
 
-main (argc, argv)
-    int		argc;
-    char	*argv [];
+main (int argc, char *argv[])
 {
-    int 	l, t, *tok, nt, size, S0n;
+    int 	l, t, *tok, size, S0n;
     char	*s, c;
 
     if (argc != 3)
@@ -3289,10 +3280,10 @@ main (argc, argv)
     sxstderr = stderr;
     sxopentty ();
 
-    is_parser = SXFALSE;
-    is_print_prod = SXFALSE;
-    is_no_semantics = SXTRUE;
-    is_default_semantics = SXTRUE;
+    is_parser = false;
+    is_print_prod = false;
+    is_no_semantics = true;
+    is_default_semantics = true;
     max_tree_nb = 1;
 
     l = 0;
@@ -3318,28 +3309,28 @@ main (argc, argv)
 	    switch (c)
 	    {
 	    case 'd':
-		is_default_semantics = SXTRUE;
-		is_no_semantics = SXFALSE;
+		is_default_semantics = true;
+		is_no_semantics = false;
 		break;
 
 	    case 'n':
-		is_no_semantics = SXTRUE;
+		is_no_semantics = true;
 		break;
 
 	    case 'p':
 		if (!is_parser)
-		    is_parser = SXTRUE;
+		    is_parser = true;
 		else
-		    is_print_prod = SXTRUE;
+		    is_print_prod = true;
 		break;
 
 	    case 'r':
-		is_parser = SXFALSE;
+		is_parser = false;
 		break;
 
 	    case 's':
-		is_default_semantics = SXFALSE;
-		is_no_semantics = SXFALSE;
+		is_default_semantics = false;
+		is_no_semantics = false;
 		break;
 
 	    default:
@@ -3350,7 +3341,7 @@ main (argc, argv)
 	}
     }
 
-    print_time = SXTRUE;
+    print_time = true;
 
     s = source = argv [2];
     n = strlen (source);
@@ -3361,7 +3352,7 @@ main (argc, argv)
 	if ((t = char2tok (c)) == 0)
 	{
 	    printf ("\
-\t%s Lexical error at char #%i\n", ME, (TOK - tok) + 1);
+\t%s Lexical error at char #%ld\n", ME, (TOK - tok) + 1);
 	    return 1;
 	}
 

@@ -25,7 +25,7 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXPPP[] = "@(#)SYNTAX - $Id: sxppp.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_SXPPP[] = "@(#)SYNTAX - $Id: sxppp.c 3785 2024-03-06 12:51:21Z garavel $" WHAT_DEBUG;
 
 #if BUG
 #define	BUG_CODE
@@ -1190,17 +1190,17 @@ void	sxppp (SXINT sxppp_what, struct sxtables *sxtables)
     paragrapheur ((struct sxnode_pp*) sxtables);
 
     if (sxstdout != stdout) {
-      long real_size;
+      off_t real_size;
 
       if (fflush (sxstdout) != 0) {
         fprintf (sxstderr, "Cannot fflush the file sxstdout = %s (errno = %s)\n",
 		 sxppvariables.logical_file_name, strerror (errno));
 	sxppvariables.is_error = true;
       }
-      else if ((real_size = ftell (sxstdout)) != (long)sxppvariables.char_count) {
-	fprintf (sxstderr, "%s : Only %ld bytes have been written in the file sxstdout = %s (instead of %ld).\n",
+      else if ((real_size = ftello (sxstdout)) != (off_t) sxppvariables.char_count) {
+	fprintf (sxstderr, "%s : Only %lld bytes have been written in the file sxstdout = %s (instead of %ld).\n",
 		 ME,
-		 real_size,
+		 (long long int) real_size,
 		 sxppvariables.logical_file_name,
 		 (long) sxppvariables.char_count);
 	sxppvariables.is_error = true;

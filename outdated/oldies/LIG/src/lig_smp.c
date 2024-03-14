@@ -48,14 +48,10 @@
 /************************************************************************/
 /* 23-08-94 13:05 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
-#define WHAT	"@(#)lig_smp.c	- SYNTAX [unix] - Ven 15 Nov 1996 10:14:21"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+
+char WHAT[] = "@(#)lig_smp.c	- SYNTAX [unix] - Ven 15 Nov 1996 10:14:21";
 
 static char	ME [] = "lig_smp";
-
 
 /*   I N C L U D E S   */
 #define SXNODE struct lig_node
@@ -135,14 +131,14 @@ static int		BNFmaxnt, BNFmaxrhsnt, BNFprod, BNFmaxitem;
 static int		*BNFlhs, *BNFprolon, *BNFlispro, *BNFprod2nbnt;
 static char		**BNFntstring;
 
-static SXBOOLEAN		is_LIG_in_normal_form, is_post_act, is_post_prdct, is_useless, is_reduced, sxttycol1p;
+static bool		is_LIG_in_normal_form, is_post_act, is_post_prdct, is_useless, is_reduced, sxttycol1p;
 static int		maxssymb, max_stack_lgth, bnf_dum_post_act;
 static int		*temp_stack;
 static SXBA		dum_bnf_rule;
 static int		SXLIGitem, SXLIGprod;
 
-static int		is_left_part_empty = SXTRUE;
-static SXBOOLEAN		is_left_part;
+static int		is_left_part_empty = true;
+static bool		is_left_part;
 
 
 static void print_comment (comment)
@@ -230,7 +226,7 @@ lig_check_productions (visited)
 				 "%sNot in normal form.",
 				 sxtab_ptr->err_titles [1]);
 
-		is_LIG_in_normal_form = SXFALSE;
+		is_LIG_in_normal_form = false;
 	    }
 
 	    if (pop_nb > max_stack_lgth)
@@ -272,7 +268,7 @@ lig_check_productions (visited)
 					 "%sNot in normal form.",
 					 sxtab_ptr->err_titles [1]);
 
-			is_LIG_in_normal_form = SXFALSE;
+			is_LIG_in_normal_form = false;
 		    }
 
 		    if (push_nb > max_stack_lgth)
@@ -310,12 +306,12 @@ action_or_prdct (visited)
     /* On fabrique "action_val ou "prdct_val"" */
     SXNODE	*nt_ptr, *obj_ptr, *ssymb_ptr;
     int         obj_name, i, val, post, ste, ssymb, nt;
-    SXBOOLEAN	is_lhs;
+    bool	is_lhs;
 
     is_lhs = visited->name == LHS_OBJECT_n;
 
     if (is_lhs)
-	is_left_part = SXTRUE;
+	is_left_part = true;
 
     nt_ptr = visited->son;
 
@@ -332,7 +328,7 @@ action_or_prdct (visited)
     if (obj_name != VOID_n) {
 	if (!is_lhs && obj_name == P_OBJECT_n)
 	    /* Primary en rhs */
-	    is_left_part = SXFALSE;
+	    is_left_part = false;
 
 	action_lgth = obj_ptr->son->degree;
 
@@ -376,7 +372,7 @@ action_or_prdct (visited)
 	SXLIGpost_action [SXLIGprod] = post;
 
 	if (post != -1)
-	    is_post_act = SXTRUE;
+	    is_post_act = true;
     }
     else {
 	if (is_left_part)
@@ -387,7 +383,7 @@ action_or_prdct (visited)
 	SXLIGpost_prdct [SXLIGitem] = post;
 
 	if (post != -1)
-	    is_post_prdct = SXTRUE;
+	    is_post_prdct = true;
     }
 }
     
@@ -447,7 +443,7 @@ lig_pi ()
 	case 4 :		/* SXVISITED->name = VOID_n */
 	    if (!is_left_part && SXLIGprod2left_secnb [SXLIGprod] > 0) {
 		/*PRIMARY en RHS et SECONDARY a gauche du PRIMARY */
-		is_left_part_empty = SXFALSE;
+		is_left_part_empty = false;
 	    }
 
 
@@ -857,7 +853,7 @@ lig_pd2 ()
 #define out_define(str,val)	fprintf(F_lig, "#define %s\t%i\n",str,val)
 
 
-static SXBOOLEAN
+static bool
 lig_write ()
 {
     static char		ME [] = "lig_write";
@@ -872,12 +868,12 @@ lig_write ()
     if ((F_lig = fopen (strcat (strcpy (file_name, prgentname), "_ligt.c"), "w")) == NULL) {
 	if (sxverbosep && !sxttycol1p) {
 	    fputc ('\n', sxtty);
-	    sxttycol1p = SXTRUE;
+	    sxttycol1p = true;
 	}
 
 	fprintf (sxstderr, "%s: cannot open (create) ", ME);
 	sxperror (file_name);
-	return SXFALSE;
+	return false;
     }
 
     vstr = varstr_alloc (64);
@@ -1044,7 +1040,7 @@ lig_write ()
     fputs ("};", F_lig);
 
     if (!is_reduced)
-	sxba2c (RDGt_set, F_lig, "SXLIGt_set", "", SXTRUE /* is_static */, vstr);
+	sxba2c (RDGt_set, F_lig, "SXLIGt_set", "", true /* is_static */, vstr);
 
     if (is_useless) {
 	fputs ("\n\n#if SXLIGuse_reduced==1\n", F_lig);
@@ -1052,12 +1048,12 @@ lig_write ()
 	if (SXLIGEQUALn_set == NULL)
 	    fputs ("\nstatic SXBA *SXLIGEQUALn_set;\n", F_lig);
 	else
-	    sxbm2c (F_lig, SXLIGEQUALn_set, inputG.maxnt+1, "SXLIGEQUALn_set", "", SXTRUE /* is_static */, vstr);
+	    sxbm2c (F_lig, SXLIGEQUALn_set, inputG.maxnt+1, "SXLIGEQUALn_set", "", true /* is_static */, vstr);
 
 	if (SXLIGPUSHPOPn_set == NULL)
 	    fputs ("\n\nstatic SXBA *SXLIGPUSHPOPn_set;\n", F_lig);
 	else
-	    sxbm2c (F_lig, SXLIGPUSHPOPn_set, inputG.maxnt+1, "SXLIGPUSHPOPn_set", "", SXTRUE /* is_static */, vstr);
+	    sxbm2c (F_lig, SXLIGPUSHPOPn_set, inputG.maxnt+1, "SXLIGPUSHPOPn_set", "", true /* is_static */, vstr);
 
 	if (SXLIGPOPn_set == NULL) {
 	    fputs ("\n\nstatic int **SXLIGAxs;\n", F_lig);
@@ -1078,7 +1074,7 @@ lig_write ()
 
 	    fputs ("};", F_lig);
 
-	    sxbm2c (F_lig, SXLIGPOPn_set, inputG.maxnt+1, "SXLIGPOPn_set", "", SXTRUE /* is_static */, vstr);
+	    sxbm2c (F_lig, SXLIGPOPn_set, inputG.maxnt+1, "SXLIGPOPn_set", "", true /* is_static */, vstr);
 	}
 
 	fputs ("\n#endif\n", F_lig);
@@ -1090,7 +1086,7 @@ lig_write ()
 
     fclose (F_lig);
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -1105,13 +1101,13 @@ lig_reduction ()
     int	ap_list_top;
     unsigned short	prod_core;
     int 		*rhs_stack;
-    SXBOOLEAN		is_local;
-    static SXBOOLEAN	SXLIG_semact ();
-    static SXBOOLEAN 	SXLIG_sem_pass ();
+    bool		is_local;
+    static bool	SXLIG_semact ();
+    static bool 	SXLIG_sem_pass ();
 
     int			top, bot, AsB, sB, AB, A, B, As, A00, B00;
     int			*p, *plim;
-    SXBOOLEAN		EQUALnfull, PUSHPOPnfull, POPnfull;
+    bool		EQUALnfull, PUSHPOPnfull, POPnfull;
     char		kind;
 
     inputG.maxnt = BNFmaxnt;
@@ -1122,7 +1118,7 @@ lig_reduction ()
     inputG.lispro = BNFlispro;
     inputG.prod2nbnt = BNFprod2nbnt;
     inputG.ntstring = BNFntstring;
-    inputG.has_cycles = SXFALSE;
+    inputG.has_cycles = false;
 
     SXLIGalloc (inputG.maxnt+1);
 
@@ -1149,7 +1145,7 @@ lig_reduction ()
     sxfree (rhs_stack);
 
     /* PROVISOIRE */
-    is_print_prod = SXFALSE;
+    is_print_prod = false;
 
     RDGt_set = sxba_calloc (inputG.maxprod+1);
 
@@ -1163,7 +1159,7 @@ lig_reduction ()
     if (!is_reduced) {
 	if (sxverbosep && !sxttycol1p) {
 	    fputc ('\n', sxtty);
-	    sxttycol1p = SXTRUE;
+	    sxttycol1p = true;
 	}
     
 	if (nb == 0)
@@ -1183,7 +1179,7 @@ lig_reduction ()
     /* Si la grammaire est reduite, toutes les relations de niveau 1 sont completes. */
     /* EQUALn et PUSHPOPn */
     bot = EQUALn_ntbot + EQUAL1_top;
-    EQUALnfull = PUSHPOPnfull = SXTRUE;
+    EQUALnfull = PUSHPOPnfull = true;
 
     for (AB = EQUALn_top; (EQUALnfull || PUSHPOPnfull) && (AB > 0); AB--) {
 	kind = EQUALn2kind [AB];
@@ -1205,11 +1201,11 @@ lig_reduction ()
 
 	    if (!SXBA_bit_is_set (RDGnt_set, X)) {
 		if (is_LIG_in_normal_form)
-		    EQUALnfull = SXFALSE;
+		    EQUALnfull = false;
 		else {
 		    if (!is_local) {
 			/* Non local, c'est un trou */
-			EQUALnfull = SXFALSE;
+			EQUALnfull = false;
 		    }
 		}
 	    }
@@ -1220,11 +1216,11 @@ lig_reduction ()
 
 	    if (!SXBA_bit_is_set (RDGnt_set, X)) {
 		if (is_LIG_in_normal_form)
-		    PUSHPOPnfull = SXFALSE;
+		    PUSHPOPnfull = false;
 		else {
 		    if (!is_local) {
 			/* Non local, c'est un trou */
-			PUSHPOPnfull = SXFALSE;
+			PUSHPOPnfull = false;
 		    }
 		}
 	    }
@@ -1233,7 +1229,7 @@ lig_reduction ()
 
     if (!EQUALnfull) {
 	/* EQUALn */
-	is_useless = SXTRUE;
+	is_useless = true;
 	SXLIGEQUALn_set = sxbm_calloc (inputG.maxnt+1, inputG.maxnt+1);
 	X = bot;
 	top = bot + EQUALn_top;
@@ -1253,7 +1249,7 @@ lig_reduction ()
     if (!PUSHPOPnfull) {
 	/* PUSHPOPn */
 	/* Il y a des "trous" */
-	is_useless = SXTRUE;
+	is_useless = true;
 	SXLIGPUSHPOPn_set = sxbm_calloc (inputG.maxnt+1, inputG.maxnt+1);
 	bot = PUSHPOPn_ntbot;
 	top = bot + PUSHPOPn_top;
@@ -1273,7 +1269,7 @@ lig_reduction ()
     }
 
     /* POPn */
-    POPnfull = SXTRUE;
+    POPnfull = true;
     bot = POPn_ntbot + POP1_top;
 
     for (AsB = POPn_top; AsB > 0; AsB--) {
@@ -1281,7 +1277,7 @@ lig_reduction ()
 
 	if (!SXBA_bit_is_set (RDGnt_set, X)) {
 	    if (is_LIG_in_normal_form) {
-		POPnfull = SXFALSE;
+		POPnfull = false;
 		break;
 	    }
 
@@ -1296,7 +1292,7 @@ lig_reduction ()
 	       stockes ds la RDG, ils ne sont pas comptes a priori comme des trous. */
 	    if (A00 != B00 || A == B) {
 		/* Non local, c'est un trou */
-		POPnfull = SXFALSE;
+		POPnfull = false;
 		break;
 	    }
 	}
@@ -1304,7 +1300,7 @@ lig_reduction ()
 
     if (!POPnfull) {
 	/* Il y a des "trous" */
-	is_useless = SXTRUE;
+	is_useless = true;
 	SXLIGPOPn_set = sxbm_calloc (inputG.maxnt+1, XxY_top (Axs_hd)+1);
 	SXLIGAxs = (int**) sxalloc (inputG.maxnt+1, sizeof (int*));
 	SXLIGAxs_area = (int*) sxcalloc ((inputG.maxnt+1)*(maxssymb+1), sizeof (int));
@@ -1360,12 +1356,12 @@ smppass ()
 
     if (sxverbosep) {
 	fputs ("\tSemantic Pass 1, ", sxtty);
-	sxttycol1p = SXFALSE;
+	sxttycol1p = false;
     }
 
     non_void_set = sxba_calloc (SXSTRtop () + 1);
     void_set = sxba_calloc (SXSTRtop () + 1);
-    is_LIG_in_normal_form = SXTRUE;
+    is_LIG_in_normal_form = true;
     rhs_symb_nb = 0;
 
     lig_check_productions (sxatcvar.atc_lv.abstract_tree_root->son);
@@ -1414,7 +1410,7 @@ smppass ()
 
 	if (sxverbosep) {
 	    fputs ("done\n", sxtty);
-	    sxttycol1p = SXTRUE;
+	    sxttycol1p = true;
 	}
 
 	if (!IS_ERROR) {
@@ -1448,26 +1444,26 @@ smppass ()
 
 	    if (sxverbosep) {
 		fputs ("\tIs this LIG reduced ? ... ", sxtty);
-		sxttycol1p = SXFALSE;
+		sxttycol1p = false;
 	    }
 
 	    lig_reduction ();
 
 	    if (sxverbosep) {
 		fputs ("done\n", sxtty);
-		sxttycol1p = SXTRUE;
+		sxttycol1p = true;
 	    }
 
 	    if (sxverbosep) {
 		fprintf (sxtty, "\t%s_ligt.c file output ... ", prgentname);
-		sxttycol1p = SXFALSE;
+		sxttycol1p = false;
 	    }
 
 	    lig_write ();
 
 	    if (sxverbosep) {
 		fputs ("done\n", sxtty);
-		sxttycol1p = SXTRUE;
+		sxttycol1p = true;
 	    }
 
 	    
@@ -1532,7 +1528,7 @@ smppass ()
     else {
 	if (sxverbosep) {
 	    fputs ("done\n", sxtty);
-	    sxttycol1p = SXTRUE;
+	    sxttycol1p = true;
 	}
     }
 

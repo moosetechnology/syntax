@@ -27,7 +27,7 @@ static char	ME [] = "lfg_lex_scanact";
 #endif
 
 #include "sxunix.h"
-char WHAT_LFGLEXSCANACT[] = "@(#)SYNTAX - $Id: lfg_lex_scanact.c 3352 2023-06-12 11:52:07Z garavel $" WHAT_DEBUG;
+char WHAT_LFGLEXSCANACT[] = "@(#)SYNTAX - $Id: lfg_lex_scanact.c 3691 2024-02-07 17:07:52Z garavel $" WHAT_DEBUG;
 
 void
 lfg_lex_scanact (SXINT entry, SXINT act_no)
@@ -97,6 +97,7 @@ lfg_lex_scanact (SXINT entry, SXINT act_no)
       default:
 	break;
       }
+      /* FALLTHROUGH */
 
     default :
       fputs ("The function \"lfg_lex_scanact\" is out of date w.r.t. its specification.\n", sxstderr);

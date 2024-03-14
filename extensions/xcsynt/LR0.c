@@ -23,7 +23,7 @@ static char	ME [] = "LR (0)";
 
 #include "csynt_optim.h"
 
-char WHAT_XCSYNTLR0[] = "@(#)SYNTAX - $Id: LR0.c 3652 2023-12-24 09:43:15Z garavel $" WHAT_DEBUG;
+char WHAT_XCSYNTLR0[] = "@(#)SYNTAX - $Id: LR0.c 3717 2024-02-10 07:24:01Z garavel $" WHAT_DEBUG;
 
 static SXINT	limitem, limt, limnt, limxnt;
 static SXINT	*tsymb1, *items_list, *nt_stack;
@@ -579,7 +579,7 @@ void sornt (SXINT xac1)
     SXINT	StNt, item, next_state, n;
     SXINT			lim;
     struct Q0	*aQ0 = Q0 + xac1;
-    char		s1 [12];
+    char		s1 [28];
 
     if ((lim = aQ0->nt_trans_nb) != 0) {
 	lim += (StNt = aQ0->bot + aQ0->t_trans_nb);
@@ -603,7 +603,7 @@ void sort (SXINT xac1)
     SXINT	StNt, item, next_state, n;
     SXINT			lim;
     struct Q0	*aQ0 = Q0 + xac1;
-    char		s1 [12];
+    char		s1 [28];
 
     if ((lim = aQ0->t_trans_nb) != 0) {
 	lim += (StNt = aQ0->bot);

@@ -35,7 +35,9 @@
 */
 
 #include "SXante.h"
+
 #include "sxcommon.h"
+/* includes stdio.h, stdlib.h, unistd.h, etc. */
 
 #ifndef SXTAB_INTERVAL
 #define SXTAB_INTERVAL 8	/* May be changed for the system */
@@ -66,9 +68,6 @@
 #define SXMAGIC_NUMBER	((SXUINT) 52113)
 extern void sxcheck_magic_number (SXUINT m1, SXUINT m2, char *who);
 
-
-/* "sxba.h" includes <stdio.h> */
-
 #include "sxba.h"
 /*
  * Unless you redefine SXBITS_PER_LONG in "sxba.h",
@@ -78,8 +77,6 @@ extern void sxcheck_magic_number (SXUINT m1, SXUINT m2, char *who);
 #include <sys/fcntl.h> /* pour O_BINARY et O_TEXT */
 #include <string.h>
 #include <sys/time.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include <sys/types.h> /* pour open() */
 #include <sys/stat.h> /* pour open() */
 #include <fcntl.h> /* pour open() */
@@ -759,8 +756,8 @@ struct sxp_lrcvr {
     struct SXP_item		*mvector, *Mvector;
     SXINT			*undo_stack;
     SXBA                        *PER_trans_sets;
+    SXINT                       glbl_best_mod;
 };
-
 
 #include "varstr.h"
 
@@ -1344,10 +1341,10 @@ extern SXINT			sxtknmdf (struct sxtoken *new_seq, SXINT lgth1, SXINT old_tok_no,
                                 ? sxtknzoom (sxplocals.Mtok_no) : 0), 				\
                                 SXGET_TOKEN(sxplocals.Mtok_no) = tok
 
-
 /********************/
 /* COMMENT_MANAGER  */
 /********************/
+
 void   sxcomment_alloc (struct sxcomment *sxcomment_ptr, SXINT size);
 void   sxcomment_clear (struct sxcomment *sxcomment_ptr);
 void   sxcomment_free (struct sxcomment *sxcomment_ptr);
@@ -1357,7 +1354,6 @@ char * sxcomment_book (struct sxcomment *sxcomment_ptr, SXUINT string_lgth);
 #define sxcomment_save(c,s,l)      strncpy (sxcomment_book (c, l), s, (size_t)l)
 #define sxcomment_put(s,l)         sxcomment_save (&(sxplocals.sxcomment), s, l)
 #define sxcomment_catenate(ss,s,l) (strncpy (ss, s, (size_t)l)+(l))
-
 
 /*******************/
 /* INCLUDE MANAGER */

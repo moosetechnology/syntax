@@ -24,7 +24,7 @@ static char	ME [] = "ARC";
 #include "SS.h"
 #include "RLR.h"
 
-char WHAT_XCSYNTARC[] = "@(#)SYNTAX - $Id: ARC.c 3652 2023-12-24 09:43:15Z garavel $" WHAT_DEBUG;
+char WHAT_XCSYNTARC[] = "@(#)SYNTAX - $Id: ARC.c 3698 2024-02-07 18:16:44Z garavel $" WHAT_DEBUG;
 
 extern bool		erase_quads (SXINT ARC_kind, SXINT qtq);
 extern void		solved_by_ARC (SXINT germe_local, SXINT arc_no, SXBA solved_by_ARC_t_set);
@@ -880,7 +880,7 @@ static void	compute_back (SXINT ppss, SXINT state, SXINT compute_back_index, SXI
 			   on continue en sequence. */
 		    }
 		}
-
+		/* FALLTHROUGH */
 		/* pas de knot dans le coup on continue en sequence */
 
 	    case -1 : /* UNBOUNDED_ sans knots */
@@ -2124,7 +2124,7 @@ static VARSTR	fknot_to_vstr (VARSTR fknot_to_vstr_vstr, SXINT entree, SXINT sort
 void	print_pss (SXINT pss)
 {
     SXINT	*bot, *top;
-    char	s [8];
+    char	s [24];
 
     sprintf (s, "%ld=", (SXINT) pss);
     put_edit_apnnl (s);

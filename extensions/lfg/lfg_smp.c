@@ -36,7 +36,7 @@ static char     ME [] = "lfg_smp";
 #include "varstr.h"
 #include "sxunix.h"
 #include <ctype.h>
-char WHAT_LFGSMP[] = "@(#)SYNTAX - $Id: lfg_smp.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_LFGSMP[] = "@(#)SYNTAX - $Id: lfg_smp.c 3715 2024-02-10 07:15:06Z garavel $" WHAT_DEBUG;
 
  /* definies ds le main */
 extern     FILE              *bnf_file, *vocabulary_file;
@@ -2221,9 +2221,9 @@ break;
 	if (brother->name == ATOM_S_n) {
 	  /* Utilisation d'un atome comme valeur d'un champ */
 	  SXINT atom_value;
+#ifndef ESSAI
 	  SXINT               lfg_pd_local_atom_id;
 	      
-#ifndef ESSAI
 	  if ((field_kind & UNBOUNDED_KIND) && brother->degree > 1) {
 	    sxerror (brother->token.source_index, 
 		     sxtab_ptr->err_titles [2][0],
@@ -2299,7 +2299,7 @@ break;
 			   sxtab_ptr->err_titles [2][0],
 			   "%sUndeclared atom: ignored.",
 			   sxtab_ptr->err_titles [2]+1);
-		  lfg_pd_local_atom_id = atom_id = SXERROR_STE;
+		  /* lfg_pd_local_atom_id = */ atom_id = SXERROR_STE;
 		}
 		else {
 		  SXBA_1_bit (working_atom_set, atom_id);
@@ -2588,7 +2588,10 @@ static SXINT main_operator;
 static bool
 gen_code (SXNODE *visited)
 {
-  SXINT     x, prod_no, id, i, ldoli, rdoli, top;
+  SXINT     x, prod_no, id, i, rdoli, top;
+#if 0
+  SXINT     ldoli;
+#endif
   SXNODE    *son, *brother;
   char    *name;
   static SXINT complex_atom_cardinal;
@@ -3015,9 +3018,9 @@ gen_code (SXNODE *visited)
 	return false;
       }
 
+#if 0
       ldoli = doli;
 
-#if 0
       /* Nelle version : on peut modifier les fils */
       if (brother->name == UNIF_OPER_n && ldoli > 0 && rdoli != 0) {
 	sxerror (son->token.source_index, 
@@ -3580,7 +3583,7 @@ output_code (void)
   fprintf (output_file, "#define PRODS_NB %ld\n", (SXINT) XH_top (prod_hd)-1);
   fprintf (output_file, "#define MAXRHS %ld\n", (SXINT) maxrhs);
   fprintf (output_file, "#define MAXRHS_SHIFT %ld\n", (SXINT) (maxrhs_shift = sxlast_bit (maxrhs)));
-  fprintf (output_file, "#define MAXRHS_AND %i\n", ~((~0) << maxrhs_shift));
+  fprintf (output_file, "#define MAXRHS_AND %i\n", ~((unsigned) (~0) << maxrhs_shift));
   /* fprintf (output_file, "#define EQUATION_NB %i\n", EQUATION_nb); */
   fprintf (output_file, "#define IS_OPERATOR_LEX_REF %ld\n", (SXINT)  is_OPERATOR_LEX_REF);
   fprintf (output_file, "#define IS_OPERATOR_LEXEME_REF %ld\n", (SXINT)  is_OPERATOR_LEXEME_REF);

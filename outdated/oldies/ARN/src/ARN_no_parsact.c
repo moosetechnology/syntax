@@ -27,11 +27,7 @@
 /* 31-05-95 10:50 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-#define WHAT	"@(#)ARN_parsact.c	- SYNTAX [unix] - Mer 31 Mai 1995 10:50:06"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+char WHAT[] = "@(#)ARN_parsact.c	- SYNTAX [unix] - Mer 31 Mai 1995 10:50:06";
 
 static char	ME [] = "ARN_parsact";
 
@@ -41,9 +37,10 @@ static char	ME [] = "ARN_parsact";
 static struct ARN	ARN;
 
 static  int
-ARN_symbols_oflw (old_size, new_size)
-    int		old_size, new_size;
+ARN_symbols_oflw (SXINT old_size, SXINT new_size)
 {
+    (void) old_size;
+    (void) new_size;
 #if 0
     ARN.symbol_set = sxba_resize (ARN.symbol_set, new_size + 1);
     ARN.symb2attr = (struct symb2attr*) sxrealloc (ARN.symb2attr,
@@ -54,9 +51,10 @@ ARN_symbols_oflw (old_size, new_size)
 }
 
 static  int
-ARN_parsers_oflw (old_size, new_size)
-    int		old_size, new_size;
+ARN_parsers_oflw (SXINT old_size, SXINT new_size)
 {
+    (void) old_size;
+    (void) new_size;
     ARN.vanished_parser_set = sxba_resize (ARN.vanished_parser_set, new_size + 1);
 
 #if 0
@@ -68,10 +66,12 @@ ARN_parsers_oflw (old_size, new_size)
     return 0;
 }
 
+#if 0
 static  int
-ARN_sons_oflw (old_size, new_size)
-    int		old_size, new_size;
+ARN_sons_oflw (SXINT old_size, SXINT new_size)
 {
+    (void) old_size;
+    (void) new_size;
     ARN.son2attr = (struct son2attr*) sxrealloc (ARN.son2attr,
 						 new_size +1,
 						 sizeof (struct son2attr));
@@ -79,38 +79,41 @@ ARN_sons_oflw (old_size, new_size)
 }
 
 static  void
-ARN_paths_oflw (old_size, new_size)
-    int		old_size, new_size;
+ARN_paths_oflw (SXINT old_size, SXINT new_size)
 {
+    (void) old_size;
+    (void) new_size;
     ARN.path2attr = (struct path2attr*) sxrealloc (ARN.path2attr,
 						   new_size +1,
 						   sizeof (struct path2attr));
 }
+#endif
 
 static  void
-ARN_level_trans_oflw (old_size, new_size)
-    int		old_size, new_size;
+ARN_level_trans_oflw (SXINT old_size, SXINT new_size)
 {
+    (void) old_size;
+    (void) new_size;
     ARN.level_trans2attr = (struct level_trans2attr*) sxrealloc (ARN.level_trans2attr,
 								 new_size +1,
 								 sizeof (struct level_trans2attr));
 }
 
-
 static  void
-ARN_symbol_set_oflw (old_size, new_size)
-    int		old_size, new_size;
+ARN_symbol_set_oflw (SXINT old_size, SXINT new_size)
 {
+    (void) old_size;
+    (void) new_size;
     ARN.symbol_set2attr = (struct symbol_set2attr*) sxrealloc (ARN.symbol_set2attr,
 							       new_size +1,
 							       sizeof (struct symbol_set2attr));
 }
 
-
 static  void
-ARN_pXs_oflw (old_size, new_size)
-    int		old_size, new_size;
+ARN_pXs_oflw (SXINT old_size, SXINT new_size)
 {
+    (void) old_size;
+    (void) new_size;
     ARN.pXs2attr = (struct pXs2attr*) sxrealloc (ARN.pXs2attr,
 						 new_size +1,
 						 sizeof (struct pXs2attr));
@@ -118,17 +121,18 @@ ARN_pXs_oflw (old_size, new_size)
 
 
 static  void
-ARN_local_trans_oflw (old_size, new_size)
-    int		old_size, new_size;
+ARN_local_trans_oflw (SXINT old_size, SXINT new_size)
 {
+    (void) old_size;
+    (void) new_size;
     ARN.local_trans2attr = (struct local_trans2attr*) sxrealloc (ARN.local_trans2attr,
 								 new_size +1,
 								 sizeof (struct local_trans2attr));
 }
 
-
+#if 0
 static int
-ARN_GC ()
+ARN_GC (void)
 {
     /* sxndparser vient de faire un GC, on en profite... */
     /* Il est possible de l'appeler a n'importe quel moment. */
@@ -137,11 +141,10 @@ ARN_GC ()
 
 
 static int
-ARN_action_pop (level, son, father)
-    int level, son, father;
+ARN_action_pop (int level, int son, int father)
 {
     /* On est au niveau level du depilage courant entre les parser son et father */
-    int				path;
+    SXINT				path;
 
     XxY_set (&ARN.paths, son, father, &path);
 
@@ -151,15 +154,16 @@ ARN_action_pop (level, son, father)
     return 0;
 }
 
+
 static int
-ARN_action_top (xtriple)
-    int	xtriple;
+ARN_action_top (int xtriple)
 {
     /* On est ds "reducer", on va lancer une reduction sur le triple xtriple. */
     /* parse_stack.ared est positionne' */
     /* On positionne les variables utiles pour le traitement de la reduction. */
     struct triple	*ptriple;
-    int 		path, trans;
+    SXINT 		path;
+    int 		trans;
 
     XxY_clear (&ARN.paths);
     ARN.act_no = parse_stack.ared->action;
@@ -186,13 +190,12 @@ ARN_action_top (xtriple)
 	ARN.stack = (int*) sxrealloc (ARN.stack,
 				      (ARN.stack_size = ARN.level) + 1,
 				      sizeof (int));
-
     return 0;
 }
 
 
 static void
-ARN_action ()
+ARN_action (void)
 {
     int	value;
 
@@ -213,8 +216,7 @@ ARN_action ()
 
 
 static void
-walk_paths (bot, level)
-    int bot, level;
+walk_paths (int bot, int level)
 {
     int		path;
     
@@ -234,8 +236,7 @@ walk_paths (bot, level)
 
 
 static int
-ARN_action_bot (bot)
-    int bot;
+ARN_action_bot (int bot)
 {
     /* On vient de terminer le depilage, on se contente de noter le parser atteint
        La parsact sera effectuee avec le test du predicat. */
@@ -243,17 +244,17 @@ ARN_action_bot (bot)
 
     return 0;
 }
-
+#endif
 
 
 static int
-ARN_action_new_top (bot, new_top, symbol)
-    int bot, new_top, symbol;
+ARN_action_new_top (int bot, int new_top, int symbol)
 {
     /* Si new_top == 0, echec syntaxique. */
     /* Attention, il peut exister le meme "symbol" avec 2 "new_top" differents. */
-    int		prev_bot, x, pXs;
-    SXBOOLEAN	first_time;
+    int		prev_bot;
+    SXINT	pXs, x;
+    // bool	first_time;
 
     if (symbol == 0 || new_top == 0)
 	return 0;
@@ -300,14 +301,13 @@ ARN_action_new_top (bot, new_top, symbol)
     return 0;
 }
 
-
 static void
-ARN_vanish_trans (son, father, link)
-    int son, father, link;
+ARN_vanish_trans (int son, int father, int link)
 {
     /* On fait disparaitre la transition entre les parser son et father. */
     struct  parsers_attr	*pattr;
-    int				n, local_link, new_main_son, new_main_symbol;
+    int				n, local_link, new_main_son;
+    // int new_main_symbol;
 
     if (father > 0)
     {
@@ -379,19 +379,19 @@ ARN_vanish_trans (son, father, link)
     else
     {
 	/* father est un dummy parser, c'est un index ds triples */
-	parse_stack.for_reducer.triples [-father].is_valid = SXFALSE;
+	parse_stack.for_reducer.triples [-father].is_valid = false;
     }
 }
 
 
 static int
-ARN_forward_walk (son)
-    int son;
+ARN_forward_walk (int son)
 {
-    int	local_trans, father, symbol, rhs, x;
+    int	local_trans, father, symbol;
+    // int x;
+    SXINT rhs;
 
     rhs = -1;
-
     XxY_Xforeach (ARN.local_trans, son, local_trans)
     {
 	father = XxY_Y (ARN.local_trans, local_trans);
@@ -428,8 +428,7 @@ ARN_forward_walk (son)
 
 
 static void
-ARN_build_a_rule (parser, rhs)
-    int parser, rhs;
+ARN_build_a_rule (int parser, int rhs)
 {
     int lhs, x;
     
@@ -462,15 +461,14 @@ ARN_build_a_rule (parser, rhs)
     }
 }
 
-static SXVOID
-ARN_walk_backward (p, is_in_set, l)
-    int		p, l;
-    SXBOOLEAN	is_in_set;
+static void
+ARN_walk_backward (int p, bool is_in_set, int l)
 {
-    int		x, son, father, first_son, major_son, local_trans;
+    int		x, son, father, first_son, major_son;
+    SXINT       local_trans;
     SXBA	fathers_set, sons_set, s;
     int		son_i, father_i;
-    SXBOOLEAN	is_sons, is_first_time, is_in_sons_set;
+    bool	is_sons, is_first_time, is_in_sons_set;
 
     fathers_set = parse_stack.parsers_set [0];
     father_i = 0;
@@ -490,8 +488,8 @@ ARN_walk_backward (p, is_in_set, l)
 	father = first_son;
 	first_son = 0;
 
-	is_first_time = SXTRUE;
-	is_in_sons_set = SXFALSE;
+	is_first_time = true;
+	is_in_sons_set = false;
 
 	for (;;) {
 #ifdef EBUG
@@ -509,7 +507,7 @@ ARN_walk_backward (p, is_in_set, l)
 	
 	    if (first_son != major_son)
 	    {
-		is_in_sons_set = SXTRUE;
+		is_in_sons_set = true;
 		SXBA_1_bit (sons_set, major_son);
 	    }
 	    
@@ -525,14 +523,14 @@ ARN_walk_backward (p, is_in_set, l)
 
 		    if (first_son != son)
 		    {
-			is_in_sons_set = SXTRUE;
+			is_in_sons_set = true;
 			SXBA_1_bit (sons_set, son);
 		    }
 		}
 	    }
 
 	    if (is_first_time) {
-		is_first_time = SXFALSE;
+		is_first_time = false;
 		father = 0;
 	    }
 
@@ -561,8 +559,8 @@ ARN_walk_backward (p, is_in_set, l)
 
 
 
-static SXVOID
-ARN_parse_forest ()
+static void
+ARN_parse_forest (void)
 {
     /* The construction of the parse forest is not performed within the
        recognizer in order to avoid the multiple definition of the same
@@ -576,11 +574,13 @@ ARN_parse_forest ()
        terminals which are the names of the transitions and second, the
        creation of the parse forest (ie the grammar rules) which uses
        the previous transitions and pathes. */
-    SXSHORT		ref;
-    int			x, parser, symbol, rhs, local_trans, xtriple;
+    short		ref;
+    int			parser, xtriple;
+    // int		x, symbol;
+    SXINT		local_trans, rhs;
     SXBA		parser_set;
     struct triple	*triple;
-    SXBOOLEAN		is_first = SXTRUE;
+    bool		is_first = true;
 
     while ((ref = parse_stack.for_reducer.refs [0]) > 0)
     {
@@ -593,8 +593,7 @@ ARN_parse_forest ()
 	if (parse_stack.ared->reduce == 0) {
 	    /* Halt */
 	    /* Normalement chaque parser a un fils unique (son == 2) */
-	  do
-	  {
+	  do {
 #if EBUG
 	      if (/* triple->link > 0 || */ !triple->is_valid || !parse_stack.halt_hit ||
 		  triple->parser == 0 || parse_stack.parser_to_attr [triple->parser].son <= 0)
@@ -603,7 +602,7 @@ ARN_parse_forest ()
 
 	      if (is_first)
 	      {
-		  is_first = SXFALSE;
+		  is_first = false;
 		  set_start_symbol (parse_stack.parser_to_attr [triple->parser].symbol);
 	      }
 
@@ -689,7 +688,7 @@ ARN_parse_forest ()
 }
 
 static void
-ARN_finalize_current_level ()
+ARN_finalize_current_level (void)
 {
     /* On modifie la parse_stack en prenant en compte les transitions
        qui ont disparues. */
@@ -725,7 +724,7 @@ ARN_finalize_current_level ()
 	    parser = parse_stack.for_reducer.triples [x].parser;
 
 	    if (SXBA_bit_is_set (ARN.vanished_parser_set, parser))
-		parse_stack.for_reducer.triples [x].is_valid = SXFALSE;
+		parse_stack.for_reducer.triples [x].is_valid = false;
 	}
 
 	/* On s'occupe maintenant des "for_scanner" */
@@ -746,10 +745,11 @@ ARN_finalize_current_level ()
 }
 
 static int
-ARN_action_final ()
+ARN_action_final (void)
 {
     /* On a termine' l'e'valuation d'un niveau, On prepare le niveau suivant. */
-    int		x, bot, new_top, keep, perhaps, trans, symbol, pXs;
+    int		x, bot, new_top, keep, perhaps, symbol, pXs;
+    // int	trans;
 
     if ((x = ARN.multiple_symbol) != 0)
     {
@@ -758,8 +758,7 @@ ARN_action_final ()
 	   positif et qui est dans for_scanner. */
 	ARN.multiple_symbol = 0;
 
-	do
-	{
+	do {
 	    symbol = X_X (ARN.symbol_set, x);
 	    new_top = ARN.symbol_set2attr [x].new_top;
 	    keep = -1;
@@ -844,9 +843,7 @@ ARN_action_final ()
 
 
 
-int ARN_parsact (which, arg)
-    int		which;
-    struct sxtables	*arg;
+int ARN_parsact (int which, struct sxtables *arg)
 {
     switch (which)
     {
@@ -994,7 +991,7 @@ int ARN_parsact (which, arg)
 	return 0;
 
     case SXINIT:
-	sxplocals.mode.with_do_undo = SXTRUE;
+	sxplocals.mode.with_do_undo = true;
 	ARN.multiple_symbol = 0;
 
 	return 0;

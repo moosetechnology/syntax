@@ -36,11 +36,7 @@
 /* 30-12-94 13:12 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-#define WHAT	"@(#)xtag_smp.c	- SYNTAX [unix] - Mer 18 Jan 1995 10:30:38"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+char WHAT[] = "@(#)xtag_smp.c	- SYNTAX [unix] - Mer 18 Jan 1995 10:30:38";
 
 static char	ME [] = "xtag_smp";
 
@@ -114,13 +110,13 @@ static struct node_address2attr
 
   struct sxsource_coord source_index;
 
-  SXBOOLEAN               is_on_spine;
+  bool               is_on_spine;
 } *node_address2attr;
 
 
 static struct tree2attr 
 {
-  SXBOOLEAN      is_aux;
+  bool      is_aux;
   
 }                   *tree2attr;
 
@@ -159,7 +155,7 @@ xtag_first_pass (visited)
   case ATTRIBUT_S_n :
     
     node_address2attr [current_node_address].kind = 0;
-    node_address2attr [current_node_address].is_on_spine = SXFALSE;
+    node_address2attr [current_node_address].is_on_spine = false;
     
     while (son != NULL) 
       {
@@ -171,7 +167,7 @@ xtag_first_pass (visited)
 
     if (*pkind & FOOT_c) 
       {
-	node_address2attr [current_node_address].is_on_spine = SXTRUE;
+	node_address2attr [current_node_address].is_on_spine = true;
 
 	if ((*pkind & NA_c) == 0)
 	  {
@@ -227,7 +223,7 @@ xtag_first_pass (visited)
 	    else 
 	      {
 		node_address2attr [current_node_address].kind |= FOOT_c;
-		tree2attr [current_tree_index].is_aux = SXTRUE;
+		tree2attr [current_tree_index].is_aux = true;
 		SXBA_1_bit (aux_set, current_root_name);
 	      }
 	  }
@@ -286,7 +282,7 @@ xtag_first_pass (visited)
 
 	if (son->position != 1 && node_address2attr [son_node_address].is_on_spine)
 	  {
-	    node_address2attr [father_node_address].is_on_spine = SXTRUE;
+	    node_address2attr [father_node_address].is_on_spine = true;
 
 	    if (node_address2attr [son_node_address].kind & FOOT_c)
 	      node_address2attr [father_node_address].kind |= KNEE_c;
@@ -360,7 +356,7 @@ xtag_first_pass (visited)
     current_root_name = SXEMPTY_STE;
     current_tree_index++;
     XxY_set (&node_address, current_tree_index, 0, &current_node_address);
-    tree2attr [current_tree_index].is_aux = SXFALSE; /* A priori */
+    tree2attr [current_tree_index].is_aux = false; /* A priori */
     
     xtag_first_pass (son);
 

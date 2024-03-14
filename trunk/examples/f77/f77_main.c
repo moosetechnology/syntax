@@ -22,9 +22,9 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_F77MAIN[] = "@(#)SYNTAX - $Id: f77_main.c 3633 2023-12-20 18:41:19Z garavel $";
+char WHAT_F77MAIN[] = "@(#)SYNTAX - $Id: f77_main.c 3780 2024-02-29 15:19:53Z garavel $";
 
-bool is_ansi, is_json, is_indent, is_pretty_printer, is_input_free_fortran;
+bool is_ansi, is_json, is_indent, is_pretty_printer, is_input_free_fortran, is_extension;
 
 /* On est dans un cas "mono-langage": */
 
@@ -43,6 +43,7 @@ options=\t-v, -verbose, -nv, -noverbose,\n\
 \t\t-ansi, -noansi,\n\
 \t\t-json, -nojson,\n\
 \t\t-indent, -noindent,\n\
+\t\t-X, -extension, -nX, -noextension,\n\
 \t\t-iff, -input_free_fortran, -niff, -noinput_free_fortran.\n";
 
 #define OPTION(opt)	(1 << (opt - 1))
@@ -55,12 +56,14 @@ options=\t-v, -verbose, -nv, -noverbose,\n\
 #define ANSI 			2
 #define JSON 			3
 #define INDENT                  4
-#define INPUT_FREE_FORTRAN      5
+#define EXTENSION               5
+#define INPUT_FREE_FORTRAN      6
 
 static char	*option_tbl [] = {"", "v", "verbose", "nv", "noverbose", "ansi", "noansi", "json", "nojson", "indent", "noindent",
-				  "iff", "input_free_fortran", "niff", "noinput_free_fortran"};
+				  "X", "extension", "nX", "noextension", "iff", "input_free_fortran", "niff", "noinput_free_fortran"};
 
 static SXINT	option_kind [] = {UNKNOWN_ARG, VERBOSE, VERBOSE, -VERBOSE, -VERBOSE, ANSI, -ANSI, JSON, -JSON, INDENT, -INDENT,
+				  EXTENSION, EXTENSION, -EXTENSION, -EXTENSION,
 				  INPUT_FREE_FORTRAN, INPUT_FREE_FORTRAN, -INPUT_FREE_FORTRAN, -INPUT_FREE_FORTRAN};
 
 char *json_indent_command = NULL;
@@ -93,6 +96,7 @@ int main (int argc, char *argv[])
     is_pretty_printer = false; /* always false for f77 */
     sxverbosep = false;
     is_ansi = false;
+    is_extension = false;
     is_input_free_fortran = false;
 
     for (argnum = 1; argnum < argc; argnum++) {
@@ -129,6 +133,14 @@ int main (int argc, char *argv[])
 	    is_indent = false;
 	    break;
 
+	case EXTENSION:
+	    is_extension = true;
+	    break;
+
+	case -EXTENSION:
+	    is_extension = false;
+	    break;
+
 	case INPUT_FREE_FORTRAN:
 	    is_input_free_fortran = true;
 	    break;
@@ -148,6 +160,11 @@ int main (int argc, char *argv[])
     }
 
  run:
+    if (is_json == true) {
+       /* L'arbre JSON accepte les extensions a FORTRAN 77 */
+       is_extension = true;
+    }
+
     if (is_json == true && is_indent == true) {
        json_indent_command = "awk '\
 			BEGIN { TAB = 0 } \

@@ -353,7 +353,7 @@ static char *err_titles[SXSEVERITIES]={
 "\002Error:\t",
 };
 static char abstract []= "%d warnings and %d errors are reported.";
-extern SXBOOLEAN sxprecovery();
+extern bool sxprecovery();
 
 static unsigned char S_char_to_simple_class[]={
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
@@ -556,7 +556,7 @@ static char *S_global_mess[]={
 };
 extern int SCANACT();
 extern int sxscan_it();
-extern SXBOOLEAN sxsrecovery();
+extern bool sxsrecovery();
 static int check_keyword();
 static struct SXT_node_info SXT_node_info[]={
 {5,1},{0,2},{21,4},{20,5},{11,7},{11,9},{0,11},{0,13},{3,15},{0,16},{19,18},{19,19},

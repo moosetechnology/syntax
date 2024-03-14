@@ -146,7 +146,7 @@ static char *err_titles[SXSEVERITIES]={
 };
 static char abstract []= "%d warnings and %d errors are reported.";
 extern int PARSACT();
-extern SXBOOLEAN sxndprecovery();
+extern bool sxndprecovery();
 
 static unsigned char S_char_to_simple_class[]={
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
@@ -213,7 +213,7 @@ static char *S_global_mess[]={
 "%sScanning stops on End Of File.",
 };
 extern int sxscan_it();
-extern SXBOOLEAN sxsrecovery();
+extern bool sxsrecovery();
 
 /********************* start of LIG tables ********************/
 static int SXLIG_prdct_or_act_disp [] = {

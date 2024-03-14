@@ -1,10 +1,6 @@
-#define WHAT	"@(#)SLC(1)/Earley automaton for wcw - SYNTAX [unix] - Tue Nov 19 15:41:58 1996"
+char WHAT[] = "@(#)SLC(1)/Earley automaton for wcw - SYNTAX [unix] - Tue Nov 19 15:41:58 1996";
 
 #if 0
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
 static char	ME [] = "wcw_earley_lc_parser";
 #endif
 
@@ -76,7 +72,7 @@ static int lhs [] = {
 /* 8 */	2,
 };
 
-
+#if 0
 static int semact [] = {
 /* 0 */	0,
 /* 1 */	0,
@@ -88,7 +84,7 @@ static int semact [] = {
 /* 7 */	0,
 /* 8 */	0,
 };
-
+#endif
 
 static int nt2order [] = {0,
 /* 1 = <S> */	1,
@@ -101,19 +97,19 @@ static int order2nt [] = {0,
 /* 2 */	2 /* <T> */,
 };
 
-
+#if 0
 static int rhs_nt2where [] = {
 /* 0 */	0 /* terminals */,
 /* 1 */	9 /* <S> */,
 /* 2 */	13 /* <T> */,
 };
 
-
 static int lhs_nt2where [] = {
 /* 0 */	17 /* <Super Start Symbol> */,
 /* 1 */	18 /* <S> */,
 /* 2 */	22 /* <T> */,
 };
+#endif
 
 static  SXBA_ELT t2item_set [5]
 #if SXBITS_PER_LONG==32
@@ -133,6 +129,7 @@ static  SXBA_ELT t2item_set [5]
 #endif
 } /* End t2item_set */;
 
+#if 0
 static  SXBA_ELT left_corner [3]
 #if SXBITS_PER_LONG==32
  [2] = {
@@ -146,6 +143,7 @@ static  SXBA_ELT left_corner [3]
 /* 2 */ {3, 0X0000000000000004, },
 #endif
 } /* End left_corner */;
+#endif
 
 static  SXBA_ELT nt2item_set [3]
 #if SXBITS_PER_LONG==32
@@ -241,7 +239,7 @@ static int order2prod [] = {
 /* 8 */	1,
 };
 
-
+#if 0
 static int prod_order2min [] = {
 /* 0 */	0,
 /* 1 */	0,
@@ -254,7 +252,6 @@ static int prod_order2min [] = {
 /* 8 */	0,
 };
 
-
 static int prod_order2max [] = {
 /* 0 */	0,
 /* 1 */	0,
@@ -266,22 +263,21 @@ static int prod_order2max [] = {
 /* 7 */	0,
 /* 8 */	0,
 };
-
+#endif
 
 static char *ntstring [] = {"",
 /* 1 */	"S",
 /* 2 */	"T",
 };
 
-
+#if 0
 static char *tstring [] = {"",
 /* 1 */	"a",
 /* 2 */	"b",
 /* 3 */	"c",
 /* 4 */	"END OF FILE",
 };
-
 #endif
-
+#endif
 
 #include "sxparser_earley_lc.c"

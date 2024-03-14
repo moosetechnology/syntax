@@ -1,4 +1,4 @@
-static SXVOID discrimine (shift_ref, parser)
+static void discrimine (shift_ref, parser)
     int	shift_ref, parser;
 {
   int				son, ltd_parser, i, p, ref, lgth, lim, shift_ambiguity, red_no;
@@ -43,7 +43,7 @@ static SXVOID discrimine (shift_ref, parser)
   ltd_agraph->son = son;
   ltd_agraph->symbol = agraph->symbol;
   ltd_agraph->state = state;
-  ltd_agraph->parse_time_built = SXTRUE;
+  ltd_agraph->parse_time_built = true;
   sxba_empty (ltd_parse_stack.families [ltd_parser]);
 
   /* Initialisation des familles avec leur premier membre */
@@ -56,7 +56,7 @@ static SXVOID discrimine (shift_ref, parser)
     {
       sxba_1_bit (ltd_parse_stack.families [ltd_parser], 1);
       ltd_parse_stack.red_no = red_no;
-      ltd_do_pops (SXFALSE, ltd_parser, LGPROD (red_no));
+      ltd_do_pops (false, ltd_parser, LGPROD (red_no));
       sxba_0_bit (ltd_parse_stack.families [ltd_parser], 1);
     }
   else
@@ -71,7 +71,7 @@ static SXVOID discrimine (shift_ref, parser)
 	  sxba_0_bit (ltd_parse_stack.families [ltd_parser], i++);
 	  sxba_1_bit (ltd_parse_stack.families [ltd_parser], i);
 	  ltd_parse_stack.red_no = bnf_ag.WS_INDPRO [-Q0xV_to_Q0 [ref]].prolis;
-	  ltd_do_pops (SXFALSE, ltd_parser, LGPROD (ltd_parse_stack.red_no));
+	  ltd_do_pops (false, ltd_parser, LGPROD (ltd_parse_stack.red_no));
 	} while (++ref < lim);
 
       sxba_0_bit (ltd_parse_stack.families [ltd_parser], i);
@@ -109,7 +109,7 @@ static SXVOID discrimine (shift_ref, parser)
 	      if (ref > 0)
 		{
 		  ltd_parse_stack.red_no = ref;
-		  ltd_do_pops (SXFALSE, p, LGPROD (ltd_parse_stack.red_no));
+		  ltd_do_pops (false, p, LGPROD (ltd_parse_stack.red_no));
 		}
 	      else
 		{
@@ -121,14 +121,14 @@ static SXVOID discrimine (shift_ref, parser)
 		    {
 		      ltd_parse_stack.red_no = bnf_ag.WS_INDPRO [-Q0xV_to_Q0 [ref]].prolis;
 		      if ((lgth = LGPROD (ltd_parse_stack.red_no)) > 0)
-			  ltd_do_pops (SXFALSE, p, lgth);
+			  ltd_do_pops (false, p, lgth);
 		    } while (++ref < lim);
 		}
 	    } while (!SS_is_empty (ltd_parse_stack.for_actor));
 	  
 	  while (ltd_parse_stack.is_new_links)
 	    {
-	      ltd_parse_stack.is_new_links = SXFALSE;
+	      ltd_parse_stack.is_new_links = false;
 	      sxba_copy (ltd_parse_stack.used_links, ltd_parse_stack.current_links);
 	      sxba_empty (ltd_parse_stack.current_links);
 	      
@@ -153,7 +153,7 @@ static SXVOID discrimine (shift_ref, parser)
 		    if ((lgth = LGPROD (ref)) > 0)
 		      {
 			ltd_parse_stack.red_no = ref;
-			ltd_do_limited_reductions (SXTRUE, p, lgth);
+			ltd_do_limited_reductions (true, p, lgth);
 		      }
 		  }
 		else
@@ -168,7 +168,7 @@ static SXVOID discrimine (shift_ref, parser)
 			ltd_parse_stack.red_no = bnf_ag.WS_INDPRO [-Q0xV_to_Q0 [ref]].prolis;
 			
 			if ((lgth = LGPROD (ltd_parse_stack.red_no)) > 0)
-			    ltd_do_limited_reductions (SXTRUE, p, lgth);
+			    ltd_do_limited_reductions (true, p, lgth);
 		      } while (++ref < lim);
 		  }
 		
@@ -178,7 +178,7 @@ static SXVOID discrimine (shift_ref, parser)
 	  
 	}
 
-      ltd_shifter(SXFALSE);
+      ltd_shifter(false);
       sxba_empty (ltd_parse_stack.family_Mb);
       y = 0;
       while (ltd_parse_stack.active_states [0] > 0)

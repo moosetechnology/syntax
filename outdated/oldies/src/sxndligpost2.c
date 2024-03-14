@@ -82,18 +82,14 @@
 /* 18-01-95 14:20 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-#define WHAT	"@(#)sxndligpost2.c\t- SYNTAX [unix] -  7 mai 2003"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+char WHAT[] = "@(#)sxndligpost2.c\t- SYNTAX [unix] -  7 mai 2003";
 
 #if 0
 static char	ME [] = "sxndligpost2";
 #endif
 
-# include 	"sxnd.h"
-# include 	"sxndlig_post2.h"
+#include 	"sxnd.h"
+#include 	"sxndlig_post2.h"
 
 extern int      sxndlig_post_do_it ();
 extern int      sxndligpost (int which, struct sxtables *arg);
@@ -146,13 +142,13 @@ memo_oflw (old_size, new_size)
    Attention entre 2 items i et j il peut y avoir PLUSIEURS relations.
 */
 
-static SXBOOLEAN
+static bool
 perform_action_prdct (prdct_no, act_no, kind)
     int	prdct_no, act_no, *kind;
 {
     int			push_nb, pop_nb, memo;
     int			*pc, *pclim, *pprdct_bot, *pprdct_top;
-    SXBOOLEAN		prdct_secondary, act_secondary, is_memo;
+    bool		prdct_secondary, act_secondary, is_memo;
     struct memo2attr	*pattr;
 
     sxinitialise(act_secondary);/* pour faire taire "gcc -Wuninitialized" */
@@ -202,7 +198,7 @@ perform_action_prdct (prdct_no, act_no, kind)
 	while (pprdct_top > pprdct_bot && pclim > pc)
 	{
 	    if (*pprdct_top-- != *pclim--)
-		return pattr->result = SXFALSE;
+		return pattr->result = false;
 	}
 
 	if (prdct_secondary && act_secondary)
@@ -211,17 +207,17 @@ perform_action_prdct (prdct_no, act_no, kind)
 	pattr->kind = *kind = push_nb - pop_nb;
     }
 
-    return pattr->result = SXTRUE;
+    return pattr->result = true;
 }
 
 
-static SXBOOLEAN
+static bool
 check_action_prdct (prdct_no, act_no, kind)
     int	prdct_no, act_no, kind;
 {
     /* prdct_no et act_no sont non_vides (donc non nuls) */
     int		*pc, *pclim, *pprdct_bot, *pprdct_top;
-    SXBOOLEAN	prdct_secondary, act_secondary;
+    bool	prdct_secondary, act_secondary;
 
 #ifdef EBUG
     if (prdct_no == 0 || act_no == 0)
@@ -238,7 +234,7 @@ check_action_prdct (prdct_no, act_no, kind)
 	pprdct_bot += 3;
 
     if ((prdct_secondary && !act_secondary) || (!prdct_secondary && act_secondary))
-	return SXFALSE;
+	return false;
 
     pclim = sxndlig_common.code.prdct_or_act_code + sxndlig_common.code.prdct_or_act_disp [act_no + 1] - 2;
     pprdct_top = sxndlig_common.code.prdct_or_act_code + sxndlig_common.code.prdct_or_act_disp [prdct_no + 1] - 2;
@@ -252,16 +248,16 @@ check_action_prdct (prdct_no, act_no, kind)
     while (++pc <= pclim && ++pprdct_bot <= pprdct_top)
     {
 	if (*pc != *pprdct_bot)
-	    return SXFALSE;
+	    return false;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
 
 
-static SXBOOLEAN
+static bool
 compose (left_item, right_item, kind)
     int left_item, right_item, kind;
 {
@@ -278,31 +274,31 @@ compose (left_item, right_item, kind)
 
 
 
-static SXBOOLEAN
+static bool
 fill_Rk (Rk, left_item, right_item, left_kind, right_kind)
     struct R	*Rk;
     int left_item, right_item, left_kind, right_kind;
 {
     int 		indice, kind = left_kind + right_kind;
-    SXBOOLEAN		do_graph = SXFALSE;
+    bool		do_graph = false;
     struct R_attr 	*pattr;
 
     if (left_item == right_item)
     {
 	if (!sxndlig.is_cyclic)
 	{
-	    sxndlig.is_cyclic = SXTRUE;
+	    sxndlig.is_cyclic = true;
 	    fputs ("Warning: This grammar is cyclic.\n", sxtty);
 	}
 
-	return SXFALSE;
+	return false;
     }
 
     if (left_kind < 0 && right_kind > 0)
     {
 	/* On a left_item <  <>* > right_item */
 	if (!compose (left_item, right_item, kind))
-	    return SXFALSE;
+	    return false;
 
 	/* Si kind == 0 On fabrique left_item <>+ right_item. */
 	if (kind <= 0)
@@ -342,7 +338,7 @@ fill_Rk (Rk, left_item, right_item, left_kind, right_kind)
     else if (pattr->kind != kind || (pattr->item & LIG_7F) != (unsigned int)right_item)
     {
 	pattr->item |= LIG_80;
-	do_graph = SXTRUE;
+	do_graph = true;
     }
 
     pattr = &(Rk->left_attr [right_item]);
@@ -356,7 +352,7 @@ fill_Rk (Rk, left_item, right_item, left_kind, right_kind)
     else if (pattr->kind != kind || (pattr->item & LIG_7F) != (unsigned int)left_item)
     {
 	pattr->item |= LIG_80;
-	do_graph = SXTRUE;
+	do_graph = true;
     }
 
     if (do_graph)
@@ -364,19 +360,19 @@ fill_Rk (Rk, left_item, right_item, left_kind, right_kind)
 	XxYxZ_set (&Rk->graph, left_item, kind, right_item, &indice);
     }
 
-    return SXTRUE; /* Ajoute' au pif le 14/05/2003 */
+    return true; /* Ajoute' au pif le 14/05/2003 */
 }
 
 
 
-static SXBOOLEAN
+static bool
 fill_trans_k (Rkm1, Rk)
     struct R	*Rkm1, *Rk;
 {
     /* On fabrique Rk a partir de R1 et Rkm1. */
     int		item, rindice, rkind, lkind, left_item, right_item, lindice;
     int		litem, ritem, left_kind, right_kind;
-    SXBOOLEAN	is_new = SXFALSE, is_right_foreach, is_left_foreach, is_left, is_right;
+    bool	is_new = false, is_right_foreach, is_left_foreach, is_left, is_right;
     SXBA	middle_set;
 
 #ifdef EBUG
@@ -413,7 +409,7 @@ fill_trans_k (Rkm1, Rk)
 	    XxYxZ_Xforeach (Rkm1->graph, item, rindice)
 	    {
 		if ((ritem = XxYxZ_Z (Rkm1->graph, rindice)) == right_item)
-		    is_right = SXTRUE;
+		    is_right = true;
 
 		if ((rkind = XxYxZ_Y (Rkm1->graph, rindice)) >= 0 /* > ou = */)
 		{
@@ -422,25 +418,25 @@ fill_trans_k (Rkm1, Rk)
 			XxYxZ_Zforeach (sxndlig.R1.graph, item, lindice)
 			{
 			    if ((litem = XxYxZ_X (sxndlig.R1.graph, lindice)) == left_item)
-				is_left = SXTRUE;
+				is_left = true;
 
 			    if ((lkind = XxYxZ_Y (sxndlig.R1.graph, lindice)) <= 0 /* < ou = */ &&
 				fill_Rk (Rk, litem, ritem, lkind, rkind))
-				is_new = SXTRUE;
+				is_new = true;
 			}
 		    }
 		    else
-			is_left = SXFALSE;
+			is_left = false;
 
 		    if (!is_left &&
 			left_kind <= 0 /* < ou = */ &&
 			fill_Rk (Rk, left_item, ritem, left_kind, rkind))
-			is_new = SXTRUE;
+			is_new = true;
 		}
 	    }
 	}
 	else
-	    is_right = SXFALSE;
+	    is_right = false;
 
 	if (!is_right && right_kind >= 0 /* > ou = */)
 	{
@@ -449,20 +445,20 @@ fill_trans_k (Rkm1, Rk)
 		XxYxZ_Zforeach (sxndlig.R1.graph, item, lindice)
 		{
 		    if ((litem = XxYxZ_X (sxndlig.R1.graph, lindice)) == left_item)
-			is_left = SXTRUE;
+			is_left = true;
 
 		    if ((lkind = XxYxZ_Y (sxndlig.R1.graph, lindice)) <= 0 /* < ou = */ &&
 			fill_Rk (Rk, litem, right_item, lkind, right_kind))
-			is_new = SXTRUE;
+			is_new = true;
 		}
 	    }
 	    else
-		is_left = SXFALSE;
+		is_left = false;
 
 	    if (!is_left
 		&& left_kind <= 0 /* < ou = */ &&
 		fill_Rk (Rk, left_item, right_item, left_kind, right_kind))
-		is_new = SXTRUE;
+		is_new = true;
 	}
     }
 
@@ -495,7 +491,7 @@ fill_trans_k (Rkm1, Rk)
 	    XxYxZ_Zforeach (Rkm1->graph, item, lindice)
 	    {
 		if ((litem = XxYxZ_Z (Rkm1->graph, lindice)) == left_item)
-		    is_left = SXTRUE;
+		    is_left = true;
 
 		if ((lkind = XxYxZ_Y (Rkm1->graph, lindice)) <= 0 /* < ou = */)
 		{
@@ -504,25 +500,25 @@ fill_trans_k (Rkm1, Rk)
 			XxYxZ_Xforeach (sxndlig.R1.graph, item, rindice)
 			{
 			    if ((ritem = XxYxZ_X (sxndlig.R1.graph, rindice)) == right_item)
-				is_right = SXTRUE;
+				is_right = true;
 
 			    if ((rkind = XxYxZ_Y (sxndlig.R1.graph, rindice)) >= 0 /* > ou = */ &&
 				fill_Rk (Rk, litem, ritem, lkind, rkind))
-				is_new = SXTRUE;
+				is_new = true;
 			}
 		    }
 		    else
-			is_right = SXFALSE;
+			is_right = false;
 
 		    if (!is_right &&
 			right_kind >= 0 /* > ou = */ &&
 			fill_Rk (Rk, litem, right_item, lkind, right_kind))
-			is_new = SXTRUE;
+			is_new = true;
 		}
 	    }
 	}
 	else
-	    is_left = SXFALSE;
+	    is_left = false;
 
 	if (!is_left && left_kind <= 0 /* < ou = */)
 	{
@@ -531,20 +527,20 @@ fill_trans_k (Rkm1, Rk)
 		XxYxZ_Xforeach (sxndlig.R1.graph, item, rindice)
 		{
 		    if ((ritem = XxYxZ_X (sxndlig.R1.graph, rindice)) == right_item)
-			is_right = SXTRUE;
+			is_right = true;
 
 		    if ((rkind = XxYxZ_Y (sxndlig.R1.graph, rindice)) >= 0 /* > ou = */ &&
 			fill_Rk (Rk, left_item, ritem, left_kind, rkind))
-			is_new = SXTRUE;
+			is_new = true;
 		}
 	    }
 	    else
-		is_right = SXFALSE;
+		is_right = false;
 
 	    if (!is_right &&
 		right_kind >= 0 /* > ou = */ &&
 		fill_Rk (Rk, left_item, right_item, left_kind, right_kind))
-		is_new = SXTRUE;
+		is_new = true;
 	}
     }
 
@@ -552,7 +548,7 @@ fill_trans_k (Rkm1, Rk)
 }
 
 
-static SXBOOLEAN
+static bool
 fill_trans (item, prdct_no, rhs_rule_no)
     int item, prdct_no, rhs_rule_no;
 {
@@ -620,11 +616,11 @@ fill_trans (item, prdct_no, rhs_rule_no)
 	else
 	    fill_Rk (&sxndlig.R1, item, next_item, 0, 0);
 
-	return SXTRUE;
+	return true;
 	
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
@@ -635,11 +631,11 @@ sxndlig_post2_do_it ()
     static int	graph_foreach [] = {1, 0, 1, 0, 0, 0};
 
     struct R	*pR;
-    SXBOOLEAN	not_done, checked;
+    bool	not_done, checked;
 
     int 	lhs_rule_no, rule_lgth, item, lhs_symb, reduce, *pprdct_no, lim, indice, rhs_rule_no;
     int		prdct_no, next_item, next_rule_lgth, next_lim;
-    SXBOOLEAN 	ret_val;
+    bool 	ret_val;
 
     sxndlig.R0_size = parse_stack.rule [parse_stack.hook_rule - 1].hd +
 	parse_stack.rule [parse_stack.hook_rule - 1].lgth;
@@ -735,12 +731,12 @@ sxndlig_post2_do_it ()
 			else if ((next_rule_lgth = parse_stack.rule [rhs_rule_no].lgth) > 0)
 			{
 			    next_item = parse_stack.rule [rhs_rule_no].hd;
-			    checked = SXFALSE;
+			    checked = false;
 			    next_lim = next_item + next_rule_lgth;
 
 			    while (++next_item < next_lim)
 				if (fill_trans (item, prdct_no, parse_stack.grammar [next_item].rhs_symb))
-				    checked = SXTRUE;
+				    checked = true;
 
 			    if (!checked)
 				CTRL_PUSH (parse_stack.erased, lhs_rule_no);
@@ -863,9 +859,9 @@ sxndligpost2 (which, arg)
     return 0;
 
   case SXINIT:
-    sxplocals.mode.with_semact = SXFALSE;
-    sxplocals.mode.with_parsact = SXFALSE;
-    sxplocals.mode.with_parsprdct = SXFALSE;
+    sxplocals.mode.with_semact = false;
+    sxplocals.mode.with_parsact = false;
+    sxplocals.mode.with_parsprdct = false;
     (*sxndlig_common.code.parsact) (which, arg);
 
     return 0;

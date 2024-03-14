@@ -21,7 +21,7 @@
 #include "sxunix.h"
 #include "B_tables.h"
 
-char WHAT_BNFREAD[] = "@(#)SYNTAX - $Id: bnfread.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_BNFREAD[] = "@(#)SYNTAX - $Id: bnfread.c 3684 2024-02-06 10:21:55Z garavel $" WHAT_DEBUG;
 
 
 #define READ(f,p,l)		\
@@ -32,9 +32,7 @@ char WHAT_BNFREAD[] = "@(#)SYNTAX - $Id: bnfread.c 3633 2023-12-20 18:41:19Z gar
 		goto read_error
 
 
-bool		bnf_read (B, langname)
-    struct bnf_ag_item		*B;
-    char	*langname;
+bool		bnf_read (struct bnf_ag_item *B, char *langname)
 {
     SXINT	bytes;
     SXINT	i;

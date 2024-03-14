@@ -22,7 +22,7 @@
 #include "SS.h"
 
 #ifndef VARIANT_32
-char WHAT_SXP_RECOVERY[] = "@(#)SYNTAX - $Id: sxp_rcvr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_SXP_RECOVERY[] = "@(#)SYNTAX - $Id: sxp_rcvr.c 3794 2024-03-14 10:15:04Z garavel $" WHAT_DEBUG;
 #endif
 
 #define Commun 1
@@ -818,6 +818,9 @@ static bool match_a_tok (SXINT cur_mod, SXINT n, SXINT tok)
     /* Cette fonction regarde si le token "tok" match le nieme element de modele cur_mod */
     SXINT	*regle;
     SXINT	j;
+
+    if (cur_mod > sxplocals.rcvr.glbl_best_mod)
+        sxtrap ("sxp_rcvr", "match_a_tok() unexpected model priority");
     
     regle = sxplocals.SXP_tables.P_lregle [cur_mod];
 
@@ -844,10 +847,10 @@ static bool match_a_tok (SXINT cur_mod, SXINT n, SXINT tok)
 
 static bool search_a_rule (SXINT *cur_mod, SXINT n, SXINT best_mod, SXINT *ster)
 {
-    /* Recherche un modele de priorite inferieure a cur_mod dont le prefixe verifie ster */
-
     SXINT 	mod, k, bot;
     SXINT	*regle;
+
+    /* Recherche un modele mod tel que l'on a cur_mod < mod <= best_mod dont le prefixe verifie ster */
 
     for (mod = *cur_mod + 1; mod < best_mod; mod++) {
 	regle = sxplocals.SXP_tables.P_lregle [mod];
@@ -1143,7 +1146,7 @@ static void new_ref (SXINT k, SXINT n, SXINT xstd, SXP_SHORT ref, SXP_SHORT test
 	    cur_mod = rule_no - 1;
 
 	    if (search_a_rule (&cur_mod, sxplocals.SXP_tables.P_maxlregle,
-			       sxplocals.rcvr.nomod, sxplocals.rcvr.ster))
+			       sxplocals.rcvr.glbl_best_mod, sxplocals.rcvr.ster))
 		deriv (true, sxplocals.SXP_tables.P_maxlregle, j - ared->lgth, 0, cur_mod);
 	}
 	else			/* Reduce */
@@ -1221,6 +1224,68 @@ static void new_ref (SXINT k, SXINT n, SXINT xstd, SXP_SHORT ref, SXP_SHORT test
   }
 }
 
+/* Les terminaux t1 et t2 de code interne t1code et t2code sont tous les 2 des candidats valides pour une correction.
+ * Si ti est générique stri repère le caractère du nom de ce générique situé après le '%'
+ * Si ti est non-générique, stri repère le premier caractère de son nom
+ * t1 est "meilleur" que t2 ssi on a
+ *    - t1 est non-générique et t2 est générique
+ *    - ou, étant tous les 2 génériques ou tous les 2 non-génériques on a str1 < str2 (par ordre alphabétique)
+*/
+
+static bool better_candidate (SXINT t1code, SXINT t2code)
+{
+  bool  is_gen1, is_gen2;
+  char  *str1, *str2, c1, c2;
+  SXINT l1, l2, l;
+  
+  is_gen1 = sxgenericp (sxplocals.sxtables, t1code);
+  is_gen2 = sxgenericp (sxplocals.sxtables, t2code);
+
+  if (!is_gen1 && is_gen2) return true;
+  if (is_gen1 && !is_gen2) return false;
+
+  str1 = sxttext (sxplocals.sxtables, t1code);
+  str2 = sxttext (sxplocals.sxtables, t2code);
+  if (is_gen1) str1++;
+  if (is_gen2) str2++;
+  l1 = strlen (str1);
+  l2 = strlen (str2);
+  l = l1 < l2 ? l1 : l2;
+
+  while (l-- > 0) {
+    c1 = *str1++;
+    c2 = *str2++;
+    if (c1 < c2) return true;
+    if (c1 > c2) return false;
+  }
+
+  /* préfixes identiques */
+  return l1 < l2;
+}
+
+
+static bool check_best_ster (SXINT n, SXINT *best_str)
+{
+    SXINT i, best, cur;
+
+    /* Pour essayer de pallier des fluctuations dans la correction d'erreur dues
+     * a de "petites" modifications dans la grammaire, qui sont genantes pour
+     * les tests de regression, on ne garde, pour un modele donne', que la
+     * correction qui met en jeu les terminaux ayant des codes minimaux
+     */
+
+    for (i = 1; i <= n; i++) {
+        best = best_str [i];
+        cur = sxplocals.rcvr.ster [i];
+        if (cur != best) {
+	  /* cur et best sont dans le même modèle, s'ils sont différents, ils correspondent forcément à un "S" ou un "X" */
+	  return better_candidate (cur, best); 
+        }
+    }
+
+  /* Identiques */
+  return false;
+}
 
 
 static void	deriv (bool string_has_grown, SXINT n, SXINT xstd, SXP_SHORT t_state, SXINT rule_no)
@@ -1228,52 +1293,92 @@ static void	deriv (bool string_has_grown, SXINT n, SXINT xstd, SXP_SHORT t_state
 /* fabrique les corrections locales; place ses resultats dans "nomod" (numero
    du modele) et "lter" (nouveau flot de tokens) */
 /* Suppose que t_state designe une T_table */
+/* rcvr.nomod est plus prioritaire que a_la_rigueur.modele_no */
 
 {
+    if (rule_no > sxplocals.rcvr.glbl_best_mod) { 
+        /* Si un modele de correction est valide' par une branche du sous-arbre
+         * des derivations calculees par cet appel de deriv(), sa priorite' ne
+         * pourra etre meilleure que celle de rule_no
+         */
+        return; /* garde-fou */
+    }   
+
     if (string_has_grown) {
 	bool must_return = true;
+        bool not_kept;
+	SXINT	*regle;
+	SXINT	head, lmod;
+	SXINT 	*best_str, i;
+        SXINT     *pnomod;
+        bool valid;
 
 	if (match_a_tok (rule_no, n, sxplocals.rcvr.ster [n]) ||
-	    search_a_rule (&rule_no, n, sxplocals.rcvr.nomod, sxplocals.rcvr.ster))
-	    do {
-	    SXINT	*regle = sxplocals.SXP_tables.P_lregle [rule_no];
-	    SXINT	head, lmod;
-	    SXINT 	*best_str, i;
+	  search_a_rule (&rule_no, n, sxplocals.rcvr.glbl_best_mod, sxplocals.rcvr.ster)) {
+	  do {
+	    /* rule_no <= glbl_best_mod */
+	    regle = sxplocals.SXP_tables.P_lregle [rule_no];
 
 	    if (n < (lmod = regle [0])) {
-		if ((head = regle [n + 1]) >= sxplocals.SXP_tables.P_right_ctxt_head [rule_no]) {
-		    if (!is_a_right_ctxt (head, get_tail (head, regle [lmod]),
-					  &xstd, &t_state, true))
-			continue;
-		}
-		else {
-		    must_return = false;
-		    break;
-		}
+	      if ((head = regle [n + 1]) >= sxplocals.SXP_tables.P_right_ctxt_head [rule_no]) {
+		if (!is_a_right_ctxt (head, get_tail (head, regle [lmod]),
+				      &xstd, &t_state, true))
+		  continue; /* Echec pour rule_no */
+	      }
+	      else {
+		/* rule_no partiellement verifie', on poursuit sur le  meme chemin */
+		must_return = false;
+		break;
+	      }
 	    }
 
 	    /* Here the model rule_no has been checked */
-	    if (is_valid (rule_no, n, sxplocals.rcvr.ster)) {
-		sxplocals.rcvr.nomod = rule_no;
-		best_str = sxplocals.rcvr.lter;
+	    valid = is_valid (rule_no, n, sxplocals.rcvr.ster);
+	    if (valid) {
+	      /* candidat principal */
+	      pnomod = &sxplocals.rcvr.nomod;
+	      best_str = sxplocals.rcvr.lter;
+	      /* On inhibe "a_la_rigueur" */
+	      sxplocals.rcvr.a_la_rigueur.modele_no = 0;
 	    }
-	    else if (rule_no < sxplocals.rcvr.a_la_rigueur.modele_no) {
-		sxplocals.rcvr.a_la_rigueur.modele_no = rule_no;
-		best_str = sxplocals.rcvr.a_la_rigueur.correction;
+	    else {
+	      /* candidat "a_la_rigueur" (vis-a-vis des Dont_delete/Dont_insert) */
+	      pnomod = &sxplocals.rcvr.a_la_rigueur.modele_no;
+	      best_str = sxplocals.rcvr.a_la_rigueur.correction;
 	    }
-	    else return;
 
-	    for (i = 1; i <= n; i++) {
+	    /* Ici, si *pnomod == 0 => La correction courante est une "a_la_rigueur" et elle ne sera pas
+	       memorisee (il y a deja un principal de stocke') dont le rule_no est sxplocals.rcvr.glbl_best_mod */
+	    
+	    not_kept = (*pnomod == 0) || ((rule_no == *pnomod) && !check_best_ster (n, best_str));
+	    	    
+	    /* not_kept => on a deja mieux en magasin... */
+	    /* ... et on ne trouvera pas mieux en continuant */
+	    
+	    if (!not_kept) {
+	      /* Ici, cette correction doit etre gardee, elle est meilleure que la precedente dans sa categorie */
+	      *pnomod = rule_no;
+
+	      if (valid)
+		/* sxplocals.rcvr.glbl_best_mod est un modele principal qui a passe' le test is_valid() */
+		/* Si aucun modele n'a ete valide' et si un "a_la_rigueur" a ete trouve', on continue a explorer les
+		   moins prioritaires a la recherche d'un valide.
+		   En revanche, si un valide est trouve', il serait inutile de rechercher des "a_la_rigueur". */
+		sxplocals.rcvr.glbl_best_mod = rule_no;
+
+	      for (i = 1; i <= n; i++) {
 		best_str [i] = sxplocals.rcvr.ster [i];
-	    }
+	      }
 
-	    for (; i <= lmod; i++) {
+	      for (; i <= lmod; i++) {
 		sxplocals.rcvr.TOK_i = sxplocals.rcvr.TOK_0 + regle [i];
 		best_str [i] = SXGET_TOKEN (sxplocals.rcvr.TOK_i).lahead;
-	    }
+	      }
+            }
 
-	    return;
-	} while (search_a_rule (&rule_no, n, sxplocals.rcvr.nomod, sxplocals.rcvr.ster));
+	    return; /* on est sur une feuille, on ne trouvera pas mieux en continuant */
+	  } while (search_a_rule (&rule_no, n, sxplocals.rcvr.glbl_best_mod, sxplocals.rcvr.ster));
+	}
 
 	if (must_return)
 	    return;
@@ -1342,13 +1447,20 @@ static bool	is_a_correction (bool no_correction_on_previous_token, SXINT xs, SXP
 	return false;
     }
 
-    sxplocals.rcvr.ster [1] = (SXGET_TOKEN (sxplocals.rcvr.TOK_0)).lahead;
+    /* Ici, apres l'appel a is_a_right_ctxt(), on peut appeler deriv() */
+
+    sxplocals.rcvr.ster [1] = (SXGET_TOKEN (sxplocals.rcvr.TOK_0)).lahead; /* TOK_0 est correct */
     sxplocals.rcvr.nomod = sxplocals.SXP_tables.P_min_prio_0 + 1;
-    sxplocals.rcvr.is_correction_on_error_token = true;
+    sxplocals.rcvr.glbl_best_mod = sxplocals.rcvr.nomod;
+    sxplocals.rcvr.is_correction_on_error_token = true; /* La correction n'implique que des modeles de la forme 0 X ... */
     deriv (true, (SXINT)1, xs2, state2, (SXINT)1);
 
-    if (sxplocals.rcvr.nomod > sxplocals.SXP_tables.P_min_prio_0)
+    if (sxplocals.rcvr.nomod > sxplocals.SXP_tables.P_min_prio_0) {
+        /* Echec de la correction avec les modeles de la forme "0 ..." */
+        /* "a_la_rigueur" peut être rempli */
 	sxplocals.rcvr.nomod = sxplocals.SXP_tables.P_nbcart + 1;
+        sxplocals.rcvr.glbl_best_mod = sxplocals.rcvr.nomod; 
+    }
 
     if (!no_correction_on_previous_token) {
 	restaure_stack (sxplocals.rcvr.min_xs + 1, xs);
@@ -1359,9 +1471,9 @@ static bool	is_a_correction (bool no_correction_on_previous_token, SXINT xs, SXP
 /* On regarde s'il existe un modele plus prioritaire que nomod pouvant
    corriger le terminal precedant le terminal en erreur. */
 
-    if (!no_correction_on_previous_token &&
+    if (!no_correction_on_previous_token /* stack est correcte */ &&
 	sxplocals.SXP_tables.P_max_prio_X < sxplocals.rcvr.nomod) {
-	sxplocals.rcvr.is_correction_on_error_token = false;
+	sxplocals.rcvr.is_correction_on_error_token = false; /* La correction implique tous les modeles */
 	deriv (false, (SXINT)0, xs, state, sxplocals.SXP_tables.P_max_prio_X);
     }
 
@@ -1433,10 +1545,15 @@ static bool	recovery (void)
     struct sxsource_coord		source_index;
     SXBA                        trans;
 
+    no_correction_on_previous_token = (sxplocals.state == 0); /* Essai */
+    /* ptok_no repère le symbole en erreur (le "1" des modèles), atok_no le "previous_token"  (le "0" des modèles) */
+
+#if 0
     if ((no_correction_on_previous_token = (sxplocals.ptok_no == sxplocals.atok_no))) {
 	/* On suppose qu'on n'est jamais en debut de tokens_buf! */
 	sxplocals.atok_no--;
     }
+#endif
 
 /* accumulation de tokens en avance */
 /* L'appel a sxget_token doit s'effectuer avant tout positionnement de variables statiques

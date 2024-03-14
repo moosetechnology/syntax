@@ -42,11 +42,7 @@
 /* 25-04-90 11:32 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-#define WHAT	"@(#)ARC.c	- SYNTAX [unix] - 23 mars 1993"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+char WHAT[] = "@(#)ARC.c	- SYNTAX [unix] - 23 mars 1993";
 
 static char	ME [] = "ARC";
 
@@ -58,15 +54,15 @@ static char	ME [] = "ARC";
 #include "RLR.h"
 
 
-extern SXBOOLEAN		erase_quads ();
-extern SXBOOLEAN		open_listing ();
-extern SXVOID		solved_by_ARC ();
-extern SXVOID		mm_process_one_LA ();
+extern bool		erase_quads ();
+extern bool		open_listing ();
+extern void		solved_by_ARC ();
+extern void		mm_process_one_LA ();
 
 static SXBA		xpss_set;
 static int		xpss_set_size;
 
-static SXBOOLEAN		is_cycle_on_reads_completed;
+static bool		is_cycle_on_reads_completed;
 static int		*out_cycles;
 static XH_header	out_cycle_hd;
 
@@ -90,7 +86,7 @@ static int		pss_work_set_m, pss_work_set_M;
 
 static int		*arc, *arc_trans;
 static XH_header	pss_list_hd;
-static SXBOOLEAN		IS_SHIFT_REDUCE, THERE_IS_AN_XPROD;;
+static bool		IS_SHIFT_REDUCE, THERE_IS_AN_XPROD;;
 static SXBA		CONFLICT_T_SET;
 
 #define RLR_maj(x, n)	(++*(x) > lgt [n] ? RLR_sature (n) : 0)
@@ -101,41 +97,41 @@ static SXBA		CONFLICT_T_SET;
 #define PssToIndex(s)	((pss_kind != FSA_) ? pss_hd.display [s + 1].X - pss_hd.display [s].X - 2: 0)
 
 
-static SXVOID ARC_UNBOUNDED_Q_oflw (old_size, new_size)
+static void ARC_UNBOUNDED_Q_oflw (old_size, new_size)
     int		old_size, new_size;
 {
     ARCs [ARC_UNBOUNDED].attr = (struct ARC_ATTR*) sxrealloc (ARCs [ARC_UNBOUNDED].attr, new_size + 1, sizeof (struct ARC_ATTR));
     ARCs [ARC_UNBOUNDED].Q_set = sxba_resize (ARCs [ARC_UNBOUNDED].Q_set, new_size + 1);
 }
-static SXVOID ARC_BOUNDED_or_FSA_Q_oflw (old_size, new_size)
+static void ARC_BOUNDED_or_FSA_Q_oflw (old_size, new_size)
     int		old_size, new_size;
 {
     ARCs [ARC_BOUNDED_or_FSA].attr = (struct ARC_ATTR*) sxrealloc (ARCs [ARC_BOUNDED_or_FSA].attr, new_size + 1, sizeof (struct ARC_ATTR));
     ARCs [ARC_BOUNDED_or_FSA].Q_set = sxba_resize (ARCs [ARC_BOUNDED_or_FSA].Q_set, new_size + 1);
 }
 
-static SXVOID	oflw_pss_to_Next (old_size, new_size)
+static void	oflw_pss_to_Next (old_size, new_size)
     int		old_size, new_size;
 {
     pss_to_Next = (int*) sxrealloc (pss_to_Next, new_size + 1, sizeof (int));
 }
 
 
-static SXVOID	oflw_ibfsa (old_size, new_size)
+static void	oflw_ibfsa (old_size, new_size)
     int		old_size, new_size;
 {
     ibfsa_to_ate = (int*) sxrealloc (ibfsa_to_ate, new_size + 1, sizeof (int));
 }
 
 
-static SXVOID	oflw_fknot (old_size, new_size)
+static void	oflw_fknot (old_size, new_size)
     int		old_size, new_size;
 {
     fknot_to_ate = (int*) sxrealloc (fknot_to_ate, new_size + 1, sizeof (int));
 }
 
 
-static SXVOID	oflw_PSSxT (old_size, new_size)
+static void	oflw_PSSxT (old_size, new_size)
     int		old_size, new_size;
 {
     PSSxT_to_xpts = (struct PSSxT_to_xpts*) sxrealloc (PSSxT_to_xpts, new_size +
@@ -144,7 +140,7 @@ static SXVOID	oflw_PSSxT (old_size, new_size)
 
 
 
-static SXVOID	oflw_pss (old_size, new_size)
+static void	oflw_pss (old_size, new_size)
     int		old_size, new_size;
 {
     register int	i = new_size;
@@ -177,10 +173,10 @@ static SXVOID	oflw_pss (old_size, new_size)
 }
 
 
-SXVOID	ARC_allocate (ARC, kind, F_oflw1)
+void	ARC_allocate (ARC, kind, F_oflw1)
     struct ARC_struct	*ARC;
     int			kind;
-    SXVOID		(*F_oflw1)();
+    void		(*F_oflw1)();
 {
     static int	ARCxTxARC_foreach [] = {1, 0, 1, 0, 0, 0};
 
@@ -202,11 +198,11 @@ SXVOID	ARC_allocate (ARC, kind, F_oflw1)
     ARC->whd = (struct whd*) sxcalloc (XTMAX + 1, sizeof (struct whd));
     ARC->t_set = sxba_calloc (XTMAX + 1);
     ARC->kind = kind;
-    ARC->is_allocated = SXTRUE;
+    ARC->is_allocated = true;
 }
 
 
-static SXVOID	ARC_clear (ARC)
+static void	ARC_clear (ARC)
     struct ARC_struct	*ARC;
 {
     XH_clear (&(ARC->Q_hd));
@@ -214,14 +210,14 @@ static SXVOID	ARC_clear (ARC)
     XxYxZ_clear (&(ARC->QxTxQ_hd));
     SS_clear_ss (ARC->Q_stack);
     sxba_empty (ARC->t_set);
-    ARC->is_initiated = SXFALSE;
+    ARC->is_initiated = false;
     ARC->conflict_t_set = NULL;
     ARC->ARC = NULL;
-    ARC->is_ARP = SXFALSE;
+    ARC->is_ARP = false;
 }
 
 
-static SXVOID	ARC_deallocate (ARC)
+static void	ARC_deallocate (ARC)
     struct ARC_struct	*ARC;
 {
     XH_free (&(ARC->Q_hd));
@@ -235,11 +231,11 @@ static SXVOID	ARC_deallocate (ARC)
 
     sxfree (ARC->whd);
     sxfree (ARC->t_set);
-    ARC->is_allocated = SXFALSE;
+    ARC->is_allocated = false;
 }
 
 
-static SXVOID pss_clear ()
+static void pss_clear ()
 {
     register int i;
 
@@ -258,7 +254,7 @@ static SXVOID pss_clear ()
     }
 }
 
-static SXVOID	ARC_reinit ()
+static void	ARC_reinit ()
 {
     register int	i;
 
@@ -281,7 +277,7 @@ static SXVOID	ARC_reinit ()
 
 
 
-static SXVOID	undo (old_xac2)
+static void	undo (old_xac2)
     int	old_xac2;
 {
     /* Du fait du clonage, certaines transitions de l'automate LR(0) ont ete
@@ -386,7 +382,7 @@ static int	RLR_sature (nbt)
 
 
 
-SXBOOLEAN check_level_conformity (item, level)
+bool check_level_conformity (item, level)
     int item, level;
 {
     /* Appele depuis earley.
@@ -398,14 +394,14 @@ SXBOOLEAN check_level_conformity (item, level)
 
     if (!XX_is_pss_check)
 	/* aucune verification de prevue... */
-	return SXTRUE;
+	return true;
 
     pssl = SS_get (ws, SS_top (ws) - level);
 
     for (lim = XH_X (pss_list_hd, pssl + 1), x = XH_X (pss_list_hd, pssl); x < lim ; x++) {
 	if ((xnucl = Q0xV_to_Q0 [XxY_is_set (&Q0xV_hd, TopState (XH_list_elem (pss_list_hd, x)), bnf_ag.WS_INDPRO [item].lispro)]) < 0) {
 	    if (-xnucl == item)
-		return SXTRUE;
+		return true;
 	}
 	else {
 	    xnucl = XQ0_TO_Q0 (xnucl);
@@ -414,15 +410,15 @@ SXBOOLEAN check_level_conformity (item, level)
 
 	    do {
 		if (*bot == item)
-		    return SXTRUE;
+		    return true;
 	    } while (++bot < top);
 	}
     }
 
-    return SXFALSE;
+    return false;
 }
 
-SXBOOLEAN check_bot_state_conformity (state, level)
+bool check_bot_state_conformity (state, level)
     int state, level;
 {
     /* Appele depuis earley.
@@ -432,31 +428,31 @@ SXBOOLEAN check_bot_state_conformity (state, level)
 
     if (!XX_is_pss_check)
 	/* aucune verification de prevue... */
-	return SXTRUE;
+	return true;
 
     pssl = SS_get (ws, SS_top (ws) - level);
 
     for (lim = XH_X (pss_list_hd, pssl + 1), x = XH_X (pss_list_hd, pssl); x < lim ; x++) {
 	if (BotState (XH_list_elem (pss_list_hd, x)) == state)
-	    return SXTRUE;
+	    return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
-static SXBOOLEAN	is_new_pss (pss, state, index, next_state, new_pss)
+static bool	is_new_pss (pss, state, index, next_state, new_pss)
     int		pss, state, index, next_state, *new_pss;
 {
     /* Fabrique un pss a partir d'un ancien et next_state et le retourne
        dans new_pss.
        Retourne vrai si le stack_suffixe fabrique n'existait pas deja.
        une pile de hauteur h_value+1 doit etre utilisee si possible. */
-    SXBOOLEAN	is_knot = SXFALSE;
+    bool	is_knot = false;
 
     if (pss_kind == FSA_) {
 	register int	bot;
 	int	new_couple, start;
-	SXBOOLEAN		new_couple_pushed = SXFALSE;
+	bool		new_couple_pushed = false;
 
 	start = pss == 0 ? state : XH_list_elem (pss_hd, bot = XH_X (pss_hd, pss
 	     ));
@@ -470,7 +466,7 @@ static SXBOOLEAN	is_new_pss (pss, state, index, next_state, new_pss)
 	    int		y, couple, X, Y;
 
 	    if ((x = top - (bot += 1)) > 0) {
-		SXBOOLEAN		done;
+		bool		done;
 
 		sxba_empty (xpss_set);
 
@@ -484,7 +480,7 @@ static SXBOOLEAN	is_new_pss (pss, state, index, next_state, new_pss)
 		SXBA_1_bit (sxba_empty (LR0_states_set), state);
 
 		do {
-		    done = SXTRUE;
+		    done = true;
 
 		    for (x = bot; x < top; x++) {
 			y = x - bot;
@@ -497,7 +493,7 @@ static SXBOOLEAN	is_new_pss (pss, state, index, next_state, new_pss)
 				SXBA_1_bit (xpss_set, y);
 				X = XxY_X (Q0xQ0_hd, couple);
 				SXBA_1_bit (LR0_states_set, X);
-				done = SXFALSE;
+				done = false;
 			    }
 			}
 		    }
@@ -509,7 +505,7 @@ static SXBOOLEAN	is_new_pss (pss, state, index, next_state, new_pss)
 		    top = XH_list_elem (pss_hd, x + bot);
 
 		    if (!new_couple_pushed && top > new_couple) {
-			new_couple_pushed = SXTRUE;
+			new_couple_pushed = true;
 			XH_push (pss_hd, new_couple);
 		    }
 
@@ -538,7 +534,7 @@ static SXBOOLEAN	is_new_pss (pss, state, index, next_state, new_pss)
 
 	    for (apss = XH_X (pss_hd, pss) + i; i <= index; i++) {
 		if ((knot = XH_list_elem (pss_hd, apss++)) < 0)
-		    is_knot = SXTRUE;
+		    is_knot = true;
 
 		XH_push (pss_hd, knot);
 	    }
@@ -552,7 +548,7 @@ static SXBOOLEAN	is_new_pss (pss, state, index, next_state, new_pss)
 
 
 
-static SXVOID	complete_cycle_on_reads ()
+static void	complete_cycle_on_reads ()
 {
    /* Construit les structures :
       out_cycles et out_cycle_hd qui, a chaque cycle nb associe
@@ -618,9 +614,9 @@ static SXVOID	complete_cycle_on_reads ()
 
 
 
-static SXVOID	Next_with_fknot ();
+static void	Next_with_fknot ();
 
-static SXVOID	Next (top_state, pss)
+static void	Next (top_state, pss)
     int		top_state, pss;
 {
     /* pss est un suffixe de pile d'analyse */
@@ -674,7 +670,7 @@ static SXVOID	Next (top_state, pss)
 
 
 
-static SXVOID	Next_with_fknot (pss, fknot)
+static void	Next_with_fknot (pss, fknot)
     int pss, fknot;
 {
     register int	bot1, x, next_state;
@@ -683,7 +679,7 @@ static SXVOID	Next_with_fknot (pss, fknot)
 
     if (!is_cycle_on_reads_completed) {
 	complete_cycle_on_reads ();
-	is_cycle_on_reads_completed = SXTRUE;
+	is_cycle_on_reads_completed = true;
     }
 
     bot = XH_X (pss_hd, pss);
@@ -734,7 +730,7 @@ static SXVOID	Next_with_fknot (pss, fknot)
 }
 
 
-static SXVOID call_Next (top_state, pss)
+static void call_Next (top_state, pss)
     int top_state;
     register int	pss;
 {
@@ -805,7 +801,7 @@ static int	ibfsa_do ()
 
 
 
-static SXVOID	put_newr_in_back (X1, X2)
+static void	put_newr_in_back (X1, X2)
     int		X1, X2;
 {
     /* Ajoute en tete l'element (X1, X2) a la relation back
@@ -826,7 +822,7 @@ static SXVOID	put_newr_in_back (X1, X2)
 
 
 
-static SXVOID	put_r_in_back (X1, X2)
+static void	put_r_in_back (X1, X2)
     int		X1;
     register int	X2;
 {
@@ -859,7 +855,7 @@ static SXVOID	put_r_in_back (X1, X2)
 
 
 
-static SXBOOLEAN is_new_knoted_pss (pss, pred, index, next_state, pss1)
+static bool is_new_knoted_pss (pss, pred, index, next_state, pss1)
     int	pss, pred, index, next_state, *pss1;
 {
     /* Fabrique un pss de type -2 (UNBOUNDED_ avec knot) */
@@ -880,7 +876,7 @@ static SXBOOLEAN is_new_knoted_pss (pss, pred, index, next_state, pss1)
 }
 
 
-static SXVOID	compute_back (ppss, state, index, item, pss)
+static void	compute_back (ppss, state, index, item, pss)
     int		ppss, state, index, item, pss;
 {
     /* Cette fonction recursive calcule la relation binaire back entre
@@ -1001,7 +997,7 @@ static SXVOID	compute_back (ppss, state, index, item, pss)
 	/* On ajoute (pss, pss1) a la relation back */
 	register int *as;
 	int	StNt, pss1, xp, next_state, nt, new_item;
-	SXBOOLEAN brand_new_pss;
+	bool brand_new_pss;
 
 	StNt = XxY_is_set (&Q0xV_hd, state, nt = bnf_ag.WS_NBPRO [bnf_ag.WS_INDPRO [
 	     item].prolis].reduc/* A */);
@@ -1068,7 +1064,7 @@ static SXVOID	compute_back (ppss, state, index, item, pss)
 
 
 
-static SXVOID	call_compute_back (ppss, state, index, item, pss)
+static void	call_compute_back (ppss, state, index, item, pss)
     int		ppss, state, index, item, pss;
 {
     if (ibfsa_needed) {
@@ -1081,7 +1077,7 @@ static SXVOID	call_compute_back (ppss, state, index, item, pss)
 
 
 
-SXVOID	back_depth_first_traversal (X1)
+void	back_depth_first_traversal (X1)
     int		X1;
 {
     /* Rappelons qu'un noeud est un suffixe de pile d'analyse. */
@@ -1108,7 +1104,7 @@ SXVOID	back_depth_first_traversal (X1)
 
 
 
-SXBOOLEAN is_pss_include (bot1, top1, bot2, top2)
+bool is_pss_include (bot1, top1, bot2, top2)
     register int	*bot1, *bot2;
     int			*top1, *top2;
 {
@@ -1116,7 +1112,7 @@ SXBOOLEAN is_pss_include (bot1, top1, bot2, top2)
     /* boti..topi designent des pss */
     /* [bot1..top1[ ne contient pas de fknot
        [bot2..top2[ contient eventuellement des fknot
-       Retourne SXTRUE ssi 1 est reconnu par 2 */
+       Retourne true ssi 1 est reconnu par 2 */
     /* On suppose que si (... in fknot out q ...) est une portion de [bot2..top2[
        alors le couple (out, q) ne figure pas ds fknot. */
     register int	state, Q0V;
@@ -1142,11 +1138,11 @@ SXBOOLEAN is_pss_include (bot1, top1, bot2, top2)
 	    }
 	    
 	    if (state != *++bot2)
-		return SXFALSE;
+		return false;
 	}
 	else {
 	    if (*bot1++ != state)
-		return SXFALSE;
+		return false;
 	}
 	
 	bot2++;
@@ -1161,15 +1157,15 @@ SXBOOLEAN is_pss_include (bot1, top1, bot2, top2)
 
     do {
 	if (*bot2 > 0 || *++bot2 != state)
-	    return SXFALSE;
+	    return false;
     } while (++bot2 < top2);
 
-    return SXTRUE;
+    return true;
 }
 
 
 
-static SXVOID	pss_set_reduction (pss_set, m, M)
+static void	pss_set_reduction (pss_set, m, M)
     register SXBA	pss_set;
     register int	*m, *M;
 {
@@ -1267,7 +1263,7 @@ static SXVOID	pss_set_reduction (pss_set, m, M)
 }
 
 
-static SXVOID	put_in_work_set (xc)
+static void	put_in_work_set (xc)
     int		xc;
 {
     SXBA_1_bit (work_set, xc);
@@ -1277,7 +1273,7 @@ static SXVOID	put_in_work_set (xc)
 
 
 
-static SXVOID	sim_a_red (pss, t)
+static void	sim_a_red (pss, t)
     int		pss, t;
 {
     /* pss designe un suffixe de pile d'analyse */
@@ -1320,7 +1316,7 @@ static SXVOID	sim_a_red (pss, t)
 		   il y a au moins un reduce et autre chose. */
 		register int	item;
 		int		new_index;
-		SXBOOLEAN		is_first = SXTRUE;
+		bool		is_first = true;
 
 
 		lim += (StNt = aQ0->bot + aQ0->t_trans_nb + aQ0->nt_trans_nb);
@@ -1339,7 +1335,7 @@ static SXVOID	sim_a_red (pss, t)
 		    }
 		    else {
 			if (is_first) {
-			    is_first = SXFALSE;
+			    is_first = false;
 			    new_pss = make_new_pss (pss, next_state);
 			    new_index = PssToIndex (new_pss);
 			}
@@ -1367,7 +1363,7 @@ static SXVOID	sim_a_red (pss, t)
 }
 
 
-static SXVOID	couple_name (x, y, name)
+static void	couple_name (x, y, name)
     int		x, y;
     char	**name;
 {
@@ -1472,7 +1468,7 @@ static int complete_germe_to_gr_act (xac1)
 }
 
 
-static SXVOID	ARC_cg (xac1_init, new_state_nb, plulong)
+static void	ARC_cg (xac1_init, new_state_nb, plulong)
     int		xac1_init, new_state_nb, plulong;
 {
     /* Generation du code pour l'automate AxOxV
@@ -1494,7 +1490,7 @@ static SXVOID	ARC_cg (xac1_init, new_state_nb, plulong)
     int				xt, aov, pied, gr_act;
     register struct P_item	*aitem;
     register struct state	*astate;
-    SXBOOLEAN			is_germe_to_gr_act_completed = SXTRUE;
+    bool			is_germe_to_gr_act_completed = true;
 
     for (xac1 = xac1_init, a = 1; a <= new_state_nb; a++, xac1 = XE1 + a - 2) {
 	astate = t_states + xac1;
@@ -1600,7 +1596,7 @@ static SXVOID	ARC_cg (xac1_init, new_state_nb, plulong)
 	    aitem->action = t_error;
 
 	    if (!is_non_deterministic_automaton && (germe_to_gr_act [xac1] = gr_act) == 0)
-		is_germe_to_gr_act_completed = SXFALSE;
+		is_germe_to_gr_act_completed = false;
 	}
 	/* else
 	   germe_to_gr_act [xac1] = 0; par defaut */
@@ -1610,7 +1606,7 @@ static SXVOID	ARC_cg (xac1_init, new_state_nb, plulong)
     }
 
     if (!is_germe_to_gr_act_completed) {
-	/* is_non_deterministic_automaton == SXFALSE */
+	/* is_non_deterministic_automaton == false */
 	for (x = xac1 - 1; x >= XE1; x--) {
 	    if (germe_to_gr_act [x] == 0) {
 		complete_germe_to_gr_act (x);
@@ -1622,15 +1618,15 @@ static SXVOID	ARC_cg (xac1_init, new_state_nb, plulong)
 }
 
 
-static SXBOOLEAN ARC_max_la (state, lgth)
+static bool ARC_max_la (state, lgth)
     int state;
 {
     /* Calcul de la longueur du plus long chemin. */
     /* La longueur du chemin courant entre l'etat initial et state est lgth. */
-    /* Retourne SXTRUE ssi une boucle a ete trouvee. */
+    /* Retourne true ssi une boucle a ete trouvee. */
     /* Les etats du chemin courant sont stockes dans arc_path_set. */
     register int aov, next;
-    register SXBOOLEAN is_loop = SXFALSE;
+    register bool is_loop = false;
    
     SXBA_1_bit (arc_path_set, state);
     lgth++;
@@ -1638,7 +1634,7 @@ static SXBOOLEAN ARC_max_la (state, lgth)
     XxYxZ_Xforeach (AxOxV_hd, state, aov) {
 	if ((next = XxYxZ_Z (AxOxV_hd, aov)) > 0) {
 	    if (SXBA_bit_is_set (arc_path_set, next) || ARC_max_la (next, lgth)) {
-		is_loop = SXTRUE;
+		is_loop = true;
 		break;
 	    }
 	}
@@ -1652,7 +1648,7 @@ static SXBOOLEAN ARC_max_la (state, lgth)
 
 
 
-static SXBOOLEAN	BS_couple (X, Y, n)
+static bool	BS_couple (X, Y, n)
     int	*X, *Y, n;
 {
     /* BS_couple est appele depuis XxY_to_SXBM pour traiter la fermeture
@@ -1662,12 +1658,12 @@ static SXBOOLEAN	BS_couple (X, Y, n)
     register int	couple;
 
     if (n > BS_top)
-	return SXFALSE;
+	return false;
 
     couple = BS_couples [n];
     *Y = XxY_Y (Q0xQ0_hd, couple);
     *X = XxY_X (Q0xQ0_hd, couple);
-    return SXTRUE;
+    return true;
 }
 
 
@@ -1681,7 +1677,7 @@ static VARSTR	couples_to_re (bot, top, entree, sortie, vstr)
     int			old_size, new_size, real_size;
 
     /* En faire une option (format liste de couples ou ER). */
-    if (SXFALSE) {
+    if (false) {
 	BS_couples = bot - 1, XxY_to_SXBM (NULL, BS_couple, BS_top = top - bot, &Q0_to_short_hd, &BS);
 	real_size = X_top (Q0_to_short_hd);
 	
@@ -1724,7 +1720,7 @@ static VARSTR	couples_to_re (bot, top, entree, sortie, vstr)
 
 
 
-static SXBOOLEAN	is_same_pss (xkas, pss_sets)
+static bool	is_same_pss (xkas, pss_sets)
     int		xkas;
     SXBA	*pss_sets;
 {
@@ -1754,7 +1750,7 @@ static SXBOOLEAN	is_same_pss (xkas, pss_sets)
 
 
 
-SXBOOLEAN	make_inter_pss (pss1, pss2)
+bool	make_inter_pss (pss1, pss2)
     int pss1, pss2;
 {
     /* On regarde si pss1 et pss2 de type FSA_ ont une intersection non vide. */
@@ -1764,16 +1760,16 @@ SXBOOLEAN	make_inter_pss (pss1, pss2)
     /* On commence par regarder s'ils ont meme etat initial et meme etat final. */
     if (*(bot2 = PSS_BOT (pss2)) != (init = *(bot1 = PSS_BOT (pss1))) ||
 	*(top2 = PSS_TOP (pss2) - 1) != (final = *(top1 = PSS_TOP (pss1) - 1)))
-	return SXFALSE;
+	return false;
 
     sxba_empty (LR0_states_set);
     SXBA_1_bit (LR0_states_set, init);
-    make_inter (bot1 + 1, top1, bot2 + 1, top2, SXTRUE, LR0_states_set);
+    make_inter (bot1 + 1, top1, bot2 + 1, top2, true, LR0_states_set);
     return SXBA_bit_is_set (LR0_states_set, final);
 }
 
 
-static SXBOOLEAN is_cycle_on_fsa (pss)
+static bool is_cycle_on_fsa (pss)
     int	pss;
 {
     /* pss est de type FSA_. */
@@ -1782,7 +1778,7 @@ static SXBOOLEAN is_cycle_on_fsa (pss)
 
     register int	*bot, *top;
     register int	i, real_size;
-    register SXBOOLEAN	is_cycle;
+    register bool	is_cycle;
 
     if (SXBA_bit_is_set (is_cycle_on_pss_computed, pss))
 	return SXBA_bit_is_set (is_cycle_on_pss, pss);
@@ -1803,7 +1799,7 @@ static SXBOOLEAN is_cycle_on_fsa (pss)
 	    break;
     }
 
-    is_cycle = SXFALSE;
+    is_cycle = false;
 
     if (bot != top) {
 	BS_couples = PSS_BOT (pss), XxY_to_SXBM (NULL, BS_couple, BS_top = (int)(top - BS_couples) - 1, &Q0_to_short_hd, &BS_plus);
@@ -1812,7 +1808,7 @@ static SXBOOLEAN is_cycle_on_fsa (pss)
 
 	for (i = 1; i < real_size;i++) {
 	    if (SXBA_bit_is_set (BS_plus [i], i)) {
-		is_cycle = SXTRUE;
+		is_cycle = true;
 		break;
 	    }
 	}
@@ -1831,7 +1827,7 @@ static SXBOOLEAN is_cycle_on_fsa (pss)
 static int	is_inter_pss (xkas, pss_sets, is_all, is_cycle_needed)
     int		xkas;
     SXBA	*pss_sets;
-    SXBOOLEAN	is_all, is_cycle_needed;
+    bool	is_all, is_cycle_needed;
 {
     /* On est dans le cas pss_kind == FSA_.
        On regarde s'il existe deux pss associes a deux types differents
@@ -1846,7 +1842,7 @@ static int	is_inter_pss (xkas, pss_sets, is_all, is_cycle_needed)
 	  - 2	=> intersection non vide. */
     register int	x, y, pss1, pss2;
     register SXBA	pss_set, pss_set1, pss_set2;
-    SXBOOLEAN		found, empty = SXTRUE, is_couple_without_cycle = SXFALSE, is_cycle_on_pss1;
+    bool		found, empty = true, is_couple_without_cycle = false, is_cycle_on_pss1;
 
     if (is_all)
 	sxba_empty (pss_set = pss_sets [work_set_no]);
@@ -1857,7 +1853,7 @@ static int	is_inter_pss (xkas, pss_sets, is_all, is_cycle_needed)
 	pss1 = 0;
 
 	while ((pss1 = sxba_scan (pss_set1, pss1)) > 0) {
-	    found = SXFALSE;
+	    found = false;
 
 	    if (is_cycle_needed && !is_couple_without_cycle)
 		is_cycle_on_pss1 = is_cycle_on_fsa (pss1);
@@ -1876,16 +1872,16 @@ static int	is_inter_pss (xkas, pss_sets, is_all, is_cycle_needed)
 			}
 
 			if (is_cycle_needed && !is_couple_without_cycle && !is_cycle_on_pss1 && !is_cycle_on_fsa (pss2))
-			    is_couple_without_cycle = SXTRUE;
+			    is_couple_without_cycle = true;
 
-			found = SXTRUE;
+			found = true;
 			SXBA_1_bit (pss_set, pss2);
 		    }
 		}
 	    }
 		
 	    if (found) {
-		empty = SXFALSE;
+		empty = false;
 		SXBA_1_bit (pss_set, pss1);
 	    }
 	}
@@ -1902,14 +1898,14 @@ static int	is_inter_pss (xkas, pss_sets, is_all, is_cycle_needed)
 
 
 
-SXBOOLEAN ARC_walk_backward (ARC, qtq, bh, bs)
+bool ARC_walk_backward (ARC, qtq, bh, bs)
     struct ARC_struct	*ARC;
     int		qtq;
-    SXBOOLEAN	(*bh)(), (*bs)();
+    bool	(*bh)(), (*bs)();
 {
     /* Cette fonction parcourt l'ARC "ARC" dans le sens retrograde.
        Elle appelle "bh" en visite heritee et "bs" en visite synthetisee.
-       Si "bh" retourne "SXTRUE", la visite du sous graphe continue.
+       Si "bh" retourne "true", la visite du sous graphe continue.
        Si "bs" retourne faux, la visite est interrompue. */
 
     register int x = 0;
@@ -1924,14 +1920,14 @@ SXBOOLEAN ARC_walk_backward (ARC, qtq, bh, bs)
     return (bs == NULL || bs (ARC, qtq)) && x == 0;
 }
 
-static SXBOOLEAN ARC_walk_forward (ARC, qtq, fh, fs)
+static bool ARC_walk_forward (ARC, qtq, fh, fs)
     struct ARC_struct	*ARC;
     int			qtq;
-    SXBOOLEAN		(*fh)(), (*fs)();
+    bool		(*fh)(), (*fs)();
 {
     /* Cette fonction parcourt l'ARC "ARC" dans le sens usuel.
        Elle appelle "fh" en visite heritee et "fs" en visite synthetisee.
-       Si "fh" retourne "SXTRUE", la visite du sous graphe continue.
+       Si "fh" retourne "true", la visite du sous graphe continue.
        Si "fs" retourne faux, la visite est interrompue. */
 
     register int x = 0;
@@ -1947,22 +1943,22 @@ static SXBOOLEAN ARC_walk_forward (ARC, qtq, fh, fs)
 }
 
 
-static SXBOOLEAN fh_propagate_cycle (ARC, qtq)
+static bool fh_propagate_cycle (ARC, qtq)
     struct ARC_struct	*ARC;
     int			qtq;
 {
     register struct ARC_ATTR	*attr = ARC->attr + XxYxZ_Z (ARC->QxTxQ_hd, qtq);
 
     if (attr->lgth == -1)
-	return SXFALSE;
+	return false;
 
     attr->lgth = -1;
-    return SXTRUE;
+    return true;
 }
 
 
 
-static SXBOOLEAN fh_propagate_lgth (ARC, qtq)
+static bool fh_propagate_lgth (ARC, qtq)
     struct ARC_struct	*ARC;
     int			qtq;
 {
@@ -1979,7 +1975,7 @@ static SXBOOLEAN fh_propagate_lgth (ARC, qtq)
 	if (pss_kind == UNBOUNDED_ && attr->lgth != -1)
 	    ARC_walk_forward (ARC, qtq, fh_propagate_cycle, NULL);
 
-	return SXFALSE;
+	return false;
     }
 
     new_lgth = ARC->attr [XxYxZ_X (ARC->QxTxQ_hd, qtq)].lgth;
@@ -1989,25 +1985,25 @@ static SXBOOLEAN fh_propagate_lgth (ARC, qtq)
     if (pss_kind != UNBOUNDED_ && old_lgth > new_lgth /* On propage la longueur minimale */ ||
 	pss_kind == UNBOUNDED_ && old_lgth != -1 && old_lgth < new_lgth /* On propage la longueur maximale */) {
 	attr->lgth = new_lgth;
-	return SXTRUE; /* On continue */
+	return true; /* On continue */
     }
 
-    return SXFALSE;
+    return false;
 }
 
-SXBOOLEAN fs_unmark (ARC, qtq)
+bool fs_unmark (ARC, qtq)
     struct ARC_struct	*ARC;
     int			qtq;
 {
     --(ARC->attr [XxYxZ_Z (ARC->QxTxQ_hd, qtq)].is_marked);
-    return SXTRUE; /* On continue */
+    return true; /* On continue */
 }
 
 
 int ARC_UNBOUNDED_get_conflict_kind (ARC, ARC_state, is_new_arc_state, t)
     struct ARC_struct	*ARC;
     int			ARC_state, t;
-    SXBOOLEAN		is_new_arc_state;
+    bool		is_new_arc_state;
 {
     /* Soit S+ un pss commun a deux types differents (si pss_kind == FSA_,
        ce peut etre un chemin commun a deux FSA). On est sur qu'il existe une
@@ -2067,7 +2063,7 @@ int ARC_UNBOUNDED_get_conflict_kind (ARC, ARC_state, is_new_arc_state, t)
 static int	ARC_BOUNDED_or_FSA_get_conflict_kind (ARC, ARC_state, is_new_arc_state, t)
     struct ARC_struct	*ARC;
     int			ARC_state, t;
-    SXBOOLEAN		is_new_arc_state;
+    bool		is_new_arc_state;
 {
     /* Soit S+ un pss commun a deux types differents (si pss_kind == FSA_,
        ce peut etre un chemin commun a deux FSA). On est sur qu'il existe une
@@ -2112,7 +2108,7 @@ static int	ARC_BOUNDED_or_FSA_get_conflict_kind (ARC, ARC_state, is_new_arc_stat
 		ck |= (pss_kind == BOUNDED_ ? NOT_RhLALR0_ : NOT_RoxoLALR0_);
 	}
 	else
-	    if (pss_kind == FSA_ && (pss = is_inter_pss (type_nb, pss_sets, SXFALSE, SXTRUE)))
+	    if (pss_kind == FSA_ && (pss = is_inter_pss (type_nb, pss_sets, false, true)))
 		/* Valeur retournee :
 		   - 0	=> intersection vide
 		   - 1	=> intersection non vide et pas de cycle.
@@ -2130,7 +2126,7 @@ static int	ARC_BOUNDED_or_FSA_get_conflict_kind (ARC, ARC_state, is_new_arc_stat
 }
 
 
-SXVOID	ts_to_kas (xpts, akas)
+void	ts_to_kas (xpts, akas)
     int			xpts;
     register struct kas	*akas;
 {
@@ -2150,7 +2146,7 @@ SXVOID	ts_to_kas (xpts, akas)
     akas->M = max (akas->M, V);
 }
 
-SXVOID	print_bfsa (bfsa, ate)
+void	print_bfsa (bfsa, ate)
     int		bfsa, ate;
 {
     char	s [8];
@@ -2161,12 +2157,12 @@ SXVOID	print_bfsa (bfsa, ate)
 }
 
 
-static SXBOOLEAN	make_fknot (e, s, nb, result)
+static bool	make_fknot (e, s, nb, result)
     int		e, s, nb, *result;
 {
     /* Fabrique un triplet (e, s, nb) ou e et s sont
        l'entree et la sortie du fknot nb. */
-    /* Retourne SXTRUE ssi c'est un nouveau fknot */
+    /* Retourne true ssi c'est un nouveau fknot */
 
     XH_push (fknot_hd, e);
     XH_push (fknot_hd, s);
@@ -2218,7 +2214,7 @@ static VARSTR	fknot_to_vstr (vstr, entree, sortie, nb)
 
 
 
-SXVOID	print_pss (pss)
+void	print_pss (pss)
     int		pss;
 {
     register int	*bot, *top;
@@ -2267,7 +2263,7 @@ SXVOID	print_pss (pss)
     put_edit_ap (varstr_tostr (vstr));
 }
 
-static SXVOID	ARC_print (ARC)
+static void	ARC_print (ARC)
     struct ARC_struct	*ARC;
 {
     register int	ARC_state, xas, xts, pss;
@@ -2289,7 +2285,7 @@ static SXVOID	ARC_print (ARC)
 
     put_edit_nl (3);
 
-    get_constructor_name (c_name, SXTRUE, ARC->pss_kind != UNBOUNDED_, ARC->h_value, ARC->k_value);
+    get_constructor_name (c_name, true, ARC->pss_kind != UNBOUNDED_, ARC->h_value, ARC->k_value);
     put_edit_nnl (32, c_name);
     put_edit_ap ("   C O N S T R U C T I O N");
     put_edit_nl (1);
@@ -2313,7 +2309,7 @@ static SXVOID	ARC_print (ARC)
 
     /* On parcourt tous les pss de l'ARC courant */
     SS_clear (ARC->Q_stack);
-    ARC->attr [1].is_marked = SXTRUE;
+    ARC->attr [1].is_marked = true;
     SS_push (ARC->Q_stack, 1); /* Etat initial */
     
     while (!SS_is_empty (ARC->Q_stack)) {
@@ -2342,7 +2338,7 @@ static SXVOID	ARC_print (ARC)
 
 		if ((ARC->attr [next_ARC_state].conflict_kind != NO_CONFLICT_ || pss != 0) &&
 		    !ARC->attr [next_ARC_state].is_marked) {
-		    ARC->attr [next_ARC_state].is_marked = SXTRUE;
+		    ARC->attr [next_ARC_state].is_marked = true;
 		    SS_push (ARC->Q_stack, next_ARC_state);
 		}
 	    }
@@ -2422,7 +2418,7 @@ static SXVOID	ARC_print (ARC)
 }
 
 
-SXBOOLEAN		X_sees_pss (X, pss)
+bool		X_sees_pss (X, pss)
     int		X, pss;
 {
     /* X et pss sont des suffixes de pile d'analyse */
@@ -2447,13 +2443,13 @@ SXBOOLEAN		X_sees_pss (X, pss)
 		    new_pss = make_new_pss (X, next_state);
 
 		    if (new_pss == pss || X_sees_pss (new_pss, pss))
-			return SXTRUE;
+			return true;
 		}
 	    }
 	} while (++StNt < lim);
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
@@ -2471,19 +2467,19 @@ static int max_min_lgth (ARC)
 }
 
 
-static SXBOOLEAN	check_lc (max_min_lgth)
+static bool	check_lc (max_min_lgth)
     int	max_min_lgth;
 {
     /* Un ARC (impur) vient d'etre construit.
        Pour chaque etat conflictuel s de l'ARC on calcule d(s),
        distance minimale entre l'etat initial et s.
        Soit h = MAX d(s). Si h est > k_value on positionne NEW_K_VALUE a h
-       et on retourne SXTRUE, sinon on retourne SXFALSE. */
+       et on retourne true, sinon on retourne false. */
     /* Une detection de non LALR a pu se produire anterieurement. Dans ce
        cas, la detection (egalite des pss) s'est produite a une distance <=
        k_value et la detection de non R(oxo)LALR se produit a la meme distance
        => traite par le cas precedent. */
-    return max_min_lgth > ORIG_K_VALUE ? (NEW_K_VALUE = max_min_lgth, SXTRUE) : SXFALSE;
+    return max_min_lgth > ORIG_K_VALUE ? (NEW_K_VALUE = max_min_lgth, true) : false;
 }
 
 
@@ -2548,7 +2544,7 @@ SXBA	fill_pss_set (ARC, pss_set, ARC_state, t, type, set)
 }
 
 
-SXVOID	fill_kas (ARC, ARC_state, kas, pss_sets, xkas, conflict_kind)
+void	fill_kas (ARC, ARC_state, kas, pss_sets, xkas, conflict_kind)
     struct ARC_struct	*ARC;
     int		ARC_state, *xkas, conflict_kind;
     struct kas	*kas;
@@ -2613,7 +2609,7 @@ SXVOID	fill_kas (ARC, ARC_state, kas, pss_sets, xkas, conflict_kind)
     }
     else if (pss_kind == FSA_) {
 	/* On ne conserve que les pss ayant des chemins communs. */
-	is_inter_pss (xk, pss_sets, SXTRUE, SXFALSE);
+	is_inter_pss (xk, pss_sets, true, false);
     }
     /* else garde-fou ou on conserve tout ex transition sur eof... */
 }
@@ -2625,7 +2621,7 @@ int	make_new_pss (pss, next_state)
 
     register int	bot, top;
     int		result;
-    SXBOOLEAN	is_knot = SXFALSE;
+    bool	is_knot = false;
 
     bot = XH_X (pss_hd, pss);
     top = XH_X (pss_hd, pss + 1) - 1;
@@ -2634,7 +2630,7 @@ int	make_new_pss (pss, next_state)
 	/* pss de type FSA_ */
 	register int couple;
 	int	new_couple;
-	SXBOOLEAN		new_couple_pushed = SXFALSE;
+	bool		new_couple_pushed = false;
 
 	XH_push (pss_hd, XH_list_elem (pss_hd, bot));
 
@@ -2647,7 +2643,7 @@ int	make_new_pss (pss, next_state)
 	    couple = XH_list_elem (pss_hd, bot);
 
 	    if (!new_couple_pushed && couple > new_couple) {
-		new_couple_pushed = SXTRUE;
+		new_couple_pushed = true;
 		XH_push (pss_hd, new_couple);
 	    }
 
@@ -2666,7 +2662,7 @@ int	make_new_pss (pss, next_state)
 
 	while (bot < top) {
 	    if ((knot = XH_list_elem (pss_hd, bot++)) < 0)
-		is_knot = SXTRUE;
+		is_knot = true;
 
 	    XH_push (pss_hd, knot);
 	}
@@ -2680,8 +2676,8 @@ int	make_new_pss (pss, next_state)
 
 
 
-SXVOID	ARC_init (print_conflicts, kind, max_red_per_state, arcs_size)
-    SXBOOLEAN	print_conflicts;
+void	ARC_init (print_conflicts, kind, max_red_per_state, arcs_size)
+    bool	print_conflicts;
     int		kind, max_red_per_state, arcs_size;
 {
     /* pss_kind :	UNBOUNDED_	FSA_	BOUNDED_
@@ -2689,7 +2685,7 @@ SXVOID	ARC_init (print_conflicts, kind, max_red_per_state, arcs_size)
     */
     register int	i;
     int			to;
-    SXBOOLEAN		first_call;
+    bool		first_call;
 
     /* print_conflicts indique qu'il faudra peut etre imprimer des conflits. */
     conflict_message = print_conflicts;
@@ -2750,10 +2746,10 @@ SXVOID	ARC_init (print_conflicts, kind, max_red_per_state, arcs_size)
 	couples_set = NULL;
 	xpss_set = NULL;
 	ibfsa_stack = NULL;
-	first_call = SXTRUE;
+	first_call = true;
     }
     else
-	first_call = SXFALSE;
+	first_call = false;
 
 
     if ((ibfsa_needed || kind == FSA_) && couples_set == NULL) /* infinity */  {
@@ -2815,7 +2811,7 @@ int	ARC_final ()
 
 
 
-SXVOID	ARC_free ()
+void	ARC_free ()
 {
     sxfree (kas), kas = NULL;
     sxfree (init_state_attr);
@@ -2823,7 +2819,7 @@ SXVOID	ARC_free ()
 }
 
 
-SXVOID	ARC_get_sizes (arc_state_nb, arc_trans_nb)
+void	ARC_get_sizes (arc_state_nb, arc_trans_nb)
     int		*arc_state_nb, *arc_trans_nb;
 {
     register int l, m;
@@ -2924,7 +2920,7 @@ int	pss_set_to_pss_list (pss_set)
 
 static int	install_a_pss_list (akas, is_init_state)
     struct kas	*akas;
-    SXBOOLEAN is_init_state;
+    bool is_init_state;
 {
     /* On supprime de work_set toutes les stack_suffixes dont le sommet
        n'a pas de transition terminale */
@@ -2958,7 +2954,7 @@ static int	install_a_pss_list (akas, is_init_state)
 
 
 
-static SXBOOLEAN	install_arc_state (ARC, kas, xkas, new_arc)
+static bool	install_arc_state (ARC, kas, xkas, new_arc)
     struct ARC_struct	*ARC;
     struct kas	*kas;
     int		xkas, *new_arc;
@@ -2966,11 +2962,11 @@ static SXBOOLEAN	install_arc_state (ARC, kas, xkas, new_arc)
     /* Un etat de l'ARC a ete calcule dans kas, on l'installe dans
        la structure definitive s'il ne s'y trouvait pas deja.
        new_arc contient l'identifiant de cet etat.
-       Retourne SXTRUE si c'est un nouvel etat. */
+       Retourne true si c'est un nouvel etat. */
 
     register int	x, ol;
     register struct kas		*akas;
-    register SXBOOLEAN	is_old;
+    register bool	is_old;
 
     for (x = 0; x <= xkas; x++) {
 	XH_push (ARC->Q_hd, (akas = kas + x)->xpts);
@@ -2980,7 +2976,7 @@ static SXBOOLEAN	install_arc_state (ARC, kas, xkas, new_arc)
     return !XH_set (&(ARC->Q_hd), new_arc);
 }
 
-static SXVOID	ARC_gather_trans (ARC, ARC_state)
+static void	ARC_gather_trans (ARC, ARC_state)
     struct ARC_struct	*ARC;
     int		ARC_state;
 {
@@ -3071,7 +3067,7 @@ static SXVOID	ARC_gather_trans (ARC, ARC_state)
 
 
 
-static SXBOOLEAN ARC_trans (ARC, ARC_state, t, next_ARC_state)
+static bool ARC_trans (ARC, ARC_state, t, next_ARC_state)
     struct ARC_struct	*ARC;
     int		ARC_state, t, *next_ARC_state;
 {
@@ -3082,7 +3078,7 @@ static SXBOOLEAN ARC_trans (ARC, ARC_state, t, next_ARC_state)
     register struct PSSxT_to_xpts	*aelem;
     struct kas				*akas;
     int					indice, ck, type, pss;
-    SXBOOLEAN				is_old_aelem, is_first, is_brand_new_state;
+    bool				is_old_aelem, is_first, is_brand_new_state;
     
     /* Pour chaque doublet ({pss}, type) de l'etat courant xpas de l'arc */
     /* Pour chaque pss de pile de l'automate LR(0) associe a type */
@@ -3103,7 +3099,7 @@ static SXBOOLEAN ARC_trans (ARC, ARC_state, t, next_ARC_state)
 		(akas = kas + xkas)->type = ((type = awl->
 					      type) > 0) ? -XxY_is_set (&Q0xV_hd, type, -t)
 						  : type;
-		is_first = SXTRUE;
+		is_first = true;
 		sxba_empty (pss_sets [xkas++]);
 		akas->m = maxint;
 		akas->M = 0;
@@ -3137,17 +3133,17 @@ static SXBOOLEAN ARC_trans (ARC, ARC_state, t, next_ARC_state)
 		/* On supprime de work_set les etats n'ayant pas de transitions terminales */
 		/* On installe work_set dans ts et on le memorise dans PSSxT_to_xpts */
 		
-		aelem->xpts = install_a_pss_list (work_kas, SXFALSE);
+		aelem->xpts = install_a_pss_list (work_kas, false);
 		aelem->back_head = back_head [0];
 		
 		if (is_first)
-		    is_first = SXFALSE;
+		    is_first = false;
 		else
 		    ts_to_kas (aelem->xpts, akas);
 	    }
 	    
 	    if ((x = awl->lnk) == 0 || ARC->wl [x].type != type) {
-		akas->xpts = install_a_pss_list (akas, SXFALSE);
+		akas->xpts = install_a_pss_list (akas, false);
 	    }
 	}
 	
@@ -3173,7 +3169,7 @@ static SXBOOLEAN ARC_trans (ARC, ARC_state, t, next_ARC_state)
 }
     
 
-SXBOOLEAN bh_ARC_one_LA (ARC, qtq)
+bool bh_ARC_one_LA (ARC, qtq)
     struct ARC_struct	*ARC;
     int			qtq;
 {
@@ -3192,18 +3188,18 @@ SXBOOLEAN bh_ARC_one_LA (ARC, qtq)
     if (la_lgth == 0 && ARC_state == 1) {
 	/* On tient un chemin */
 	mm_process_one_LA (ARC);
-	return SXFALSE;
+	return false;
     }
 
     if (la_lgth == 0 || ARC_state == 1)
-	return SXFALSE;
+	return false;
 
     return pss_kind == UNBOUNDED_ && (la_lgth <= lgth || lgth == -1) /* lgth est la longueur du plus long chemin. */ ||
 	pss_kind != UNBOUNDED_ && la_lgth >= lgth /* lgth est la longueur du plus court chemin. */;
 }
 
 
-SXBOOLEAN bs_ARC_one_LA (ARC, qtq)
+bool bs_ARC_one_LA (ARC, qtq)
     struct ARC_struct	*ARC;
     int			qtq;
 {
@@ -3213,7 +3209,7 @@ SXBOOLEAN bs_ARC_one_LA (ARC, qtq)
 }
 
 
-static SXVOID ARC_conflict_processing (ARC, qtq)
+static void ARC_conflict_processing (ARC, qtq)
     struct ARC_struct	*ARC;
     int			qtq;
 {
@@ -3241,34 +3237,34 @@ static SXVOID ARC_conflict_processing (ARC, qtq)
 }
 
 
-SXBOOLEAN bh_mark (ARC, qtq)
+bool bh_mark (ARC, qtq)
     struct ARC_struct	*ARC;
     int			qtq;
 {
     register struct ARC_ATTR	*attr = ARC->attr + XxYxZ_X (ARC->QxTxQ_hd, qtq);
 
     if (attr->is_marked)
-	return SXFALSE; /* sous-graphe deja traite (ou en cours de traitement). */
+	return false; /* sous-graphe deja traite (ou en cours de traitement). */
 
-    attr->is_marked = SXTRUE;
-    return SXTRUE; /* On continue */
+    attr->is_marked = true;
+    return true; /* On continue */
 }
 
 
-SXBOOLEAN bh_unmark (ARC, qtq)
+bool bh_unmark (ARC, qtq)
     struct ARC_struct	*ARC;
     int			qtq;
 {
     register struct ARC_ATTR	*attr = ARC->attr + XxYxZ_X (ARC->QxTxQ_hd, qtq);
 
     if (!attr->is_marked)
-	return SXFALSE; /* sous-graphe deja traite (ou en cours de traitement). */
+	return false; /* sous-graphe deja traite (ou en cours de traitement). */
 
-    attr->is_marked = SXFALSE;
-    return SXTRUE; /* On continue */
+    attr->is_marked = false;
+    return true; /* On continue */
 }
 
-static SXVOID ARC_init_state_building (ARC)
+static void ARC_init_state_building (ARC)
     struct ARC_struct	*ARC;
 {
     /* Calcul de l'etat initial dans les cas d'un ARC (FSA_, BOUNDED_ ou UNBOUNDED_). */
@@ -3323,12 +3319,12 @@ static SXVOID ARC_init_state_building (ARC)
 	/* On supprime les etats n'ayant pas de transitions
 	   terminales */
 	pinit->type = work_kas->type = type;
-	pinit->pss_list = work_kas->xpts = install_a_pss_list (work_kas, SXTRUE);
+	pinit->pss_list = work_kas->xpts = install_a_pss_list (work_kas, true);
 	pinit->h_value = h_value;
 	pinit->fork_list = 0;
     }
     
-    has_several_equiv_reductions = SXFALSE;
+    has_several_equiv_reductions = false;
     
     if (THERE_IS_AN_XPROD) {
 	int	x, y, nb;
@@ -3348,7 +3344,7 @@ static SXVOID ARC_init_state_building (ARC)
 		if (PROD_TO_RED (y) != repr_red_no)
 		    break;
 		
-		has_several_equiv_reductions = SXTRUE;
+		has_several_equiv_reductions = true;
 		akas = kas + x;
 		sxba_or (work_kas->pss_set, akas->pss_set);
 		work_kas->m = min (work_kas->m, akas->m);
@@ -3358,7 +3354,7 @@ static SXVOID ARC_init_state_building (ARC)
 	    work_kas->type = -(grand + repr_red_no);
 	    
 	    if (nb > 0)
-		work_kas->xpts = install_a_pss_list (work_kas, SXTRUE);
+		work_kas->xpts = install_a_pss_list (work_kas, true);
 	    
 	    if (++xkas < cur_red)
 		kas [xkas] = *work_kas;
@@ -3374,12 +3370,12 @@ static SXVOID ARC_init_state_building (ARC)
 	sxtrap (ME, "ARC_construction");
     
     ARC->attr [0].lgth = ARC->attr [1].lgth = 0;
-    ARC->attr [0].is_marked = ARC->attr [1].is_marked = SXFALSE;
+    ARC->attr [0].is_marked = ARC->attr [1].is_marked = false;
     ARC->conflict_kind = ARC->attr [1].conflict_kind = NO_CONFLICT_;
-    ARC->attr [1].is_tree_orig = SXFALSE;
+    ARC->attr [1].is_tree_orig = false;
     ARC->attr [0].primes_nb = ARC->attr [1].primes_nb = 0;
     ARC->attr [1].from = ARC->ARC == NULL ? 0 : 1;
-    ARC->is_initiated = SXTRUE;
+    ARC->is_initiated = true;
 }
 
 
@@ -3407,21 +3403,21 @@ static struct ARC_struct *call_ARC_building (XARC, qtq)
     if (!ARC->is_initiated) {
 	ARC->ARC = XARC;
 	ARC_init_state_building (ARC);
-	ARC->is_clonable = SXTRUE;
+	ARC->is_clonable = true;
 	ARC->pss_kind = pss_kind;
 	ARC->h_value = h_value;
 	ARC->k_value = k_value;
     }
 
     /* On remonte dans l'XARC en marquant les etats accessibles. */
-    XARC->attr [XARC_state].is_marked = SXTRUE;
+    XARC->attr [XARC_state].is_marked = true;
     ARC_walk_backward (XARC, qtq, bh_mark, NULL);
 
     ARC_building (ARC, ARC_trans, ARC_UNBOUNDED_get_conflict_kind);
     
     /* On enleve les marques. */
     ARC_walk_backward (XARC, qtq, bh_unmark, NULL);
-    XARC->attr [XARC_state].is_marked = SXFALSE;
+    XARC->attr [XARC_state].is_marked = false;
     ARC->is_clonable = XARC->is_clonable;
     pss_kind = FSA_;
     k_value = ORIG_K_VALUE;
@@ -3431,7 +3427,7 @@ static struct ARC_struct *call_ARC_building (XARC, qtq)
 }
 
 
-static SXBOOLEAN ARC_conflicting_node_processing (ARC, qtq)
+static bool ARC_conflicting_node_processing (ARC, qtq)
     struct ARC_struct	*ARC;
     int			qtq;
 {
@@ -3439,10 +3435,10 @@ static SXBOOLEAN ARC_conflicting_node_processing (ARC, qtq)
           - prepare les messages d'erreur
 	  - regarde s'il est clonable
 	  - etc...
-       Retourne SXTRUE ssi le conflit a pu etre resolu. */
+       Retourne true ssi le conflit a pu etre resolu. */
     register int	ARC_state, ck;
     int			xkas;
-    SXBOOLEAN		local_conflict_has_been_solved = SXFALSE;
+    bool		local_conflict_has_been_solved = false;
 
     ARC_state = XxYxZ_Z (ARC->QxTxQ_hd, qtq);
     
@@ -3467,18 +3463,18 @@ static SXBOOLEAN ARC_conflicting_node_processing (ARC, qtq)
 		    /* Probleme, le conflit a ete resolu en LALR. */
 		    XARC->is_clonable)
 		    /* les clones ont ete ajoutes a la liste. */
-		    local_conflict_has_been_solved = SXTRUE;
+		    local_conflict_has_been_solved = true;
 		/* sinon, les messages on ete prepares en LR. */
 	    }
 	}
 	else
-	    local_conflict_has_been_solved = SXTRUE;
+	    local_conflict_has_been_solved = true;
     }
     else {
 	/* C'est un ARC. */
 	if (is_lr_constructor) {
 	    if (call_XARC_building (ARC, qtq) == NO_CONFLICT_)
-		local_conflict_has_been_solved = SXTRUE;
+		local_conflict_has_been_solved = true;
 	}
 	else {
 	    /* Preparation du message de non-conformite */
@@ -3492,7 +3488,7 @@ static SXBOOLEAN ARC_conflicting_node_processing (ARC, qtq)
 }
 
 
-static SXBOOLEAN fh_remote_conflict (ARC, qtq)
+static bool fh_remote_conflict (ARC, qtq)
     struct ARC_struct	*ARC;
     int			qtq;
 {
@@ -3502,7 +3498,7 @@ static SXBOOLEAN fh_remote_conflict (ARC, qtq)
     attr = ARC->attr + (next_ARC_state = XxYxZ_Z (ARC->QxTxQ_hd, qtq));
 
     if ((attr->is_marked)++)
-	return SXFALSE; /* sous-graphe deja traite (ou en cours de traitement). */
+	return false; /* sous-graphe deja traite (ou en cours de traitement). */
 
     t = XxYxZ_Y (ARC->QxTxQ_hd, qtq);
 
@@ -3515,32 +3511,32 @@ static SXBOOLEAN fh_remote_conflict (ARC, qtq)
 	    ARC_conflicting_node_processing (ARC, qtq);
     }
 
-    return SXTRUE; /* On continue */
+    return true; /* On continue */
 }
 
-static SXBOOLEAN bh_not_pure_tree (ARC, qtq)
+static bool bh_not_pure_tree (ARC, qtq)
     struct ARC_struct	*ARC;
     int			qtq;
 {
     register struct ARC_ATTR	*attr = ARC->attr + XxYxZ_X (ARC->QxTxQ_hd, qtq);
 
     if (!attr->is_pure_tree)
-	return SXFALSE; /* sous-graphe deja traite (ou en cours de traitement). */
+	return false; /* sous-graphe deja traite (ou en cours de traitement). */
 
-    attr->is_pure_tree = SXFALSE;
-    return SXTRUE; /* On continue */
+    attr->is_pure_tree = false;
+    return true; /* On continue */
 }
 
 
 int	ARC_building (ARC, F_trans, F_get_conflict_kind)
     struct ARC_struct	*ARC;
-    SXBOOLEAN	(*F_trans)();
+    bool	(*F_trans)();
     int		(*F_get_conflict_kind) ();
 {
     register int	ARC_state, t;
     register struct ARC_ATTR	*attr;
     int			next_ARC_state, qtq, ck, x_tree_orig, lgth, type_nb, new_lgth;
-    SXBOOLEAN		give_up, is_new_ARC_state, local_conflict_has_been_solved;
+    bool		give_up, is_new_ARC_state, local_conflict_has_been_solved;
 
     sxba_empty (ARC->Q_set);
     SS_clear (ARC->Q_stack);
@@ -3554,7 +3550,7 @@ int	ARC_building (ARC, F_trans, F_get_conflict_kind)
 	}
 
 	ARC_gather_trans (ARC, ARC_state);
-	give_up = SXFALSE;
+	give_up = false;
 	t = 0;
 	
 	while ((t = sxba_scan_reset (ARC->t_set, t)) > 0) {
@@ -3587,15 +3583,15 @@ int	ARC_building (ARC, F_trans, F_get_conflict_kind)
 		    if (is_new_ARC_state) {
 			new_lgth = ARC->attr [ARC_state].lgth;
 			attr->lgth = L_SUCC (new_lgth);
-			attr->is_pure_tree = SXTRUE;
-			attr->is_marked = SXFALSE;
+			attr->is_pure_tree = true;
+			attr->is_marked = false;
 			attr->conflict_kind = NO_CONFLICT_;
 		    }
 		    else
 			ARC_walk_forward (ARC, qtq, fh_propagate_lgth, fs_unmark);
 		    
 		    if (ARC_state == 1)
-			attr->is_tree_orig = SXTRUE;
+			attr->is_tree_orig = true;
 		    
 		    if ((type_nb = ARC->whd [t].type_nb) > 1) {
 			/* Etat mixte */
@@ -3635,13 +3631,13 @@ int	ARC_building (ARC, F_trans, F_get_conflict_kind)
 			       On pourrait supprimer de Q_stack les etats des sous-arbres. */
 			    if (!conflict_message) {
 				/* On abandonne tout! */
-				    give_up = SXTRUE;
+				    give_up = true;
 				    SS_clear (ARC->Q_stack);
 			    }
 			    else if (is_unique_conflict_per_state) {
 				/* Abandon de l'"arbre" courant => CLEAR des structures. */
 				if (ARC_state != 1) {
-				    give_up = SXTRUE;
+				    give_up = true;
 				    SS_top (ARC->Q_stack) = x_tree_orig;
 				}
 			    }
@@ -3662,11 +3658,11 @@ int	ARC_building (ARC, F_trans, F_get_conflict_kind)
     return ARC->conflict_kind;
 }
 
-SXBOOLEAN ARC_construction (failed_kind, xac1, conflict_t_set, is_shift_reduce, StNt
+bool ARC_construction (failed_kind, xac1, conflict_t_set, is_shift_reduce, StNt
 			  , red_no)
     int		xac1, StNt, red_no, *failed_kind;
     SXBA	conflict_t_set;
-    SXBOOLEAN	is_shift_reduce;
+    bool	is_shift_reduce;
 {
     /* Il y a conflit (LALR(1) ou LR(1)) dans l'etat xac1.
        Cette procedure calcule l'ARC reduit de germe xac1.
@@ -3699,7 +3695,7 @@ SXBOOLEAN ARC_construction (failed_kind, xac1, conflict_t_set, is_shift_reduce, 
        Si les transitions sur a et b ne sont pas construites, l'ARC pur n'a pas
        de sortie! */
     int			arc_no, conflict_kind, i, ARC_kind;
-    SXBOOLEAN		 must_loop;
+    bool		 must_loop;
     struct ARC_struct	*ARC;
 
 /* Initialisations */
@@ -3711,7 +3707,7 @@ SXBOOLEAN ARC_construction (failed_kind, xac1, conflict_t_set, is_shift_reduce, 
     RED_NO = red_no;
     IS_SHIFT_REDUCE = is_shift_reduce;
     CONFLICT_T_SET = conflict_t_set;
-    THERE_IS_AN_XPROD = SXFALSE;
+    THERE_IS_AN_XPROD = false;
 
     if (has_xprod) {
 	register int lim, x = 0;
@@ -3720,14 +3716,14 @@ SXBOOLEAN ARC_construction (failed_kind, xac1, conflict_t_set, is_shift_reduce, 
 
 	do {
 	   if (-Q0xV_to_Q0 [StNt + x] >= lim) {
-	       THERE_IS_AN_XPROD = SXTRUE;
+	       THERE_IS_AN_XPROD = true;
 	       break;
 	   }
 	} while (++x < red_no);
     }
 
     do {
-	must_loop = SXFALSE;
+	must_loop = false;
 
 	/* On doit reconstruire l'etat initial, meme si on reboucle, le clonage ayant pu le
 	   changer. */
@@ -3742,7 +3738,7 @@ SXBOOLEAN ARC_construction (failed_kind, xac1, conflict_t_set, is_shift_reduce, 
 	if (!ARC->is_initiated) {
 	    ARC_init_state_building (ARC);
 	    ARC->conflict_t_set = conflict_t_set;
-	    ARC->is_clonable = SXTRUE;
+	    ARC->is_clonable = true;
 	    ARC->pss_kind = pss_kind;
 	    ARC->h_value = h_value;
 	    ARC->k_value = k_value;
@@ -3770,7 +3766,7 @@ SXBOOLEAN ARC_construction (failed_kind, xac1, conflict_t_set, is_shift_reduce, 
 		    cloning ();
 		    Q0xQ0_top = XxY_top (Q0xQ0_hd);
 		    undo (old_xac2);
-		    must_loop = SXTRUE;
+		    must_loop = true;
 		}
 	    }
 
@@ -3794,7 +3790,7 @@ SXBOOLEAN ARC_construction (failed_kind, xac1, conflict_t_set, is_shift_reduce, 
 		    k_value = NEW_K_VALUE;
 		    k_value_max = max (k_value_max, k_value);
 		    h_value = -1;
-		    must_loop = SXTRUE;
+		    must_loop = true;
 		}
 	    }
 	}
@@ -3851,7 +3847,7 @@ int	ARC_get_red_no (arc_no, t)
 }
 
 
-SXVOID	RLR_code_generation (xac1, arc_no, t_set, plulong)
+void	RLR_code_generation (xac1, arc_no, t_set, plulong)
     int		xac1, arc_no, plulong;
     SXBA	t_set;
 {
@@ -3882,7 +3878,7 @@ SXVOID	RLR_code_generation (xac1, arc_no, t_set, plulong)
 
     /* Calcul de Super_ARC et code generation */
     if (is_super_arc)
-	new_state_nb = super_FSA (&Q_hd, &QxTxQ_hd, &AxOxV_hd, XTMAX, SXTRUE);
+	new_state_nb = super_FSA (&Q_hd, &QxTxQ_hd, &AxOxV_hd, XTMAX, true);
 
     ARC_cg (xac1, new_state_nb, plulong);
 

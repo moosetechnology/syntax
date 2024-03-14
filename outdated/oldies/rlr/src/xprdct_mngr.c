@@ -30,20 +30,14 @@
 /* 28-03-88 09:55 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-
-#define WHAT	"@(#)xprdct_mngr.c\t- SYNTAX [unix] - 30 avril 1992"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+char WHAT[] = "@(#)xprdct_mngr.c\t- SYNTAX [unix] - 30 avril 1992";
 
 static char	ME [] = "xprdct_mngr";
+
 /*   I N C L U D E S   */
 #include "P_tables.h"
 
 #include "rlr_optim.h"
-
-
 
 struct xprdct {
     int		lnk, hash, size, head;
@@ -254,20 +248,20 @@ int	get_xprdct (prdct1, prdct2)
 
 
 
-SXBOOLEAN		prdct_equal (xprdct, prdct1, prdct2)
+bool		prdct_equal (xprdct, prdct1, prdct2)
     int		xprdct, prdct1, prdct2;
 {
     /* Regarde si le predicat etendu prdct1 && prdct2 est xprdct */
 
     if (xprdct >= -1)
-	return SXFALSE;
+	return false;
 
     return xprdct == get_xprdct (prdct1, prdct2);
 }
 
 
 
-SXVOID build_branch (xprdct, fe, father)
+void build_branch (xprdct, fe, father)
     int		xprdct, father;
     struct floyd_evans	*fe;
 {

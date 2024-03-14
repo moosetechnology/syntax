@@ -64,7 +64,7 @@ static char	ME [] = "weights_semact";
 #  define TERM_CONVERT(t)           t
 #endif /* mp_h */
 
-char WHAT_WEIGHTS_SEMACT[] = "@(#)SYNTAX - $Id: weights_semact.c 3498 2023-08-20 18:14:09Z garavel $" WHAT_DEBUG;
+char WHAT_WEIGHTS_SEMACT[] = "@(#)SYNTAX - $Id: weights_semact.c 3678 2024-02-06 08:38:24Z garavel $" WHAT_DEBUG;
 
 static char	Usage [] = "";
 
@@ -134,7 +134,7 @@ weights_args_usage ()
 
 /* decode les arguments specifiques a weights */
 /* l'option argv [*parg_num] est inconnue du parseur earley */
-static SXBOOLEAN
+static bool
 weights_args_decode (pargnum, argc, argv)
      int  *pargnum, argc;
      char *argv [];
@@ -142,10 +142,10 @@ weights_args_decode (pargnum, argc, argv)
   switch (option_get_kind (argv [*pargnum])) {
 
   case UNKNOWN_ARG:
-    return SXFALSE;
+    return false;
   }
 
-  return SXTRUE;
+  return true;
 }
 
 
@@ -162,7 +162,7 @@ static char    *priority_vector;
 static char    priority_vector_default [] = "1";
 static int     priority_vector_lgth;
 
-SXBOOLEAN       WEIGHTS_SEM_PASS_ARG;
+bool       WEIGHTS_SEM_PASS_ARG;
 
 static void
 allocate_all ()
@@ -328,7 +328,7 @@ terminal_instantiation (Tij, t, if_id/* , terminal_string */)
   int                        lexeme_id, struct_id, head, temp_prio, prio;
   struct if_id2t_list        *ptr;
 #if EBUG
-  SXBOOLEAN                    done = SXFALSE;
+  bool                    done = false;
 #endif /* EBUG */
 
   prio = 0;
@@ -340,7 +340,7 @@ terminal_instantiation (Tij, t, if_id/* , terminal_string */)
 
     if (ptr->t == TERM_CONVERT (t)) {
 #if EBUG
-      done = SXTRUE;
+      done = true;
 #endif /* EBUG */
 
       bot2 = ptr->list;
@@ -420,10 +420,10 @@ locally_select_optimal_trees (Aij)
 {
   int hook, init_hook, cur_Pij;
   double localmax;
-  SXBOOLEAN found_best_hook;
+  bool found_best_hook;
 
 
-  found_best_hook = SXFALSE;
+  found_best_hook = false;
   init_hook = hook = spf.outputG.lhs [spf.outputG.maxxprod+Aij].prolon;     
   localmax=0.0;
 
@@ -449,7 +449,7 @@ locally_select_optimal_trees (Aij)
 
   /* passe 2 */
   hook = init_hook;
-  found_best_hook = SXFALSE;
+  found_best_hook = false;
   while ((cur_Pij = spf.outputG.rhs [hook].lispro) != 0) {
     if (cur_Pij > 0) { /* il ne s'agit pas d'une branche elaguee */
       if (localmax > Pij2weight[cur_Pij]-0.000001 /* si cette production n'est pas optimale... */
@@ -457,9 +457,9 @@ locally_select_optimal_trees (Aij)
 	  /* ou alors on a déjà trouvé une prod optimale, celle-ci l'est aussi mais on ne veut qu'un seul arbre*/
 	  ) { 
 	spf.outputG.rhs [hook].lispro = -cur_Pij; /*...on l'élague ;... */
-	spf.outputG.is_proper = SXFALSE;
+	spf.outputG.is_proper = false;
       } else {
-	found_best_hook = SXTRUE; /* on se souvient qu'on a trouvé au moins une prod optimale */
+	found_best_hook = true; /* on se souvient qu'on a trouvé au moins une prod optimale */
       }
     }
     hook++;
@@ -513,7 +513,7 @@ weights_sem_pass ()
   double tree_nb,new_tree_nb;
   int maxeid;
   char msg[60], qualifier[10];
-  SXBOOLEAN is_not_empty, temp_bool;
+  bool is_not_empty, temp_bool;
 
 #if EBUG
   fprintf(stdout,"\n");
@@ -554,7 +554,7 @@ weights_sem_pass ()
   }
 
   if (is_print_time) {
-    sprintf(msg,"\tWeights filtering (SXTRUE ");
+    sprintf(msg,"\tWeights filtering (true ");
     msg [1] = sxtoupper (msg [1]);
     if (tree_nb < 1.0E6)
       sprintf(msg,"%s%.f -> ",msg,tree_nb);

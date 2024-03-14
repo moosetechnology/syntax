@@ -76,12 +76,12 @@ extern char* get_xnt_string();
 #define XQ0_TO_Q0(s)		((clone_to_lr0_state == NULL) || (s <= lr0_automaton_state_nb) ? s : clone_to_lr0_state [s - lr0_automaton_state_nb])
 int		*clone_to_lr0_state, lr0_automaton_state_nb;
 
-extern char	release_mess [];
-char	*language_name, constructor_name [24];
+
+char	constructor_name [24];
 
 struct bnf_ag_item	bnf_ag;
 
-SXBOOLEAN is_automaton,
+bool is_automaton,
 	is_list_user_conflicts,
 	is_list_system_conflicts,
 	is_list_conflicts,
@@ -262,7 +262,7 @@ int	t_hash [HASH_SIZE],
 
 
 
-extern int	LALR1 (), OPTIM ();
-extern SXVOID	sat_mess ();
+extern int	LALR1 (void), OPTIM (void);
+extern void	sat_mess (void);
 
 /*   E N D    R L R _ O P T I M . H  */

@@ -25,15 +25,7 @@
 /* 16-09-93 15:35 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-
-#ifndef lint
-#define WHAT	"@(#)L_act.c\t- SYNTAX [unix] -  Mar 15 Mar 1994 11:11:03"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
-
-#endif
+char WHAT[] = "@(#)L_act.c\t- SYNTAX [unix] -  Mar 15 Mar 1994 11:11:03";
 
 static char	ME [] = "L_act";
 
@@ -71,7 +63,7 @@ char *language_name = &(LANGUAGE_NAME [0]);
      redeclaree (en tant que variable, tableau ou fonction) et un tableau ou fonction
      ne peut pas etre redeclaree en tant que variable ou tableau et fonction identique.
      Pb, si les profiles sont identiques, mais le type du resultat est different, c'est
-     correct. Ce probleme est regle' avec les predicats "&n" qui re'pondent SXTRUE ssi
+     correct. Ce probleme est regle' avec les predicats "&n" qui re'pondent true ssi
      le type de base est "int".
 
      @n produit le message d'erreur :
@@ -125,7 +117,7 @@ struct tt_attr {
 
 struct listof_attr {
     int prev, lhs, fun, expr, var;
-    SXBOOLEAN	is_activated;
+    bool	is_activated;
 };
 
 struct sem_stack {
@@ -152,7 +144,7 @@ static int	symbs [7];
 static int	block_level, block_nb, current_block_nb, basic_type_name, current_listof_level,
                 listof_level, prev_listof, prev_recordtype_lhs, sem_stack_size, record_name;
 static int	action_20, action_21, cur_nt;
-static SXBOOLEAN	is_record_body;
+static bool	is_record_body;
 
 static XxY_header		listof_hd, labels_hd, recordtype_lhsXrule, var_nameXrule,
                                 type_nameXrule, type_steXblock_nb;
@@ -166,7 +158,7 @@ static int	_xnt, _xt;
 #define new_nt()	(sxdp_new_xnt (++cur_nt, -1, &_xnt), _xnt)
 #define new_xt(t,p)	(sxdp_new_xt (t, p, &_xt, 0, 0), -_xt)
 
-static SXVOID
+static void
 listof_oflw (old_size, new_size)
     int old_size, new_size;
 {
@@ -175,21 +167,21 @@ listof_oflw (old_size, new_size)
 						      sizeof (struct listof_attr));
 }
 
-static SXVOID
+static void
 symbol_table_oflw (old_size, new_size)
     int old_size, new_size;
 {
     st_to_attr = (struct st_attr*) sxrealloc (st_to_attr, new_size + 1, sizeof (struct st_attr));
 }
 
-static SXVOID
+static void
 type_table_oflw (old_size, new_size)
     int old_size, new_size;
 {
     tt_to_attr = (struct tt_attr*) sxrealloc (tt_to_attr, new_size + 1, sizeof (struct tt_attr));
 }
 
-static SXVOID
+static void
 type_steXblock_nb_oflw (old_size, new_size)
     int old_size, new_size;
 {
@@ -199,7 +191,7 @@ type_steXblock_nb_oflw (old_size, new_size)
 		   sizeof (struct type_steXblock_nb_to_attr));
 }
 
-static SXVOID
+static void
 symbols_oflw (size)
     int size;
 {
@@ -262,7 +254,7 @@ desambig ()
 */
 
 
-static SXVOID
+static void
 desactivate_var_rules (name)
     int name;
 {
@@ -281,7 +273,7 @@ desactivate_var_rules (name)
     }
 }
 
-static SXVOID
+static void
 desactivate_type_rules (name)
     int name;
 {
@@ -300,12 +292,12 @@ desactivate_type_rules (name)
     }
 }
 
-static SXVOID
+static void
 push_rule_attr (rule, action, priority, associativity)
     int rule, action, priority, associativity;
 {
     int x;
-    SXBOOLEAN oflw;
+    bool oflw;
 
     x = SS_top (rule_attr_stack);
     oflw = x == SS_size (rule_attr_stack);
@@ -326,14 +318,14 @@ push_rule_attr (rule, action, priority, associativity)
 static int
 add_rule (symbols, rhs_lgth, clean, act, prio, assoc)
     int *symbols, rhs_lgth, act, prio, assoc;
-    SXBOOLEAN clean;
+    bool clean;
 {
     /* Traite la plupart des cas de creation de regles. */
     /* Si clean, on remet en etat en sortie de bloc. */
     /* Si on veut la conserver active en sortie de bloc on appelle
-       add_rule avec clean==SXFALSE */
+       add_rule avec clean==false */
     /* Si on veut la conserver inactive en sortie de bloc on appelle
-       add_rule avec clean==SXFALSE et dans tous les cas, au retour,
+       add_rule avec clean==false et dans tous les cas, au retour,
        on la met a la main ds deactivate_stack. */
     int rule, action, priority, associativity;
 
@@ -463,7 +455,7 @@ build_listof (current_listof_level, basic_type_name)
 {
     int		couple, LISTOFnm1_TYPE, LISTOFn_TYPE, LISTOFn_TYPE_LHS,
                 LISTOFn_TYPE_FUN, LISTOFn_TYPE_VAR, rule;
-    SXBOOLEAN	is_new;
+    bool	is_new;
     struct listof_attr  *pl;
 
     is_new = !XxY_set (&listof_hd, current_listof_level, basic_type_name, &couple);
@@ -506,7 +498,7 @@ build_listof (current_listof_level, basic_type_name)
 	
 	pl->prev = prev_listof;
 	prev_listof = couple;
-	pl->is_activated = SXTRUE;
+	pl->is_activated = true;
 
 	/* Les regles sont uniquement desactivees en sortie de bloc. */
 	/* Les codes des non-terminaux sont gardes. */
@@ -515,7 +507,7 @@ build_listof (current_listof_level, basic_type_name)
 
 	symbs [1] = -PAR_G;
 	symbs [2] = -PAR_D;
-	rule = add_rule (symbs, 2, SXFALSE, 0, 0, UNDEF_ASSOC);
+	rule = add_rule (symbs, 2, false, 0, 0, UNDEF_ASSOC);
 	SS_push (deactivate_stack, rule);
 
 	symbs [1] = -KW_CONS;
@@ -524,28 +516,28 @@ build_listof (current_listof_level, basic_type_name)
 	symbs [4] = -VIRG;
 	symbs [5] = LISTOFn_TYPE;
 	symbs [6] = -PAR_D;
-	rule = add_rule (symbs, 6, SXFALSE, 0, 0, UNDEF_ASSOC);
+	rule = add_rule (symbs, 6, false, 0, 0, UNDEF_ASSOC);
 	SS_push (deactivate_stack, rule);
 
 	symbs [1] = -KW_TAIL;
 	symbs [2] = -PAR_G;
 	symbs [3] = LISTOFn_TYPE;
 	symbs [4] = -PAR_D;
-	rule = add_rule (symbs, 4, SXFALSE, 0, 0, UNDEF_ASSOC);
+	rule = add_rule (symbs, 4, false, 0, 0, UNDEF_ASSOC);
 	SS_push (deactivate_stack, rule);
 
 	symbs [1] = LISTOFn_TYPE_VAR;
-	rule = add_rule (symbs, 1, SXFALSE, 0, 0, UNDEF_ASSOC);
+	rule = add_rule (symbs, 1, false, 0, 0, UNDEF_ASSOC);
 	SS_push (deactivate_stack, rule);
 
 	symbs [0] = LISTOFn_TYPE_VAR;
 
 	symbs [1] = LISTOFn_TYPE_LHS;
-	rule = add_rule (symbs, 1, SXFALSE, 0, 0, UNDEF_ASSOC);
+	rule = add_rule (symbs, 1, false, 0, 0, UNDEF_ASSOC);
 	SS_push (deactivate_stack, rule);
 
 	symbs [1] = LISTOFn_TYPE_FUN;
-	rule = add_rule (symbs, 1, SXFALSE, 0, 0, UNDEF_ASSOC);
+	rule = add_rule (symbs, 1, false, 0, 0, UNDEF_ASSOC);
 	SS_push (deactivate_stack, rule);
 
 	symbs [0] = STMT;
@@ -553,7 +545,7 @@ build_listof (current_listof_level, basic_type_name)
 	symbs [2] = -EGAL;
 	symbs [3] = LISTOFn_TYPE ;
 	symbs [4] = -POINT_VIRG;
-	rule = add_rule (symbs, 4, SXFALSE, 0, 0, UNDEF_ASSOC);
+	rule = add_rule (symbs, 4, false, 0, 0, UNDEF_ASSOC);
 	SS_push (deactivate_stack, rule);
 
 	symbs [0] = BOOL_EXPR;
@@ -561,7 +553,7 @@ build_listof (current_listof_level, basic_type_name)
 	symbs [1] = LISTOFn_TYPE;
 	symbs [2] = -COMP_OP;
 	symbs [3] = LISTOFn_TYPE ;
-	rule = add_rule (symbs, 3, SXFALSE, 0, 400, NON_ASSOC);
+	rule = add_rule (symbs, 3, false, 0, 400, NON_ASSOC);
 	SS_push (deactivate_stack, rule);
     }
 
@@ -570,7 +562,7 @@ build_listof (current_listof_level, basic_type_name)
 
 
 
-static SXVOID
+static void
 gen_labels ()
 {
     int couple, rule;
@@ -583,7 +575,7 @@ gen_labels ()
 	symbols [1] = -KW_GOTO ;
 	symbols [2] = new_xt (-IDENTIFIER, -XxY_Y (labels_hd, couple));
 	symbols [3] = -POINT_VIRG;
-	rule = add_rule (symbols, 3, SXTRUE, 0, 0, UNDEF_ASSOC);
+	rule = add_rule (symbols, 3, true, 0, 0, UNDEF_ASSOC);
 	/* SS_push (xtnt_stack, symbols [2]); */
 
 	/* <LABEL> = %label : ; 22 */
@@ -591,13 +583,13 @@ gen_labels ()
 	symbols [1] = symbols [2] ;
 	symbols [2] = -DEUX_POINTS ;
 	/* Cette regle sera supprimee de l'automate par @14 apres sa premiere utilisation. */
-	rule = add_rule (symbols, 2, SXTRUE, 22, 0, UNDEF_ASSOC);
+	rule = add_rule (symbols, 2, true, 22, 0, UNDEF_ASSOC);
 	/* l'action 22 mettra ds la sem_stack le numero de rule qui sera utilise par @14. */
     }
 }
 
 
-static SXVOID
+static void
 ACTION_1 ()
 {
     prev_listof = -prev_listof;
@@ -619,9 +611,9 @@ ACTION_1 ()
 }
 
 
-static SXVOID
+static void
 rules_at_block_exit (delete)
-    SXBOOLEAN delete;
+    bool delete;
 {
     int rule, x;
 
@@ -670,9 +662,9 @@ rules_at_block_exit (delete)
     SS_close (reactivate_stack);
 }
 
-static SXVOID
+static void
 ACTION_2 (delete)
-    SXBOOLEAN delete;
+    bool delete;
 {
     int tnt, prdct_no, couple, name, x;
 
@@ -712,7 +704,7 @@ ACTION_2 (delete)
 	   
     while (prev_listof > 0)
     {
-	listof_to_attr [prev_listof].is_activated = SXFALSE;
+	listof_to_attr [prev_listof].is_activated = false;
 	/* On ne recupere pas les elements de "listof_hd" car "listof_to_attr"
 	   contient des codes de non-terminaux qui doivent etre reutilises
 	   pour produire les memes regles. */
@@ -766,7 +758,7 @@ L_parsact (what, act_no)
 {
     int			name, rule, x, bot, xt, tnt, lhs_case, prev_xname, prev_lhs_case,
                         prev_block, prdct_no, param_type_name;
-    SXBOOLEAN		is_new_name;
+    bool		is_new_name;
     struct tt_attr	*ptt_attr;
 
     switch (what) {
@@ -817,11 +809,11 @@ L_parsact (what, act_no)
 	        
 	cur_nt = XxY_top (SXDG.xnt);
 
-	return SXTRUE;
+	return true;
 
     case SXINIT:
 	SXDG.desambig = desambig;
-	sxplocals.mode.with_do_undo = SXTRUE; /* Pour tester... */
+	sxplocals.mode.with_do_undo = true; /* Pour tester... */
 
 	block_level = 0;
 	current_block_nb = block_nb = 0;
@@ -841,51 +833,51 @@ L_parsact (what, act_no)
 	    /* La premiere passe sur le texte source est lancee d'ici. */
 	    int				last_tok_nb;
 	    static struct sxparse_mode	
-		first_pass_mode = {SXPARSER, SXWITHOUT_ERROR, 0, 0, 0, SXFALSE, SXTRUE,
-				       SXFALSE, SXTRUE, SXTRUE, SXTRUE};
+		first_pass_mode = {SXPARSER, SXWITHOUT_ERROR, 0, 0, 0, false, true,
+				       false, true, true, true};
 /*
   new_mode.mode = SXPARSER; C'est un parser
   new_mode.kind = SXWITHOUT_ERROR; Pas de traitement d'erreur
   new_mode.local_errors_nb = 0; Decompte du nombre de corrections.
   new_mode.global_errors_nb = 0; Decompte du nombre de rattrapage global.
   new_mode.look_back = 0; On conserve tous les tokens
-  new_mode.is_prefixe = SXFALSE; On parse tout le source
-  new_mode.is_silent = SXTRUE; Pas de message d'erreur
-  new_mode.with_semact = SXFALSE; On inhibe les semact
-  new_mode.with_parsact = SXTRUE; On execute les parsact
-  new_mode.with_parsprdct = SXTRUE; On execute les parsprdct
-  new_mode.with_do_undo = SXTRUE; Pourquoi pas
+  new_mode.is_prefixe = false; On parse tout le source
+  new_mode.is_silent = true; Pas de message d'erreur
+  new_mode.with_semact = false; On inhibe les semact
+  new_mode.with_parsact = true; On execute les parsact
+  new_mode.with_parsprdct = true; On execute les parsprdct
+  new_mode.with_do_undo = true; Pourquoi pas
 */
 
 	    sxparse_in_la (FIRST_PASS, 0, &last_tok_nb, &first_pass_mode);
 
 	    current_block_nb = block_nb = 0;
-	    is_record_body = SXFALSE;
+	    is_record_body = false;
 	    gen_labels (); /* Du (dummy) bloc externe */
 	}
 
-	return SXTRUE;
+	return true;
 
     case SXFINAL:
-	return SXTRUE;
+	return true;
 
     case SXACTION:
 	switch (act_no) {
 	case 0:
-	    return SXTRUE;
+	    return true;
 	    
 	case 1:			/* <BLOCK> = { @1 <DECL*> <STMT*> } @2 ; */
 	    /* Entree de block */
-	    is_record_body = SXFALSE;
+	    is_record_body = false;
 	    ACTION_1 ();
 
-	    return SXTRUE;
+	    return true;
 	    
 	case 2:			/* <BLOCK> = { @1 <DECL*> <STMT*> } @2 ; */
 	    /* Sortie de block */
-	    ACTION_2 (SXTRUE);
+	    ACTION_2 (true);
 
-	    return SXTRUE;
+	    return true;
 
 	case 3:	/* <DECL> = <TYPE_NAME> @3 <DECLARATOR+> ";" ;
 		   <DECL> = subtype <BASIC_TYPE_NAME> @3 <SUBTYPE_NAME+> ;
@@ -913,7 +905,7 @@ L_parsact (what, act_no)
 	    /* On reserve la place pour <RECTYPE_LHS> "." */
 	    symbols_top = is_record_body ? 3 : 1;
 
-	    return SXTRUE;
+	    return true;
 
 	case 5:			/* <INT_EXPR+> = <INT_EXPR+> ,  <INT_EXPR> @5 ;
 				   <INT_EXPR+> = <INT_EXPR> @5 ; */
@@ -924,7 +916,7 @@ L_parsact (what, act_no)
 	    symbols [++symbols_top] = -CROC_G;
 	    symbols [++symbols_top] = INT_EXPR;
 	    symbols [++symbols_top] = -CROC_D;
-	    return SXTRUE;
+	    return true;
 
 	case 8:			/* <PROFILE> = %id  @7 ( <TYPE_NAME*> ) @8 ; */
 	    symbols [++symbols_top] = -PAR_D;
@@ -964,7 +956,7 @@ L_parsact (what, act_no)
 			    is_new_name = sxsymbol_table_put (&symbol_table,
 							      ptok->string_table_entry,
 							      block_level,
-							      &name); /* SXTRUE */
+							      &name); /* true */
 			    if (lhs_case == SCALAR || prev_lhs_case == SCALAR)
 			    {
 				/* La nouvelle variable cache la precedente */
@@ -976,7 +968,7 @@ L_parsact (what, act_no)
 			{
 			    /* et definie au meme niveau de bloc */
 			    name = prev_xname;
-			    is_new_name = SXFALSE;
+			    is_new_name = false;
 
 			    if (lhs_case == SCALAR || prev_lhs_case == SCALAR)
 				/* Erreur : illegale redefinition */
@@ -1001,7 +993,7 @@ L_parsact (what, act_no)
 		    {
 			/* Aucune variable de ce nom est visible */
 			is_new_name = sxsymbol_table_put (&symbol_table, ptok->string_table_entry,
-							  block_level, &name); /* SXTRUE */
+							  block_level, &name); /* true */
 			symbols [1] = xt = new_xt (-IDENTIFIER, -ptok->string_table_entry);
 		    }
 	
@@ -1020,7 +1012,7 @@ L_parsact (what, act_no)
 			    pattr->listof_level = current_listof_level;
 			}
 
-			rule = add_rule (symbols, symbols_top, SXTRUE, 0, 0, UNDEF_ASSOC);
+			rule = add_rule (symbols, symbols_top, true, 0, 0, UNDEF_ASSOC);
 			XxY_set (&var_nameXrule, name, rule, &couple);
 		    }
 		    else
@@ -1054,14 +1046,14 @@ L_parsact (what, act_no)
 			    is_new_name = sxsymbol_table_put (&symbol_table,
 							      ptok->string_table_entry,
 							      block_level,
-							      &name); /* SXTRUE */
+							      &name); /* true */
 			    /* Aucun conflit possible, sauf par l'intermediaire des "with"!! */
 			}
 			else
 			{
 			    /* et definie au meme niveau de bloc */
 			    name = prev_xname;
-			    is_new_name = SXFALSE;
+			    is_new_name = false;
 
 			    if (lhs_case == SCALAR || prev_lhs_case == SCALAR)
 				/* Erreur : illegale redefinition */
@@ -1086,7 +1078,7 @@ L_parsact (what, act_no)
 		    {
 			/* Aucune variable de ce nom est visible */
 			is_new_name = sxsymbol_table_put (&symbol_table, ptok->string_table_entry,
-							  block_level, &name); /* SXTRUE */
+							  block_level, &name); /* true */
 			symbols [3] = xt = new_xt (-IDENTIFIER, -ptok->string_table_entry);
 		    }
 	
@@ -1103,7 +1095,7 @@ L_parsact (what, act_no)
 			    pattr->listof_level = current_listof_level;
 			}
 
-			rule = add_rule (symbols, symbols_top, SXTRUE, 0, 0, UNDEF_ASSOC);
+			rule = add_rule (symbols, symbols_top, true, 0, 0, UNDEF_ASSOC);
 			XxY_set (&var_nameXrule, name, rule, &x);
 			XxY_set (&recordtype_lhsXrule, tt_to_attr [record_name].lhs, rule, &x);
 		    }
@@ -1114,11 +1106,11 @@ L_parsact (what, act_no)
 		}
 	    }
 
-	    return SXTRUE;
+	    return true;
 
 	case 7:			/* <PROFILE> = %id  ( @7 <TYPE_NAME*> @8 ) ; */
 	    symbols [++symbols_top] = -PAR_G;
-	    return SXTRUE;
+	    return true;
 
 	case 9:			/* <TYPE_NAME+> = <TYPE_NAME+> , <TYPE_NAME> @9 ; */
 	    symbols [++symbols_top] = -VIRG;
@@ -1158,7 +1150,7 @@ L_parsact (what, act_no)
 						      x);
 	    listof_level = 0;
 
-	    return SXTRUE;
+	    return true;
 
 	case 11: /* <DYNAM_OPER> = ( <DYNOP_PRIO> , <DYNOP_CLASS> , <DYNOP_ASSOC> @11 ) ; */
 	    if ((xt = symbols [1]) != 0)
@@ -1206,7 +1198,7 @@ L_parsact (what, act_no)
 		    prio = atoi (sxstrget (prio));
 		    assoc = (assoc == KW_LEFT) ? LEFT_ASSOC
 			: (assoc == KW_RIGHT ? RIGHT_ASSOC : NON_ASSOC);
-		    rule = add_rule (symbols, symbols_top, SXTRUE, 0, prio, assoc);
+		    rule = add_rule (symbols, symbols_top, true, 0, prio, assoc);
 
 		    SXDG.t_priorities [-xt].value = prio;
 		    SXDG.t_priorities [-xt].assoc = assoc;
@@ -1217,7 +1209,7 @@ L_parsact (what, act_no)
 				 sxplocals.sxtables->err_titles [2]);
 	    }
 
-	    return SXTRUE;
+	    return true;
 
 	case 13: /* <SUBTYPE_NAME+> = <SUBTYPE_NAME+> , %id @13 ;
 		    <SUBTYPE_NAME+> = %id @13 ; */
@@ -1284,11 +1276,11 @@ L_parsact (what, act_no)
 		        subtype_name;
 		    int seed_var, seed_primary, seed_const, seed_type_name;
 		    int father_type_name, couple;
-		    SXBOOLEAN	already_found;
+		    bool	already_found;
 		    struct type_steXblock_nb_to_attr	*ptb_to_attr;
 
 		    sxsymbol_table_put (&type_table, ptok->string_table_entry,
-					block_level, &name); /* SXTRUE */
+					block_level, &name); /* true */
 
 		    /* Si le sous-type est vu en look-ahead (plusieurs fois) et en
 		       normal, le "name" peut etre different (ou pas) a chaque fois.
@@ -1348,13 +1340,13 @@ L_parsact (what, act_no)
 		    /* <BASIC_TYPE_NAME> = subtype_name ; */
 		    symbols [0] = BASIC_TYPE_NAME;
 		    symbols [1] = subtype_name;
-		    rule = add_rule (symbols, 1, SXTRUE, 0, 0, UNDEF_ASSOC);
+		    rule = add_rule (symbols, 1, true, 0, 0, UNDEF_ASSOC);
 		    XxY_set (&type_nameXrule, name, rule, &couple);
 
 		    /* <SUBTYPE_VAR> = <SUBTYPE_LHS> ; */
 		    symbols [0] = subtype_var;
 		    symbols [1] = subtype_lhs;
-		    rule = add_rule (symbols, 1, SXTRUE, 0, 0, UNDEF_ASSOC);
+		    rule = add_rule (symbols, 1, true, 0, 0, UNDEF_ASSOC);
 		    XxY_set (&type_nameXrule, name, rule, &couple);
 
 		    SS_push (xtnt_stack, subtype_var);
@@ -1362,7 +1354,7 @@ L_parsact (what, act_no)
 
 		    /* <SUBTYPE_VAR> = <SUBTYPE_FUN> ; */
 		    symbols [1] = subtype_fun;
-		    rule = add_rule (symbols, 1, SXTRUE, 0, 0, UNDEF_ASSOC);
+		    rule = add_rule (symbols, 1, true, 0, 0, UNDEF_ASSOC);
 		    XxY_set (&type_nameXrule, name, rule, &couple);
 
 		    SS_push (xtnt_stack, subtype_fun);
@@ -1374,7 +1366,7 @@ L_parsact (what, act_no)
 		    symbols [0] = basic_type_name < 0
 			? seed_var : tt_to_attr [basic_type_name].var;
 		    symbols [1] = subtype_var;
-		    rule = add_rule (symbols, 1, SXTRUE, 0, 0, UNDEF_ASSOC);
+		    rule = add_rule (symbols, 1, true, 0, 0, UNDEF_ASSOC);
 		    XxY_set (&type_nameXrule, name, rule, &couple);
 
 		    /* <STMT> = <SUBTYPE_LHS>  "="  <SUBTYPE_EXPR> ";" ; */
@@ -1383,7 +1375,7 @@ L_parsact (what, act_no)
 		    symbols [2] = -EGAL;
 		    symbols [3] = subtype_expr;
 		    symbols [4] = -POINT_VIRG;
-		    rule = add_rule (symbols, 4, SXTRUE, 0, 0, UNDEF_ASSOC);
+		    rule = add_rule (symbols, 4, true, 0, 0, UNDEF_ASSOC);
 		    XxY_set (&type_nameXrule, name, rule, &couple);
 		    SS_push (xtnt_stack, subtype_expr);
 
@@ -1394,7 +1386,7 @@ L_parsact (what, act_no)
 			symbols [1] = subtype_expr;
 			symbols [2] = -COMP_OP;
 			symbols [3] = subtype_expr;
-			rule = add_rule (symbols, 3, SXTRUE, 0, 400, NON_ASSOC);
+			rule = add_rule (symbols, 3, true, 0, 400, NON_ASSOC);
 			XxY_set (&type_nameXrule, name, rule, &couple);
 		    }
 
@@ -1403,12 +1395,12 @@ L_parsact (what, act_no)
 		    symbols [1] = subtype_expr;
 		    symbols [2] = -((seed_type_name == KW_INT) ? ADD_OP : OR_OP); 
 		    symbols [3] = subtype_expr;
-		    rule = add_rule (symbols, 3, SXTRUE, 0, 100 /* ADD_PRIO */, LEFT_ASSOC);
+		    rule = add_rule (symbols, 3, true, 0, 100 /* ADD_PRIO */, LEFT_ASSOC);
 		    XxY_set (&type_nameXrule, name, rule, &couple);
 
 		    /*	<SUBTYPE_EXPR> = <SUBTYPE_EXPR> mul_op <SUBTYPE_EXPR> ; */
 		    symbols [2] = -((seed_type_name == KW_INT) ? MUL_OP : AND_OP);
-		    rule = add_rule (symbols, 3, SXTRUE, 0, 200 /* MUL_PRIO */, LEFT_ASSOC);
+		    rule = add_rule (symbols, 3, true, 0, 200 /* MUL_PRIO */, LEFT_ASSOC);
 		    
 		    if (seed_type_name == KW_BOOL)
 		    {
@@ -1417,38 +1409,38 @@ L_parsact (what, act_no)
 			symbols [2] = -COMP_OP;
 
 			/* Priorite au plus precis */
-			rule = add_rule (symbols, 3, SXTRUE, 0, 400, NON_ASSOC);
+			rule = add_rule (symbols, 3, true, 0, 400, NON_ASSOC);
 			XxY_set (&type_nameXrule, name, rule, &couple);
 		    }
 
 		    /*	<SUBTYPE_EXPR> = un_op <SUBTYPE_EXPR> ; */
 		    symbols [1] = -((seed_type_name == KW_INT) ? ADD_OP : NOT_OP);
 		    symbols [2] = subtype_expr;
-		    rule = add_rule (symbols, 2, SXTRUE, 0, 300 /* UNOP_PRIO */, RIGHT_ASSOC);
+		    rule = add_rule (symbols, 2, true, 0, 300 /* UNOP_PRIO */, RIGHT_ASSOC);
 		    XxY_set (&type_nameXrule, name, rule, &couple);
 		    
 		    /* <SUBTYPE_EXPR> = <SUBTYPE_PRIMARY> ; */
 		    symbols [1] = subtype_primary;
-		    rule = add_rule (symbols, 1, SXTRUE, 0, 0, UNDEF_ASSOC);
+		    rule = add_rule (symbols, 1, true, 0, 0, UNDEF_ASSOC);
 		    XxY_set (&type_nameXrule, name, rule, &couple);
 		    SS_push (xtnt_stack, subtype_primary);
 
 		    /* <SUBTYPE_PRIMARY> = <SEED_CONST> ; */
 		    symbols [0] = subtype_primary;
 		    symbols [1] = seed_const;
-		    rule = add_rule (symbols, 1, SXTRUE, 0, 0, UNDEF_ASSOC);
+		    rule = add_rule (symbols, 1, true, 0, 0, UNDEF_ASSOC);
 		    XxY_set (&type_nameXrule, name, rule, &couple);
 
 		    /* <SUBTYPE_PRIMARY> = <SUBTYPE_VAR> ; */
 		    symbols [1] = subtype_var;
-		    rule = add_rule (symbols, 1, SXTRUE, 0, 0, UNDEF_ASSOC);
+		    rule = add_rule (symbols, 1, true, 0, 0, UNDEF_ASSOC);
 		    XxY_set (&type_nameXrule, name, rule, &couple);
 
 		    /* <SUBTYPE_PRIMARY> = ( <SUBTYPE_EXPR> ) ; */
 		    symbols [1] = -PAR_G;
 		    symbols [2] = subtype_expr;
 		    symbols [3] = -PAR_D;
-		    rule = add_rule (symbols, 3, SXTRUE, 0, 0, UNDEF_ASSOC);
+		    rule = add_rule (symbols, 3, true, 0, 0, UNDEF_ASSOC);
 		    XxY_set (&type_nameXrule, name, rule, &couple);
 
 		    /* <SUBTYPE_PRIMARY> = ( subtype_name ) <SEED_PRIMARY> ; */
@@ -1456,7 +1448,7 @@ L_parsact (what, act_no)
 		    symbols [2] = subtype_name;
 		    symbols [3] = -PAR_D;
 		    symbols [4] = seed_primary;
-		    rule = add_rule (symbols, 4, SXTRUE, 0, 0, UNDEF_ASSOC);
+		    rule = add_rule (symbols, 4, true, 0, 0, UNDEF_ASSOC);
 		    XxY_set (&type_nameXrule, name, rule, &couple);
 
 		    /* Pour tous les FATHER on genere :
@@ -1467,17 +1459,17 @@ L_parsact (what, act_no)
 			 father_type_name = tt_to_attr [father_type_name].father_type_name)
 		    {
 			symbols [0] = tt_to_attr [father_type_name].primary;
-			rule = add_rule (symbols, 4, SXTRUE, 0, 0, UNDEF_ASSOC);
+			rule = add_rule (symbols, 4, true, 0, 0, UNDEF_ASSOC);
 			XxY_set (&type_nameXrule, name, rule, &couple);
 		    }
 
 		    symbols [0] = (father_type_name == -KW_INT) ? INT_PRIMARY : BOOL_PRIMARY;
-		    rule = add_rule (symbols, 4, SXTRUE, 0, 0, UNDEF_ASSOC);
+		    rule = add_rule (symbols, 4, true, 0, 0, UNDEF_ASSOC);
 		    XxY_set (&type_nameXrule, name, rule, &couple);
 		}
 	    }
 
-	    return SXTRUE;
+	    return true;
 
 	case 14: /* <STMT>	= <LABEL> @14 <STMT> ; */
 	    /* Supprime la regle definissant <LABEL> */
@@ -1486,16 +1478,16 @@ L_parsact (what, act_no)
 	    /* desactivee pour le reste du bloc, elle sera detruite ou reactivee
 	       en sortie de bloc par le mecanisme usuel. */
 
-	    return SXTRUE;
+	    return true;
 
 	case 15: /* <TYPE_NAME>	= listof @15 <TYPE_NAME> ; */
 	    listof_level++;
-	    return SXTRUE; 
+	    return true; 
 
 	case 16: /* <T>		= { @16 ; */
 	    SS_push (block_stack, current_block_nb);
 	    current_block_nb = ++block_nb;
-	    return SXTRUE; 
+	    return true; 
 
 	case 17: /* <T>		= : @17 ; */
 	    ptok = &(SXGET_TOKEN (sxplocals.atok_no - 2));
@@ -1507,11 +1499,11 @@ L_parsact (what, act_no)
 		XxY_set (&labels_hd, current_block_nb, ptok->string_table_entry, &label);
 	    }
 
-	    return SXTRUE; 
+	    return true; 
 
 	case 18: /* <T>		= } @18 ; */
 	    current_block_nb = SS_pop (block_stack);
-	    return SXTRUE; 
+	    return true; 
 
 	
 	case 19: /* <TYPE_DECL> = record @19 %id 
@@ -1562,12 +1554,12 @@ L_parsact (what, act_no)
 	    {
 		/* Nouveau nom de record au niveau courant */
 		int recordtype_var, recordtype_lhs, recordtype_fun, recordtype_name, couple;
-		SXBOOLEAN	already_found;
+		bool	already_found;
 		struct type_steXblock_nb_to_attr	*ptb_to_attr;
 
 		/* record_name est global (pas de record ds un record) */
 		sxsymbol_table_put (&type_table, ptok->string_table_entry,
-				    block_level, &record_name); /* SXTRUE */
+				    block_level, &record_name); /* true */
 
 		already_found = XxY_set (type_steXblock_nb, ptok->string_table_entry,
 					 current_block_nb, &couple);
@@ -1605,18 +1597,18 @@ L_parsact (what, act_no)
 		/* <BASIC_TYPE_NAME> = recordtype_name ; */
 		symbols [0] = BASIC_TYPE_NAME;
 		symbols [1] = recordtype_name;
-		rule = add_rule (symbols, 1, SXTRUE, 0, 0, UNDEF_ASSOC);
+		rule = add_rule (symbols, 1, true, 0, 0, UNDEF_ASSOC);
 		XxY_set (&type_nameXrule, name, rule, &couple);
 
 		/* <RECORDTYPE_VAR> = <RECORDTYPE_LHS> ; */
 		symbols [0] = recordtype_var;
 		symbols [1] = recordtype_lhs;
-		rule = add_rule (symbols, 1, SXTRUE, 0, 0, UNDEF_ASSOC);
+		rule = add_rule (symbols, 1, true, 0, 0, UNDEF_ASSOC);
 		XxY_set (&type_nameXrule, name, rule, &couple);
 
 		/* <RECORDTYPE_VAR> = <RECORDTYPE_FUN> ; */
 		symbols [1] = recordtype_fun;
-		rule = add_rule (symbols, 1, SXTRUE, 0, 0, UNDEF_ASSOC);
+		rule = add_rule (symbols, 1, true, 0, 0, UNDEF_ASSOC);
 		XxY_set (&type_nameXrule, name, rule, &couple);
 
 		/* <BOOL_EXPR> = <RECORDTYPE_VAR>  comp_op  <RECORDTYPE_VAR> ; */
@@ -1624,7 +1616,7 @@ L_parsact (what, act_no)
 		symbols [1] = recordtype_var;
 		symbols [2] = -COMP_OP;
 		symbols [3] = recordtype_var;
-		rule = add_rule (symbols, 3, SXTRUE, 0, 400, NON_ASSOC);
+		rule = add_rule (symbols, 3, true, 0, 400, NON_ASSOC);
 		XxY_set (&type_nameXrule, name, rule, &couple);
 		   
 		/* <STMT> = <RECORDTYPE_LHS>  "="  <RECORDTYPE_VAR> ";" ; */
@@ -1633,21 +1625,21 @@ L_parsact (what, act_no)
 		symbols [2] = -EGAL;
 		symbols [3] = recordtype_var;
 		symbols [4] = -POINT_VIRG;
-		rule = add_rule (symbols, 4, SXTRUE, 0, 0, UNDEF_ASSOC);
+		rule = add_rule (symbols, 4, true, 0, 0, UNDEF_ASSOC);
 		XxY_set (&type_nameXrule, name, rule, &couple);
 
 		/* <STMT> = with <RECORDTYPE_LHS> do @20 <STMT> ";" @21 ; */
 		if (action_20 == 0)
 		{
 		    symbols [0] = action_20 = new_nt ();
-		    rule = add_rule (symbols, 0, SXFALSE, 0, 0, UNDEF_ASSOC);
+		    rule = add_rule (symbols, 0, false, 0, 0, UNDEF_ASSOC);
 		    SXDG.rule_to_action [rule] = -20;
 		}
 
 		if (action_21 == 0)
 		{
 		    symbols [0] = action_21 = new_nt ();
-		    rule = add_rule (symbols, 0, SXFALSE, 0, 0, UNDEF_ASSOC);
+		    rule = add_rule (symbols, 0, false, 0, 0, UNDEF_ASSOC);
 		    SXDG.rule_to_action [rule] = -21;
 		}
 
@@ -1658,11 +1650,11 @@ L_parsact (what, act_no)
 		symbols [4] = action_20;
 		symbols [5] = STMT;
 		symbols [6] = action_21;
-		rule = add_rule (symbols, 6, SXTRUE, 0, 0, UNDEF_ASSOC);
+		rule = add_rule (symbols, 6, true, 0, 0, UNDEF_ASSOC);
 		XxY_set (&type_nameXrule, name, rule, &couple);
 	    }
 
-	    return SXTRUE; 
+	    return true; 
 
 /* @20 et @21 doivent-ils etre mis dans SXDO/SXUNDO ?? */
 	case 20: /* <STMT> = with <RECORDTYPE_LHS> do @20 <STMT> ";" @21 ; */
@@ -1702,17 +1694,17 @@ L_parsact (what, act_no)
 			rhs = XxY_Y (SXDG.rhs, rhs);
 		    }
 
-		    rule = add_rule (symbols, i, SXTRUE, 0, 0, UNDEF_ASSOC);
+		    rule = add_rule (symbols, i, true, 0, 0, UNDEF_ASSOC);
 		}
 	    }
 
-	    return SXTRUE; 
+	    return true; 
 
 	case 21: /* <STMT> = with <RECORDTYPE_VAR> do @20 <STMT> ";" @21 ; */
 	    /* @21 : Supprimer les re`gles generees par @20. */    
-	    rules_at_block_exit (SXTRUE);
+	    rules_at_block_exit (true);
 
-	    return SXTRUE; 
+	    return true; 
 
 	case 22:
 	    /* No 22 est utilise' ds semact, pourrait repasser ici. */
@@ -1722,20 +1714,20 @@ L_parsact (what, act_no)
 		                     { @23
 				        <OBJECT_DECL+>
 				     } @24 ";" ; */
-	    is_record_body = SXTRUE;
+	    is_record_body = true;
 	    block_level++;
 	    SS_push (block_stack, current_block_nb);
 	    current_block_nb = ++block_nb;
 	    sxsymbol_table_open (symbol_table, block_level);
 
-	    return SXTRUE; 
+	    return true; 
 
 	case 24: /* <TYPE_DECL> = record @19 %id 
 		                     { @23
 				        <OBJECT_DECL+>
 				     } @24 ";" ; */
 
-	    is_record_body = SXFALSE;;
+	    is_record_body = false;;
 
 	    sxsymbol_table_foreach_scope (symbol_table, block_level, name)
 	    {
@@ -1743,11 +1735,11 @@ L_parsact (what, act_no)
 		    XxY_erase (var_nameXrule, x);
 	    }
 
-	    sxsymbol_table_close (&symbol_table, block_level, SXTRUE);
+	    sxsymbol_table_close (&symbol_table, block_level, true);
 	    block_level--;
 	    current_block_nb = SS_pop (block_stack);
 
-	    return SXTRUE; 
+	    return true; 
 
 	default:
 	    break;
@@ -1772,16 +1764,16 @@ L_parsact (what, act_no)
 	if (act_no == 1)
 	    ACTION_1 ();
 
-	return SXTRUE;
+	return true;
 
     case SXUNDO:
 	if (act_no == 1)
 	{
-	    ACTION_2 (SXFALSE);
+	    ACTION_2 (false);
 	    block_nb--;
 	}
 
-	return SXTRUE;
+	return true;
 
     case SXPREDICATE:
 	/* Peut-etre un peu simple !!! */
@@ -1812,7 +1804,7 @@ L_parsact (what, act_no)
 	sxfree (type_steXblock_nb_to_attr);
 	sxfree (listof_to_attr);
 	sxfree (sem_stack);
-	return SXTRUE;
+	return true;
 
     default:
 	break;

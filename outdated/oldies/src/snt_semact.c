@@ -46,7 +46,7 @@ static char	ME [] = "snt_semact";
 #undef SX_INIT_VAL
 #define SX_GLOBAL_VAR	extern
 
-//char WHAT_SNT_SEMACT[] = "@(#)SYNTAX - $Id: snt_semact.c 3498 2023-08-20 18:14:09Z garavel $" WHAT_DEBUG;
+//char WHAT_SNT_SEMACT[] = "@(#)SYNTAX - $Id: snt_semact.c 3678 2024-02-06 08:38:24Z garavel $" WHAT_DEBUG;
 
 static char	Usage [] = "";
 
@@ -116,7 +116,7 @@ sntfilter_args_usage ()
 
 /* decode les arguments specifiques a sntfilter */
 /* l'option argv [*parg_num] est inconnue du parseur earley */
-static SXBOOLEAN
+static bool
 sntfilter_args_decode (pargnum, argc, argv)
      int  *pargnum, argc;
      char *argv [];
@@ -124,10 +124,10 @@ sntfilter_args_decode (pargnum, argc, argv)
   switch (option_get_kind (argv [*pargnum])) {
 
   case UNKNOWN_ARG:
-    return SXFALSE;
+    return false;
   }
 
-  return SXTRUE;
+  return true;
 }
 
 
@@ -196,7 +196,7 @@ int string2chunkid(nts)
 #include ntf_h
 #undef sntfilter_c_init
 
-extern SXBOOLEAN       SNTFILTER_SEM_PASS_ARG;
+extern bool       SNTFILTER_SEM_PASS_ARG;
 
 static void
 allocate_all ()
@@ -376,7 +376,7 @@ snt_exists_any (lb,ub)
 
 extern  FILE    *xml_file;
 
-static SXBOOLEAN
+static bool
 is_an_snt (Aij)
      int Aij;
 {
@@ -880,10 +880,10 @@ locally_select_tree_with_longest_snts (Aij)
 {
   int hook, init_hook, cur_Pij;
   double localmin;
-  SXBOOLEAN found_best_hook, blessed_Aij;
+  bool found_best_hook, blessed_Aij;
 
 
-  found_best_hook = SXFALSE;
+  found_best_hook = false;
   init_hook = hook = spf.outputG.lhs [spf.outputG.maxxprod+Aij].prolon;     
   localmin=1000000000000.0;
 
@@ -905,7 +905,7 @@ locally_select_tree_with_longest_snts (Aij)
 
   /* passe 2 */
   hook = init_hook;
-  found_best_hook = SXFALSE;
+  found_best_hook = false;
   blessed_Aij = SXBA_bit_is_set(Xpq_is_blessed, Aij);
   while ((cur_Pij = spf.outputG.rhs [hook].lispro) != 0) {
     if (cur_Pij > 0) { /* il ne s'agit pas d'une branche elaguee */
@@ -924,13 +924,13 @@ locally_select_tree_with_longest_snts (Aij)
 	//	fprintf(stdout," - eliminated (%i / %e > %e == %i)\n", found_best_hook, Pij2weight[cur_Pij], localmin, (localmin < Pij2weight[cur_Pij]));
 #endif
 	spf.outputG.rhs [hook].lispro=-cur_Pij; /*...on l'élague ;... */
-	spf.outputG.is_proper = SXFALSE;
+	spf.outputG.is_proper = false;
       } else {
 #if EBUG
 	fprintf(stdout," - kept\n");
 	//	fprintf(stdout," - kept (%i / %e > %e == %i)\n", found_best_hook, Pij2weight[cur_Pij], localmin, (localmin < Pij2weight[cur_Pij]));
 #endif
-	found_best_hook = SXTRUE; /* on se souvient qu'on a trouvé au moins une prod optimale */
+	found_best_hook = true; /* on se souvient qu'on a trouvé au moins une prod optimale */
       }
     }
     hook++;
@@ -1075,7 +1075,7 @@ sntfilter_sem_pass ()
   double tree_nb,new_tree_nb;
   int maxeid;
   char msg[60], qualifier[10];
-  SXBOOLEAN is_not_empty, temp_bool;
+  bool is_not_empty, temp_bool;
 
 #if EBUG
   fprintf(stdout,"\n");
@@ -1186,7 +1186,7 @@ sntfilter_sem_pass ()
   }
 
   if (is_print_time) {
-    sprintf(msg,"\t%s %sfiltering (SXTRUE ", SNTS_NAME, qualifier);
+    sprintf(msg,"\t%s %sfiltering (true ", SNTS_NAME, qualifier);
     msg [1] = sxtoupper (msg [1]);
     if (tree_nb < 1.0E6)
       sprintf(msg,"%s%.f -> ",msg,tree_nb);

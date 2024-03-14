@@ -17,7 +17,7 @@ static char ME [] = "Static Typedef Resolution Module";
 #define	ID_NAME		4
 #define	TYPEDEF_NAME	5
 
-static SXBOOLEAN	is_typedef;
+static bool	is_typedef;
 static SXBA	stack;
 static int	stack_size, block_level, struct_level;
 
@@ -41,7 +41,7 @@ int dc_parsact (entry, action_nb)
     int entry, action_nb;
 {
     int x;
-    SXBOOLEAN is_ok;
+    bool is_ok;
 
     switch (entry) {
     case SXOPEN:
@@ -58,7 +58,7 @@ int dc_parsact (entry, action_nb)
 	return;
 
     case SXINIT:
-	is_typedef = SXFALSE;
+	is_typedef = false;
 	struct_level = block_level = 0;
 	return;
 
@@ -80,7 +80,7 @@ int dc_parsact (entry, action_nb)
     case SXACTION:
 	switch (action_nb) {
 	case 1: /* <storage-class-specifier> = @1 typedef ; */
-	    is_typedef = SXTRUE;
+	    is_typedef = true;
 	    return;
 
 	case 2:
@@ -92,7 +92,7 @@ int dc_parsact (entry, action_nb)
 <internal-declaration> = <declaration-specifiers-0> ";" @2 ;
 <internal-declaration> = <declaration-specifiers-1> ";" @2 ;
 */
-	    is_typedef = SXFALSE;
+	    is_typedef = false;
 	    return;
 
 	case 3:
@@ -109,7 +109,7 @@ int dc_parsact (entry, action_nb)
 		stack_oflw ();
 
 	    is_typedef ? SXBA_1_bit (stack, x) : SXBA_0_bit (stack, x);
-	    is_typedef = SXFALSE;
+	    is_typedef = false;
 
 	    if (action_nb == 9)
 		struct_level++;
@@ -167,7 +167,7 @@ int dc_parsact (entry, action_nb)
 <parameter-declaration> = <declaration-specifiers-0> <function-declarator> @8 ;
 <parameter-declaration> = <declaration-specifiers-1> <function-declarator> @8 ;
 */	    
-	    sxsymbol_table_close (&identifiers, block_level + 1, SXTRUE);
+	    sxsymbol_table_close (&identifiers, block_level + 1, true);
 	    return;
 
 	case 5: /* <d-identifier> = @5 %identifier ; */

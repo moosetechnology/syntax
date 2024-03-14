@@ -46,15 +46,7 @@
 /* 16-10-87 10:50 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-#define WHAT	"@(#)OPTIM_LO.c - SYNTAX [unix] - Lundi 25 Novembre 1996"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
-
-
-
-
+char WHAT[] = "@(#)OPTIM_LO.c - SYNTAX [unix] - Lundi 25 Novembre 1996";
 
 #include "P_tables.h"
 
@@ -64,14 +56,14 @@ static struct what {
 #include "bstr.h"
 
 extern struct bstr	*options_text ();
-extern SXVOID		sxtime ();
+extern void		sxtime ();
 
 static int	*xt_to_ate;
 static VARSTR	wvstr;
 static char	small_string [12];
 
 
-static SXVOID alloc_alpha_table ()
+static void alloc_alpha_table ()
 {
     xt_to_ate = (int *) sxcalloc (bnf_ag.WS_TBL_SIZE.xtmax + 1, sizeof (int));
     sxstr_mngr (SXBEGIN);
@@ -79,7 +71,7 @@ static SXVOID alloc_alpha_table ()
 }
 
 
-SXVOID free_alpha_table ()
+void free_alpha_table ()
 {
     if (xt_to_ate != NULL) {
 	sxfree (xt_to_ate), xt_to_ate = NULL;
@@ -171,7 +163,7 @@ static char	*prdct_to_str (code)
 
 
 
-SXVOID	soritem (x, d, f, c1, s2)
+void	soritem (x, d, f, c1, s2)
     int		x, d, f;
     char	*c1, *s2;
 {
@@ -179,7 +171,7 @@ SXVOID	soritem (x, d, f, c1, s2)
     register int	i, c;
     int		noprod, addeb, adfin, xegal, j, l;
     char	tail [64], *t, *t_string;
-    SXBOOLEAN	is_first_time;
+    bool	is_first_time;
 
     noprod = bnf_ag.WS_INDPRO [x].prolis;
     addeb = bnf_ag.WS_NBPRO [noprod].prolon;
@@ -279,11 +271,11 @@ SXVOID	soritem (x, d, f, c1, s2)
     if (*c1 != SXNUL)
 	put_edit_nnl (f, c1);
 
-    is_first_time = SXTRUE;
+    is_first_time = true;
 
     while (*s2 != SXNUL) {
 	if (is_first_time) {
-	    is_first_time = SXFALSE;
+	    is_first_time = false;
 	}
 	else if (*c1 != SXNUL) {
 	    put_edit_nnl (d, c1);
@@ -315,7 +307,7 @@ char	*laset (varstring, maxi, look_ahead_set)
     SXBA	look_ahead_set;
 {
     register int	t, col, l;
-    SXBOOLEAN		is_first = SXTRUE;
+    bool		is_first = true;
     register char	*t_string;
 
     varstr_raz (varstring);
@@ -325,7 +317,7 @@ char	*laset (varstring, maxi, look_ahead_set)
 
     while ((t = sxba_scan (look_ahead_set, t)) > 0) {
 	if (is_first)
-	    is_first = SXFALSE;
+	    is_first = false;
 	else {
 	    varstr_catenate (varstring, ", ");
 	    col += 2;
@@ -369,7 +361,7 @@ VARSTR	prod_to_str (vstr, prod)
 
 
 
-SXBOOLEAN		open_listing (kind, language_name, ME, component_name)
+bool		open_listing (kind, language_name, ME, component_name)
     int		kind;
     char	*language_name, *ME, *component_name;
 {
@@ -377,7 +369,7 @@ SXBOOLEAN		open_listing (kind, language_name, ME, component_name)
 #include <time.h>
 
     if (is_listing_opened)
-	return SXTRUE;
+	return true;
 
     {
 	char	listing_name [32];
@@ -385,16 +377,16 @@ SXBOOLEAN		open_listing (kind, language_name, ME, component_name)
 	if ((listing = fopen (strcat (strcpy (listing_name, language_name), component_name), "w")) == NULL) {
 	    if (sxverbosep && !sxttycol1p) {
 		fputc ('\n', sxtty);
-		sxttycol1p = SXTRUE;
+		sxttycol1p = true;
 	    }
 
 	    fprintf (sxstderr, "%s: cannot open (create) ", ME);
 	    sxperror (listing_name);
-	    return SXFALSE;
+	    return false;
 	}
     }
 
-    is_listing_opened = SXTRUE;
+    is_listing_opened = true;
     put_edit_initialize (listing);
     put_edit_nnl (9, "Listing of:");
     put_edit (25, language_name);
@@ -420,12 +412,12 @@ SXBOOLEAN		open_listing (kind, language_name, ME, component_name)
 	alloc_alpha_table ();
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
 
-SXVOID	output_fe (kind, xa, test, afe)
+void	output_fe (kind, xa, test, afe)
     int		kind, xa, test;
     register struct floyd_evans		*afe;
 {
@@ -561,7 +553,7 @@ SXVOID	output_fe (kind, xa, test, afe)
 
 /*   L I S T I N G   O U T P U T   */
 
-SXVOID	optim_lo (language_name, ME)
+void	optim_lo (language_name, ME)
     char	*language_name, *ME;
 {
     static char		hyph60 [] = "-------------------------------------------------------------";
@@ -572,7 +564,7 @@ SXVOID	optim_lo (language_name, ME)
 
     if (sxverbosep) {
 	fprintf (sxtty, "\tListing Output ... ");
-	sxttycol1p = SXFALSE;
+	sxttycol1p = false;
     }
 
     open_listing (2, language_name, ME, ".op.l");
@@ -902,13 +894,13 @@ SXVOID	optim_lo (language_name, ME)
 
     if (sxverbosep) {
 	sxtime (SXFINAL, "done");
-	sxttycol1p = SXTRUE;
+	sxttycol1p = true;
     }
 }
 
 
 
-SXVOID	optim_ll ()
+void	optim_ll ()
 {
     register int	i;
 
@@ -1052,7 +1044,7 @@ SXVOID	optim_ll ()
 }
 
 
-SXVOID	optim_sizes ()
+void	optim_sizes ()
 {
     put_edit_nl (3);
     put_edit (21, "********** T H E   A C T U A L   S I Z E S **********");

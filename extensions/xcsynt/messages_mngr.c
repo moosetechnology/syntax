@@ -25,7 +25,7 @@ static char	ME [] = "messages_mngr";
 #include "RLR.h"
 #include "bstr.h"
 
-char WHAT_XCSYNTMESSAGESMNGR[] = "@(#)SYNTAX - $Id: messages_mngr.c 3652 2023-12-24 09:43:15Z garavel $" WHAT_DEBUG;
+char WHAT_XCSYNTMESSAGESMNGR[] = "@(#)SYNTAX - $Id: messages_mngr.c 3694 2024-02-07 17:42:10Z garavel $" WHAT_DEBUG;
 
 extern char	*conflict_kind_to_string (VARSTR result, SXINT conflict_kind, SXINT h_val, SXINT k_val);
 extern bool	is_t_in_first (SXINT t, SXINT item);
@@ -161,7 +161,8 @@ static void	xcsynt_write (SXINT red_no, SXINT item)
 }
 
 
-
+#if 0
+/* cette fonction n'est pas utilisee */
 static SXINT items_index (SXINT cur_index, SXINT top_index, SXINT *nb)
 {
     /* cur_index repere dans stack_hd une liste d'items. */
@@ -187,7 +188,7 @@ static SXINT items_index (SXINT cur_index, SXINT top_index, SXINT *nb)
 
     return cur_index;
 }
-
+#endif
 
 
 

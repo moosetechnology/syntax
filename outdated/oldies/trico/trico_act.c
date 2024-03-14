@@ -25,24 +25,10 @@
 /* Dimanche 21 mai 2000 (phd) :	Création				*/
 /************************************************************************/
 
-
-#ifdef unix
-#define WHAT	"@(#)trico_act.c\t- SYNTAX [unix] - Dimanche 21 mai 2000"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
-
-#else /* of ifdef unix */
-#define WHAT	"@(#)sxperror.c\t- SYNTAX [mingw] - Mardi 5 septembre 2000"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
-
-#endif /* of ifdef unix */
+char WHAT[] = "@(#)trico_act.c\t- SYNTAX [unix] - Dimanche 21 mai 2000";
 
 #include "sxunix.h"
+#include <time.h>
 #include "trico_env.h"
 
 
@@ -70,7 +56,7 @@ static FILE	*trico_file = {NULL};
 
 
 
-static SXINLINE SXVOID
+static SXINLINE void
 horodatage (int INIT_ou_ACTION)
 {
   sxtimestamp (INIT_ou_ACTION, "%ldms\n");
@@ -92,7 +78,7 @@ min (int a, int b)
  */
 
 
-static SXINLINE SXVOID
+static SXINLINE void
 vecswap2 (int *a, int *b, int n)
 {
   while (n-- > 0) {
@@ -102,7 +88,7 @@ vecswap2 (int *a, int *b, int n)
   }
 }
 
-static SXINLINE SXVOID
+static SXINLINE void
 swap2 (int *a, int *b)
 {
   int t = *(a); *(a) = *(b); *(b) = t;
@@ -133,7 +119,7 @@ med3 (int *a, int *b, int *c, int d)
 
 
 /* Cette fonction "inf_egal" ne sert que pour l'appel de "sort_by_tree" */
-static SXINLINE SXBOOLEAN
+static SXINLINE bool
 inf_egal (int a, int b)
 {
   unsigned char *s, *t;
@@ -164,7 +150,7 @@ inf_egal_sup (int *a, int *b)
 
 
 
-static SXINLINE SXVOID
+static SXINLINE void
 inssort (int *a, int n, int d)
 {
   int *pi, *pj;
@@ -186,7 +172,7 @@ inssort (int *a, int n, int d)
 }
 
 
-static SXINLINE SXVOID
+static SXINLINE void
 choose_median (int *a, int n, int d)
 {
   int *pm;
@@ -209,7 +195,7 @@ choose_median (int *a, int n, int d)
 
 
 
-static SXINLINE SXVOID
+static SXINLINE void
 ssort2 (int *a, int n, int d)
 {
   if (n < 10) {
@@ -245,7 +231,7 @@ ssort2 (int *a, int n, int d)
 
 
 
-static SXINLINE SXVOID
+static SXINLINE void
 multi_key_quick_sort (int *a, int n)
 {
   ssort2 (a, n, 0);
@@ -260,7 +246,7 @@ multi_key_quick_sort (int *a, int n)
  */
 
 
-static SXINLINE SXVOID
+static SXINLINE void
 swap_range (int *a, int *b, int n)
 {
   while (n-- > 0) {
@@ -268,7 +254,7 @@ swap_range (int *a, int *b, int n)
   }
 }
 
-static SXINLINE SXVOID
+static SXINLINE void
 swap (int *a, int *b)
 {
   int t = *a; *a = *b; *b = t;
@@ -291,7 +277,7 @@ inf_egal_sup_depth (int *a, int *b, int d)
 
 
 
-static SXINLINE SXVOID
+static SXINLINE void
 phd_sort (int *a, int n, int d)
 {
   switch (n) {
@@ -371,7 +357,7 @@ phd_sort (int *a, int n, int d)
 
 
 
-static SXINLINE SXVOID
+static SXINLINE void
 phd_multi_key_quick_sort (int *a, int n)
 {
   phd_sort (a, n, 0);
@@ -388,7 +374,7 @@ phd_multi_key_quick_sort (int *a, int n)
  */
 
 
-static SXINLINE SXVOID
+static SXINLINE void
 sxmkswap_range (int *a, int *b, int n)
 {
   while (n-- > 0) {
@@ -396,7 +382,7 @@ sxmkswap_range (int *a, int *b, int n)
   }
 }
 
-static SXINLINE SXVOID
+static SXINLINE void
 sxmkswap (int *a, int *b)
 {
   int t = *a; *a = *b; *b = t;
@@ -417,7 +403,7 @@ sxmkp2l (int *i)
 
 
 
-static SXINLINE SXVOID
+static SXINLINE void
 sxmksort_depth (int *a, int n, int d)
 {
   switch (n) {
@@ -505,7 +491,7 @@ sxmksort_depth (int *a, int n, int d)
 
 
 
-static SXINLINE SXVOID
+static SXINLINE void
 sxmksort (int *a, int n)
 {
   sxmksort_depth (a, n, 0);
@@ -516,25 +502,25 @@ sxmksort (int *a, int n)
 
 static struct mots mots;
 static int	*pste;
-static struct trico trico;
+// static struct trico trico;
 
 static SXBA	ensemble;
 static int	taille_ensemble;
 
-static SXINLINE SXVOID
+static SXINLINE void
 agrandir_mots ()
 {
   mots.ste = (int*) sxrealloc (mots.ste, (mots.taille *= 2), sizeof (int));
   pste = &(mots.ste [mots.nombre]);
 }
 
-static SXINLINE SXVOID
+static SXINLINE void
 agrandir_ensemble ()
 {
   ensemble = sxba_resize (ensemble, (taille_ensemble *= 2));
 }
 
-static SXVOID
+static void
 gripe ()
 {
   fputs ("\nUne fonction de \"trico\" n'est pas à jour.\n", sxstderr);
@@ -544,12 +530,10 @@ gripe ()
 
 
 
-
-static SXVOID
+#if 0
+static void
 gen_header ()
 {
-  extern char	*ctime ();
-  extern long	time ();
   long		date_time = time (0);
 
   fprintf (trico_file,
@@ -567,7 +551,7 @@ gen_header ()
 
 
 
-static SXVOID
+static void
 gen_includes ()
 {
   fputs ("\n/************** I N C L U D E S **********************/\n", trico_file);
@@ -575,7 +559,7 @@ gen_includes ()
 }
 
 
-static SXVOID
+static void
 gen_trico ()
 {
   int 		i;
@@ -611,12 +595,12 @@ gen_trico ()
   fputs (trico.max ? "trico_char2class,\ntrico_comb_vector\n" : "NULL,\nNULL\n", trico_file);
   fputs ("};\n", trico_file);
 }
-
+#endif
 
 static int *pointeurs_de_mots, *pointeurs_prefixe, *pointeurs_suffixe, *pointeurs_supplementaires, *pointeurs_rajoutes, *pointeurs_en_plus;
 
 
-static SXVOID
+static void
 trico_process ()
 {
   register int		 i;
@@ -665,10 +649,8 @@ trico_process ()
 
 
 
-SXVOID
-trico_sem_act (code, numact)
-    int		code;
-    int		numact;
+void
+trico_sem_act (int code, int numact)
 {
   int			ste;
 
@@ -754,10 +736,8 @@ trico_sem_act (code, numact)
 }
 
 
-SXVOID
-trico_scan_act (code, act_no)
-    int		code;
-    int		act_no;
+void
+trico_scan_act (int code, int act_no)
 {
   switch (code) {
   case SXOPEN:

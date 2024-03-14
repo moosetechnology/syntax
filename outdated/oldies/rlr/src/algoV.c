@@ -24,11 +24,7 @@
 /* 23-10-87 14:00 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-#define WHAT	"@(#)algoV.c - SYNTAX [unix] - 6 Novembre 1990"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+char WHAT[] = "@(#)algoV.c - SYNTAX [unix] - 6 Novembre 1990";
 
 static char	ME [] = "algoV";
 
@@ -53,19 +49,19 @@ static struct Ei {
        }	*Ei;
 static struct group {
 	   int	lgth, adr, etat_nb, xetat;
-	   SXBOOLEAN	is_propre;
+	   bool	is_propre;
        }	*Ecp;
 static struct attribute		*attributes;
 static struct base	*bases;
 static struct item	*cpitems, *vector;
 static int	*new_to_old, *Vic, *sorted, *etats;
 static int	MIN, MAX, action_no, Ei_set_card, xEcp, xcpitems, xetats, delta;
-static SXBOOLEAN	up, first_time;
+static bool	up, first_time;
 static SXBA	bases_set, not_yet_processed, Vic_set, Ei_set, working_set;
 
 
 
-static SXVOID	overflow (lower, upper)
+static void	overflow (lower, upper)
     int		*lower, *upper;
 {
     register struct item	*old_vector = vector, *xnew, *xold;
@@ -99,7 +95,7 @@ static SXVOID	overflow (lower, upper)
 
 
 
-static SXBOOLEAN	is_compatible (avector, aitem, lim)
+static bool	is_compatible (avector, aitem, lim)
     register struct item	*avector, *aitem, *lim;
 {
     register int	act, actpi, t;
@@ -110,11 +106,11 @@ static SXBOOLEAN	is_compatible (avector, aitem, lim)
 	    pi = avector + (t = aitem->check);
 
 	    if ((actpi = pi->action) != 0 && (actpi != act || pi->check != t))
-		return SXFALSE;
+		return false;
 	}
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -124,7 +120,7 @@ static int	get_next_origine (state_no, aitem, lim)
     register struct item	*aitem, *lim;
 {
     static int	prev_origine, prev_state_no, lower, upper;
-    static SXBOOLEAN	in_lower_upper;
+    static bool	in_lower_upper;
     register int	mt, Mt, x;
 
 
@@ -136,8 +132,8 @@ static int	get_next_origine (state_no, aitem, lim)
 
     do {
 	if (first_time) {
-	    first_time = SXFALSE;
-	    up = SXTRUE;
+	    first_time = false;
+	    up = true;
 	    upper = lower = delta = action_no;
 	    MIN = lower + mt;
 	    MAX = lower + Mt;
@@ -159,17 +155,17 @@ static int	get_next_origine (state_no, aitem, lim)
 	    while (lower <= 0)
 		overflow (&lower, &upper);
 
-	    in_lower_upper = SXTRUE;
+	    in_lower_upper = true;
 	    prev_origine = lower;
 	}
 	else if (in_lower_upper && prev_origine < upper)
 	    ++prev_origine;
 	else {
-	    in_lower_upper = SXFALSE;
+	    in_lower_upper = false;
 
 	    if (up) {
 		upper++;
-		up = SXFALSE;
+		up = false;
 
 		while (upper + Mt > vector [0].action)
 		    overflow (&lower, &upper);
@@ -178,7 +174,7 @@ static int	get_next_origine (state_no, aitem, lim)
 	    }
 	    else {
 		lower--;
-		up = SXTRUE;
+		up = true;
 
 		while (lower <= 0)
 		    overflow (&lower, &upper);
@@ -197,7 +193,7 @@ static int	get_next_origine (state_no, aitem, lim)
 
 
 
-static SXBOOLEAN	par_poids (i, j)
+static bool	par_poids (i, j)
     int		i, j;
 {
     register struct attribute	*ai = attributes + i, *aj = attributes + j;
@@ -207,7 +203,7 @@ static SXBOOLEAN	par_poids (i, j)
 
 
 
-static SXBOOLEAN	par_gain (i, j)
+static bool	par_gain (i, j)
     int		i, j;
 {
     return Ei [i].gain > Ei [j].gain;
@@ -215,7 +211,7 @@ static SXBOOLEAN	par_gain (i, j)
 
 
 
-static SXVOID	put_in_Vic (aitem, lim)
+static void	put_in_Vic (aitem, lim)
     register struct item	*aitem, *lim;
 {
     register int	t, act;
@@ -230,7 +226,7 @@ static SXVOID	put_in_Vic (aitem, lim)
 
 
 
-static SXVOID	put_in_Vic_with_default (aitem, lim)
+static void	put_in_Vic_with_default (aitem, lim)
     register struct item	*aitem, *lim;
 {
     register int	t, act, actVic;
@@ -258,7 +254,7 @@ static SXVOID	put_in_Vic_with_default (aitem, lim)
 
 
 
-static SXVOID	get_compatibility_with_Vic (aitem, lim, size, def)
+static void	get_compatibility_with_Vic (aitem, lim, size, def)
     register struct item	*aitem, *lim;
     int		*size, *def;
 {
@@ -284,7 +280,7 @@ static SXVOID	get_compatibility_with_Vic (aitem, lim, size, def)
 
 
 
-static SXVOID	Ecp_construction (states, items)
+static void	Ecp_construction (states, items)
     struct state	*states;
     struct item		*items;
 
@@ -304,7 +300,7 @@ static SXVOID	Ecp_construction (states, items)
 	aEcp = Ecp + ++xEcp;
 	aEcp->adr = xcpitems + 1;
 	aEcp->lgth = 0;
-	aEcp->is_propre = SXTRUE;
+	aEcp->is_propre = true;
 	aEcp->xetat = Vj;
 	/* etat unique code directement dans xetat */
 	aEcp->etat_nb = 1;
@@ -337,7 +333,7 @@ static SXVOID	Ecp_construction (states, items)
     aEcp = Ecp + ++xEcp;
     aEcp->adr = xcpitems + 1;
     aEcp->lgth = 0;
-    aEcp->is_propre = SXFALSE;
+    aEcp->is_propre = false;
     aEcp->xetat = xetats + 1;
     aEcp->etat_nb = 0;
     astate = states + new_to_old [Vi];
@@ -379,8 +375,8 @@ static int	algoIV (aitem, lim, state)
 
 
 
-SXVOID	algoV (is_nt, statemax, tmax, xrupt1, states, items, BASES, VECTOR, BASES_SET, m, M, DELTA)
-    SXBOOLEAN	is_nt;
+void	algoV (is_nt, statemax, tmax, xrupt1, states, items, BASES, VECTOR, BASES_SET, m, M, DELTA)
+    bool	is_nt;
     int		statemax, tmax, xrupt1;
     struct state	*states;
     struct item		*items, **VECTOR;
@@ -406,7 +402,7 @@ SXVOID	algoV (is_nt, statemax, tmax, xrupt1, states, items, BASES, VECTOR, BASES
 	register struct item	*aitem, *lim;
 	register struct attribute	*ai;
 	register int	i, l;
-	register SXBOOLEAN	first_nt;
+	register bool	first_nt;
 
 
 /* Tri par poids decroissants des vecteurs non vides de la matrice de transition */
@@ -419,7 +415,7 @@ SXVOID	algoV (is_nt, statemax, tmax, xrupt1, states, items, BASES, VECTOR, BASES
 		if (!is_nt)
 		    ai->mint = 1, ai->maxt = tmax;
 
-		first_nt = SXTRUE;
+		first_nt = true;
 
 		for (lim = (aitem = items + states [i].start) + l; aitem < lim; aitem++) {
 		    if (aitem->action != 0)
@@ -427,7 +423,7 @@ SXVOID	algoV (is_nt, statemax, tmax, xrupt1, states, items, BASES, VECTOR, BASES
 
 		    if (is_nt && aitem->check != 0 /* on tient compte des defauts */ ) {
 			if (first_nt) {
-			    first_nt = SXFALSE;
+			    first_nt = false;
 			    ai->mint = aitem->check;
 			}
 			else
@@ -524,7 +520,7 @@ SXVOID	algoV (is_nt, statemax, tmax, xrupt1, states, items, BASES, VECTOR, BASES
 	register struct item	*aitem;
 	register struct attribute	*ai;
 	register int	i, l;
-	register SXBOOLEAN	first_nt;
+	register bool	first_nt;
 
 
 /* Tri par poids decroissants des vecteurs non vides de la matrice de transition */

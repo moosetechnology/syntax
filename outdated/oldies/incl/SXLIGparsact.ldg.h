@@ -32,7 +32,7 @@
 #include "XxY.h";
 #include "semact.h";
 
-SXBOOLEAN			is_print_prod, is_print_time;
+bool			is_print_prod, is_print_time;
 #define TIME_INIT	0
 #define TIME_FINAL	1
 
@@ -99,7 +99,7 @@ static struct dum_attr {
 static int		dumAij_top, dumAij;
 #endif
 
-static SXBOOLEAN		LIGhas_cycles;
+static bool		LIGhas_cycles;
 static SXBA		LIGcyclic_prod_set;
 
 static XxY_header	EQUALn_hd, POPn_hd;
@@ -119,7 +119,7 @@ static int		xLDGprod_top, xLDGprod, xLDGlispro_top, xLDGlispro, LDGprod_nb;
 static int		LDGphrases_nb;
 static int		*LDGsuffix_stack, *LDGprefix_stack;
 static int		*LDGlhs_hd, *LDGprod2next;
-static SXBOOLEAN		LDGhas_cycles;
+static bool		LDGhas_cycles;
 static SXBA		LDGcyclic_nt_set, LDGprod_set, LDGnt_set2;
 static int		LDGmax_rhs_lgth;
 
@@ -136,7 +136,7 @@ static SXBA		LDGnt_set;
    A(..) -> A(..)
    A(..) -> A(..a a)
    A(..a a) -> A(..)
-   On a (A =n A) et donc check_locality(A,A)==SXTRUE ce qui est faux.
+   On a (A =n A) et donc check_locality(A,A)==true ce qui est faux.
    A priori 3 solutions :
 
    1)Noter a la construction de chaque relation un couple d'attributs (is_local, is_non_local)
@@ -145,10 +145,10 @@ static SXBA		LDGnt_set;
    PB: si le couple d'attributs (is_local, is_non_local) d'un element deja existant change, il faut
    propager recursivement ce changement sur tous les elements composes a partir de cet element!!
 
-   2)Dans le cas douteux, check_locality retourne SXFALSE et, apres generation, on rend la LDG
+   2)Dans le cas douteux, check_locality retourne false et, apres generation, on rend la LDG
    epsilon free.
 
-   3)Dans le cas douteux, check_locality retourne SXFALSE et, on laisse ds la LDG les productions
+   3)Dans le cas douteux, check_locality retourne false et, on laisse ds la LDG les productions
    vides.
 
    On essaie la 2!
@@ -156,10 +156,10 @@ static SXBA		LDGnt_set;
 
 
 #if SXLIGis_normal_form==1
-#define check_locality(Aij,Bkl)	SXFALSE
+#define check_locality(Aij,Bkl)	false
 #else
 static int		_A, _B;
-#define check_equality(A,B)	((_A = ((A) < 0 ? dumAij2attr[-A].Aij : (A)), _B = ((B) < 0 ? dumAij2attr[-B].Aij : (B)), (_A == _B ? A != B : SXFALSE)))
+#define check_equality(A,B)	((_A = ((A) < 0 ? dumAij2attr[-A].Aij : (A)), _B = ((B) < 0 ? dumAij2attr[-B].Aij : (B)), (_A == _B ? A != B : false)))
 #define check_locality(Aij,Bkl)	(check_equality(Aij,Bkl))
 #endif
 
@@ -246,7 +246,7 @@ EQUALn_oflw (old_size, new_size)
     CTRL_REALLOC (PUSHPOPn_stack, new_size);
 }
 
-static SXVOID
+static void
 PUSH1_oflw (old_size, new_size)
     int		old_size, new_size;
 {
@@ -254,7 +254,7 @@ PUSH1_oflw (old_size, new_size)
 }
 
 
-static SXVOID
+static void
 POP1_oflw (old_size, new_size)
     int		old_size, new_size;
 {
@@ -262,7 +262,7 @@ POP1_oflw (old_size, new_size)
 }
 
 
-static SXVOID
+static void
 POPn_oflw (old_size, new_size)
     int		old_size, new_size;
 {
@@ -390,7 +390,7 @@ SXLIG_semact_final (size)
 }
 #endif
 
-static SXBOOLEAN
+static bool
 SXLIG_semact (i, j, prod_core, rhs_stack)
     unsigned short	*prod_core;
     int 	i, j, rhs_stack [];
@@ -411,14 +411,14 @@ SXLIG_semact (i, j, prod_core, rhs_stack)
 	prod &= ~(HIBITS);
 	SXBA_1_bit (LIGcyclic_prod_set, prod);
 #endif
-	return SXFALSE;
+	return false;
     }
 
 #if SXLIGis_reduced==0
     /* La grammaire initiale n'est pas reduite */
     if (!SXBA_bit_is_set (SXLIGt_set, prod))
 	/* Cette production est inutile */
-	return SXTRUE;
+	return true;
 #endif
 
     /* La foret partagee ne contient que les NT */
@@ -615,7 +615,7 @@ SXLIG_semact (i, j, prod_core, rhs_stack)
 
     LFprolon [xLFprod] = xLFlispro;
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -625,7 +625,7 @@ static void
 n_level_relations ()
 {
     int 	A, B, C, AB, AC, BC, AsB, BsC, BsD, CsD, As, sC, sD, ssymb;
-    SXBOOLEAN	is_new;
+    bool	is_new;
     char	*pkind;
 #if SXLIGis_leveln_complete==0
 #if SXLIGuse_reduced==1
@@ -1426,7 +1426,7 @@ LDGextraction (S0n)
 {
     int			AB, ABn, AC, ACn, BC, BCn, AsB, AsC, AsCn, BsC, As, sC, ssymb;
     int			Aij, secAij, Bkl, Bmn, Ckl;
-    SXBOOLEAN		is_local, is_local2;
+    bool		is_local, is_local2;
     char		*pkind;
     struct rel_attr	*rel_attr_ptr;
 
@@ -1847,7 +1847,7 @@ LDGseek_cycles ()
 		    if (SXBA_bit_is_reset_set (LDGnt_set2, B))
 			PUSH (LDGnt_stack, B);
 		    else {
-			LDGhas_cycles = SXTRUE;
+			LDGhas_cycles = true;
 			return;
 		    }
 		}
@@ -1865,7 +1865,7 @@ LDGseek_cycles ()
 }
 	
 
-static SXBOOLEAN
+static bool
 SXLIG_sem_pass (S0n)
     int S0n;
 {
@@ -2021,7 +2021,7 @@ SXLIG_sem_pass (S0n)
 	sxtime (TIME_FINAL, "\tSemantic Pass: Linear Derivation Grammar");
 #endif
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -2042,8 +2042,8 @@ SXLIG_actions (what, arg)
 	for_semact.sem_pass = SXLIG_sem_pass;
 #if 0
 	/* Ds le cas des LIG, les Aij sont stockes ds le X_header Aij_hd */
-	for_semact.need_Aij2A_i_j = SXFALSE;
-	for_semact.need_pack_unpack = SXFALSE;
+	for_semact.need_Aij2A_i_j = false;
+	for_semact.need_pack_unpack = false;
 #endif
 
 	break;

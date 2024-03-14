@@ -21,7 +21,7 @@
 #include "B_tables.h"
 #include "yax_vars.h"
 
-char WHAT_TAXDEFACT[] = "@(#)SYNTAX - $Id: def_act.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_TAXDEFACT[] = "@(#)SYNTAX - $Id: def_act.c 3695 2024-02-07 17:44:37Z garavel $" WHAT_DEBUG;
 
 static bool	has_defining_occurrence = false, has_semantics = false;
 static SXINT	attribute_needed = 0;
@@ -201,13 +201,16 @@ static void	found_rule (void)
 /*   --------------------------------------------------------- */
 
 static void	gripe (void)
+#ifdef __GNUC__
+     __attribute__ ((noreturn))
+#endif
+     ;
+
+static void	gripe (void)
 {
     fputs ("\nThe function \"def_act\" is out of date with respect to its specification.\n", sxstderr);
     sxexit(1);
 }
-
-
-
 
 /*   --------------------------------------------------------- */
 

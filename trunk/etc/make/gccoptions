@@ -18,7 +18,7 @@ SXUTIL=$(SX)/util
 
 SXBIBS=$(SXLIB)/libsxutil.a $(SXLIB)/libsx.a
 
-GCC_WARNINGS=-Wall -Wextra -Wswitch-default -Wdeclaration-after-statement -Wundef -Wshadow -Wbad-function-cast -Wcast-qual -Wredundant-decls -Wno-char-subscripts -Wcast-align -fno-common -Wstrict-prototypes -Wformat -Wuninitialized -fstrict-aliasing
+GCC_WARNINGS=-Wall -Wextra -Wswitch-default -Wdeclaration-after-statement -Wundef -Wshadow -Wbad-function-cast -Wcast-qual -Wredundant-decls -Wno-char-subscripts -Wcast-align -fno-common -Wstrict-prototypes -Wformat -Wuninitialized -fstrict-aliasing -Wold-style-definition -std=c2x
 
 COMPILER=gcc $(GCC_WARNINGS) $(EXTRA_CFLAGS)
 

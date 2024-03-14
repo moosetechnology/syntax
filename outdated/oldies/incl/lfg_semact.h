@@ -15,13 +15,13 @@ SX_GLOBAL_VAR char              *input_sentence_string;
 SX_GLOBAL_VAR int               *Pij2disp, *fs_id_Pij_dstack, Pij_cur_bot;
 SX_GLOBAL_VAR double            *fs_id_Pij_wstack;
 
-SX_GLOBAL_VAR SXBOOLEAN           is_print_f_structure;
-SX_GLOBAL_VAR SXBOOLEAN           is_partial  /* SXTRUE <=> Aucune f_structure a la racine, on a recupere ce qu'on a pu ... */;
-SX_GLOBAL_VAR SXBOOLEAN           is_relaxed_run /* positionne si le 1er passage a echoue'.  On en refait un sans la verif de la coherence */;
-SX_GLOBAL_VAR SXBOOLEAN           is_consistent /* !is_consistent <=> toutes les f_struct sont incoherentes */;
-SX_GLOBAL_VAR SXBOOLEAN           with_ranking;
-SX_GLOBAL_VAR SXBOOLEAN           relaxed_run_allowed, is_unique_parse, is_print_output_dag, is_ranking;
-SX_GLOBAL_VAR SXBOOLEAN           is_print_final_f_structure_number, is_proba_ranking, is_nbest_ranking;
+SX_GLOBAL_VAR bool           is_print_f_structure;
+SX_GLOBAL_VAR bool           is_partial  /* true <=> Aucune f_structure a la racine, on a recupere ce qu'on a pu ... */;
+SX_GLOBAL_VAR bool           is_relaxed_run /* positionne si le 1er passage a echoue'.  On en refait un sans la verif de la coherence */;
+SX_GLOBAL_VAR bool           is_consistent /* !is_consistent <=> toutes les f_struct sont incoherentes */;
+SX_GLOBAL_VAR bool           with_ranking;
+SX_GLOBAL_VAR bool           relaxed_run_allowed, is_unique_parse, is_print_output_dag, is_ranking;
+SX_GLOBAL_VAR bool           is_print_final_f_structure_number, is_proba_ranking, is_nbest_ranking;
 SX_GLOBAL_VAR int               max_fs_nb, fs_nb_threshold;
 SX_GLOBAL_VAR int               old_fs_id_Pij_dstack_size;
 
@@ -32,18 +32,18 @@ SX_GLOBAL_VAR int               old_fs_id_Pij_dstack_size;
 #undef include_qq_valeurs_declarations
 
 #define LOCAL_ARG_SET_SIZE      NBLONGS(MAX_FIELD_ID+1)
-SX_GLOBAL_VAR SXBOOLEAN           set_fs_id_signature (int fs_id, int level, SXBOOLEAN (*f)());
+SX_GLOBAL_VAR bool           set_fs_id_signature (int fs_id, int level, bool (*f)());
 
 SX_GLOBAL_VAR int               seek_prefix_Aij (char* A, int Pij);
 SX_GLOBAL_VAR int               seek_Aij (char* A, int Pij);
 
 SX_GLOBAL_VAR int               walk_aij (int aij_val, int (*f) ());
-SX_GLOBAL_VAR SXBOOLEAN           fs_is_set (int fs_id, int field_id, int **ret_val);
+SX_GLOBAL_VAR bool           fs_is_set (int fs_id, int field_id, int **ret_val);
 SX_GLOBAL_VAR int               atom_id2local_atom_id (int atom_id);
 SX_GLOBAL_VAR int               get_atomic_field_val (int fs_id, int field_id);
 SX_GLOBAL_VAR int               get_fs_id_atom_val (int field);
 #ifdef ESSAI
-SX_GLOBAL_VAR int               get_ufs_atom_val (int val, SXBOOLEAN *is_shared, SXBA local_atom_id_set); /* Pour output_semact !! */
+SX_GLOBAL_VAR int               get_ufs_atom_val (int val, bool *is_shared, SXBA local_atom_id_set); /* Pour output_semact !! */
 SX_GLOBAL_VAR SXBA              left_local_atom_id_set;
 SX_GLOBAL_VAR X_header          atom_id2local_atom_id_hd;
 #endif /* ESSAI */

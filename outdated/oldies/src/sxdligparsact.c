@@ -33,11 +33,7 @@
 /* 10-08-94 14:29 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-#define WHAT	"@(#)sxdligparsact.c	- SYNTAX [unix] - Lundi 23 Janvier 1995"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+char WHAT[] = "@(#)sxdligparsact.c	- SYNTAX [unix] - Lundi 23 Janvier 1995";
 
 #if 0
 static char	ME [] = "sxdligparsact";
@@ -137,7 +133,7 @@ int sxdligparsact (which, arg)
 	return 0;
 
     case SXINIT:
-	sxplocals.mode.with_do_undo = SXTRUE;
+	sxplocals.mode.with_do_undo = true;
 	(*sxliglocals.code.parsact) (which, arg);
 
 	return 0;

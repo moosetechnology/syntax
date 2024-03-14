@@ -30,11 +30,7 @@
 /* 06-07-89 11:45 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-#define WHAT	"@(#)ambig.c	- SYNTAX [unix] - Vendredi 5 Août 1994"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+char WHAT[] = "@(#)ambig.c	- SYNTAX [unix] - Vendredi 5 Août 1994";
 
 static char	ME [] = "ambig";
 
@@ -65,7 +61,7 @@ static int		cycle_pivot;
 static SXBA		NT_set, S_set;
 static int		*S_stack, *NT_stack;
 static VARSTR		cycle_vstr;
-static SXBOOLEAN		(*includes_F) ();
+static bool		(*includes_F) ();
 static SXBA		init_t_set, ambig_orig_sub_set, to_be_processed_t_set;
 
 static SXBA	not_nullable_set, not_nullable_already_checked_set;
@@ -79,11 +75,11 @@ static char	equal [] = "==  ";
 static char	der [] = "=>  ";
 static char	dots [] = " ... ";
 static char	equals [] = " === ";
-static SXBOOLEAN	grow_items1 ();
+static bool	grow_items1 ();
 
 
 
-static SXVOID	oflw_StNt_reads_cycle (old_size, new_size)
+static void	oflw_StNt_reads_cycle (old_size, new_size)
     int		old_size, new_size;
 {
     StNt_to_reads_cycle_nb = (int*) sxrealloc (StNt_to_reads_cycle_nb, new_size +
@@ -91,7 +87,7 @@ static SXVOID	oflw_StNt_reads_cycle (old_size, new_size)
 }
 
 
-static SXVOID	nt_trans_to_spath (nt_trans, item, spath)
+static void	nt_trans_to_spath (nt_trans, item, spath)
     register int	*spath;
     int		nt_trans, item;
 {
@@ -157,7 +153,7 @@ static int	nt_trans_to_item_no_i (nt_trans2, nt_trans1, i)
 
 
 
-static SXBOOLEAN	grow_items2 (incl, path, items1, nt1, items2, nt2, item2, nt, top, from)
+static bool	grow_items2 (incl, path, items1, nt1, items2, nt2, item2, nt, top, from)
     register int	*incl, *path, *items1, *items2;
     int		item2, nt1, nt2, nt, top, from;
 {
@@ -167,12 +163,12 @@ static SXBOOLEAN	grow_items2 (incl, path, items1, nt1, items2, nt2, item2, nt, t
 	/* C'est fini pour items2 */
 	if (nt1 == nt)
 	    /* C'est fini pour items1 */
-	    return SXTRUE;
+	    return true;
 
 	return grow_items1 (incl, path, items1, nt1, items2, nt2, item2, nt, top);
     }
 
-    while (SXTRUE) {
+    while (true) {
 	int	state;
 
 	state = path [top];
@@ -200,13 +196,13 @@ static SXBOOLEAN	grow_items2 (incl, path, items1, nt1, items2, nt2, item2, nt, t
 		    if (grow_items2 (incl, path, items1, nt1, items2,
 				     bnf_ag.WS_NBPRO [bnf_ag.WS_INDPRO [item].prolis].reduc,
 				     item, nt, top, from))
-			return SXTRUE;
+			return true;
 
 		    --*items2;
 		}
 	    }
 
-	    return SXFALSE;
+	    return false;
 	}
 	else {
 	    /* item2 : nt2 -> X1 ... Xn . alpha et nt2 != nt */
@@ -218,7 +214,7 @@ static SXBOOLEAN	grow_items2 (incl, path, items1, nt1, items2, nt2, item2, nt, t
 	    top++;
 
 	    if (XxY_is_set (&Q0xQ0_hd, path [top], state) == 0)
-		return SXFALSE;
+		return false;
 
 	    item2--;
 	}
@@ -227,7 +223,7 @@ static SXBOOLEAN	grow_items2 (incl, path, items1, nt1, items2, nt2, item2, nt, t
 
 
 
-static SXBOOLEAN	grow_items1 (incl, path, items1, nt1, items2, nt2, item2, nt, top)
+static bool	grow_items1 (incl, path, items1, nt1, items2, nt2, item2, nt, top)
     register int	*incl, *path, *items1, *items2;
     int		item2, nt1, nt2, nt, top;
 {
@@ -255,18 +251,18 @@ static SXBOOLEAN	grow_items1 (incl, path, items1, nt1, items2, nt2, item2, nt, t
 		nt1 = bnf_ag.WS_NBPRO [bnf_ag.WS_INDPRO [item].prolis].reduc;
 
 		if (nt1 == nt && nt2 == nt)
-		    return SXTRUE;
+		    return true;
 	    }
 
 	    if (nt2 != nt) {
 		if (grow_items2 (incl, path, items1, nt1, items2, nt2, item2, nt, top, *items2)) {
-		    return SXTRUE;
+		    return true;
 		}
 	    }
 	    else if (nt1 != nt) {
 		if (grow_items1 (incl, path, items1, nt1, items2, nt2, item2, nt, top)) {
 		    /* Inclusion */
-		    return SXTRUE;
+		    return true;
 		}
 	    }
 
@@ -280,12 +276,12 @@ static SXBOOLEAN	grow_items1 (incl, path, items1, nt1, items2, nt2, item2, nt, t
 /* Non inclusion, on remet tout en place */
 
     incl [++*incl] = nt_trans1;
-    return SXFALSE;
+    return false;
 }
 
 
 
-static SXVOID	slice_cat (item1, item2)
+static void	slice_cat (item1, item2)
     int		item1, item2;
 {
     /* soit : A->alpha beta gamma
@@ -300,7 +296,7 @@ static SXVOID	slice_cat (item1, item2)
 }
 
 
-static SXVOID	outderiv (xitem, items, t_string, pf)
+static void	outderiv (xitem, items, t_string, pf)
     int		xitem, *items;
     char	*t_string;
     char	**pf;
@@ -310,7 +306,7 @@ static SXVOID	outderiv (xitem, items, t_string, pf)
    xitem */
     register int	x, lim, nt, item;
     int		pre_col, pre_lgth, red_no, init_item;
-    SXBOOLEAN	is_t_string;
+    bool	is_t_string;
 
     lim = items [0];
     is_t_string = xitem < 1;
@@ -448,7 +444,7 @@ static char	*make_t_string (post1, item, init_t)
 
 
 
-static SXBOOLEAN is_t_trans (item)
+static bool is_t_trans (item)
     register int	item;
 {
     /* Cette fonction retourne vrai ssi FIRST (Y1 Y2 ... Yn) est non vide.
@@ -457,10 +453,10 @@ static SXBOOLEAN is_t_trans (item)
 
     while ((tnt = bnf_ag.WS_INDPRO [item++].lispro) != 0) {
 	if (tnt < 0 || !SXBA_bit_is_set (bnf_ag.BVIDE, tnt))
-	    return SXTRUE;
+	    return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
@@ -490,11 +486,11 @@ static SXBA first (t_set, item)
 }
 
 
-SXBOOLEAN is_t_in_first (t, item)
+bool is_t_in_first (t, item)
     register int	t, item;
 {
     /* item : A -> alpha . X1 --- Xn
-    /* Cette fonction retourne SXTRUE ssi
+    /* Cette fonction retourne true ssi
           X1 --- Xn =>* epsilon ou
 	  t est dans FIRST1 (X1 ---Xn) */
     register int	tnt;
@@ -504,20 +500,20 @@ SXBOOLEAN is_t_in_first (t, item)
 	    return t == tnt;
 
 	if (SXBA_bit_is_set (bnf_ag.FIRST [XNT_TO_NT_CODE (tnt)], -t))
-	    return SXTRUE;
+	    return true;
 	
 	if (!SXBA_bit_is_set (bnf_ag.BVIDE, tnt))
-	    return SXFALSE;
+	    return false;
 
 	item++;
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
 
-static SXBOOLEAN	SCC (origine, X1, stack, check_set)
+static bool	SCC (origine, X1, stack, check_set)
     int		origine, X1, *stack;
     register SXBA	check_set;
 {
@@ -537,22 +533,22 @@ static SXBOOLEAN	SCC (origine, X1, stack, check_set)
 	if (!SXBA_bit_is_set (check_set, X2) /* X2 n'est pas encore examine */ ) {
 	    if (SCC (origine, X2, stack, check_set))
 		/* SCC sur origine detecte */
-		return SXTRUE;
+		return true;
 	}
 	else if (X2 == origine) {
 	    /* detection */
-	    return SXTRUE;
+	    return true;
 	}
     }
 
     POP (stack, x);
-    return SXFALSE;
+    return false;
 }
 
 
 
 
-static SXBOOLEAN	print_ambiguity (stack1, item, nt_trans)
+static bool	print_ambiguity (stack1, item, nt_trans)
     int		*stack1, item, nt_trans;
 {
     register int	X1, X2;
@@ -616,13 +612,13 @@ static SXBOOLEAN	print_ambiguity (stack1, item, nt_trans)
 
 
 
-static SXBOOLEAN	includes_traversal (X)
+static bool	includes_traversal (X)
     int		X;
 {
     /* Cette procedure recursive traverse en profondeur d'abord une fois et une seule chaque
        noeud du graphe induit par la relation includes. */
     /* Sur chaque  nouveau noeud X, appelle la fonction includes_F (X). Si cette
-       fonction retourne SXTRUE, la traversee est interrompue. */
+       fonction retourne true, la traversee est interrompue. */
     register int	x, Y;
 
     XxY_Xforeach (includes_hd, X, x) {
@@ -630,21 +626,21 @@ static SXBOOLEAN	includes_traversal (X)
 
 	if (!SXBA_bit_is_set (StNt_set, Y) /* Y n'est pas encore examine */ ) {
 	    if (includes_F != NULL && (*includes_F) (Y))
-		return SXTRUE;
+		return true;
 
 	    SXBA_1_bit (StNt_set, Y);
 
 	    if (includes_traversal (Y))
-		return SXTRUE;
+		return true;
 	}
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
 
-static SXVOID NT_closure (NT_set, NT)
+static void NT_closure (NT_set, NT)
     register SXBA	NT_set;
     register int	NT;
 {
@@ -664,7 +660,7 @@ static SXVOID NT_closure (NT_set, NT)
 }
 
 
-static SXBOOLEAN check_item (item, S_stack, NT_stack)
+static bool check_item (item, S_stack, NT_stack)
     int 		item;
     register int	*S_stack;
     int			*NT_stack;
@@ -685,11 +681,11 @@ static SXBOOLEAN check_item (item, S_stack, NT_stack)
 
     if (SS_is_empty (NT_stack))
 	/* NT_stack == vide */
-	return SXTRUE;
+	return true;
 
     if ((Y = bnf_ag.WS_INDPRO [item].lispro) <= 0)
 	/* beta == epsilon ou beta = t beta' */
-	return SXFALSE;
+	return false;
     
     /* beta == Y beta' */
     NT_top = SS_pop (NT_stack);
@@ -703,17 +699,17 @@ static SXBOOLEAN check_item (item, S_stack, NT_stack)
 
 	while ((item = nucl_i (next, ++n)) > 0) {
 	    if (check_item (item + 1, S_stack, NT_stack))
-		return SXTRUE;
+		return true;
 	}
     }
 
     SS_push (NT_stack, NT_top);
     PUSH (S_stack, S_top);
-    return SXFALSE;
+    return false;
 }
 
 
-static SXVOID print_not_LRpi (cycle_stack, kind)
+static void print_not_LRpi (cycle_stack, kind)
     register int	*cycle_stack;
     int			kind;
     /* Un cycle de la relation reads est stocke dans cycle_stack. */
@@ -722,7 +718,7 @@ static SXVOID print_not_LRpi (cycle_stack, kind)
        goto (s, Xn) = s1, s1 dans le cycle. */
     register int	x, y, z, n;
     int 		s, s1, stop, item, A, Xi;
-    SXBOOLEAN		is_cycle_equal_Xi;
+    bool		is_cycle_equal_Xi;
 
     sxba_empty (S_set);
     x = 0;
@@ -803,11 +799,11 @@ static SXVOID print_not_LRpi (cycle_stack, kind)
     }
 
     varstr_raz (cycle_vstr);
-    is_cycle_equal_Xi = SXTRUE;
+    is_cycle_equal_Xi = true;
 
     for (x = n = bnf_ag.WS_NBPRO [bnf_ag.WS_INDPRO [item].prolis].prolon; x < item;x++) {
 	if (x > n) {
-	    is_cycle_equal_Xi = SXFALSE;
+	    is_cycle_equal_Xi = false;
 	    varstr_catenate (cycle_vstr, " ");
 	}
 	else
@@ -837,7 +833,7 @@ static SXVOID print_not_LRpi (cycle_stack, kind)
     }
 
     while (!SS_is_empty (NT_stack)) {
-	is_cycle_equal_Xi = SXFALSE;
+	is_cycle_equal_Xi = false;
 	z = SS_pop (NT_stack);
 	varstr_catenate (cycle_vstr, " ");
 	varstr_catenate (cycle_vstr, get_nt_string (z));
@@ -973,7 +969,7 @@ static SXVOID print_not_LRpi (cycle_stack, kind)
     put_edit (put_edit_get_col() + 1, right);
 }
 
-static SXBOOLEAN	read_non_empty (next_state)
+static bool	read_non_empty (next_state)
     int next_state;
 {
     register int 	n, item, kind;
@@ -993,12 +989,12 @@ static SXBOOLEAN	read_non_empty (next_state)
 	    if (is_t_trans (item)) {
 		/* FIRST (Y1 Y2 ... Yn) est non vide */
 		read_empty [next_state] = 2 /* read est non vide */;
-		return SXTRUE;
+		return true;
 	    }
 	}
 
 	read_empty [next_state] = 1 /* next_state est examine et read est vide */;
-	return SXFALSE;
+	return false;
     }
 
     return kind == 2;
@@ -1006,14 +1002,14 @@ static SXBOOLEAN	read_non_empty (next_state)
 
 
 
-static SXBOOLEAN	ambiguity_check (X1)
+static bool	ambiguity_check (X1)
     int		X1;
 {
     /* Cette procedure recursive traverse en profondeur d'abord une fois et
        une seule chaque noeud du graphe induit par la relation includes. */
     /* Chaque fois qu'une ambiguite est detectee, elle est stockee. */
     register int	x, X, X2, next_state;
-    SXBOOLEAN		is_local_ambiguity = SXFALSE;
+    bool		is_local_ambiguity = false;
 
     XxY_Xforeach (includes_hd, X1, x) {
 	X2 = XxY_Y (includes_hd, x);
@@ -1023,7 +1019,7 @@ static SXBOOLEAN	ambiguity_check (X1)
 	    PUSH (StNt_stack, X2);
 
 	    if (ambiguity_check (X2)) {
-		is_local_ambiguity = SXTRUE;
+		is_local_ambiguity = true;
 		/* Une ambiguite est atteinte depuis X2 */
 		SXBA_1_bit (proto_ambig_StNt_set, X2);
 	    }
@@ -1047,7 +1043,7 @@ static SXBOOLEAN	ambiguity_check (X1)
 			ambig_orig_set = sxba_calloc (X);
 		    }
 
-		    is_local_ambiguity = SXTRUE;
+		    is_local_ambiguity = true;
 		    X = 0;
 
 		    do {
@@ -1061,7 +1057,7 @@ static SXBOOLEAN	ambiguity_check (X1)
 	    } while (X != X2);
 	}
 	else if (proto_ambig_StNt_set != NULL && SXBA_bit_is_set (proto_ambig_StNt_set, X2))
-	    is_local_ambiguity = SXTRUE;
+	    is_local_ambiguity = true;
 	/* X2 ne se trouve pas dans StNt_stack, on n'est donc
 	   pas en train de visiter ses descendants or X2 a deja ete visite,
 	   la visite de X2 et de tous ses descendants est donc terminee et
@@ -1076,20 +1072,20 @@ static SXBOOLEAN	ambiguity_check (X1)
 
 
 
-SXBOOLEAN	ambiguity (conflict_set, ambig_root_set)
+bool	ambiguity (conflict_set, ambig_root_set)
     register SXBA	conflict_set, ambig_root_set;
 {
     /* conflict_set est l'ensemble des etats conflictuels (au sens LALR(1)
        du terme) de l'automate LR(0).
        ambig_root_set est l'ensemble des transitions non-terminales racines
        de graphes de la relation includes qui comportent des cycles. */
-    /* Retourne SXTRUE si la condition suffisante d'ambiguite est detectee.
+    /* Retourne true si la condition suffisante d'ambiguite est detectee.
        De plus ambig_root_set contient les origines (racines) des graphes
        d'includes ayant permis ces detections et ambig_StNt_set l'ensemble
        des transitions non-terminales impliquees dans des cycles dont au moins
        un representant (p, A) verifie Read (p, A) est non vide. */
     register int	StNt, St;
-    SXBOOLEAN		is_ambiguous = SXFALSE;
+    bool		is_ambiguous = false;
 
     if (StNt_stack == NULL) {
 	StNt_set = sxba_calloc (XxY_top (Q0xV_hd) + 1);
@@ -1104,7 +1100,7 @@ SXBOOLEAN	ambiguity (conflict_set, ambig_root_set)
 
 	if (SXBA_bit_is_set (conflict_set, St)) {
 	    if (ambiguity_check (StNt))
-		is_ambiguous = SXTRUE;
+		is_ambiguous = true;
 	    else
 		SXBA_0_bit (ambig_root_set, StNt);
 	}
@@ -1123,13 +1119,13 @@ SXBOOLEAN	ambiguity (conflict_set, ambig_root_set)
 
 
 
-SXBOOLEAN is_ambig_on_StNt (StNt)
+bool is_ambig_on_StNt (StNt)
     int StNt;
 {
     return SXBA_bit_is_set (ambig_StNt_set, StNt);
 }
 
-SXVOID	free_ambiguities ()
+void	free_ambiguities ()
 {
     if (ambig_orig_set != NULL) {
 	sxfree (ambig_orig_set), ambig_orig_set = NULL;
@@ -1150,16 +1146,16 @@ SXVOID	free_ambiguities ()
 
 
 
-static SXBOOLEAN ambig_orig_F (X)
+static bool ambig_orig_F (X)
     int X;
 {
     if (SXBA_bit_is_set (ambig_orig_set, X))
 	SXBA_1_bit (ambig_orig_sub_set, X);
 
-    return SXFALSE;
+    return false;
 }
 
-SXVOID	print_ambiguities (xac1, t_set, StNt)
+void	print_ambiguities (xac1, t_set, StNt)
     int		xac1, StNt;
     SXBA	t_set;
 {
@@ -1215,7 +1211,7 @@ SXVOID	print_ambiguities (xac1, t_set, StNt)
 		    sxba_minus (to_be_processed_t_set, init_t_set);
 		    CLEAR (StNt_stack);
 		    sxba_empty (StNt_set);
-		    SCC (StNt, StNt, StNt_stack, StNt_set) /* SXTRUE */ ;
+		    SCC (StNt, StNt, StNt_stack, StNt_set) /* true */ ;
 
 
 /* On est dans les conditions suivantes:
@@ -1300,7 +1296,7 @@ SXVOID	print_ambiguities (xac1, t_set, StNt)
 
 
 
-SXBOOLEAN	is_not_nullable (xnt)
+bool	is_not_nullable (xnt)
     int xnt;
 {
     /* On sait que nt =>+ vide. On regarde si nt peut aussi ne pas deriver ds le vide. */
@@ -1315,10 +1311,10 @@ SXBOOLEAN	is_not_nullable (xnt)
     nt = XNT_TO_NT_CODE (xnt);
 
     if (SXBA_bit_is_set (not_nullable_set, nt))
-	return SXTRUE;
+	return true;
 
     if (!SXBA_bit_is_reset_set (not_nullable_already_checked_set, nt))
-	return SXFALSE;
+	return false;
 
     /* Evite de boucler sur les tests recursifs. */
 
@@ -1329,7 +1325,7 @@ SXBOOLEAN	is_not_nullable (xnt)
 
 	if (!SXBA_bit_is_set (bnf_ag.NULLABLE, item)) {
 	    SXBA_1_bit (not_nullable_set, nt);
-	    return SXTRUE;
+	    return true;
 	}
     }
 
@@ -1340,12 +1336,12 @@ SXBOOLEAN	is_not_nullable (xnt)
 	    /* item : a -> alpha .nt1 beta avec nt1 dans N et nt1 =>+ vide. */
 	    if (is_not_nullable (nt1)) {
 		SXBA_1_bit (not_nullable_set, nt);
-		return SXTRUE;
+		return true;
 	    }
 	}
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
@@ -1356,12 +1352,12 @@ int	is_cycle_in_reads ()
                            A    B           +
    (p,A) reads (q,B) <=> p -> q -> r   et B => epsilon et r != 0 */
 
-    SXBOOLEAN	is_cycle, is_ambig;
+    bool	is_cycle, is_ambig;
 
     if (sxba_scan (bnf_ag.BVIDE, 0) < 0)
-	return SXFALSE;
+	return false;
 
-    is_cycle = is_ambig = SXFALSE;
+    is_cycle = is_ambig = false;
     XxY_alloc (&reads_hd, "reads", xac2, 4, 1, 0, NULL, statistics_file);
     StNt_to_reads_cycle_nb = NULL;
 
@@ -1412,10 +1408,10 @@ int	is_cycle_in_reads ()
 	for (i = 1; i < reads_index_size;i++) {
 	    if (SXBA_bit_is_set (reads_plus [i], i)) {
 		SXBA_1_bit (index_set, i);
-		is_cycle = SXTRUE;
+		is_cycle = true;
 
 		if (!is_ambig && is_not_nullable (XxY_Y (Q0xV_hd, X_X (reads_index_hd, i))))
-		    is_ambig = SXTRUE;
+		    is_ambig = true;
 	    }
 	}
 	
@@ -1492,7 +1488,7 @@ SXBA is_not_LRpi_on_StNt (StNt)
     /* StNt_set2 contient tous les fils de StNt impliques dans un cycle de reads */
 }
 
-SXVOID	free_not_LRpi ()
+void	free_not_LRpi ()
 {
     if (NT_set != NULL) {
 	varstr_free (cycle_vstr);
@@ -1521,7 +1517,7 @@ SXVOID	free_not_LRpi ()
 
 
 
-SXVOID free_cycles ()
+void free_cycles ()
 {
     if (reads_cycle_sets != NULL) {
 	sxbm_free (reads_cycle_sets), reads_cycle_sets = NULL;
@@ -1533,7 +1529,7 @@ SXVOID free_cycles ()
 	sxfree (ambig_StNt_set), ambig_StNt_set = NULL;
 }
 
-static SXBOOLEAN cycle_set_to_path (X)
+static bool cycle_set_to_path (X)
     register int	X;
 {
     /* cycle_set contient un cycle de la relation reads.
@@ -1546,14 +1542,14 @@ static SXBOOLEAN cycle_set_to_path (X)
     XxY_Xforeach (reads_hd, X, x) {
 	if ((X2 = XxY_Y (reads_hd, x)) == cycle_pivot ||
 	    SXBA_bit_is_set (cycle_set, X2) && StNt_stack [X2] == 0 && cycle_set_to_path (X2))
-	    return SXTRUE;
+	    return true;
     }
 
     POP (StNt_stack, x);
 }
 
 
-SXVOID	print_not_LRpi_conflicts (kind)
+void	print_not_LRpi_conflicts (kind)
     int kind;
 {
     /* kind == AMBIGUOUS_ ou kind == NOT_LRPI_ */

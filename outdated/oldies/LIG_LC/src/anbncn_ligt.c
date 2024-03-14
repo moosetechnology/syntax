@@ -1,8 +1,4 @@
-#define WHAT	"@(#)Linear Derivation Grammar Generator for the LIG \"anbncn\" - SYNTAX [unix] - Tue Jan 28 16:16:39 1997"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+char WHAT[] = "@(#)Linear Derivation Grammar Generator for the LIG \"anbncn\" - SYNTAX [unix] - Tue Jan 28 16:16:39 1997";
 
 static char	ME [] = "anbncn_ligt.c";
 

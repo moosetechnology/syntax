@@ -21,7 +21,7 @@
 #include "sxunix.h"
 #include "B_tables.h"
 
-char WHAT_BNFWRITE[] = "@(#)SYNTAX - $Id: bnfwrite.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_BNFWRITE[] = "@(#)SYNTAX - $Id: bnfwrite.c 3684 2024-02-06 10:21:55Z garavel $" WHAT_DEBUG;
 
 
 #define WRITE(f,p,l)		\
@@ -32,9 +32,7 @@ char WHAT_BNFWRITE[] = "@(#)SYNTAX - $Id: bnfwrite.c 3633 2023-12-20 18:41:19Z g
 		goto write_error
 
 
-bool		bnf_write (B, langname)
-    struct bnf_ag_item		*B;
-    char	*langname;
+bool		bnf_write (struct bnf_ag_item *B, char *langname)
 {
     SXINT	bytes;
     SXINT	i;

@@ -30,11 +30,7 @@
 /************************************************************************/
 
 
-#define WHAT	"@(#)reg_exp_main.c\t- SYNTAX [unix] - Jeu 26 Mai 1994 11:17:34"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+char WHAT[] = "@(#)reg_exp_main.c\t- SYNTAX [unix] - Jeu 26 Mai 1994 11:17:34";
 
 #include <stdlib.h>
 #include "sxdynam_scanner.h"
@@ -52,7 +48,7 @@ FILE	*sxtty;
 /*    options    */
 /*---------------*/
 
-SXBOOLEAN		sxverbosep;
+bool		sxverbosep;
 static char	ME [] = "reg_exp";
 static char	Usage [] = "\
 Usage:\t%s [options] [files]\n\
@@ -82,7 +78,7 @@ options=\t-sc, -source, -nsc, -nosource,\n\
 #define LANGUAGE_NAME	  8
 #define LAST_OPTION	  LANGUAGE_NAME
 
-
+#if 0
 static char	*option_tbl [] = {
     "",
     "sc", "source", "nsc", "nosource",
@@ -106,9 +102,7 @@ static int	option_kind [] = {
     LANGUAGE_NAME, LANGUAGE_NAME,};
 
 
-
-static int	option_get_kind (arg)
-    register char	*arg;
+static int	option_get_kind (char *arg)
 {
     register char	**opt;
 
@@ -125,8 +119,7 @@ static int	option_get_kind (arg)
 
 
 
-static char	*option_get_text (kind)
-    register int	kind;
+static char	*option_get_text (int kind)
 {
     register int	i;
 
@@ -140,8 +133,7 @@ static char	*option_get_text (kind)
 
 
 
-static	language_name (path_name, lang_name)
-    char	*path_name, *lang_name;
+static	language_name (char *path_name, char *lang_name)
 {
     register char	*p;
 
@@ -162,9 +154,7 @@ static	language_name (path_name, lang_name)
 
 
 static FILE *
-sxstr_to_file (source_file, source_lgth)
-    char	*source_file;
-    int		source_lgth;
+sxstr_to_file (char *source_file, int source_lgth)
 {
     char	*last;
     FILE	*infile;
@@ -186,11 +176,12 @@ sxstr_to_file (source_file, source_lgth)
 
     return infile;
 }
+#endif
 
 
 
 static FILE *
-stdin_to_file ()
+stdin_to_file (void)
 {
     FILE	*infile;
     char	pathname [32];
@@ -210,12 +201,10 @@ stdin_to_file ()
     return infile;
 }
 
-main (argc, argv)
-    int		argc;
-    char	*argv [];
+main (int argc, char *argv[])
 {
     FILE	*infile;
-    int		ste;
+    // int		ste;
 
     if (sxstdout == NULL) {
 	sxstdout = stdout;

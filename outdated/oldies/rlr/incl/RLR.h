@@ -7,7 +7,7 @@ extern VARSTR	fsa_to_re ();
 
 struct ARC_ATTR {
     int		from, conflict_kind, lgth, primes_nb;
-    SXBOOLEAN	is_tree_orig, is_pure_tree, is_marked;
+    bool	is_tree_orig, is_pure_tree, is_marked;
 };
 struct whd {
     int		lnk, type_nb;
@@ -27,7 +27,7 @@ struct ARC_struct {
     SXBA		t_set, conflict_t_set;
     struct ARC_struct	*ARC;
     int			pss_kind, h_value, k_value, kind, conflict_kind;
-    SXBOOLEAN		is_allocated, is_initiated, is_XARC, is_clonable, is_ARP;
+    bool		is_allocated, is_initiated, is_XARC, is_clonable, is_ARP;
 };
 
 struct ARC_struct	ARCs [4];
@@ -79,7 +79,7 @@ XxY_header	FORKxT_hd;
 int		*FORKxT_to_fks;
 
 int		XX_ARC_kind, QTQ /* Global pour install_a_quad */;
-SXBOOLEAN		XX_is_XARC, XX_is_pss_check;
+bool		XX_is_XARC, XX_is_pss_check;
 
 SXBA		*reads_cycle_sets;
 int		reads_cycle_sets_line_nb;
@@ -92,7 +92,7 @@ struct init_state_attr	*init_state_attr;
 
 int	shift_item, shift_terminal;
 
-SXBOOLEAN		is_shift_type, ibfsa_needed, has_several_equiv_reductions, is_clonable;
+bool		is_shift_type, ibfsa_needed, has_several_equiv_reductions, is_clonable;
 
 int		NEW_K_VALUE;
 
@@ -109,8 +109,8 @@ X_header	pss_to_Next_hd;
 int		*pss_to_Next;
 XH_header	Next_hd;
 
-SXBOOLEAN		conflict_message;
-#define is_all_conflicts	SXTRUE
+bool		conflict_message;
+#define is_all_conflicts	true
 
 #define maxint		(((unsigned int)(-1))>>1)
 #define TopState(s)	(pss_hd.list [pss_hd.display [s+1].X-2])

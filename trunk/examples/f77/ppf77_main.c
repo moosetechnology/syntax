@@ -29,7 +29,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-char WHAT_PPF77MAIN[] = "@(#)SYNTAX - $Id: ppf77_main.c 3633 2023-12-20 18:41:19Z garavel $";
+char WHAT_PPF77MAIN[] = "@(#)SYNTAX - $Id: ppf77_main.c 3769 2024-02-28 14:35:05Z garavel $";
 
 extern struct sxtables	ppf77_tables;
 
@@ -39,14 +39,15 @@ extern void f77_src_mngr (SXINT what, FILE *infile, char *file_name);
 /*    options    */
 /*---------------*/
 
-bool		is_ansi, is_json, is_pretty_printer, is_input_free_fortran, is_output_free_fortran;
+bool		is_ansi, is_json, is_pretty_printer, is_input_free_fortran, is_output_free_fortran, is_extension;
 
 static char	ME [] = "ppf77_main";
 static char	Usage [] = "\
 Usage:\t%s [options] [files]\n\
 options=\t-v, -verbose, -nv, -noverbose,\n\
 \t\t-ansi, -noansi,\n\
-\t\t-fs, -format_suffix, -nfs, -noformat_suffix,\n\
+\t\t-X, -extension, -nX, -noextension,\n\
+\t\t-fs, -format_suffix, -nfs, -noformat_suffix,\n		\
 \t\t-iff, -input_free_fortran, -niff, -noinput_free_fortran.\n\
 \t\t-off, -output_free_fortran, -noff, -nooutput_free_fortran.\n";
 
@@ -62,16 +63,21 @@ options=\t-v, -verbose, -nv, -noverbose,\n\
 #define FORMAT_SUFFIX		3
 #define INPUT_FREE_FORTRAN	4
 #define OUTPUT_FREE_FORTRAN	5
+#define EXTENSION               6
 
 static char	*option_tbl [] = {"", "v", "verbose", "nv", "noverbose",
 				  "ansi", "noansi",
 				  "fs", "nfs", "format_suffix", "no_format_suffix",
 				  "iff", "input_free_fortran", "niff", "noinput_free_fortran",
-				  "off", "output_free_fortran", "noff", "nooutput_free_fortran"};
+				  "off", "output_free_fortran", "noff", "nooutput_free_fortran",
+				  "X", "extension", "nX", "noextension"
+                                  };
 static SXINT	option_kind [] = {UNKNOWN_ARG, VERBOSE, VERBOSE, -VERBOSE, -VERBOSE,
 				  ANSI, -ANSI, FORMAT_SUFFIX, -FORMAT_SUFFIX, FORMAT_SUFFIX, -FORMAT_SUFFIX,
 				  INPUT_FREE_FORTRAN, INPUT_FREE_FORTRAN, -INPUT_FREE_FORTRAN, -INPUT_FREE_FORTRAN,
-				  OUTPUT_FREE_FORTRAN, OUTPUT_FREE_FORTRAN, -OUTPUT_FREE_FORTRAN, -OUTPUT_FREE_FORTRAN};
+				  OUTPUT_FREE_FORTRAN, OUTPUT_FREE_FORTRAN, -OUTPUT_FREE_FORTRAN, -OUTPUT_FREE_FORTRAN,
+				  EXTENSION, EXTENSION, -EXTENSION, -EXTENSION
+                                 };
 
 
 static SXINT continuation_line_nb;
@@ -386,6 +392,7 @@ static bool	file_copy (char *in, char *out)
 	  /* On ne met pas de '0' sur la ligne initiale en colonne 6 */
 	  str+= 5;
 		
+		
 	  /* On regarde ou est la marge */
 	  /* Le pretty-printer assure qu'elle ne se trouve pas trop loin... */
 	  margin = 0;
@@ -659,6 +666,7 @@ int main (int argc, char *argv[])
     is_ansi = false;
     is_input_free_fortran = false;
     is_output_free_fortran = false;
+    is_extension = false; /* ppf77 accepte ou non les extensions */
 
     sxppvariables.kw_case = SXUPPER_CASE /* How should keywords be written */ ;
     sxppvariables.terminal_case = (SXCASE *) sxcalloc (sxeof_code (&ppf77_tables)+1, sizeof (SXCASE));
@@ -728,6 +736,14 @@ int main (int argc, char *argv[])
 
 	case -OUTPUT_FREE_FORTRAN:
 	    is_output_free_fortran = false;
+	    break;
+
+	case EXTENSION:
+	    is_extension = true;
+	    break;
+
+	case -EXTENSION:
+	    is_extension = false;
 	    break;
 
 	case UNKNOWN_ARG:

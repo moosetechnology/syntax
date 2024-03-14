@@ -33,11 +33,7 @@
 /* 18-05-90 10:05 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-#define WHAT	"@(#)messages_mngr.c	- SYNTAX [unix] - 4 Décembre 1992"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+char WHAT[] = "@(#)messages_mngr.c	- SYNTAX [unix] - 4 Décembre 1992";
 
 static char	ME [] = "messages_mngr";
 
@@ -51,13 +47,13 @@ static char	ME [] = "messages_mngr";
 
 extern char	*xt_to_str ();
 extern char	*conflict_kind_to_string ();
-extern SXBOOLEAN	is_t_in_first ();
-extern SXBOOLEAN	ttrue ();
-extern SXBOOLEAN	earley ();
-extern SXBOOLEAN	is_pss_include ();
+extern bool	is_t_in_first ();
+extern bool	ttrue ();
+extern bool	earley ();
+extern bool	is_pss_include ();
 extern SXBA	fill_pss_set ();
-extern SXBOOLEAN	bh_ARC_one_LA ();
-extern SXBOOLEAN	bs_ARC_one_LA ();
+extern bool	bh_ARC_one_LA ();
+extern bool	bs_ARC_one_LA ();
 
 static XH_header	duo_params_hd;
 static int		duo_params_germe;
@@ -80,7 +76,7 @@ static int	item_nb, item_nb_conflict;
 
 static int	xkas, max_LALR_length, max_not_LALR_length;
 static char	*c_name;
-static SXBOOLEAN	should_print_re;
+static bool	should_print_re;
 static int	TYPE1, TYPE2, FORK;
 
 
@@ -90,7 +86,7 @@ static int	LR0_statesN_set_size;
 static struct bstr	*bstr_cat_Vs (bstr, Vs, is_bot_up)
     register struct bstr	*bstr;
     int	Vs;
-    SXBOOLEAN is_bot_up;
+    bool is_bot_up;
 {
     /* Vs designe dans stack_hd une liste de symboles
        met dans vstr la chaine correspondante. */
@@ -148,7 +144,7 @@ static struct bstr	*bstr_cat_post_stack (bstr)
 
 
 
-static SXVOID	rlr_write (red_no, item)
+static void	rlr_write (red_no, item)
     int		red_no, item;
 {
     /* item : A -> alpha . beta
@@ -214,14 +210,14 @@ static int items_index (cur_index, top_index, nb)
 
 
 
-static SXVOID compute_items_np (cur_index, top_index, write_index, is_shift)
+static void compute_items_np (cur_index, top_index, write_index, is_shift)
     register int	cur_index;
     int			top_index, write_index;
-    SXBOOLEAN		is_shift;
+    bool		is_shift;
 {
     register int	cur_item, new_index, tnt, items_nb = 0;
     int			nb, old_nb, item, init_item, total_nb = 0;
-    SXBOOLEAN		should_write;
+    bool		should_write;
 
     while (cur_index < top_index) {
 	should_write = cur_index == write_index;
@@ -276,39 +272,39 @@ static SXVOID compute_items_np (cur_index, top_index, write_index, is_shift)
 
 
 
-static SXBOOLEAN is_conflict_prod_reached (bot_items)
+static bool is_conflict_prod_reached (bot_items)
     int **bot_items;
 {
     /* bot_items et TOP_items sont des pointeurs dans stack_hd dans une liste d'items. */
     register int	item, init_item;
     
     if (*bot_items == TOP_items)
-	return SXTRUE;
+	return true;
 
     if ((item = *(*bot_items)++) == 2)/* S' -> S . eof */
-	return SXTRUE; /* derive obligatoirement de l'axiome. */
+	return true; /* derive obligatoirement de l'axiome. */
 
     init_item = bnf_ag.WS_NBPRO [bnf_ag.WS_INDPRO [item].prolis].prolon;
 
     while (item >= init_item) {
 	if (bnf_ag.WS_INDPRO [item--].lispro > 0 && is_conflict_prod_reached (bot_items))
-	    return SXTRUE;
+	    return true;
     }
 
     return *bot_items == TOP_items;
 }
 
 
-static SXBOOLEAN ecrire (should_write)
-    SXBOOLEAN	should_write;
+static bool ecrire (should_write)
+    bool	should_write;
 {
     /* BOT_items et TOP_items sont des pointeurs dans stack_hd dans une liste d'items. */
     register int	x, item, tnt, nb;
     int			red_no, *ptr;
-    SXBOOLEAN		done, sub_write;
+    bool		done, sub_write;
     
     if (BOT_items == TOP_items)
-	return SXTRUE;
+	return true;
 
     if ((item = *BOT_items++) == 2)/* S' -> S . eof */
 	return ecrire (should_write);
@@ -335,19 +331,19 @@ static SXBOOLEAN ecrire (should_write)
     while (--nb >= 0) {
 	if ((tnt = SS_pop (pre_stack)) > 0) {
 	    if (conflict_derivation_kind == 2)
-		sub_write = SXTRUE;
+		sub_write = true;
 	    else if (should_write)
 		sub_write = is_conflict_prod_reached ((ptr = BOT_items, &ptr));
 	    else
-		sub_write = SXFALSE;
+		sub_write = false;
 
-	    done = ecrire (sub_write); /* (sub_write == SXFALSE) => (done == SXFALSE) */
+	    done = ecrire (sub_write); /* (sub_write == false) => (done == false) */
 
 	    if (should_write && !sub_write)
 		rlr_write (0, 0);
 
 	    if (done)
-		return SXTRUE;
+		return true;
 	}
 	else
 	    SS_push (post_stack, tnt);
@@ -360,8 +356,8 @@ static SXBOOLEAN ecrire (should_write)
 static int	install_a_LR0_path (); /* Plus loin */
 
 
-static SXVOID	print_a_quad (is_eof, Vs, items, Ts/*, delta_items*/)
-    SXBOOLEAN	is_eof;
+static void	print_a_quad (is_eof, Vs, items, Ts/*, delta_items*/)
+    bool	is_eof;
     int Vs, items, Ts/*, delta_items*/;
 {
     /* Vs, items et Ts sont des identifiants de stack_hd
@@ -382,7 +378,7 @@ static SXVOID	print_a_quad (is_eof, Vs, items, Ts/*, delta_items*/)
     SS_clear_ss (post_stack);
 
     if (Vs != 0)
-	pre = bstr_cat_Vs (pre, Vs, SXFALSE);
+	pre = bstr_cat_Vs (pre, Vs, false);
 
     varstr_raz (vsuffixe);
 
@@ -406,7 +402,7 @@ static SXVOID	print_a_quad (is_eof, Vs, items, Ts/*, delta_items*/)
     BOT_items = STACK_BOT (items);
     TOP_items = STACK_TOP (items);
 
-    ecrire (SXTRUE);
+    ecrire (true);
     put_edit_nl (1);
 }
 
@@ -427,12 +423,12 @@ int get_quad_nb ()
     return nb;
 }
 
-SXBOOLEAN erase_quads (ARC_kind, qtq)
+bool erase_quads (ARC_kind, qtq)
     int	ARC_kind, qtq;
 {
     /* Supprime les quad de ARC dont la derniere transition est qtq. */
     register int x, bot;
-    SXBOOLEAN done = SXFALSE;
+    bool done = false;
 
     if (quad_hd.display != NULL) {
 	for (x = XH_top (quad_hd) - 1; x > 0; x--) {
@@ -442,7 +438,7 @@ SXBOOLEAN erase_quads (ARC_kind, qtq)
 		if (XH_list_elem (quad_hd, bot + 4) == ARC_kind &&
 		    XH_list_elem (quad_hd, bot + 5) == qtq) {
 		    XH_erase (quad_hd, x);
-		    done = SXTRUE;
+		    done = true;
 		}
 	    }
 	}
@@ -466,7 +462,7 @@ static int install_a_quad (p0, p1, p2, p3, p4)
     return indice;
 }
 
-SXBOOLEAN make_a_quad (etat_charniere, item_charniere, items_stack)
+bool make_a_quad (etat_charniere, item_charniere, items_stack)
     int	etat_charniere, item_charniere, *items_stack;
 {
     /* item_charniere : A -> X1  Xp . Xp+1  Xn est dans etat_charniere
@@ -476,7 +472,7 @@ SXBOOLEAN make_a_quad (etat_charniere, item_charniere, items_stack)
 
     if (conflict_derivation_kind == 0) {
 	install_a_quad (0, 0, LA, ORIG_ITEM, XX_ARC_kind);
-	return SXTRUE;
+	return true;
     }
 
     top = items_stack + SS_top (items_stack);
@@ -572,11 +568,11 @@ static int fill_PREV_PSS_SET (XARC, prev_pss_set, XARC_state, t, type, fork)
 }
 
 
-static SXBOOLEAN call_earley (fork)
+static bool call_earley (fork)
     int		fork;
 {
     int	indice, LA_init;
-    SXBOOLEAN	ret_val;
+    bool	ret_val;
 
     if (duo_params_hd.display == NULL) {
 	XH_alloc (&duo_params_hd, "duo_params_hd", xac2, 4, 2, NULL, statistics_file);
@@ -594,7 +590,7 @@ static SXBOOLEAN call_earley (fork)
     XH_push (duo_params_hd, BS1);
 
     if (XH_set (&duo_params_hd, &indice)) /* deja traite.. */
-	return SXTRUE;
+	return true;
 
     if (is_unique_derivation_per_conflict) {
 	/* On regarde si une derivation pour ORIG_ITEM conduisant a la proto_phrase
@@ -605,7 +601,7 @@ static SXBOOLEAN call_earley (fork)
 	XH_push (duo_params_hd, BS1);
 
 	if (XH_is_set (&duo_params_hd)) /* deja traite.. */
-	    return SXTRUE;
+	    return true;
     }
 
     if (bnf_ag.WS_INDPRO [ORIG_ITEM].lispro == 0) {
@@ -619,7 +615,7 @@ static SXBOOLEAN call_earley (fork)
 	if (earley_parse (LA_init, LA_init + LA_length, &stack_hd, ORIG_ITEM, ttrue))
 	    ret_val = earley (ORIG_ITEM, germe, LA, LA_length, &stack_hd, BS2);
 	else
-	    ret_val = SXFALSE;
+	    ret_val = false;
     }
 
     if (is_unique_derivation_per_conflict && ret_val) {
@@ -636,7 +632,7 @@ static SXBOOLEAN call_earley (fork)
 }
 
 
-static SXVOID build_XARC_path (XARC, XARC_state, type, fork)
+static void build_XARC_path (XARC, XARC_state, type, fork)
     struct ARC_struct	*XARC;
     int	XARC_state, type, fork;
 {
@@ -664,7 +660,7 @@ static SXVOID build_XARC_path (XARC, XARC_state, type, fork)
     */
 
     register int	n, next, red_no;
-    SXBOOLEAN		has_pb = SXTRUE;
+    bool		has_pb = true;
 
     /* Calcul des valeurs initiales */
     if (-type < grand) {
@@ -674,14 +670,14 @@ static SXVOID build_XARC_path (XARC, XARC_state, type, fork)
 	if (conflict_derivation_kind == 0 && nucl_i (next, 2) == 0) {
 	    /* Un seul item shift, c'est obligatoirement le bon! */
 	    install_a_quad (0, 0, LA, ORIG_ITEM = nucl_i (next, 1), XX_ARC_kind);
-	    has_pb = SXFALSE;
+	    has_pb = false;
 	}
 	else {
 	    n = 0;
 
 	    while ((ORIG_ITEM = nucl_i (next, ++n)) > 0) {
 		if (call_earley (fork))
-		    has_pb = SXFALSE;
+		    has_pb = false;
 	    }
 	}
     }
@@ -692,11 +688,11 @@ static SXVOID build_XARC_path (XARC, XARC_state, type, fork)
 	while ((ORIG_ITEM = orig_item_i (red_no, ++n)) > 0) {
 	    if (conflict_derivation_kind == 0) {
 		install_a_quad (0, 0, LA, ORIG_ITEM, XX_ARC_kind);
-		has_pb = SXFALSE;
+		has_pb = false;
 	    }
 	    else
 		if (call_earley (fork))
-		    has_pb = SXFALSE;
+		    has_pb = false;
 	}
     }
 
@@ -723,7 +719,7 @@ static int	get_a_pred_state (state)
 
 
 
-static SXBOOLEAN conformity_parse_stack_pss (parse_stack, pss)
+static bool conformity_parse_stack_pss (parse_stack, pss)
     int *parse_stack, pss;
 {
     /* On regarde si parse_stack et pss sont "compatibles".
@@ -746,7 +742,7 @@ static SXBOOLEAN conformity_parse_stack_pss (parse_stack, pss)
 	/* Cas R(h)LALR */
 	while (pss_bot <= --pss_top) {
 	    if (*pss_top != *--ps_top)
-		return SXFALSE;
+		return false;
 	}
     }
     else {
@@ -755,7 +751,7 @@ static SXBOOLEAN conformity_parse_stack_pss (parse_stack, pss)
 	register int	*x;
 
 	if (*pss_bot != (first = *ps_bot) || *--pss_top != *--ps_top)
-	    return SXFALSE;
+	    return false;
 
 	while (++ps_bot <= ps_top) {
 	    last = *ps_bot;
@@ -771,14 +767,14 @@ static SXBOOLEAN conformity_parse_stack_pss (parse_stack, pss)
 	    }
 
 	    if (x == pss_top) /* Echec */
-		return SXFALSE;
+		return false;
 	}
     }
 
-    return SXTRUE;
+    return true;
 }
 
-static SXBOOLEAN conformity_LALR (parse_stack)
+static bool conformity_LALR (parse_stack)
     int	*parse_stack;
 {
     /* On verifie que parse_stack est un chemin
@@ -787,29 +783,29 @@ static SXBOOLEAN conformity_LALR (parse_stack)
 
     while ((pss = sxba_scan (PREV_PSS_SET, pss)) > 0) {
 	if (conformity_parse_stack_pss (parse_stack, pss)) {
-	    return SXTRUE;
+	    return true;
 	}
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
-SXBOOLEAN check_real_conformity (parse_stack)
+bool check_real_conformity (parse_stack)
     int	*parse_stack;
 {
     /* Verifie que parse_stack est conforme a [l'un des] pss|fork de PREV_PSS_SET
        responsable du conflit. */
     if (PREV_PSS_SET == NULL)
 	/* Pas de verification si inutile */
-	return SXTRUE;
+	return true;
     
     return conformity_LALR (parse_stack);
 }
 
 
 
-static SXVOID	print_title (shift_or_reduce, suffixe, conflict_name)
+static void	print_title (shift_or_reduce, suffixe, conflict_name)
     char	*shift_or_reduce, *suffixe, *conflict_name;
 {
     char	str [8];
@@ -820,7 +816,7 @@ static SXVOID	print_title (shift_or_reduce, suffixe, conflict_name)
     sprintf (str, "%d ", germe);
     bstr_cat_str (pre, str);
     bstr_cat_str (pre, "on ");
-    bstr_cat_Vs (pre, LA, SXTRUE);
+    bstr_cat_Vs (pre, LA, true);
     bstr_cat_str (pre, suffixe);
     bstr_cat_str (pre, "between:");
     put_edit_ap (bstr_tostr (pre));
@@ -913,7 +909,7 @@ static int	ARP_xprefixe (ARP_state, type, cn, bfsa, nmax)
 }
 
 
-static SXBOOLEAN	ARP_knot_xpath (entree, sortie, kbot, ktop)
+static bool	ARP_knot_xpath (entree, sortie, kbot, ktop)
     int		sortie, entree;
     register int	*ktop, *kbot;
 {
@@ -921,7 +917,7 @@ static SXBOOLEAN	ARP_knot_xpath (entree, sortie, kbot, ktop)
        sortie (inclus) */
     int			*bot;
     register int	p, q, couple, next;
-    SXBOOLEAN		is_XQ0;
+    bool		is_XQ0;
 
     bot = kbot;
 
@@ -938,10 +934,10 @@ static SXBOOLEAN	ARP_knot_xpath (entree, sortie, kbot, ktop)
 		XH_push (stack_hd, next);
 
 		if (p == sortie)
-		    return SXTRUE;
+		    return true;
 
 		if (ARP_knot_xpath (p, sortie, bot, ktop))
-		    return SXTRUE;
+		    return true;
 
 		XH_pop (stack_hd, next);
 		SXBA_0_bit (LR0_statesN_set, p);
@@ -949,12 +945,12 @@ static SXBOOLEAN	ARP_knot_xpath (entree, sortie, kbot, ktop)
 	}
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
 
-static SXVOID	ARP_call_knot_xpath (entree, sortie, knot)
+static void	ARP_call_knot_xpath (entree, sortie, knot)
     int		sortie, entree, knot;
 {
     sxba_empty (LR0_statesN_set);
@@ -1089,7 +1085,7 @@ static int	cat_a_LR0_path (bs1, bs2, bs_2)
 
 
 
-SXVOID messages_mngr_alloc ()
+void messages_mngr_alloc ()
 {
     register int l;
 
@@ -1112,7 +1108,7 @@ SXVOID messages_mngr_alloc ()
 }
 
 
-SXVOID messages_mngr_free ()
+void messages_mngr_free ()
 {
 
     if (duo_params_hd.display != NULL)
@@ -1133,7 +1129,7 @@ SXVOID messages_mngr_free ()
 }
 
 
-static SXBOOLEAN one_ambig_LA (XARC, prev_XARC_state, t, XARC_state)
+static bool one_ambig_LA (XARC, prev_XARC_state, t, XARC_state)
     struct ARC_struct	*XARC;
     int prev_XARC_state, t, XARC_state;
 {
@@ -1150,7 +1146,7 @@ static SXBOOLEAN one_ambig_LA (XARC, prev_XARC_state, t, XARC_state)
 }
 
 
-SXVOID mm_process_one_LA (ARC)
+void mm_process_one_LA (ARC)
     struct ARC_struct	*ARC;
 {
     /* Un (nouveau) LA vient d'etre trouve. */
@@ -1158,7 +1154,7 @@ SXVOID mm_process_one_LA (ARC)
     register int	x;
     int			qtq, t, prev_ARC_state, next_ARC_state, type_nb, red_no,
                         /* quad_hd_top, */conflict_kind, LA_init, lim, n, next, type;
-    SXBOOLEAN		is_new_mess;
+    bool		is_new_mess;
 
     for (x = SS_top (ws) - 1, lim = SS_bot (ws); x > lim; x--) {
 	qtq = SS_get (ws, x);
@@ -1181,7 +1177,7 @@ SXVOID mm_process_one_LA (ARC)
     type_nb = XH_list_lgth (ARC->Q_hd, next_ARC_state) >> 1;
 
     if (ARC->is_XARC) {
-	XX_is_XARC = SXTRUE;
+	XX_is_XARC = true;
 
 	if (!ARC->is_ARP)
 	    /* Egalite des forks. */
@@ -1190,7 +1186,7 @@ SXVOID mm_process_one_LA (ARC)
 	    call_ARP_conflict_messages (ARC, prev_ARC_state, t, next_ARC_state);
     }
     else {
-	XX_is_XARC = SXFALSE;
+	XX_is_XARC = false;
 
 	for (x = 0; x < type_nb; x++) {
 	    if (!sxba_is_empty (PSS_SET = pss_sets [x])) {
@@ -1203,7 +1199,7 @@ SXVOID mm_process_one_LA (ARC)
 		       conduisent a PSS_SET. */
 		    register int	y;
 		    register SXBA	pss_set1, pss_set2;
-		    SXBOOLEAN		loop;
+		    bool		loop;
 
 		    lim = SS_top (ws);
 		    y = SS_bot (ws) + 1; /* On saute le "fond" qui a servi a construire ws. */
@@ -1224,7 +1220,7 @@ SXVOID mm_process_one_LA (ARC)
 		}
 
 /*		quad_hd_top = XH_top (quad_hd); */
-		is_new_mess = SXFALSE;
+		is_new_mess = false;
 		
 		/* Calcul des valeurs initiales */
 		if (type < grand) {
@@ -1236,7 +1232,7 @@ SXVOID mm_process_one_LA (ARC)
 			/* Un seul item shift, c'est obligatoirement le bon! */
 			install_a_quad (0, 0, LA, ORIG_ITEM = nucl_i (next, 1),
 					XX_ARC_kind);
-			is_new_mess = SXTRUE;
+			is_new_mess = true;
 		    }
 		    else {
 			n = 0;
@@ -1245,7 +1241,7 @@ SXVOID mm_process_one_LA (ARC)
 			    if (earley_parse (LA_init, LA_init + LA_length, &stack_hd,
 					      ORIG_ITEM, ttrue))
 				if (earley (ORIG_ITEM, germe, LA, LA_length, &stack_hd, 0))
-				    is_new_mess = SXTRUE;
+				    is_new_mess = true;
 			}
 		    }
 		}
@@ -1256,11 +1252,11 @@ SXVOID mm_process_one_LA (ARC)
 		    while ((ORIG_ITEM = orig_item_i (red_no, ++n)) > 0) {
 			if (conflict_derivation_kind == 0) {
 			    install_a_quad (0, 0, LA, ORIG_ITEM, XX_ARC_kind);
-			   is_new_mess = SXTRUE; 
+			   is_new_mess = true; 
 			}
 			else {
 			    if (earley (ORIG_ITEM, germe, LA, LA_length, &stack_hd, 0))
-				is_new_mess = SXTRUE;
+				is_new_mess = true;
 			}
 		    }
 		}
@@ -1286,7 +1282,7 @@ SXVOID mm_process_one_LA (ARC)
 }
 
 
-SXVOID	sambig_conflict_messages (XARC, qtq, fork, type1, type2)
+void	sambig_conflict_messages (XARC, qtq, fork, type1, type2)
     struct ARC_struct	*XARC;
     int			qtq, fork, type1, type2;
 {
@@ -1310,15 +1306,15 @@ SXVOID	sambig_conflict_messages (XARC, qtq, fork, type1, type2)
     SS_close (ws);
 }
 
-static SXBOOLEAN is_in (path1, path2)
+static bool is_in (path1, path2)
     int path1, path2;
 {
     /* Verifie que pathi est inclus ds pathj */
-    /* Retourne SXTRUE ssi path1 <= path2 */
+    /* Retourne true ssi path1 <= path2 */
     register int *bot1, *top1, *bot2, *top2;
 
     if (path1 == path2)
-	return SXTRUE;
+	return true;
 
     top1 = STACK_TOP (path1);
     bot1 = STACK_BOT (path1);
@@ -1334,10 +1330,10 @@ static SXBOOLEAN is_in (path1, path2)
 }
 
 
-static SXBOOLEAN fork_couple_not_processed (fork1, fork2)
+static bool fork_couple_not_processed (fork1, fork2)
     int fork1, fork2;
 {
-    /* Retourne SXTRUE et stocke le couple ssi il n'existe pas deja dans lpss. */
+    /* Retourne true et stocke le couple ssi il n'existe pas deja dans lpss. */
     register int f1, f2, bot, top;
 
     if (fork1 <= fork2) {
@@ -1351,22 +1347,22 @@ static SXBOOLEAN fork_couple_not_processed (fork1, fork2)
 
     for (top = SS_top (lpss), bot = SS_bot (lpss); bot < top; bot++) {
 	if (f1 == SS_get (lpss, bot++) && f2 == SS_get (lpss, bot)) {
-	    return SXFALSE;
+	    return false;
 	}
     }
 
     SS_push (lpss, f1);
     SS_push (lpss, f2);
-    return SXTRUE;
+    return true;
 }
 
 
-SXVOID	ARP_conflict_messages (XARC, prev_XARC_state, t, next_XARC_state, ARP_state,
+void	ARP_conflict_messages (XARC, prev_XARC_state, t, next_XARC_state, ARP_state,
 			       is_ambig, and_set)
     struct ARC_struct	*XARC;
     int			prev_XARC_state, t, next_XARC_state, ARP_state;
     SXBA		and_set;
-    SXBOOLEAN		is_ambig;
+    bool		is_ambig;
 {
     /* ARP_state est un etat de l'ARP non clonable.
        On prepare la sortie des messages denoncant les conflits. */
@@ -1376,7 +1372,7 @@ SXVOID	ARP_conflict_messages (XARC, prev_XARC_state, t, next_XARC_state, ARP_sta
     int			pss, item1, item2, type1, type2, state1, state2,
                         n1, n2, is, wst1, wst2, y, prev_bfsa1, prev_bfsa2;
     int			pb1_path, pb2_path;
-    SXBOOLEAN		der1_seen, der2_seen;
+    bool		der1_seen, der2_seen;
     
     bot = ARP_STATES_BOT (ARP_state);
     top = ARP_STATES_TOP (ARP_state);
@@ -1389,7 +1385,7 @@ SXVOID	ARP_conflict_messages (XARC, prev_XARC_state, t, next_XARC_state, ARP_sta
 	    type1 = *p1;
 	    ibot1 = ARP_ITEMS_BOT (-is);
 	    itop1 = ARP_ITEMS_TOP (-is);
-	    der1_seen = SXFALSE;
+	    der1_seen = false;
 	
 	    while (ibot1 < itop1) {
 		if (XxY_Y (ARP_items, item1 = *ibot1++) == 0) {
@@ -1410,7 +1406,7 @@ SXVOID	ARP_conflict_messages (XARC, prev_XARC_state, t, next_XARC_state, ARP_sta
 				    /* On parcourt les autres types */
 				    ibot2 = ARP_ITEMS_BOT (is);
 				    itop2 = ARP_ITEMS_TOP (is);
-				    der2_seen = SXFALSE;
+				    der2_seen = false;
 
 				    while (ibot2 < itop2) {
 					item2 = *ibot2++;
@@ -1485,7 +1481,7 @@ SXVOID	ARP_conflict_messages (XARC, prev_XARC_state, t, next_XARC_state, ARP_sta
 						    type2 < -grand) {
 						    /* Dans le cas Shift, on regarde tous les items
 						       pour eviter de manquer des cas shifts. */
-						    der2_seen = SXTRUE;
+						    der2_seen = true;
 						    break;
 						}
 					    }
@@ -1501,7 +1497,7 @@ SXVOID	ARP_conflict_messages (XARC, prev_XARC_state, t, next_XARC_state, ARP_sta
 
 			    if (is_unique_derivation_per_conflict && type1 < -grand) {
 				/* Cas Reduce. */
-				der1_seen = SXTRUE;
+				der1_seen = true;
 				break;
 			    }
 			}
@@ -1523,7 +1519,7 @@ SXVOID	ARP_conflict_messages (XARC, prev_XARC_state, t, next_XARC_state, ARP_sta
 }
 
 
-SXVOID conflict_messages_output (conflict_t_set)
+void conflict_messages_output (conflict_t_set)
     SXBA conflict_t_set;
 {
     /* Sortie de tous les messages accumules. */
@@ -1532,7 +1528,7 @@ SXVOID conflict_messages_output (conflict_t_set)
     register int		quad, nquad, orig_item, q, *bot;
     int				lim, indice, ARC_state, ARC_kind, ck, kind, from;
     register struct ARC_struct	*ARC;
-    SXBOOLEAN		is_shift_reduce_conflict = SXFALSE, is_eof;
+    bool		is_shift_reduce_conflict = false, is_eof;
     /* La1 != LA2 => state1 != state2 */
     
     if ((lim = XH_top (quad_hd)) > 1) {
@@ -1576,7 +1572,7 @@ SXVOID conflict_messages_output (conflict_t_set)
 				    *(bot + 4) == ARC_kind &&
 				    XxYxZ_Z (ARC->QxTxQ_hd, *(bot + 5)) == ARC_state &&
 				    bnf_ag.WS_INDPRO [*(bot + 3) /* orig_item */].lispro != 0) {
-				    is_shift_reduce_conflict = SXTRUE;
+				    is_shift_reduce_conflict = true;
 				    break;
 				}
 			    }

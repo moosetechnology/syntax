@@ -24,11 +24,7 @@
 /* 23-08-94 13:40 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-#define WHAT	"@(#)wcw3_parsact.c	- SYNTAX [unix] - Mar 23 Aou 1994 13:40:43"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+char WHAT[] = "@(#)wcw3_parsact.c	- SYNTAX [unix] - Mar 23 Aou 1994 13:40:43";
 
 static char	ME [] = "wcw3_parsact";
 

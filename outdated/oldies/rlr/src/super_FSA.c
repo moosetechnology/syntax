@@ -26,11 +26,7 @@
 /* 26-10-90 15:15 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-#define WHAT	"@(#)super_FSA.c	- SYNTAX [unix] - 1 Aout 1991"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+char WHAT[] = "@(#)super_FSA.c	- SYNTAX [unix] - 1 Aout 1991";
 
 static char	ME [] = "super_FSA";
 
@@ -72,7 +68,7 @@ static void install (r)
 }
 
 
-static SXBOOLEAN check (r)
+static bool check (r)
     int r;
 {
     register int	rts, t, s;
@@ -87,11 +83,11 @@ static SXBOOLEAN check (r)
 		next = Q_to_classes [next];
 
 	    if (next != s)
-		return SXFALSE;
+		return false;
 	}
     }
 
-    return SXTRUE;
+    return true;
 }
 
 
@@ -100,7 +96,7 @@ int	super_FSA (X_hd, XxYxZ_hd, AxOxV_hd, Tcard, dont_reuse_initial_state)
     X_header	*X_hd;
     XxYxZ_header	*XxYxZ_hd, *AxOxV_hd;
     int		Tcard;
-    SXBOOLEAN	dont_reuse_initial_state;
+    bool	dont_reuse_initial_state;
 {
     /* This procedure computes from a given FSA :
           M = (Q, T, delta, i, F)
@@ -144,7 +140,7 @@ int	super_FSA (X_hd, XxYxZ_hd, AxOxV_hd, Tcard, dont_reuse_initial_state)
 	/* Q - F computation */
 	register int	x, r, x_classe;
 	register SXBA	classe, new_classe;
-	SXBOOLEAN		is_stable, is_OK;
+	bool		is_stable, is_OK;
 
 	top_classe = dont_reuse_initial_state ? 2 : 1;
 	classe =  classes [top_classe];
@@ -161,10 +157,10 @@ int	super_FSA (X_hd, XxYxZ_hd, AxOxV_hd, Tcard, dont_reuse_initial_state)
 	   foreach t delta (q1, t) and delta (q2, t) are also k-1 equivalent
 	*/
 
-	is_stable = SXFALSE;
+	is_stable = false;
 	
 	while (!is_stable) {
-	    is_stable = SXTRUE;
+	    is_stable = true;
 	    x_classe = 0;
 
 	    while (++x_classe <= top_classe) {
@@ -175,20 +171,20 @@ int	super_FSA (X_hd, XxYxZ_hd, AxOxV_hd, Tcard, dont_reuse_initial_state)
 		    /* two elements at least. */
 		    install (r);
 		    new_classe = classes [top_classe + 1];
-		    is_OK = SXTRUE;
+		    is_OK = true;
 
 		    while ((r = sxba_scan (classe, r)) > 0) {
 			if (check (r))
 			    install (r);
 			else {
-			    is_OK = SXFALSE;
+			    is_OK = false;
 			    SXBA_1_bit (new_classe, r);
 			}
 		    }
 
 		    if (!is_OK) {
 			/* Mandatory global processing of incompatible states. */
-			is_stable = SXFALSE;
+			is_stable = false;
 			top_classe++;
 			sxba_minus (classe, new_classe);
 			r = 0;

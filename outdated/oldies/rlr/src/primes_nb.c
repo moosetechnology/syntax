@@ -31,17 +31,7 @@
 /* 20010327 08:33 (phd):	Création de cette rubrique.		*/
 /************************************************************************/
 
-
-#ifndef lint
-#define WHAT	"@(#)primes_nb.c	- SYNTAX [unix] - 27 mars 2001"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
-
-#endif
-
-
+char WHAT[] = "@(#)primes_nb.c	- SYNTAX [unix] - 27 mars 2001";
 
 static char	ME [] = "primes_nb";
 
@@ -50,7 +40,7 @@ static char	ME [] = "primes_nb";
 FILE	*sxstderr = {NULL};
 FILE	*sxtty;
 
-SXBOOLEAN	sxverbosep;
+bool	sxverbosep;
 
 static int	sroot, max_nb;
 static SXBA	sieve;

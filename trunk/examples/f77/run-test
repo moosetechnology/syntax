@@ -74,19 +74,28 @@ FILTER() {
 
 echo "*** testing f77"
 
-for FILE in `ls test/misc/*.f test/nist/*.FOR`
+for FILE in `ls test/evref/*.FOR test/misc/*.f test/nist/*.FOR`
 do
 	echo ""
 	echo "f77" "$FILE" | sed -e 's+test/++'
 
+	case "$FILE" in
+		test/evref/extension-* )
+			OPTION="-X"
+			;;
+		* )
+			OPTION=""
+			;;
+	esac
+
 	if [ $VALGRIND_OPTION = 1 ]
 	then
 		echo ""
-		$VALGRIND bin/f77.out $FILE
+		$VALGRIND bin/f77.out $OPTION $FILE
 		continue
 	fi
 
-	bin/f77.out $FILE
+	bin/f77.out $OPTION $FILE
 	STATUS=$?
 	if [ $STATUS != 0 ]
 	then
@@ -108,16 +117,25 @@ do
 	echo "ppf77" "$FILE" | sed -e 's+test/++'
 	cp $FILE $TMP1
 
+	case "$FILE" in
+		test/evref/extension-* )
+			OPTION="-X"
+			;;
+		* )
+			OPTION=""
+			;;
+	esac
+
 	if [ $VALGRIND_OPTION = 1 ]
 	then
 		echo ""
-		$VALGRIND bin/ppf77.out $TMP1
+		$VALGRIND bin/ppf77.out $OPTION $TMP1
 		continue
 	fi
 
-	bin/ppf77.out < $TMP1 > $TMP2
+	bin/ppf77.out $OPTION < $TMP1 > $TMP2
 
-	bin/ppf77.out $TMP1
+	bin/ppf77.out $OPTION $TMP1
 	# ici $TMP1 a ete modifie par ppf77.out
 	STATUS=$?
 	if [ $STATUS != 0 ]
@@ -128,7 +146,7 @@ do
 	cmp -s $TMP1 $TMP2
 	if [ $? != 0 ]
 	then
-		echo "   pff77.out < file and pff77.out file give different results"
+		echo "   pff77.out $OPTION < file and pff77.out file give different results"
 	fi
 
 	# here, files $TMP1 and $TMP2 are identical

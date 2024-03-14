@@ -27,7 +27,7 @@
 #include "bstr.h"
 #include "put_edit.h"
 
-char WHAT_XCSYNTLEFTCORNER[] = "@(#)SYNTAX - $Id: left_corner.c 3652 2023-12-24 09:43:15Z garavel $" WHAT_DEBUG;
+char WHAT_XCSYNTLEFTCORNER[] = "@(#)SYNTAX - $Id: left_corner.c 3697 2024-02-07 17:57:37Z garavel $" WHAT_DEBUG;
 
 extern SXINT	LC0 (void);
 
@@ -194,6 +194,7 @@ static SXINT	csynt_run (void)
 	if (is_force) {
 	    break;
 	}
+	/* FALLTHROUGH */
 
     default:
 	if (sxverbosep && !sxttycol1p) {

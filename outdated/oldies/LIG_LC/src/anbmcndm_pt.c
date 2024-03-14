@@ -1,10 +1,6 @@
-#define WHAT	"@(#)SLC(1)/Earley automaton for anbmcndm - SYNTAX [unix] - Mon Dec 16 15:54:07 1996"
+char WHAT[] = "@(#)SLC(1)/Earley automaton for anbmcndm - SYNTAX [unix] - Mon Dec 16 15:54:07 1996";
 
 #if 0
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
 static char	ME [] = "anbmcndm_earley_lc_parser";
 #endif
 

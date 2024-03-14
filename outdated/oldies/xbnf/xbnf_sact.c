@@ -22,7 +22,7 @@
 #include "B_tables.h"
 #include "xbnf_vars.h"
 
-char WHAT_XBNFSACT[] = "@(#)SYNTAX - $Id: xbnf_sact.c 3369 2023-06-17 10:18:35Z garavel $" WHAT_DEBUG;
+char WHAT_XBNFSACT[] = "@(#)SYNTAX - $Id: xbnf_sact.c 3678 2024-02-06 08:38:24Z garavel $" WHAT_DEBUG;
 
 #define rule_slice 100
 
@@ -45,7 +45,7 @@ SXUINT	bnf_get_line_no (SXINT rule_no)
 
 
 
-SXVOID	bnf_get_rule_tail (SXUINT rule_no, SXUINT *tline, SXUINT *tcol)
+void	bnf_get_rule_tail (SXUINT rule_no, SXUINT *tline, SXUINT *tcol)
 {
     *tline = coords [rule_no].tail.line;
     *tcol = coords [rule_no].tail.column;
@@ -53,7 +53,7 @@ SXVOID	bnf_get_rule_tail (SXUINT rule_no, SXUINT *tline, SXUINT *tcol)
 
 
 
-SXVOID	bnf_skip_rule (void)
+void	bnf_skip_rule (void)
 {
     struct tail	*tail_coord;
     SXUINT	line;
@@ -80,7 +80,7 @@ SXVOID	bnf_skip_rule (void)
 
 
 
-SXVOID	bnf_found_bad_beginning_of_rule (void)
+void	bnf_found_bad_beginning_of_rule (void)
 {
     struct sxsource_coord	less_coord;
 
@@ -94,7 +94,7 @@ SXVOID	bnf_found_bad_beginning_of_rule (void)
 
 
 
-static SXVOID	gripe (void)
+static void	gripe (void)
 {
     fputs ("\nThe function \"xbnf_scan_act\" is out of date with respect to its specification.\n", sxstderr);
     sxexit(1);
@@ -102,10 +102,10 @@ static SXVOID	gripe (void)
 
 
 
-SXVOID	(*more_scan_act) (SXINT code, SXINT act_no);
+void	(*more_scan_act) (SXINT code, SXINT act_no);
 
 
-SXVOID
+void
 xbnf_scan_act (SXINT code, SXINT act_no)
 {
     switch (code) {
@@ -130,14 +130,14 @@ xbnf_scan_act (SXINT code, SXINT act_no)
 	return;
 
     case SXINIT:
-	is_predicate = SXFALSE;
+	is_predicate = false;
 
 	if (more_scan_act != NULL) {
 	    (*more_scan_act) (code, act_no);
 	}
 
 	{
-	    SXSHORT	c;
+	    short	c;
 
 	    c = sxsrcmngr.current_char;
 
@@ -162,7 +162,7 @@ xbnf_scan_act (SXINT code, SXINT act_no)
 
     case SXACTION:
 	switch (act_no) {
-	    SXSHORT	c;
+	    short	c;
 
 	case 1:
 	    {
@@ -209,7 +209,7 @@ xbnf_scan_act (SXINT code, SXINT act_no)
 
 	case 3:
 	    /* Post-action de %SXPREDICATE : is_predicate est utilise dans bnf_symtab */
-	    is_predicate = SXTRUE;
+	    is_predicate = true;
 	    return;
 
 	default:

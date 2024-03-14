@@ -28,11 +28,7 @@
 /* 25-04-90 11:32 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-#define WHAT	"@(#)RARP.c	- SYNTAX [unix] - 21 octobre 1991"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+char WHAT[] = "@(#)RARP.c	- SYNTAX [unix] - 21 octobre 1991";
 
 static char	ME [] = "RARP";
 
@@ -62,9 +58,9 @@ static X_header		X_RARP_new_trans_hd;
 
 static int		last_UARP_state;
 
-static SXBOOLEAN		is_alloc_UARP_called;
+static bool		is_alloc_UARP_called;
 
-static SXVOID	RARP_open ()
+static void	RARP_open ()
 {
     static int	RARPxTRANSxRARP_foreach [] = {1, 0, 1, 0, 0, 0};
     register int l, i;
@@ -93,7 +89,7 @@ static SXVOID	RARP_open ()
 
 
 
-static SXVOID UARP_gather ()
+static void UARP_gather ()
 {
     /* On rassemble dans ws les feuilles de UARP. */
     /* On en profite pour RAZer Q0_to_occur_nb. */
@@ -120,11 +116,11 @@ static int	RARP_install_items_set ()
     /* Un resultat negatif indique la presence d'un item final */
     register int	item = 0;
     int			result;
-    SXBOOLEAN		is_final = SXTRUE;
+    bool		is_final = true;
 
     while ((item = sxba_scan_reset (UARP_states_set, item)) > 0) {
 	if (item != 1)
-	    is_final = SXFALSE;
+	    is_final = false;
 
 	XH_push (RARP_items_hd, item);
     }
@@ -134,7 +130,7 @@ static int	RARP_install_items_set ()
 }
 
 
-static	SXVOID RARP_next (RARP_state, trans)
+static	void RARP_next (RARP_state, trans)
     int		RARP_state, trans;
 {
     /* Calcule l'etat atteint depuis RARP_state par transition sur trans. */
@@ -142,7 +138,7 @@ static	SXVOID RARP_next (RARP_state, trans)
     register int	is, type_nb, x;
     int			*top, *itop, type, next_is, next_RARP_state, unused, UARP_state, pred,
                         new_trans;
-    SXBOOLEAN		not_empty;
+    bool		not_empty;
 
     bot = RARP_STATES_BOT (RARP_state);
     top = RARP_STATES_TOP (RARP_state);
@@ -153,7 +149,7 @@ static	SXVOID RARP_next (RARP_state, trans)
 	is = abs (is);
 	ibot = RARP_ITEMS_BOT (is);
 	itop = RARP_ITEMS_TOP (is);
-	not_empty = SXFALSE;
+	not_empty = false;
 
 	while (ibot < itop) {
 	    if ((UARP_state = *ibot++) != 1) {
@@ -161,7 +157,7 @@ static	SXVOID RARP_next (RARP_state, trans)
 		    if (XxYxZ_Y (UARPxTRANSxUARP_hd, x) == trans) {
 			pred = XxYxZ_X (UARPxTRANSxUARP_hd, x);
 			SXBA_1_bit (UARP_states_set, pred);
-			not_empty = SXTRUE;
+			not_empty = true;
 		    }
 		}
 	    }
@@ -195,7 +191,7 @@ static	SXVOID RARP_next (RARP_state, trans)
 }
 
 
-static	SXVOID RARP_sort (RARP_state)
+static	void RARP_sort (RARP_state)
     int		RARP_state;
 {
     /* Cette procedure regarde les transitions possibles depuis RARP_state.
@@ -231,7 +227,7 @@ static	SXVOID RARP_sort (RARP_state)
 }
 
 
-SXVOID	RARP_free ()
+void	RARP_free ()
 {
     /* Libere les structures UARP. */
     if (is_alloc_UARP_called) {
@@ -254,7 +250,7 @@ SXVOID	RARP_free ()
 
 
 
-static SXVOID	RARP_init ()
+static void	RARP_init ()
 {
     register int	x, UARP_state, is, lim;
     int			RARP_state;
@@ -274,7 +270,7 @@ static SXVOID	RARP_init ()
 
 
 
-static SXVOID	RARP_construction ()
+static void	RARP_construction ()
 {
     register int	RARP_state;
 
@@ -291,7 +287,7 @@ static SXVOID	RARP_construction ()
 
 
 
-SXVOID cloning ()
+void cloning ()
 {
     /* UARP contient l'union des ARP. */
     /* On construit RARP le DFSA inverse correspondant. */
@@ -332,13 +328,13 @@ SXVOID cloning ()
 }
 
 
-SXVOID alloc_UARP ()
+void alloc_UARP ()
 {
     static int	UARPxTRANSxUARP_foreach [] = {0, 0, 1, 0, 0, 0};
 
     /* Alloue ou raz les structures UARP (Union of ARPs). */
     if (!is_alloc_UARP_called) {
-	is_alloc_UARP_called = SXTRUE;
+	is_alloc_UARP_called = true;
 	XxYxZ_alloc (&UARPxTRANSxUARP_hd, "UARPxTRANSxUARP_hd", xac2, 4, UARPxTRANSxUARP_foreach, NULL, statistics_file);
     }
     else {
@@ -349,7 +345,7 @@ SXVOID alloc_UARP ()
 }
 
 
-static SXVOID open_UARP ()
+static void open_UARP ()
 {
     /* Alloue ou raz les structures UARP (Union of ARPs) qui dependent de l'ARP courant. */
     register int l, i;
@@ -375,7 +371,7 @@ static SXVOID open_UARP ()
 }
 
 
-SXVOID build_UARP ()
+void build_UARP ()
 {
     register int	i, ARP_state, next_ARP_state, x;
     int			trans, UARP_state, next_UARP_state, unused;

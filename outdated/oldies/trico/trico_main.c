@@ -33,29 +33,10 @@
 /* 20000521 15:33 (phd):	Création à partir de sxmain.c et lecl	*/
 /************************************************************************/
 
-#ifndef lint
-#ifdef	BUG
-#define WHAT	"@(#)trico.d.c	- SYNTAX [WNT] - 18 mars 2002"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
-
-#else
-#define WHAT	"@(#)trico.c	- SYNTAX [WNT] - 18 mars 2002"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
-
-#endif
-#endif
-
+char WHAT[] = "@(#)trico.d.c	- SYNTAX [unix] - 18 mars 2002";
 
 #include "sxunix.h"
 #include "trico_env.h"
-
-
 
 char	by_mess [] = "the SYNTAX automaton constructor TRICO";
 
@@ -67,7 +48,7 @@ char	by_mess [] = "the SYNTAX automaton constructor TRICO";
 FILE	*sxstdout = {NULL}, *sxstderr = {NULL};
 
 FILE		*sxtty;
-SXBOOLEAN		sxverbosep = {SXTRUE};
+bool		sxverbosep = {true};
 
 /* On est dans un cas "mono-langage": */
 
@@ -77,7 +58,7 @@ extern struct sxtables	trico_tables;
 /*    options    */
 /*---------------*/
 
-SXBOOLEAN		sxverbosep;
+bool		sxverbosep;
 static char	ME [] = "trico";
 static char	Usage [] = "\
 Utilisation :\t%s [options] [fichiers]\n\
@@ -164,7 +145,7 @@ option_get_text (kind)
 
 
 
-static SXINLINE SXVOID
+static SXINLINE void
 language_name (path_name)
     char	*path_name;
 {
@@ -183,7 +164,7 @@ language_name (path_name)
 }
 
 
-static SXINLINE SXVOID
+static SXINLINE void
 trico_run (pathname)
     register char	*pathname;
 {
@@ -255,64 +236,64 @@ int main (int argc, char *argv[])
 #endif
 
   sxopentty ();
-  sxttycol1p = SXTRUE;
+  sxttycol1p = true;
 
 /* valeurs par defaut */
 
   options_set = OPTION (SOURCE) | OPTION (VERBEUX) | OPTION (OBJET) | OPTION (OPTIMALISER);
-  is_source = sxverbosep = is_object = is_optimize = SXTRUE;
-  is_table = is_list = SXFALSE;
+  is_source = sxverbosep = is_object = is_optimize = true;
+  is_table = is_list = false;
 
 /* Décodage des options */
 
   for (argnum = 1; argnum < argc; argnum++) {
     switch (option_get_kind (argv [argnum])) {
     case SOURCE:
-      is_source = SXTRUE, options_set |= OPTION (SOURCE);
+      is_source = true, options_set |= OPTION (SOURCE);
       break;
 
     case -SOURCE:
-      is_source = is_object = is_table = is_list = SXFALSE, options_set &= noOPTION (SOURCE) & noOPTION (OBJET) & noOPTION (TABLE) & noOPTION (LISTE);
+      is_source = is_object = is_table = is_list = false, options_set &= noOPTION (SOURCE) & noOPTION (OBJET) & noOPTION (TABLE) & noOPTION (LISTE);
       break;
 
     case VERBEUX:
-      sxverbosep = SXTRUE, options_set |= OPTION (VERBEUX);
+      sxverbosep = true, options_set |= OPTION (VERBEUX);
       break;
 
     case -VERBEUX:
-      sxverbosep = SXFALSE, options_set &= noOPTION (VERBEUX);
+      sxverbosep = false, options_set &= noOPTION (VERBEUX);
       break;
 
     case OBJET:
-      is_source = is_object = SXTRUE, options_set |= OPTION (SOURCE) | OPTION (OBJET);
+      is_source = is_object = true, options_set |= OPTION (SOURCE) | OPTION (OBJET);
       break;
 
     case -OBJET:
-      is_object = SXFALSE, options_set &= noOPTION (OBJET);
+      is_object = false, options_set &= noOPTION (OBJET);
       break;
 
     case TABLE:
-      is_source = is_table = SXTRUE, options_set |= OPTION (SOURCE) | OPTION (TABLE);
+      is_source = is_table = true, options_set |= OPTION (SOURCE) | OPTION (TABLE);
       break;
 
     case -TABLE:
-      is_table = SXFALSE, options_set &= noOPTION (TABLE);
+      is_table = false, options_set &= noOPTION (TABLE);
       break;
 
     case LISTE:
-      is_source = is_object = is_table = is_list = SXTRUE, options_set |= OPTION (SOURCE) | OPTION (OBJET) | OPTION (TABLE) | OPTION (LISTE);
+      is_source = is_object = is_table = is_list = true, options_set |= OPTION (SOURCE) | OPTION (OBJET) | OPTION (TABLE) | OPTION (LISTE);
       break;
 
     case -LISTE:
-      is_list = SXFALSE, options_set &= noOPTION (LISTE);
+      is_list = false, options_set &= noOPTION (LISTE);
       break;
 
     case OPTIMALISER:
-      is_optimize = SXTRUE, options_set |= OPTION (OPTIMALISER);
+      is_optimize = true, options_set |= OPTION (OPTIMALISER);
       break;
 
     case -OPTIMALISER:
-      is_optimize = SXFALSE, options_set &= noOPTION (OPTIMALISER);
+      is_optimize = false, options_set &= noOPTION (OPTIMALISER);
       break;
 
     case LANGAGE:
@@ -396,14 +377,14 @@ options_text (line)
     register char	*line;
 {
   register int	i;
-  SXBOOLEAN	is_first = SXTRUE;
+  bool	is_first = true;
 
   *line = SXNUL;
 
   for (i = 1; i <= LAST_OPTION; i++)
     if (options_set & OPTION (i)) {
       if (is_first)
-	is_first = SXFALSE;
+	is_first = false;
       else
 	strcat (line, ", ");
 
@@ -415,7 +396,7 @@ options_text (line)
 
 
 
-SXVOID
+void
 sxvoid ()
 /* Procédure ne faisant rien, mais le faisant bien ! */
 {

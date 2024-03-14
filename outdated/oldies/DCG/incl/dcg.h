@@ -7,7 +7,7 @@
 /*------------------------------*/
 
 long		options_set;
-SXBOOLEAN		sxverbosep, is_normal_form;
+bool		sxverbosep, is_normal_form;
 char		prgentname [32];
 struct sxtables	*sxtab_ptr;
 

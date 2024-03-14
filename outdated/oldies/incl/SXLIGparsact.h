@@ -90,7 +90,7 @@ static int		*LFprod, *LFprolon, *LFlispro, *LFprod2next;
 static int		*LFlhs;
 #endif
 static int		xLFprod_top, xLFprod, xLFlispro_top, xLFlispro;
-static SXBOOLEAN		LFhas_cycles;
+static bool		LFhas_cycles;
 
 static XxY_header	EQUAL1_hd, PUSH1_hd, POP1_hd, Axs_hd;
 static int		EQUAL1_top, POP1_top, PUSH1_top;
@@ -149,7 +149,7 @@ static int		RDGmax_rhs_lgth;
 
 #if 0
 #if is_initial_LIG==0
-static SXBOOLEAN		RDGhas_cycles;
+static bool		RDGhas_cycles;
 static SXBA		RDGcyclic_nt_set, RDGprod_set, RDGnt_set2;
 #endif
 #endif
@@ -167,7 +167,7 @@ static SXBA		RDGnt_set;
    A(..) -> A(..)
    A(..) -> A(..a a)
    A(..a a) -> A(..)
-   On a (A =n A) et donc check_locality(A,A)==SXTRUE ce qui est faux.
+   On a (A =n A) et donc check_locality(A,A)==true ce qui est faux.
    A priori 3 solutions :
 
    1)Noter a la construction de chaque relation un couple d'attributs (is_local, is_non_local)
@@ -176,10 +176,10 @@ static SXBA		RDGnt_set;
    PB: si le couple d'attributs (is_local, is_non_local) d'un element deja existant change, il faut
    propager recursivement ce changement sur tous les elements composes a partir de cet element!!
 
-   2)Dans le cas douteux, check_locality retourne SXFALSE et, apres generation, on rend la RDG
+   2)Dans le cas douteux, check_locality retourne false et, apres generation, on rend la RDG
    epsilon free.
 
-   3)Dans le cas douteux, check_locality retourne SXFALSE et, on laisse ds la RDG les productions
+   3)Dans le cas douteux, check_locality retourne false et, on laisse ds la RDG les productions
    vides.
 
    On essaie la 2!
@@ -187,10 +187,10 @@ static SXBA		RDGnt_set;
 
 /* check_locality(Aij,Bkl) ne peut etre vrai que si l'on a Aij <>n Bkl ou Aij <>n Cmn >1 Bkl */
 #if SXLIGis_normal_form==1
-#define check_locality(Aij,Bkl)	SXFALSE
+#define check_locality(Aij,Bkl)	false
 #else
 static int		_A, _B;
-#define check_equality(A,B)	((_A = ((A) < 0 ? dumAij2attr[-A].Aij : (A)), _B = ((B) < 0 ? dumAij2attr[-B].Aij : (B)), (_A == _B ? A != B : SXFALSE)))
+#define check_equality(A,B)	((_A = ((A) < 0 ? dumAij2attr[-A].Aij : (A)), _B = ((B) < 0 ? dumAij2attr[-B].Aij : (B)), (_A == _B ? A != B : false)))
 #define check_locality(Aij,Bkl)	(check_equality(Aij,Bkl))
 #endif
 
@@ -272,14 +272,14 @@ RDGlispro_oflw ()
     RDGitem2prod = (int*) sxrealloc (RDGitem2prod, xRDGlispro_top+1, sizeof (int));
 }
 
-static SXVOID
+static void
 EQUAL1_oflw (old_size, new_size)
     int		old_size, new_size;
 {
     EQUAL12attr = (struct rel_attr*) sxrealloc (EQUAL12attr, new_size +1, sizeof (struct rel_attr));
 }
 
-static SXVOID
+static void
 EQUALn_oflw (old_size, new_size)
     int		old_size, new_size;
 {
@@ -291,7 +291,7 @@ EQUALn_oflw (old_size, new_size)
 #endif    
 }
 
-static SXVOID
+static void
 PUSH1_oflw (old_size, new_size)
     int		old_size, new_size;
 {
@@ -299,7 +299,7 @@ PUSH1_oflw (old_size, new_size)
 }
 
 
-static SXVOID
+static void
 POP1_oflw (old_size, new_size)
     int		old_size, new_size;
 {
@@ -310,7 +310,7 @@ POP1_oflw (old_size, new_size)
 }
 
 
-static SXVOID
+static void
 POPn_oflw (old_size, new_size)
     int		old_size, new_size;
 {
@@ -423,7 +423,7 @@ SXLIG_semact (i, j, prod_core, rhs_stack)
 	   on previent le parser que le point fixe est atteint. */
 	prod &= ~(HIBITS);
 	SXBA_1_bit (LIGcyclic_prod_set, prod);
-	LFhas_cycles = SXTRUE;
+	LFhas_cycles = true;
 
 	return 0;
     }
@@ -645,7 +645,7 @@ static void
 n_level_relations ()
 {
     int 	A, B, C, D, AB, AC, BC, AsB, BsC, BsD, CsD, As, sC, sD, ssymb;
-    SXBOOLEAN	is_new;
+    bool	is_new;
     char	*pkind;
 #if SXLIGis_leveln_complete==0
 #if SXLIGuse_reduced==1
@@ -1945,12 +1945,12 @@ RDGextraction (S0n)
 
 #if 0
 #if is_initial_LIG==0
-static SXBOOLEAN
+static bool
 RDGseek_cycles (A)
     int A;
 {
     int B, prod, item, X;
-    SXBOOLEAN	is_cycle;
+    bool	is_cycle;
 
     prod = RDGrhsnt2prod [A];
 	
@@ -1965,11 +1965,11 @@ RDGseek_cycles (A)
 		SXBA_0_bit (RDGcyclic_nt_set, B); /* B est teste */
 	    }
 	    else {
-		is_cycle = SXTRUE;
+		is_cycle = true;
 	    }
 
 	    if (is_cycle)
-		return SXTRUE;
+		return true;
 	}
 
 	item = RDGprolon [prod];
@@ -1979,7 +1979,7 @@ RDGseek_cycles (A)
 	prod = RDGitem2prod [item];
     }
 
-    return SXFALSE;
+    return false;
 }
 
 static void
@@ -1995,7 +1995,7 @@ RDGtest_cycles ()
 	SXBA_1_bit (RDGnt_set2, nt);
 
 	if (RDGseek_cycles (nt)) {
-	    RDGhas_cycles = SXTRUE;
+	    RDGhas_cycles = true;
 	    return;
 	}
 
@@ -2007,7 +2007,7 @@ RDGtest_cycles ()
 #endif
 
 
-static SXBOOLEAN
+static bool
 SXLIG_sem_pass (S0n)
     int S0n;
 {
@@ -2171,7 +2171,7 @@ SXLIG_sem_pass (S0n)
 	sxtime (TIME_FINAL, "\tSemantic Pass: Rightmost Derivation Grammar");
 #endif
 
-    return SXTRUE;
+    return true;
 }
 
 static void
@@ -2384,13 +2384,13 @@ struct for_semact {
     void	(*sem_init) (),
                 (*sem_final) ();
 
-    SXBOOLEAN	(*prdct) (),
+    bool	(*prdct) (),
                 (*parsact) (),
                 (*semact) (),
                 (*constraint) (),
                 (*sem_pass) ();
 
-    SXBOOLEAN	need_Aij2A_i_j,
+    bool	need_Aij2A_i_j,
                 need_pack_unpack;
 }
 
@@ -2416,7 +2416,7 @@ static SXBA			RDGright_tree_is_valid;
 static int			*RDGprod2used_nb;
 static SXBA			LFprod_set, LFfixed_point_reached;
 
-static SXVOID
+static void
 RDGright_trees_oflw (old_size, new_size)
     int		old_size, new_size;
 {
@@ -2469,7 +2469,7 @@ RDGgen_right_trees ()
     int		Y, X, prod, bot, top, lgth, ptop, stop, tree, new_tree, nbnt, lfprod;
     int		min, nb, next_min, ret_val;
     int		*params;
-    SXBOOLEAN	go_on, is_first_time;
+    bool	go_on, is_first_time;
 
     if (IS_EMPTY (RDGprefix_stack)) {
 	/* On a reconnu un arbre */
@@ -2499,17 +2499,17 @@ RDGgen_right_trees ()
 	    TOP (RDGparse_stack) = top - nbnt;
 
 	    ret_val = 0;
-	    is_first_time = SXFALSE;
+	    is_first_time = false;
 
 	    if (XH_set (&RDGright_trees, &new_tree)) {
 		/* Existe deja */
 		if (SXBA_bit_is_set (RDGright_tree_is_valid, new_tree)) {
 		    /* On continue */
-		    go_on = SXTRUE;
+		    go_on = true;
 		}
 		else {
 		    /* Deja vu et contraintes incompatibles, abandon */
-		    go_on = SXFALSE;
+		    go_on = false;
 		}
 	    }
 	    else {
@@ -2527,18 +2527,18 @@ RDGgen_right_trees ()
 			/* Les contraintes sur les "features" sont verifiees, on peut
 			   continuer */
 			SXBA_1_bit (RDGright_tree_is_valid, new_tree);
-			go_on = SXTRUE;
+			go_on = true;
 		    }
 		    else {
 			/* Abandon de l'arbre */
-			go_on = SXTRUE;
+			go_on = true;
 		    }
 		}
 		else {
 		    /* Detection d'une circularite */
 		    if (SXBA_bit_is_set (LFfixed_point_reached, lfprod))
 			/* Le point fixe a deja ete calcule : Abandon */
-			go_on = SXFALSE;
+			go_on = false;
 		    else {
 			/* On previent for_features.semact que lfprod a deja ete trouve */
 			ret_val = for_features.semact == NULL || (*for_features.semact) (new_tree | HIBITS, &params);
@@ -2546,14 +2546,14 @@ RDGgen_right_trees ()
 			if (ret_val != 0) {
 			    /* Ca continue de marcher... */
 			    SXBA_1_bit (RDGright_tree_is_valid, new_tree);
-			    go_on = SXTRUE;
+			    go_on = true;
 
 			    if (ret_val &= HIBITS)
 				/* Pt fixe atteint */
 				SXBA_1_bit (LFfixed_point_reached, lfprod);
 			}
 			else {
-			    go_on = SXFALSE;
+			    go_on = false;
 			}
 		    }
 		}
@@ -2733,7 +2733,7 @@ SXLIG_ndsemact (rhs_stack)
     int		nb, Bpri, Bsec;
     int		gitem, rule_lgth, bot, top;
     int		*pca, *pcp;
-    SXBOOLEAN	is_in_seq;
+    bool	is_in_seq;
 
     int		x, git, lfitem, bo, Xmn, i, j, k, l, range;
 
@@ -2761,7 +2761,7 @@ SXLIG_ndsemact (rhs_stack)
 	is_in_seq = (Aij == lhs_seq);
     }
     else {
-	is_in_seq = SXFALSE;
+	is_in_seq = false;
     }
 
     top = SS_top (rhs_stack);
@@ -3269,7 +3269,7 @@ SXLIG_post_td_init ()
 
     /* Pour l'instant, prudence. */
     /* Regarder si sxndparser peut etre + precis */
-    LFhas_cycles = SXTRUE;
+    LFhas_cycles = true;
 
     pAij_top = XxY_top (parse_stack.symbols);
 
@@ -3313,9 +3313,9 @@ SXLIG_actions (which, arg)
     return 0;
 
   case SXINIT:
-    sxplocals.mode.with_semact = SXFALSE;
-    sxplocals.mode.with_parsact = SXFALSE;
-    sxplocals.mode.with_parsprdct = SXFALSE;
+    sxplocals.mode.with_semact = false;
+    sxplocals.mode.with_parsact = false;
+    sxplocals.mode.with_parsprdct = false;
 
     return 0;
 
@@ -3375,8 +3375,8 @@ SXLIG_actions (what, arg)
 	for_semact->sem_pass = SXLIG_semantics;
 #if 0
 	/* Ds le cas des LIG, les Aij sont stockes ds le X_header Aij_hd */
-	for_semact->need_Aij2A_i_j = SXFALSE;
-	for_semact->need_pack_unpack = SXFALSE;
+	for_semact->need_Aij2A_i_j = false;
+	for_semact->need_pack_unpack = false;
 #endif
 
 	break;

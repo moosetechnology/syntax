@@ -34,7 +34,7 @@ static char	ME [] = "left_corner automaton constructor";
 #include "P_tables.h"
 #include "csynt_optim.h"
 
-char WHAT_XCSYNTLC0[] = "@(#)SYNTAX - $Id: LC0.c 3652 2023-12-24 09:43:15Z garavel $" WHAT_DEBUG;
+char WHAT_XCSYNTLC0[] = "@(#)SYNTAX - $Id: LC0.c 3717 2024-02-10 07:24:01Z garavel $" WHAT_DEBUG;
 
 extern char	*laset (VARSTR varstring, SXINT maxi, SXBA look_ahead_set);
 
@@ -361,7 +361,7 @@ static void
 print_state (SXINT state)
 {
     SXINT		next_state, tnt, trans, la, xprod, empty, item;
-    char	s1 [12], *string;
+    char	s1 [28], *string;
     bool	is_non_kernel;
 
     put_edit (1, star_71);
@@ -587,7 +587,7 @@ ntfe (void)
     SXINT			state, next_state, tnt, xnt, act, red_no, x, trans, xprod;
     struct state	*astate;
     SXINT			*nter;
-    bool		is_xnt, is_nd_list;
+    bool		is_nd_list;
     SXBA		xnt_set;
 
     if (sxverbosep)
@@ -652,7 +652,6 @@ ntfe (void)
 		    nter [xnt] = 0;
 
 		    if (xnt > bnf_ag.WS_TBL_SIZE.ntmax) {
-			is_xnt = true;
 			xprdct_items++;
 			xpredicates++;
 			    

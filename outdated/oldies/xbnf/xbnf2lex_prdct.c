@@ -35,7 +35,7 @@ static char	ME [] = "xbnf2lex_prdct.c";
 #include "XH.h"
 #include "varstr.h"
 
-char WHAT_XBNF2LEXPRDCT[] = "@(#)SYNTAX - $Id: xbnf2lex_prdct.c 3369 2023-06-17 10:18:35Z garavel $" WHAT_DEBUG;
+char WHAT_XBNF2LEXPRDCT[] = "@(#)SYNTAX - $Id: xbnf2lex_prdct.c 3677 2024-02-05 18:31:33Z garavel $" WHAT_DEBUG;
 
 
 /*
@@ -65,7 +65,7 @@ E N D   N O D E   N A M E S
 
 extern struct sxtables *sxtab_ptr;
 extern char	*prgentname, *processorname;
-extern SXBOOLEAN is_predicate;
+extern bool is_predicate;
 
 /*-----------------*/
 /* local variables */
@@ -77,7 +77,7 @@ static XH_header rhs_tlist;
 static SXINT *prdct_disp;
 static SXINT *ste2t, t;
 
-static SXVOID
+static void
 put_prdct (SXNODE *visited)
 {
   SXNODE	*brother;
@@ -117,7 +117,7 @@ put_prdct (SXNODE *visited)
 }
 
 
-static SXVOID
+static void
 tree_walk (SXNODE *visited)
 {
   SXINT ste, prdct, x, y;
@@ -254,7 +254,7 @@ tree_walk (SXNODE *visited)
 /* xbnf2lex_prdct */
 /*----------------*/
 
-SXVOID	xbnf2lex_prdct (SXNODE *adam)
+void	xbnf2lex_prdct (SXNODE *adam)
 {
 
 /*-----------------------------------------------*/

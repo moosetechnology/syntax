@@ -32,11 +32,7 @@
 /* ??-09-90 ??:?? (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-#define WHAT	"@(#)LR0.c	- SYNTAX [unix] - 9 Juillet 1992"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+char WHAT[] = "@(#)LR0.c	- SYNTAX [unix] - 9 Juillet 1992";
 
 static char	ME [] = "LR (0)";
 
@@ -47,17 +43,17 @@ static char	ME [] = "LR (0)";
 static int	limitem, limt, limnt;
 static int	*tsymb1, *items_list, *nt_stack;
 static SXBA	t_set, nt_set;
-static SXBOOLEAN	is_t_trans, is_nt_trans;
+static bool	is_t_trans, is_nt_trans;
 
 
-static SXVOID	oflw_nucleus (old_size, new_size)
+static void	oflw_nucleus (old_size, new_size)
     int		old_size, new_size;
 {
     Q0 = (struct Q0*) sxrealloc (Q0, new_size + 1, sizeof (struct Q0));
 }
 
 
-static SXVOID	oflw_Q0xV (old_size, new_size)
+static void	oflw_Q0xV (old_size, new_size)
     int		old_size, new_size;
 {
     Q0xV_to_Q0 = (int*) sxrealloc (Q0xV_to_Q0, new_size + 1, sizeof (int));
@@ -78,13 +74,13 @@ static	mettre (item)
 	    /* Nouvelle sous_liste */
 	    if (tnt > 0) {
 		if (SXBA_bit_is_reset_set (nt_set, tnt)) {
-		    is_nt_trans = SXTRUE;
+		    is_nt_trans = true;
 		    nt_stack [(*nt_stack)++] = tnt;
 		}
 	    }
 	    else {
 		SXBA_1_bit (t_set, -tnt);
-		is_t_trans = SXTRUE;
+		is_t_trans = true;
 	    }
 	}
     }
@@ -97,7 +93,7 @@ static	mettre (item)
 }
 
 
-SXVOID	LR0 ()
+void	LR0 ()
 {
     limitem = bnf_ag.WS_TBL_SIZE.indpro + 1;
     limt = -bnf_ag.WS_TBL_SIZE.xtmax - 1;
@@ -143,7 +139,7 @@ SXVOID	LR0 ()
 	register int	xac1;
 
 	for (xac1 = 1; xac1 < XH_top (nucleus_hd); xac1++) {
-	    is_t_trans = is_nt_trans = SXFALSE;
+	    is_t_trans = is_nt_trans = false;
 	    
 	    {
 		/* Fermeture. */
@@ -321,19 +317,19 @@ SXVOID	LR0 ()
 }
 
 
-SXBOOLEAN		pred_card (q)
+bool		pred_card (q)
     int		q;
 {
-    /* Retourne SXTRUE ss1 le nombre de predecesseurs de q dans l'automate LR(0) est
+    /* Retourne true ss1 le nombre de predecesseurs de q dans l'automate LR(0) est
        superieur a 1 */
     register int	x, n = 0;
 
     XxY_Yforeach (Q0xQ0_hd, q, x) {
 	if (++n > 1)
-	    return SXTRUE;
+	    return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
 
@@ -368,7 +364,7 @@ int	nucl_i (state, i)
 }
 
 
-SXBOOLEAN		t_in_deriv (t, item)
+bool		t_in_deriv (t, item)
     register int	t, item;
 {
     /* Teste si le terminal "t" appartient a S avec
@@ -379,7 +375,7 @@ SXBOOLEAN		t_in_deriv (t, item)
     while ((tnt = bnf_ag.WS_INDPRO [item++].lispro) > 0) {
 	/* Non terminal */
 	if (SXBA_bit_is_set (bnf_ag.FIRST [XNT_TO_NT_CODE (tnt)], -t))
-	    return SXTRUE;
+	    return true;
 
 	if (!SXBA_bit_is_set (bnf_ag.BVIDE, tnt))
 	    break;
@@ -390,13 +386,13 @@ SXBOOLEAN		t_in_deriv (t, item)
 
 
 
-SXBOOLEAN ante (state, item, f)
+bool ante (state, item, f)
     int		state, item;
-    SXBOOLEAN	(*f)();
+    bool	(*f)();
 {
     /* item : A -> alpha . beta est dans state.
        Appelle la fonction f pour chaque etat q tel que goto*(q, alpha) = state.
-       f a la possibilite d'interrompre le parcourt en retournant SXTRUE */
+       f a la possibilite d'interrompre le parcourt en retournant true */
     register int	x;
 
     if (bnf_ag.WS_INDPRO [item - 1].lispro != 0) {
@@ -404,13 +400,13 @@ SXBOOLEAN ante (state, item, f)
 	XxY_Yforeach (Q0xQ0_hd, state, x) {
 	    /* Calcul des etats predecesseurs de state (sur X) */
 	    if (ante (XxY_X (Q0xQ0_hd, x), item - 1, f))
-		return SXTRUE;
+		return true;
 	}
     }
     else /* item de la fermeture: A -> . beta */
 	return f (state, item);
 
-    return SXFALSE;
+    return false;
 }
 
 int	gotostar (state, start, goal)

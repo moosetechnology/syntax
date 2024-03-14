@@ -351,7 +351,7 @@ static void sxSL_move (header, x, y, lgth)
 
     sxsubset_stat (stdout, &sxsubset_work);
 
-    /* sxsubset_to_c (&sxsubset_work, stdout, "sxsubset_work", SXTRUE); */
+    /* sxsubset_to_c (&sxsubset_work, stdout, "sxsubset_work", true); */
     getrusage (RUSAGE_SELF, &prev_usage);
 
     for (j = 1; j <= erasenb; j++) {
@@ -366,7 +366,7 @@ static void sxSL_move (header, x, y, lgth)
 	}
     }
     
-    /* sxsubset_to_c (&sxsubset_work, stdout, "sxsubset_work", SXTRUE); */
+    /* sxsubset_to_c (&sxsubset_work, stdout, "sxsubset_work", true); */
 
     getrusage (RUSAGE_SELF, &next_usage);
     

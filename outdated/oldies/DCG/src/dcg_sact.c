@@ -1,7 +1,7 @@
 #include "sxunix.h"
 #include "dcg_td.h"
 
-SXVOID	dcg_scan_act (what, act_no)
+void	dcg_scan_act (what, act_no)
     int		what, act_no;
 {
     int cur_lahead, c0, c1, c2;

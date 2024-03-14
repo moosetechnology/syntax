@@ -28,7 +28,7 @@ char	*prgentname;
 
 long    options_set;
  
-SXBOOLEAN is_list,
+bool is_list,
         is_object,
         is_optimize,
         is_source,

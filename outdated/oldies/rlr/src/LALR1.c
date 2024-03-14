@@ -76,11 +76,7 @@
 /* 30-10-86 11:05 (phd):	Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-#define WHAT	"@(#)LALR1.c	- SYNTAX [unix] -  Mercredi 24 Novembre 1999"
-static struct what {
-  struct what	*whatp;
-  char		what [sizeof (WHAT)];
-} what = {&what, WHAT};
+char WHAT[] = "@(#)LALR1.c	- SYNTAX [unix] -  Mercredi 24 Novembre 1999";
 
 static char	*ME;
 
@@ -120,24 +116,24 @@ assoc$set is replaced by value_$set
 #include "bstr.h"
 
 
-extern SXBOOLEAN	prio_read (), prio_free ();
+extern bool	prio_read (), prio_free ();
 extern VARSTR	prod_to_str ();
-extern SXBOOLEAN	ambiguity (), is_not_nullable ();
+extern bool	ambiguity (), is_not_nullable ();
 extern int	is_cycle_in_reads ();
 extern SXBA	is_not_LRpi_on_StNt ();
-extern SXBOOLEAN	open_listing ();
+extern bool	open_listing ();
 extern VARSTR	cat_t_string ();
 extern char	*laset ();
 extern char	*xt_to_str ();
-extern SXBOOLEAN	ante ();
-extern SXBOOLEAN	ARC_construction ();
+extern bool	ante ();
+extern bool	ARC_construction ();
 
 static int	**Titems_set;
 
 static struct priority	*t_priorities /* 1:xtmax */ ;
 static struct priority	*r_priorities /* 1:xnbpro */ ;
 static char	star_71 [] = "***********************************************************************";
-static SXBOOLEAN	is_lalr1, is_ARCs, is_conflict, is_ARC_init_called,
+static bool	is_lalr1, is_ARCs, is_conflict, is_ARC_init_called,
                 is_t_and_r_priorities;
 static int	processable_state_nb;
 static int	limt, limnt, limpro;
@@ -152,7 +148,7 @@ static SXBA	/* xtmax */ *look_ahead_sets /* 1:reduce_item_no */ ;
 static SXBA	/* xtmax */ t_set, t2_set, t1_set;
 static SXBA	ambig_root_set, conflict_set, shift_reduce_conflict_set;
 static int	grammar_kind;
-static SXBOOLEAN	is_users_conflict, is_systems_conflict;
+static bool	is_users_conflict, is_systems_conflict;
 static SXBA	users_conflict_set, systems_conflict_set;
 struct chosen {
 	   int	conflict_type; /* SHIFT_REDUCE, REDUCE_REDUCE */
@@ -211,7 +207,7 @@ static struct bstr	*pre;
 static struct priority	UNDEF_PRIO = {0, 0};
 static struct priority	current_prio;
 static int	min_reduce;
-static SXBOOLEAN	is_error_code_needed;
+static bool	is_error_code_needed;
 static char	header [] = "\
  LALR(1)  |                            |\n\
 Conflicts |        Shift-Reduce        |        Reduce-Reduce\n\
@@ -219,16 +215,14 @@ Conflicts |        Shift-Reduce        |        Reduce-Reduce\n\
           |  Prio  | %s |   Rlr  |  Prio  | %s |   Rlr\n\
           |--------|----------|--------|--------|----------|--------\n";
 
-static SXVOID	oflw_Q0xT_to_conflict_action (old_size, new_size)
-    int		old_size, new_size;
+static void	oflw_Q0xT_to_conflict_action (int old_size, int new_size)
 {
     Q0xT_to_chosen = (struct chosen*) sxrealloc (Q0xT_to_chosen, new_size +
 	 1, sizeof (struct chosen));
 }
 
 
-SXVOID	CLEAR (T)
-    register int	*T;
+void	CLEAR (int *T)
 {
     register int	x, y;
 
@@ -241,9 +235,7 @@ SXVOID	CLEAR (T)
 
 
 
-SXVOID sxtime (what, str)
-    int what;
-    char *str;
+void sxtime (int what, char *str)
 {
 #include <sys/time.h>
   long diff;
@@ -287,10 +279,9 @@ SXVOID sxtime (what, str)
 
 
 /* A METTRE DS LR(0) */
-static SXBOOLEAN is_item_in_state (item, state)
-    int item, state;
+static bool is_item_in_state (int item, int state)
 {
-    /* Retourne SXTRUE ssi item est un element de state. */
+    /* Retourne true ssi item est un element de state. */
     register int	tnt, n, item_n, StNt;
     int			lim;
     register struct Q0	*aQ0;
@@ -324,16 +315,15 @@ static SXBOOLEAN is_item_in_state (item, state)
     do {
 	if (XxY_Y (Q0xV_hd, StNt) == tnt &&
 	    is_item_in_state (item, Q0xV_to_Q0 [StNt]))
-	    return SXTRUE;
+	    return true;
     } while (++StNt < lim);
 
-    return SXFALSE;
+    return false;
 }
 
 
 /* A METTRE DS AMBIG */
-static int *check_ambig1 (state_set)
-    SXBA state_set;
+static int *check_ambig1 (SXBA state_set)
 {
     /* De'place' depuis BNF.
        Regarde s'il n'existe pas 2 regles A->alpha et A->beta telles que
@@ -412,9 +402,7 @@ static int *check_ambig1 (state_set)
 }
 
 
-static SXVOID ambig1_print (epsilons, state_set)
-    int		*epsilons;
-    SXBA	state_set;
+static void ambig1_print (int *epsilons, SXBA state_set)
 {
     register int i, nt, xprod, nt1;
 
@@ -449,9 +437,7 @@ static SXVOID ambig1_print (epsilons, state_set)
 
 
 
-static SXBA *is_cycle_in_grammar (state_set)
-    SXBA state_set;
-
+static SXBA *is_cycle_in_grammar (SXBA state_set)
 {
     /* CYCLE_FREE  TEST 				*/
     /* we first compute the relation R :	 	*/
@@ -462,10 +448,10 @@ static SXBA *is_cycle_in_grammar (state_set)
     /* <A> R+ <A>				 	*/
 
     register int	i;
-    SXBOOLEAN		is_cycle;
+    bool		is_cycle;
     register int	nt, x_lispro, y_lispro;
     int			lim, head, tail, nt1, x_rule, xac1, n, item, next;
-    SXBOOLEAN		is_non_terminal;
+    bool		is_non_terminal;
     register SXBA	*R, *Rplus, rule_set, cycle_prods;
     struct Q0		*aQ0;
 
@@ -478,7 +464,7 @@ static SXBA *is_cycle_in_grammar (state_set)
 	    x_rule = bnf_ag.WS_NBPRO [i].numpg;
 	    
 	    if ((tail = bnf_ag.WS_NBPRO [x_rule + 1].prolon - 2) - (head = bnf_ag.WS_NBPRO [x_rule].prolon) >= 0) {
-		is_non_terminal = SXTRUE;
+		is_non_terminal = true;
 		
 		for (x_lispro = head; x_lispro <= tail && (is_non_terminal = (bnf_ag.WS_INDPRO [x_lispro].lispro > 0)); x_lispro
 		     ++)
@@ -497,7 +483,7 @@ static SXBA *is_cycle_in_grammar (state_set)
 
 			    if (y_lispro == x_lispro) {
 				nt1 = XNT_TO_NT_CODE (bnf_ag.WS_INDPRO [x_lispro].lispro);
-				SXBA_1_bit (R [nt], nt1); /* R[nt][nt1]=SXTRUE */
+				SXBA_1_bit (R [nt], nt1); /* R[nt][nt1]=true */
 				SXBA_1_bit (Rplus [nt], nt1);
 				SXBA_1_bit (rule_set, x_rule); /* production interessante. */
 			    }
@@ -509,12 +495,12 @@ static SXBA *is_cycle_in_grammar (state_set)
     }
 
     fermer (Rplus, bnf_ag.WS_TBL_SIZE.ntmax + 1);
-    is_cycle = SXFALSE;
+    is_cycle = false;
 
     for (i = 1; i <= bnf_ag.WS_TBL_SIZE.ntmax; i++) {
 	if (SXBA_bit_is_set (Rplus [i], i)) {
 	    SXBA_1_bit (Rplus [0], i);
-	    is_cycle = SXTRUE;
+	    is_cycle = true;
 	}
     }
     
@@ -610,8 +596,7 @@ static SXBA *is_cycle_in_grammar (state_set)
 }
 
 
-static SXVOID cycle_print (Rplus, state_set)
-    SXBA	*Rplus, state_set;
+static void cycle_print (SXBA *Rplus, SXBA state_set)
 {
     register int i, nt;
 
@@ -650,8 +635,7 @@ static SXVOID cycle_print (Rplus, state_set)
 
 
 
-static SXVOID	lookback (state, item, StNt)
-    int		state, item, StNt;
+static void	lookback (int state, int item, int StNt)
 {
     /* Cette fonction recursive calcule la relation binaire includes entre des couples
        (StNt, StNt1) ou chaque StNt est un couple (etat, nt)
@@ -706,7 +690,7 @@ static SXVOID	lookback (state, item, StNt)
 
 
 
-SXVOID compute_Next_states_set ()
+void compute_Next_states_set (void)
 {
     register int	xac1, nt, StNt;
     register struct Q0	*aQ0;
@@ -740,8 +724,7 @@ SXVOID compute_Next_states_set ()
 
 
 
-static SXVOID	compute_includes (xac1)
-    int		xac1;
+static void	compute_includes (int xac1)
 {
     register int	StNt, lim;
     register struct Q0	*aQ0 = Q0 + xac1;
@@ -759,10 +742,7 @@ static SXVOID	compute_includes (xac1)
 
 
 
-int	put_in_fe (fe, hashs, lnks, afe)
-    register struct floyd_evans		*fe, *afe;
-    register int	*lnks;
-    int		*hashs;
+int	put_in_fe (struct floyd_evans *fe, int *hashs, int *lnks, struct floyd_evans *afe)
 {
     register int	hash, x, y;
     register struct floyd_evans		*afex;
@@ -791,9 +771,7 @@ int	put_in_fe (fe, hashs, lnks, afe)
 
 
 
-static	set_chosen (drk, at, rn, p)
-    int		drk, at, rn;
-    struct priority	p;
+static	set_chosen (int drk, int at, int rn, struct priority p)
 {
     chosen.desambig_rule_kind = drk;
     chosen.action_taken = at;
@@ -803,8 +781,7 @@ static	set_chosen (drk, at, rn, p)
 
 
 
-static SXBOOLEAN erase_StNt_StNt1 (St, item)
-    int St, item;
+static bool erase_StNt_StNt1 (int St, int item)
 {
     /* Appelee depuis ante */
     /* Nt1 et StNt sont statiques */
@@ -815,11 +792,10 @@ static SXBOOLEAN erase_StNt_StNt1 (St, item)
     if (elem = XxY_is_set (&includes_hd, StNt, StNt1))
 	XxY_erase (includes_hd, elem);
 
-    return SXFALSE;
+    return false;
 }
 
-SXVOID	cut_includes (q, q1)
-    int		q, q1;
+void	cut_includes (int q, int q1)
 {
     /* Supprime tous les elements de la relation includes "passant" par q1 et q tels que
            (St, Nt) includes (St1, Nt1)
@@ -876,9 +852,7 @@ SXVOID	cut_includes (q, q1)
 
 
 
-static SXVOID	fill_items_set (nt_trans_set, nt_trans_stack, nt_trans)
-    register int	*nt_trans_set, *nt_trans_stack;
-    int		nt_trans;
+static void	fill_items_set (int *nt_trans_set, int *nt_trans_stack, int nt_trans)
 {
     /* Rappelons qu'un noeud est une transition non terminale cad un couple (etat, liste d'items)
        ou chaque item de la liste est un element de "etat" et repere le meme non-terminal */
@@ -892,7 +866,7 @@ static SXVOID	fill_items_set (nt_trans_set, nt_trans_stack, nt_trans)
     register int	xpnt1, x, xnucl, X2;
     register int	*bot, *top;
     int			item, xpnt2, StNt;
-    SXBOOLEAN		is_a_tree = SXFALSE;
+    bool		is_a_tree = false;
 
     CLEAR (nt_trans_set);
     PUSH (nt_trans_set, nt_trans);
@@ -926,7 +900,7 @@ static SXVOID	fill_items_set (nt_trans_set, nt_trans_stack, nt_trans)
 		}
 	    }
 	    else
-		is_a_tree = SXFALSE;
+		is_a_tree = false;
 	}
     }
 
@@ -941,9 +915,7 @@ static SXVOID	fill_items_set (nt_trans_set, nt_trans_stack, nt_trans)
 
 
 
-static SXVOID	fill_look_ahead_set (items_set, la_set)
-    register int	*items_set;
-    register SXBA	la_set;
+static void	fill_look_ahead_set (int *items_set, SXBA la_set)
 {
     /* Cette procedure remplit l'ensemble la_set avec les terminaux visibles depuis les items
        de items_set. Si item est un element de items_set: A -> alpha . Y1 Y2 ... Yn 
@@ -1023,8 +995,7 @@ System Disambiguating Rules (SDR)
 	 rule which appears first in the grammar text.
 */
 
-static SXVOID	set_conflict_action (xac1)
-    int xac1;
+static void	set_conflict_action (int xac1)
 {
     /* L'etat xac1 est conflictuel au sens LALR(1) du terme.
        Cette procedure calcule et stocke les actions par defaut
@@ -1040,7 +1011,7 @@ static SXVOID	set_conflict_action (xac1)
     register int	t, StNt, xla, red_no;
     register struct Q0	*aQ0;
     int			lim, min_red_no, indice;
-    SXBOOLEAN		to_be_processed;
+    bool		to_be_processed;
 
     /* Attention, certains reduce peuvent ne pas etre conflictuels. */
     /* On commence par regarder le statuts des reduces de xac1 vis-a-vis de prio. */
@@ -1051,7 +1022,7 @@ static SXVOID	set_conflict_action (xac1)
 	chosen.conflict_type = SXBA_bit_is_set (t2_set, t) ? SHIFT_REDUCE : REDUCE_REDUCE;
 	chosen.conflict_kind = NOT_LALRk_;
 
-	to_be_processed = SXFALSE;
+	to_be_processed = false;
 
 	if (chosen.conflict_type == SHIFT_REDUCE) {
 	    /* conflit Shift/Reduce */
@@ -1066,13 +1037,13 @@ static SXVOID	set_conflict_action (xac1)
 	    }
 	    else {
 		/* A completer. */
-		to_be_processed = SXTRUE;
+		to_be_processed = true;
 		set_chosen (PRIO_drk, SHIFT, 0, current_prio);
 	    }
 	}
 	else {
 	    /* A completer. */
-	    to_be_processed = SXTRUE;
+	    to_be_processed = true;
 	    set_chosen (PRIO_drk, REDUCE, 0, UNDEF_PRIO);
 	}
 	
@@ -1143,7 +1114,7 @@ static SXVOID	set_conflict_action (xac1)
 	}
 	
 	if (chosen.desambig_rule_kind == PRIO_drk) {
-	    is_users_conflict = SXTRUE;
+	    is_users_conflict = true;
 	    SXBA_1_bit (users_conflict_set, xac1);
 	    
 	    if (chosen.conflict_type == SHIFT_REDUCE)
@@ -1152,7 +1123,7 @@ static SXVOID	set_conflict_action (xac1)
 		prr++;
 	}
 	else {
-	    is_systems_conflict = SXTRUE;
+	    is_systems_conflict = true;
 	    SXBA_1_bit (systems_conflict_set, xac1);
 	    
 	    if (chosen.conflict_type == SHIFT_REDUCE)
@@ -1168,9 +1139,7 @@ static SXVOID	set_conflict_action (xac1)
 }
 
 
-static int equiv_rule_processing (StNt, lim, base, set)
-    int		StNt, lim, base;
-    SXBA	set;
+static int equiv_rule_processing (int StNt, int lim, int base, SXBA set)
 {
     /* On est dans le cas has_xprod */
     /* Recherche des productions ayant meme representant que StNt
@@ -1201,15 +1170,14 @@ static int equiv_rule_processing (StNt, lim, base, set)
 }
 
 
-static SXBOOLEAN	compute_lalr1_conflicts (xac1)
-    int		xac1;
+static bool	compute_lalr1_conflicts (int xac1)
 {
     /* Recherche des conflits (eventuels) en LALR(1) */
     register int	r1, StNt, xla, t;
     int			lim, base_xla, base_StNt, cur_rule_no;
     register SXBA	la_set_r1;
     register struct Q0	*aQ0;
-    SXBOOLEAN	is_conflict = SXFALSE;
+    bool	is_conflict = false;
 
     if ((lim = (aQ0 = Q0 + xac1)->red_trans_nb) > 0) {
 	/* Il y a au moins un reduce, on calcule le[s] look-ahead-set[s]
@@ -1257,8 +1225,8 @@ static SXBOOLEAN	compute_lalr1_conflicts (xac1)
 			if (!is_conflict) {
 			    SXBA_1_bit (conflict_set, xac1);
 			    processable_state_nb++;
-			    is_lalr1 = SXFALSE;
-			    is_conflict = SXTRUE;
+			    is_lalr1 = false;
+			    is_conflict = true;
 			}
 		    }
 		    
@@ -1287,10 +1255,10 @@ static SXBOOLEAN	compute_lalr1_conflicts (xac1)
 			SXBA_1_bit (shift_reduce_conflict_set, xac1);
 			
 			if (!is_conflict) {
-			    is_conflict = SXTRUE;
+			    is_conflict = true;
 			    SXBA_1_bit (conflict_set, xac1);
 			    processable_state_nb++;
-			    is_lalr1 = SXFALSE;
+			    is_lalr1 = false;
 			}
 		    }	
 		} while (++StNt < lim);
@@ -1309,12 +1277,10 @@ static SXBOOLEAN	compute_lalr1_conflicts (xac1)
 
 
 
-static struct bstr	*bstr_cat_T_set (bstr, t_set)
-    register struct bstr	*bstr;
-    register SXBA	t_set;
+static struct bstr	*bstr_cat_T_set (struct bstr *bstr, SXBA t_set)
 {
     register int nb, t;
-    SXBOOLEAN is_af;
+    bool is_af;
 
     nb = sxba_cardinal (t_set);
 
@@ -1338,11 +1304,11 @@ static struct bstr	*bstr_cat_T_set (bstr, t_set)
 
 
 
-static SXVOID	resize ()
+static void	resize (void)
 {
     register int	xac1, l;
     register int	*p, *lim;
-    SXBOOLEAN		is_new_conflict;
+    bool		is_new_conflict;
 
     LR0_sets = sxbm_resize (LR0_sets, 8, 8, xac2);
     conflict_set = LR0_sets [0];
@@ -1371,7 +1337,7 @@ static SXVOID	resize ()
 
     compute_Next_states_set ();
 
-    is_new_conflict = SXFALSE;
+    is_new_conflict = false;
 
     for (xac1 = old_xac2; xac1 < xac2; xac1++)
 	is_new_conflict = is_new_conflict || compute_lalr1_conflicts (xac1);
@@ -1381,10 +1347,7 @@ static SXVOID	resize ()
 
 
 
-static SXBOOLEAN state_to_conflict_set (xac1, is_u, is_s, mask, t_set)
-    int 		xac1, mask;
-    SXBOOLEAN		is_u, is_s;
-    register SXBA	t_set;
+static bool state_to_conflict_set (int xac1, bool is_u, bool is_s, int mask, SXBA t_set)
 {
     /* Remplit t_set avec un sous_ensemble des terminaux impliques
        dans les conflits de l'etat xac1. */
@@ -1393,7 +1356,7 @@ static SXBOOLEAN state_to_conflict_set (xac1, is_u, is_s, mask, t_set)
           mask == NO_CONFLICT_		=>	aucun conflits
           mask == ALL_CONFLICT_		=>	tous les conflits */
     register int	x, t, kind;
-    register SXBOOLEAN	not_empty = SXFALSE;
+    register bool	not_empty = false;
 
     sxba_empty (t_set);
 
@@ -1404,7 +1367,7 @@ static SXBOOLEAN state_to_conflict_set (xac1, is_u, is_s, mask, t_set)
 	    (mask & Q0xT_to_chosen [x].conflict_kind) != mask) {
 	    t = XxY_Y (Q0xT_to_conflict_action_hd, x);
 	    SXBA_1_bit (t_set, t);
-	    not_empty = SXTRUE;
+	    not_empty = true;
 	}
     }
 
@@ -1413,9 +1376,7 @@ static SXBOOLEAN state_to_conflict_set (xac1, is_u, is_s, mask, t_set)
 
 
 
-SXVOID print_conclusions (xac1, t_set)
-    int xac1;
-    SXBA t_set;
+void print_conclusions (int xac1, SXBA t_set)
 {
     /* t_set contient l'ensemble t des transitions terminales (initiales)
        qui n'ont pas pues etre resolues (il existe au moins une chaine
@@ -1484,15 +1445,12 @@ SXVOID print_conclusions (xac1, t_set)
 }
 
 
-static SXVOID print_minimal_message (xac1, t_set, gk)
-    int		xac1;
-    SXBA	t_set;
-    char	*gk;
+static void print_minimal_message (int xac1, SXBA t_set, char *gk)
 {
     register int	StNt, lim;
     register SXBA	la_set;
     register struct Q0	*aQ0 = Q0 + xac1;
-    SXBOOLEAN		is_shift_reduce;
+    bool		is_shift_reduce;
     char		str [8];
     
     if (pre == NULL)
@@ -1546,7 +1504,7 @@ static SXVOID print_minimal_message (xac1, t_set, gk)
 }
 
 
-static SXVOID print_minimal_messages ()
+static void print_minimal_messages (void)
 {
     register int	xac1 = 0;
     
@@ -1562,10 +1520,7 @@ static SXVOID print_minimal_messages ()
 
 
 
-static SXVOID set_conflict_kind (germe, t_set, failed_kind, is_ALL)
-    int			germe, failed_kind;
-    register SXBA	t_set;
-    SXBOOLEAN		is_ALL;
+static void set_conflict_kind (int germe, SXBA t_set, int failed_kind, bool is_ALL)
 {
     /* Positionne le conflict_kind des conflits de germe a failed_kind.
        Si is_ALL tous les conflits, sinon ceux de t_set. */
@@ -1581,9 +1536,7 @@ static SXVOID set_conflict_kind (germe, t_set, failed_kind, is_ALL)
 
 
 
-SXVOID solved_by_ARC (germe, arc_no, t_set)
-    int germe, arc_no;
-    SXBA	t_set;
+void solved_by_ARC (int germe, int arc_no, SXBA t_set)
 {
     /* Les conflits de t_set sur l'etat germe ont ete resolus par l'ARC arc_no. */
     register int t = 0;
@@ -1611,35 +1564,32 @@ SXVOID solved_by_ARC (germe, arc_no, t_set)
 	/* On code en negatif dans reduce_no le numero de l'ARC ayant permis la resolution
 	   du conflit sur t ... */
 	pchosen->reduce_no = -arc_no;
-	is_ARCs = SXTRUE;
+	is_ARCs = true;
     }
 }
 
 
 
-SXBOOLEAN	should_print_conflict (conflict_kind)
-    int conflict_kind;
+bool	should_print_conflict (int conflict_kind)
 {
     /* Cette fonction determine a partir du conflit courant conflict_kind
        et des variables statiques print_current_conflict, print_next_conflict
        et next_processed_kind s'il faut imprimer le conflit courant. */
 
     if (print_current_conflict)
-	return SXTRUE;
+	return true;
 
     if (!print_next_conflict)
-	return SXFALSE;
+	return false;
 
     return (conflict_kind & next_processed_kind) == next_processed_kind;
 }
 
 
-static SXBOOLEAN	call_ARC (is_u, is_s, processed_kind)
-    SXBOOLEAN	is_u, is_s;
-    int		processed_kind;
+static bool	call_ARC (bool is_u, bool is_s, int processed_kind)
 {
     register int	xac1 = 0;
-    SXBOOLEAN	is_RLR = SXTRUE;
+    bool	is_RLR = true;
 
     do {
 	old_xac2 = xac2;
@@ -1652,7 +1602,7 @@ static SXBOOLEAN	call_ARC (is_u, is_s, processed_kind)
 		register struct Q0	*aQ0 = Q0 + xac1;
 		int	oxac2 = xac2;
 		int	failed_kind = 0;
-		SXBOOLEAN	is_pure;
+		bool	is_pure;
 
 
 /* Si le type de conflit detecte par l'appel courant de ARC_construction
@@ -1675,9 +1625,9 @@ static SXBOOLEAN	call_ARC (is_u, is_s, processed_kind)
 		       chaque t est failed_kind. On pourra l'utiliser ulterieurement pour
 		       eviter par exemple de lancer du RoxoLALR si le LALR(3) a deja detecte
 		       la non appartenance. */
-		    set_conflict_kind (xac1, t_set, failed_kind, SXFALSE);
+		    set_conflict_kind (xac1, t_set, failed_kind, false);
 		    grammar_kind |= failed_kind;
-		    is_RLR = SXFALSE;
+		    is_RLR = false;
 
 		    if ((next_processed_kind & failed_kind) == next_processed_kind) {
 			/* Le prochain traitement est moins puissant que l'origine
@@ -1729,9 +1679,7 @@ static SXBOOLEAN	call_ARC (is_u, is_s, processed_kind)
 }
 
 
-char *conflict_kind_to_string (result, conflict_kind, h_val, k_val)
-    VARSTR	result;
-    int 	conflict_kind, h_val, k_val;
+char *conflict_kind_to_string (VARSTR result, int conflict_kind, int h_val, int k_val)
 {
     register int	ck, k, already_processed = 0;
     char		string [32];
@@ -1832,8 +1780,7 @@ char *conflict_kind_to_string (result, conflict_kind, h_val, k_val)
 }    
     
 
-static SXBOOLEAN is_ambig_1 (StNt_set)
-    register SXBA	StNt_set;
+static bool is_ambig_1 (SXBA StNt_set)
 {
     /* Si l'un des Nt des StNt de StNt_set est non nullable, alors il y a
        ambiguite. */
@@ -1841,10 +1788,10 @@ static SXBOOLEAN is_ambig_1 (StNt_set)
 
     while ((StNt = sxba_scan (StNt_set, StNt)) > 0) {
 	if (is_not_nullable (XxY_Y (Q0xV_hd, StNt)))
-	    return SXTRUE;
+	    return true;
     }
 
-    return SXFALSE;
+    return false;
 }
 
     
@@ -1853,8 +1800,7 @@ static SXBOOLEAN is_ambig_1 (StNt_set)
 #define ND_LIST_CLEAR	4
 #define ND_LIST_FREE	3
 
-static SXVOID nd_list (kind, t, act)
-    int kind, t, *act;
+static void nd_list (int kind, int t, int *act)
 {
     /* gere, pour chaque etat les actions du non-determinisme */
     static int *nd_hd, *nd_stack, *nd_lnk;
@@ -1903,7 +1849,7 @@ static SXVOID nd_list (kind, t, act)
 
 
     
-int	LALR1 ()
+int	LALR1 (void)
 {
     ME = constructor_name;
 
@@ -1929,10 +1875,10 @@ int	LALR1 ()
     MAX_LA = 1; /* nombre max de tokens en avance. */
     grammar_kind = NO_CONFLICT_;
     k_value_max = k_value;
-    is_lalr1 = SXTRUE;
-    is_not_LRpi = SXFALSE;
-    is_ambiguous = SXFALSE;
-    is_listing_opened = SXFALSE;
+    is_lalr1 = true;
+    is_not_LRpi = false;
+    is_ambiguous = false;
+    is_listing_opened = false;
     limt = -bnf_ag.WS_TBL_SIZE.xtmax - 1;
     limnt = bnf_ag.WS_TBL_SIZE.xntmax + 1;
     limpro = bnf_ag.WS_TBL_SIZE.xnbpro + 1;
@@ -2031,7 +1977,7 @@ int	LALR1 ()
     XxY_alloc (&Q0xT_to_conflict_action_hd, "Q0xT_to_conflict_action", xac2, 2, 1, 0, oflw_Q0xT_to_conflict_action, statistics_file);
     Q0xT_to_chosen = (struct chosen*) sxalloc (XxY_size (Q0xT_to_conflict_action_hd) + 1
 	     , sizeof (struct chosen));
-    is_users_conflict = is_systems_conflict = SXFALSE;
+    is_users_conflict = is_systems_conflict = false;
 
     {
 	/* On calcule les look-ahead sets de tous les items reduce, on en profite pour
@@ -2066,7 +2012,7 @@ int	LALR1 ()
     if (is_automaton)
 	open_listing (1, language_name, ME, ".la.l");
 
-    is_ARC_init_called = SXFALSE;
+    is_ARC_init_called = false;
 
     if (processable_state_nb > 0 &&
 	(k_value > 1 ||
@@ -2075,7 +2021,7 @@ int	LALR1 ()
 	 is_rlr_constructor ||
 	 is_ambiguity_check)) {
 	int kind;
-	SXBOOLEAN	is_epsilon_free;
+	bool	is_epsilon_free;
 	SXBA	ambig_states_by_includes = NULL,
 	        nonLRpi_states_by_reads = NULL,
 	        ambig_states_by_grammar_cycle = NULL,
@@ -2092,7 +2038,7 @@ int	LALR1 ()
 	    if ((epsilons = check_ambig1 (ambig_states_by_identical_epsilon_derivation)) != NULL) {
 		register int i;
 		
-		is_ambiguous = SXTRUE;
+		is_ambiguous = true;
 		
 		if (!is_listing_opened)
 		    open_listing (1, language_name, ME, ".la.l");
@@ -2103,7 +2049,7 @@ int	LALR1 ()
 		i = 0;
 		
 		while ((i = sxba_scan (ambig_states_by_identical_epsilon_derivation, i)) > 0)
-		    set_conflict_kind (i, NULL, AMBIGUOUS_, SXTRUE);
+		    set_conflict_kind (i, NULL, AMBIGUOUS_, true);
 			
 		sxfree (epsilons);
 	    }
@@ -2117,7 +2063,7 @@ int	LALR1 ()
 	if ((Rplus = is_cycle_in_grammar (ambig_states_by_grammar_cycle)) != NULL) {
 	    register int i;
 
-	    is_ambiguous = SXTRUE;
+	    is_ambiguous = true;
 
 	    if (!is_listing_opened)
 		open_listing (1, language_name, ME, ".la.l");
@@ -2128,7 +2074,7 @@ int	LALR1 ()
 	    i = 0;
 
 	    while ((i = sxba_scan (ambig_states_by_grammar_cycle, i)) > 0)
-		set_conflict_kind (i, NULL, AMBIGUOUS_, SXTRUE);
+		set_conflict_kind (i, NULL, AMBIGUOUS_, true);
 
 	    sxfree (Rplus);
 	}
@@ -2141,7 +2087,7 @@ int	LALR1 ()
 		   que les racines produisant une ambiguite. */
 		register int	xac1, StNt, lim, x;
 		register struct Q0	*aQ0;
-		SXBOOLEAN		should_print_conflict;
+		bool		should_print_conflict;
 
 		ambig_states_by_includes = sxba_calloc (xac2 + 1);
 		StNt = 0;
@@ -2150,7 +2096,7 @@ int	LALR1 ()
 		    xac1 = XxY_X (Q0xV_hd, StNt);
 		    
 		    if (SXBA_bit_is_reset_set (ambig_states_by_includes, xac1)) {
-			set_conflict_kind (xac1, NULL, AMBIGUOUS_, SXTRUE);
+			set_conflict_kind (xac1, NULL, AMBIGUOUS_, true);
 			
 			if (!is_listing_opened)
 			    open_listing (1, language_name, ME, ".la.l");
@@ -2166,7 +2112,7 @@ int	LALR1 ()
 						   is_list_user_conflicts,
 						   is_list_system_conflicts,
 						   ALL_CONFLICT_,
-						   t_set); /* Should be SXTRUE */
+						   t_set); /* Should be true */
 			    print_minimal_message (xac1,
 						   t_set,
 						   NULL);
@@ -2182,7 +2128,7 @@ int	LALR1 ()
 			}
 		    }
 		    
-		    is_ambiguous = SXTRUE;
+		    is_ambiguous = true;
 		}
 	    }
 
@@ -2225,9 +2171,9 @@ int	LALR1 ()
 		register int		lim, StNt;
 		register struct Q0	*aQ0;
 		SXBA			StNt_set2;
-		SXBOOLEAN			should_print_conflict;
+		bool			should_print_conflict;
 		
-		is_not_LRpi = SXTRUE;
+		is_not_LRpi = true;
 		nonLRpi_states_by_reads = sxba_calloc (xac2 + 1);
 		xac1 = 0;
 
@@ -2243,7 +2189,7 @@ int	LALR1 ()
 			    if (SXBA_bit_is_reset_set (nonLRpi_states_by_reads, xac1)) {
 				kind = is_ambig_1 (StNt_set2) ? AMBIGUOUS_ : NOT_LRPI_;
 				grammar_kind |= kind;
-				set_conflict_kind (xac1, NULL, kind, SXTRUE);
+				set_conflict_kind (xac1, NULL, kind, true);
 				
 				if (!is_listing_opened)
 				    open_listing (1, language_name, ME, ".la.l");
@@ -2260,7 +2206,7 @@ int	LALR1 ()
 							   is_list_user_conflicts,
 							   is_list_system_conflicts,
 							   ALL_CONFLICT_,
-							   t_set); /* Should be SXTRUE */
+							   t_set); /* Should be true */
 				    print_minimal_message (xac1,
 							   t_set,
 							   NULL);
@@ -2286,12 +2232,12 @@ int	LALR1 ()
 
 
     arc_state_nb = arc_trans_nb = 0;
-    is_ARCs = SXFALSE;
+    is_ARCs = false;
     germe_to_gr_act = NULL;
     xe1 = (init_state = xac2) + 1;
 
     if (processable_state_nb > 0) {
-	SXBOOLEAN is_u, is_s, old_is_lr_constructor;
+	bool is_u, is_s, old_is_lr_constructor;
 	int	old_h_value, old_k_value;
 
 	is_u = is_list_user_conflicts && is_users_conflict;
@@ -2320,10 +2266,10 @@ int	LALR1 ()
 		old_k_value = k_value;
 		old_is_lr_constructor = is_lr_constructor;
 		h_value = -1; /* UNBOUNDED_ */
-		k_value = 1, is_lr_constructor = SXFALSE; /* LALR (1) */
+		k_value = 1, is_lr_constructor = false; /* LALR (1) */
 		/* L'initialisation de print_next_conflict est inutile. */
-		ARC_init (print_current_conflict = SXTRUE, UNBOUNDED_, max_red_per_state, processable_state_nb);
-		is_ARC_init_called = SXTRUE;
+		ARC_init (print_current_conflict = true, UNBOUNDED_, max_red_per_state, processable_state_nb);
+		is_ARC_init_called = true;
 		call_ARC (is_u, is_s, next_processed_kind = NOT_LRPI_);
 		h_value = old_h_value;
 		k_value = old_k_value;
@@ -2352,8 +2298,8 @@ int	LALR1 ()
 		h_value = -1; /* UNBOUNDED_ */
 		/* Sortie eventuelle des conflits. */
 		ARC_init (is_list_system_conflicts, UNBOUNDED_, max_red_per_state, processable_state_nb);
-		is_ARC_init_called = SXTRUE;
-		is_conflict = !call_ARC (SXFALSE, SXTRUE, NOT_LRPI_);
+		is_ARC_init_called = true;
+		is_conflict = !call_ARC (false, true, NOT_LRPI_);
 		h_value = old_h_value;
 		
 		if (sxverbosep)
@@ -2371,7 +2317,7 @@ int	LALR1 ()
 		    char	name [24];
 
 		    fprintf (sxtty, "\t%s construction",
-			     get_constructor_name (name, !is_lr_constructor, SXTRUE, h_value, k_value));
+			     get_constructor_name (name, !is_lr_constructor, true, h_value, k_value));
 		    
 		    if (is_automaton && is_listing_opened)
 			fputs (" & ARC output ... ", sxtty);
@@ -2380,11 +2326,11 @@ int	LALR1 ()
 		}
 		
 		print_current_conflict = is_list_system_conflicts;
-		print_next_conflict = SXFALSE;
+		print_next_conflict = false;
 		next_processed_kind = NO_CONFLICT_;
 		ARC_init (is_list_system_conflicts, h_value == 0 ? FSA_ : BOUNDED_, max_red_per_state, processable_state_nb);
-		is_ARC_init_called = SXTRUE;
-		is_conflict = !call_ARC (SXFALSE, SXTRUE, is_lr_constructor ? NOT_RoxoLR0_ :
+		is_ARC_init_called = true;
+		is_conflict = !call_ARC (false, true, is_lr_constructor ? NOT_RoxoLR0_ :
 					 (h_value == 0 ? NOT_RoxoLALR0_ : NOT_RLALR_));
 		
 		if (sxverbosep)
@@ -2548,7 +2494,7 @@ int	LALR1 ()
 	register struct P_item	*aitem;
 	register struct state	*astate;
 	int	*tant_fe;
-	SXBOOLEAN		is_xnt;
+	bool		is_xnt;
 	SXBA	nt_set;
 
 	if (sxverbosep)
@@ -2613,14 +2559,14 @@ int	LALR1 ()
 		astate = nt_states + xac1;
 		aitem = nt_items + (astate->start = xnt_items);
 		lim += (StNt = aQ0->bot + aQ0->t_trans_nb);
-		is_xnt = SXFALSE;
+		is_xnt = false;
 
 		do {
 		    xnt = aitem->check = XxY_Y (Q0xV_hd, StNt);
 		    next = Q0xV_to_Q0 [StNt];
 
 		    if (aitem->check > bnf_ag.WS_TBL_SIZE.ntmax) {
-			is_xnt = SXTRUE;
+			is_xnt = true;
 			xnt = XNT_TO_NT_CODE (xnt);
 			SXBA_1_bit (nt_set, xnt);
 
@@ -2689,13 +2635,13 @@ int	LALR1 ()
 	    /* Au boulot */
 	    register int	xac1;
 	    int		lim, pop_fe, arc_no;
-	    SXBOOLEAN	is_xt, should_call_RLR_cg;
+	    bool	is_xt, should_call_RLR_cg;
 	    register struct Q0	*aQ0;
 
 	    for (xac1 = 1; xac1 < xac2; xac1++) {
 		aQ0 = Q0 + xac1;
-		is_error_code_needed = SXFALSE;
-		should_call_RLR_cg = SXFALSE;
+		is_error_code_needed = false;
+		should_call_RLR_cg = false;
 		sxba_empty (t1_set);
 
 		if ((lim = aQ0->t_trans_nb) > 0) {
@@ -2745,7 +2691,7 @@ int	LALR1 ()
 				pchosen = &(Q0xT_to_chosen [indice]);
 
 				if (pchosen->action_taken == ERROR_ACTION)
-				    is_error_code_needed = SXTRUE;
+				    is_error_code_needed = true;
 				else if (pchosen->action_taken == ND_ACTION) {
 				    /* Non-deterministe */
 				    int	act;
@@ -2914,7 +2860,7 @@ int	LALR1 ()
 			    nd_list (ND_LIST_GET, xt, &red_no);
 
 			    if (red_no == 0) {
-				should_call_RLR_cg = SXTRUE;
+				should_call_RLR_cg = true;
 				SXBA_1_bit (t2_set, xt);
 			    }
 			    else {
@@ -3165,7 +3111,7 @@ int	LALR1 ()
 		    put_edit_apnnl (varstr_tostr (vstr));
 	    } while ((i = sxba_scan (not_used_red_set, i)) > 0);
 
-	    sxttycol1p = SXTRUE;
+	    sxttycol1p = true;
 	}
 
 	if (is_tspe)
@@ -3258,7 +3204,7 @@ int	LALR1 ()
 
     if (is_listing_opened) {
 	put_edit_finalize ();
-	is_listing_opened = SXFALSE;
+	is_listing_opened = false;
     }
 
     nd_degree = is_non_deterministic_automaton ? dsr + drr : -1;
