@@ -1,2 +1,0 @@
-      CALL ROUTINE_START
-      END

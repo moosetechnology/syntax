@@ -1,0 +1,2 @@
+      IMPLICIT UNDEFINED(A-Z) u
+      END

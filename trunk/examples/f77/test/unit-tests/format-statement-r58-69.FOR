@@ -1,3 +1,0 @@
-      PROGRAM SIMPLEMAIN
-1     FORMAT( A8, 2X, I4 ) 
-      END

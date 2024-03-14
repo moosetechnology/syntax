@@ -1,3 +1,0 @@
-      PROGRAM SIMPLEMAIN
-      IF ( TALLY .GE. 1000 ) RETURN 
-      END

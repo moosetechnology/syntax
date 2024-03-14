@@ -22,7 +22,7 @@ static char	ME [] = "ATCPP";
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXATCPP[] = "@(#)SYNTAX - $Id: sxatcpp.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_SXATCPP[] = "@(#)SYNTAX - $Id: sxatcpp.c 3790 2024-03-12 10:13:55Z garavel $" WHAT_DEBUG;
 
 /* Gestion dans le tas : */
 
@@ -85,12 +85,9 @@ static void	free_areas (void)
 static struct sxnode_pp	*root_ptr, *prv_ptr;
 static char	*com_ref;
 
+#define cons_com(c1,c2) ((c1)==NULL?(c2):((c2)==NULL?(c1):string_cat((c1),(c2))))
 
-
-
-#define cons_com(c1,c2) (c1==NULL?c2:(c2==NULL?c1:string_cat(c1,c2)))
-
-static char	*string_cat (char *s1, char *s2)
+static char *string_cat (char *s1, char *s2)
 {
     char	*t1, *t2;
     size_t	l1;
@@ -126,18 +123,9 @@ static void	initialize (void)
   extern void BEFORE_PPTREE_WALK (struct sxnode_pp *);
 #endif
 
-static void	finalize (void)
+static void	finalize_action (void)
 {
-  /* le commentaire eventuel se trouvant en fin de  */
-  /* programme devient le post_comment de la racine */
-  struct sxtoken	*eof_tok_ptr;
-
-  eof_tok_ptr = &SXGET_TOKEN (sxplocals.Mtok_no);
-
-  if (eof_tok_ptr->lahead != sxeof_code (sxppvariables.sxtables))
-    sxtrap (ME, "no EOF in the input program!!");
-
-  root_ptr->post_comment = cons_com (root_ptr->post_comment, eof_tok_ptr->comment);
+  sxuse (ME); /* Pour compilos susceptibles!! */
 
 #ifdef BEFORE_PPTREE_WALK
   BEFORE_PPTREE_WALK (root_ptr);
@@ -148,7 +136,11 @@ static void	finalize (void)
     SXRESIZE (area, 1, sizeof (struct sxatcpp_area) + (area_size = (area_end = node) - area->zone) * sizeof (struct sxnode_pp));
   }
 #endif
+}
 
+
+static void	finalize (void)
+{
   sxfree (tree_node_stack);
   tree_node_stack = NULL;
 }
@@ -331,6 +323,8 @@ void	sxatcpp (SXINT sxatcpp_what, struct sxtables *arg /* or action number */)
 	if (sxverbosep) {
 	  fputs ("Pretty Printer ", sxtty);
 	}
+
+	finalize_action ();
 
 	/* dans le cas ou sxppp() est appelee avec un premier parametre valant
 	 * SXACTION, le deuxieme parametre, formellement declare avec le type

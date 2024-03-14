@@ -89,7 +89,7 @@ static char ME [] = "f77_analyse.c";
 #include "f77_td.h"
 #include <ctype.h>
 
-char WHAT_F77ANALYSE[] = "@(#)SYNTAX - $Id: f77_analyse.c 3776 2024-02-29 14:15:40Z garavel $";
+char WHAT_F77ANALYSE[] = "@(#)SYNTAX - $Id: f77_analyse.c 3793 2024-03-12 12:42:31Z garavel $";
 
 /* Il faudrait INTERDIRE l'insertion d'un EOL par le rattrapage d'erreur
    du scanner. Utiliser sxs_srcvr? */
@@ -755,7 +755,6 @@ static char *ppc2comment (SXINT BP_type) {
   return comment;
 }
 
-
 /* Cette procédure parcourt la liste des noeuds construits par atcpp et remplit les champs (pre_)comment et post_comment
    avec les commentaires créés à partir de la structure comments */
 
@@ -853,8 +852,6 @@ static char *executable_program_unit_name [5] = {
 
 
 /* Les nouveaux "mode" d'analyse */
-/* Pierre le 10/03/2023 : Dans do_parse_mode_nomess j'ai changé kind de SXWITHOUT_ERROR en SXWITH_CORRECTION */
-/* Pierre le 28/11/2023 : Dans do_parse_mode_nomess j'ai (re)changé kind de SXWITH_CORRECTION en SXWITHOUT_ERROR */
 #if 0
 /* Pour savoir qui est quoi */
 struct sxparse_mode {
@@ -875,7 +872,7 @@ struct sxparse_mode {
 static struct sxparse_mode
 f77_parse_mode = {SXPARSER, SXWITH_RECOVERY, 0, 0, 0 /* tous les tokens */, false, false, true, true, true, false};
 static struct sxparse_mode
-do_parse_mode_nomess = {SXPARSER, SXWITHOUT_ERROR, 0, 0, 0, true, false, false, false, false, false};
+do_parse_mode_noerr = {SXPARSER, SXWITHOUT_ERROR, 0, 0, 0, true, false, false, false, false, false};
 static struct sxparse_mode
 format_parse_mode_withmess = {SXPARSER, SXWITH_CORRECTION, 0, 0, 0, true, false, false, false, false, false};
 
@@ -915,8 +912,6 @@ struct sxscan_mode {
 };
 #endif
 
-/* Essai */
-/* static struct sxscan_mode scan_mode_nomess = {0, SXNORMAL_SCAN, true, true, true, true, true}; */
 static struct sxscan_mode scan_mode_withmess = {0, SXNORMAL_SCAN, false, true, true, true, true};
 
 #define ts_put(c)							\
@@ -3239,7 +3234,7 @@ this expression is erased.",
 	      local_errors_nb = sxplocals.mode.local_errors_nb;
 	      global_errors_nb = sxplocals.mode.global_errors_nb;
 	      we_are_in_parse_in_la = true;
-	      is_do_stmt = sxparse_in_la (DO_EP_t, Mtok_no, &tok_no, &do_parse_mode_nomess);
+	      is_do_stmt = sxparse_in_la (DO_EP_t, Mtok_no, &tok_no, &do_parse_mode_noerr /* détection mais aucun traitement des erreurs */);
 	      we_are_in_parse_in_la = false;
 	      /* Remarque, le %EOL de la fin de carte logique n'a pas été rencontré et donc @3 non exécutée.*/
 
@@ -4238,7 +4233,9 @@ SXINT f77_scanact (SXINT code, SXINT act_no) {
 	      fputs ("********************************************************************************************\n", stdout);
 #endif
 
-	      if (SXGET_TOKEN (tok_no).lahead != sxeof_code (sxsvar.sxtables) /* EOF_t */)
+            if (do_parse_mode_noerr.kind != SXWITHOUT_ERROR /* la lecture des tokens s'est arrêté sur la détection d'erreur */
+                /* On met cette instruction au cas où "do_parse_mode" sera changé */ &&
+                SXGET_TOKEN (tok_no).lahead != sxeof_code (sxsvar.sxtables) /* EOF_t */)
 		/* Dans tous les cas, erreur ou pas, l'analyse du sous-langage s'est poursuivie jusqu'au EOF bidon */
 		sxtrap (ME, "f77_scanact (after sxparse_in_la call for FORMAT)");
 

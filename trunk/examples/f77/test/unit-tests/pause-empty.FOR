@@ -1,3 +1,0 @@
-      PROGRAM SIMPLEMAIN
-      PAUSE
-      END

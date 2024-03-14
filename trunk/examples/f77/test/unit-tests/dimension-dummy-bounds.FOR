@@ -1,3 +1,0 @@
-       SUBROUTINE ENHANCE( A, NLO, NHI ) 
-       DIMENSION A(NLO : NHI)  
-       END

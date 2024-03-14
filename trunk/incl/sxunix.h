@@ -756,8 +756,8 @@ struct sxp_lrcvr {
     struct SXP_item		*mvector, *Mvector;
     SXINT			*undo_stack;
     SXBA                        *PER_trans_sets;
+    SXINT                       glbl_best_mod;
 };
-
 
 #include "varstr.h"
 
@@ -1341,10 +1341,10 @@ extern SXINT			sxtknmdf (struct sxtoken *new_seq, SXINT lgth1, SXINT old_tok_no,
                                 ? sxtknzoom (sxplocals.Mtok_no) : 0), 				\
                                 SXGET_TOKEN(sxplocals.Mtok_no) = tok
 
-
 /********************/
 /* COMMENT_MANAGER  */
 /********************/
+
 void   sxcomment_alloc (struct sxcomment *sxcomment_ptr, SXINT size);
 void   sxcomment_clear (struct sxcomment *sxcomment_ptr);
 void   sxcomment_free (struct sxcomment *sxcomment_ptr);
@@ -1354,7 +1354,6 @@ char * sxcomment_book (struct sxcomment *sxcomment_ptr, SXUINT string_lgth);
 #define sxcomment_save(c,s,l)      strncpy (sxcomment_book (c, l), s, (size_t)l)
 #define sxcomment_put(s,l)         sxcomment_save (&(sxplocals.sxcomment), s, l)
 #define sxcomment_catenate(ss,s,l) (strncpy (ss, s, (size_t)l)+(l))
-
 
 /*******************/
 /* INCLUDE MANAGER */

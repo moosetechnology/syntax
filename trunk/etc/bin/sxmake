@@ -172,22 +172,28 @@ FULL_CLEAN() {
 	done
 	# nettoyages ad hoc
 	rm -rf */src/*_t.c
-	# on nettoie maintenant le repertoire extensions
-	(
+	# on nettoie maintenant le repertoire extensions (s'il existe)
+	if [ -d ../extensions ]
+	then
+		(
 		cd ../extensions
 		for FILE in `ls */makefile`
 		do
 			( cd `dirname "$FILE"` ; $MAKE -s clean )
 		done
-	)
-	# on nettoie maintenant le repertoire outdated/oldies
-	(
+		)
+	fi
+	# on nettoie maintenant le repertoire outdated/oldies (s'il existe)
+	if [ -d ../outdated/oldies ]
+	then
+		(
 		cd ../outdated/oldies
 		for FILE in `ls */makefile`
 		do
 			( cd `dirname "$FILE"` ; $MAKE -s clean )
 		done
-	)
+		)
+	fi
 }
 
 # ----------------------------------------------------------------------------

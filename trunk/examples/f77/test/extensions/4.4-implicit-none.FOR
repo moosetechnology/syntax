@@ -1,2 +1,0 @@
-      IMPLICIT NONE
-      END

@@ -1,3 +1,0 @@
-      PROGRAM SIMPLEMAIN
-123   INTEGER I
-      END

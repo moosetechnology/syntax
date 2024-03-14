@@ -1,6 +1,4 @@
 
-------------------------------------------------------------------------------
-
 Pierre Boullier - sept 2023
 
 Ne pas appeler des fonctions comme sxcurrent_scanned_token_string() etc. 
@@ -16,7 +14,7 @@ sxget_token() sachant que le numéro du dernier token précédant le prédicat
 est stocké dans sxplocals.ptok_no. Donc, pour accéder au token suivant un 
 prédicat il faut appeler
 	sxget_token (sxplocals.ptok_no + 1)
-qui retourne un pointeur vers le token et permet donc d’accéder au contenu 
+qui retourne un pointeur vers le token et permet donc d'accéder au contenu 
 de ce token.
 
 Voici par exemple le code du prédicat &1 dans f77_analyse.c
@@ -38,16 +36,67 @@ Voici par exemple le code du prédicat &1 dans f77_analyse.c
 
 Pour avoir la chaîne de caractères de ce token il faut appeler
    sxstrget (pt->string_table_entry)
-ou` pt est le pointeur vers le token d’intérêt.
+ou` pt est le pointeur vers le token d'intérêt.
+
+------------------------------------------------------------------------------
+
+Pierre Boullier - mars 2024
+
+Pour la manipulation interne des lexemes (ou tokens), il y deux cas a
+considerer :
+
+1) Terminal non generique (mots-cles, operateurs arithmetiques, ponctuation,
+   etc.)
+
+   Pour ceux-ci, le champ .lahead permet d'acceder, par sxttext(), au nom
+   (chaine de caracteres) de chacun de ces terminaux.
+
+2) Terminaux generiques (identificateurs, nombres, chaines, etc.). Leur
+   nom commence obligatoirement par "%" (par exemple, %IDENTIFIER, %int,
+   etc.)
+
+   Pour ceux-ci, le champ .lahead permet d'acceder, par sxttext(), au nom
+   du lexeme : %IDENTIFIER, %id, etc.
+
+   Pour ceux-ci, le champ .string_table_entry permet d'acceder, par
+   sxstrget(), aux chaines de caracteres des tokens concrets correspondants
+   (VAL, 123, etc.)
+
+   Lorsque la recuperation d'erreurs syntaxiques insere un terminal generique,
+   le champ .string_table_entry a la valeur speciale SXERROR_STE, qui
+   indique qu'aucune valeur concrete n'existe pour ce terminal.
+
+Hubert :
+
+Dans un exemple ou l'on affichait le contenu des tokens, on voyait
+une bizarrerie :
+
+sxplocals.toks_buf[0][63] .lahead = 59 ("%IDENTIFIER"), .ste = 23 ("NIL")
+sxplocals.toks_buf[0][65] .lahead = 55 (")"), .ste = 1 ("")
+sxplocals.toks_buf[0][66] .lahead = 50 (","), .ste = 1 ("")
+sxplocals.toks_buf[0][67] .lahead = 54 ("("), .ste = 10 ("(")
+
+Dans ce dernier cas, le champ string_table_entry conduit à la
+chaîne "(" (comme le champ lahead), tandis que ce n'était pas
+le cas pour la parenthèse fermante qui (a priori) devrait être
+symétrique de la parenthèse ouvrante.
+
+Pierre :
+
+C'est effectivement curieux qu'une '(' ait un ste qui ne soit pas SXEMPTY_STE 
+(qui est egal a 1). L'explication semble être que le fichier".lecl", dans
+la rubrique "Tokens" définit le terminal "(" par une expression régulière
+dans laquelle le caractere '(' n'est pas supprime' par '-'. Dans ce cas,
+il ne faut pas s'étonner de le retrouver dans le token.
 
 ------------------------------------------------------------------------------
 
 Pierre Boullier - sept 2023
 
 Les prédicats du parser ont été créés pour palier la faiblesse de la puissance
-théorique du LALR(1), en permettant en particulier (mais pas uniquement) à 
-l’utilisateur d’aller voir manuellement les tokens du contexte droit pour
-l’aider à prendre sa décision.  Il dispose pour cela de la fonction 
+théorique du LALR(1), en permettant en particulier (mais pas uniquement a
+l'utilisateur d'aller voir manuellement les tokens du contexte droit pour
+l'aider a` prendre sa décision.  Il dispose pour cela de la fonction 
 
 extern struct sxtoken		*sxget_token (SXINT token_number);
 
