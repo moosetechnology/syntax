@@ -1132,6 +1132,8 @@ SXML_TYPE_LIST ast_substring(SXML_TYPE_LIST variable,
               SXML_TYPE_LIST upper_bound) {
   
   SXML_TYPE_LIST variable_or_array;
+  SXML_TYPE_LIST upper_bound_safe = upper_bound;
+  SXML_TYPE_LIST lower_bound_safe = lower_bound;
 
   if (array == NULL) {
     variable_or_array = JSON_KU_("variable", variable);
@@ -1139,9 +1141,6 @@ SXML_TYPE_LIST ast_substring(SXML_TYPE_LIST variable,
   else 
     variable_or_array = JSON_KU_("array", array);
 
-  SXML_TYPE_LIST upper_bound_safe = upper_bound;
-  SXML_TYPE_LIST lower_bound_safe = lower_bound;
-  
   if (upper_bound == NULL) {
     upper_bound_safe = ast_empty_string();
   } 

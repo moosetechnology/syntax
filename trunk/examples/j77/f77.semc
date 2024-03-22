@@ -934,8 +934,6 @@ $LIST( <10a:type>)
 
 <10a:type>	= <10b:scalar_type> * <103:nonzero_unsigned_int_constant> ;
 
-* OLD RULE: <10a:type>	= <10b:scalar_type> * @0 <22:len_specification> ;
-
 $LIST( <10a:type>)
 {
   $LIST( <10a:type>) = ast_type_reference(
@@ -1572,9 +1570,6 @@ $LIST(<20:type_statement>)
 <20:type_statement>
 		= <10b:scalar_type> * <103:nonzero_unsigned_int_constant>  <20a:scalar_name_list> ;
 
-* OLD RULE supprimee
-*	 = <10b:scalar_type> * @0 <22:len_specification>  <20a:scalar_name_list> ;
-
 $LIST(<20:type_statement>)
 {
   $LIST(<20:type_statement>) = ast_type_statement(
@@ -1590,24 +1585,9 @@ $LIST(<20:type_statement>)
 *------------------------------------------------------------------------------
 
 * [[EXTENSION]]
-* semble faux
+* semble faux!!
 * <20:type_statement>
 *		= <10b:scalar_type> * <103:nonzero_unsigned_int_constant> ,  <20a:scalar_name_list> ;
-
-
-<20:type_statement>
-		= <10b:scalar_type> * @0 <22:len_specification> ,  <20a:scalar_name_list> ;
-
-$LIST(<20:type_statement>)
-{
-  $LIST(<20:type_statement>) = ast_type_statement(
-    ast_type_reference(
-      $LIST(<10b:scalar_type>),
-      $LIST( <22:len_specification>)),
-    LOCATION(0), 
-    $LIST( <20a:scalar_name_list>)
-  );
-}
 
 *------------------------------------------------------------------------------
 
@@ -1822,19 +1802,6 @@ $LIST(<21b:implicit_body>)
       );
 } 
 
-*------------------------------------------------------------------------------
-
-* Pierre Boullier na pris pas la regle suivante dans sa grammaire
-* Je suggere de detruire ce qui suit de la def de <21b:implicit_body>
-
-<21b:implicit_body>
-		= NONE ;
-
-$LIST(<21b:implicit_body>)
-{
-  $LIST(<21b:implicit_body>) = NULL;
-}    
-
 *******************************************************************************
 
 <21c:implicit_elem_list>
@@ -1917,9 +1884,9 @@ $LIST( <22:len_specification>)
 
 $LIST( <22:len_specification>)
 {
-* Hubert : ici je mettrais un assert (false) 
-* car ce bloc dinstructions ne doit jamais etre execute 
-  $LIST( <22:len_specification>) = SXML_T($ptext ("%int_id"));
+  /* ce bloc dinstructions ne doit jamais etre execute */
+  assert (false);
+  // $LIST( <22:len_specification>) = SXML_T($ptext ("%int_id"));
 }
 
 *------------------------------------------------------------------------------
@@ -3267,6 +3234,10 @@ $LIST( <47a:control_info_elem>)
     $LIST(<88a:variable_or_array_element_name>)
   );
 }    
+
+*------------------------------------------------------------------------------
+
+**** !!! a supprimer ???
 
 <47a:control_info_elem>
 		= NML  =  <99:symbolic_name> ;
