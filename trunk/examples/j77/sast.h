@@ -228,6 +228,46 @@ SXML_TYPE_LIST ast_fmt_specification( SXML_TYPE_TEXT repeat_factor,
             SXML_TYPE_LIST descriptor,
             SXML_TYPE_TEXT slash ) {
   
+  /* don't want to list all 9 possible cases, will list only those occuring in the grammar */
+  
+  if (repeat_factor == NULL){
+    if (descriptor == NULL){
+      return JSON_MAP(
+        SXML_LL(
+          ast_tag ("format_specification"),
+          JSON_KQ ("slash", slash)
+        )
+      );
+    }
+
+    if (slash == NULL){
+      return JSON_MAP(
+        SXML_LL(
+          ast_tag ("format_specification"),
+          JSON_KU ("descriptor", descriptor)
+        )
+      );
+    }
+
+    return JSON_MAP(
+      SXML_LLL(
+        ast_tag ("format_specification"),
+        JSON_KU_ ("descriptor", descriptor),
+        JSON_KQ ("slash", slash)
+      )
+    );
+  }
+
+  if (slash == NULL){
+    return JSON_MAP(
+      SXML_LLL(
+        ast_tag ("format_specification"),
+        JSON_KQ_ ("repeat_factor", repeat_factor), 
+        JSON_KU ("descriptor", descriptor)
+      )
+    );
+  }
+
   return JSON_MAP(
     SXML_LLLL(
       ast_tag ("format_specification"),
@@ -390,6 +430,14 @@ SXML_TYPE_LIST ast_call_argument_with_return_specifier( SXML_TYPE_LIST location,
 SXML_TYPE_LIST ast_implicit_statement( SXML_TYPE_LIST location,
             SXML_TYPE_LIST parameters) {
     
+    if (parameters == NULL) {
+        return SXML_LTL(
+          ast_abstract_statement( "implicit_statement", location),
+          ",\n",
+          JSON_KQ("parameters", "none") 
+        );
+    }
+
     return SXML_LTL(
     ast_abstract_statement( "implicit_statement", location),
     ",\n",
@@ -980,6 +1028,15 @@ SXML_TYPE_LIST ast_complex_constant(
 SXML_TYPE_LIST ast_complex_constant_real_part(
             SXML_TYPE_TEXT sign,
             SXML_TYPE_LIST constant) {
+
+  if (sign == NULL){
+    return JSON_MAP(
+      SXML_L(
+        JSON_KU( "constant", constant)
+      )
+    );
+  }
+
   return JSON_MAP(
     SXML_LL(
       JSON_KQ_( "sign", sign),
@@ -1105,9 +1162,9 @@ SXML_TYPE_LIST ast_add_declarator_len( SXML_TYPE_LIST variable_declarator,
  */
 SXML_TYPE_LIST ast_lower_upper_bound(SXML_TYPE_LIST lower_bound,
               SXML_TYPE_LIST upper_bound) {
-  if (upper_bound == NULL) {
+  if (lower_bound == NULL) {
     return JSON_MAP(
-      JSON_KU("lower_bound", lower_bound) );
+      JSON_KU ("upper_bound", upper_bound) );
   }
   else {
     return JSON_MAP(
@@ -1352,6 +1409,21 @@ SXML_TYPE_LIST ast_do_statement(
             SXML_TYPE_LIST variable_name,
             SXML_TYPE_LIST do_parameters) {
 
+  if (statement_number == NULL){
+    return SXML_LTL(
+      ast_abstract_statement( "do_statement", location),
+      ",\n",
+      JSON_KU_ ("loop_control", 
+        JSON_MAP(
+          SXML_LL(
+            JSON_KU_("variable_name", variable_name),
+            do_parameters
+          )
+        )
+      )
+    );
+  }
+
   return SXML_LTLL(
     ast_abstract_statement( "do_statement", location),
     ",\n",
@@ -1374,6 +1446,13 @@ SXML_TYPE_LIST ast_do_parameters(SXML_TYPE_LIST init,
               SXML_TYPE_LIST limit,
               SXML_TYPE_LIST increment) {
     
+    if (increment == NULL){
+      return SXML_LL(
+        JSON_KU_("init", init),
+        JSON_KU_("limit", limit)
+      );
+    }
+
     return SXML_LLL(
       JSON_KU_("init", init),
       JSON_KU_("limit", limit),
