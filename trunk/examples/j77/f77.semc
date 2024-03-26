@@ -3234,22 +3234,7 @@ $LIST( <47a:control_info_elem>)
     "END",
     $LIST(<88a:variable_or_array_element_name>)
   );
-}    
-
-*------------------------------------------------------------------------------
-
-**** !!! a supprimer ???
-
-<47a:control_info_elem>
-		= NML  =  <99:symbolic_name> ;
-
-$LIST( <47a:control_info_elem>)
-{
-  $LIST( <47a:control_info_elem>) = ast_control_info_elem(
-    "NML",
-    $LIST(<99:symbolic_name>)
-  );
-}    
+}        
 
 *******************************************************************************
 
