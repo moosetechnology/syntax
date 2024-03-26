@@ -657,7 +657,7 @@ SXML_TYPE_LIST ast_assignment_statement( SXML_TYPE_LIST location,
 
 
 /* -------------------------------------------------------------------------
- * outputs an goto_statement
+ * outputs a goto_statement
  * - type (unconditional, computed, assigned)
  * - label(s)
  * - variable or expression to which goto branches
@@ -666,11 +666,19 @@ SXML_TYPE_LIST ast_goto_statement( SXML_TYPE_LIST location,
             SXML_TYPE_TEXT type,
             SXML_TYPE_LIST labels,
             SXML_TYPE_LIST var) {
-    
-    return SXML_LTLLL(
-    ast_abstract_statement( "goto_statement", location),
+
+  char *tag;
+  tag = malloc( strlen( type) + 16);
+  if (tag == NULL) {
+    fprintf(stderr, "Could not allocate memory in ast_goto_statement\n");
+    exit(0);
+  }
+  strcpy(tag, type);
+  strcpy( tag+strlen(type), "_goto_statement");
+
+  return SXML_LTLL(
+    ast_abstract_statement( tag, location),
     ",\n",
-    JSON_KQ_("type", type),
     JSON_KU_(
       "labels",
       JSON_ARRAY( labels)),
