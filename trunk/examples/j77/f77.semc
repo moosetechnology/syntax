@@ -1760,8 +1760,10 @@ $LIST(<21:implicit_statement>)
 {
   $LIST(<21:implicit_statement>) = ast_implicit_statement(
     LOCATION(0),
-    $LIST(<21c:implicit_elem_list>)
-    );
+    ast_implicit_body_parameter(
+      SXML_T("\"UNDEFINED\""),
+      $LIST(<21c:implicit_elem_list>) )
+   );
 }    
 
 *******************************************************************************
