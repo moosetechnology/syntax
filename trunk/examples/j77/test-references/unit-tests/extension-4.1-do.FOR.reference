@@ -1,0 +1,91 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/extension-4.1-do.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": "null",
+            "parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "7"
+            },
+            "end_pos": {
+                "line": "4",
+                "column": "9"
+            },
+            "statement_list": [
+                {
+                    "tag": "do_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "7"
+                    },
+                    "loop_control": {
+                        "variable_name": {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "10"
+                            },
+                            "name": "OUTER"
+                        },
+                        "init": {
+                            "tag": "unsigned_int_constant",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "18"
+                            },
+                            "value": "1"
+                        }
+                    },
+                    "statements_list": [
+                        {
+                            "tag": "assignment_statement",
+                            "start_pos": {
+                                "line": "2",
+                                "column": "10"
+                            },
+                            "left": [
+                                {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "2",
+                                        "column": "10"
+                                    },
+                                    "name": "OUTER"
+                                }
+                            ],
+                            "right": [
+                                {
+                                    "tag": "arithmetic_expression",
+                                    "expression": {
+                                        "tag": "binary_expression",
+                                        "lhs": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "2",
+                                                "column": "18"
+                                            },
+                                            "name": "OUTER"
+                                        },
+                                        "operator": "+",
+                                        "rhs": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "2",
+                                                "column": "24"
+                                            },
+                                            "value": "1"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

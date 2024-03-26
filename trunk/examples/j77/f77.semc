@@ -2713,7 +2713,7 @@ $LIST(<37:else_if_statement>)
 
 $LIST(<38:else_statement>)
 {
-  $LIST(<38:else_statement>) = ast_else_statement("");
+  $LIST(<38:else_statement>) = ast_else_statement(NULL);
 }
 
 *------------------------------------------------------------------------------

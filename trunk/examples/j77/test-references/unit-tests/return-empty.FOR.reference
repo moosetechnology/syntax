@@ -1,0 +1,40 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/return-empty.FOR",
+    "program_units": [
+        {
+            "tag": "function",
+            "name": {
+                "tag": "symbolic_name",
+                "start_pos": {
+                    "line": "1",
+                    "column": "24"
+                },
+                "name": "FCT"
+            },
+            "parameters": [],
+            "return_type": {
+                "tag": "type_reference",
+                "name": "INTEGER"
+            },
+            "start_pos": {
+                "line": "1",
+                "column": "7"
+            },
+            "end_pos": {
+                "line": "3",
+                "column": "9"
+            },
+            "statement_list": [
+                {
+                    "tag": "return_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "7"
+                    }
+                }
+            ]
+        }
+    ]
+}

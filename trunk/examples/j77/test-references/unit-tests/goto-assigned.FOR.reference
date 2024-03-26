@@ -1,0 +1,79 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/goto-assigned.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": "null",
+            "parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "5",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "assignment_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "8"
+                    },
+                    "left": [
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "21"
+                            },
+                            "name": "N"
+                        }
+                    ]
+                },
+                {
+                    "tag": "goto_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "8"
+                    },
+                    "type": "assigned",
+                    "labels": [
+                        "10",
+                        "20",
+                        "30",
+                        "40"
+                    ],
+                    "var": [
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "2",
+                                "column": "14"
+                            },
+                            "name": "N"
+                        }
+                    ]
+                },
+                {
+                    "label": "10",
+                    "tag": "continue_statement",
+                    "start_pos": {
+                        "line": "3",
+                        "column": "8"
+                    }
+                },
+                {
+                    "label": "40",
+                    "tag": "stop_statement",
+                    "start_pos": {
+                        "line": "4",
+                        "column": "8"
+                    }
+                }
+            ]
+        }
+    ]
+}

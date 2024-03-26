@@ -430,14 +430,6 @@ SXML_TYPE_LIST ast_call_argument_with_return_specifier( SXML_TYPE_LIST location,
 SXML_TYPE_LIST ast_implicit_statement( SXML_TYPE_LIST location,
             SXML_TYPE_LIST parameters) {
     
-    if (parameters == NULL) {
-        return SXML_LTL(
-          ast_abstract_statement( "implicit_statement", location),
-          ",\n",
-          JSON_KQ("parameters", "none") 
-        );
-    }
-
     return SXML_LTL(
     ast_abstract_statement( "implicit_statement", location),
     ",\n",
@@ -1449,7 +1441,7 @@ SXML_TYPE_LIST ast_do_parameters(SXML_TYPE_LIST init,
     if (increment == NULL){
       return SXML_LL(
         JSON_KU_("init", init),
-        JSON_KU_("limit", limit)
+        JSON_KU("limit", limit)
       );
     }
 
@@ -1489,6 +1481,12 @@ SXML_TYPE_LIST ast_end_do(SXML_TYPE_TEXT label) {
  */
 SXML_TYPE_LIST ast_else_statement(SXML_TYPE_TEXT else_label) {
 
+    if (else_label == NULL){
+      return SXML_L(
+        ast_tag("else_statement")
+      );      
+    }
+
     return SXML_LL(
       ast_tag("else_statement"),  
       JSON_KQ_("else_label", else_label)
@@ -1502,6 +1500,15 @@ SXML_TYPE_LIST ast_else_block(SXML_TYPE_LIST else_label,
               SXML_TYPE_LIST else_statements,
               SXML_TYPE_LIST end_if) {
 
+    if (else_label == NULL){
+      return JSON_MAP(
+        SXML_LL(
+          JSON_KU_("else_statements", JSON_ARRAY(else_statements)),
+          end_if
+        )
+      );
+    }
+
     return JSON_MAP(
       SXML_LLL(
         else_label,
@@ -1509,7 +1516,6 @@ SXML_TYPE_LIST ast_else_block(SXML_TYPE_LIST else_label,
         end_if
       )
     );
-    
 }
 
 

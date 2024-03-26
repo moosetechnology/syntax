@@ -53,6 +53,10 @@ SXML_TYPE_LIST JSON_KQ_ (SXML_TYPE_TEXT K, SXML_TYPE_TEXT V)
 
 SXML_TYPE_LIST JSON_KU (SXML_TYPE_TEXT K, SXML_TYPE_LIST V)
 {
+  if (V == NULL){
+    return SXML_TTT ("\"", K, "\" : {}");
+  }
+
   return SXML_TTTL ("\"", K, "\" : ", V);
 }
 
@@ -63,5 +67,9 @@ SXML_TYPE_LIST JSON_KU (SXML_TYPE_TEXT K, SXML_TYPE_LIST V)
 
 SXML_TYPE_LIST JSON_KU_ (SXML_TYPE_TEXT K, SXML_TYPE_LIST V)
 {
+  if (V == NULL){
+    return SXML_TTT ("\"", K, "\" : {},\n");
+  }
+
   return SXML_TTTLT ("\"", K, "\" : ", V, ",\n");
 }
