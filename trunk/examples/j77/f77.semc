@@ -1744,9 +1744,8 @@ $LIST(<21:implicit_statement>)
 
 $LIST(<21:implicit_statement>)
 {
-  $LIST(<21:implicit_statement>) = ast_implicit_statement(
-    LOCATION(0),
-    NULL
+  $LIST(<21:implicit_statement>) = ast_implicit_none_statement(
+    LOCATION(0)
   );
 }    
 

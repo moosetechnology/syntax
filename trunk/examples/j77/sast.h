@@ -399,6 +399,13 @@ SXML_TYPE_LIST ast_implicit_statement( SXML_TYPE_LIST location,
 }
 
 
+SXML_TYPE_LIST ast_implicit_none_statement( SXML_TYPE_LIST location) {
+    
+    return SXML_L(
+    ast_abstract_statement( "implicit_none_statement", location) ); 
+}
+
+
 /* -------------------------------------------------------------------------
  * outputs an typed element parameter of a body of an implicit statement
  * - a type
