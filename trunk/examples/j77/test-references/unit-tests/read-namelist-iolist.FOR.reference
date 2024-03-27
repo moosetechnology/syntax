@@ -1,0 +1,86 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/read-namelist-iolist.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": "null",
+            "parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "7"
+            },
+            "end_pos": {
+                "line": "2",
+                "column": "9"
+            },
+            "statement_list": [
+                {
+                    "tag": "read_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "7"
+                    },
+                    "control_info_list": [
+                        {
+                            "name": "UNIT",
+                            "parameter": {
+                                "tag": "unsigned_int_constant",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "13"
+                                },
+                                "value": "1"
+                            }
+                        },
+                        {
+                            "name": "FMT",
+                            "parameter": {
+                                "label_ref": "2"
+                            }
+                        },
+                        {
+                            "name": "ERR",
+                            "parameter": "8"
+                        },
+                        {
+                            "name": "END",
+                            "parameter": "9"
+                        },
+                        {
+                            "name": "END",
+                            "parameter": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "40"
+                                },
+                                "name": "N"
+                            }
+                        }
+                    ],
+                    "io_list": [
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "44"
+                            },
+                            "name": "X"
+                        },
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "47"
+                            },
+                            "name": "Y"
+                        }
+                    ],
+                    "format": []
+                }
+            ]
+        }
+    ]
+}

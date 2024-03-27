@@ -15,6 +15,7 @@ for f in `ls test/unit-tests/*.FOR`
 do
 	test_file=`basename ${f}`
 	actual="test-references/unit-tests/${test_file}.reference"
+	echo "RECORDING FOR TEST ${f}"
 	bin/f77.out -json "${f}" | python -m json.tool > "${actual}"
 done
 
@@ -24,5 +25,6 @@ for f in `ls test/nist/*.FOR`
 do
 	test_file=`basename ${f}`
 	actual="test-references/nist/${test_file}.reference"
+	echo "RECORDING FOR TEST ${f}"
 	bin/f77.out -json "${f}" | python -m json.tool > "${actual}"
 done

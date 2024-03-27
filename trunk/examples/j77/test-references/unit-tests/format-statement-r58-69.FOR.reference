@@ -1,0 +1,59 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/format-statement-r58-69.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": {
+                "tag": "symbolic_name",
+                "start_pos": {
+                    "line": "1",
+                    "column": "15"
+                },
+                "name": "SIMPLEMAIN"
+            },
+            "start_pos": {
+                "line": "1",
+                "column": "7"
+            },
+            "end_pos": {
+                "line": "3",
+                "column": "9"
+            },
+            "statement_list": [
+                {
+                    "label": "1",
+                    "tag": "format_statement",
+                    "specification": [
+                        {
+                            "tag": "format_specification",
+                            "descriptor": {
+                                "tag": "repeatable_edit_descriptor",
+                                "repeated_descriptors": [
+                                    "A8"
+                                ]
+                            }
+                        },
+                        {
+                            "tag": "format_specification",
+                            "descriptor": {
+                                "tag": "nonrepeatable_edit_descriptor",
+                                "descriptor": "2X"
+                            }
+                        },
+                        {
+                            "tag": "format_specification",
+                            "descriptor": {
+                                "tag": "repeatable_edit_descriptor",
+                                "repeated_descriptors": [
+                                    "I4"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

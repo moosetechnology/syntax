@@ -1273,8 +1273,9 @@ $LIST( <16c:dimension_declarator>)
 $LIST( <16c:dimension_declarator>)
 {
   $LIST( <16c:dimension_declarator>) = ast_lower_upper_bound(
-    $LIST( <81:dim_bound_expr>),
-    NULL );
+  	NULL, 
+    $LIST( <81:dim_bound_expr>)
+    );
 }
 
 *******************************************************************************
@@ -2713,7 +2714,7 @@ $LIST(<37:else_if_statement>)
 
 $LIST(<38:else_statement>)
 {
-  $LIST(<38:else_statement>) = ast_else_statement("");
+  $LIST(<38:else_statement>) = ast_else_statement(NULL);
 }
 
 *------------------------------------------------------------------------------
@@ -2891,7 +2892,7 @@ $LIST(<40b:do_parameters>)
   $LIST(<40b:do_parameters>) = ast_do_parameters(
   	$LIST(<78:int_real_dp_expr>), 
   	$LIST(<78:int_real_dp_expr>), 
-  	SXML_T("null")
+  	NULL
   );
 }    
 
@@ -3234,22 +3235,7 @@ $LIST( <47a:control_info_elem>)
     "END",
     $LIST(<88a:variable_or_array_element_name>)
   );
-}    
-
-*------------------------------------------------------------------------------
-
-**** !!! a supprimer ???
-
-<47a:control_info_elem>
-		= NML  =  <99:symbolic_name> ;
-
-$LIST( <47a:control_info_elem>)
-{
-  $LIST( <47a:control_info_elem>) = ast_control_info_elem(
-    "NML",
-    $LIST(<99:symbolic_name>)
-  );
-}    
+}        
 
 *******************************************************************************
 
@@ -4322,7 +4308,7 @@ $LIST( <60d:fmt_spec_/:>)
 {
   $LIST( <60d:fmt_spec_/:>) = ast_fmt_specification(
     NULL,
-    ast_empty_map(),
+    NULL,
     $NAME(<60f:/:>)
   );
 }    
@@ -5054,7 +5040,7 @@ $LIST( <72:return_statement>)
 
 $LIST( <72:return_statement>)
 {
-  $LIST( <72:return_statement>) = SXML_T("<72>.2");
+  $LIST( <72:return_statement>) = $LIST(<77:integer_expr>);
 }
 
 *******************************************************************************

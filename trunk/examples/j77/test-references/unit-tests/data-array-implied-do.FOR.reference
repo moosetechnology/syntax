@@ -1,0 +1,247 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/data-array-implied-do.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": "null",
+            "parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "2",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "data_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "8"
+                    },
+                    "data_parameters": [
+                        {
+                            "nlist": [
+                                {
+                                    "tag": "data_imply_do_list",
+                                    "dlist": [
+                                        {
+                                            "tag": "array_element_name",
+                                            "name": {
+                                                "tag": "symbolic_name",
+                                                "start_pos": {
+                                                    "line": "1",
+                                                    "column": "15"
+                                                },
+                                                "name": "S"
+                                            },
+                                            "qualifiers_list": [
+                                                {
+                                                    "tag": "symbolic_name",
+                                                    "start_pos": {
+                                                        "line": "1",
+                                                        "column": "17"
+                                                    },
+                                                    "name": "I"
+                                                },
+                                                {
+                                                    "tag": "symbolic_name",
+                                                    "start_pos": {
+                                                        "line": "1",
+                                                        "column": "19"
+                                                    },
+                                                    "name": "I"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "1",
+                                                "column": "23"
+                                            },
+                                            "name": "I"
+                                        }
+                                    ],
+                                    "m1": {
+                                        "tag": "literal_expression",
+                                        "literal": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "1",
+                                                "column": "25"
+                                            },
+                                            "value": "1"
+                                        }
+                                    },
+                                    "m2": {
+                                        "tag": "literal_expression",
+                                        "literal": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "1",
+                                                "column": "27"
+                                            },
+                                            "value": "4"
+                                        }
+                                    },
+                                    "m3": {}
+                                }
+                            ],
+                            "clist": [
+                                {
+                                    "tag": "data_statement_constant",
+                                    "occurence": {
+                                        "tag": "nonzero_unsigned_int_constant",
+                                        "start_pos": {
+                                            "line": "1",
+                                            "column": "30"
+                                        },
+                                        "value": "4"
+                                    },
+                                    "constant": {
+                                        "tag": "unsigned_real_constant",
+                                        "start_pos": {
+                                            "line": "1",
+                                            "column": "32"
+                                        },
+                                        "value": "1.0"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "nlist": [
+                                {
+                                    "tag": "data_imply_do_list",
+                                    "dlist": [
+                                        {
+                                            "tag": "data_imply_do_list",
+                                            "dlist": [
+                                                {
+                                                    "tag": "array_element_name",
+                                                    "name": {
+                                                        "tag": "symbolic_name",
+                                                        "start_pos": {
+                                                            "line": "1",
+                                                            "column": "41"
+                                                        },
+                                                        "name": "R"
+                                                    },
+                                                    "qualifiers_list": [
+                                                        {
+                                                            "tag": "symbolic_name",
+                                                            "start_pos": {
+                                                                "line": "1",
+                                                                "column": "43"
+                                                            },
+                                                            "name": "I"
+                                                        },
+                                                        {
+                                                            "tag": "symbolic_name",
+                                                            "start_pos": {
+                                                                "line": "1",
+                                                                "column": "45"
+                                                            },
+                                                            "name": "J"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "tag": "symbolic_name",
+                                                    "start_pos": {
+                                                        "line": "1",
+                                                        "column": "49"
+                                                    },
+                                                    "name": "J"
+                                                }
+                                            ],
+                                            "m1": {
+                                                "tag": "literal_expression",
+                                                "literal": {
+                                                    "tag": "unsigned_int_constant",
+                                                    "start_pos": {
+                                                        "line": "1",
+                                                        "column": "51"
+                                                    },
+                                                    "value": "1"
+                                                }
+                                            },
+                                            "m2": {
+                                                "tag": "literal_expression",
+                                                "literal": {
+                                                    "tag": "unsigned_int_constant",
+                                                    "start_pos": {
+                                                        "line": "1",
+                                                        "column": "53"
+                                                    },
+                                                    "value": "3"
+                                                }
+                                            },
+                                            "m3": {}
+                                        },
+                                        {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "1",
+                                                "column": "57"
+                                            },
+                                            "name": "I"
+                                        }
+                                    ],
+                                    "m1": {
+                                        "tag": "literal_expression",
+                                        "literal": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "1",
+                                                "column": "59"
+                                            },
+                                            "value": "1"
+                                        }
+                                    },
+                                    "m2": {
+                                        "tag": "literal_expression",
+                                        "literal": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "1",
+                                                "column": "61"
+                                            },
+                                            "value": "2"
+                                        }
+                                    },
+                                    "m3": {}
+                                }
+                            ],
+                            "clist": [
+                                {
+                                    "tag": "data_statement_constant",
+                                    "occurence": {
+                                        "tag": "nonzero_unsigned_int_constant",
+                                        "start_pos": {
+                                            "line": "1",
+                                            "column": "65"
+                                        },
+                                        "value": "6"
+                                    },
+                                    "constant": {
+                                        "tag": "unsigned_real_constant",
+                                        "start_pos": {
+                                            "line": "1",
+                                            "column": "67"
+                                        },
+                                        "value": "1.0"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
