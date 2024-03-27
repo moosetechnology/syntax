@@ -394,11 +394,12 @@ SXML_TYPE_LIST ast_implicit_statement( SXML_TYPE_LIST location,
     ast_abstract_statement( "implicit_statement", location),
     ",\n",
     JSON_KU(
-      "parameters",
+      "implicit_parameters",
       JSON_ARRAY( parameters)) ); 
 }
 
-
+/* -------------------------------------------------------------------------
+ */
 SXML_TYPE_LIST ast_implicit_none_statement( SXML_TYPE_LIST location) {
     
     return SXML_L(
@@ -418,8 +419,23 @@ SXML_TYPE_LIST ast_implicit_body_parameter(
     return JSON_MAP(
       SXML_LL(
         JSON_KU_("type", type),
-        JSON_KU("elements", JSON_ARRAY(elements))
+        JSON_KU("implicit_elements", JSON_ARRAY(elements))
       ));
+}
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_implicit_element(
+              SXML_TYPE_TEXT left,
+              SXML_TYPE_TEXT right
+              ) {
+  return JSON_MAP(
+    SXML_LLL(
+      ast_tag("implicit_range"),
+      JSON_KQ_("implicit_range_lower", left),
+      JSON_KQ("implicit_range_upper", right)
+      )
+  );
 }
 
 
@@ -1497,20 +1513,5 @@ SXML_TYPE_LIST ast_block_if_statement(
       JSON_KU_("expression", expression),
       JSON_KU_("then_statements", JSON_ARRAY(then_statements)),
       JSON_KU("else_block", else_block)
-  );
-}
-
-/* -------------------------------------------------------------------------
- */
-SXML_TYPE_LIST ast_implicit_element(
-              SXML_TYPE_TEXT left,
-              SXML_TYPE_TEXT right
-              ) {
-  return JSON_MAP(
-    SXML_LLL(
-      ast_tag("implicit_element"),
-      JSON_KQ_("left", left),
-      JSON_KQ("right", right)
-      )
   );
 }
