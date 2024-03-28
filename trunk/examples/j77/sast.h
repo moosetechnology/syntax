@@ -410,14 +410,14 @@ SXML_TYPE_LIST ast_call_statement( SXML_TYPE_LIST name,
  */
 SXML_TYPE_LIST ast_call_argument_with_return_specifier( SXML_TYPE_LIST location,
             SXML_TYPE_TEXT return_specifier,
-            SXML_TYPE_TEXT argument) {
+            SXML_TYPE_LIST argument) {
 
   return JSON_MAP(
     SXML_LTLL(
       ast_abstract_statement( "argument_with_return_specifier", location),
       ",\n",
       JSON_KQ_ ("return_specifier", return_specifier),
-      JSON_KQ("argument", argument)
+      argument
     )
   );
 }
@@ -761,21 +761,21 @@ SXML_TYPE_LIST ast_goto_statement( SXML_TYPE_LIST location,
  */
 SXML_TYPE_LIST ast_arithmetic_if_statement( SXML_TYPE_LIST location,
             SXML_TYPE_LIST expression,
-            SXML_TYPE_TEXT s1,
-            SXML_TYPE_TEXT s2,
-            SXML_TYPE_TEXT s3
+            SXML_TYPE_LIST s1,
+            SXML_TYPE_LIST s2,
+            SXML_TYPE_LIST s3
             ) {
     
-    return SXML_LTLLLL(
+    return SXML_LTLL(
     ast_abstract_statement( "arithmetic_if_statement", location),
     ",\n",
     JSON_KU_(
       "expression",
       JSON_ARRAY( expression)),
-    JSON_KQ_("s1", s1),
-    JSON_KQ_("s2", s2),
-    JSON_KQ ("s3", s3)
-    ); 
+    JSON_KU(
+      "label_refs",
+      JSON_ARRAY( SXML_LTLTL( s1, ",\n", s2, ",\n", s3)))
+    );
 }
 
 
@@ -959,12 +959,19 @@ SXML_TYPE_LIST ast_inquire_statement( SXML_TYPE_LIST location,
 SXML_TYPE_LIST ast_control_info_elem(
             SXML_TYPE_TEXT name,
             SXML_TYPE_LIST parameter) {
-    
+
+  if (name == NULL) {
+    return JSON_MAP(
+      JSON_KU("parameter", parameter)
+    );
+  }
+  else {
     return JSON_MAP(
       SXML_LL(
         JSON_KQ_("name", name),
         JSON_KU("parameter", parameter))  
     );
+  }
 }
 
 
@@ -1428,7 +1435,7 @@ SXML_TYPE_LIST ast_do_loop(
  */
 SXML_TYPE_LIST ast_do_statement(
             SXML_TYPE_LIST location,
-            SXML_TYPE_TEXT statement_number,
+            SXML_TYPE_LIST statement_number,
             SXML_TYPE_LIST variable_name,
             SXML_TYPE_LIST do_parameters) {
 
@@ -1450,7 +1457,7 @@ SXML_TYPE_LIST ast_do_statement(
   return SXML_LTLL(
     ast_abstract_statement( "do_statement", location),
     ",\n",
-    JSON_KQ_ ("statement_number", statement_number),
+    JSON_KU_ ("statement_number", statement_number),
     JSON_KU_ ("loop_control", 
       JSON_MAP(
         SXML_LL(
