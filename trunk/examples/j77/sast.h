@@ -408,16 +408,16 @@ SXML_TYPE_LIST ast_call_statement( SXML_TYPE_LIST name,
  * - return specifier
  * - argument
  */
-SXML_TYPE_LIST ast_call_argument_with_return_specifier( SXML_TYPE_LIST location,
+SXML_TYPE_LIST ast_alternate_return_specifier( SXML_TYPE_LIST location,
             SXML_TYPE_TEXT return_specifier,
             SXML_TYPE_LIST argument) {
 
   return JSON_MAP(
     SXML_LTLL(
-      ast_abstract_statement( "argument_with_return_specifier", location),
+      ast_abstract_statement( "alternate_return_specifier", location),
       ",\n",
       JSON_KQ_ ("return_specifier", return_specifier),
-      argument
+      JSON_KU ("label", argument)
     )
   );
 }
@@ -773,7 +773,7 @@ SXML_TYPE_LIST ast_arithmetic_if_statement( SXML_TYPE_LIST location,
       "expression",
       JSON_ARRAY( expression)),
     JSON_KU(
-      "label_refs",
+      "labels",
       JSON_ARRAY( SXML_LTLTL( s1, ",\n", s2, ",\n", s3)))
     );
 }

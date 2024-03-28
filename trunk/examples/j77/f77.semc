@@ -5014,7 +5014,7 @@ $LIST( <71b:actual_argument>)
 
 $LIST( <71b:actual_argument>)
 {
-  $LIST( <71b:actual_argument>) = ast_call_argument_with_return_specifier(
+  $LIST( <71b:actual_argument>) = ast_alternate_return_specifier(
     LOCATION(0),
     "*",
     $LIST(<110b:label_ref>)
