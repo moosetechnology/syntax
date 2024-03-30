@@ -22,7 +22,7 @@ SXML_TYPE_LIST ast_location( SXML_TYPE_TEXT position,
     JSON_MAP (
       SXML_LL (
         JSON_KQ_ ("line", SXML_UINT(line)),
-  JSON_KQ ("column", SXML_UINT(column)) )));
+        JSON_KQ ("column", SXML_UINT(column)) )));
 }
 
 
@@ -94,7 +94,11 @@ SXML_TYPE_LIST ast_program_unit( SXML_TYPE_TEXT tag,
   return JSON_MAP(
     SXML_LLLTLTL(
       ast_tag(tag),
-      (header == NULL ? SXML_LL(JSON_KQ_ ("name", "null"), JSON_KU_ ("parameters", JSON_ARRAY(NULL))) : header),
+      (header == NULL
+       ? SXML_LL(
+	  JSON_KQ_ ("name", "null"),
+	  JSON_KU_ ("prog_unit_parameters", JSON_ARRAY(NULL)))
+       : header),
       location,
       ",\n",
       end_location,
@@ -349,14 +353,14 @@ SXML_TYPE_LIST ast_type_reference( SXML_TYPE_LIST name,
     return JSON_MAP(
       SXML_LL (
         ast_tag("type_reference"),
-  JSON_KQ ("name", name->TEXT) ));
+      JSON_KQ ("name", name->TEXT) ));
   }
   else {
     return JSON_MAP(
       SXML_LLL (
         ast_tag("type_reference"),
-  JSON_KQ_ ("name", name->TEXT),
-  JSON_KU ("len_specification", len_specification) ));
+      JSON_KQ_ ("name", name->TEXT),
+      JSON_KU ("len_specification", len_specification) ));
   }
 }
 
@@ -431,11 +435,11 @@ SXML_TYPE_LIST ast_implicit_statement( SXML_TYPE_LIST location,
             SXML_TYPE_LIST parameters) {
     
     return SXML_LTL(
-    ast_abstract_statement( "implicit_statement", location),
-    ",\n",
-    JSON_KU(
-      "implicit_parameters",
-      JSON_ARRAY( parameters)) ); 
+      ast_abstract_statement( "implicit_statement", location),
+      ",\n",
+      JSON_KU(
+        "implicit_parameters",
+        JSON_ARRAY( parameters)) ); 
 }
 
 /* -------------------------------------------------------------------------
@@ -443,7 +447,7 @@ SXML_TYPE_LIST ast_implicit_statement( SXML_TYPE_LIST location,
 SXML_TYPE_LIST ast_implicit_none_statement( SXML_TYPE_LIST location) {
     
     return SXML_L(
-    ast_abstract_statement( "implicit_none_statement", location) ); 
+      ast_abstract_statement( "implicit_none_statement", location) ); 
 }
 
 
@@ -519,11 +523,11 @@ SXML_TYPE_LIST ast_data_statement( SXML_TYPE_LIST location,
             SXML_TYPE_LIST parameters) {
     
     return SXML_LTL(
-    ast_abstract_statement( "data_statement", location),
-    ",\n",
-    JSON_KU(
-      "data_parameters",
-      JSON_ARRAY( parameters)) ); 
+      ast_abstract_statement( "data_statement", location),
+      ",\n",
+      JSON_KU(
+        "data_parameters",
+        JSON_ARRAY( parameters)) ); 
 }
 
 
@@ -575,12 +579,12 @@ SXML_TYPE_LIST ast_dimension_statement( SXML_TYPE_LIST location,
             SXML_TYPE_LIST array_declarators) {
     
     return SXML_LTL(
-    ast_abstract_statement( "dimension_statement", location),
-    ",\n",
-    JSON_KU(
-      "array_declarators",
-      JSON_ARRAY( array_declarators))
-    ); 
+      ast_abstract_statement( "dimension_statement", location),
+      ",\n",
+      JSON_KU(
+        "array_declarators",
+        JSON_ARRAY( array_declarators))
+      ); 
 }
 
 
@@ -592,12 +596,12 @@ SXML_TYPE_LIST ast_equivalence_statement( SXML_TYPE_LIST location,
             SXML_TYPE_LIST parameters) {
     
     return SXML_LTL(
-    ast_abstract_statement( "equivalence_statement", location),
-    ",\n",
-    JSON_KU(
-      "parameters",
-      JSON_ARRAY( parameters))
-    ); 
+      ast_abstract_statement( "equivalence_statement", location),
+      ",\n",
+      JSON_KU(
+        "parameters",
+        JSON_ARRAY( parameters))
+      ); 
 }
 
 
@@ -620,12 +624,12 @@ SXML_TYPE_LIST ast_common_statement( SXML_TYPE_LIST location,
             SXML_TYPE_LIST parameters) {
     
     return SXML_LTL(
-    ast_abstract_statement( "common_statement", location),
-    ",\n",
-    JSON_KU(
-      "parameters",
-      JSON_ARRAY( parameters))
-    ); 
+      ast_abstract_statement( "common_statement", location),
+      ",\n",
+      JSON_KU(
+        "parameters",
+        JSON_ARRAY( parameters))
+      ); 
 }
 
 
@@ -1417,11 +1421,11 @@ SXML_TYPE_LIST ast_logical_if_statement(
  */
 SXML_TYPE_LIST ast_do_loop(
             SXML_TYPE_LIST do_statement,
-            SXML_TYPE_LIST statements_list) {
+            SXML_TYPE_LIST statement_list) {
 
   return SXML_LL(
     do_statement,
-    JSON_KU("statements_list", JSON_ARRAY(statements_list))
+    JSON_KU("statement_list", JSON_ARRAY(statement_list))
     );
 }
 
