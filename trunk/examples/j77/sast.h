@@ -491,25 +491,26 @@ SXML_TYPE_LIST ast_parameter_statement( SXML_TYPE_LIST location,
             SXML_TYPE_LIST parameters) {
     
     return SXML_LTL(
-    ast_abstract_statement( "parameter_statement", location),
-    ",\n",
-    JSON_KU(
-      "parameters",
-      JSON_ARRAY( parameters)) ); 
+      ast_abstract_statement( "parameter_statement", location),
+      ",\n",
+      JSON_KU(
+        "constant_declarations",
+        JSON_ARRAY( parameters)) ); 
 }
 
 
 /* -------------------------------------------------------------------------
- * outputs a parameter_statement
- * - list of parameters
+ * outputs a parameter assignment
+ * - symbolic name assigned
+ * - constant expression
  */
-SXML_TYPE_LIST ast_parameter_statement_parameter(
+SXML_TYPE_LIST ast_parameter_assign(
             SXML_TYPE_LIST name,
             SXML_TYPE_LIST constant_expression) {
     
     return JSON_MAP(
       SXML_LL(
-        JSON_KU_("name", name),
+        JSON_KU_("symbolic_name", name),
         JSON_KU("expression", constant_expression))  
     );
 }
