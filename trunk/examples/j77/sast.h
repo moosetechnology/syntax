@@ -722,6 +722,22 @@ SXML_TYPE_LIST ast_assignment_statement( SXML_TYPE_LIST location,
     ); 
 }
 
+/* -------------------------------------------------------------------------
+ * outputs an option in a control_info_elem
+ * similar to assignment_statement without the location
+ */
+SXML_TYPE_LIST ast_io_option(
+            SXML_TYPE_LIST left,
+            SXML_TYPE_LIST right) {
+    
+    return JSON_MAP(
+      SXML_LLL(
+        ast_tag( "control_info_option"),
+	JSON_KU_( "symbolic_name", left),
+	JSON_KU( "right", JSON_ARRAY( right))
+      ) ); 
+}
+
 
 /* -------------------------------------------------------------------------
  * outputs a goto_statement
@@ -865,7 +881,7 @@ SXML_TYPE_LIST ast_rewind_statement( SXML_TYPE_LIST location,
     ast_abstract_statement( "rewind_statement", location),
     ",\n",
     JSON_KU(
-      "parameters",
+      "control_info_list",
       JSON_ARRAY( parameters))
     ); 
 }
@@ -882,7 +898,7 @@ SXML_TYPE_LIST ast_backspace_statement( SXML_TYPE_LIST location,
     ast_abstract_statement( "backspace_statement", location),
     ",\n",
     JSON_KU(
-      "parameters",
+      "control_info_list",
       JSON_ARRAY( parameters))
     ); 
 }
@@ -899,7 +915,7 @@ SXML_TYPE_LIST ast_endfile_statement( SXML_TYPE_LIST location,
     ast_abstract_statement( "endfile_statement", location),
     ",\n",
     JSON_KU(
-      "parameters",
+      "control_info_list",
       JSON_ARRAY( parameters))
     ); 
 }
@@ -915,7 +931,7 @@ SXML_TYPE_LIST ast_open_statement( SXML_TYPE_LIST location,
     ast_abstract_statement( "open_statement", location),
     ",\n",
     JSON_KU(
-      "parameters",
+      "control_info_list",
       JSON_ARRAY( parameters))
     ); 
 }
@@ -932,7 +948,7 @@ SXML_TYPE_LIST ast_close_statement( SXML_TYPE_LIST location,
     ast_abstract_statement( "close_statement", location),
     ",\n",
     JSON_KU(
-      "parameters",
+      "control_info_list",
       JSON_ARRAY( parameters))
     ); 
 }
@@ -949,7 +965,7 @@ SXML_TYPE_LIST ast_inquire_statement( SXML_TYPE_LIST location,
     ast_abstract_statement( "inquire_statement", location),
     ",\n",
     JSON_KU(
-      "parameters",
+      "control_info_list",
       JSON_ARRAY( parameters))
     ); 
 }
@@ -966,15 +982,13 @@ SXML_TYPE_LIST ast_control_info_elem(
 
   if (name == NULL) {
     return JSON_MAP(
-      JSON_KU("parameter", parameter)
+      JSON_KU("expression", parameter)
     );
   }
   else {
-    return JSON_MAP(
-      SXML_LL(
-        JSON_KQ_("name", name),
-        JSON_KU("parameter", parameter))  
-    );
+    return ast_io_option(
+      JSON_MAP( JSON_KQ("name", name)),
+      parameter );
   }
 }
 
