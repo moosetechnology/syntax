@@ -130,7 +130,7 @@ SXML_TYPE_LIST ast_subprogram_unit_header( SXML_TYPE_LIST name,
   return SXML_LL(
     JSON_KU_ ("name", name),
     JSON_KU_ (
-      "parameters",
+      "prog_unit_parameters",
       JSON_ARRAY( parameters) ));
 }
 
@@ -561,14 +561,14 @@ SXML_TYPE_LIST ast_function_statement( SXML_TYPE_LIST location,
             SXML_TYPE_LIST expression) {
     
     return SXML_LTLLL(
-    ast_abstract_statement( "function_statement", location),
-    ",\n",
-    JSON_KU_("name", name),  
-    JSON_KU_(
-      "parameters",
-      JSON_ARRAY( parameters)),
-    JSON_KU("expression", expression)
-    ); 
+      ast_abstract_statement( "function_statement", location),
+      ",\n",
+      JSON_KU_("name", name),  
+      JSON_KU_(
+        "prog_unit_parameters",
+        JSON_ARRAY( parameters)),
+      JSON_KU("expression", expression)
+      ); 
 }
 
 
