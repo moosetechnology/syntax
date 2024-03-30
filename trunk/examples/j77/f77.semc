@@ -3401,7 +3401,7 @@ $LIST( <50b:open_info_elem>)
 $LIST( <50b:open_info_elem>)
 {
   $LIST( <50b:open_info_elem>) = ast_control_info_elem(
-    "ERR", 
+    "ERR",
     $LIST(<110b:label_ref>)
   );
 }   
@@ -3414,7 +3414,7 @@ $LIST( <50b:open_info_elem>)
 $LIST( <50b:open_info_elem>)
 {
   $LIST( <50b:open_info_elem>) = ast_control_info_elem(
-    "FILE", 
+    "FILE",
     $LIST(<82a:character_or_non_typed_expression>)
   );
 }    
@@ -3427,7 +3427,7 @@ $LIST( <50b:open_info_elem>)
 $LIST( <50b:open_info_elem>)
 {
   $LIST( <50b:open_info_elem>) = ast_control_info_elem(
-    "STATUS", 
+    "STATUS",
     $LIST(<82a:character_or_non_typed_expression>)
   );
 }    
@@ -3440,7 +3440,7 @@ $LIST( <50b:open_info_elem>)
 $LIST( <50b:open_info_elem>)
 {
   $LIST( <50b:open_info_elem>) = ast_control_info_elem(
-    "ACCESS", 
+    "ACCESS",
     $LIST(<82a:character_or_non_typed_expression>)
   );
 }    
@@ -3453,7 +3453,7 @@ $LIST( <50b:open_info_elem>)
 $LIST( <50b:open_info_elem>)
 {
   $LIST( <50b:open_info_elem>) = ast_control_info_elem(
-    "FORM", 
+    "FORM",
     $LIST(<82a:character_or_non_typed_expression>)
   );
 }    
@@ -3466,7 +3466,7 @@ $LIST( <50b:open_info_elem>)
 $LIST( <50b:open_info_elem>)
 {
   $LIST( <50b:open_info_elem>) = ast_control_info_elem(
-    "RECL", 
+    "RECL",
     $LIST(<77:integer_expr>)
   );
 }    
@@ -3479,7 +3479,7 @@ $LIST( <50b:open_info_elem>)
 $LIST( <50b:open_info_elem>)
 {
   $LIST( <50b:open_info_elem>) = ast_control_info_elem(
-    "BLANK", 
+    "BLANK",
     $LIST(<82a:character_or_non_typed_expression>)
   );
 }    
@@ -3492,7 +3492,7 @@ $LIST( <50b:open_info_elem>)
 $LIST( <50b:open_info_elem>)
 {
   $LIST( <50b:open_info_elem>) = ast_control_info_elem(
-    "IOSTAT", 
+    "IOSTAT",
     $LIST(<88a:variable_or_array_element_name>)
   );
 }
@@ -3553,8 +3553,11 @@ $LIST( <51a:close_info_elem_list>)
 
 $LIST( <51b:close_info_elem>)
 {
-  $LIST( <51b:close_info_elem>) = $LIST(<56:unit_identifier>);
-}    
+  $LIST( <51b:close_info_elem>) = ast_control_info_elem(
+    "UNIT",
+    $LIST(<56:unit_identifier>)
+  );
+}  
 
 *------------------------------------------------------------------------------
 
@@ -3564,7 +3567,7 @@ $LIST( <51b:close_info_elem>)
 $LIST( <51b:close_info_elem>)
 {
   $LIST( <51b:close_info_elem>) = ast_control_info_elem(
-    "ERR", 
+    "ERR",
     $LIST(<110b:label_ref>)
   );
 } 
@@ -3577,7 +3580,7 @@ $LIST( <51b:close_info_elem>)
 $LIST( <51b:close_info_elem>)
 {
   $LIST( <51b:close_info_elem>) = ast_control_info_elem(
-    "STATUS", 
+    "STATUS",
     $LIST(<82a:character_or_non_typed_expression>)
   );
 }    
@@ -3590,7 +3593,7 @@ $LIST( <51b:close_info_elem>)
 $LIST( <51b:close_info_elem>)
 {
   $LIST( <51b:close_info_elem>) = ast_control_info_elem(
-    "IOSTAT", 
+    "IOSTAT",
     $LIST(<88a:variable_or_array_element_name>)
   );
 }
@@ -3651,7 +3654,10 @@ $LIST( <52a:inquire_info_elem_list>)
 
 $LIST( <52b:inquire_info_elem>)
 {
-  $LIST( <52b:inquire_info_elem>) = $LIST(<56:unit_identifier>);
+  $LIST( <52b:inquire_info_elem>) = ast_control_info_elem(
+    "UNIT",
+    $LIST(<56:unit_identifier>)
+  );
 }    
 
 *------------------------------------------------------------------------------
@@ -3662,7 +3668,7 @@ $LIST( <52b:inquire_info_elem>)
 $LIST( <52b:inquire_info_elem>)
 {
   $LIST( <52b:inquire_info_elem>) = ast_control_info_elem(
-    "FILE", 
+    "FILE",
     $LIST(<82a:character_or_non_typed_expression>)
   );
 }    
@@ -3675,7 +3681,7 @@ $LIST( <52b:inquire_info_elem>)
 $LIST( <52b:inquire_info_elem>)
 {
   $LIST( <52b:inquire_info_elem>) = ast_control_info_elem(
-    "ERR", 
+    "ERR",
     $LIST(<110b:label_ref>)
   );
 }    
@@ -3688,7 +3694,7 @@ $LIST( <52b:inquire_info_elem>)
 $LIST( <52b:inquire_info_elem>)
 {
   $LIST( <52b:inquire_info_elem>) = ast_control_info_elem(
-    $NAME(<52c:inquire_info_key>), 
+    $NAME(<52c:inquire_info_key>),
     $LIST(<88a:variable_or_array_element_name>)
   );
 }    
@@ -3914,7 +3920,10 @@ $LIST( <53a:backspace_or_endfile_or_rewind_info_elem_list>)
 
 $LIST( <53b:backspace_or_endfile_or_rewind_info_elem>)
 {
-  $LIST( <53b:backspace_or_endfile_or_rewind_info_elem>) = $LIST(<56:unit_identifier>);
+  $LIST( <53b:backspace_or_endfile_or_rewind_info_elem>) = ast_control_info_elem(
+    "UNIT",
+    $LIST(<56:unit_identifier>)
+  );
 }    
 
 *------------------------------------------------------------------------------
@@ -3925,7 +3934,7 @@ $LIST( <53b:backspace_or_endfile_or_rewind_info_elem>)
 $LIST( <53b:backspace_or_endfile_or_rewind_info_elem>)
 {
   $LIST( <53b:backspace_or_endfile_or_rewind_info_elem>) = ast_control_info_elem(
-    "ERR", 
+    "ERR",
     $LIST(<110b:label_ref>)
   );
 }
@@ -3938,7 +3947,7 @@ $LIST( <53b:backspace_or_endfile_or_rewind_info_elem>)
 $LIST( <53b:backspace_or_endfile_or_rewind_info_elem>)
 {
   $LIST( <53b:backspace_or_endfile_or_rewind_info_elem>) = ast_control_info_elem(
-    "IOSTAT", 
+    "IOSTAT",
     $LIST( <88a:variable_or_array_element_name>)
   );
 }    
@@ -5156,7 +5165,7 @@ $LIST( <74b:expression_list>)
 $LIST( <75:constant_expr>)
 {
   $LIST( <75:constant_expr>) = ast_const_expression(
-    "arithmetic_const_expr>",
+    "arithmetic_const_expr",
     $LIST(<79:arithmetic_const_expr>)
   );
 }   
