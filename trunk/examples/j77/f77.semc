@@ -1944,7 +1944,7 @@ $LIST( <23a:assign_list>)
 
 $LIST( <23b:assign>)
 {
-  $LIST( <23b:assign>) = ast_parameter_statement_parameter(
+  $LIST( <23b:assign>) = ast_parameter_assign(
     $LIST(<99:symbolic_name>), 
     $LIST(<75:constant_expr>) 
     );
