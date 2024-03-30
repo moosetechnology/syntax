@@ -5156,7 +5156,7 @@ $LIST( <74b:expression_list>)
 $LIST( <75:constant_expr>)
 {
   $LIST( <75:constant_expr>) = ast_const_expression(
-    "logical_const_expr",
+    "arithmetic_const_expr>",
     $LIST(<79:arithmetic_const_expr>)
   );
 }   
@@ -5169,7 +5169,7 @@ $LIST( <75:constant_expr>)
 $LIST( <75:constant_expr>)
 {
   $LIST( <75:constant_expr>) = ast_const_expression(
-    "logical_const_expr",
+    "character_const_expr",
     $LIST(<83:character_const_expr>)
   );
 }    
