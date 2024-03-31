@@ -618,36 +618,31 @@ SXML_TYPE_LIST ast_equiv_entity_list(
 
 
 /* -------------------------------------------------------------------------
- * outputs a parameter of a common_statement
- * - array of parameters, where each parameter is a pair of [name] and list of variable names, array names, and array declarators 
+ * outputs a common_statement
+ * - common_body = a list of pairs [name]/list of variable names, array names, and array declarators 
  */
 SXML_TYPE_LIST ast_common_statement( SXML_TYPE_LIST location,
-            SXML_TYPE_LIST parameters) {
+            SXML_TYPE_LIST common_body) {
     
     return SXML_LTL(
       ast_abstract_statement( "common_statement", location),
       ",\n",
       JSON_KU(
-        "parameters",
-        JSON_ARRAY( parameters))
+        "common_body",
+        JSON_ARRAY( common_body))
       ); 
 }
 
 
 /* -------------------------------------------------------------------------
- * outputs a parameter of a common_statement. parameter consists of:
+ * outputs a common_statement body. Consists of:
  * - name (optional)
  * - nlist: List of variables, arrays, array elements, substrings, and implied DO lists separated by commas
  */
-SXML_TYPE_LIST ast_common_body(
-            SXML_TYPE_LIST name,
-            SXML_TYPE_LIST nlist) {
-    
+SXML_TYPE_LIST ast_common_name(
+            SXML_TYPE_LIST name) {
     return JSON_MAP(
-      SXML_LL(
-        JSON_KU_("name", name),
-        JSON_KU("nlist", JSON_ARRAY(nlist)))  
-    );
+      JSON_KU("common_name", name) );
 }
 
 

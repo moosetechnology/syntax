@@ -1503,10 +1503,7 @@ $LIST( <common_body>)
 
 $LIST( <common_body>)
 {
-  $LIST( <common_body>) = ast_common_body(
-    ast_empty_map(), 
-    $LIST(<20b:scalar_name>)
-  );
+  $LIST( <common_body>) = $LIST(<20b:scalar_name>);
 }
 
 *******************************************************************************
@@ -1525,11 +1522,12 @@ $LIST( <common_body>)
 
 $LIST( <19b:common_part>)
 {
-  $LIST( <19b:common_part>) = ast_common_body(
-    $LIST(<99:symbolic_name>), 
+  $LIST( <19b:common_part>) = SXML_LTL(
+    ast_common_name( $LIST(<99:symbolic_name>) ),
+    ",",
     $LIST(<20b:scalar_name>)
   );
-}    
+}
 
 *------------------------------------------------------------------------------
 
@@ -1542,10 +1540,7 @@ $LIST( <19b:common_part>)
 
 $LIST( <19b:common_part>)
 {
-  $LIST( <19b:common_part>) = ast_common_body(
-    ast_empty_map(), 
-    $LIST(<20b:scalar_name>)
-  );
+  $LIST( <19b:common_part>) = $LIST(<20b:scalar_name>);
 }    
 
 *******************************************************************************
