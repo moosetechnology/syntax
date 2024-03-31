@@ -1397,7 +1397,7 @@ $LIST( <18a:equiv_list>)
 
 $LIST( <18b:equiv>)
 {
-  $LIST( <18b:equiv>) = ast_equiv_entity_list($LIST(<18c:equiv_entity_list>));
+  $LIST( <18b:equiv>) = ast_equiv_group($LIST(<18c:equiv_entity_list>));
 }
 
 *******************************************************************************

@@ -607,26 +607,30 @@ SXML_TYPE_LIST ast_dimension_statement( SXML_TYPE_LIST location,
  * - list of lists of variable names, array element names, array names, and character substring names separated by commas  
  */
 SXML_TYPE_LIST ast_equivalence_statement( SXML_TYPE_LIST location,
-            SXML_TYPE_LIST parameters) {
+            SXML_TYPE_LIST equiv_groups) {
     
     return SXML_LTL(
       ast_abstract_statement( "equivalence_statement", location),
       ",\n",
       JSON_KU(
-        "parameters",
-        JSON_ARRAY( parameters))
+        "equivalence_groups",
+        JSON_ARRAY( equiv_groups))
       ); 
 }
 
 
 /* -------------------------------------------------------------------------
- * outputs a parameter of a equivalence_statement
+ * outputs a "group" of a equivalent entities
  * - list of variable names, array element names, array names, and character substring names separated by commas  
  */
-SXML_TYPE_LIST ast_equiv_entity_list(
+SXML_TYPE_LIST ast_equiv_group(
             SXML_TYPE_LIST entity_list) {
     
-    return JSON_ARRAY(entity_list);
+    return JSON_MAP(
+      JSON_KU(
+        "equiv_group",
+	JSON_ARRAY(entity_list) )
+    );
 }
 
 
