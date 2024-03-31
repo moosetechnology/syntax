@@ -5580,7 +5580,7 @@ $LIST( <79b:arithmetic_or_non_typed_const_expr>)
 
 $LIST( <80:int_constant_expr>)
 {
-  $LIST( <80:int_constant_expr>) = ast_unary_expression(
+  $LIST( <80:int_constant_expr>) = ast_constant_signed(
     $NAME( <114:sign>),
     $LIST( <80a:int_constant_expr>) );
 }
