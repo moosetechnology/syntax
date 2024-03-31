@@ -211,14 +211,27 @@ SXML_TYPE_LIST ast_labeled_statement( SXML_TYPE_TEXT label,
 
 /* -------------------------------------------------------------------------
  * outputs a format statement
- * - label (optional)
  * - format statement
  */
-SXML_TYPE_LIST ast_format_statement( SXML_TYPE_LIST format) {
-  return SXML_LL(
-        ast_tag ( "format_statement"), 
-        JSON_KU  ("specification", JSON_ARRAY(format))
-        );
+SXML_TYPE_LIST ast_format_statement( SXML_TYPE_LIST location,
+	    SXML_TYPE_LIST format) {
+  if(format == NULL) {
+    return SXML_LTL(
+        ast_abstract_statement( "format_statement", location),
+	",\n",
+        JSON_KQ ("specification", "")
+     );
+  }
+  else {
+    return SXML_LTL(
+        ast_abstract_statement( "format_statement", location),
+	",\n",
+        SXML_TLT (
+	  "\"specification\":\"" ,
+	  format,
+	  "\"")
+     );
+  }
 }
 
 
