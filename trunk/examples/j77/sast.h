@@ -14,11 +14,11 @@ SXML_TYPE_LIST ast_empty_string() {
 /* -------------------------------------------------------------------------
  * ouputs line and column  position
  */
-SXML_TYPE_LIST ast_location( SXML_TYPE_TEXT position,
+SXML_TYPE_LIST ast_location( SXML_TYPE_TEXT position_name,
             SXUINT line,
             SXUINT column) {
   return JSON_KU(
-    position,
+    position_name,
     JSON_MAP (
       SXML_LL (
         JSON_KQ_ ("line", SXML_UINT(line)),
@@ -47,9 +47,9 @@ SXML_TYPE_LIST ast_end_location( SXUINT line,
 
 
 /* -------------------------------------------------------------------------
- * ouputs a tag
+ * ouputs a tag followed by a comma
  */
-SXML_TYPE_LIST ast_tag( SXML_TYPE_TEXT tag) {
+SXML_TYPE_LIST ast_tag_( SXML_TYPE_TEXT tag) {
   return JSON_KQ_ ("tag", tag);
 }
 
@@ -93,7 +93,7 @@ SXML_TYPE_LIST ast_program_unit( SXML_TYPE_TEXT tag,
 
   return JSON_MAP(
     SXML_LLLTLTL(
-      ast_tag(tag),
+      ast_tag_(tag),
       (header == NULL
        ? SXML_LL(
 	  JSON_KQ_ ("name", "null"),
@@ -159,7 +159,7 @@ SXML_TYPE_LIST ast_abstract_statement( SXML_TYPE_TEXT tag,
           SXML_TYPE_LIST location) {
 
   return SXML_LL(
-    ast_tag(tag),
+    ast_tag_(tag),
     location );
 }
 
@@ -191,7 +191,8 @@ SXML_TYPE_LIST ast_unknown_parameter( SXML_TYPE_TEXT rule,
 }
 
 /* -------------------------------------------------------------------------
- * outputs an labeled_statement
+ * outputs a labeled_statement.
+ * Note: the label is part of the statement
  * - label (optional)
  * - statement
  */
@@ -203,8 +204,8 @@ SXML_TYPE_LIST ast_labeled_statement( SXML_TYPE_TEXT label,
   else {
     return JSON_MAP( 
       SXML_LL(
-        JSON_KQ_ ("label", label), 
-  statement) );
+        JSON_KQ_ ( "label", label), 
+	statement) );
   }
 }
 
@@ -251,7 +252,7 @@ SXML_TYPE_LIST ast_fmt_specification( SXML_TYPE_TEXT repeat_factor,
     if (descriptor == NULL){
       return JSON_MAP(
         SXML_LL(
-          ast_tag ("format_specification"),
+          ast_tag_ ("format_specification"),
           JSON_KQ ("slash", slash)
         )
       );
@@ -260,7 +261,7 @@ SXML_TYPE_LIST ast_fmt_specification( SXML_TYPE_TEXT repeat_factor,
     if (slash == NULL){
       return JSON_MAP(
         SXML_LL(
-          ast_tag ("format_specification"),
+          ast_tag_ ("format_specification"),
           JSON_KU ("descriptor", descriptor)
         )
       );
@@ -268,7 +269,7 @@ SXML_TYPE_LIST ast_fmt_specification( SXML_TYPE_TEXT repeat_factor,
 
     return JSON_MAP(
       SXML_LLL(
-        ast_tag ("format_specification"),
+        ast_tag_ ("format_specification"),
         JSON_KU_ ("descriptor", descriptor),
         JSON_KQ ("slash", slash)
       )
@@ -278,7 +279,7 @@ SXML_TYPE_LIST ast_fmt_specification( SXML_TYPE_TEXT repeat_factor,
   if (slash == NULL){
     return JSON_MAP(
       SXML_LLL(
-        ast_tag ("format_specification"),
+        ast_tag_ ("format_specification"),
         JSON_KQ_ ("repeat_factor", repeat_factor), 
         JSON_KU ("descriptor", descriptor)
       )
@@ -287,7 +288,7 @@ SXML_TYPE_LIST ast_fmt_specification( SXML_TYPE_TEXT repeat_factor,
 
   return JSON_MAP(
     SXML_LLLL(
-      ast_tag ("format_specification"),
+      ast_tag_ ("format_specification"),
       JSON_KQ_ ("repeat_factor", repeat_factor), 
       JSON_KU_ ("descriptor", descriptor),
       JSON_KQ ("slash", slash)
@@ -303,7 +304,7 @@ SXML_TYPE_LIST ast_fmt_specification( SXML_TYPE_TEXT repeat_factor,
 SXML_TYPE_LIST ast_nonrepeatable_edit_descriptor( SXML_TYPE_LIST descriptor) {
   return JSON_MAP(
     SXML_LL(
-      ast_tag ( "nonrepeatable_edit_descriptor"), 
+      ast_tag_ ( "nonrepeatable_edit_descriptor"), 
       JSON_KU  ("descriptor", SXML_QUOTED_LIST (descriptor))
     )
   );
@@ -316,7 +317,7 @@ SXML_TYPE_LIST ast_nonrepeatable_edit_descriptor( SXML_TYPE_LIST descriptor) {
 SXML_TYPE_LIST ast_nonrepeatable_edit_descriptor_character( SXML_TYPE_LIST descriptor) {
   return JSON_MAP(
     SXML_LL(
-      ast_tag ( "nonrepeatable_edit_descriptor"), 
+      ast_tag_ ( "nonrepeatable_edit_descriptor"), 
       JSON_KU  ("descriptor", descriptor)
     )
   );
@@ -329,7 +330,7 @@ SXML_TYPE_LIST ast_nonrepeatable_edit_descriptor_character( SXML_TYPE_LIST descr
 SXML_TYPE_LIST ast_repeatable_edit_descriptor( SXML_TYPE_LIST descriptor) {
   return JSON_MAP(
     SXML_LL(
-      ast_tag ( "repeatable_edit_descriptor"), 
+      ast_tag_ ( "repeatable_edit_descriptor"), 
       JSON_KU  ("repeated_descriptors", JSON_ARRAY(descriptor))
     )
   );
@@ -365,13 +366,13 @@ SXML_TYPE_LIST ast_type_reference( SXML_TYPE_LIST name,
   if (len_specification == NULL) {
     return JSON_MAP(
       SXML_LL (
-        ast_tag("type_reference"),
+        ast_tag_("type_reference"),
       JSON_KQ ("name", name->TEXT) ));
   }
   else {
     return JSON_MAP(
       SXML_LLL (
-        ast_tag("type_reference"),
+        ast_tag_("type_reference"),
       JSON_KQ_ ("name", name->TEXT),
       JSON_KU ("len_specification", len_specification) ));
   }
@@ -488,7 +489,7 @@ SXML_TYPE_LIST ast_implicit_element(
               ) {
   return JSON_MAP(
     SXML_LLL(
-      ast_tag("implicit_range"),
+      ast_tag_("implicit_range"),
       JSON_KQ_("implicit_range_lower", left),
       JSON_KQ("implicit_range_upper", right)
       )
@@ -745,7 +746,7 @@ SXML_TYPE_LIST ast_io_option(
     
     return JSON_MAP(
       SXML_LLL(
-        ast_tag( "control_info_option"),
+        ast_tag_( "control_info_option"),
 	JSON_KU_( "symbolic_name", left),
 	JSON_KU( "right", JSON_ARRAY( right))
       ) ); 
@@ -1036,7 +1037,7 @@ SXML_TYPE_LIST ast_constant_signed(
             SXML_TYPE_LIST constant) {
   return JSON_MAP(
     SXML_LLL(
-      ast_tag("constant_signed"),
+      ast_tag_("constant_signed"),
       JSON_KQ_("sign", sign),
       JSON_KU( "constant", constant)
     )
@@ -1054,7 +1055,7 @@ SXML_TYPE_LIST ast_const_expression(
             SXML_TYPE_LIST expression) {
   return JSON_MAP(
     SXML_LL(
-      ast_tag(type),
+      ast_tag_(type),
       JSON_KU( "expression", expression)
     )
   );
@@ -1114,7 +1115,7 @@ SXML_TYPE_LIST ast_literal_expression( SXML_TYPE_LIST literal) {
 
   return JSON_MAP (
     SXML_LL(
-      ast_tag( "literal_expression"),
+      ast_tag_( "literal_expression"),
       JSON_KU( "literal", literal) ));
 }
 
@@ -1126,7 +1127,7 @@ SXML_TYPE_LIST ast_variable_expression( SXML_TYPE_LIST variable) {
 
   return JSON_MAP (
     SXML_LL(
-      ast_tag( "variable_expression"),
+      ast_tag_( "variable_expression"),
       JSON_KU( "variable", variable) ));
 }
 
@@ -1138,7 +1139,7 @@ SXML_TYPE_LIST ast_parenthesis_expression( SXML_TYPE_LIST expression) {
 
   return JSON_MAP (
     SXML_LL(
-      ast_tag( "parenthesis_expression"),
+      ast_tag_( "parenthesis_expression"),
       JSON_KU( "expression", expression) ));
 }
 
@@ -1153,7 +1154,7 @@ SXML_TYPE_LIST ast_unary_expression( SXML_TYPE_TEXT unary_operator,
 
   return JSON_MAP (
     SXML_LLL(
-      ast_tag( "unary_expression"),
+      ast_tag_( "unary_expression"),
       JSON_KQ_( "operator", unary_operator),
       JSON_KU ( "expression", expression) ));
 }
@@ -1168,7 +1169,7 @@ SXML_TYPE_LIST ast_binary_expression( SXML_TYPE_LIST lhs_expression,
 
   return JSON_MAP (
     SXML_LLLL(
-      ast_tag( "binary_expression"),
+      ast_tag_( "binary_expression"),
       JSON_KU_ ( "lhs", lhs_expression),
       JSON_KQ_( "operator", binary_operator),
       JSON_KU ( "rhs", rhs_expression) ));
@@ -1182,7 +1183,7 @@ SXML_TYPE_LIST ast_expression( SXML_TYPE_TEXT tag,
 
   return JSON_MAP (
     SXML_LL(
-      ast_tag(tag),
+      ast_tag_(tag),
       JSON_KU( "expression", expression) 
     )
   );
@@ -1198,7 +1199,7 @@ SXML_TYPE_LIST ast_variable_declarator( SXML_TYPE_LIST variable,
            SXML_TYPE_LIST dimension_declarator) {
  return JSON_MAP(
    SXML_LLL(
-     ast_tag( "variable_declarator"),
+     ast_tag_( "variable_declarator"),
      JSON_KU_( "variable", variable),
      JSON_KU (  "dimension_declarators", JSON_ARRAY( dimension_declarator)) ) );
 }
@@ -1270,7 +1271,7 @@ SXML_TYPE_LIST ast_substring(SXML_TYPE_LIST variable,
 
   return JSON_MAP(
     SXML_LLLL(
-      ast_tag("substring"),
+      ast_tag_("substring"),
       variable_or_array,
       JSON_KU_("lower_bound", lower_bound_safe),
       JSON_KU ("upper_bound", upper_bound_safe)
@@ -1289,7 +1290,7 @@ SXML_TYPE_LIST ast_array_element_name(SXML_TYPE_LIST name,
   
   return JSON_MAP(
     SXML_LLL(
-      ast_tag("array_element_name"),
+      ast_tag_("array_element_name"),
       JSON_KU_("name", name),
       JSON_KU ("qualifiers_list", JSON_ARRAY(qualifiers))
       )
@@ -1305,7 +1306,7 @@ SXML_TYPE_LIST ast_function_reference( SXML_TYPE_LIST name) {
 
   return JSON_MAP(
     SXML_LL (
-        ast_tag("function_reference"),
+        ast_tag_("function_reference"),
         JSON_KU("name", name)
     )
   );
@@ -1355,7 +1356,7 @@ SXML_TYPE_LIST ast_logical_primary( SXML_TYPE_LIST expression) {
 
   return JSON_MAP(
     SXML_LL (
-      ast_tag("logical_primary"),
+      ast_tag_("logical_primary"),
       JSON_KU("expression", expression)
     )
   );
@@ -1371,7 +1372,7 @@ SXML_TYPE_LIST ast_logical_factor( SXML_TYPE_TEXT negated,
 
   return JSON_MAP(
     SXML_LLL (
-      ast_tag("logical_factor"),
+      ast_tag_("logical_factor"),
       JSON_KQ_("negated", negated),
       JSON_KU("expression", expression)
     )
@@ -1389,7 +1390,7 @@ SXML_TYPE_LIST ast_data_statement_constant( SXML_TYPE_LIST occurence,
 
   return JSON_MAP(
     SXML_LLL (
-      ast_tag("data_statement_constant"),
+      ast_tag_("data_statement_constant"),
       JSON_KU_("occurence", occurence),
       JSON_KU("constant", constant)
     )
@@ -1401,44 +1402,24 @@ SXML_TYPE_LIST ast_data_statement_constant( SXML_TYPE_LIST occurence,
  * ouputs a data_imply_do_list
  * - dlist: list of array element names and implied DO lists
  * -- the last element of dlist is iv: implied DO variable
- * - m1: initial value of iv
- * - m2: limit value of iv
- * - [m3]: increment value of iv (if m3 is omitted, then a default value of 1 is assumed)
+ * - initial value of iv
+ * - limit value of iv
+ * - increment value of iv (if omitted, a default value of 1 is assumed)
  */
 SXML_TYPE_LIST ast_data_imply_do_list( SXML_TYPE_LIST dlist,
-                SXML_TYPE_LIST m1,
-                SXML_TYPE_LIST m2,
-                SXML_TYPE_LIST m3) {
+                SXML_TYPE_LIST init,
+                SXML_TYPE_LIST limit,
+                SXML_TYPE_LIST increment) {
 
   return JSON_MAP(
     SXML_LLLLL (
-      ast_tag("data_imply_do_list"),
+      ast_tag_("data_imply_do_list"),
       JSON_KU_("dlist", JSON_ARRAY(dlist)),
-      JSON_KU_("m1", m1),
-      JSON_KU_("m2", m2),
-      JSON_KU("m3", m3)
+      JSON_KU_("init", init),
+      JSON_KU_("limit", limit),
+      JSON_KU("increment", increment)
     )
   );
-}
-
-
-/* -------------------------------------------------------------------------
- * outputs a logical if statement
- * - Location of the statement
- * - logical expression
- * - statement to execute
- */
-SXML_TYPE_LIST ast_logical_if_statement(
-            SXML_TYPE_LIST location,
-            SXML_TYPE_LIST expression,
-            SXML_TYPE_LIST statement) {
-
-  return SXML_LTLL(
-    ast_abstract_statement( "logical_if_statement", location),
-    ",\n",
-    JSON_KU_ ("expression", expression),
-    JSON_KU ("statement", JSON_MAP(statement))
-    );
 }
 
 /* -------------------------------------------------------------------------
@@ -1524,18 +1505,6 @@ SXML_TYPE_LIST ast_do_parameters(SXML_TYPE_LIST init,
 
 /* -------------------------------------------------------------------------
  */
-SXML_TYPE_LIST ast_end_if(SXML_TYPE_TEXT label) {
-  
-    return JSON_KU(
-      "end_if", JSON_MAP(
-        JSON_KQ("label", label)
-      )
-    );
-}
-
-
-/* -------------------------------------------------------------------------
- */
 SXML_TYPE_LIST ast_end_do(SXML_TYPE_TEXT label) {
   
     return JSON_KU(
@@ -1547,73 +1516,93 @@ SXML_TYPE_LIST ast_end_do(SXML_TYPE_TEXT label) {
 
 
 /* -------------------------------------------------------------------------
+ * outputs a logical if statement
+ * - Location of the statement
+ * - logical expression
+ * - statement to execute
  */
-SXML_TYPE_LIST ast_else_statement(SXML_TYPE_TEXT else_label) {
+SXML_TYPE_LIST ast_logical_if_statement(
+            SXML_TYPE_LIST location,
+            SXML_TYPE_LIST expression,
+            SXML_TYPE_LIST statement) {
 
-    if (else_label == NULL){
-      return SXML_L(
-        ast_tag("else_statement")
+  return SXML_LTLL(
+    ast_abstract_statement( "logical_if_statement", location),
+    ",\n",
+    JSON_KU_ ("expression", expression),
+    JSON_KU ("statement", JSON_MAP(statement))
+    );
+}
+
+
+/* -------------------------------------------------------------------------
+ * ouputs a ELSE possibly labeled, possibly with a IF
+ *   ends with a comma (part of a IF or ELSE IF node)
+ * - tag : differentiate beween a simple ELSE or a ELSE IF
+ * - label (optional)
+ * - location of the ELSE
+ */
+SXML_TYPE_LIST ast_else_(
+              SXML_TYPE_LIST location,
+	      SXML_TYPE_TEXT tag,
+	      SXML_TYPE_TEXT label) {
+
+    if (label == NULL){
+      return SXML_LLT(
+        ast_tag_(tag),
+	location,
+	",\n"
       );      
     }
-
-    return SXML_LL(
-      ast_tag("else_statement"),  
-      JSON_KQ_("else_label", else_label)
-    );
-}
-
-
-/* -------------------------------------------------------------------------
- */
-SXML_TYPE_LIST ast_else_block(SXML_TYPE_LIST else_label,
-              SXML_TYPE_LIST else_statements,
-              SXML_TYPE_LIST end_if) {
-
-    if (else_label == NULL){
-      return JSON_MAP(
-        SXML_LL(
-          JSON_KU_("else_statements", JSON_ARRAY(else_statements)),
-          end_if
-        )
+    else {
+      return SXML_LLTL(
+        ast_tag_(tag),  
+        location,
+        ",\n",
+        JSON_KQ_("label", label)
       );
     }
-
-    return JSON_MAP(
-      SXML_LLL(
-        else_label,
-        JSON_KU_("else_statements", JSON_ARRAY(else_statements)),
-        end_if
-      )
-    );
 }
 
 
 /* -------------------------------------------------------------------------
+ * BlockIf statement
+ * - condition
+ * - then_statements (optional), this is an array of statements
+ * - else_block (optional), this is a ELSE node (containing statements)
  */
-SXML_TYPE_LIST ast_if_else_statement(
-              SXML_TYPE_TEXT label,
-              SXML_TYPE_LIST expression
+SXML_TYPE_LIST ast_block_if_statement(
+              SXML_TYPE_LIST location,
+              SXML_TYPE_LIST condition,
+              SXML_TYPE_LIST then_statements,
+              SXML_TYPE_LIST else_block
               ) {
 
-    return SXML_LL(  
-      JSON_KQ_("label", label),
-      JSON_KU_("expression", expression)
-    );
+  return SXML_LTLLL(
+    ast_abstract_statement("block_if_statement", location),
+    ",\n",
+    JSON_KU_("condition", condition),
+    JSON_KU_("then_statements", JSON_ARRAY(then_statements)),
+    JSON_KU("else_block", else_block)
+  );
 }
 
 
 /* -------------------------------------------------------------------------
+ * ELSE followed by BlockIf
+ * - else_if_line : the line "ELSE IF (condition) THEN"
+ * - then_statements, this is an array of statements
+ * - else_block, this is a ELSE node (containing statements)
  */
-SXML_TYPE_LIST ast_if_else_block(
-              SXML_TYPE_LIST if_else_statement,
+SXML_TYPE_LIST ast_else_if_else(
+              SXML_TYPE_LIST else_if_line,
               SXML_TYPE_LIST then_statements,
               SXML_TYPE_LIST else_block
               ) {
 
     return JSON_MAP(
-      SXML_LLLL(  
-        ast_tag("if_else_block"),
-        if_else_statement,
+      SXML_LLL (
+        else_if_line,
         JSON_KU_("then_statements", JSON_ARRAY(then_statements)),
         JSON_KU("else_block", else_block)
       )
@@ -1622,19 +1611,86 @@ SXML_TYPE_LIST ast_if_else_block(
 
 
 /* -------------------------------------------------------------------------
+ * a line: ELSE followed by IF (condition) THEN
+ * the nested statements (THEN and ELSE parts) are not here but
+ *   in ast_else_if_else(...)
+ * May be labeled
  */
-SXML_TYPE_LIST ast_block_if_statement(
-              SXML_TYPE_LIST location,
-              SXML_TYPE_LIST expression,
-              SXML_TYPE_LIST then_statements,
-              SXML_TYPE_LIST else_block
+SXML_TYPE_LIST ast_else_if_line(
+              SXML_TYPE_LIST location_else,
+              SXML_TYPE_TEXT label,
+              SXML_TYPE_LIST location_if,
+              SXML_TYPE_LIST condition
               ) {
-  return
-    SXML_LTLLL(
-      ast_abstract_statement("block_if_statement", location),
-      ",\n",
-      JSON_KU_("expression", expression),
-      JSON_KU_("then_statements", JSON_ARRAY(then_statements)),
-      JSON_KU("else_block", else_block)
-  );
+
+    return SXML_LL(
+        ast_else_(location_else, "else_if", label),
+	/*location_if,
+	",\n",*/
+	JSON_KU_("condition", condition)
+    );
+}
+
+
+/* -------------------------------------------------------------------------
+ * ELSE keyword in a BlockIf, part of the BlockIf
+ * May be labeled
+ */
+SXML_TYPE_LIST ast_else_line(
+              SXML_TYPE_LIST location,
+	      SXML_TYPE_TEXT label) {
+
+    return ast_else_(location, "else", label);
+}
+
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_else_block(SXML_TYPE_LIST label,
+              SXML_TYPE_LIST else_statements,
+              SXML_TYPE_LIST end_if) {
+
+    if (label == NULL){
+      return JSON_MAP(
+        SXML_LL(
+          JSON_KU_("statement_list", JSON_ARRAY(else_statements)),
+          JSON_KU ("end_if", end_if)
+        )
+      );
+    }
+    else {
+      return JSON_MAP(
+        SXML_LLL(
+          label,
+          JSON_KU_("statement_list", JSON_ARRAY(else_statements)),
+          JSON_KU ("end_if", end_if)
+        )
+      );
+    }
+}
+
+
+/* -------------------------------------------------------------------------
+ * END IF in a BlockIf
+ * May be labeled
+ */
+SXML_TYPE_LIST ast_end_if(
+              SXML_TYPE_LIST location,
+	      SXML_TYPE_TEXT label) {
+  if(label == NULL) {
+    return JSON_MAP(
+      SXML_LL(
+        ast_tag_("end_if"),
+	location )
+    );
+  }
+  else {
+    return JSON_MAP(
+      SXML_LLTL(
+        ast_tag_("end_if"),
+	location,
+	",\n",
+        JSON_KQ("label", label) )
+    );
+  }
 }

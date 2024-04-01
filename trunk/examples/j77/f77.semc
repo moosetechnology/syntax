@@ -2654,7 +2654,7 @@ $LIST(<36a:else_blocks>)
 
 $LIST(<36a:else_blocks>)
 {
-  $LIST(<36a:else_blocks>) = ast_if_else_block(
+  $LIST(<36a:else_blocks>) = ast_else_if_else(
     $LIST(<37:else_if_statement>),
     $LIST(<2c:statement_list>),
     $LIST(<36a:else_blocks>)
@@ -2669,7 +2669,7 @@ $LIST(<36a:else_blocks>)
 
 $LIST(<36a:else_blocks>)
 {
-  $LIST(<36a:else_blocks>) = ast_if_else_block(
+  $LIST(<36a:else_blocks>) = ast_else_if_else(
     $LIST(<37:else_if_statement>),
     NULL,
     $LIST(<36a:else_blocks>)
@@ -2683,8 +2683,10 @@ $LIST(<36a:else_blocks>)
 
 $LIST(<37:else_if_statement>)
 {
-  $LIST(<37:else_if_statement>) = ast_if_else_statement(
-    "",
+  $LIST(<37:else_if_statement>) = ast_else_if_line(
+    LOCATION(0),
+    NULL,
+    LOCATION(1),
     $LIST(<74:expression>)
   );
 }   
@@ -2696,8 +2698,10 @@ $LIST(<37:else_if_statement>)
 
 $LIST(<37:else_if_statement>)
 {
-  $LIST(<37:else_if_statement>) = ast_if_else_statement(
+  $LIST(<37:else_if_statement>) = ast_else_if_line(
+    LOCATION(0),
     $NAME(<110:label>),
+    LOCATION(1),
     $LIST(<74:expression>)
   );
 }    
@@ -2709,7 +2713,9 @@ $LIST(<37:else_if_statement>)
 
 $LIST(<38:else_statement>)
 {
-  $LIST(<38:else_statement>) = ast_else_statement(NULL);
+  $LIST(<38:else_statement>) = ast_else_line(
+    LOCATION(0),
+    NULL);
 }
 
 *------------------------------------------------------------------------------
@@ -2719,7 +2725,8 @@ $LIST(<38:else_statement>)
 
 $LIST(<38:else_statement>)
 {
-  $LIST(<38:else_statement>) = ast_else_statement(
+  $LIST(<38:else_statement>) = ast_else_line(
+    LOCATION(0),
     $NAME(<110:label>)
   );
 }    
@@ -2731,7 +2738,10 @@ $LIST(<38:else_statement>)
 
 $LIST(<39:end_if_statement>)
 {
-  $LIST(<39:end_if_statement>) = ast_end_if("");
+  $LIST(<39:end_if_statement>) = ast_end_if(
+    LOCATION(0),
+    NULL
+  );
 }    
 
 *------------------------------------------------------------------------------
@@ -2742,6 +2752,7 @@ $LIST(<39:end_if_statement>)
 $LIST(<39:end_if_statement>)
 {
   $LIST(<39:end_if_statement>) = ast_end_if(
+    LOCATION(0),
     $NAME(<110:label>)
   );
 }    
