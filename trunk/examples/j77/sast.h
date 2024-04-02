@@ -815,7 +815,7 @@ SXML_TYPE_LIST ast_arithmetic_if_statement( SXML_TYPE_LIST location,
 
 /* -------------------------------------------------------------------------
  * outputs a write_statement
- * - control_info_list of parameters UNIT, FMT, IOSTAT, REC, ERR, NML
+ * - control_info_list of parameters UNIT, FMT, IOSTAT, REC, ERR
  * - io_list: list of variables 
  */
 SXML_TYPE_LIST ast_write_statement( SXML_TYPE_LIST location,
@@ -837,7 +837,7 @@ SXML_TYPE_LIST ast_write_statement( SXML_TYPE_LIST location,
 
 /* -------------------------------------------------------------------------
  * outputs a read_statement
- * - control_info_list of parameters UNIT, FMT, IOSTAT, REC, ERR, NML, etc
+ * - control_info_list of parameters UNIT, FMT, IOSTAT, REC, ERR, etc
  * - io_list: list of variables
  * - format identifier  
  */
@@ -986,7 +986,7 @@ SXML_TYPE_LIST ast_inquire_statement( SXML_TYPE_LIST location,
 
 
 /* -------------------------------------------------------------------------
- * outputs a parameter of a write_statement. possible parameters UNIT, FMT, IOSTAT, REC, ERR, NML
+ * outputs a parameter of a write_statement. possible parameters UNIT, FMT, IOSTAT, REC, ERR
  * - parameter name (optional)
  * - parameter
  */
