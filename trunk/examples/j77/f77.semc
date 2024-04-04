@@ -1827,7 +1827,6 @@ $LIST(<21c:implicit_elem_list>)
 
 <21d:implicit_elem>
 		= <99b:letter> ;
-*		au lieu de = <99:symbolic_name> ;
 
 $LIST(<21d:implicit_elem>)
 {
@@ -1841,7 +1840,6 @@ $LIST(<21d:implicit_elem>)
 
 <21d:implicit_elem>
 		= <99b:letter> - <99b:letter> ;
-*		au lieu de = <99:symbolic_name> - <99:symbolic_name> ;
 
 $LIST(<21d:implicit_elem>)
 {
@@ -6390,13 +6388,6 @@ $LIST(<99:symbolic_name>)
 
 	$LIST(<99:symbolic_name>) = ast_symbolic_name(LOCATION(0), $ptext ("%symbolic_name"));
 	
-*------------------------------------------------------------------------------
-
-* desormais inutile
-*
-* <99:symbolic_name> 
-*		= THEN ;
-
 *******************************************************************************
 
 <99a:symbolic_name_list>
