@@ -1,3 +1,5 @@
+
+
 /* -------------------------------------------------------------------------
  */
 SXML_TYPE_LIST ast_empty_map() {
@@ -1017,11 +1019,12 @@ SXML_TYPE_LIST ast_constant(
             SXML_TYPE_LIST location, 
             SXML_TYPE_TEXT constant_type,
             SXML_TYPE_TEXT constant) {
+
   return JSON_MAP(
     SXML_LTL(
       ast_abstract_statement(constant_type, location),
       ",\n",
-      JSON_KQ( "value", constant)
+      JSON_KQ( "value", escapeSpecialChar(constant) )
     )
   );
 }
