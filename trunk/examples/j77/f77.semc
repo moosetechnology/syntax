@@ -2801,7 +2801,22 @@ $LIST(<40a:do_loop>)
 *------------------------------------------------------------------------------
 
 * [[EXTENSION]]
-* Ci-apres, on a un vrai "do_block" se terminant par un vrai END DO 
+* Ci-apres, on a un "do_while" se terminant par un vrai END DO 
+* qui va aussi fermer tous les <40:do_statement> ouverts dans le "do_block".
+
+<40a:do_loop>	= DO  WHILE ( <84:logical_expression> ) %EOL
+		     <2c:statement_list>
+                  <40c:end_do> ;
+
+$LIST(<40a:do_loop>)
+ {
+ // xxx !!
+ }
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+* Ci-apres, on a un "do_block" se terminant par un vrai END DO 
 * qui va aussi fermer tous les <40:do_statement> ouverts dans le "do_block".
 
 <40a:do_loop>	= DO  <99:symbolic_name>  =  <40b:do_parameters> %EOL
@@ -2850,6 +2865,28 @@ $LIST(<40:do_statement>)
     $LIST(<40b:do_parameters>)
   );
 }    
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+<40:do_statement>
+		= DO  <110b:label_ref>  WHILE ( <84:logical_expression> ) %EOL ;
+
+$LIST(<40:do_statement>)
+{
+// xxx !!
+}
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+<40:do_statement>
+		= DO  <110b:label_ref> ,  WHILE ( <84:logical_expression> ) %EOL ;
+
+$LIST(<40:do_statement>)
+{
+// xxx !!
+}
 
 *******************************************************************************
 
