@@ -1432,12 +1432,21 @@ SXML_TYPE_LIST ast_data_imply_do_list( SXML_TYPE_LIST dlist,
  */
 SXML_TYPE_LIST ast_do_loop(
             SXML_TYPE_LIST do_statement,
-            SXML_TYPE_LIST statement_list) {
+            SXML_TYPE_LIST statement_list,
+            SXML_TYPE_LIST end_do) {
 
-  return SXML_LL(
+  if (end_do == NULL){
+    return SXML_LL(
+      do_statement,
+      JSON_KU("statement_list", JSON_ARRAY(statement_list))
+      );
+  }
+
+  return SXML_LLL(
     do_statement,
-    JSON_KU("statement_list", JSON_ARRAY(statement_list))
-    );
+    JSON_KU_("statement_list", JSON_ARRAY(statement_list)),
+    end_do
+  );
 }
 
 
@@ -1481,6 +1490,34 @@ SXML_TYPE_LIST ast_do_statement(
         )
       )
     )
+  );
+}
+
+
+/* -------------------------------------------------------------------------
+ * prepares a do-while statement used in a do loop
+ * - Location of the statement
+ * - statment number
+ * - loop controll logical expression
+ */
+SXML_TYPE_LIST ast_do_while_statement(
+            SXML_TYPE_LIST location,
+            SXML_TYPE_LIST statement_number,
+            SXML_TYPE_LIST logical_expression) {
+
+  if (statement_number == NULL){
+    return SXML_LTL(
+      ast_abstract_statement( "do_statement", location),
+      ",\n",
+      JSON_KU_ ("loop_control_expression", logical_expression) 
+    );
+  }
+
+  return SXML_LTLL(
+    ast_abstract_statement( "do_statement", location),
+    ",\n",
+    JSON_KU_ ("statement_number", statement_number),
+    JSON_KU_ ("loop_control_expression", logical_expression) 
   );
 }
 
