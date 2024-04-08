@@ -2684,7 +2684,6 @@ $LIST(<37:else_if_statement>)
   $LIST(<37:else_if_statement>) = ast_else_if_line(
     LOCATION(0),
     NULL,
-    LOCATION(1),
     $LIST(<74:expression>)
   );
 }   
@@ -2699,7 +2698,6 @@ $LIST(<37:else_if_statement>)
   $LIST(<37:else_if_statement>) = ast_else_if_line(
     LOCATION(0),
     $NAME(<110:label>),
-    LOCATION(1),
     $LIST(<74:expression>)
   );
 }    

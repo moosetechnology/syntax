@@ -1622,14 +1622,11 @@ SXML_TYPE_LIST ast_else_if_else(
 SXML_TYPE_LIST ast_else_if_line(
               SXML_TYPE_LIST location_else,
               SXML_TYPE_TEXT label,
-              SXML_TYPE_LIST location_if,
               SXML_TYPE_LIST condition
               ) {
 
     return SXML_LL(
         ast_else_(location_else, "else_if", label),
-	/*location_if,
-	",\n",*/
 	JSON_KU_("condition", condition)
     );
 }
