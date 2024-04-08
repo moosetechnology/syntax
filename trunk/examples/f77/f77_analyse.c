@@ -89,7 +89,7 @@ static char ME [] = "f77_analyse.c";
 #include "f77_td.h"
 #include <ctype.h>
 
-char WHAT_F77ANALYSE[] = "@(#)SYNTAX - $Id: f77_analyse.c 3793 2024-03-12 12:42:31Z garavel $";
+char WHAT_F77ANALYSE[] = "@(#)SYNTAX - $Id: f77_analyse.c 3813 2024-04-08 09:04:50Z garavel $";
 
 /* Il faudrait INTERDIRE l'insertion d'un EOL par le rattrapage d'erreur
    du scanner. Utiliser sxs_srcvr? */
@@ -271,6 +271,9 @@ static struct stmts {
 static void stmts_alloc (void) {
   /* On part avec la taille d'une carte (aucune réallocation si is_input_free_fortran == false */
   stmts.string = varstr_alloc (84);
+  stmts.continuation_line_no = 0;
+  stmts.is_eof_hit = false;
+  stmts.is_a_continuation_card = false;
 }
 
 
@@ -661,7 +664,7 @@ static void init_ppc (void) {
   ppc.last_offset = varstr_length (comments.vstr); /* Longueur totale de tous les commentaires */
   ppc.top = DTOP (comments.lines_no); /* nombre de commentaires */
   ppc.prev_comments_top = 0; /* nombre de commentaires déjà traités */
-  ppc.bsup = 0; /* longueur totale des commentaires déjà traités */
+  ppc.line_no = ppc.binf = ppc.bsup = 0; /* longueur totale des commentaires déjà traités */
 }
 
 
@@ -1860,6 +1863,28 @@ sxsrcmngr.buffer [sxsrcmngr.bufindex] = sxsrcmngr.current_char, sxsrcmngr.bufcoo
 /*VARARGS1*/
 #include <limits.h>
 
+static bool is_ansi_lgth_already_checked;
+
+#define XCHARACTER_kind    1
+#define XLENGTH_kind       2
+#define XIMPLICIT_kind     3
+#define XDO_LOOP_kind      4
+#define XDO_WHILE_kind     5
+#define Xlast_kind         5
+
+static bool extension_already_seen [Xlast_kind+1];
+
+static char *extension_mess [] = 
+  {
+    "",
+    "character ('_' or '$')",
+    "scalar type length",
+    "IMPLICIT statement",
+    "DO-LOOP statement",
+    "DO-WHILE statement",
+  };
+
+static SXINT head_tok_no; /* On se souvient du tok_no du 1er token d'une ligne */
 
 void	f77_src_mngr (SXINT what, FILE *infile, char *file_name)
 {
@@ -1883,6 +1908,19 @@ void	f77_src_mngr (SXINT what, FILE *infile, char *file_name)
     sxsrcmngr.infile = infile; /* Pour les getc */
 
     stmts_alloc ();
+
+    is_tab_already_met = false;
+    is_hollerith_already_met = false;
+    is_quoted_string_already_met = false;
+    is_lower_to_upper_already_met = false;
+    is_implicit_extension_already_met = false;
+
+    is_ansi_lgth_already_checked = false;
+
+    for (i = Xlast_kind; i > 0; i--)
+      extension_already_seen [i] = false;
+
+    head_tok_no = 0;
 
     /* Initialisation */
     varstr_catchar (stmts.string, SXNEWLINE); /* On suppose que toute nouvelle carte est précédée d'un EOL */
@@ -1966,7 +2004,7 @@ void	f77_src_mngr (SXINT what, FILE *infile, char *file_name)
 
 static char *skip_an_int (char *str)
 {
-    /* saute DIGIT */
+    /* saute DIGIT* */
     /* Cette chaine est terminee par SXNUL */
     char c;
 
@@ -2406,7 +2444,8 @@ static bool check_for_a_lhs (SXINT tok_no)
 /* str en est le texte
    Mtok_no est le numero du token précédent l'id (qui est lui dans sxsvar.sxlv.terminal_token
    head_tok_no est le numero du 1er token de la ligne */
-static bool check_inside_FUNCTION (SXINT head_tok_no, SXINT Mtok_no, char *str, SXINT str_lgth)
+
+static bool check_inside_FUNCTION (SXINT Mtok_no, char *str, SXINT str_lgth)
 {
   if (str_lgth < 9 /*  |FUNCTION| + 1 (taille min de l'id) */
       || seek_kw (str) != FUNCTION_p)
@@ -2440,48 +2479,52 @@ static bool check_inside_FUNCTION (SXINT head_tok_no, SXINT Mtok_no, char *str, 
   return true;
 }
 
-
-static void check_id (struct sxtoken *tt)
+static void extension_hit (SXINT Xstmt_kind, struct sxsource_coord source_index)
 {
-  static bool is_alnum_already_checked, is_ansi_lgth_already_checked;
-
-  if (!is_alnum_already_checked || !is_ansi_lgth_already_checked) {
-    /* un seul message d'erreur */
-    SXINT ste = tt->string_table_entry;
-    char  c, *str = sxstrget (ste);
-
-    if (!is_extension && !is_alnum_already_checked) {
-      while ((c = *str++) != SXNUL) {
-	if (!isalnum (c))
-	  break;
-      }
-
-      if (c != SXNUL) {
-	is_alnum_already_checked = true;
-	sxerror (tt->source_index,
-		 sxsvar.sxtables->err_titles [1][0] /* warning */,
-		 "%sIn standard, the character '%c' cannot be used within symbolic names,\n\
-For extended FORTRAN, use the \"-X\" option. In the sequel, the others extended symbolic names will not be quoted.",
-		 sxsvar.sxtables->err_titles [1]+1 /* warning */,
-		 c);
-      }
-    }
-
-    if (is_ansi && !is_ansi_lgth_already_checked) {
-      if (sxstrlen (ste) > 6) {
-	is_ansi_lgth_already_checked = true;
-	sxerror (tt->source_index,
-		 sxsvar.sxtables->err_titles [1][0] /* warning */,
-		 "%sIn ansi standard, a symbolic name is a sequence of one to\n\
-six letters or digits, the first of which must be a letter. This name exceeds this limit.\n\
-In the sequel, the others non ansi symbolic names will not be quoted.",
-		 sxsvar.sxtables->err_titles [1]+1 /* warning */);
-      }
-    }
+  if (!is_extension && !extension_already_seen [Xstmt_kind]) {
+    extension_already_seen [Xstmt_kind] = true;
+    sxerror (source_index,
+	     sxsvar.sxtables->err_titles [1][0] /* warning */,
+	     "%sNot a valid f77 %s,\n\
+For extended FORTRAN, use the \"-X\" option.\n\
+Subsequent non-f77 %ss will not be reported.",
+	     sxsvar.sxtables->err_titles [1]+1 /* warning */,
+	     extension_mess [Xstmt_kind],
+	     extension_mess [Xstmt_kind]);
+    
   }
 }
 
+static void check_id (struct sxtoken *tt)
+{
+  char  c, *str;
 
+  if (!is_extension && !extension_already_seen [XCHARACTER_kind]) {
+    str = sxstrget (tt->string_table_entry);
+
+    while ((c = *str++) != SXNUL) {
+      if (!isalnum (c))
+	break;
+    }
+
+    if (c != SXNUL) {
+      extension_already_seen [XCHARACTER_kind] = true;
+      extension_hit (XCHARACTER_kind, tt->source_index);
+    }
+  }
+
+  if (is_ansi && !is_ansi_lgth_already_checked) {
+    if (sxstrlen (tt->string_table_entry) > 6) {
+      is_ansi_lgth_already_checked = true;
+      sxerror (tt->source_index,
+	       sxsvar.sxtables->err_titles [1][0] /* warning */,
+	       "%sIn ansi f77 standard, a symbolic name is a sequence of one to\n\
+six letters or digits, the first of which must be a letter. This name exceeds this limit.\n\
+Subsequent non-f77 symbolic names will not be reported.",
+	       sxsvar.sxtables->err_titles [1]+1 /* warning */);
+    }
+  }
+}
 
 static bool isXalpha (char c)
 {
@@ -2501,7 +2544,6 @@ static void check_scalar_type_repr_lgth (SXINT type, struct sxtoken *int_ptok) {
     "8" /* REAL */,
     "16" /* (DOUBLE) PRECISION */
   };
-  static bool is_type_extension_already_met;
 
   char *str;
   bool is_ok;
@@ -2563,14 +2605,8 @@ static void check_scalar_type_repr_lgth (SXINT type, struct sxtoken *int_ptok) {
     int_ptok->string_table_entry = sxstrsave (default_type_lgth [type]);
   }
 	  
-  if (type != CHARACTER_t && !is_extension && !is_type_extension_already_met) {
-    is_type_extension_already_met = true;
-    sxerror (int_ptok->source_index,
-	     sxsvar.sxtables->err_titles [1][0] /* warning */,
-	     "%sIn standard, the length of scalar types cannot be specified,\n\
-For extended FORTRAN, use the \"-X\" option. In the sequel, the others extended scalar types will not be quoted.",
-	     sxsvar.sxtables->err_titles [1]+1 /* warning */);
-  }
+  if (type != CHARACTER_t)
+    extension_hit (XLENGTH_kind, int_ptok->source_index);
 }
 
 static bool check_FUNCTION (char *str, SXINT strlgth, SXINT l, SXINT Mtok_no)
@@ -2730,15 +2766,9 @@ static bool check_IMPLICIT_stmt ()
   if (!result) return false; /* On considère que ce n'est pas un IMPLICIT stmt */
 
   /* Ici, on considère qu'on a un IMPLICIT stmt */
-  
-  if (extension_met && !is_extension && !is_implicit_extension_already_met) {
-    is_implicit_extension_already_met = true;
-    sxerror (sxsvar.sxlv.terminal_token.source_index,
-	     sxsvar.sxtables->err_titles [1][0] /* warning */,
-	     "%sIllegal f77 IMPLICIT statement,\n\
-For extended FORTRAN, use the \"-X\" option. In the sequel, the others IMPLICIT statement will not be quoted.",
-	     sxsvar.sxtables->err_titles [1]+1 /* warning */);
-  }
+
+  if (extension_met)
+    extension_hit (XIMPLICIT_kind, sxsvar.sxlv.terminal_token.source_index);
 
   /* On transforme l'id en IMPLICIT kw */
   sxsvar.sxlv.terminal_token.lahead = IMPLICIT_t;
@@ -3085,44 +3115,44 @@ this expression is erased.",
 	break;
 	
     case DO_p  :
-      /* Spécif des do
-	<40:do_statement>
-		= DO  <110b:label_ref> ,  <99:symbolic_name>  =  <40b:do_parameters> %EOL ;
-	<40:do_statement>
-		= DO  <110b:label_ref>  <99:symbolic_name>  =  <40b:do_parameters> %EOL ;
-	* [[EXTENSION]]
-	<40:do_statement>
-		= DO  <99:symbolic_name>  =  <40b:do_parameters> %EOL ;
+      /* Spécif des do (voir f77.bnf)
+	 Standard fortran 77
+	 1:	= DO  <110b:label_ref> ,  <99:symbolic_name>  =  <40b:do_parameters> %EOL ;
+	 2:	= DO  <110b:label_ref>  <99:symbolic_name>  =  <40b:do_parameters> %EOL ;
+	 [[EXTENSION]]
+	 3:	= DO  <99:symbolic_name>  =  <40b:do_parameters> %EOL ;
+	 4:	= DO  WHILE ( <84:logical_expression> ) %EOL
+	 5:	= DO  <110b:label_ref>  WHILE ( <84:logical_expression> ) %EOL ;
+	 6:	= DO  <110b:label_ref> ,  WHILE ( <84:logical_expression> ) %EOL ;
        */
 	if (!after_if_log &&
 	    strlgth >= 3) {
 	  struct sxtoken	*PTOK1;
 	  bool		is_do_stmt;
 
-	  str += 2;
+	  str += strlen ("DO");
 	  str1 = skip_an_int (str);
 
-	  PTOK1 = &(SXGET_TOKEN (Mtok_no + 1)); /* safe */
+	  PTOK1 = &(SXGET_TOKEN (Mtok_no + 1)); /* safe */ /* VIRGULE_t, EGAL_t ou LEFTP_t */
 
 	  if (str1 > str
 	      && *str1 == SXNUL
-	      && PTOK1->lahead == VIRGULE_t
-	      /* && sxget_token (Mtok_no + 2)->lahead == ID_t on ne teste plus ce qui suit "," on laisse le traitement
-		 d'erreur s'en occuper si ce n'est pas un <do_statement> */) {
-	    /* le source est de la forme "do SXINT ,"
-	       on suppose donc que c'est l'entête d'un <do_statement> et on transforme l'id en DO_t suivi de ENTIER_t */
+	      && PTOK1->lahead == VIRGULE_t) {
+	    /* le source est de la forme "do SXINT ," (cas 1 ou 6)
+	       on suppose donc que c'est l'entête d'un <do_statement> avec label et on transforme l'id en DO_t suivi de ENTIER_t */
+	    /* Dans le cas 6, extension_hit() sera appelé sur le WHILE */
 	    is_do_stmt = true;
 	    PTOK->lahead = DO_t;
 	    PTOK->string_table_entry = SXEMPTY_STE;
 	    tt [0].lahead = ENTIER_t;
 	    tt [0].string_table_entry = sxstr2save (str, str1 - str);
 	    tt [0].source_index =
-	      *get_source_index (&(PTOK->source_index), 2);
+	      *get_source_index (&(PTOK->source_index), strlen ("DO"));
 	    tt [0].comment = NULL;
 	    sxtknmdf (&(tt [0]), 1, Mtok_no + 1, 0); /* l'id est de la forme do SXINT */
 	  }
 	  else if ((isXalpha (*str1)) && (PTOK1->lahead == EGAL_t)) {
-	    /* Ici l'id courant est de la forme "do [int] id", et le token suivant est "=",
+	    /* Ici l'id courant est de la forme "do [int] id", et le token suivant est "=" (cas 2 ou 3),
 	       ça peut donc être une partie gauche d'affectation ou un <do_statement> */
 	    /* Remarque si "[int]" est vide i.e. "str1 == str" on peut être dans l'extension de f77 */
 	    /* Cas délicat où il faut analyser le contexte droit sur une longueur non bornée. */
@@ -3141,7 +3171,7 @@ this expression is erased.",
 	    /* Si OK on rend "do [%SXINT] %id". */
 	    /* On ne change rien dans le mode du scanner. */
 	    SXINT		      head;
-	    short                   *last_buffer_ptr;
+	    short                     *last_buffer_ptr;
 	    struct sxsrcmngr	      prev_sxsrcmngr;
 	    struct sxscan_mode        old_scan_mode;
 	    struct sxtoken	      TOK, TOK1;
@@ -3260,8 +3290,10 @@ this expression is erased.",
 	    fputs ("********************************************************************************************\n", stdout);
 #endif
 		
-	    if (SXGET_TOKEN (tok_no).lahead != sxeof_code (sxsvar.sxtables) /* EOF_t */)
-	      /* Dans tous les cas, erreur ou pas, l'analyse du sous-langage s'est poursuivie jusqu'au EOF bidon */
+	    if (do_parse_mode_noerr.kind != SXWITHOUT_ERROR /* la lecture des tokens s'est arrêté sur la détection d'erreur */
+		/* On met cette instruction au cas où "do_parse_mode" sera changé */ &&
+		SXGET_TOKEN (tok_no).lahead != sxeof_code (sxsvar.sxtables) /* EOF_t */)
+	      /* Dans tous ces cas, erreur ou pas, l'analyse du sous-langage s'est poursuivie jusqu'au EOF bidon */
 	      sxtrap (ME, "f77_scanact (after sxparse_in_la call for DO)");
 
 	    /* On remet en état */
@@ -3283,8 +3315,11 @@ this expression is erased.",
 	      /* On lit le 1er caractère de la ligne suivante car le eof ne l'a pas fait!! */
 	      f77_next_char ();
 
+	      if (str1 == str /* pas de label => DO-LOOP (cas 3) */)
+		extension_hit (XDO_LOOP_kind, SXGET_TOKEN (Mtok_no).source_index);
+
 	      /* On fait cette vérif ici, après validation du do */
-	      check_id (sxget_token (Mtok_no));
+	      check_id (sxget_token (Mtok_no+((str1 == str) ? 1 : 2)));
 	    }
 	    else {
 	      /* finalement, meme en corrigeant, ce n'est pas un do_stmt, on suppose donc que c'est un %id en lhs */
@@ -3297,6 +3332,41 @@ this expression is erased.",
 	      sxsrcmngr = prev_sxsrcmngr;
 	      /* ... et on laisse l'analyse normale relire les tokens suivants */
 	    }
+	  }
+	  else if (strcmp (str1, "WHILE") == 0) {
+	    /* On est sur 'DO [int] WHILE ...' */
+	    is_do_stmt = false;
+
+	    if (SXGET_TOKEN (Mtok_no+1).lahead == LEFTP_t) {
+	      /* On est sur 'DO [int] WHILE (...' => (cas 4 ou 5) */
+	      is_do_stmt = true;
+	      extension_hit (XDO_WHILE_kind, SXGET_TOKEN (Mtok_no).source_index);
+	      /* On se souvient du token */
+	      tt [0] = *PTOK;
+	      
+	      /* On change le token *PTOK en DO (même source_index) */
+	      PTOK->lahead = DO_t;
+	      PTOK->string_table_entry = SXEMPTY_STE;
+
+	      /* On fabrique un token %int, si nécessaire */
+	      if (str1 >  str) {
+		tt [1].lahead = ENTIER_t;
+		tt [1].string_table_entry = sxstr2save (str, str1 - str);
+		tt [1].source_index =
+		  *get_source_index (&(PTOK->source_index), 2 /* lgth("DO") */);
+		tt [1].comment = NULL;
+	      }	    
+
+	      /* ... et un token WHILE */
+	      tt [2].lahead = WHILE_t;
+	      tt [2].string_table_entry = SXEMPTY_STE;
+	      tt [2].source_index =
+		*get_source_index (&(PTOK->source_index), 2 + str1 - str /* lgth("DOint") */);
+	      tt [2].comment = NULL;
+
+	      /* ... et on les insère devant le token suivant (le "=") qui se trouve en Mtok_no+1 */
+	      sxtknmdf (&(tt [(str1 >  str) ? 1 : 2]), (str1 >  str) ? 2 : 1, Mtok_no + 1, 0);
+	    }	    
 	  }
 	  else
 	    /* Ici l'id à la forme "do ...", et n'est pas un <do_statement> on ne change donc rien (on a un %id) */
@@ -3855,6 +3925,7 @@ SXINT f77_scanact (SXINT code, SXINT act_no) {
     t_stack = (SXINT*) sxcalloc (sxeof_code (sxsvar.sxtables) + 1, sizeof (SXINT));
     t_stack [0] = -1; /* vide */
     iokw_stack = (SXINT*) sxalloc ((iokw_stack_size = 10) + 1, sizeof (SXINT));
+    do_stack_xlbl = 0;
     iokw_stack [0] = iokw_stack [1] = 0 /* Pour check_iokw () */;
     stmt_kind = (SXINT*) sxcalloc (sxeof_code (sxsvar.sxtables) + 1, sizeof (SXINT));
     ETAT = ETAT_0;
@@ -3996,9 +4067,7 @@ SXINT f77_scanact (SXINT code, SXINT act_no) {
 	 de syntax (appelé lui aussi récursivement par l'intermédiaire de la fonction sxparse_in_la).
       */
       {
-	/* Post action de %id */
-	static SXINT head_tok_no; /* On se souvient du tok_no du 1er token d'une ligne */
-	
+	/* Post action de %id */	
 	SXINT	Mtok_no, lahead, cur_lahead, tok_no;
 	char	*str;
 	SXINT	strlgth;
@@ -4233,9 +4302,7 @@ SXINT f77_scanact (SXINT code, SXINT act_no) {
 	      fputs ("********************************************************************************************\n", stdout);
 #endif
 
-            if (do_parse_mode_noerr.kind != SXWITHOUT_ERROR /* la lecture des tokens s'est arrêté sur la détection d'erreur */
-                /* On met cette instruction au cas où "do_parse_mode" sera changé */ &&
-                SXGET_TOKEN (tok_no).lahead != sxeof_code (sxsvar.sxtables) /* EOF_t */)
+	      if (SXGET_TOKEN (tok_no).lahead != sxeof_code (sxsvar.sxtables) /* EOF_t */)
 		/* Dans tous les cas, erreur ou pas, l'analyse du sous-langage s'est poursuivie jusqu'au EOF bidon */
 		sxtrap (ME, "f77_scanact (after sxparse_in_la call for FORMAT)");
 
@@ -4297,6 +4364,8 @@ SXINT f77_scanact (SXINT code, SXINT act_no) {
 	      else {
 		/* C'est un ident, mais... */
 		/* ...attention, ca peut etre "DO [label] ident =" qui ressemble étrangement à une affectation. */
+		/* En revanche, l'extension "DO [label] WHILE (...) %eol" ne ressemble pas à une affectation.
+		   Ici, on n'est donc pas dans le cas "DO WHILE", il est traité plus loin (voir case ID_t) */
 		TOK_i = Mtok_no + 1;
 
 		if (SXGET_TOKEN (TOK_i).lahead == EGAL_t &&
@@ -4610,6 +4679,19 @@ this expression is erased.",
 
 	    break;
 
+	  case WHILE_t:
+	    /* On est dans le cas mot-clé ssi le 1er token de la ligne est un DO */
+	    if (SXGET_TOKEN (head_tok_no).lahead != DO_t) {
+	      /* On en fait un id (check_id () est inutile) */
+	      sxsvar.sxlv.terminal_token.lahead = ID_t;
+	      sxsvar.sxlv.terminal_token.string_table_entry =
+		sxstrsave (sxttext (sxsvar.sxtables, cur_lahead));
+	    }
+	    else
+	      extension_hit (XDO_WHILE_kind, SXGET_TOKEN (head_tok_no).source_index);
+
+	    break;
+
 	  case THEN_t:
 	    /* On n'est pas en début d'instruction */
 	    /* En général THEN est un id sauf si le début de la ligne est un [ELSE] IF
@@ -4657,7 +4739,7 @@ this expression is erased.",
 		  /* ... on laisse PRECISION_t au scanner */
 		}
 	      }
-	      else if (check_inside_FUNCTION (head_tok_no, sxplocals.Mtok_no, sxstrget (ste), sxstrlen (ste))) {
+	      else if (check_inside_FUNCTION (sxplocals.Mtok_no, sxstrget (ste), sxstrlen (ste))) {
 		/* on regarde si cet id a la forme FUNCTIONid( et est précédé d'un <10a:type> */	    
 		/* ... Le token FUNCTION a été sorti, on laisse le scanner sortir l'id suffixe */
 		is_function_stmt = true;

@@ -2684,7 +2684,6 @@ $LIST(<37:else_if_statement>)
   $LIST(<37:else_if_statement>) = ast_else_if_line(
     LOCATION(0),
     NULL,
-    LOCATION(1),
     $LIST(<74:expression>)
   );
 }   
@@ -2699,7 +2698,6 @@ $LIST(<37:else_if_statement>)
   $LIST(<37:else_if_statement>) = ast_else_if_line(
     LOCATION(0),
     $NAME(<110:label>),
-    LOCATION(1),
     $LIST(<74:expression>)
   );
 }    
@@ -2795,13 +2793,40 @@ $LIST(<39:end_if_statement>)
 
 $LIST(<40a:do_loop>)
  {
-   $LIST(<40a:do_loop>) = ast_do_loop($LIST(<40:do_statement>), $LIST(<2c:statement_list>));
+   $LIST(<40a:do_loop>) = ast_do_loop(
+     $LIST(<40:do_statement>), 
+     $LIST(<2c:statement_list>),
+     NULL
+   );
  }
 
 *------------------------------------------------------------------------------
 
 * [[EXTENSION]]
-* Ci-apres, on a un vrai "do_block" se terminant par un vrai END DO 
+* Ci-apres, on a un "do_while" se terminant par un vrai END DO 
+* qui va aussi fermer tous les <40:do_statement> ouverts dans le "do_block".
+
+<40a:do_loop>	= DO  WHILE ( <84:logical_expression> ) %EOL
+		     <2c:statement_list>
+                  <40c:end_do> ;
+
+$LIST(<40a:do_loop>)
+{
+   $LIST(<40a:do_loop>) = ast_do_loop(
+   	ast_do_while_statement(
+    	LOCATION(0),
+    	NULL, 
+    	$LIST(<84:logical_expression>)
+  	),
+  	$LIST(<2c:statement_list>),
+  	$LIST(<40c:end_do>)
+  );
+ }
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+* Ci-apres, on a un "do_block" se terminant par un vrai END DO 
 * qui va aussi fermer tous les <40:do_statement> ouverts dans le "do_block".
 
 <40a:do_loop>	= DO  <99:symbolic_name>  =  <40b:do_parameters> %EOL
@@ -2817,7 +2842,8 @@ $LIST(<40a:do_loop>)
     	$LIST(<99:symbolic_name>), 
     	$LIST(<40b:do_parameters>)
   	),
-  	$LIST(<2c:statement_list>)
+  	$LIST(<2c:statement_list>),
+  	$LIST(<40c:end_do>)
   );
  }
 
@@ -2850,6 +2876,36 @@ $LIST(<40:do_statement>)
     $LIST(<40b:do_parameters>)
   );
 }    
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+<40:do_statement>
+		= DO  <110b:label_ref>  WHILE ( <84:logical_expression> ) %EOL ;
+
+$LIST(<40:do_statement>)
+{
+  $LIST(<40:do_statement>) = ast_do_while_statement(
+    LOCATION(0), 
+    $LIST(<110b:label_ref>), 
+    $LIST(<84:logical_expression>)
+  );
+}
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+<40:do_statement>
+		= DO  <110b:label_ref> ,  WHILE ( <84:logical_expression> ) %EOL ;
+
+$LIST(<40:do_statement>)
+{
+  $LIST(<40:do_statement>) = ast_do_while_statement(
+    LOCATION(0), 
+    $LIST(<110b:label_ref>), 
+    $LIST(<84:logical_expression>)
+  );
+}
 
 *******************************************************************************
 
