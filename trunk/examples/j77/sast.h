@@ -839,28 +839,40 @@ SXML_TYPE_LIST ast_write_statement( SXML_TYPE_LIST location,
 
 /* -------------------------------------------------------------------------
  * outputs a read_statement
- * - control_info_list of parameters UNIT, FMT, IOSTAT, REC, ERR, etc
- * - io_list: list of variables
  * - format identifier  
+ * - control_info_list of parameters UNIT, FMT, IOSTAT, REC, ERR, etc
+ * - io_list: list of variables [optional]
+ * format and control_info_list are mutually exclusive
  */
 SXML_TYPE_LIST ast_read_statement( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST format,
             SXML_TYPE_LIST control_info_list,
-            SXML_TYPE_LIST io_list,
-            SXML_TYPE_LIST format) {
-    
-    return SXML_LTLLL(
-    ast_abstract_statement( "read_statement", location),
-    ",\n",
-    JSON_KU_(
-      "control_info_list",
-      JSON_ARRAY( control_info_list)),
-    JSON_KU_(
-      "io_list",
-      JSON_ARRAY( io_list)),
-    JSON_KU(
-      "format",
-      JSON_ARRAY( format))
-    ); 
+            SXML_TYPE_LIST io_list) {
+
+  if (format == NULL) {
+    return SXML_LTLL(
+      ast_abstract_statement( "read_statement", location),
+      ",\n",
+      JSON_KU_(
+        "format",
+	JSON_ARRAY( format)),
+      JSON_KU(
+        "io_list",
+	JSON_ARRAY( io_list))
+    );
+  }
+  else {
+    return SXML_LTLL(
+      ast_abstract_statement( "read_statement", location),
+      ",\n",
+      JSON_KU_(
+        "control_info_list",
+	JSON_ARRAY( control_info_list)),
+      JSON_KU(
+        "io_list",
+	JSON_ARRAY( io_list))
+    );
+  }
 }
 
 
@@ -870,18 +882,18 @@ SXML_TYPE_LIST ast_read_statement( SXML_TYPE_LIST location,
  * - format identifier  
  */
 SXML_TYPE_LIST ast_print_statement( SXML_TYPE_LIST location,
-            SXML_TYPE_LIST io_list,
-            SXML_TYPE_LIST format) {
+            SXML_TYPE_LIST format,
+            SXML_TYPE_LIST io_list) {
     
     return SXML_LTLL(
-    ast_abstract_statement( "print_statement", location),
-    ",\n",
-    JSON_KU_(
-      "io_list",
-      JSON_ARRAY( io_list)),
-    JSON_KU(
-      "format",
-      JSON_ARRAY( format))
+      ast_abstract_statement( "print_statement", location),
+      ",\n",
+      JSON_KU_(
+	"format",
+	JSON_ARRAY( format)),
+      JSON_KU(
+	"io_list",
+	JSON_ARRAY( io_list))
     ); 
 }
 
@@ -1622,7 +1634,7 @@ SXML_TYPE_LIST ast_else_if_else(
 SXML_TYPE_LIST ast_else_if_line(
               SXML_TYPE_LIST location_else,
               SXML_TYPE_TEXT label,
-              SXML_TYPE_LIST location_if,
+//             SXML_TYPE_LIST location_if,
               SXML_TYPE_LIST condition
               ) {
 

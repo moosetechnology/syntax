@@ -2684,7 +2684,7 @@ $LIST(<37:else_if_statement>)
   $LIST(<37:else_if_statement>) = ast_else_if_line(
     LOCATION(0),
     NULL,
-    LOCATION(1),
+    /*LOCATION(1),*/
     $LIST(<74:expression>)
   );
 }   
@@ -2699,7 +2699,7 @@ $LIST(<37:else_if_statement>)
   $LIST(<37:else_if_statement>) = ast_else_if_line(
     LOCATION(0),
     $NAME(<110:label>),
-    LOCATION(1),
+    /*LOCATION(1),*/
     $LIST(<74:expression>)
   );
 }    
@@ -3014,9 +3014,9 @@ $LIST( <45:read_statement>)
 {
   $LIST( <45:read_statement>) = ast_read_statement(
     LOCATION(0),
+    NULL,
     $LIST(<47:control_info_list>),
-    $LIST(<48:io_list>),
-    NULL
+    $LIST(<48:io_list>)
   );
 }    
 
@@ -3029,8 +3029,8 @@ $LIST( <45:read_statement>)
 {
   $LIST( <45:read_statement>) = ast_read_statement(
     LOCATION(0),
-    $LIST(<47:control_info_list>),
     NULL,
+    $LIST(<47:control_info_list>),
     NULL  
   );
 }    
@@ -3044,9 +3044,9 @@ $LIST( <45:read_statement>)
 {
   $LIST( <45:read_statement>) = ast_read_statement(
     LOCATION(0),
+    $LIST(<57:format_identifier>),
     NULL,
-    $LIST(<48:io_list>),
-    $LIST(<57:format_identifier>)
+    $LIST(<48:io_list>)
   );
 }    
 
@@ -3059,9 +3059,9 @@ $LIST( <45:read_statement>)
 {
   $LIST( <45:read_statement>) = ast_read_statement(
     LOCATION(0),
+    $LIST(<57:format_identifier>),
     NULL,
-    NULL,
-    $LIST(<57:format_identifier>)  
+    NULL
   );
 }
 
@@ -3074,8 +3074,8 @@ $LIST( <46:print_statement>)
 {
   $LIST( <46:print_statement>) = ast_print_statement(
     LOCATION(0),
-    $LIST(<48:io_list>),
-    $LIST(<57:format_identifier>)
+    $LIST(<57:format_identifier>),
+    $LIST(<48:io_list>)
   );
 }    
 
@@ -3088,8 +3088,8 @@ $LIST( <46:print_statement>)
 {
   $LIST( <46:print_statement>) = ast_print_statement(
     LOCATION(0),
-    NULL,
-    $LIST(<57:format_identifier>)
+    $LIST(<57:format_identifier>),
+    NULL
   );
 }    
 
