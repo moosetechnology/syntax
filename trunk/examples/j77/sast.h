@@ -854,8 +854,8 @@ SXML_TYPE_LIST ast_read_statement( SXML_TYPE_LIST location,
       ast_abstract_statement( "read_statement", location),
       ",\n",
       JSON_KU_(
-        "format",
-	JSON_ARRAY( format)),
+        "control_info_list",
+	JSON_ARRAY( control_info_list)),
       JSON_KU(
         "io_list",
 	JSON_ARRAY( io_list))
@@ -866,8 +866,8 @@ SXML_TYPE_LIST ast_read_statement( SXML_TYPE_LIST location,
       ast_abstract_statement( "read_statement", location),
       ",\n",
       JSON_KU_(
-        "control_info_list",
-	JSON_ARRAY( control_info_list)),
+        "format",
+	JSON_ARRAY( format)),
       JSON_KU(
         "io_list",
 	JSON_ARRAY( io_list))
@@ -1453,12 +1453,13 @@ SXML_TYPE_LIST ast_do_loop(
       JSON_KU("statement_list", JSON_ARRAY(statement_list))
       );
   }
-
-  return SXML_LLL(
-    do_statement,
-    JSON_KU_("statement_list", JSON_ARRAY(statement_list)),
-    end_do
-  );
+  else {
+    return SXML_LLL(
+      do_statement,
+      JSON_KU_("statement_list", JSON_ARRAY(statement_list)),
+      end_do
+    );
+  }
 }
 
 
@@ -1546,12 +1547,13 @@ SXML_TYPE_LIST ast_do_parameters(SXML_TYPE_LIST init,
         JSON_KU("limit", limit)
       );
     }
-
-    return SXML_LLL(
-      JSON_KU_("init", init),
-      JSON_KU_("limit", limit),
-      JSON_KU("increment", increment)
-    );    
+    else {
+      return SXML_LLL(
+        JSON_KU_("init", init),
+	JSON_KU_("limit", limit),
+	JSON_KU("increment", increment)
+      );
+    }
 }
 
 
