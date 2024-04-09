@@ -697,7 +697,7 @@
 
 * [[EXTENSION]]
 * semble faux!!
-*<20:type_statement>
+* <20:type_statement>
 *		= <10b:scalar_type> * <103:nonzero_unsigned_int_constant> ,  <20a:scalar_name_list> ;
 
 *------------------------------------------------------------------------------
@@ -802,14 +802,12 @@
 *******************************************************************************
 
 <21d:implicit_elem>
-		= %letter ;
-*		au lieu de = <99:symbolic_name> ;
+		= <99b:letter> ;
 
 *------------------------------------------------------------------------------
 
 <21d:implicit_elem>
-		= %letter - %letter ;
-*		au lieu de = <99:symbolic_name> - <99:symbolic_name> ;
+		= <99b:letter> - <99b:letter> ;
 
 *******************************************************************************
 
@@ -824,7 +822,7 @@
 *------------------------------------------------------------------------------
 
 * la production ci-dessous n'est jamais reconnue, car le scanner ne retourne
-* jamais le token %int_id (voir commentaire dans f77.lecl) 
+* jamais le token %int_id (voir commentaire dans f77.lecl)
 
 <22:len_specification>
 		= %int_id ;
@@ -1236,7 +1234,17 @@
 *------------------------------------------------------------------------------
 
 * [[EXTENSION]]
-* Ci-apres, on a un vrai "do_block" se terminant par un vrai END DO 
+* Ci-apres, on a un "do_while" se terminant par un vrai END DO 
+* qui va aussi fermer tous les <40:do_statement> ouverts dans le "do_block".
+
+<40a:do_loop>	= DO  WHILE ( <84:logical_expression> ) %EOL
+		     <2c:statement_list>
+                  <40c:end_do> ;
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+* Ci-apres, on a un "do_block" se terminant par un vrai END DO 
 * qui va aussi fermer tous les <40:do_statement> ouverts dans le "do_block".
 
 <40a:do_loop>	= DO  <99:symbolic_name>  =  <40b:do_parameters> %EOL
@@ -1252,6 +1260,18 @@
 
 <40:do_statement>
 		= DO  <110b:label_ref>  <99:symbolic_name>  =  <40b:do_parameters> %EOL ;
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+<40:do_statement>
+		= DO  <110b:label_ref>  WHILE ( <84:logical_expression> ) %EOL ;
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+<40:do_statement>
+		= DO  <110b:label_ref> ,  WHILE ( <84:logical_expression> ) %EOL ;
 
 *******************************************************************************
 
@@ -2861,13 +2881,6 @@
 <99:symbolic_name> 
 		= %symbolic_name ;
 
-*------------------------------------------------------------------------------
-
-* desormais inutile
-*
-* <99:symbolic_name> 
-*		= THEN ;
-
 *******************************************************************************
 
 <99a:symbolic_name_list>
@@ -2877,6 +2890,11 @@
 
 <99a:symbolic_name_list>
 		= <99:symbolic_name> ;
+
+*******************************************************************************
+
+<99b:letter>
+		= %letter ;
 
 *******************************************************************************
 

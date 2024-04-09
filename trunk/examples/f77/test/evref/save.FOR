@@ -1,2 +1,2 @@
-       SAVE
+       SAVE A, /B/ 
        END 
