@@ -2266,11 +2266,12 @@ $LIST( <28:data_imply_do_list>)
 {
   $LIST( <28:data_imply_do_list>) = ast_data_imply_do_list(
     $LIST(<28a:data_imply_do_list_head_list>),
-    $LIST(<80:int_constant_expr>),
-    $LIST(<80:int_constant_expr>'),
-    ast_empty_map()
+    ast_do_parameters(
+      $LIST(<80:int_constant_expr>),
+      $LIST(<80:int_constant_expr>'),
+      NULL)
   );
-}    
+}
 
 *------------------------------------------------------------------------------
 
@@ -2281,9 +2282,10 @@ $LIST( <28:data_imply_do_list>)
 {
   $LIST( <28:data_imply_do_list>) = ast_data_imply_do_list(
     $LIST(<28a:data_imply_do_list_head_list>),
-    $LIST(<80:int_constant_expr>),
-    $LIST(<80:int_constant_expr>'),
-    $LIST(<80:int_constant_expr>'')
+    ast_do_parameters(
+      $LIST(<80:int_constant_expr>),
+      $LIST(<80:int_constant_expr>'),
+      $LIST(<80:int_constant_expr>'') )
   ); 
 }   
 
@@ -2835,6 +2837,7 @@ $LIST(<40a:do_loop>)
 
 $LIST(<40a:do_loop>)
  {
+ printf("<2c:statement_list>\n");
    $LIST(<40a:do_loop>) = ast_do_loop(
    	ast_do_statement(
     	  LOCATION(0),
@@ -3366,9 +3369,10 @@ $LIST( <49:io_imply_do_list>)
     	",", 
     	$LIST(<99:symbolic_name>)
     ),
-    $LIST(<78:int_real_dp_expr>),
-    $LIST(<78:int_real_dp_expr>'),
-    $LIST(<78:int_real_dp_expr>'')
+    ast_do_parameters(
+      $LIST(<78:int_real_dp_expr>),
+      $LIST(<78:int_real_dp_expr>'),
+      $LIST(<78:int_real_dp_expr>'') )
   );
 }
 
@@ -3385,11 +3389,12 @@ $LIST( <49:io_imply_do_list>)
     	",", 
     	$LIST(<99:symbolic_name>)
     ),
-    $LIST(<78:int_real_dp_expr>),
-    $LIST(<78:int_real_dp_expr>'),
-    ast_empty_map()
+    ast_do_parameters(
+      $LIST(<78:int_real_dp_expr>),
+      $LIST(<78:int_real_dp_expr>'),
+      NULL )
   );
-}    
+}
 
 *******************************************************************************
 

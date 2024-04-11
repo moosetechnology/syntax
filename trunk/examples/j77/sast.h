@@ -823,7 +823,7 @@ SXML_TYPE_LIST ast_arithmetic_if_statement( SXML_TYPE_LIST location,
 SXML_TYPE_LIST ast_write_statement( SXML_TYPE_LIST location,
             SXML_TYPE_LIST control_info_list,
             SXML_TYPE_LIST io_list) {
-    
+
     return SXML_LTLL(
     ast_abstract_statement( "write_statement", location),
     ",\n",
@@ -1422,17 +1422,13 @@ SXML_TYPE_LIST ast_data_statement_constant( SXML_TYPE_LIST occurence,
  * - increment value of iv (if omitted, a default value of 1 is assumed)
  */
 SXML_TYPE_LIST ast_data_imply_do_list( SXML_TYPE_LIST dlist,
-                SXML_TYPE_LIST init,
-                SXML_TYPE_LIST limit,
-                SXML_TYPE_LIST increment) {
+                SXML_TYPE_LIST do_parameters) {
 
   return JSON_MAP(
-    SXML_LLLLL (
+    SXML_LLL (
       ast_tag_("data_imply_do_list"),
       JSON_KU_("dlist", JSON_ARRAY(dlist)),
-      JSON_KU_("init", init),
-      JSON_KU_("limit", limit),
-      JSON_KU("increment", increment)
+      do_parameters
     )
   );
 }
@@ -1540,7 +1536,7 @@ SXML_TYPE_LIST ast_do_while_statement(
 SXML_TYPE_LIST ast_do_parameters(SXML_TYPE_LIST init,
               SXML_TYPE_LIST limit,
               SXML_TYPE_LIST increment) {
-    
+
     if (increment == NULL){
       return SXML_LL(
         JSON_KU_("init", init),
