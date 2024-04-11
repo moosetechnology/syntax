@@ -1435,10 +1435,10 @@ SXML_TYPE_LIST ast_do_loop(
             SXML_TYPE_LIST statement_list,
             SXML_TYPE_LIST end_do) {
 
-  if (end_do == NULL){
+  if (statement_list == NULL){
     return SXML_LL(
       do_statement,
-      JSON_KU("statement_list", JSON_ARRAY(statement_list))
+      end_do
       );
   }
 

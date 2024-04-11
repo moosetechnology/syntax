@@ -2796,7 +2796,7 @@ $LIST(<40a:do_loop>)
    $LIST(<40a:do_loop>) = ast_do_loop(
      $LIST(<40:do_statement>), 
      $LIST(<2c:statement_list>),
-     NULL
+     ast_end_do("")
    );
  }
 
@@ -2951,7 +2951,7 @@ $LIST(<40b:do_parameters>)
 {
   $LIST(<40b:do_parameters>) = ast_do_parameters(
   	$LIST(<78:int_real_dp_expr>), 
-  	$LIST(<78:int_real_dp_expr>), 
+  	$LIST(<78:int_real_dp_expr>'), 
   	NULL
   );
 }    
