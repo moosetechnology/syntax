@@ -387,25 +387,28 @@ SXML_TYPE_LIST ast_type_reference( SXML_TYPE_LIST name,
 
 
 /* -------------------------------------------------------------------------
- * outputs a pause/stop_statement (with optional "argument")
- * - pause_stop: whether it is a pause_statement or a stop_statement
- * - argument of the PAUSE/STOP
+ * outputs a pause/stop/return_statement (with optional "argument")
+ * - pause_stop: whether it is a pause/stop ore return_statement
+ * - argument of the PAUSE/STOP/RETURN
  * - Location of the statement
  */
-SXML_TYPE_LIST ast_pause_stop_statement(SXML_TYPE_TEXT pause_stop, 
+SXML_TYPE_LIST ast_abstract_statement_with_argument (SXML_TYPE_TEXT statement_name, 
            SXML_TYPE_LIST argument,
            SXML_TYPE_LIST location) {
   if (argument == NULL) {
-    return ast_abstract_statement( pause_stop, location);
+    return ast_abstract_statement( statement_name, location);
   }
   else {
     return SXML_LTL(
-      ast_abstract_statement( pause_stop, location),
+      ast_abstract_statement( statement_name, location),
       ",\n",
       JSON_KU("argument", argument)
     );
   }
 }
+
+
+
 
 
 /* -------------------------------------------------------------------------

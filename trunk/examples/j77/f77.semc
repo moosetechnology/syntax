@@ -688,9 +688,7 @@ $LIST(<7:executable_statement>)
 
 $LIST(<7:executable_statement>)
 {
-  $LIST(<7:executable_statement>) = ast_abstract_statement(
-    "continue_statement",
-    LOCATION(0) );
+  $LIST(<7:executable_statement>) = $LIST(<41:continue_statement>);
 }
 
 *------------------------------------------------------------------------------
@@ -820,9 +818,7 @@ $LIST(<7:executable_statement>)
 
 $LIST(<7:executable_statement>)
 {
-  $LIST(<7:executable_statement>) = ast_abstract_statement(
-    "return_statement",
-    LOCATION(0) );
+  $LIST(<7:executable_statement>) = $LIST(<72:return_statement>);
 }
 
 *******************************************************************************
@@ -2973,7 +2969,9 @@ $LIST(<40b:do_parameters>)
 
 $LIST( <41:continue_statement>)
 {
-  $LIST( <41:continue_statement>) = NULL;
+  $LIST( <41:continue_statement>) =  ast_abstract_statement(
+    "continue_statement",
+    LOCATION(0) );
 }    
 
 *******************************************************************************
@@ -2986,7 +2984,7 @@ $LIST( <41:continue_statement>)
 
 $LIST( <42:stop_statement>)
 {
-  $LIST( <42:stop_statement>) = ast_pause_stop_statement(
+  $LIST( <42:stop_statement>) = ast_abstract_statement_with_argument(
     "stop_statement",
     NULL,
     LOCATION(0)
@@ -3000,7 +2998,7 @@ $LIST( <42:stop_statement>)
 
 $LIST( <42:stop_statement>)
 {
-  $LIST( <42:stop_statement>) = ast_pause_stop_statement(
+  $LIST( <42:stop_statement>) = ast_abstract_statement_with_argument(
     "stop_statement",
     $LIST(<102:unsigned_int_constant>),
     LOCATION(0)
@@ -3014,7 +3012,7 @@ $LIST( <42:stop_statement>)
 
 $LIST( <42:stop_statement>)
 {
-  $LIST( <42:stop_statement>) = ast_pause_stop_statement(
+  $LIST( <42:stop_statement>) = ast_abstract_statement_with_argument(
     "stop_statement",
     $LIST(<109:character_constant>),
     LOCATION(0)
@@ -3028,7 +3026,7 @@ $LIST( <42:stop_statement>)
 
 $LIST( <43:pause_statement>)
 {
-  $LIST( <43:pause_statement>) = ast_pause_stop_statement(
+  $LIST( <43:pause_statement>) = ast_abstract_statement_with_argument(
     "pause_statement",
     NULL,
     LOCATION(0)
@@ -3042,7 +3040,7 @@ $LIST( <43:pause_statement>)
 
 $LIST( <43:pause_statement>)
 {
-  $LIST( <43:pause_statement>) = ast_pause_stop_statement(
+  $LIST( <43:pause_statement>) = ast_abstract_statement_with_argument(
     "pause_statement",
     $LIST(<102:unsigned_int_constant>),
     LOCATION(0)
@@ -3056,7 +3054,7 @@ $LIST( <43:pause_statement>)
 
 $LIST( <43:pause_statement>)
 {
-  $LIST( <43:pause_statement>) = ast_pause_stop_statement(
+  $LIST( <43:pause_statement>) = ast_abstract_statement_with_argument(
     "pause_statement",
     $LIST(<109:character_constant>),
     LOCATION(0)
@@ -5043,7 +5041,9 @@ $LIST( <71b:actual_argument>)
 
 $LIST( <72:return_statement>)
 {
-  $LIST( <72:return_statement>) = NULL;
+  $LIST( <72:return_statement>) = ast_abstract_statement(
+    "return_statement",
+    LOCATION(0) );
 }
 
 *------------------------------------------------------------------------------
@@ -5053,7 +5053,11 @@ $LIST( <72:return_statement>)
 
 $LIST( <72:return_statement>)
 {
-  $LIST( <72:return_statement>) = $LIST(<77:integer_expr>);
+  $LIST( <72:return_statement>) = ast_abstract_statement_with_argument(
+    "return_statement",
+    $LIST(<77:integer_expr>),
+    LOCATION(0)
+  );
 }
 
 *******************************************************************************
