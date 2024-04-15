@@ -1757,7 +1757,9 @@ $LIST(<21:implicit_statement>)
   $LIST(<21:implicit_statement>) = ast_implicit_statement(
     LOCATION(0),
     ast_implicit_body_parameter(
-      SXML_T("\"UNDEFINED\""),
+      ast_type_reference(
+        SXML_T("UNDEFINED"),
+        NULL ),
       $LIST(<21c:implicit_elem_list>) )
    );
 }    
@@ -2266,11 +2268,12 @@ $LIST( <28:data_imply_do_list>)
 {
   $LIST( <28:data_imply_do_list>) = ast_data_imply_do_list(
     $LIST(<28a:data_imply_do_list_head_list>),
-    $LIST(<80:int_constant_expr>),
-    $LIST(<80:int_constant_expr>'),
-    ast_empty_map()
+    ast_do_parameters(
+      $LIST(<80:int_constant_expr>),
+      $LIST(<80:int_constant_expr>'),
+      NULL)
   );
-}    
+}
 
 *------------------------------------------------------------------------------
 
@@ -2281,9 +2284,10 @@ $LIST( <28:data_imply_do_list>)
 {
   $LIST( <28:data_imply_do_list>) = ast_data_imply_do_list(
     $LIST(<28a:data_imply_do_list_head_list>),
-    $LIST(<80:int_constant_expr>),
-    $LIST(<80:int_constant_expr>'),
-    $LIST(<80:int_constant_expr>'')
+    ast_do_parameters(
+      $LIST(<80:int_constant_expr>),
+      $LIST(<80:int_constant_expr>'),
+      $LIST(<80:int_constant_expr>'') )
   ); 
 }   
 
@@ -2815,9 +2819,9 @@ $LIST(<40a:do_loop>)
 {
    $LIST(<40a:do_loop>) = ast_do_loop(
    	ast_do_while_statement(
-    	LOCATION(0),
-    	NULL, 
-    	$LIST(<84:logical_expression>)
+    	  LOCATION(0),
+	  NULL, 
+	  $LIST(<84:logical_expression>)
   	),
   	$LIST(<2c:statement_list>),
   	$LIST(<40c:end_do>)
@@ -2839,10 +2843,10 @@ $LIST(<40a:do_loop>)
 printf("<2c:statement_list>\n");
    $LIST(<40a:do_loop>) = ast_do_loop(
    	ast_do_statement(
-    	LOCATION(0),
-    	NULL, 
-    	$LIST(<99:symbolic_name>), 
-    	$LIST(<40b:do_parameters>)
+    	  LOCATION(0),
+	  NULL, 
+	  $LIST(<99:symbolic_name>), 
+	  $LIST(<40b:do_parameters>)
   	),
   	$LIST(<2c:statement_list>),
   	$LIST(<40c:end_do>)
@@ -3072,9 +3076,9 @@ $LIST( <45:read_statement>)
 {
   $LIST( <45:read_statement>) = ast_read_statement(
     LOCATION(0),
+    NULL,
     $LIST(<47:control_info_list>),
-    $LIST(<48:io_list>),
-    NULL
+    $LIST(<48:io_list>)
   );
 }    
 
@@ -3087,8 +3091,8 @@ $LIST( <45:read_statement>)
 {
   $LIST( <45:read_statement>) = ast_read_statement(
     LOCATION(0),
-    $LIST(<47:control_info_list>),
     NULL,
+    $LIST(<47:control_info_list>),
     NULL  
   );
 }    
@@ -3102,9 +3106,9 @@ $LIST( <45:read_statement>)
 {
   $LIST( <45:read_statement>) = ast_read_statement(
     LOCATION(0),
+    $LIST(<57:format_identifier>),
     NULL,
-    $LIST(<48:io_list>),
-    $LIST(<57:format_identifier>)
+    $LIST(<48:io_list>)
   );
 }    
 
@@ -3117,9 +3121,9 @@ $LIST( <45:read_statement>)
 {
   $LIST( <45:read_statement>) = ast_read_statement(
     LOCATION(0),
+    $LIST(<57:format_identifier>),
     NULL,
-    NULL,
-    $LIST(<57:format_identifier>)  
+    NULL
   );
 }
 
@@ -3132,8 +3136,8 @@ $LIST( <46:print_statement>)
 {
   $LIST( <46:print_statement>) = ast_print_statement(
     LOCATION(0),
-    $LIST(<48:io_list>),
-    $LIST(<57:format_identifier>)
+    $LIST(<57:format_identifier>),
+    $LIST(<48:io_list>)
   );
 }    
 
@@ -3146,8 +3150,8 @@ $LIST( <46:print_statement>)
 {
   $LIST( <46:print_statement>) = ast_print_statement(
     LOCATION(0),
-    NULL,
-    $LIST(<57:format_identifier>)
+    $LIST(<57:format_identifier>),
+    NULL
   );
 }    
 
@@ -3368,9 +3372,10 @@ $LIST( <49:io_imply_do_list>)
     	",", 
     	$LIST(<99:symbolic_name>)
     ),
-    $LIST(<78:int_real_dp_expr>),
-    $LIST(<78:int_real_dp_expr>'),
-    $LIST(<78:int_real_dp_expr>'')
+    ast_do_parameters(
+      $LIST(<78:int_real_dp_expr>),
+      $LIST(<78:int_real_dp_expr>'),
+      $LIST(<78:int_real_dp_expr>'') )
   );
 }
 
@@ -3387,11 +3392,12 @@ $LIST( <49:io_imply_do_list>)
     	",", 
     	$LIST(<99:symbolic_name>)
     ),
-    $LIST(<78:int_real_dp_expr>),
-    $LIST(<78:int_real_dp_expr>'),
-    ast_empty_map()
+    ast_do_parameters(
+      $LIST(<78:int_real_dp_expr>),
+      $LIST(<78:int_real_dp_expr>'),
+      NULL )
   );
-}    
+}
 
 *******************************************************************************
 
