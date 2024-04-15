@@ -700,10 +700,7 @@ $LIST(<7:executable_statement>)
 
 $LIST(<7:executable_statement>)
 {
-  $LIST(<7:executable_statement>) = ast_pause_stop_statement(
-    "stop_statement",
-    $LIST( <42:stop_statement>),
-    LOCATION(0) );
+  $LIST(<7:executable_statement>) = $LIST( <42:stop_statement>);
 }
 
 *------------------------------------------------------------------------------
@@ -713,10 +710,7 @@ $LIST(<7:executable_statement>)
 
 $LIST(<7:executable_statement>)
 {
-  $LIST(<7:executable_statement>) = ast_pause_stop_statement(
-    "pause_statement",
-    $LIST( <43:pause_statement>),
-    LOCATION(0) );
+  $LIST(<7:executable_statement>) = $LIST( <43:pause_statement>);
 }
 
 *------------------------------------------------------------------------------
@@ -2992,7 +2986,11 @@ $LIST( <41:continue_statement>)
 
 $LIST( <42:stop_statement>)
 {
-  $LIST( <42:stop_statement>) = NULL;
+  $LIST( <42:stop_statement>) = ast_pause_stop_statement(
+    "stop_statement",
+    NULL,
+    LOCATION(0)
+  );
 }
 
 *------------------------------------------------------------------------------
@@ -3002,7 +3000,11 @@ $LIST( <42:stop_statement>)
 
 $LIST( <42:stop_statement>)
 {
-  $LIST( <42:stop_statement>) = $LIST(<102:unsigned_int_constant>);
+  $LIST( <42:stop_statement>) = ast_pause_stop_statement(
+    "stop_statement",
+    $LIST(<102:unsigned_int_constant>),
+    LOCATION(0)
+  );
 }
 
 *------------------------------------------------------------------------------
@@ -3012,7 +3014,11 @@ $LIST( <42:stop_statement>)
 
 $LIST( <42:stop_statement>)
 {
-  $LIST( <42:stop_statement>) = $LIST(<109:character_constant>);
+  $LIST( <42:stop_statement>) = ast_pause_stop_statement(
+    "stop_statement",
+    $LIST(<109:character_constant>),
+    LOCATION(0)
+  );
 }
 
 *******************************************************************************
@@ -3022,7 +3028,11 @@ $LIST( <42:stop_statement>)
 
 $LIST( <43:pause_statement>)
 {
-  $LIST( <43:pause_statement>) = NULL;
+  $LIST( <43:pause_statement>) = ast_pause_stop_statement(
+    "pause_statement",
+    NULL,
+    LOCATION(0)
+  );
 }
 
 *------------------------------------------------------------------------------
@@ -3032,7 +3042,11 @@ $LIST( <43:pause_statement>)
 
 $LIST( <43:pause_statement>)
 {
-  $LIST( <43:pause_statement>) = $LIST(<102:unsigned_int_constant>);
+  $LIST( <43:pause_statement>) = ast_pause_stop_statement(
+    "pause_statement",
+    $LIST(<102:unsigned_int_constant>),
+    LOCATION(0)
+  );
 }
 
 *------------------------------------------------------------------------------
@@ -3042,7 +3056,11 @@ $LIST( <43:pause_statement>)
 
 $LIST( <43:pause_statement>)
 {
-  $LIST( <43:pause_statement>) = $LIST(<109:character_constant>);
+  $LIST( <43:pause_statement>) = ast_pause_stop_statement(
+    "pause_statement",
+    $LIST(<109:character_constant>),
+    LOCATION(0)
+  );
 }
 
 *******************************************************************************
