@@ -628,10 +628,7 @@ $LIST(<6:other_specification_statement>)
 
 $LIST(<6:other_specification_statement>)
 {
-  $LIST(<6:other_specification_statement>) = ast_external_statement(
-    LOCATION(0),
-    $LIST(<24:external_statement>)
-  );
+  $LIST(<6:other_specification_statement>) = $LIST(<24:external_statement>);
 }
 
 *------------------------------------------------------------------------------
@@ -641,10 +638,7 @@ $LIST(<6:other_specification_statement>)
 
 $LIST(<6:other_specification_statement>)
 {
-  $LIST(<6:other_specification_statement>) = ast_intrinsic_statement(
-    LOCATION(0),
-    $LIST(<25:intrinsic_statement>)
-  );
+  $LIST(<6:other_specification_statement>) = $LIST(<25:intrinsic_statement>);
 }
 
 *------------------------------------------------------------------------------
@@ -654,10 +648,7 @@ $LIST(<6:other_specification_statement>)
 
 $LIST(<6:other_specification_statement>)
 {
-  $LIST(<6:other_specification_statement>) = ast_save_statement(
-    LOCATION(0),
-    $LIST(<26:save_statement>) 
-  );
+  $LIST(<6:other_specification_statement>) = $LIST(<26:save_statement>);
 }
 
 *******************************************************************************
@@ -1960,7 +1951,10 @@ $LIST( <23b:assign>)
 
 $LIST( <24:external_statement>)
 {
-  $LIST( <24:external_statement>) = $LIST(<99a:symbolic_name_list>);
+  $LIST( <24:external_statement>) = ast_external_statement(
+    LOCATION(0),
+    $LIST(<99a:symbolic_name_list>)
+  );
 }    
 
 *******************************************************************************
@@ -1970,7 +1964,10 @@ $LIST( <24:external_statement>)
 
 $LIST( <25:intrinsic_statement>)
 {
-  $LIST( <25:intrinsic_statement>) = $LIST(<99a:symbolic_name_list>);
+  $LIST( <25:intrinsic_statement>) = ast_intrinsic_statement(
+    LOCATION(0),
+    $LIST(<99a:symbolic_name_list>)
+  );
 }    
 
 *******************************************************************************
@@ -1980,7 +1977,10 @@ $LIST( <25:intrinsic_statement>)
 
 $LIST( <26:save_statement>)
 {
-  $LIST( <26:save_statement>) = NULL;
+  $LIST( <26:save_statement>) = ast_save_statement(
+    LOCATION(0),
+    NULL 
+  );
 }    
 
 *------------------------------------------------------------------------------
@@ -1990,7 +1990,10 @@ $LIST( <26:save_statement>)
 
 $LIST( <26:save_statement>)
 {
-  $LIST( <26:save_statement>) = $LIST(<26a:save_statement_name_list>);
+  $LIST( <26:save_statement>) = ast_save_statement(
+    LOCATION(0),
+    $LIST(<26a:save_statement_name_list>)
+  );
 }    
 
 *******************************************************************************
