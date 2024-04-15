@@ -1757,7 +1757,9 @@ $LIST(<21:implicit_statement>)
   $LIST(<21:implicit_statement>) = ast_implicit_statement(
     LOCATION(0),
     ast_implicit_body_parameter(
-      SXML_T("\"UNDEFINED\""),
+      ast_type_reference(
+        SXML_T("UNDEFINED"),
+        NULL ),
       $LIST(<21c:implicit_elem_list>) )
    );
 }    
@@ -2837,7 +2839,6 @@ $LIST(<40a:do_loop>)
 
 $LIST(<40a:do_loop>)
  {
- printf("<2c:statement_list>\n");
    $LIST(<40a:do_loop>) = ast_do_loop(
    	ast_do_statement(
     	  LOCATION(0),
