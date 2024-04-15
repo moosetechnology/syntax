@@ -199,15 +199,20 @@ SXML_TYPE_LIST ast_unknown_parameter( SXML_TYPE_TEXT rule,
  * - statement
  */
 SXML_TYPE_LIST ast_labeled_statement( SXML_TYPE_TEXT label,
+               SXML_TYPE_LIST location,
                SXML_TYPE_LIST statement) {
   if (label == NULL) {
     return JSON_MAP( statement);
   }
   else {
     return JSON_MAP( 
-      SXML_LL(
-        JSON_KQ_ ( "label", label), 
-	statement) );
+      SXML_LLTL(
+        JSON_KQ_ ( "label", label),
+        location,
+        ",\n", 
+	      statement
+      ) 
+    );
   }
 }
 

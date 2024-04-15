@@ -54,6 +54,11 @@ bool pclose_needed;
 	   sxcurrent_parsed_line (N),\
            sxcurrent_parsed_column (N) )
 
+#define TOKEN_LOCATION(STRING, N) ast_location( \
+	   STRING, \
+	   sxcurrent_parsed_line (N),\
+           sxcurrent_parsed_column (N))
+
 #define ENDING_LOCATION(N,STRING) ast_end_location( \
 	   sxcurrent_parsed_line (N),\
            sxcurrent_parsed_column (N),\
@@ -144,7 +149,7 @@ $LIST(<0:F77>)
 {
 	fprintf (stderr, "$LIST(<0:F77>) computed on zombie token !DO without label\n");
 	$LIST(<0:F77>) = SXML_T ("zombie token !DO without label");
-	}
+}
 
 *------------------------------------------------------------------------------
 
@@ -365,6 +370,7 @@ $LIST(<2d:labeled_statement>)
 {
   $LIST(<2d:labeled_statement>) = ast_labeled_statement(
       $NAME(<110:label>),
+      TOKEN_LOCATION("label_pos", 0),
       $LIST( <2e:statement>) );
 }
 
@@ -377,6 +383,7 @@ $LIST(<2d:labeled_statement>)
 {
   $LIST(<2d:labeled_statement>) =  ast_labeled_statement(
       $NAME(<110:label>),
+      TOKEN_LOCATION("label_pos", 0),
       $LIST( <58:format_statement>) );
 }
 
@@ -388,6 +395,7 @@ $LIST(<2d:labeled_statement>)
 $LIST(<2d:labeled_statement>)
 {
   $LIST(<2d:labeled_statement>) = ast_labeled_statement(
+    NULL,
     NULL,
     $LIST(<2e:statement>) );
 }
@@ -2797,7 +2805,6 @@ $LIST(<39:end_if_statement>)
 
 $LIST(<40a:do_loop>)
  {
- 	 printf
    $LIST(<40a:do_loop>) = ast_do_loop(
      $LIST(<40:do_statement>), 
      $LIST(<2c:statement_list>),
