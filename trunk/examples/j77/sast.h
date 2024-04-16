@@ -367,21 +367,30 @@ SXML_TYPE_LIST ast_type_statement( SXML_TYPE_LIST type_reference,
  * - name of the type
  * - len_specification
  */
-SXML_TYPE_LIST ast_type_reference( SXML_TYPE_LIST name,
-            SXML_TYPE_LIST len_specification) {
+SXML_TYPE_LIST ast_type_reference( SXML_TYPE_LIST location,
+  SXML_TYPE_LIST name,
+  SXML_TYPE_LIST len_specification) {
 
   if (len_specification == NULL) {
     return JSON_MAP(
-      SXML_LL (
+      SXML_LLTL (
         ast_tag_("type_reference"),
-      JSON_KQ ("name", name->TEXT) ));
+        location,
+        ",\n",
+        JSON_KQ ("name", name->TEXT) 
+      )
+    );
   }
   else {
     return JSON_MAP(
-      SXML_LLL (
+      SXML_LLTLL (
         ast_tag_("type_reference"),
-      JSON_KQ_ ("name", name->TEXT),
-      JSON_KU ("len_specification", len_specification) ));
+        location,
+        ",\n",
+        JSON_KQ_ ("name", name->TEXT),
+        JSON_KU ("len_specification", len_specification)
+      )
+    );
   }
 }
 

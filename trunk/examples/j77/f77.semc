@@ -912,6 +912,7 @@ $LIST(<10:function_statement>)
 $LIST( <10a:type>)
 {
   $LIST( <10a:type>) = ast_type_reference(
+  		LOCATION(0),
       $LIST( <10b:scalar_type>),
       NULL
   );
@@ -926,6 +927,7 @@ $LIST( <10a:type>)
 $LIST( <10a:type>)
 {
   $LIST( <10a:type>) = ast_type_reference(
+    LOCATION(0),
     $LIST( <10b:scalar_type>),
     $LIST(<103:nonzero_unsigned_int_constant>)
   );
@@ -938,6 +940,7 @@ $LIST( <10a:type>)
 $LIST( <10a:type>)
 {
   $LIST( <10a:type>) = ast_type_reference(
+  		LOCATION(0),
       SXML_T("CHARACTER"),
       NULL );
 }
@@ -949,6 +952,7 @@ $LIST( <10a:type>)
 $LIST( <10a:type>)
 {
   $LIST( <10a:type>) = ast_type_reference(
+      LOCATION(0),
       SXML_T("CHARACTER"),
       $LIST(<22:len_specification>)
   );
@@ -1541,6 +1545,7 @@ $LIST(<20:type_statement>)
 {
   $LIST(<20:type_statement>) = ast_type_statement(
     ast_type_reference(
+      LOCATION(0),
       $LIST (<10b:scalar_type>),
       NULL ),
     LOCATION(0), 
@@ -1559,6 +1564,7 @@ $LIST(<20:type_statement>)
 {
   $LIST(<20:type_statement>) = ast_type_statement(
     ast_type_reference(
+      LOCATION(0),
       $LIST( <10b:scalar_type>),
       $LIST( <103:nonzero_unsigned_int_constant>)
     ),
@@ -1582,7 +1588,11 @@ $LIST(<20:type_statement>)
 $LIST(<20:type_statement>)
 {
   $LIST(<20:type_statement>) = ast_type_statement(
-    ast_type_reference( SXML_T("CHARACTER"), NULL),
+    ast_type_reference( 
+      LOCATION(0),
+    	SXML_T("CHARACTER"), 
+    	NULL
+    ),
     LOCATION(0), 
     $LIST( <20c:character_name_list>));
 }
@@ -1596,6 +1606,7 @@ $LIST(<20:type_statement>)
 {
   $LIST(<20:type_statement>) = ast_type_statement(
     ast_type_reference(
+      LOCATION(0),
       SXML_T("CHARACTER"),
       $LIST(<22:len_specification>)),
     LOCATION(0), 
@@ -1611,8 +1622,10 @@ $LIST(<20:type_statement>)
 {
   $LIST(<20:type_statement>) = ast_type_statement(
     ast_type_reference(
+      LOCATION(0),
       SXML_T("CHARACTER"),
-      $LIST(<22:len_specification>)),
+      $LIST(<22:len_specification>)
+    ),
     LOCATION(0), 
     $LIST( <20c:character_name_list>));
 }
@@ -1747,8 +1760,10 @@ $LIST(<21:implicit_statement>)
     LOCATION(0),
     ast_implicit_body_parameter(
       ast_type_reference(
+        LOCATION(0),
         SXML_T("UNDEFINED"),
-        NULL ),
+        NULL 
+      ),
       $LIST(<21c:implicit_elem_list>) )
    );
 }    
