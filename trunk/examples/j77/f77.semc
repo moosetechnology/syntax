@@ -1127,7 +1127,10 @@ $LIST( <12b:subroutine_parameter_list>)
 
 $LIST( <12c:subroutine_parameter>)
 {
-  $LIST( <12c:subroutine_parameter>) = $LIST(<99:symbolic_name>);
+  $LIST( <12c:subroutine_parameter>) = ast_subroutine_parameter(
+  	LOCATION(0),
+  	$LIST(<99:symbolic_name>)
+  );
 }
 
 *------------------------------------------------------------------------------
@@ -1137,7 +1140,10 @@ $LIST( <12c:subroutine_parameter>)
 
 $LIST( <12c:subroutine_parameter>)
 {
-  $LIST( <12c:subroutine_parameter>) = SXML_T( "\"*\"");
+  $LIST( <12c:subroutine_parameter>) = ast_subroutine_parameter(
+  	LOCATION(0),
+  	SXML_T( "\"*\"")
+  );
 }
 
 *******************************************************************************
