@@ -54,7 +54,7 @@ bool pclose_needed;
 	   sxcurrent_parsed_line (N),\
            sxcurrent_parsed_column (N) )
 
-#define TOKEN_LOCATION(STRING, N) ast_location( \
+#define TOKEN_LOCATION(STRING, N) ast_location_( \
 	   STRING, \
 	   sxcurrent_parsed_line (N),\
            sxcurrent_parsed_column (N))
@@ -889,9 +889,13 @@ $LIST( <9:entry_statement>)
 
 $LIST(<10:function_statement>)
 {
-  $LIST(<10:function_statement>) = ast_add_return_type(
-    $LIST( <10d:function_header>),
-    $LIST( <10a:type>) );
+  $LIST(<10:function_statement>) = SXML_LL(
+    TOKEN_LOCATION("function_token_pos", 1),
+    ast_add_return_type(
+      $LIST( <10d:function_header>),
+      $LIST( <10a:type>) 
+    )
+  );
 }
 
 *------------------------------------------------------------------------------
@@ -902,7 +906,10 @@ $LIST(<10:function_statement>)
 
 $LIST(<10:function_statement>)
 {
-  $LIST(<10:function_statement>) = $LIST( <10d:function_header>);
+  $LIST(<10:function_statement>) = SXML_LL(
+    TOKEN_LOCATION("function_token_pos", 0),
+    $LIST( <10d:function_header>)
+  );
 }
 
 *******************************************************************************

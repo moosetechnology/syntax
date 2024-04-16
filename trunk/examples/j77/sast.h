@@ -27,6 +27,18 @@ SXML_TYPE_LIST ast_location( SXML_TYPE_TEXT position_name,
         JSON_KQ ("column", SXML_UINT(column)) )));
 }
 
+/* -------------------------------------------------------------------------
+ * ouputs line, column position with comma after
+ */
+SXML_TYPE_LIST ast_location_( SXML_TYPE_TEXT position_name,
+            SXUINT line,
+            SXUINT column) {
+  return SXML_LT(
+    ast_location(position_name, line, column),
+    ",\n"
+  );
+}
+
 
 /* -------------------------------------------------------------------------
  * ouputs line and column start position
@@ -206,10 +218,9 @@ SXML_TYPE_LIST ast_labeled_statement( SXML_TYPE_TEXT label,
   }
   else {
     return JSON_MAP( 
-      SXML_LLTL(
+      SXML_LLL(
         JSON_KQ_ ( "label", label),
-        location,
-        ",\n", 
+        location, 
 	      statement
       ) 
     );
