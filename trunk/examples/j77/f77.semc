@@ -1362,7 +1362,10 @@ $LIST( <17:equivalence_statement>)
 
 $LIST( <18:equiv_entity>)
 {
-  $LIST( <18:equiv_entity>) = $LIST(<99:symbolic_name>);
+  $LIST( <18:equiv_entity>) = ast_equiv_entity(
+  	LOCATION(0),
+  	$LIST(<99:symbolic_name>)
+  );
 }        
 
 *------------------------------------------------------------------------------
@@ -1372,7 +1375,10 @@ $LIST( <18:equiv_entity>)
 
 $LIST( <18:equiv_entity>)
 {
-  $LIST( <18:equiv_entity>) = $LIST(<88b:function_reference_or_array_element_name>);
+  $LIST( <18:equiv_entity>) = ast_equiv_entity(
+  	LOCATION(0),
+  	$LIST(<88b:function_reference_or_array_element_name>)
+  );
 }    
 
 *------------------------------------------------------------------------------
@@ -1382,7 +1388,10 @@ $LIST( <18:equiv_entity>)
 
 $LIST( <18:equiv_entity>)
 {
-  $LIST( <18:equiv_entity>) = $LIST(<89:substring_name>);
+  $LIST( <18:equiv_entity>) = ast_equiv_entity(
+  	LOCATION(0),
+  	$LIST(<89:substring_name>)
+  );
 }    
 
 *******************************************************************************
@@ -1415,7 +1424,10 @@ $LIST( <18a:equiv_list>)
 
 $LIST( <18b:equiv>)
 {
-  $LIST( <18b:equiv>) = ast_equiv_group($LIST(<18c:equiv_entity_list>));
+  $LIST( <18b:equiv>) = ast_equiv_group(
+  	LOCATION(0),
+  	$LIST(<18c:equiv_entity_list>)
+  );
 }
 
 *******************************************************************************
