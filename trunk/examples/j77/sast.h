@@ -1238,11 +1238,14 @@ SXML_TYPE_LIST ast_expression( SXML_TYPE_TEXT tag,
  * - name of the variable
  * - dimension_declarator
  */
-SXML_TYPE_LIST ast_variable_declarator( SXML_TYPE_LIST variable,
+SXML_TYPE_LIST ast_variable_declarator( SXML_TYPE_LIST location,
+           SXML_TYPE_LIST variable,
            SXML_TYPE_LIST dimension_declarator) {
  return JSON_MAP(
-   SXML_LLL(
+   SXML_LLTLL(
      ast_tag_( "variable_declarator"),
+     location,
+     ",\n",
      JSON_KU_( "variable", variable),
      JSON_KU (  "dimension_declarators", JSON_ARRAY( dimension_declarator)) ) );
 }
@@ -1265,19 +1268,30 @@ SXML_TYPE_LIST ast_add_declarator_len( SXML_TYPE_LIST variable_declarator,
 
 /* -------------------------------------------------------------------------
  */
-SXML_TYPE_LIST ast_lower_upper_bound(SXML_TYPE_LIST lower_bound,
+SXML_TYPE_LIST ast_dimension_declarator(SXML_TYPE_LIST location,
+              SXML_TYPE_LIST lower_bound,
               SXML_TYPE_LIST upper_bound) {
   if (lower_bound == NULL) {
     return JSON_MAP(
-      JSON_KU ("upper_bound", upper_bound) );
+      SXML_LLTL(
+        ast_tag_("dimension_declarator"),
+        location,
+        ",\n",
+        JSON_KU ("upper_bound", upper_bound) 
+      )
+    );
   }
   else {
     return JSON_MAP(
-      SXML_LL(
+      SXML_LLTLL(
+        ast_tag_("dimension_declarator"),
+        location,
+        ",\n",
         JSON_KU_("lower_bound", lower_bound),
-        JSON_KU ("upper_bound", upper_bound) ));
+        JSON_KU ("upper_bound", upper_bound) 
+      )
+    );
   }
-
 }
 
 
