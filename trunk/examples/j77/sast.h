@@ -698,19 +698,39 @@ SXML_TYPE_LIST ast_common_statement( SXML_TYPE_LIST location,
       JSON_KU(
         "common_body",
         JSON_ARRAY( common_body))
-      ); 
+    ); 
 }
 
 
 /* -------------------------------------------------------------------------
- * outputs a common_statement body. Consists of:
- * - name (optional)
- * - nlist: List of variables, arrays, array elements, substrings, and implied DO lists separated by commas
+ * outputs a group of elements in a statement boy. Consists of:
+ * - group name (optional)
+ * - one element of nlist: List of variables, arrays, array elements, substrings, and implied DO lists separated by commas
  */
-SXML_TYPE_LIST ast_common_name(
-            SXML_TYPE_LIST name) {
+SXML_TYPE_LIST ast_common_block_group(SXML_TYPE_LIST location,
+            SXML_TYPE_LIST common_block_name,
+            SXML_TYPE_LIST common_element_name) {
+
+    if (common_block_name == NULL){
+      return JSON_MAP(
+        SXML_LLTL(
+          ast_tag_("common_group"),
+          location,
+          ",\n",
+          JSON_KU("common_element_name", common_element_name) 
+        )
+      );
+    }
+
     return JSON_MAP(
-      JSON_KU("common_name", name) );
+      SXML_LLTLL(
+        ast_tag_("common_group"),
+        location,
+        ",\n",
+        JSON_KU_("common_block_name", common_block_name),
+        JSON_KU("common_element_name", common_element_name) 
+      )
+    );
 }
 
 
