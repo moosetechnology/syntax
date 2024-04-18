@@ -1789,7 +1789,8 @@ $LIST(<21:implicit_statement>)
 $LIST(<21:implicit_statement>)
 {
   $LIST(<21:implicit_statement>) = ast_implicit_none_statement(
-    LOCATION(0)
+    LOCATION(0),
+    TOKEN_LOCATION("none_start_pos", 1)
   );
 }    
 
@@ -1805,8 +1806,9 @@ $LIST(<21:implicit_statement>)
   $LIST(<21:implicit_statement>) = ast_implicit_statement(
     LOCATION(0),
     ast_implicit_body_parameter(
+    	LOCATION(1),
       ast_type_reference(
-        LOCATION(0),
+        LOCATION(1),
         SXML_T("UNDEFINED"),
         NULL 
       ),
@@ -1846,6 +1848,7 @@ $LIST(<21a:implicit_body_list>)
 $LIST(<21b:implicit_body>)
 {
   $LIST(<21b:implicit_body>) = ast_implicit_body_parameter(
+  		LOCATION(0),
       $LIST(<10a:type>), 
       $LIST(<21c:implicit_elem_list>)
       );
@@ -1883,6 +1886,7 @@ $LIST(<21c:implicit_elem_list>)
 $LIST(<21d:implicit_elem>)
 {
   $LIST(<21d:implicit_elem>) = ast_implicit_element(
+  	LOCATION(0),
     $NAME(<99b:letter>),
     ""
   );
@@ -1896,6 +1900,7 @@ $LIST(<21d:implicit_elem>)
 $LIST(<21d:implicit_elem>)
 {
   $LIST(<21d:implicit_elem>) = ast_implicit_element(
+  	LOCATION(0),
     $NAME(<99b:letter>),
     $NAME(<99b:letter>')
   );

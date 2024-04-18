@@ -481,17 +481,19 @@ SXML_TYPE_LIST ast_implicit_statement( SXML_TYPE_LIST location,
     return SXML_LTL(
       ast_abstract_statement( "implicit_statement", location),
       ",\n",
-      JSON_KU(
-        "implicit_parameters",
-        JSON_ARRAY( parameters)) ); 
+      JSON_KU("implicit_parameters",JSON_ARRAY( parameters)) 
+    ); 
 }
 
 /* -------------------------------------------------------------------------
  */
-SXML_TYPE_LIST ast_implicit_none_statement( SXML_TYPE_LIST location) {
+SXML_TYPE_LIST ast_implicit_none_statement( SXML_TYPE_LIST location,
+  SXML_TYPE_LIST location_none) {
     
-    return SXML_L(
-      ast_abstract_statement( "implicit_none_statement", location) ); 
+    return SXML_LL(
+      location_none,
+      ast_abstract_statement( "implicit_none_statement", location)
+      ); 
 }
 
 
@@ -500,12 +502,15 @@ SXML_TYPE_LIST ast_implicit_none_statement( SXML_TYPE_LIST location) {
  * - a type
  * - a list of elements
  */
-SXML_TYPE_LIST ast_implicit_body_parameter( 
+SXML_TYPE_LIST ast_implicit_body_parameter( SXML_TYPE_LIST location,
             SXML_TYPE_LIST type,
             SXML_TYPE_LIST elements) {
     
     return JSON_MAP(
-      SXML_LL(
+      SXML_LLTLL(
+        ast_tag_("implicit_type_rule"),
+        location,
+        ",\n",
         JSON_KU_("type", type),
         JSON_KU("implicit_elements", JSON_ARRAY(elements))
       ));
@@ -513,13 +518,15 @@ SXML_TYPE_LIST ast_implicit_body_parameter(
 
 /* -------------------------------------------------------------------------
  */
-SXML_TYPE_LIST ast_implicit_element(
+SXML_TYPE_LIST ast_implicit_element(SXML_TYPE_LIST location,
               SXML_TYPE_TEXT left,
               SXML_TYPE_TEXT right
               ) {
   return JSON_MAP(
-    SXML_LLL(
+    SXML_LLTLL(
       ast_tag_("implicit_range"),
+      location,
+      ",\n",
       JSON_KQ_("implicit_range_lower", left),
       JSON_KQ("implicit_range_upper", right)
       )
