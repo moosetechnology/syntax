@@ -555,12 +555,14 @@ SXML_TYPE_LIST ast_parameter_statement( SXML_TYPE_LIST location,
  * - symbolic name assigned
  * - constant expression
  */
-SXML_TYPE_LIST ast_parameter_assign(
+SXML_TYPE_LIST ast_parameter_assign(SXML_TYPE_LIST location,
             SXML_TYPE_LIST name,
             SXML_TYPE_LIST constant_expression) {
     
     return JSON_MAP(
-      SXML_LL(
+      SXML_LTLL(
+        location,
+        ",\n",
         JSON_KU_("symbolic_name", name),
         JSON_KU("expression", constant_expression))  
     );
