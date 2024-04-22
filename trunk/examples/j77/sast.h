@@ -1125,12 +1125,15 @@ SXML_TYPE_LIST ast_constant(
  * constant object
  */
 SXML_TYPE_LIST ast_constant_signed(
-            SXML_TYPE_TEXT sign,
+            SXML_TYPE_LIST location,
+            SXML_TYPE_LIST sign,
             SXML_TYPE_LIST constant) {
   return JSON_MAP(
-    SXML_LLL(
+    SXML_LLTLL(
       ast_tag_("constant_signed"),
-      JSON_KQ_("sign", sign),
+      location,
+      ",\n",
+      JSON_KU_("sign", sign),
       JSON_KU( "constant", constant)
     )
   );
@@ -1183,7 +1186,7 @@ SXML_TYPE_LIST ast_complex_constant(
  * constant
  */
 SXML_TYPE_LIST ast_complex_constant_real_part(
-            SXML_TYPE_TEXT sign,
+            SXML_TYPE_LIST sign,
             SXML_TYPE_LIST constant) {
 
   if (sign == NULL){
@@ -1196,7 +1199,7 @@ SXML_TYPE_LIST ast_complex_constant_real_part(
 
   return JSON_MAP(
     SXML_LL(
-      JSON_KQ_( "sign", sign),
+      JSON_KU_( "sign", sign),
       JSON_KU( "constant", constant)
     )
   );
@@ -1206,12 +1209,15 @@ SXML_TYPE_LIST ast_complex_constant_real_part(
 /* -------------------------------------------------------------------------
  * outputs a literal_expression.
  */
-SXML_TYPE_LIST ast_literal_expression( SXML_TYPE_LIST literal) {
+SXML_TYPE_LIST ast_literal_expression( SXML_TYPE_LIST location, 
+            SXML_TYPE_LIST literal) {
 
   return JSON_MAP (
-    SXML_LL(
+    SXML_LLTL(
       ast_tag_( "literal_expression"),
-      JSON_KU( "literal", literal) ));
+      location,
+      ",\n",
+      JSON_KU( "expression_value", literal) ));
 }
 
 
@@ -1852,3 +1858,21 @@ SXML_TYPE_LIST ast_subroutine_parameter(
     )
   );
 }
+
+
+/* -------------------------------------------------------------------------
+ * expression sign
+ */
+SXML_TYPE_LIST ast_sign(
+        SXML_TYPE_LIST location,
+        SXML_TYPE_TEXT sign) {
+  
+  return JSON_MAP(
+    SXML_LTL(
+      location,
+      ",\n",
+      JSON_KQ("sign_value", sign)
+    )
+  );
+}
+
