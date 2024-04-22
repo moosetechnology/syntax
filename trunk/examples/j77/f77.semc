@@ -2155,7 +2155,8 @@ $LIST( <27a:data_statement_body_list>)
 
 $LIST( <27b:data_statement_body>)
 {
-  $LIST( <27b:data_statement_body>) = ast_data_statement_parameter(
+  $LIST( <27b:data_statement_body>) = ast_data_statement_group(
+  	LOCATION(0),
     $LIST(<27c:data_statement_name_list>),
     $LIST(<27e:data_statement_constant_list>)
   );
@@ -2191,7 +2192,10 @@ $LIST( <27c:data_statement_name_list>)
 
 $LIST( <27d:data_statement_name>)
 {
-  $LIST( <27d:data_statement_name>) = $LIST(<99:symbolic_name>);
+  $LIST( <27d:data_statement_name>) = ast_data_statement_variable(
+  	LOCATION(0),
+  	$LIST(<99:symbolic_name>)
+ 	);
 }
 
 *------------------------------------------------------------------------------
@@ -2201,7 +2205,10 @@ $LIST( <27d:data_statement_name>)
 
 $LIST( <27d:data_statement_name>)
 {
-  $LIST( <27d:data_statement_name>) = $LIST(<88b:function_reference_or_array_element_name>);
+  $LIST( <27d:data_statement_name>) = ast_data_statement_variable(
+  	LOCATION(0),
+  	$LIST(<88b:function_reference_or_array_element_name>)
+ 	);
 }    
 
 *------------------------------------------------------------------------------
@@ -2211,7 +2218,10 @@ $LIST( <27d:data_statement_name>)
 
 $LIST( <27d:data_statement_name>)
 {
-  $LIST( <27d:data_statement_name>) = $LIST(<89:substring_name>);
+  $LIST( <27d:data_statement_name>) = ast_data_statement_variable(
+  	LOCATION(0),
+  	$LIST(<89:substring_name>)
+ 	);
 }    
 
 *------------------------------------------------------------------------------
@@ -2221,7 +2231,10 @@ $LIST( <27d:data_statement_name>)
 
 $LIST( <27d:data_statement_name>)
 {
-  $LIST( <27d:data_statement_name>) = $LIST(<28:data_imply_do_list>);
+  $LIST( <27d:data_statement_name>) = ast_data_statement_variable(
+  	LOCATION(0),
+  	$LIST(<28:data_imply_do_list>)
+ 	);
 }    
 
 *******************************************************************************
@@ -2255,7 +2268,8 @@ $LIST( <27e:data_statement_constant_list>)
 $LIST( <27f:data_statement_constant>)
 {
   $LIST( <27f:data_statement_constant>) = ast_data_statement_constant(
-    ast_empty_map(),
+  	LOCATION(0),
+    NULL,
     $LIST(<99:symbolic_name>)
   );
 }    
@@ -2268,7 +2282,8 @@ $LIST( <27f:data_statement_constant>)
 $LIST( <27f:data_statement_constant>)
 {
   $LIST( <27f:data_statement_constant>) = ast_data_statement_constant(
-    ast_empty_map(),
+  	LOCATION(0),
+    NULL,
     $LIST(<100:constant>)
   );
 }    
@@ -2281,6 +2296,7 @@ $LIST( <27f:data_statement_constant>)
 $LIST( <27f:data_statement_constant>)
 {
   $LIST( <27f:data_statement_constant>) = ast_data_statement_constant(
+  	LOCATION(0),
     $LIST(<103:nonzero_unsigned_int_constant>),
     $LIST(<100:constant>)
   );
@@ -2294,6 +2310,7 @@ $LIST( <27f:data_statement_constant>)
 $LIST( <27f:data_statement_constant>)
 {
   $LIST( <27f:data_statement_constant>) = ast_data_statement_constant(
+  	LOCATION(0),
     $LIST(<103:nonzero_unsigned_int_constant>),
     $LIST(<99:symbolic_name>)
   );
@@ -2307,6 +2324,7 @@ $LIST( <27f:data_statement_constant>)
 $LIST( <27f:data_statement_constant>)
 {
   $LIST( <27f:data_statement_constant>) = ast_data_statement_constant(
+  	LOCATION(0),
     $LIST(<99:symbolic_name>),
     $LIST(<100:constant>)
   );
@@ -2320,6 +2338,7 @@ $LIST( <27f:data_statement_constant>)
 $LIST( <27f:data_statement_constant>)
 {
   $LIST( <27f:data_statement_constant>) = ast_data_statement_constant(
+  	LOCATION(0),
     $LIST(<99:symbolic_name>),
     $LIST(<99:symbolic_name>)
   );

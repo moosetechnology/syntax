@@ -1,11 +1,3 @@
-
-
-/* -------------------------------------------------------------------------
- */
-SXML_TYPE_LIST ast_empty_map() {
-  return SXML_T("{}");
-}
-
 /* -------------------------------------------------------------------------
  */
 SXML_TYPE_LIST ast_empty_string() {
@@ -574,14 +566,14 @@ SXML_TYPE_LIST ast_parameter_assign(SXML_TYPE_LIST location,
  * - list of parameters
  */
 SXML_TYPE_LIST ast_data_statement( SXML_TYPE_LIST location,
-            SXML_TYPE_LIST parameters) {
+            SXML_TYPE_LIST groups) {
     
     return SXML_LTL(
       ast_abstract_statement( "data_statement", location),
       ",\n",
       JSON_KU(
-        "data_parameters",
-        JSON_ARRAY( parameters)) ); 
+        "data_groups",
+        JSON_ARRAY( groups)) ); 
 }
 
 
@@ -590,14 +582,60 @@ SXML_TYPE_LIST ast_data_statement( SXML_TYPE_LIST location,
  * - nlist: List of variables, arrays, array elements, substrings, and implied DO lists separated by commas
  * - clist: List of constants
  */
-SXML_TYPE_LIST ast_data_statement_parameter(
+SXML_TYPE_LIST ast_data_statement_group(
+            SXML_TYPE_LIST location,
             SXML_TYPE_LIST nlist,
             SXML_TYPE_LIST clist) {
     
     return JSON_MAP(
-      SXML_LL(
-        JSON_KU_("nlist", JSON_ARRAY(nlist)),
-        JSON_KU("clist", JSON_ARRAY(clist)))  
+      SXML_LLTLL(
+        ast_tag_("data_group"),
+        location,
+        ",\n",
+        JSON_KU_("data_group_variables_list", JSON_ARRAY(nlist)),
+        JSON_KU("data_group_constants_list", JSON_ARRAY(clist)))  
+    );
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a variable from data statement variables list
+ */
+SXML_TYPE_LIST ast_data_statement_variable(
+            SXML_TYPE_LIST location,
+            SXML_TYPE_LIST variable) {
+    
+    return JSON_MAP(
+      SXML_LLTL(
+        ast_tag_("data_group_variable"),
+        location,
+        ",\n",
+        JSON_KU("data_group_variable_value", variable)
+      )  
+    );
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a value from data statement constant list
+ * - number of successive occurrences of the constant
+ * - constant
+ */
+SXML_TYPE_LIST ast_data_statement_constant(SXML_TYPE_LIST location,
+            SXML_TYPE_LIST occurence,
+            SXML_TYPE_LIST constant) {
+    
+    if (occurence == NULL)
+      occurence = SXML_T("{}");
+    
+    return JSON_MAP(
+      SXML_LLTLL(
+        ast_tag_("data_group_constant"),
+        location,
+        ",\n",
+        JSON_KU_("data_group_constant_occurence", occurence),
+        JSON_KU("data_group_constant_value", constant)
+      )  
     );
 }
 
@@ -1510,24 +1548,6 @@ SXML_TYPE_LIST ast_logical_factor( SXML_TYPE_TEXT negated,
       ast_tag_("logical_factor"),
       JSON_KQ_("negated", negated),
       JSON_KU("expression", expression)
-    )
-  );
-}
-
-
-/* -------------------------------------------------------------------------
- * ouputs a data_statement_constant
- * - number of successive occurrences of the constant
- * - constant
- */
-SXML_TYPE_LIST ast_data_statement_constant( SXML_TYPE_LIST occurence,
-                SXML_TYPE_LIST constant) {
-
-  return JSON_MAP(
-    SXML_LLL (
-      ast_tag_("data_statement_constant"),
-      JSON_KU_("occurence", occurence),
-      JSON_KU("constant", constant)
     )
   );
 }
