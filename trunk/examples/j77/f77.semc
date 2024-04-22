@@ -5241,6 +5241,7 @@ $LIST( <75:constant_expr>)
 {
   $LIST( <75:constant_expr>) = ast_const_expression(
     "arithmetic_const_expr",
+    LOCATION(0),
     $LIST(<79:arithmetic_const_expr>)
   );
 }   
@@ -5254,6 +5255,7 @@ $LIST( <75:constant_expr>)
 {
   $LIST( <75:constant_expr>) = ast_const_expression(
     "character_const_expr",
+    LOCATION(0),
     $LIST(<83:character_const_expr>)
   );
 }    
@@ -5267,6 +5269,7 @@ $LIST( <75:constant_expr>)
 {
   $LIST( <75:constant_expr>) = ast_const_expression(
     "logical_const_expr",
+    LOCATION(0),
     $LIST(<85:logical_const_expr>)
   );
 }    

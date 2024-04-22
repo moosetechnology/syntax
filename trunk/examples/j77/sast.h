@@ -1144,11 +1144,14 @@ SXML_TYPE_LIST ast_constant_signed(
  */
 SXML_TYPE_LIST ast_const_expression(
             SXML_TYPE_TEXT type,
+            SXML_TYPE_LIST location,
             SXML_TYPE_LIST expression) {
   return JSON_MAP(
-    SXML_LL(
+    SXML_LLTL(
       ast_tag_(type),
-      JSON_KU( "expression", expression)
+      location,
+      ",\n",
+      JSON_KU( "expression_value", expression)
     )
   );
 }
