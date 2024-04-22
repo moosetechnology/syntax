@@ -2085,7 +2085,11 @@ $LIST( <26a:save_statement_name_list>)
 
 $LIST( <26b:save_statement_name>)
 {
-  $LIST( <26b:save_statement_name>) = $LIST(<99:symbolic_name>);
+  $LIST( <26b:save_statement_name>) = ast_save_statement_namelist_element(
+  	LOCATION(0),
+  	"false",
+  	$LIST(<99:symbolic_name>)
+  );
 }
 
 *------------------------------------------------------------------------------
@@ -2095,7 +2099,11 @@ $LIST( <26b:save_statement_name>)
 
 $LIST( <26b:save_statement_name>)
 {
-  $LIST( <26b:save_statement_name>) = $LIST(<99:symbolic_name>);
+  $LIST( <26b:save_statement_name>) = ast_save_statement_namelist_element(
+  	LOCATION(0),
+  	"true",
+  	$LIST(<99:symbolic_name>)
+  );
 }    
 
 *******************************************************************************

@@ -788,8 +788,28 @@ SXML_TYPE_LIST ast_save_statement( SXML_TYPE_LIST location,
     ast_abstract_statement( "save_statement", location),
     ",\n",
     JSON_KU(
-      "var_list",
+      "save_statement_namelist",
       JSON_ARRAY( var_list))
+    ); 
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a save statement
+ * - var_list: list of names of an array, variables, or common blocks (enclosed in slashes), occurring in a subprogram  
+ */
+SXML_TYPE_LIST ast_save_statement_namelist_element( SXML_TYPE_LIST location,
+            SXML_TYPE_TEXT guarded,
+            SXML_TYPE_LIST element) {
+    
+    return JSON_MAP(
+      SXML_LLTLL(
+        ast_tag_("save_statement_namelist_element"),
+        location,
+        ",\n",
+        JSON_KQ_("guarded", guarded),
+        JSON_KU("element_value", element)
+      )
     ); 
 }
 
