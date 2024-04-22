@@ -222,10 +222,10 @@ $LIST(<1:executable_program>)
 $LIST(<1a:executable_program_list>)
 
 {
-  $LIST(<1a:executable_program_list>) = SXML_LTL (
+  $LIST(<1a:executable_program_list>) = ast_list(
     $LIST(<1a:executable_program_list>'),
-    ",\n",
-    $LIST(<1:executable_program>) );
+    $LIST(<1:executable_program>) 
+  );
 }
 
 
@@ -345,10 +345,10 @@ $LIST(<2a:end_statement>)
 $LIST(<2c:statement_list>)
 
 {
-  $LIST(<2c:statement_list>) = SXML_LTL (
+  $LIST(<2c:statement_list>) = ast_list(
     $LIST(<2c:statement_list>'),
-    ",\n",
-    $LIST( <2d:labeled_statement>) );
+    $LIST( <2d:labeled_statement>) 
+  );
 }
 
 *------------------------------------------------------------------------------
@@ -1104,10 +1104,10 @@ $LIST(<12a:subroutine_header>)
 
 $LIST(<12b:subroutine_parameter_list>)
 {
-  $LIST(<12b:subroutine_parameter_list>) = SXML_LTL(
+  $LIST(<12b:subroutine_parameter_list>) = ast_list(
     $LIST( <12b:subroutine_parameter_list>'),
-    ",\n",
-    $LIST( <12c:subroutine_parameter>) );
+    $LIST( <12c:subroutine_parameter>) 
+  );
 }
 
 *------------------------------------------------------------------------------
@@ -1218,10 +1218,10 @@ $LIST( <16:array_declarator>)
 
 $LIST( <16a:array_declarator_list>)
 {
-  $LIST( <16a:array_declarator_list>) = SXML_LTL(
+  $LIST( <16a:array_declarator_list>) = ast_list(
     $LIST( <16a:array_declarator_list>'),
-    ",\n",
-    $LIST( <16:array_declarator>) );
+    $LIST( <16:array_declarator>) 
+  );
 }
 
 *------------------------------------------------------------------------------
@@ -1244,10 +1244,10 @@ $LIST( <16a:array_declarator_list>)
 
 $LIST( <16b:dimension_declarator_list>)
 {
-  $LIST( <16b:dimension_declarator_list>) = SXML_LTL(
+  $LIST( <16b:dimension_declarator_list>) = ast_list(
     $LIST( <16c:dimension_declarator>),
-    ",\n",
-    $LIST( <16b:dimension_declarator_list>') );
+    $LIST( <16b:dimension_declarator_list>') 
+  );
 }
 
 *------------------------------------------------------------------------------
@@ -1402,9 +1402,8 @@ $LIST( <18:equiv_entity>)
 
 $LIST( <18a:equiv_list>)
 {
-  $LIST( <18a:equiv_list>) = SXML_LTL(
+  $LIST( <18a:equiv_list>) = ast_list(
     $LIST(<18a:equiv_list>'),
-    ",",
     $LIST(<18b:equiv>)
   );
 }    
@@ -1438,9 +1437,8 @@ $LIST( <18b:equiv>)
 
 $LIST( <18c:equiv_entity_list>)
 {
-  $LIST( <18c:equiv_entity_list>) = SXML_LTL(
+  $LIST( <18c:equiv_entity_list>) = ast_list(
     $LIST(<18c:equiv_entity_list>'),
-    ",",
     $LIST(<18:equiv_entity>)
   );
 }
@@ -1482,9 +1480,8 @@ $LIST( <19:common_statement>)
 
 $LIST( <19a:common_body_list>)
 {
-  $LIST( <19a:common_body_list>) = SXML_LTL(
+  $LIST( <19a:common_body_list>) = ast_list(
     $LIST(<19a:common_body_list>'),
-    ",",
     $LIST(<,common_body>)
   );
 }    
@@ -1683,10 +1680,10 @@ $LIST(<20:type_statement>)
 
 $LIST( <20a:scalar_name_list>)
 {
-  $LIST(<20a:scalar_name_list>) = SXML_LTL (
+  $LIST(<20a:scalar_name_list>) = ast_list (
     $LIST(<20a:scalar_name_list>'),
-    ",",
-    $LIST(<20b:scalar_name>));
+    $LIST(<20b:scalar_name>)
+  );
 }
 
 *------------------------------------------------------------------------------
@@ -1729,10 +1726,10 @@ $LIST(<20b:scalar_name>)
 
 $LIST( <20c:character_name_list>)
 {
-  $LIST(<20c:character_name_list>) = SXML_LTL (
+  $LIST(<20c:character_name_list>) = ast_list(
     $LIST(<20c:character_name_list>'),
-    ",\n",
-    $LIST(<20d:character_name>));
+    $LIST(<20d:character_name>)
+  );
 }
 
 *------------------------------------------------------------------------------
@@ -1824,11 +1821,10 @@ $LIST(<21:implicit_statement>)
 
 $LIST(<21a:implicit_body_list>)
 {
-  $LIST(<21a:implicit_body_list>) = SXML_LTL(
+  $LIST(<21a:implicit_body_list>) = ast_list(
     $LIST(<21a:implicit_body_list>'),
-    ",", 
     $LIST(<21b:implicit_body>)
-    );
+  );
 }    
 
 *------------------------------------------------------------------------------
@@ -1862,11 +1858,10 @@ $LIST(<21b:implicit_body>)
 
 $LIST(<21c:implicit_elem_list>)
 {
-  $LIST(<21c:implicit_elem_list>) = SXML_LTL(
+  $LIST(<21c:implicit_elem_list>) = ast_list(
     $LIST(<21c:implicit_elem_list>'), 
-    ",", 
     $LIST(<21d:implicit_elem>)
-    );
+  );
 }
 
 *------------------------------------------------------------------------------
@@ -1972,11 +1967,10 @@ $LIST( <23:parameter_statement>)
 
 $LIST( <23a:assign_list>)
 {
-  $LIST( <23a:assign_list>) = SXML_LTL(
+  $LIST( <23a:assign_list>) = ast_list(
     $LIST(<23a:assign_list>'),
-    ",",
     $LIST(<23b:assign>)
-    );
+  );
 }    
 
 *------------------------------------------------------------------------------
@@ -2061,9 +2055,8 @@ $LIST( <26:save_statement>)
 
 $LIST( <26a:save_statement_name_list>)
 {
-  $LIST( <26a:save_statement_name_list>) = SXML_LTL(
+  $LIST( <26a:save_statement_name_list>) = ast_list(
     $LIST(<26a:save_statement_name_list>'),
-    ",",
     $LIST(<26b:save_statement_name>)
   );
 }
@@ -2126,9 +2119,8 @@ $LIST( <27:data_statement>)
 
 $LIST( <27a:data_statement_body_list>)
 {
-  $LIST( <27a:data_statement_body_list>) = SXML_LTL(
+  $LIST( <27a:data_statement_body_list>) = ast_list(
     $LIST(<27a:data_statement_body_list>'),
-    ",",
     $LIST(<27b:data_statement_body>)
   );
 }
@@ -2140,9 +2132,8 @@ $LIST( <27a:data_statement_body_list>)
 
 $LIST( <27a:data_statement_body_list>)
 {
-  $LIST( <27a:data_statement_body_list>) = SXML_LTL(
+  $LIST( <27a:data_statement_body_list>) = ast_list(
     $LIST(<27a:data_statement_body_list>'),
-    ",",
     $LIST(<27b:data_statement_body>)
   );
 }    
@@ -2177,9 +2168,8 @@ $LIST( <27b:data_statement_body>)
 
 $LIST( <27c:data_statement_name_list>)
 {
-  $LIST( <27c:data_statement_name_list>) = SXML_LTL(
+  $LIST( <27c:data_statement_name_list>) = ast_list(
     $LIST(<27c:data_statement_name_list>'),
-    ",",
     $LIST(<27d:data_statement_name>)
   );
 }    
@@ -2241,9 +2231,8 @@ $LIST( <27d:data_statement_name>)
 
 $LIST( <27e:data_statement_constant_list>)
 {
-  $LIST( <27e:data_statement_constant_list>) = SXML_LTL(
+  $LIST( <27e:data_statement_constant_list>) = ast_list(
     $LIST(<27e:data_statement_constant_list>'),
-    ",",
     $LIST(<27f:data_statement_constant>)
   );
 }     
@@ -2375,9 +2364,8 @@ $LIST( <28:data_imply_do_list>)
 
 $LIST( <28a:data_imply_do_list_head_list>)
 {
-  $LIST( <28a:data_imply_do_list_head_list>) = SXML_LTL(
+  $LIST( <28a:data_imply_do_list_head_list>) = ast_list(
     $LIST(<28b:data_imply_do_list_head>),
-    ",",
     $LIST(<28a:data_imply_do_list_head_list>')
   );
 }    
@@ -2389,9 +2377,8 @@ $LIST( <28a:data_imply_do_list_head_list>)
 
 $LIST( <28a:data_imply_do_list_head_list>)
 {
-  $LIST( <28a:data_imply_do_list_head_list>) = SXML_LTL(
+  $LIST( <28a:data_imply_do_list_head_list>) = ast_list(
     $LIST(<28b:data_imply_do_list_head>),
-    ",",
     $LIST(<99:symbolic_name>)
   );
 }    
@@ -3288,9 +3275,8 @@ $LIST( <47:control_info_list>)
 
 $LIST( <47b:control_info_elem_list>)
 {
-  $LIST( <47b:control_info_elem_list>) = SXML_LTL(
+  $LIST( <47b:control_info_elem_list>) = ast_list(
     $LIST(<47b:control_info_elem_list>'),
-    ",",
     $LIST(<47a:control_info_elem>)
   );
 }
@@ -3302,9 +3288,8 @@ $LIST( <47b:control_info_elem_list>)
 
 $LIST( <47b:control_info_elem_list>)
 {
-  $LIST( <47b:control_info_elem_list>) = SXML_LTL(
+  $LIST( <47b:control_info_elem_list>) = ast_list(
     $LIST(<56:unit_identifier>),
-    ",",
     $LIST(<57:format_identifier>)
   );
 }    
@@ -3316,9 +3301,8 @@ $LIST( <47b:control_info_elem_list>)
 
 $LIST( <47b:control_info_elem_list>)
 {
-  $LIST( <47b:control_info_elem_list>) = SXML_LTL(
+  $LIST( <47b:control_info_elem_list>) = ast_list(
     $LIST(<56:unit_identifier>),
-    ",",
     $LIST(<47a:control_info_elem>)
   );
 }    
@@ -3425,10 +3409,10 @@ $LIST( <47a:control_info_elem>)
 
 $LIST( <48:io_list>)
 {
-  $LIST( <48:io_list>) = SXML_LTL(
+  $LIST( <48:io_list>) = ast_list(
     $LIST(<48:io_list>'),
-    ",",
-    $LIST(<74:expression>));
+    $LIST(<74:expression>)
+  );
 }
 
 *------------------------------------------------------------------------------
@@ -3437,10 +3421,10 @@ $LIST( <48:io_list>)
 
 $LIST( <48:io_list>)
 {
-  $LIST( <48:io_list>) = SXML_LTL(
+  $LIST( <48:io_list>) = ast_list(
     $LIST(<48:io_list>'),
-    ",",
-    $LIST(<49:io_imply_do_list>));
+    $LIST(<49:io_imply_do_list>)
+  );
 }
 
 *------------------------------------------------------------------------------
@@ -3469,9 +3453,8 @@ $LIST( <48:io_list>)
 $LIST( <49:io_imply_do_list>)
 {
   $LIST( <49:io_imply_do_list>) = ast_data_imply_do_list(
-    SXML_LTL(
+    ast_list(
     	$LIST(<48:io_list>), 
-    	",", 
     	$LIST(<99:symbolic_name>)
     ),
     ast_do_parameters(
@@ -3489,9 +3472,8 @@ $LIST( <49:io_imply_do_list>)
 $LIST( <49:io_imply_do_list>)
 {
   $LIST( <49:io_imply_do_list>) = ast_data_imply_do_list(
-    SXML_LTL(
+    ast_list(
     	$LIST(<48:io_list>),
-    	",", 
     	$LIST(<99:symbolic_name>)
     ),
     ast_do_parameters(
@@ -3524,10 +3506,10 @@ $LIST( <50:open_statement>)
 
 $LIST( <50a:open_info_elem_list>)
 {
-  $LIST( <50a:open_info_elem_list>) = SXML_LTL(
+  $LIST( <50a:open_info_elem_list>) = ast_list(
     $LIST(<50a:open_info_elem_list>'),
-    ",",
-    $LIST(<50b:open_info_elem>));
+    $LIST(<50b:open_info_elem>)
+  );
 }    
 
 *------------------------------------------------------------------------------
@@ -3690,10 +3672,10 @@ $LIST( <51:close_statement>)
 
 $LIST( <51a:close_info_elem_list>)
 {
-  $LIST( <51a:close_info_elem_list>) = SXML_LTL(
+  $LIST( <51a:close_info_elem_list>) = ast_list(
     $LIST(<51a:close_info_elem_list>'),
-    ",",
-    $LIST(<51b:close_info_elem>));
+    $LIST(<51b:close_info_elem>)
+  );
 }     
 
 *------------------------------------------------------------------------------
@@ -3791,10 +3773,10 @@ $LIST( <52:inquire_statement>)
 
 $LIST( <52a:inquire_info_elem_list>)
 {
-  $LIST( <52a:inquire_info_elem_list>) = SXML_LTL(
+  $LIST( <52a:inquire_info_elem_list>) = ast_list(
     $LIST(<52a:inquire_info_elem_list>'),
-    ",",
-    $LIST(<52b:inquire_info_elem>));
+    $LIST(<52b:inquire_info_elem>)
+  );
 }    
 
 *------------------------------------------------------------------------------
@@ -4057,10 +4039,10 @@ $LIST( <53:backspace_statement>)
 
 $LIST( <53a:backspace_or_endfile_or_rewind_info_elem_list>)
 {
-  $LIST( <53a:backspace_or_endfile_or_rewind_info_elem_list>) = SXML_LTL(
+  $LIST( <53a:backspace_or_endfile_or_rewind_info_elem_list>) = ast_list(
     $LIST(<53a:backspace_or_endfile_or_rewind_info_elem_list>'),
-    ",",
-    $LIST(<53b:backspace_or_endfile_or_rewind_info_elem>));
+    $LIST(<53b:backspace_or_endfile_or_rewind_info_elem>)
+  );
 }    
 
 *------------------------------------------------------------------------------
@@ -4319,10 +4301,10 @@ $LIST( <60:fmt_specification>)
 
 $LIST( <60a:fmt_spec_list>)    
 {
-  $LIST( <60a:fmt_spec_list>) = SXML_LTL(
+  $LIST( <60a:fmt_spec_list>) = ast_list(
     $LIST(<60a:fmt_spec_list>'),
-    ",",
-    $LIST(<60c:fmt_spec>));
+    $LIST(<60c:fmt_spec>)
+  );
 }    
 
 *------------------------------------------------------------------------------
@@ -4344,10 +4326,10 @@ $LIST( <60a:fmt_spec_list>)
 
 $LIST( <60a:fmt_spec_list>)    
 {
-  $LIST( <60a:fmt_spec_list>) = SXML_LTL(
+  $LIST( <60a:fmt_spec_list>) = ast_list(
     $LIST(<60b:fmt_spec_list_/:>),
-    ",",
-    $LIST(<60c:fmt_spec>));
+    $LIST(<60c:fmt_spec>)
+  );
 }    
 
 *------------------------------------------------------------------------------
@@ -4379,10 +4361,10 @@ $LIST( <60b:fmt_spec_list_/:>)
 
 $LIST( <60b:fmt_spec_list_/:>)    
 {
-  $LIST( <60b:fmt_spec_list_/:>) = SXML_LTL(
+  $LIST( <60b:fmt_spec_list_/:>) = ast_list(
     $LIST(<60b:fmt_spec_list_/:>'),
-    ",",
-    $LIST(<60d:fmt_spec_/:>));
+    $LIST(<60d:fmt_spec_/:>)
+  );
 }    
 
 *------------------------------------------------------------------------------
@@ -4392,10 +4374,10 @@ $LIST( <60b:fmt_spec_list_/:>)
 
 $LIST( <60b:fmt_spec_list_/:>)    
 {
-  $LIST( <60b:fmt_spec_list_/:>) = SXML_LTL(
+  $LIST( <60b:fmt_spec_list_/:>) = ast_list(
     $LIST(<60a:fmt_spec_list>),
-    ",",
-    $LIST(<60d:fmt_spec_/:>));
+    $LIST(<60d:fmt_spec_/:>)
+  );
 }    
 
 *------------------------------------------------------------------------------
@@ -5062,10 +5044,10 @@ $LIST( <71:call_statement>)
 
 $LIST( <71a:actual_argument_list>)
 {
-  $LIST( <71a:actual_argument_list>) = SXML_LTL(
+  $LIST( <71a:actual_argument_list>) = ast_list(
     $LIST( <71a:actual_argument_list>'),
-    ",\n",
-    $LIST( <71b:actual_argument>) );
+    $LIST( <71b:actual_argument>) 
+  );
 }
 
 *------------------------------------------------------------------------------
@@ -5224,9 +5206,8 @@ $LIST( <74a:non_typed_expression>)
 
 $LIST( <74b:expression_list>)
 {
-  $LIST( <74b:expression_list>) = SXML_LTL(
+  $LIST( <74b:expression_list>) = ast_list(
     $LIST( <74b:expression_list>'),
-    ",\n",
     $LIST( <74:expression>) 
   );
 }    
@@ -6576,9 +6557,8 @@ $LIST(<99:symbolic_name>)
 
 $LIST(<99a:symbolic_name_list>)
 {
-  $LIST(<99a:symbolic_name_list>) = SXML_LTL(
+  $LIST(<99a:symbolic_name_list>) = ast_list(
     $LIST( <99a:symbolic_name_list>'),
-    ",\n",
     $LIST(<99:symbolic_name>) 
   );
 }
@@ -6881,9 +6861,8 @@ $NAME( <110:label>)
 
 $LIST(<110a:label_ref_list>)
 {
-  $LIST(<110a:label_ref_list>) = SXML_LTL(
+  $LIST(<110a:label_ref_list>) = ast_list(
     $LIST( <110a:label_ref_list>'),
-    ",\n",
     $LIST( <110b:label_ref>)
   );
 }

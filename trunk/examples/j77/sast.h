@@ -1896,3 +1896,13 @@ SXML_TYPE_LIST ast_sign(
   );
 }
 
+/* -------------------------------------------------------------------------
+ * expression sign
+ */
+SXML_TYPE_LIST ast_list(
+        SXML_TYPE_LIST tail,
+        SXML_TYPE_LIST head) {
+  
+  return SXML_LTL(tail, ",", head);
+}
+
