@@ -6913,8 +6913,8 @@ $LIST(<110a:label_ref_list>)
 
 $LIST( <110b:label_ref>)
 {
-  $LIST( <110b:label_ref>) = ast_text_to_map(
-    "label_ref",
+  $LIST( <110b:label_ref>) = ast_label_ref(
+    LOCATION(0),
     $ptext ("%unsigned_int_constant")
   );
 }    

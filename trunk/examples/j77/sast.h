@@ -1947,3 +1947,17 @@ SXML_TYPE_LIST ast_list(
   return SXML_LTL(tail, ",", head);
 }
 
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_label_ref(
+              SXML_TYPE_LIST location,
+              SXML_TYPE_TEXT value) {
+  return JSON_MAP(
+    SXML_LLTL(
+      ast_tag_("label_ref"),
+      location,
+      ",\n",
+      JSON_KQ("label_ref_value", value)
+    )
+  );
+}
