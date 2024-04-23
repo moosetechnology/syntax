@@ -1784,14 +1784,16 @@ SXML_TYPE_LIST ast_else_(
  */
 SXML_TYPE_LIST ast_block_if_statement(
               SXML_TYPE_LIST location,
+              SXML_TYPE_LIST then_token_location,
               SXML_TYPE_LIST condition,
               SXML_TYPE_LIST then_statements,
               SXML_TYPE_LIST else_block
               ) {
 
-  return SXML_LTLLL(
+  return SXML_LTLLLL(
     ast_abstract_statement("block_if_statement", location),
     ",\n",
+    then_token_location,
     JSON_KU_("condition", condition),
     JSON_KU_("then_statements", JSON_ARRAY(then_statements)),
     JSON_KU("else_block", else_block)
@@ -1805,14 +1807,16 @@ SXML_TYPE_LIST ast_block_if_statement(
  * - then_statements, this is an array of statements
  * - else_block, this is a ELSE node (containing statements)
  */
-SXML_TYPE_LIST ast_else_if_else(
+SXML_TYPE_LIST ast_else_if_else(SXML_TYPE_LIST location,
               SXML_TYPE_LIST else_if_line,
               SXML_TYPE_LIST then_statements,
               SXML_TYPE_LIST else_block
               ) {
 
     return JSON_MAP(
-      SXML_LLL (
+      SXML_LTLLL (
+        location,
+        ",\n",
         else_if_line,
         JSON_KU_("then_statements", JSON_ARRAY(then_statements)),
         JSON_KU("else_block", else_block)
@@ -1829,13 +1833,15 @@ SXML_TYPE_LIST ast_else_if_else(
  */
 SXML_TYPE_LIST ast_else_if_line(
               SXML_TYPE_LIST location_else,
+              SXML_TYPE_LIST location_then,
               SXML_TYPE_TEXT label,
               SXML_TYPE_LIST condition
               ) {
 
-    return SXML_LL(
-        ast_else_(location_else, "else_if", label),
-	JSON_KU_("condition", condition)
+    return SXML_LLL(
+      ast_else_(location_else, "else_if", label),
+      location_then,
+      JSON_KU_("condition", condition)
     );
 }
 
@@ -1854,13 +1860,16 @@ SXML_TYPE_LIST ast_else_line(
 
 /* -------------------------------------------------------------------------
  */
-SXML_TYPE_LIST ast_else_block(SXML_TYPE_LIST label,
+SXML_TYPE_LIST ast_else_block(SXML_TYPE_LIST location,
+              SXML_TYPE_LIST label,
               SXML_TYPE_LIST else_statements,
               SXML_TYPE_LIST end_if) {
 
     if (label == NULL){
       return JSON_MAP(
-        SXML_LL(
+        SXML_LTLL(
+          location,
+          ",\n",
           JSON_KU_("statement_list", JSON_ARRAY(else_statements)),
           JSON_KU ("end_if", end_if)
         )
@@ -1868,7 +1877,9 @@ SXML_TYPE_LIST ast_else_block(SXML_TYPE_LIST label,
     }
     else {
       return JSON_MAP(
-        SXML_LLL(
+        SXML_LTLLL(
+          location,
+          ",\n",
           label,
           JSON_KU_("statement_list", JSON_ARRAY(else_statements)),
           JSON_KU ("end_if", end_if)

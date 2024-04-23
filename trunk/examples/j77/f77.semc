@@ -2639,7 +2639,8 @@ $LIST(<35:logical_if_statement>)
   $LIST(<35:logical_if_statement>) = ast_logical_if_statement(
     LOCATION(0),
     $LIST(<74:expression>), 
-    $LIST(<7:executable_statement>)); 
+    $LIST(<7:executable_statement>)
+  ); 
 }    
 
 *******************************************************************************
@@ -2660,6 +2661,7 @@ $LIST(<36:block_if_statement>)
 {
   $LIST(<36:block_if_statement>) = ast_block_if_statement(
     LOCATION(0),
+    TOKEN_LOCATION("then_start",2),
     $LIST(<74:expression>),
     $LIST(<2c:statement_list>), 
     $LIST(<36a:else_blocks>)
@@ -2676,6 +2678,7 @@ $LIST(<36:block_if_statement>)
 {
   $LIST(<36:block_if_statement>) = ast_block_if_statement(
     LOCATION(0),
+    TOKEN_LOCATION("then_start",2),
     $LIST(<74:expression>),
     NULL, 
     $LIST(<36a:else_blocks>)
@@ -2701,6 +2704,7 @@ $LIST(<36:block_if_statement>)
 $LIST(<36a:else_blocks>)
 {
   $LIST(<36a:else_blocks>) = ast_else_block(
+  	LOCATION(0),
     NULL,
     NULL,
     $LIST(<39:end_if_statement>)
@@ -2717,6 +2721,7 @@ $LIST(<36a:else_blocks>)
 $LIST(<36a:else_blocks>)
 {
   $LIST(<36a:else_blocks>) = ast_else_block(
+  	LOCATION(0),
     $LIST(<38:else_statement>),
     $LIST(<2c:statement_list>),
     $LIST(<39:end_if_statement>)
@@ -2732,6 +2737,7 @@ $LIST(<36a:else_blocks>)
 $LIST(<36a:else_blocks>)
 {
   $LIST(<36a:else_blocks>) =  ast_else_block(
+  	LOCATION(0),
     $LIST(<38:else_statement>),
     NULL,
     $LIST(<39:end_if_statement>)
@@ -2748,6 +2754,7 @@ $LIST(<36a:else_blocks>)
 $LIST(<36a:else_blocks>)
 {
   $LIST(<36a:else_blocks>) = ast_else_if_else(
+  	LOCATION(0),
     $LIST(<37:else_if_statement>),
     $LIST(<2c:statement_list>),
     $LIST(<36a:else_blocks>)
@@ -2763,6 +2770,7 @@ $LIST(<36a:else_blocks>)
 $LIST(<36a:else_blocks>)
 {
   $LIST(<36a:else_blocks>) = ast_else_if_else(
+  	LOCATION(0),
     $LIST(<37:else_if_statement>),
     NULL,
     $LIST(<36a:else_blocks>)
@@ -2778,6 +2786,7 @@ $LIST(<37:else_if_statement>)
 {
   $LIST(<37:else_if_statement>) = ast_else_if_line(
     LOCATION(0),
+    TOKEN_LOCATION("then_start", 4),
     NULL,
     $LIST(<74:expression>)
   );
@@ -2792,6 +2801,7 @@ $LIST(<37:else_if_statement>)
 {
   $LIST(<37:else_if_statement>) = ast_else_if_line(
     LOCATION(0),
+    TOKEN_LOCATION("then_start", 4),
     $NAME(<110:label>),
     $LIST(<74:expression>)
   );
