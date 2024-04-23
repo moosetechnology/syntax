@@ -1561,17 +1561,49 @@ SXML_TYPE_LIST ast_logical_factor( SXML_TYPE_TEXT negated,
  * - limit value of iv
  * - increment value of iv (if omitted, a default value of 1 is assumed)
  */
-SXML_TYPE_LIST ast_data_imply_do_list( SXML_TYPE_LIST dlist,
+SXML_TYPE_LIST ast_data_imply_do_list( SXML_TYPE_LIST location,
+                SXML_TYPE_LIST dlist,
                 SXML_TYPE_LIST do_parameters) {
 
   return JSON_MAP(
-    SXML_LLL (
+    SXML_LLTLL (
       ast_tag_("data_imply_do_list"),
-      JSON_KU_("dlist", JSON_ARRAY(dlist)),
+      location,
+      ",\n",
+      dlist,
       do_parameters
     )
   );
 }
+
+
+/* -------------------------------------------------------------------------
+ * implied list assigned variable (array element name and implied DO list)
+ */
+SXML_TYPE_LIST ast_implied_do_assigned_variable( SXML_TYPE_LIST location,
+                SXML_TYPE_LIST variable) {
+
+  return JSON_KU(
+    "implied_do_assigned_variable",
+    JSON_MAP(
+      SXML_LTL(
+        location,
+        ",\n",
+        JSON_KU("implied_do_assigned_variable_value", variable)
+      )
+    )
+  );
+}
+
+
+/* -------------------------------------------------------------------------
+ * implied do variable 
+ */
+SXML_TYPE_LIST ast_implied_do_variable( SXML_TYPE_LIST variable) {
+
+  return JSON_KU_("implied_do_variable", variable);
+}
+
 
 /* -------------------------------------------------------------------------
  * creates a do loop
@@ -1686,8 +1718,8 @@ SXML_TYPE_LIST ast_do_parameters(SXML_TYPE_LIST init,
     else {
       return SXML_LLL(
         JSON_KU_("init", init),
-	JSON_KU_("limit", limit),
-	JSON_KU("increment", increment)
+	      JSON_KU_("limit", limit),
+	      JSON_KU("increment", increment)
       );
     }
 }
