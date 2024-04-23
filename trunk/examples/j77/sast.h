@@ -862,14 +862,10 @@ SXML_TYPE_LIST ast_assignment_statement( SXML_TYPE_LIST location,
             SXML_TYPE_LIST right) {
     
     return SXML_LTLL(
-    ast_abstract_statement( "assignment_statement", location),
-    ",\n",
-    JSON_KU_(
-      "left",
-      JSON_ARRAY( left)),
-    JSON_KU(
-      "right",
-      JSON_ARRAY( right))
+      ast_abstract_statement( "assignment_statement", location),
+      ",\n",
+      JSON_KU_("left",left),
+      JSON_KU("right",right)
     ); 
 }
 
