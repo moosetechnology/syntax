@@ -1,11 +1,4 @@
 /* -------------------------------------------------------------------------
- */
-SXML_TYPE_LIST ast_empty_string() {
-  return SXML_T("\"\"");
-}
-
-
-/* -------------------------------------------------------------------------
  * ouputs line and column  position
  */
 SXML_TYPE_LIST ast_location( SXML_TYPE_TEXT position_name,
@@ -1430,11 +1423,11 @@ SXML_TYPE_LIST ast_substring(SXML_TYPE_LIST variable,
     variable_or_array = JSON_KU_("array", array);
 
   if (upper_bound == NULL) {
-    upper_bound_safe = ast_empty_string();
+    upper_bound_safe = SXML_T("\"\"");
   } 
 
   if (lower_bound == NULL) {
-    lower_bound_safe = ast_empty_string();
+    lower_bound_safe = SXML_T("\"\"");
   }  
 
 

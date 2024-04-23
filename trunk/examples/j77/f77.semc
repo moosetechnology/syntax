@@ -6527,7 +6527,7 @@ $LIST( <89:substring_name>)
   $LIST( <89:substring_name>) = ast_substring(
     $LIST(<99:symbolic_name>),
     NULL,
-    ast_empty_string(),
+    NULL,
     $LIST(<77b:[integer_expr]>)
   );
 }    
