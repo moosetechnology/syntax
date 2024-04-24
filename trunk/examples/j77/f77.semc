@@ -6520,6 +6520,7 @@ $LIST( <88a:variable_or_array_element_name>)
 $LIST( <89:substring_name>)
 {
   $LIST( <89:substring_name>) = ast_substring(
+  	LOCATION(0),
     $LIST(<99:symbolic_name>),
     NULL,
     $LIST(<74:expression>),
@@ -6535,6 +6536,7 @@ $LIST( <89:substring_name>)
 $LIST( <89:substring_name>)
 {
   $LIST( <89:substring_name>) = ast_substring(
+  	LOCATION(0),
     $LIST(<99:symbolic_name>),
     NULL,
     NULL,
@@ -6550,6 +6552,7 @@ $LIST( <89:substring_name>)
 $LIST( <89:substring_name>)
 {
   $LIST( <89:substring_name>) = ast_substring(
+  	LOCATION(0),
     NULL,
     $LIST(<88b:function_reference_or_array_element_name>),
     $LIST(<77b:[integer_expr]>),
@@ -6587,7 +6590,10 @@ $LIST( <89:substring_name>)
 
 $LIST(<99:symbolic_name>)
 
-	$LIST(<99:symbolic_name>) = ast_symbolic_name(LOCATION(0), $ptext ("%symbolic_name"));
+	$LIST(<99:symbolic_name>) = ast_symbolic_name(
+		LOCATION(0), 
+		$ptext ("%symbolic_name")
+	);
 	
 *******************************************************************************
 

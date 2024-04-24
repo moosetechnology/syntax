@@ -1412,7 +1412,8 @@ SXML_TYPE_LIST ast_dimension_declarator(SXML_TYPE_LIST location,
  * - leftmost character position of the substring 
  * - rightmost character position of the substring 
  */
-SXML_TYPE_LIST ast_substring(SXML_TYPE_LIST variable,
+SXML_TYPE_LIST ast_substring(SXML_TYPE_LIST location,
+              SXML_TYPE_LIST variable,
               SXML_TYPE_LIST array,
               SXML_TYPE_LIST lower_bound,
               SXML_TYPE_LIST upper_bound) {
@@ -1437,8 +1438,10 @@ SXML_TYPE_LIST ast_substring(SXML_TYPE_LIST variable,
 
 
   return JSON_MAP(
-    SXML_LLLL(
+    SXML_LLTLLL(
       ast_tag_("substring"),
+      location,
+      ",\n",
       variable_or_array,
       JSON_KU_("lower_bound", lower_bound_safe),
       JSON_KU ("upper_bound", upper_bound_safe)
