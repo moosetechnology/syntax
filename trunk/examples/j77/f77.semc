@@ -6787,6 +6787,7 @@ $LIST( <107:complex_constant>)
 $LIST( <107a:real_part>)
 {
   $LIST( <107a:real_part>) = ast_complex_constant_real_part(
+  	LOCATION(0),
     NULL,
     $LIST(<105:unsigned_real_constant>)
   );
@@ -6800,6 +6801,7 @@ $LIST( <107a:real_part>)
 $LIST( <107a:real_part>)
 {
   $LIST( <107a:real_part>) = ast_complex_constant_real_part(
+  	LOCATION(0),
     NULL,
     $LIST(<102:unsigned_int_constant>)
   );
@@ -6813,6 +6815,7 @@ $LIST( <107a:real_part>)
 $LIST( <107a:real_part>)
 {
   $LIST( <107a:real_part>) = ast_complex_constant_real_part(
+  	LOCATION(0),
     $LIST(<114:sign>),
     $LIST(<105:unsigned_real_constant>)
   );
@@ -6826,6 +6829,7 @@ $LIST( <107a:real_part>)
 $LIST( <107a:real_part>)
 {
   $LIST( <107a:real_part>) = ast_complex_constant_real_part(
+  	LOCATION(0),
     $LIST(<114:sign>),
     $LIST(<102:unsigned_int_constant>)
   );
