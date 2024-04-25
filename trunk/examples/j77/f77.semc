@@ -5320,7 +5320,11 @@ $LIST( <75:constant_expr>)
 
 $LIST( <75a:non_typed_const_expr>)
 {
-  $LIST( <75a:non_typed_const_expr>) = $LIST(<99:symbolic_name>);
+  $LIST( <75a:non_typed_const_expr>) = ast_const_expression(
+  	"non_typed_const_expr",
+  	LOCATION(0),
+  	$LIST(<99:symbolic_name>) 
+  );
 }    
 
 *------------------------------------------------------------------------------

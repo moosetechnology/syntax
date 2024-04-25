@@ -1196,6 +1196,7 @@ SXML_TYPE_LIST ast_const_expression(
             SXML_TYPE_TEXT type,
             SXML_TYPE_LIST location,
             SXML_TYPE_LIST expression) {
+  
   return JSON_MAP(
     SXML_LLTL(
       ast_tag_(type),
@@ -1333,13 +1334,16 @@ SXML_TYPE_LIST ast_unary_expression( SXML_TYPE_TEXT unary_operator,
 /* -------------------------------------------------------------------------
  * outputs a binary_expression.
  */
-SXML_TYPE_LIST ast_binary_expression( SXML_TYPE_LIST lhs_expression,
+SXML_TYPE_LIST ast_binary_expression( SXML_TYPE_LIST location,
+               SXML_TYPE_LIST lhs_expression,
                SXML_TYPE_LIST binary_operator,
                SXML_TYPE_LIST rhs_expression) {
 
   return JSON_MAP (
-    SXML_LLLL(
+    SXML_LLTLLL(
       ast_tag_( "binary_expression"),
+      location,
+      ",\n",
       JSON_KU_ ( "lhs", lhs_expression),
       JSON_KU_( "operator", binary_operator),
       JSON_KU ( "rhs", rhs_expression) ));
