@@ -1286,6 +1286,23 @@ SXML_TYPE_LIST ast_variable_expression( SXML_TYPE_LIST variable) {
 
 
 /* -------------------------------------------------------------------------
+ * outputs a variable_expression.
+ */
+SXML_TYPE_LIST ast_scalar_variable( SXML_TYPE_LIST location,
+          SXML_TYPE_LIST variable) {
+
+  return JSON_MAP (
+    SXML_LLTL(
+      ast_tag_( "scalar_variable"),
+      location,
+      ",\n",
+      JSON_KU( "variable_name", variable) 
+    )
+  );
+}
+
+
+/* -------------------------------------------------------------------------
  * outputs a parenthesis_expression (expresison between parentheses)
  */
 SXML_TYPE_LIST ast_parenthesis_expression( SXML_TYPE_LIST expression) {
@@ -1470,16 +1487,19 @@ SXML_TYPE_LIST ast_substring(SXML_TYPE_LIST location,
 
 
 /* -------------------------------------------------------------------------
- * outputs an array_element_name qualified by a subscript.
+ * outputs an array_element_name or a function reference qualified by a subscript.
  * - array name 
  * - qualifiers
  */
-SXML_TYPE_LIST ast_array_element_name(SXML_TYPE_LIST name,
+SXML_TYPE_LIST ast_function_reference_or_array_element_name(SXML_TYPE_LIST location,
+              SXML_TYPE_LIST name,
               SXML_TYPE_LIST qualifiers) {
   
   return JSON_MAP(
-    SXML_LLL(
-      ast_tag_("array_element_name"),
+    SXML_LLTLL(
+      ast_tag_("function_reference_or_array_element_name"),
+      location,
+      ",\n",
       JSON_KU_("name", name),
       JSON_KU ("qualifiers_list", JSON_ARRAY(qualifiers))
       )
@@ -1491,11 +1511,14 @@ SXML_TYPE_LIST ast_array_element_name(SXML_TYPE_LIST name,
  * ouputs a funciton_reference
  * - name of the function
  */
-SXML_TYPE_LIST ast_function_reference( SXML_TYPE_LIST name) {
+SXML_TYPE_LIST ast_function_reference( SXML_TYPE_LIST location,
+              SXML_TYPE_LIST name) {
 
   return JSON_MAP(
-    SXML_LL (
+    SXML_LLTL (
         ast_tag_("function_reference"),
+        location,
+        ",\n",
         JSON_KU("name", name)
     )
   );
