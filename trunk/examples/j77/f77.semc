@@ -5369,6 +5369,7 @@ $LIST( <76:arithmetic_expression>)
 $LIST( <76a:arithmetic_expression>)
 {
   $LIST( <76a:arithmetic_expression>) = ast_binary_expression(
+  	LOCATION(0),
     $LIST(<76b:arithmetic_or_non_typed_expression>),
     ast_operator(LOCATION(1), "arithmetic_operator", "+"),
     $LIST(<76b:arithmetic_or_non_typed_expression>')
@@ -5383,6 +5384,7 @@ $LIST( <76a:arithmetic_expression>)
 $LIST( <76a:arithmetic_expression>)
 {
   $LIST( <76a:arithmetic_expression>) = ast_binary_expression(
+  	LOCATION(0),
     $LIST(<76b:arithmetic_or_non_typed_expression>),
     ast_operator(LOCATION(1), "arithmetic_operator", "-"),
     $LIST(<76b:arithmetic_or_non_typed_expression>')
@@ -5397,6 +5399,7 @@ $LIST( <76a:arithmetic_expression>)
 $LIST( <76a:arithmetic_expression>)
 {
   $LIST( <76a:arithmetic_expression>) = ast_binary_expression(
+  	LOCATION(0),
     $LIST(<76b:arithmetic_or_non_typed_expression>),
     ast_operator(LOCATION(1), "arithmetic_operator", "*"),
     $LIST(<76b:arithmetic_or_non_typed_expression>')
@@ -5411,6 +5414,7 @@ $LIST( <76a:arithmetic_expression>)
 $LIST( <76a:arithmetic_expression>)
 {
   $LIST( <76a:arithmetic_expression>) = ast_binary_expression(
+  	LOCATION(0),
     $LIST(<76b:arithmetic_or_non_typed_expression>),
     ast_operator(LOCATION(1), "arithmetic_operator", "/"),
     $LIST(<76b:arithmetic_or_non_typed_expression>')
@@ -5425,6 +5429,7 @@ $LIST( <76a:arithmetic_expression>)
 $LIST( <76a:arithmetic_expression>)
 {
   $LIST( <76a:arithmetic_expression>) = ast_binary_expression(
+  	LOCATION(0),
     $LIST(<76b:arithmetic_or_non_typed_expression>),
     ast_operator(LOCATION(1), "arithmetic_operator", "**"),
     $LIST(<76b:arithmetic_or_non_typed_expression>')
@@ -5583,6 +5588,7 @@ $LIST( <79:arithmetic_const_expr>)
 $LIST( <79a:arithmetic_const_expr>)
 {
   $LIST( <79a:arithmetic_const_expr>) = ast_binary_expression(
+  	LOCATION(0),
     $LIST(<79b:arithmetic_or_non_typed_const_expr>),
     ast_operator(LOCATION(1), "arithmetic_operator", "+"),
     $LIST(<79b:arithmetic_or_non_typed_const_expr>')
@@ -5597,6 +5603,7 @@ $LIST( <79a:arithmetic_const_expr>)
 $LIST( <79a:arithmetic_const_expr>)
 {
   $LIST( <79a:arithmetic_const_expr>) = ast_binary_expression(
+  	LOCATION(0),
     $LIST(<79b:arithmetic_or_non_typed_const_expr>),
     ast_operator(LOCATION(1), "arithmetic_operator", "-"),
     $LIST(<79b:arithmetic_or_non_typed_const_expr>')
@@ -5611,6 +5618,7 @@ $LIST( <79a:arithmetic_const_expr>)
 $LIST( <79a:arithmetic_const_expr>)
 {
   $LIST( <79a:arithmetic_const_expr>) = ast_binary_expression(
+  	LOCATION(0),
     $LIST(<79b:arithmetic_or_non_typed_const_expr>),
     ast_operator(LOCATION(1), "arithmetic_operator", "*"),
     $LIST(<79b:arithmetic_or_non_typed_const_expr>')
@@ -5625,6 +5633,7 @@ $LIST( <79a:arithmetic_const_expr>)
 $LIST( <79a:arithmetic_const_expr>)
 {
   $LIST( <79a:arithmetic_const_expr>) = ast_binary_expression(
+  	LOCATION(0),
     $LIST(<79b:arithmetic_or_non_typed_const_expr>),
     ast_operator(LOCATION(1), "arithmetic_operator", "/"),
     $LIST(<79b:arithmetic_or_non_typed_const_expr>')
@@ -5639,6 +5648,7 @@ $LIST( <79a:arithmetic_const_expr>)
 $LIST( <79a:arithmetic_const_expr>)
 {
   $LIST( <79a:arithmetic_const_expr>) = ast_binary_expression(
+  	LOCATION(0),
     $LIST(<79b:arithmetic_or_non_typed_const_expr>),
     ast_operator(LOCATION(1), "arithmetic_operator", "**"),
     $LIST(<79b:arithmetic_or_non_typed_const_expr>')
@@ -5718,6 +5728,7 @@ $LIST( <80:int_constant_expr>)
 $LIST( <80a:int_constant_expr>)
 {
   $LIST( <80a:int_constant_expr>) = ast_binary_expression(
+  	LOCATION(0),
     $LIST( <80a:int_constant_expr>' ),
     ast_operator(LOCATION(1), "arithmetic_operator", "+"),
     $LIST( <80a:int_constant_expr>'') );
@@ -5731,6 +5742,7 @@ $LIST( <80a:int_constant_expr>)
 $LIST( <80a:int_constant_expr>)
 {
   $LIST( <80a:int_constant_expr>) = ast_binary_expression(
+  	LOCATION(0),
     $LIST( <80a:int_constant_expr>' ),
     ast_operator(LOCATION(1), "arithmetic_operator", "-"),
     $LIST( <80a:int_constant_expr>'') );
@@ -5744,6 +5756,7 @@ $LIST( <80a:int_constant_expr>)
 $LIST( <80a:int_constant_expr>)
 {
   $LIST( <80a:int_constant_expr>) = ast_binary_expression(
+  	LOCATION(0),
     $LIST( <80a:int_constant_expr>' ),
     ast_operator(LOCATION(1), "arithmetic_operator", "*"),
     $LIST( <80a:int_constant_expr>'') );
@@ -5757,6 +5770,7 @@ $LIST( <80a:int_constant_expr>)
 $LIST( <80a:int_constant_expr>)
 {
   $LIST( <80a:int_constant_expr>) = ast_binary_expression(
+  	LOCATION(0),
     $LIST( <80a:int_constant_expr>' ),
     ast_operator(LOCATION(1), "arithmetic_operator", "/"),
     $LIST( <80a:int_constant_expr>'') );
@@ -5770,6 +5784,7 @@ $LIST( <80a:int_constant_expr>)
 $LIST( <80a:int_constant_expr>)
 {
   $LIST( <80a:int_constant_expr>) = ast_binary_expression(
+  	LOCATION(0),
     $LIST( <80a:int_constant_expr>' ),
     ast_operator(LOCATION(1), "arithmetic_operator", "**"),
     $LIST( <80a:int_constant_expr>'') );
@@ -5864,6 +5879,7 @@ $LIST( <81:dim_bound_expr>)
 $LIST( <82:character_expression>)
 {
   $LIST( <82:character_expression>) = ast_binary_expression(
+  	LOCATION(0),
     $LIST(<82a:character_or_non_typed_expression>),
     ast_operator(LOCATION(1), "character_operator", "//"),
     $LIST(<82a:character_or_non_typed_expression>')  
@@ -5929,7 +5945,8 @@ $LIST( <82a:character_or_non_typed_expression>)
 
 $LIST( <83:character_const_expr>)
 {
-  $LIST( <83:character_const_expr>) = ast_binary_expression(
+  $LIST( <83:character_const_expr>) = ast_binary_expression(	
+  	LOCATION(0),
     $LIST(<83:character_const_expr>'),
     ast_operator(LOCATION(1), "character_operator", "//"),
     $LIST(<83:character_const_expr>'')
@@ -5973,6 +5990,7 @@ $LIST( <83:character_const_expr>)
 $LIST( <84:logical_expression>)
 {
   $LIST( <84:logical_expression>) = ast_binary_expression(
+  	LOCATION(0),
     $LIST(<84b:logical_or_non_typed_expression>),
     ast_operator(LOCATION(1), "logical_operator", ".AND."),
     $LIST(<84b:logical_or_non_typed_expression>')
@@ -5987,6 +6005,7 @@ $LIST( <84:logical_expression>)
 $LIST( <84:logical_expression>)
 {
   $LIST( <84:logical_expression>) = ast_binary_expression(
+  	LOCATION(0),
     $LIST(<84b:logical_or_non_typed_expression>),
     ast_operator(LOCATION(1), "logical_operator", ".OR."),
     $LIST(<84b:logical_or_non_typed_expression>')
@@ -6001,6 +6020,7 @@ $LIST( <84:logical_expression>)
 $LIST( <84:logical_expression>)
 {
   $LIST( <84:logical_expression>) = ast_binary_expression(
+  	LOCATION(0),
     $LIST(<84b:logical_or_non_typed_expression>),
     ast_operator(LOCATION(1), "logical_operator", ".EQV."),
     $LIST(<84b:logical_or_non_typed_expression>')
@@ -6015,6 +6035,7 @@ $LIST( <84:logical_expression>)
 $LIST( <84:logical_expression>)
 {
   $LIST( <84:logical_expression>) = ast_binary_expression(
+  	LOCATION(0),
     $LIST(<84b:logical_or_non_typed_expression>),
     ast_operator(LOCATION(1), "logical_operator", ".NEQV."),
     $LIST(<84b:logical_or_non_typed_expression>')
@@ -6144,6 +6165,7 @@ $LIST( <84e:logical_or_non_typed_primary>)
 $LIST( <85:logical_const_expr>)
 {
   $LIST( <85:logical_const_expr>) = ast_binary_expression(
+  	LOCATION(0),
     $LIST(<85b:logical_or_non_typed_const_expr>),
     ast_operator(LOCATION(1), "logical_operator", ".AND."),
     $LIST(<85b:logical_or_non_typed_const_expr>')
@@ -6158,6 +6180,7 @@ $LIST( <85:logical_const_expr>)
 $LIST( <85:logical_const_expr>)
 {
   $LIST( <85:logical_const_expr>) = ast_binary_expression(
+  	LOCATION(0),
     $LIST(<85b:logical_or_non_typed_const_expr>),
     ast_operator(LOCATION(1), "logical_operator", ".OR."),
     $LIST(<85b:logical_or_non_typed_const_expr>')
@@ -6172,6 +6195,7 @@ $LIST( <85:logical_const_expr>)
 $LIST( <85:logical_const_expr>)
 {
   $LIST( <85:logical_const_expr>) = ast_binary_expression(
+  	LOCATION(0),
     $LIST(<85b:logical_or_non_typed_const_expr>),
     ast_operator(LOCATION(1), "logical_operator", ".EQV."),
     $LIST(<85b:logical_or_non_typed_const_expr>')
@@ -6186,6 +6210,7 @@ $LIST( <85:logical_const_expr>)
 $LIST( <85:logical_const_expr>)
 {
   $LIST( <85:logical_const_expr>) = ast_binary_expression(
+  	LOCATION(0),
     $LIST(<85b:logical_or_non_typed_const_expr>),
     ast_operator(LOCATION(1), "logical_operator", ".NEQV."),
     $LIST(<85b:logical_or_non_typed_const_expr>')
@@ -6307,6 +6332,7 @@ $LIST( <85e:logical_or_non_typed_const_prim>)
 $LIST( <86:relational_expression>)
 {
   $LIST( <86:relational_expression>) = ast_binary_expression(
+  	LOCATION(0),
     $LIST(<86b:arithmetic_or_character_expression>),
     $LIST(<87:rel_op>),
     $LIST(<86b:arithmetic_or_character_expression>')
@@ -6338,6 +6364,7 @@ $LIST( <86:relational_expression>)
 $LIST( <86a:relational_const_expr>)
 {
   $LIST( <86a:relational_const_expr>) = ast_binary_expression(
+  	LOCATION(0),
     $LIST(<86c:arithmetic_or_character_const_expr>),
     $LIST(<87:rel_op>),
     $LIST(<86c:arithmetic_or_character_const_expr>')
