@@ -1317,16 +1317,35 @@ SXML_TYPE_LIST ast_unary_expression( SXML_TYPE_TEXT unary_operator,
  * outputs a binary_expression.
  */
 SXML_TYPE_LIST ast_binary_expression( SXML_TYPE_LIST lhs_expression,
-               SXML_TYPE_TEXT binary_operator,
+               SXML_TYPE_LIST binary_operator,
                SXML_TYPE_LIST rhs_expression) {
 
   return JSON_MAP (
     SXML_LLLL(
       ast_tag_( "binary_expression"),
       JSON_KU_ ( "lhs", lhs_expression),
-      JSON_KQ_( "operator", binary_operator),
+      JSON_KU_( "operator", binary_operator),
       JSON_KU ( "rhs", rhs_expression) ));
 }
+
+
+/* -------------------------------------------------------------------------
+ * outputs a relational operator
+ */
+SXML_TYPE_LIST ast_operator( SXML_TYPE_LIST location,
+              SXML_TYPE_TEXT tag,
+              SXML_TYPE_TEXT operator) {
+
+  return JSON_MAP (
+    SXML_LLTL(
+      ast_tag_(tag),
+      location,
+      ",\n",
+      JSON_KQ("operator_value", operator) 
+    )
+  );
+}
+
 
 /* -------------------------------------------------------------------------
  * outputs an expression.
