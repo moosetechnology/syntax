@@ -862,22 +862,6 @@ SXML_TYPE_LIST ast_assignment_statement( SXML_TYPE_LIST location,
     ); 
 }
 
-/* -------------------------------------------------------------------------
- * outputs an option in a control_info_elem
- * similar to assignment_statement without the location
- */
-SXML_TYPE_LIST ast_io_option(
-            SXML_TYPE_LIST left,
-            SXML_TYPE_LIST right) {
-    
-    return JSON_MAP(
-      SXML_LLL(
-        ast_tag_( "control_info_option"),
-	JSON_KU_( "symbolic_name", left),
-	JSON_KU( "right", JSON_ARRAY( right))
-      ) ); 
-}
-
 
 /* -------------------------------------------------------------------------
  * outputs a goto_statement
@@ -1128,20 +1112,19 @@ SXML_TYPE_LIST ast_inquire_statement( SXML_TYPE_LIST location,
  * - parameter name (optional)
  * - parameter
  */
-SXML_TYPE_LIST ast_control_info_elem(
+SXML_TYPE_LIST ast_control_info_elem(SXML_TYPE_LIST location,
             SXML_TYPE_TEXT name,
             SXML_TYPE_LIST parameter) {
 
-  if (name == NULL) {
-    return JSON_MAP(
-      JSON_KU("expression", parameter)
-    );
-  }
-  else {
-    return ast_io_option(
-      JSON_MAP( JSON_KQ("name", name)),
-      parameter );
-  }
+  return JSON_MAP(
+    SXML_LLTLL(
+      ast_tag_( "control_info_option"),
+      location,
+      ",\n",
+      JSON_KQ_("control_option_name", name),
+      JSON_KU("control_option_value", parameter)
+    )
+  );
 }
 
 
