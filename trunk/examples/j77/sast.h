@@ -1532,10 +1532,14 @@ SXML_TYPE_LIST ast_function_reference( SXML_TYPE_LIST location,
 /* -------------------------------------------------------------------------
  */
 SXML_TYPE_LIST ast_text_to_map(
+              SXML_TYPE_LIST location,
               SXML_TYPE_TEXT tag,
               SXML_TYPE_TEXT obj) {
   return JSON_MAP(
-    JSON_KQ(tag, obj)
+    SXML_LL(
+      JSON_KQ_(tag, obj),
+      location
+    )
   );
 }
 

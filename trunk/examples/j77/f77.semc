@@ -1336,7 +1336,11 @@ $LIST( <16e:last_upper_dimension_bound>)
 {
   $LIST( <16e:last_upper_dimension_bound>) = ast_literal_expression(
   	LOCATION(0),
-  	ast_text_to_map("asterisk", "*")
+  	ast_text_to_map(
+  		LOCATION(0),
+  		"asterisk", 
+  		"*"
+  	)
   );
 }
 
@@ -1909,7 +1913,11 @@ $LIST(<21d:implicit_elem>)
 
 $LIST( <22:len_specification>)
 {
-  $LIST( <22:len_specification>) = ast_text_to_map("asterisk", "*");
+  $LIST( <22:len_specification>) = ast_text_to_map(
+  	LOCATION(1),
+  	"asterisk", 
+  	"*"
+  );
 }
 
 *------------------------------------------------------------------------------
@@ -3129,7 +3137,7 @@ $LIST( <43:pause_statement>)
   $LIST( <43:pause_statement>) = ast_abstract_statement_with_argument(
     "pause_statement",
     NULL,
-    LOCATION(0)
+    LOCATION(0)pha
   );
 }
 
@@ -4230,8 +4238,11 @@ $LIST( <56:unit_identifier>)
 
 $LIST( <56:unit_identifier>)
 {
-  $LIST( <56:unit_identifier>) = 
-    ast_text_to_map("asterisk", "*");
+  $LIST( <56:unit_identifier>) = ast_text_to_map(
+  	LOCATION(0),
+  	"asterisk", 
+  	"*"
+  );
 }
 
 *******************************************************************************
@@ -4274,8 +4285,10 @@ $LIST( <57:format_identifier>)
 
 $LIST( <57:format_identifier>)
 {
-  $LIST( <57:format_identifier>) = 
-    ast_text_to_map("asterisk", "*");
+  $LIST( <57:format_identifier>) = ast_text_to_map(
+  	LOCATION(0),
+  	"asterisk", "*"
+  );
 }    
 
 *******************************************************************************
