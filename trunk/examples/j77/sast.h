@@ -1667,14 +1667,14 @@ SXML_TYPE_LIST ast_do_loop(
   if (statement_list == NULL){
     return SXML_LL(
       do_statement,
-      end_do
-      );
+      JSON_KU("end_do", end_do)
+    );
   }
   else {
     return SXML_LLL(
       do_statement,
       JSON_KU_("statement_list", JSON_ARRAY(statement_list)),
-      end_do
+      JSON_KU("end_do", end_do)
     );
   }
 }
@@ -1732,20 +1732,25 @@ SXML_TYPE_LIST ast_do_statement(
  */
 SXML_TYPE_LIST ast_do_while_statement(
             SXML_TYPE_LIST location,
+            SXML_TYPE_LIST location_while,
             SXML_TYPE_LIST statement_number,
             SXML_TYPE_LIST logical_expression) {
 
   if (statement_number == NULL){
-    return SXML_LTL(
+    return SXML_LTLTL(
       ast_abstract_statement( "do_statement", location),
+      ",\n",
+      location_while,
       ",\n",
       JSON_KU_ ("loop_control_expression", logical_expression) 
     );
   }
 
-  return SXML_LTLL(
+  return SXML_LTLTLL(
     ast_abstract_statement( "do_statement", location),
     ",\n",
+    location_while,
+      ",\n",
     JSON_KU_ ("statement_number", statement_number),
     JSON_KU_ ("loop_control_expression", logical_expression) 
   );
@@ -1776,10 +1781,17 @@ SXML_TYPE_LIST ast_do_parameters(SXML_TYPE_LIST init,
 
 /* -------------------------------------------------------------------------
  */
-SXML_TYPE_LIST ast_end_do(SXML_TYPE_TEXT label) {
+SXML_TYPE_LIST ast_end_do(SXML_TYPE_LIST location,
+              SXML_TYPE_TEXT label) {
   
-    return JSON_KU(
-      "end_do", JSON_MAP(
+    if (label == NULL) {
+      return JSON_MAP(location);
+    }
+
+    return JSON_MAP(
+      SXML_LTL(
+        location,
+        ",\n",
         JSON_KQ("label", label)
       )
     );
@@ -1802,7 +1814,7 @@ SXML_TYPE_LIST ast_logical_if_statement(
     ",\n",
     JSON_KU_ ("expression", expression),
     JSON_KU ("statement", JSON_MAP(statement))
-    );
+  );
 }
 
 

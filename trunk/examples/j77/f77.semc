@@ -2796,7 +2796,7 @@ $LIST(<37:else_if_statement>)
 {
   $LIST(<37:else_if_statement>) = ast_else_if_line(
     LOCATION(0),
-    TOKEN_LOCATION("then_start", 4),
+    TOKEN_LOCATION("then_start", 5),
     NULL,
     $LIST(<74:expression>)
   );
@@ -2810,8 +2810,8 @@ $LIST(<37:else_if_statement>)
 $LIST(<37:else_if_statement>)
 {
   $LIST(<37:else_if_statement>) = ast_else_if_line(
-    LOCATION(0),
-    TOKEN_LOCATION("then_start", 4),
+    LOCATION(1),
+    TOKEN_LOCATION("then_start", 6),
     $NAME(<110:label>),
     $LIST(<74:expression>)
   );
@@ -2826,7 +2826,8 @@ $LIST(<38:else_statement>)
 {
   $LIST(<38:else_statement>) = ast_else_line(
     LOCATION(0),
-    NULL);
+    NULL
+  );
 }
 
 *------------------------------------------------------------------------------
@@ -2911,7 +2912,7 @@ $LIST(<40a:do_loop>)
    $LIST(<40a:do_loop>) = ast_do_loop(
      $LIST(<40:do_statement>), 
      $LIST(<2c:statement_list>),
-     ast_end_do("")
+     ast_end_do(LOCATION(2), NULL)
    );
  }
 
@@ -2929,9 +2930,10 @@ $LIST(<40a:do_loop>)
 {
    $LIST(<40a:do_loop>) = ast_do_loop(
    	ast_do_while_statement(
-    	  LOCATION(0),
-	  NULL, 
-	  $LIST(<84:logical_expression>)
+    	  LOCATION(2),
+    	  TOKEN_LOCATION("while_pos", 3),
+	  		NULL, 
+	  		$LIST(<84:logical_expression>)
   	),
   	$LIST(<2c:statement_list>),
   	$LIST(<40c:end_do>)
@@ -2953,10 +2955,10 @@ $LIST(<40a:do_loop>)
 printf("<2c:statement_list>\n");
    $LIST(<40a:do_loop>) = ast_do_loop(
    	ast_do_statement(
-    	  LOCATION(0),
-	  NULL, 
-	  $LIST(<99:symbolic_name>), 
-	  $LIST(<40b:do_parameters>)
+    	LOCATION(0),
+	  	NULL, 
+	  	$LIST(<99:symbolic_name>), 
+	  	$LIST(<40b:do_parameters>)
   	),
   	$LIST(<2c:statement_list>),
   	$LIST(<40c:end_do>)
@@ -3002,7 +3004,8 @@ $LIST(<40:do_statement>)
 $LIST(<40:do_statement>)
 {
   $LIST(<40:do_statement>) = ast_do_while_statement(
-    LOCATION(0), 
+    LOCATION(0),
+    TOKEN_LOCATION("while_pos", 2), 
     $LIST(<110b:label_ref>), 
     $LIST(<84:logical_expression>)
   );
@@ -3017,7 +3020,8 @@ $LIST(<40:do_statement>)
 $LIST(<40:do_statement>)
 {
   $LIST(<40:do_statement>) = ast_do_while_statement(
-    LOCATION(0), 
+    LOCATION(0),
+    TOKEN_LOCATION("while_pos", 3), 
     $LIST(<110b:label_ref>), 
     $LIST(<84:logical_expression>)
   );
@@ -3030,7 +3034,10 @@ $LIST(<40:do_statement>)
 
 $LIST(<40c:end_do>)
 {
-  $LIST(<40c:end_do>) = ast_end_do("");
+  $LIST(<40c:end_do>) = ast_end_do(
+  	LOCATION(0),
+  	NULL
+  );
 }
 
 *------------------------------------------------------------------------------
@@ -3040,6 +3047,7 @@ $LIST(<40c:end_do>)
 $LIST(<40c:end_do>)
 {
   $LIST(<40c:end_do>) = ast_end_do(
+  	LOCATION(1),
     $NAME(<110:label>)
   );
 }
