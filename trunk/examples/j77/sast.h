@@ -1108,13 +1108,13 @@ SXML_TYPE_LIST ast_inquire_statement( SXML_TYPE_LIST location,
 
 
 /* -------------------------------------------------------------------------
- * outputs a parameter of a write_statement. possible parameters UNIT, FMT, IOSTAT, REC, ERR
- * - parameter name (optional)
- * - parameter
+ * outputs an option of a read/open/write/rewind and other statements. possible parameters UNIT, FMT, IOSTAT, REC, ERR
+ * - option name
+ * - option value
  */
 SXML_TYPE_LIST ast_control_info_elem(SXML_TYPE_LIST location,
             SXML_TYPE_TEXT name,
-            SXML_TYPE_LIST parameter) {
+            SXML_TYPE_LIST value) {
 
   return JSON_MAP(
     SXML_LLTLL(
@@ -1122,7 +1122,26 @@ SXML_TYPE_LIST ast_control_info_elem(SXML_TYPE_LIST location,
       location,
       ",\n",
       JSON_KQ_("control_option_name", name),
-      JSON_KU("control_option_value", parameter)
+      JSON_KU("control_option_value", value)
+    )
+  );
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a unit parameter. separated from the options above, since here it omits [UNIT = ] part
+ * could be an integer, * or substring. In two later cases [UNIT = ] would be a syntactical error
+ * - option value
+ */
+SXML_TYPE_LIST ast_unit_identifier(SXML_TYPE_LIST location,
+            SXML_TYPE_LIST parameter) {
+
+  return JSON_MAP(
+    SXML_LLTL(
+      ast_tag_( "unit_control_option"),
+      location,
+      ",\n",
+      JSON_KU("unit_option_value", parameter)
     )
   );
 }
