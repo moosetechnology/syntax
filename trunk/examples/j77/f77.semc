@@ -4402,9 +4402,10 @@ $LIST( <60a:fmt_spec_list>)
 
 $LIST( <60a:fmt_spec_list>)    
 {
-  $LIST( <60a:fmt_spec_list>) = SXML_LL(
+  $LIST( <60a:fmt_spec_list>) = ast_list(
     $LIST(<60b:fmt_spec_list_/:>),
-    $LIST(<60c:fmt_spec>));
+    $LIST(<60c:fmt_spec>)
+   );
 }    
 
 *------------------------------------------------------------------------------
@@ -4437,9 +4438,10 @@ $LIST( <60a:fmt_spec_list>)
 
 $LIST( <60b:fmt_spec_list_/:>)    
 {
-  $LIST( <60b:fmt_spec_list_/:>) = SXML_LL(
+  $LIST( <60b:fmt_spec_list_/:>) = ast_list(
     $LIST(<60b:fmt_spec_list_/:>'),
-    $LIST(<60d:fmt_spec_/:>));
+    $LIST(<60d:fmt_spec_/:>)
+  );
 }    
 
 *------------------------------------------------------------------------------
@@ -4570,9 +4572,11 @@ $LIST( <60e:repeatable_edit_descriptor>)
   	LOCATION(0),
   	"repeatable_edit_descriptor",
   	"integer_edit",
- 		SXML_TT(
+ 		SXML_QUOTED_LIST(
+ 			SXML_TT(
     	"I",
     	$NAME(<62:w>)
+    	)
     )
   );
 }
@@ -4588,11 +4592,13 @@ $LIST( <60e:repeatable_edit_descriptor>)
   	LOCATION(0),
   	"repeatable_edit_descriptor",
   	"integer_edit",
-  	SXML_TTTT(
-    	"I",
-    	$NAME(<62:w>),
-    	".",
-    	$NAME(<67:m>)
+  	SXML_QUOTED_LIST(
+ 			SXML_TTTT(
+    		"I",
+    		$NAME(<62:w>),
+    		".",
+    		$NAME(<67:m>)
+    	)
     )
   );
 }
@@ -4608,7 +4614,7 @@ $LIST( <60e:repeatable_edit_descriptor>)
   	LOCATION(0),
   	"repeatable_edit_descriptor",
   	"character_edit",
-  	SXML_T("A")
+  	SXML_T("\"A\"")
   );
 }    
 
@@ -4623,9 +4629,11 @@ $LIST( <60e:repeatable_edit_descriptor>)
   	LOCATION(0),
   	"repeatable_edit_descriptor",
   	"character_edit",
-  	SXML_TT(
-    	"A",
-    	$NAME(<62:w>)
+  	SXML_QUOTED_LIST(
+ 			SXML_TT(
+    		"A",
+    		$NAME(<62:w>)
+    	)
     )
   );
 }    
@@ -4641,9 +4649,11 @@ $LIST( <60e:repeatable_edit_descriptor>)
   	LOCATION(0),
   	"repeatable_edit_descriptor",
   	"logical_edit",
-  	SXML_TT(
-    	"L",
-    	$NAME(<62:w>)
+  	SXML_QUOTED_LIST(
+ 			SXML_TT(
+    		"L",
+    		$NAME(<62:w>)
+    	)
     )
   );
 }    
@@ -4669,10 +4679,7 @@ $LIST( <60h:nonrepeatable_edit_descriptor>)
   	LOCATION(0),
   	"nonrepeatable_edit_descriptor",
   	"scale_control",
-  	SXML_LT(
-    	$LIST(<68:k>),
-    	"P"
-    )
+  	$LIST(<68:k>)
   );
 }    
 
@@ -4683,16 +4690,11 @@ $LIST( <60h:nonrepeatable_edit_descriptor>)
 
 $LIST( <60h:nonrepeatable_edit_descriptor>)    
 {
-  $LIST( <60h:nonrepeatable_edit_descriptor>) = ast_edit_descriptor(
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = ast_scale_float_editing(
   	LOCATION(0),
-  	"nonrepeatable_edit_descriptor",
-  	"scale_control",
-  	SXML_LTLL(
-    	$LIST(<68:k>),
-    	"P",
-    	$LIST(<61a:[repeat_spec]>),
-    	$LIST(<60g:float_editing>)
-    )
+  	$LIST(<68:k>),
+    $LIST(<61a:[repeat_spec]>),
+    $LIST(<60g:float_editing>)
   );
 }    
 
@@ -4707,7 +4709,7 @@ $LIST( <60h:nonrepeatable_edit_descriptor>)
   	LOCATION(0),
   	"nonrepeatable_edit_descriptor",
   	"scale_control",
-  	SXML_T("P")
+  	SXML_T("\"P\"")
   );
 }
 
@@ -4718,15 +4720,11 @@ $LIST( <60h:nonrepeatable_edit_descriptor>)
 
 $LIST(<60h:nonrepeatable_edit_descriptor>)    
 {
-  $LIST(<60h:nonrepeatable_edit_descriptor>) = ast_edit_descriptor(
+  $LIST(<60h:nonrepeatable_edit_descriptor>) = ast_scale_float_editing(
   	LOCATION(0),
-  	"nonrepeatable_edit_descriptor",
-  	"scale_control",
-  	SXML_TLL(
-    	"P",
-    	$LIST(<61a:[repeat_spec]>),
-    	$LIST(<60g:float_editing>)
-    )
+ 		NULL,
+    $LIST(<61a:[repeat_spec]>),
+    $LIST(<60g:float_editing>)
   );
 }    
 
@@ -4756,9 +4754,11 @@ $LIST(<60h:nonrepeatable_edit_descriptor>)
   	LOCATION(0),
   	"nonrepeatable_edit_descriptor",
   	"position_control",
-  	SXML_TT( 
-    	"T",
-     	$NAME(<65:c>)
+  	SXML_QUOTED_LIST(
+ 			SXML_TT( 
+    		"T",
+     		$NAME(<65:c>)
+     	)
     )
   );
 }
@@ -4774,9 +4774,11 @@ $LIST(<60h:nonrepeatable_edit_descriptor>)
   	LOCATION(0),
   	"nonrepeatable_edit_descriptor",
   	"position_control",
-  	SXML_TT(
-  		"T L",
-      $NAME(<65:c>)
+  	SXML_QUOTED_LIST(
+ 			SXML_TT(
+  			"T L",
+      	$NAME(<65:c>)
+      )
     )
   );
 }    
@@ -4792,9 +4794,11 @@ $LIST(<60h:nonrepeatable_edit_descriptor>)
   	LOCATION(0),
   	"nonrepeatable_edit_descriptor",
   	"position_control",
-  	SXML_TT(
-    	"T R",
-    	$NAME(<65:c>)
+  	SXML_QUOTED_LIST(
+ 			SXML_TT(
+    		"T R",
+    		$NAME(<65:c>)
+    	)
     )
   );
 }
@@ -4810,9 +4814,11 @@ $LIST(<60h:nonrepeatable_edit_descriptor>)
   	LOCATION(0),
   	"nonrepeatable_edit_descriptor",
   	"position_control",
-  	SXML_TT(
-    	$NAME(<64:n>),
-    	"X"
+  	SXML_QUOTED_LIST(
+ 			SXML_TT(
+    		$NAME(<64:n>),
+    		"X"
+    	)
     )
   );
 }    
@@ -4828,7 +4834,7 @@ $LIST(<60h:nonrepeatable_edit_descriptor>)
   	LOCATION(0),
   	"nonrepeatable_edit_descriptor",
   	"sign_control",
-  	SXML_T("S")
+  	SXML_T("\"S\"")
   );
 }    
 
@@ -4843,7 +4849,7 @@ $LIST(<60h:nonrepeatable_edit_descriptor>)
   	LOCATION(0),
   	"nonrepeatable_edit_descriptor",
   	"sign_control",
-  	SXML_T("S P")
+  	SXML_T("\"S P\"")
   );
 }    
 
@@ -4858,7 +4864,7 @@ $LIST(<60h:nonrepeatable_edit_descriptor>)
   	LOCATION(0),
   	"nonrepeatable_edit_descriptor",
   	"sign_control",
-  	SXML_T("S S") 
+  	SXML_T("\"S S\"") 
   );
 }    
 
@@ -4873,7 +4879,7 @@ $LIST(<60h:nonrepeatable_edit_descriptor>)
   	LOCATION(0),
   	"nonrepeatable_edit_descriptor",
   	"blank_control",
-  	SXML_T("B N")
+  	SXML_T("\"B N\"")
  	);
 }    
 
@@ -4889,7 +4895,7 @@ $LIST(<60h:nonrepeatable_edit_descriptor>)
   	LOCATION(0),
   	"nonrepeatable_edit_descriptor",
   	"blank_control",
-  	SXML_T("B Z")
+  	SXML_T("\"B Z\"")
   );
 }
 
@@ -4951,11 +4957,13 @@ $LIST(<60g:float_editing>)
   	LOCATION(0),
   	"repeatable_edit_descriptor",
   	"float_edit",
-		SXML_TTTT(
-    	"F",
-    	$NAME(<62:w>),
-    	".",
-    	$NAME(<66:d>)
+  	SXML_QUOTED_LIST(
+ 			SXML_TTTT(
+    		"F",
+    		$NAME(<62:w>),
+    		".",
+    		$NAME(<66:d>)
+    	)
     )
   );
 }    
@@ -4971,11 +4979,13 @@ $LIST(<60g:float_editing>)
   	LOCATION(0),
   	"repeatable_edit_descriptor",
   	"float_edit",
-  	SXML_TTTT(
-    	"D",
-    	$NAME(<62:w>),
-    	".",
-    	$NAME(<66:d>)
+  	SXML_QUOTED_LIST(
+ 			SXML_TTTT(
+    		"D",
+    		$NAME(<62:w>),
+    		".",
+    		$NAME(<66:d>)
+    	)
     )
   );
 }    
@@ -4991,11 +5001,13 @@ $LIST(<60g:float_editing>)
   	LOCATION(0),
   	"repeatable_edit_descriptor",
   	"float_edit",
-  	SXML_TTTT(
-    	"E",
-    	$NAME(<62:w>),
-    	".",
-    	$NAME(<66:d>)
+  	SXML_QUOTED_LIST(
+ 			SXML_TTTT(
+    		"E",
+    		$NAME(<62:w>),
+    		".",
+    		$NAME(<66:d>)
+    	)
     )
   );
 }    
@@ -5011,13 +5023,15 @@ $LIST(<60g:float_editing>)
   	LOCATION(0),
   	"repeatable_edit_descriptor",
   	"float_edit",
-  	SXML_TTTTTT(
-    	"E",
-    	$NAME(<62:w>),
-    	".",
-    	$NAME(<66:d>),
-    	"E",
-    	$NAME(<63:e>)
+  	SXML_QUOTED_LIST(
+ 			SXML_TTTTTT(
+    		"E",
+    		$NAME(<62:w>),
+    		".",
+    		$NAME(<66:d>),
+    		"E",
+    		$NAME(<63:e>)
+    	)
     )
   );
 }    
@@ -5033,11 +5047,13 @@ $LIST(<60g:float_editing>)
   	LOCATION(0),
   	"repeatable_edit_descriptor",
   	"float_edit",
-  	SXML_TTTT(
-    	"G",
-    	$NAME(<62:w>),
-    	".",
-    	$NAME(<66:d>)
+  	SXML_QUOTED_LIST(
+ 			SXML_TTTT(
+    		"G",
+    		$NAME(<62:w>),
+    		".",
+    		$NAME(<66:d>)
+    	)
     )
   );
 }
@@ -5053,13 +5069,15 @@ $LIST(<60g:float_editing>)
   	LOCATION(0),
   	"repeatable_edit_descriptor",
   	"float_edit",
-  	SXML_TTTTTT(
-    	"G",
-    	$NAME(<62:w>),
-    	".",
-    	$NAME(<66:d>),
-    	"E",
-    	$NAME(<63:e>)
+  	SXML_QUOTED_LIST(
+ 			SXML_TTTTTT(
+    		"G",
+    		$NAME(<62:w>),
+    		".",
+    		$NAME(<66:d>),
+    		"E",
+    		$NAME(<63:e>)
+    	)
     )
   );
 }    
@@ -5182,7 +5200,10 @@ $NAME(<67:m>)
 $LIST(<68:k>)
 
 {
-  $LIST(<68:k>) = SXML_T($ptext ("%repeat_spec"));
+  $LIST(<68:k>) = ast_scale_factor(
+  	NULL,
+  	$ptext ("%repeat_spec")
+  );
 }
 
 *------------------------------------------------------------------------------
@@ -5192,7 +5213,10 @@ $LIST(<68:k>)
 $LIST(<68:k>)
 
 {
-  $LIST(<68:k>) = SXML_LT($LIST(<114:sign>), $ptext ("%repeat_spec"));
+  $LIST(<68:k>) = ast_scale_factor(
+  	$LIST(<114:sign>),
+  	$ptext ("%repeat_spec")
+  );
 }
 
 *******************************************************************************

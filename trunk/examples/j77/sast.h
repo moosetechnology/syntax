@@ -226,7 +226,7 @@ SXML_TYPE_LIST ast_format_statement( SXML_TYPE_LIST location,
     return SXML_LTL(
       ast_abstract_statement( "format_statement", location),
 	    ",\n",
-      JSON_KU("format_specifiers", format)
+      JSON_KU("format_specifiers", JSON_ARRAY(format))
     );
   }
 }
@@ -244,7 +244,7 @@ SXML_TYPE_LIST ast_parenthesized_fmt( SXML_TYPE_LIST location,
       ast_tag_ ("parenthesized_format_specifier"),
       location,
       ",\n",
-      JSON_KU("format_specifiers_list", fmt_spec)
+      JSON_KU("format_specifiers_list", JSON_ARRAY(fmt_spec))
     )
   );
 }
@@ -324,7 +324,6 @@ SXML_TYPE_LIST ast_edit_descriptor( SXML_TYPE_LIST location,
           SXML_TYPE_TEXT descriptor_purpose,
           SXML_TYPE_LIST descriptor) {
 
-  if (descriptor->TEXT[0] == '{'){
     return JSON_MAP(
       SXML_LLTLL(
         ast_tag_ ( descriptor_type),
@@ -334,17 +333,6 @@ SXML_TYPE_LIST ast_edit_descriptor( SXML_TYPE_LIST location,
         JSON_KU("descriptor_value", descriptor)
       )
     );
-  } else {
-    return JSON_MAP(
-      SXML_LLTLL(
-        ast_tag_ ( descriptor_type),
-        location,
-        ",\n", 
-        JSON_KQ_("descriptor_purpose", descriptor_purpose),
-        JSON_KU("descriptor_value", SXML_TLT("\"", descriptor, "\""))
-      )
-    );
-  }
 }
 
 
@@ -394,6 +382,67 @@ SXML_TYPE_LIST ast_format_repeat_factor( SXML_TYPE_LIST location,
       location,
       ",\n",
       JSON_KQ("repeat_factor_value", repeat_factor)
+    )
+  );
+}
+
+
+/* -------------------------------------------------------------------------
+ * 
+ */
+SXML_TYPE_LIST ast_scale_float_editing( SXML_TYPE_LIST location,
+            SXML_TYPE_LIST scale_factor,
+            SXML_TYPE_LIST repeat_factor,
+            SXML_TYPE_LIST float_editing) {
+  
+  SXML_TYPE_LIST scale_factor_assured;
+
+  if (scale_factor == NULL)
+    scale_factor_assured = SXML_T("\"P\"");
+  else 
+    scale_factor_assured = scale_factor;
+  
+  if (repeat_factor == NULL)
+    return JSON_MAP(
+      SXML_LLTLL(
+        ast_tag_ ("scale_control_float_editing"),
+        location,
+        ",\n", 
+        JSON_KU_("scale_factor", scale_factor_assured),
+        JSON_KU("float_editing", float_editing)
+      )
+    );
+
+  else 
+    return JSON_MAP(
+      SXML_LLTLLL(
+        ast_tag_ ("scale_control_float_editing"),
+        location,
+        ",\n", 
+        JSON_KU_("scale_factor", scale_factor_assured),
+        JSON_KU_("repeat_factor", repeat_factor),
+        JSON_KU("float_editing", float_editing)
+      )
+    ); 
+}
+
+/* -------------------------------------------------------------------------
+ * outputs a type_statement (variable declaration)
+ * - type_reference
+ * - Location of the statement
+ * - list of variables
+ */
+SXML_TYPE_LIST ast_scale_factor( SXML_TYPE_LIST sign,
+            SXML_TYPE_TEXT factor) {
+
+  if (sign == NULL)
+    return SXML_QUOTED_LIST(SXML_TT(factor,"P"));
+
+  else   
+    return JSON_MAP(
+    SXML_LL(
+      JSON_KU_("sign", sign),
+      JSON_KU ("factor_value", SXML_QUOTED_LIST(SXML_TT(factor,"P")))
     )
   );
 }
