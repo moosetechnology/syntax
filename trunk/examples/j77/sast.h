@@ -1723,42 +1723,15 @@ SXML_TYPE_LIST ast_data_imply_do_list( SXML_TYPE_LIST location,
                 SXML_TYPE_LIST do_parameters) {
 
   return JSON_MAP(
-    SXML_LLTLL (
+    SXML_LLTLTL (
       ast_tag_("data_imply_do_list"),
       location,
       ",\n",
-      dlist,
+      JSON_KU("dlist", JSON_ARRAY(dlist)),
+      ",\n",
       do_parameters
     )
   );
-}
-
-
-/* -------------------------------------------------------------------------
- * implied list assigned variable (array element name and implied DO list)
- */
-SXML_TYPE_LIST ast_implied_do_assigned_variable( SXML_TYPE_LIST location,
-                SXML_TYPE_LIST variable) {
-
-  return JSON_KU(
-    "implied_do_assigned_variable",
-    JSON_MAP(
-      SXML_LTL(
-        location,
-        ",\n",
-        JSON_KU("implied_do_assigned_variable_value", variable)
-      )
-    )
-  );
-}
-
-
-/* -------------------------------------------------------------------------
- * implied do variable 
- */
-SXML_TYPE_LIST ast_implied_do_variable( SXML_TYPE_LIST variable) {
-
-  return JSON_KU_("implied_do_variable", variable);
 }
 
 

@@ -2410,7 +2410,7 @@ $LIST( <28a:data_imply_do_list_head_list>)
 {
   $LIST( <28a:data_imply_do_list_head_list>) = ast_list(
     $LIST(<28b:data_imply_do_list_head>),
-    ast_implied_do_variable($LIST(<99:symbolic_name>))
+    $LIST(<99:symbolic_name>)
   );
 }    
 
@@ -2421,10 +2421,7 @@ $LIST( <28a:data_imply_do_list_head_list>)
 
 $LIST( <28b:data_imply_do_list_head>)
 {
-  $LIST( <28b:data_imply_do_list_head>) = ast_implied_do_assigned_variable(
-  	LOCATION(0),
-  	$LIST(<88b:function_reference_or_array_element_name>)
-  );
+  $LIST( <28b:data_imply_do_list_head>) = $LIST(<88b:function_reference_or_array_element_name>);
 }    
 
 *------------------------------------------------------------------------------
@@ -2434,10 +2431,7 @@ $LIST( <28b:data_imply_do_list_head>)
 
 $LIST( <28b:data_imply_do_list_head>)
 {
-  $LIST( <28b:data_imply_do_list_head>) = ast_implied_do_assigned_variable(
-  	LOCATION(0),
-  	$LIST(<28:data_imply_do_list>)
-  );
+  $LIST( <28b:data_imply_do_list_head>) = $LIST(<28:data_imply_do_list>);
 }  
 
 *******************************************************************************
