@@ -1270,7 +1270,7 @@ SXML_TYPE_LIST ast_constant(
     SXML_LTL(
       ast_abstract_statement(constant_type, location),
       ",\n",
-      JSON_KQ( "constant_value", escapeSpecialChar(constant) )
+      JSON_KQ( "value", escapeSpecialChar(constant) )
     )
   );
 }
@@ -1353,7 +1353,7 @@ SXML_TYPE_LIST ast_complex_constant_real_part(
       SXML_LTL(
         location,
         ",\n",
-        JSON_KU( "constant_value", constant)
+        JSON_KU( "value", constant)
       )
     );
   }
@@ -1363,7 +1363,7 @@ SXML_TYPE_LIST ast_complex_constant_real_part(
       location,
         ",\n",
       JSON_KU_( "constant_sign", sign),
-      JSON_KU( "constant_value", constant)
+      JSON_KU( "value", constant)
     )
   );
 }
