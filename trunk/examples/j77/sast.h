@@ -1397,7 +1397,7 @@ SXML_TYPE_LIST ast_variable_expression( SXML_TYPE_LIST variable) {
 
 
 /* -------------------------------------------------------------------------
- * outputs a variable_expression.
+ * outputs a scalar variable_expression.
  */
 SXML_TYPE_LIST ast_scalar_variable( SXML_TYPE_LIST location,
           SXML_TYPE_LIST variable) {
@@ -1408,6 +1408,23 @@ SXML_TYPE_LIST ast_scalar_variable( SXML_TYPE_LIST location,
       location,
       ",\n",
       JSON_KU( "variable_name", variable) 
+    )
+  );
+}
+
+
+/* -------------------------------------------------------------------------
+ * outputs a variable_expression (when it is unclear what is the type of variable, e.g array name of scalar var name in subroutine parameter)
+ */
+SXML_TYPE_LIST ast_variable( SXML_TYPE_LIST location,
+          SXML_TYPE_LIST variable) {
+
+  return JSON_MAP (
+    SXML_LLTL(
+      ast_tag_( "variable"),
+      location,
+      ",\n",
+      JSON_KU( "name", variable) 
     )
   );
 }
@@ -2067,23 +2084,6 @@ SXML_TYPE_LIST ast_end_if(
   }
 }
 
-/* -------------------------------------------------------------------------
- * soubroutine parameter
- */
-SXML_TYPE_LIST ast_subroutine_parameter(
-        SXML_TYPE_LIST location,
-        SXML_TYPE_LIST name) {
-  
-  return JSON_MAP(
-    SXML_LLTL(
-      ast_tag_("subroutine_parameter"),
-      location,
-      ",\n",
-      JSON_KU("subroutine_name", name)
-    )
-  );
-}
-
 
 /* -------------------------------------------------------------------------
  * expression sign
@@ -2122,6 +2122,20 @@ SXML_TYPE_LIST ast_label_ref(
       location,
       ",\n",
       JSON_KQ("label_ref_value", value)
+    )
+  );
+}
+
+
+/* -------------------------------------------------------------------------
+ * asterisk
+ */
+SXML_TYPE_LIST ast_asterisk( SXML_TYPE_LIST location) {
+  
+  return JSON_MAP(
+    SXML_LL(
+      JSON_KQ_("tag", "asterisk"),
+      location
     )
   );
 }
