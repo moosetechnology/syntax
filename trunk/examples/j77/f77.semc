@@ -6720,7 +6720,7 @@ $LIST( <87:rel_op>)
 
 $LIST( <88:array_element_name>)
 {
-  $LIST( <88:array_element_name>) = ast_function_reference_or_array_element_name(
+  $LIST( <88:array_element_name>) = ast_array_element_name(
   	LOCATION(0),
     $LIST(<99:symbolic_name>),
     $LIST(<74b:expression_list>)

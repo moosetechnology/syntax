@@ -1605,17 +1605,17 @@ SXML_TYPE_LIST ast_substring(SXML_TYPE_LIST location,
  * - array name 
  * - qualifiers
  */
-SXML_TYPE_LIST ast_function_reference_or_array_element_name(SXML_TYPE_LIST location,
+SXML_TYPE_LIST ast_array_element_name(SXML_TYPE_LIST location,
               SXML_TYPE_LIST name,
               SXML_TYPE_LIST qualifiers) {
-  
+
   return JSON_MAP(
     SXML_LLTLL(
-      ast_tag_("function_reference_or_array_element_name"),
-      location,
-      ",\n",
-      JSON_KU_("name", name),
-      JSON_KU ("qualifiers_list", JSON_ARRAY(qualifiers))
+      ast_tag_("array_element_name"),
+        location,
+        ",\n",
+        JSON_KU_("name", name),
+        JSON_KU ("qualifiers_list", JSON_ARRAY(qualifiers))
       )
     );
 }
