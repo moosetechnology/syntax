@@ -708,10 +708,10 @@ SXML_TYPE_LIST ast_data_statement_variable(
     
     return JSON_MAP(
       SXML_LLTL(
-        ast_tag_("data_group_variable"),
+        ast_tag_("variable"),
         location,
         ",\n",
-        JSON_KU("data_group_variable_value", variable)
+        JSON_KU("name", variable)
       )  
     );
 }
@@ -734,8 +734,8 @@ SXML_TYPE_LIST ast_data_statement_constant(SXML_TYPE_LIST location,
         ast_tag_("data_group_constant"),
         location,
         ",\n",
-        JSON_KU_("data_group_constant_occurence", occurence),
-        JSON_KU("data_group_constant_value", constant)
+        JSON_KU_("occurence", occurence),
+        JSON_KU("constant", constant)
       )  
     );
 }
