@@ -2,8 +2,8 @@
 include $(SX)/etc/make/gccoptions
 
 F77=$(SX)/examples/f77
-BIN=$(F77)/bin
-LIB=$(F77)/lib
+BIN=$(F77)/bin.$(ARCH)
+LIB=$(F77)/lib.$(ARCH)
 
 OPTIONS=-rhs 11
 
