@@ -27,10 +27,10 @@
 
 * The following declarations define the synthesized attributes
 
-$LIST(<0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <8:program_statement>) 
+$LIST( <common_body>, <,common_body>, <0:F77>, <1:executable_program>, <1a:executable_program_list>, <2:main_program>, <2a:end_statement>, <2c:statement_list>, <2d:labeled_statement>, <2e:statement>, <3:function_subprogram>, <4:subroutine_subprogram>, <5:block_data_subprogram>, <6:other_specification_statement>, <7:executable_statement>, <7a:other_executable_statement>, <8:program_statement>, <9:entry_statement>, <10:function_statement>, <10b:scalar_type>, <10d:function_header>, <10a:type>, <12:subroutine_statement>, <12a:subroutine_header>, <12b:subroutine_parameter_list>, <12c:subroutine_parameter>, <13:function_or_subroutine_entry>, <14:block_data_statement>, <15:dimension_statement>, <16:array_declarator>, <16a:array_declarator_list>, <16b:dimension_declarator_list>, <16c:dimension_declarator>, <16d:last_dimension_declarator>, <16e:last_upper_dimension_bound>, <17:equivalence_statement>, <18:equiv_entity>, <18a:equiv_list>, <18b:equiv>, <18c:equiv_entity_list>, <19:common_statement>, <19a:common_body_list>, <19b:common_part>, <20:type_statement>, <20a:scalar_name_list>, <20b:scalar_name>, <20c:character_name_list>, <20d:character_name>, <21:implicit_statement>, <21a:implicit_body_list>, <21b:implicit_body>, <21c:implicit_elem_list>, <21d:implicit_elem>, <22:len_specification>, <23:parameter_statement>, <23a:assign_list>, <23b:assign>, <24:external_statement>, <25:intrinsic_statement>, <26:save_statement>, <26a:save_statement_name_list>, <26b:save_statement_name>, <27:data_statement>, <27a:data_statement_body_list>, <27b:data_statement_body>, <27c:data_statement_name_list>, <27d:data_statement_name>, <27e:data_statement_constant_list>, <27f:data_statement_constant>, <28:data_imply_do_list>, <28a:data_imply_do_list_head_list>, <28b:data_imply_do_list_head>, <29:assignment_statement>, <29a:left_hand_side>, <30:goto_statement>, <31:unconditional_goto>, <32:computed_goto>, <33:assigned_goto>, <34:arithmetic_if_statement>, <35:logical_if_statement>, <36:block_if_statement>, <36a:else_blocks>, <37:else_if_statement>, <38:else_statement>, <39:end_if_statement>, <40:do_statement>, <40a:do_loop>, <40b:do_parameters>, <40c:end_do>, <41:continue_statement>, <42:stop_statement>, <43:pause_statement>, <44:write_statement>, <45:read_statement>, <46:print_statement>, <47:control_info_list>, <47a:control_info_elem>, <47b:control_info_elem_list>, <48:io_list>, <49:io_imply_do_list>, <50:open_statement>, <50a:open_info_elem_list>, <50b:open_info_elem>, <51:close_statement>, <51a:close_info_elem_list>, <51b:close_info_elem>, <52:inquire_statement>, <52a:inquire_info_elem_list>, <52b:inquire_info_elem>, <53:backspace_statement>, <53a:backspace_or_endfile_or_rewind_info_elem_list>, <53b:backspace_or_endfile_or_rewind_info_elem>, <54:endfile_statement>, <55:rewind_statement>, <56:unit_identifier>, <57:format_identifier>, <58:format_statement>, <59:format_specification>, <60:fmt_specification>, <60a:fmt_spec_list>, <60b:fmt_spec_list_/:>, <60c:fmt_spec>, <60d:fmt_spec_/:>, <60e:repeatable_edit_descriptor>, <60g:float_editing>, <60h:nonrepeatable_edit_descriptor>, <65:c>,<68:k>, <70:statement_function_statement>, <71:call_statement>, <71a:actual_argument_list>, <71b:actual_argument>, <72:return_statement>, <74:expression>, <74a:non_typed_expression>, <74b:expression_list>, <75:constant_expr>, <75a:non_typed_const_expr>, <76:arithmetic_expression>, <76a:arithmetic_expression>, <76b:arithmetic_or_non_typed_expression>, <77:integer_expr>, <77a:integer_const_expr>, <77b:[integer_expr]>, <78:int_real_dp_expr>, <79:arithmetic_const_expr>, <79a:arithmetic_const_expr>, <79b:arithmetic_or_non_typed_const_expr>, <80:int_constant_expr>, <80a:int_constant_expr>, <81:dim_bound_expr>, <82:character_expression>, <82a:character_or_non_typed_expression>, <83:character_const_expr>, <84:logical_expression>, <84b:logical_or_non_typed_expression>, <84c:logical_factor>, <84d:logical_primary>, <84e:logical_or_non_typed_primary>, <85:logical_const_expr>, <85b:logical_or_non_typed_const_expr>, <85c:logical_const_fact>, <85d:logical_const_prim>, <85e:logical_or_non_typed_const_prim>, <86:relational_expression>, <86a:relational_const_expr>, <86b:arithmetic_or_character_expression>, <86c:arithmetic_or_character_const_expr>, <88:array_element_name>, <88a:variable_or_array_element_name>, <88b:function_reference_or_array_element_name>, <89:substring_name>, <99:symbolic_name>, <99a:symbolic_name_list>, <100:constant>, <101:unsigned_arithmetic_constant>, <102:unsigned_int_constant>, <103:nonzero_unsigned_int_constant>, <105:unsigned_real_constant>, <106:unsigned_dp_constant>, <107:complex_constant>, <107a:real_part>, <107b:complex_part>, <108:logical_constant>, <109:character_constant>, <110a:label_ref_list>, <110b:label_ref>) 
 : SXML_TYPE_LIST ;
 
-$NAME(<99:symbolic_name>) : SXML_TYPE_TEXT; /* i.e., character string */
+$NAME( <52c:inquire_info_key>, <60f:/:>, <61:repeat_spec>, <61a:[repeat_spec]>, <62:w>, <63:e>, <64:n>, <65:c>, <66:d>, <67:m>, <87:rel_op>, <99b:letter>, <110:label>, <114:sign>) : SXML_TYPE_TEXT; /* i.e., character string */
 
 *------------------------------------------------------------------------------
 
@@ -38,6 +38,8 @@ $
 decl =
 
 #include "sxml.h"
+#include "sjson.h"
+#include "sast.h"
 SXML_TYPE_LIST ROOT;
 
 extern bool is_json; /* declared in "f77_main.c" */
@@ -46,25 +48,16 @@ extern char *json_indent_command; /* declared in "f77_main.c" */
 extern FILE *json_pipe; /* declared in "f77_analyse.c" */
 bool pclose_needed;
 
-#define TODO(N) "{\"TODO-" #N "\":null}"
+#define TODO(N) SXML_T("{\"TODO-" #N "\":null}\n")
 
-#define LOCATION(N) SXML_TTTTTTT ( \
-		"\"file\":\"", \
-		sxcurrent_parsed_file_name (N), \
-		"\",\n\"line\":\"", \
-		SXML_UINT (sxcurrent_parsed_line (N)), \
-		"\",\n\"column\":\"", \
-		SXML_UINT (sxcurrent_parsed_column (N)), \
-		"\"")
+#define LOCATION(N) ast_start_location( \
+	   sxcurrent_parsed_line (N),\
+           sxcurrent_parsed_column (N) )
 
-#define ENDING_LOCATION(N,STRING) SXML_TTTTTTT ( \
-		"\"ending-file\":\"", \
-		sxcurrent_parsed_file_name (N), \
-		"\",\n\"ending-line\":\"", \
-		SXML_UINT (sxcurrent_parsed_line (N)), \
-		"\",\n\"ending-column\":\"", \
-		SXML_UINT (sxcurrent_parsed_column (N) + strlen (STRING) - 1), \
-		"\"")
+#define ENDING_LOCATION(N,STRING) ast_end_location( \
+	   sxcurrent_parsed_line (N),\
+           sxcurrent_parsed_column (N),\
+	   STRING)
 
 *------------------------------------------------------------------------------
 
@@ -72,26 +65,26 @@ $
 open =
 	{
 		if (is_json == false) {
-			/* no JSON output will be emitted */
-			json_pipe = fopen ("/dev/null", "w");
-			pclose_needed = false;
+		  /* no JSON output will be emitted */
+		  json_pipe = fopen ("/dev/null", "w");
+		  pclose_needed = false;
 		} else if (is_indent == false) {
-			/* non-indented JSON output will be emitted */
-			json_pipe = stdout;
-			pclose_needed = false;
+		  /* non-indented JSON output will be emitted */
+		  json_pipe = stdout;
+		  pclose_needed = false;
 		} else {
-			/* indented JSON output will be emitted, if possible */
-			json_pipe = popen (json_indent_command, "w");
-			if (json_pipe != NULL) {
-				pclose_needed = true;
-			} else {
-				/* indenting is impossible */
-				json_pipe = stdout;
-				pclose_needed = false;
-			}
+		  /* indented JSON output will be emitted, if possible */
+		  json_pipe = popen (json_indent_command, "w");
+		  if (json_pipe != NULL) {
+		     pclose_needed = true;
+		  } else {
+		     /* indenting is impossible */
+		     json_pipe = stdout;
+		     pclose_needed = false;
+		  }
 		}
 		/* beginning of table of comments */
-		fprintf (json_pipe, "{\n\"comments\":\n{");
+		fprintf (json_pipe, "{\n\"tag\":\"fortran_file\",\n\"comments\":\n{");
 	}
 
 *------------------------------------------------------------------------------
@@ -100,7 +93,7 @@ $
 close =
 	{
 		/* ending the table of comments */
-		fprintf (json_pipe, "\n},");
+		fprintf (json_pipe, "\n},\n");
 		SXML_PRINT (json_pipe, ROOT);
 		fprintf (json_pipe, "}\n");
 		if (pclose_needed) {
@@ -116,13 +109,13 @@ $
 
 $LIST(<0:F77>)
 
-	{
-	$LIST(<0:F77>) = SXML_TLT (
-		"\n\"program_units\":\n[\n",
-		$LIST(<1a:executable_program_list>),
-		"\n]");
-	ROOT = $LIST(<0:F77>);
-	}
+{
+  $LIST(<0:F77>) = ast_program_file(
+    sxcurrent_parsed_file_name (0),
+    $LIST(<1a:executable_program_list>) );
+
+  ROOT = $LIST(<0:F77>);
+}
 
 *------------------------------------------------------------------------------
 
@@ -134,11 +127,10 @@ $LIST(<0:F77>)
 
 $LIST(<0:F77>)
 
-	{
-	fprintf (stderr, "$LIST(<0:F77>) computed on zombie token !DO\n");
-	$LIST(<0:F77>) = SXML_T ("zombie token !DO");
-	}
-
+{
+  fprintf (stderr, "$LIST(<0:F77>) computed on zombie token !DO\n");
+  $LIST(<0:F77>) = SXML_T ("zombie token !DO");
+}
 *------------------------------------------------------------------------------
 
 * ENTRY POINT USED BY THE LOOK-AHEAD MECANISM
@@ -149,7 +141,7 @@ $LIST(<0:F77>)
 
 $LIST(<0:F77>)
 
-	{
+{
 	fprintf (stderr, "$LIST(<0:F77>) computed on zombie token !DO without label\n");
 	$LIST(<0:F77>) = SXML_T ("zombie token !DO without label");
 	}
@@ -162,10 +154,10 @@ $LIST(<0:F77>)
 
 $LIST(<0:F77>)
 
-	{
-	fprintf (stderr, "$LIST(<0:F77>) computed on zombie token !FORMAT\n");
-	$LIST(<0:F77>) = SXML_T ("zombie token !FORMAT");
-	}
+{
+  fprintf (stderr, "$LIST(<0:F77>) computed on zombie token !FORMAT\n");
+  $LIST(<0:F77>) = SXML_T ("zombie token !FORMAT");
+}
 
 *******************************************************************************
 
@@ -178,11 +170,10 @@ $LIST(<0:F77>)
 
 $LIST(<1:executable_program>)
 
-	$LIST(<1:executable_program>) = SXML_TLT (
-		"{\n\"main\":\n{\n",
-		$LIST(<2:main_program>),
-		"\n}\n}");
-
+{
+  $LIST(<1:executable_program>) = $LIST(<2:main_program>);
+}
+	
 *------------------------------------------------------------------------------
 
 <1:executable_program>
@@ -190,10 +181,9 @@ $LIST(<1:executable_program>)
 
 $LIST(<1:executable_program>)
 
-	$LIST(<1:executable_program>) = SXML_TTT (
-		"{\n\"function\":\n",
-		TODO (1),
-		"\n}");
+{
+  $LIST(<1:executable_program>) = $LIST(<3:function_subprogram>);
+}
 
 *------------------------------------------------------------------------------
 
@@ -202,10 +192,9 @@ $LIST(<1:executable_program>)
 
 $LIST(<1:executable_program>)
 
-	$LIST(<1:executable_program>) = SXML_TTT (
-		"{\n\"subroutine\":\n",
-		TODO (2),
-		"\n}");
+{
+  $LIST(<1:executable_program>) = $LIST(<4:subroutine_subprogram>);
+}
 
 *------------------------------------------------------------------------------
 
@@ -214,10 +203,10 @@ $LIST(<1:executable_program>)
 
 $LIST(<1:executable_program>)
 
-	$LIST(<1:executable_program>) = SXML_TTT (
-		"{\n\"blockdata\":\n",
-		TODO (3),
-		"\n}");
+{
+  $LIST(<1:executable_program>) = $LIST(<5:block_data_subprogram>);
+}
+
 
 *******************************************************************************
 
@@ -227,10 +216,13 @@ $LIST(<1:executable_program>)
 
 $LIST(<1a:executable_program_list>)
 
-	$LIST(<1a:executable_program_list>) = SXML_LTL (
-		$LIST(<1a:executable_program_list>'),
-		",\n",
-		$LIST(<1:executable_program>));
+{
+  $LIST(<1a:executable_program_list>) = SXML_LTL (
+    $LIST(<1a:executable_program_list>'),
+    ",\n",
+    $LIST(<1:executable_program>) );
+}
+
 
 *------------------------------------------------------------------------------
 
@@ -238,8 +230,9 @@ $LIST(<1a:executable_program_list>)
 		= <1:executable_program> ;
 
 $LIST(<1a:executable_program_list>)
-
-	$LIST(<1a:executable_program_list>) = SXML_L ($LIST(<1:executable_program>));
+{
+  $LIST(<1a:executable_program_list>) = SXML_L ($LIST(<1:executable_program>));
+}
 
 *******************************************************************************
 
@@ -250,10 +243,15 @@ $LIST(<1a:executable_program_list>)
 		  <2a:end_statement> ;
 
 $LIST(<2:main_program>)
+{
+  $LIST(<2:main_program>) = ast_program_unit(
+    "main",
+    $LIST (<8:program_statement>),
+    LOCATION(0),
+    $LIST( <2a:end_statement>),
+    NULL );
+}
 
-	$LIST(<2:main_program>) = SXML_LL (
-		$LIST(<8:program_statement>),
-		$LIST(<2a:end_statement>));
 
 *------------------------------------------------------------------------------
 
@@ -261,11 +259,15 @@ $LIST(<2:main_program>)
 		= <2a:end_statement> ;
 
 $LIST(<2:main_program>)
+{
+  $LIST(<2:main_program>) = ast_program_unit(
+    "main",
+    NULL,
+    LOCATION(0),
+    $LIST( <2a:end_statement>),
+    NULL );
+}
 
-	$LIST(<2:main_program>) = SXML_TLL (
-		"\"name\":null,\n",
-		LOCATION (0),
-		$LIST(<2a:end_statement>));
 
 *------------------------------------------------------------------------------
 
@@ -275,10 +277,15 @@ $LIST(<2:main_program>)
 		  <2a:end_statement> ;
 
 $LIST(<2:main_program>)
+{
+  $LIST(<2:main_program>) = ast_program_unit(
+    "main",
+    $LIST( <8:program_statement>),
+    LOCATION(0),
+    $LIST( <2a:end_statement>),
+    $LIST(<2c:statement_list>) );
+}
 
-	$LIST(<2:main_program>) = SXML_LL (
-		$LIST(<8:program_statement>),
-		$LIST(<2a:end_statement>));
 
 *------------------------------------------------------------------------------
 
@@ -287,11 +294,15 @@ $LIST(<2:main_program>)
 		  <2a:end_statement> ;
 
 $LIST(<2:main_program>)
+{
+  $LIST(<2:main_program>) = ast_program_unit(
+    "main",
+    NULL,
+    LOCATION(0),
+    $LIST( <2a:end_statement>),
+    $LIST(<2c:statement_list>) );
+}
 
-	$LIST(<2:main_program>) = SXML_TLL (
-		"\"name\":null,\n",
-		LOCATION (0),
-		$LIST(<2a:end_statement>));
 
 *******************************************************************************
 
@@ -303,9 +314,10 @@ $LIST(<2:main_program>)
 
 $LIST(<2a:end_statement>)
 
-	$LIST(<2a:end_statement>) = SXML_TL (
-		",\n",
-		ENDING_LOCATION (0, "END"));
+{
+  $LIST(<2a:end_statement>) = ENDING_LOCATION (0, "END");
+}
+
 
 *------------------------------------------------------------------------------
 
@@ -314,9 +326,10 @@ $LIST(<2a:end_statement>)
 
 $LIST(<2a:end_statement>)
 
-	$LIST(<2a:end_statement>) = SXML_TL (
-		",\n",
-		ENDING_LOCATION (0, "END"));
+{
+  $LIST(<2a:end_statement>) = ENDING_LOCATION (0, "END");
+}
+
 
 *******************************************************************************
 
@@ -324,63 +337,148 @@ $LIST(<2a:end_statement>)
 		= <2c:statement_list>
 		  <2d:labeled_statement> %EOL ;
 
+$LIST(<2c:statement_list>)
+
+{
+  $LIST(<2c:statement_list>) = SXML_LTL (
+    $LIST(<2c:statement_list>'),
+    ",\n",
+    $LIST( <2d:labeled_statement>) );
+}
+
 *------------------------------------------------------------------------------
 
 <2c:statement_list>
 		= <2d:labeled_statement> %EOL ;
+
+$LIST(<2c:statement_list>)
+{
+  $LIST(<2c:statement_list>) = $LIST( <2d:labeled_statement>);
+}
 
 *******************************************************************************
 
 <2d:labeled_statement>
 		= <110:label> <2e:statement> ;
 
+$LIST(<2d:labeled_statement>)
+{
+  $LIST(<2d:labeled_statement>) = ast_labeled_statement(
+      $NAME(<110:label>),
+      $LIST( <2e:statement>) );
+}
+
 *------------------------------------------------------------------------------
 
 <2d:labeled_statement>
 		= <110:label> <58:format_statement> ;
+
+$LIST(<2d:labeled_statement>)
+{
+  $LIST(<2d:labeled_statement>) =  ast_labeled_statement(
+      $NAME(<110:label>),
+      $LIST( <58:format_statement>) );
+}
 
 *------------------------------------------------------------------------------
 
 <2d:labeled_statement>
 		= <2e:statement> ;
 
+$LIST(<2d:labeled_statement>)
+{
+  $LIST(<2d:labeled_statement>) = ast_labeled_statement(
+    NULL,
+    $LIST(<2e:statement>) );
+}
+
 *******************************************************************************
 
 <2e:statement>	= <6:other_specification_statement> ;
+
+$LIST(<2e:statement>)
+{
+  $LIST(<2e:statement>) = $LIST( <6:other_specification_statement>);
+}
 
 *------------------------------------------------------------------------------
 
 <2e:statement>	= <7:executable_statement> ;
 
+$LIST(<2e:statement>)
+{
+  $LIST(<2e:statement>) = $LIST( <7:executable_statement>);
+}
+
 *------------------------------------------------------------------------------
 
 <2e:statement>	= <7a:other_executable_statement> ;
+
+$LIST(<2e:statement>)
+{
+  $LIST(<2e:statement>) = $LIST(<7a:other_executable_statement>);
+}
 
 *------------------------------------------------------------------------------
 
 <2e:statement>	= <9:entry_statement> ;
 
+$LIST(<2e:statement>)
+{
+  $LIST(<2e:statement>) = $LIST (<9:entry_statement>);
+}
+
 *------------------------------------------------------------------------------
 
 <2e:statement>	= <21:implicit_statement> ;
+
+$LIST(<2e:statement>)
+{
+  $LIST(<2e:statement>) = $LIST(<21:implicit_statement>);
+}
 
 *------------------------------------------------------------------------------
 
 <2e:statement>	= <23:parameter_statement> ;
 
+$LIST(<2e:statement>)
+{
+  $LIST(<2e:statement>) = $LIST(<23:parameter_statement>);
+}
+
 *------------------------------------------------------------------------------
 
 <2e:statement>	= <27:data_statement> ;
+
+$LIST(<2e:statement>)
+{
+  $LIST(<2e:statement>) = $LIST(<27:data_statement>);
+}
 
 *------------------------------------------------------------------------------
 
 <2e:statement>	= <70:statement_function_statement> ;
 
+$LIST(<2e:statement>)
+{
+  $LIST(<2e:statement>) = $LIST(<70:statement_function_statement>);
+}
+
 *******************************************************************************
 
 <3:function_subprogram>
 		= <10:function_statement> %EOL
 		  <2a:end_statement> ;
+
+$LIST(<3:function_subprogram>)
+{
+  $LIST(<3:function_subprogram>) = ast_program_unit(
+    "function",
+    $LIST( <10:function_statement>),
+    LOCATION(0),
+    $LIST( <2a:end_statement>),
+    NULL );
+}
 
 *------------------------------------------------------------------------------
 
@@ -389,11 +487,34 @@ $LIST(<2a:end_statement>)
 		  <2c:statement_list>
 		  <2a:end_statement> ;
 
+		  
+$LIST(<3:function_subprogram>)
+
+{
+  $LIST(<3:function_subprogram>) = ast_program_unit(
+    "function",
+    $LIST( <10:function_statement>),
+    LOCATION(0),
+    $LIST( <2a:end_statement>),
+    $LIST(<2c:statement_list>) );
+}
+
 *******************************************************************************
 
 <4:subroutine_subprogram>
 		= <12:subroutine_statement> %EOL
 		  <2a:end_statement> ;
+		  
+$LIST(<4:subroutine_subprogram>)
+
+{
+  $LIST(<4:subroutine_subprogram>) = ast_program_unit(
+    "subroutine",
+    $LIST( <12:subroutine_statement>),
+    LOCATION(0),
+    $LIST( <2a:end_statement>),
+    NULL );
+}
 
 *------------------------------------------------------------------------------
 
@@ -401,6 +522,18 @@ $LIST(<2a:end_statement>)
 		= <12:subroutine_statement> %EOL
 		  <2c:statement_list>
 		  <2a:end_statement> ;
+
+		  
+$LIST(<4:subroutine_subprogram>)
+
+{
+  $LIST(<4:subroutine_subprogram>) = ast_program_unit(
+    "subroutine",
+    $LIST( <12:subroutine_statement>),
+    LOCATION(0),
+    $LIST( <2a:end_statement>),
+    $LIST(<2c:statement_list>) );
+}
 
 *******************************************************************************
 
@@ -411,6 +544,17 @@ $LIST(<2a:end_statement>)
 		= <14:block_data_statement> %EOL
 		  <2a:end_statement> ;
 
+$LIST( <5:block_data_subprogram>)
+
+{
+  $LIST( <5:block_data_subprogram>) = ast_program_unit(
+    "block_data",
+    $LIST( <14:block_data_statement>),
+    LOCATION(0),
+    $LIST( <2a:end_statement>),
+    NULL );
+}      
+
 *------------------------------------------------------------------------------
 
 <5:block_data_subprogram>
@@ -418,125 +562,275 @@ $LIST(<2a:end_statement>)
 		  <2c:statement_list>
 		  <2a:end_statement> ;
 
+$LIST( <5:block_data_subprogram>)
+
+{
+  $LIST( <5:block_data_subprogram>) = ast_program_unit(
+    "block_data",
+    $LIST( <14:block_data_statement>),
+    LOCATION(0),
+    $LIST( <2a:end_statement>),
+    $LIST( <2c:statement_list>) );
+}      
+
 *******************************************************************************
 
 <6:other_specification_statement>
 		= <15:dimension_statement> ;
+
+$LIST(<6:other_specification_statement>)
+{
+  $LIST(<6:other_specification_statement>) = $LIST(<15:dimension_statement>);
+}
 
 *------------------------------------------------------------------------------
 
 <6:other_specification_statement>
 		= <17:equivalence_statement> ;
 
+$LIST(<6:other_specification_statement>)
+{
+  $LIST(<6:other_specification_statement>) = $LIST(<17:equivalence_statement>);
+}
+
 *------------------------------------------------------------------------------
 
 <6:other_specification_statement>
 		= <19:common_statement> ;
+
+$LIST(<6:other_specification_statement>)
+{
+  $LIST(<6:other_specification_statement>) = $LIST(<19:common_statement>);
+}
 
 *------------------------------------------------------------------------------
 
 <6:other_specification_statement>
 		= <20:type_statement> ;
 
+$LIST(<6:other_specification_statement>)
+{
+  $LIST(<6:other_specification_statement>) = $LIST( <20:type_statement>);
+}
+
 *------------------------------------------------------------------------------
 
 <6:other_specification_statement>
 		= <24:external_statement> ;
+
+$LIST(<6:other_specification_statement>)
+{
+  $LIST(<6:other_specification_statement>) = ast_external_statement(
+    LOCATION(0),
+    $LIST(<24:external_statement>)
+  );
+}
 
 *------------------------------------------------------------------------------
 
 <6:other_specification_statement>
 		= <25:intrinsic_statement> ;
 
+$LIST(<6:other_specification_statement>)
+{
+  $LIST(<6:other_specification_statement>) = ast_intrinsic_statement(
+    LOCATION(0),
+    $LIST(<25:intrinsic_statement>)
+  );
+}
+
 *------------------------------------------------------------------------------
 
 <6:other_specification_statement>
 		= <26:save_statement> ;
+
+$LIST(<6:other_specification_statement>)
+{
+  $LIST(<6:other_specification_statement>) = ast_save_statement(
+    LOCATION(0),
+    $LIST(<26:save_statement>) 
+  );
+}
 
 *******************************************************************************
 
 <7:executable_statement>
 		= <29:assignment_statement> ;
 
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = $LIST(<29:assignment_statement>);
+}
+
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <30:goto_statement> ;
+
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = $LIST(<30:goto_statement>);
+}
 
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <34:arithmetic_if_statement> ;
 
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = $LIST(<34:arithmetic_if_statement>);
+}
+
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <41:continue_statement> ;
+
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = ast_abstract_statement(
+    "continue_statement",
+    LOCATION(0) );
+}
 
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <42:stop_statement> ;
 
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = ast_pause_stop_statement(
+    "stop_statement",
+    $LIST( <42:stop_statement>),
+    LOCATION(0) );
+}
+
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <43:pause_statement> ;
+
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = ast_pause_stop_statement(
+    "pause_statement",
+    $LIST( <43:pause_statement>),
+    LOCATION(0) );
+}
 
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <44:write_statement> ;
 
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = $LIST(<44:write_statement>);
+}
+
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <45:read_statement> ;
+
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = $LIST(<45:read_statement>);
+}
 
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <46:print_statement> ;
 
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = $LIST(<46:print_statement>);
+}
+
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <55:rewind_statement> ;
+
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = $LIST(<55:rewind_statement>);
+}
 
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <53:backspace_statement> ;
 
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = $LIST(<53:backspace_statement>);
+}
+
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <54:endfile_statement> ;
+
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = $LIST(<54:endfile_statement>);
+}
 
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <50:open_statement> ;
 
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = $LIST(<50:open_statement>);
+}
+
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <51:close_statement> ;
+
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = $LIST(<51:close_statement>);
+}
 
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <52:inquire_statement> ;
 
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = $LIST(<52:inquire_statement>);
+}
+
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <71:call_statement> ;
 
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = $LIST (<71:call_statement>);
+}
+
 *------------------------------------------------------------------------------
 
 <7:executable_statement>
 		= <72:return_statement> ;
+
+$LIST(<7:executable_statement>)
+{
+  $LIST(<7:executable_statement>) = ast_abstract_statement(
+    "return_statement",
+    LOCATION(0) );
+}
 
 *******************************************************************************
 
@@ -551,15 +845,30 @@ $LIST(<2a:end_statement>)
 <7a:other_executable_statement>
 		= <35:logical_if_statement> ;
 
+$LIST(<7a:other_executable_statement>)
+{
+  $LIST(<7a:other_executable_statement>) = $LIST(<35:logical_if_statement>); 
+}     
+
 *------------------------------------------------------------------------------
 
 <7a:other_executable_statement>
 		= <36:block_if_statement> ;
 
+$LIST(<7a:other_executable_statement>)
+{
+  $LIST(<7a:other_executable_statement>) = $LIST(<36:block_if_statement>); 
+}    
+
 *------------------------------------------------------------------------------
 
 <7a:other_executable_statement>
 		= <40a:do_loop> ;
+
+$LIST(<7a:other_executable_statement>)
+{
+  $LIST(<7a:other_executable_statement>) = $LIST(<40a:do_loop>); 
+}    
 
 *******************************************************************************
 
@@ -567,31 +876,57 @@ $LIST(<2a:end_statement>)
 		= PROGRAM  <99:symbolic_name> ;
 
 $LIST(<8:program_statement>)
+{
+  $LIST(<8:program_statement>) = ast_mainprogram_unit_header (
+    $LIST( <99:symbolic_name>)
+  );
+}
 
-	$LIST(<8:program_statement>) = SXML_TTTL (
-		"\"name\":\"",
-		$NAME(<99:symbolic_name>),
-		"\",\n",
-		LOCATION (0));
 
 *******************************************************************************
 
 <9:entry_statement>
 		= <13:function_or_subroutine_entry> ;
 
+$LIST( <9:entry_statement>)
+{
+  $LIST( <9:entry_statement>) = $LIST( <13:function_or_subroutine_entry>);
+}
+
 *******************************************************************************
 
 <10:function_statement>
 		= <10a:type>  FUNCTION  <10d:function_header> ;
+
+$LIST(<10:function_statement>)
+{
+  $LIST(<10:function_statement>) = ast_add_return_type(
+    $LIST( <10d:function_header>),
+    $LIST( <10a:type>) );
+}
 
 *------------------------------------------------------------------------------
 
 <10:function_statement>
 		= FUNCTION  <10d:function_header> ;
 
+
+$LIST(<10:function_statement>)
+{
+  $LIST(<10:function_statement>) = $LIST( <10d:function_header>);
+}
+
 *******************************************************************************
 
 <10a:type>	= <10b:scalar_type> ;
+
+$LIST( <10a:type>)
+{
+  $LIST( <10a:type>) = ast_type_reference(
+      $LIST( <10b:scalar_type>),
+      NULL
+  );
+}
 
 *------------------------------------------------------------------------------
 
@@ -599,48 +934,111 @@ $LIST(<8:program_statement>)
 
 <10a:type>	= <10b:scalar_type> * <103:nonzero_unsigned_int_constant> ;
 
+$LIST( <10a:type>)
+{
+  $LIST( <10a:type>) = ast_type_reference(
+    $LIST( <10b:scalar_type>),
+    $LIST(<103:nonzero_unsigned_int_constant>)
+  );
+}
+
 *------------------------------------------------------------------------------
 
 <10a:type>	= CHARACTER ;
 
+$LIST( <10a:type>)
+{
+  $LIST( <10a:type>) = ast_type_reference(
+      SXML_T("CHARACTER"),
+      NULL );
+}
+
 *------------------------------------------------------------------------------
 
 <10a:type>	= CHARACTER * <22:len_specification> ;
+
+$LIST( <10a:type>)
+{
+  $LIST( <10a:type>) = ast_type_reference(
+      SXML_T("CHARACTER"),
+      $LIST(<22:len_specification>)
+  );
+}
 
 *******************************************************************************
 
 <10b:scalar_type>
 		= INTEGER ;
 
+$LIST( <10b:scalar_type>)
+{
+  $LIST( <10b:scalar_type>) = SXML_T("INTEGER");
+}
+
 *------------------------------------------------------------------------------
 
 <10b:scalar_type>
 		= REAL ;
+
+$LIST( <10b:scalar_type>)
+{
+  $LIST( <10b:scalar_type>) = SXML_T("REAL");
+}
 
 *------------------------------------------------------------------------------
 
 <10b:scalar_type>
 		= DOUBLE  PRECISION ;
 
+$LIST( <10b:scalar_type>)
+{
+  $LIST( <10b:scalar_type>) = SXML_T("DOUBLE PRECISION");
+}
+
 *------------------------------------------------------------------------------
 
 <10b:scalar_type>
 		= COMPLEX ;
+
+$LIST( <10b:scalar_type>)
+{
+  $LIST( <10b:scalar_type>) = SXML_T("COMPLEX");
+}
 
 *------------------------------------------------------------------------------
 
 <10b:scalar_type>
 		= LOGICAL ;
 
+$LIST( <10b:scalar_type>)
+{
+  $LIST( <10b:scalar_type>) = SXML_T("LOGICAL");
+}
+
 *******************************************************************************
 
 <10d:function_header>
 		= <99:symbolic_name>  ( ) ;
 
+$LIST(<10d:function_header>)
+
+{
+  $LIST(<10d:function_header>) = ast_subprogram_unit_header(
+    $LIST(<99:symbolic_name>),
+    NULL );
+}
+
 *------------------------------------------------------------------------------
 
 <10d:function_header>
 		= <99:symbolic_name>  ( <99a:symbolic_name_list> ) ;
+
+$LIST(<10d:function_header>)
+{
+  $LIST(<10d:function_header>) = ast_subprogram_unit_header(
+    $LIST(<99:symbolic_name>),
+    $LIST( <99a:symbolic_name_list>) );
+}
 
 *******************************************************************************
 
@@ -658,60 +1056,138 @@ $LIST(<8:program_statement>)
 <12:subroutine_statement>
 		= SUBROUTINE  <12a:subroutine_header> ;
 
+$LIST(<12:subroutine_statement>)
+{
+  $LIST(<12:subroutine_statement>) = $LIST(<12a:subroutine_header>);
+}
+
 *******************************************************************************
 
 <12a:subroutine_header>
 		= <99:symbolic_name> ;
+
+$LIST(<12a:subroutine_header>)
+{
+  $LIST(<12a:subroutine_header>) = ast_subprogram_unit_header(
+    $LIST(<99:symbolic_name>),
+    NULL );
+}
 
 *------------------------------------------------------------------------------
 
 <12a:subroutine_header>
 		= <99:symbolic_name>  ( ) ;
 
+$LIST(<12a:subroutine_header>)
+{
+  $LIST(<12a:subroutine_header>) = ast_subprogram_unit_header(
+    $LIST(<99:symbolic_name>),
+    NULL );
+}
+
 *------------------------------------------------------------------------------
 
 <12a:subroutine_header>
 		= <99:symbolic_name>  ( <12b:subroutine_parameter_list> ) ;
+
+$LIST(<12a:subroutine_header>)
+{
+  $LIST(<12a:subroutine_header>) = ast_subprogram_unit_header(
+    $LIST(<99:symbolic_name>),
+    $LIST (<12b:subroutine_parameter_list> ) );
+}
 
 *******************************************************************************
 
 <12b:subroutine_parameter_list>
 		= <12b:subroutine_parameter_list> ,  <12c:subroutine_parameter> ;
 
+$LIST(<12b:subroutine_parameter_list>)
+{
+  $LIST(<12b:subroutine_parameter_list>) = SXML_LTL(
+    $LIST( <12b:subroutine_parameter_list>'),
+    ",\n",
+    $LIST( <12c:subroutine_parameter>) );
+}
+
 *------------------------------------------------------------------------------
 
 <12b:subroutine_parameter_list>
 		= <12c:subroutine_parameter> ;
+
+$LIST( <12b:subroutine_parameter_list>)
+{
+  $LIST( <12b:subroutine_parameter_list>) = $LIST(<12c:subroutine_parameter>);
+}
 
 *******************************************************************************
 
 <12c:subroutine_parameter>
 		= <99:symbolic_name> ;
 
+$LIST( <12c:subroutine_parameter>)
+{
+  $LIST( <12c:subroutine_parameter>) = $LIST(<99:symbolic_name>);
+}
+
 *------------------------------------------------------------------------------
 
 <12c:subroutine_parameter>
 		= * ;
+
+$LIST( <12c:subroutine_parameter>)
+{
+  $LIST( <12c:subroutine_parameter>) = SXML_T( "\"*\"");
+}
 
 *******************************************************************************
 
 <13:function_or_subroutine_entry>
 		= ENTRY  <12a:subroutine_header> ;
 
+$LIST( <13:function_or_subroutine_entry>)
+{
+  $LIST( <13:function_or_subroutine_entry>) = SXML_LL(
+    $LIST( <12a:subroutine_header>),
+    ast_abstract_statement(
+      "entry_statement",
+      LOCATION(0)) );
+}
+
 *******************************************************************************
 
 <14:block_data_statement>
 		= BLOCK  DATA ;
+
+$LIST( <14:block_data_statement>)
+{
+  $LIST( <14:block_data_statement>) = NULL;
+}    
 
 *------------------------------------------------------------------------------
 
 <14:block_data_statement>
 		= BLOCK  DATA  <99:symbolic_name> ;
 
+$LIST( <14:block_data_statement>)
+{
+  $LIST( <14:block_data_statement>) = ast_subprogram_unit_header(
+    $LIST(<99:symbolic_name>),
+    NULL );
+}    
+
 *******************************************************************************
 
 <15:dimension_statement>
 		= DIMENSION  <16a:array_declarator_list> ;
+
+$LIST( <15:dimension_statement>)
+{
+  $LIST( <15:dimension_statement>) = ast_dimension_statement(
+    LOCATION(0),
+    $LIST(<16a:array_declarator_list>)
+    );
+}    
 
 *******************************************************************************
 
@@ -720,62 +1196,143 @@ $LIST(<8:program_statement>)
 <16:array_declarator>
 		= <99:symbolic_name>  ( <16b:dimension_declarator_list> ) ;
 
+$LIST( <16:array_declarator>)
+{
+ $LIST( <16:array_declarator>) = ast_variable_declarator(
+    $LIST( <99:symbolic_name>),
+    $LIST( <16b:dimension_declarator_list>) );
+}
+
 *******************************************************************************
 
 <16a:array_declarator_list>
 		= <16a:array_declarator_list> ,  <16:array_declarator> ;
+
+$LIST( <16a:array_declarator_list>)
+{
+  $LIST( <16a:array_declarator_list>) = SXML_LTL(
+    $LIST( <16a:array_declarator_list>'),
+    ",\n",
+    $LIST( <16:array_declarator>) );
+}
 
 *------------------------------------------------------------------------------
 
 <16a:array_declarator_list>
 		= <16:array_declarator> ;
 
+$LIST( <16a:array_declarator_list>)
+{
+  $LIST( <16a:array_declarator_list>) = $LIST( <16:array_declarator>);
+}
+
 *******************************************************************************
 
 * The maximum number of dimensions is seven.
+*** Why the order is inversed here ?
 
 <16b:dimension_declarator_list>
 		= <16c:dimension_declarator> ,  <16b:dimension_declarator_list> ;
+
+$LIST( <16b:dimension_declarator_list>)
+{
+  $LIST( <16b:dimension_declarator_list>) = SXML_LTL(
+    $LIST( <16c:dimension_declarator>),
+    ",\n",
+    $LIST( <16b:dimension_declarator_list>') );
+}
 
 *------------------------------------------------------------------------------
 
 <16b:dimension_declarator_list>
 		= <16d:last_dimension_declarator> ;
 
+$LIST( <16b:dimension_declarator_list>)
+{
+  $LIST( <16b:dimension_declarator_list>) =
+    $LIST( <16d:last_dimension_declarator>);
+}
+
 *******************************************************************************
 
 <16c:dimension_declarator>
 		= <81:dim_bound_expr>  :  <81:dim_bound_expr> ;
 
+$LIST( <16c:dimension_declarator>)
+{
+  $LIST( <16c:dimension_declarator>) = ast_lower_upper_bound(
+    $LIST( <81:dim_bound_expr>),
+    $LIST( <81:dim_bound_expr>') );
+}
+
 *------------------------------------------------------------------------------
 
 <16c:dimension_declarator>
 		= <81:dim_bound_expr> ;
+
+$LIST( <16c:dimension_declarator>)
+{
+  $LIST( <16c:dimension_declarator>) = ast_lower_upper_bound(
+  	NULL, 
+    $LIST( <81:dim_bound_expr>)
+    );
+}
 
 *******************************************************************************
 
 <16d:last_dimension_declarator>
 		= <81:dim_bound_expr>  :  <16e:last_upper_dimension_bound> ;
 
+$LIST( <16d:last_dimension_declarator>)
+{
+  $LIST( <16d:last_dimension_declarator>) = ast_lower_upper_bound(
+    $LIST( <81:dim_bound_expr>),
+    $LIST( <16e:last_upper_dimension_bound>) );
+}
+
 *------------------------------------------------------------------------------
 
 <16d:last_dimension_declarator>
 		= <16e:last_upper_dimension_bound> ;
+
+$LIST( <16d:last_dimension_declarator>)
+{
+  $LIST( <16d:last_dimension_declarator>) = $LIST( <16e:last_upper_dimension_bound>);
+}
 
 *******************************************************************************
 
 <16e:last_upper_dimension_bound>
 		= <81:dim_bound_expr> ;
 
+$LIST( <16e:last_upper_dimension_bound>)
+{
+  $LIST( <16e:last_upper_dimension_bound>) =
+    $LIST( <81:dim_bound_expr>);
+}
+
 *------------------------------------------------------------------------------
 
 <16e:last_upper_dimension_bound>
 		= * ;
 
+$LIST( <16e:last_upper_dimension_bound>)
+{
+  $LIST( <16e:last_upper_dimension_bound>) = ast_literal_expression( ast_text_to_map("asterisk", "*"));
+}
+
 *******************************************************************************
 
 <17:equivalence_statement>
 		= EQUIVALENCE  <18a:equiv_list> ;
+
+$LIST( <17:equivalence_statement>)
+{
+  $LIST( <17:equivalence_statement>) = ast_equivalence_statement(
+    LOCATION(0),
+    $LIST(<18a:equiv_list>)
+  );
+}    
 
 *******************************************************************************
 
@@ -785,44 +1342,100 @@ $LIST(<8:program_statement>)
 <18:equiv_entity>
 		= <99:symbolic_name> ;
 
+$LIST( <18:equiv_entity>)
+{
+  $LIST( <18:equiv_entity>) = $LIST(<99:symbolic_name>);
+}        
+
 *------------------------------------------------------------------------------
 
 <18:equiv_entity>
 		= <88b:function_reference_or_array_element_name> ;
+
+$LIST( <18:equiv_entity>)
+{
+  $LIST( <18:equiv_entity>) = $LIST(<88b:function_reference_or_array_element_name>);
+}    
 
 *------------------------------------------------------------------------------
 
 <18:equiv_entity>
 		= <89:substring_name> ;
 
+$LIST( <18:equiv_entity>)
+{
+  $LIST( <18:equiv_entity>) = $LIST(<89:substring_name>);
+}    
+
 *******************************************************************************
 
 <18a:equiv_list>
 		= <18a:equiv_list> ,  <18b:equiv> ;
+
+$LIST( <18a:equiv_list>)
+{
+  $LIST( <18a:equiv_list>) = SXML_LTL(
+    $LIST(<18a:equiv_list>'),
+    ",",
+    $LIST(<18b:equiv>)
+  );
+}    
 
 *------------------------------------------------------------------------------
 
 <18a:equiv_list>
 		= <18b:equiv> ;
 
+$LIST( <18a:equiv_list>)
+{
+  $LIST( <18a:equiv_list>) = $LIST(<18b:equiv>);
+}    
+
 *******************************************************************************
 
 <18b:equiv>	= ( <18c:equiv_entity_list> ) ;
+
+$LIST( <18b:equiv>)
+{
+  $LIST( <18b:equiv>) = ast_equiv_group($LIST(<18c:equiv_entity_list>));
+}
 
 *******************************************************************************
 
 <18c:equiv_entity_list>
 		= <18c:equiv_entity_list> ,  <18:equiv_entity> ;
 
+$LIST( <18c:equiv_entity_list>)
+{
+  $LIST( <18c:equiv_entity_list>) = SXML_LTL(
+    $LIST(<18c:equiv_entity_list>'),
+    ",",
+    $LIST(<18:equiv_entity>)
+  );
+}
+
 *------------------------------------------------------------------------------
 
 <18c:equiv_entity_list>
 		= <18:equiv_entity> ;
 
+$LIST( <18c:equiv_entity_list>)
+{
+  $LIST( <18c:equiv_entity_list>) = $LIST(<18:equiv_entity>);
+}    
+
 *******************************************************************************
 
 <19:common_statement>
 		= COMMON   <19a:common_body_list> ;
+
+$LIST( <19:common_statement>)
+{
+  $LIST( <19:common_statement>) = ast_common_statement(
+    LOCATION(0),
+    $LIST(<19a:common_body_list>)
+  );
+}    
 
 *******************************************************************************
 
@@ -836,14 +1449,33 @@ $LIST(<8:program_statement>)
 <19a:common_body_list>
 		= <19a:common_body_list>  <,common_body> ;
 
+$LIST( <19a:common_body_list>)
+{
+  $LIST( <19a:common_body_list>) = SXML_LTL(
+    $LIST(<19a:common_body_list>'),
+    ",",
+    $LIST(<,common_body>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <19a:common_body_list>
 		= <common_body> ;
 
+$LIST( <19a:common_body_list>)
+{
+  $LIST( <19a:common_body_list>) = $LIST(<common_body>);
+}    
+
 *******************************************************************************
 
 <,common_body>	= ,  <common_body> ;
+
+$LIST( <,common_body>)
+{
+  $LIST( <,common_body>) = $LIST(<common_body>);
+}
 
 *------------------------------------------------------------------------------
 
@@ -851,13 +1483,28 @@ $LIST(<8:program_statement>)
 
 <,common_body>	= <19b:common_part> ;
 
+$LIST( <,common_body>)
+{
+  $LIST( <,common_body>) = $LIST(<19b:common_part>);
+}
+
 *******************************************************************************
 
 <common_body>	= <19b:common_part> ;
 
+$LIST( <common_body>)
+{
+  $LIST( <common_body>) = $LIST(<19b:common_part>);
+}
+
 *------------------------------------------------------------------------------
 
 <common_body>	= <20b:scalar_name> ;
+
+$LIST( <common_body>)
+{
+  $LIST( <common_body>) = $LIST(<20b:scalar_name>);
+}
 
 *******************************************************************************
 
@@ -873,6 +1520,15 @@ $LIST(<8:program_statement>)
 <19b:common_part>
 		= / <99:symbolic_name> /  <20b:scalar_name> ;
 
+$LIST( <19b:common_part>)
+{
+  $LIST( <19b:common_part>) = SXML_LTL(
+    ast_common_name( $LIST(<99:symbolic_name>) ),
+    ",",
+    $LIST(<20b:scalar_name>)
+  );
+}
+
 *------------------------------------------------------------------------------
 
 * Voir ci-dessous le commentaire de la regle <60f:/:>. La situation est
@@ -882,10 +1538,26 @@ $LIST(<8:program_statement>)
 <19b:common_part>
 		= // <20b:scalar_name> ;
 
+$LIST( <19b:common_part>)
+{
+  $LIST( <19b:common_part>) = $LIST(<20b:scalar_name>);
+}    
+
 *******************************************************************************
 
 <20:type_statement>
 		= <10b:scalar_type>  <20a:scalar_name_list> ;
+
+$LIST(<20:type_statement>)
+{
+  $LIST(<20:type_statement>) = ast_type_statement(
+    ast_type_reference(
+      $LIST (<10b:scalar_type>),
+      NULL ),
+    LOCATION(0), 
+    $LIST( <20a:scalar_name_list>));
+
+}
 
 *------------------------------------------------------------------------------
 
@@ -893,6 +1565,18 @@ $LIST(<8:program_statement>)
 
 <20:type_statement>
 		= <10b:scalar_type> * <103:nonzero_unsigned_int_constant>  <20a:scalar_name_list> ;
+
+$LIST(<20:type_statement>)
+{
+  $LIST(<20:type_statement>) = ast_type_statement(
+    ast_type_reference(
+      $LIST( <10b:scalar_type>),
+      $LIST( <103:nonzero_unsigned_int_constant>)
+    ),
+    LOCATION(0), 
+    $LIST( <20a:scalar_name_list>)
+  );
+}
 
 *------------------------------------------------------------------------------
 
@@ -906,60 +1590,146 @@ $LIST(<8:program_statement>)
 <20:type_statement>
 		= CHARACTER  <20c:character_name_list> ;
 
+$LIST(<20:type_statement>)
+{
+  $LIST(<20:type_statement>) = ast_type_statement(
+    ast_type_reference( SXML_T("CHARACTER"), NULL),
+    LOCATION(0), 
+    $LIST( <20c:character_name_list>));
+}
+
 *------------------------------------------------------------------------------
 
 <20:type_statement>
 		= CHARACTER * <22:len_specification>  <20c:character_name_list> ;
+
+$LIST(<20:type_statement>)
+{
+  $LIST(<20:type_statement>) = ast_type_statement(
+    ast_type_reference(
+      SXML_T("CHARACTER"),
+      $LIST(<22:len_specification>)),
+    LOCATION(0), 
+    $LIST( <20c:character_name_list>));
+}
 
 *------------------------------------------------------------------------------
 
 <20:type_statement>
 		= CHARACTER * <22:len_specification> ,  <20c:character_name_list> ;
 
+$LIST(<20:type_statement>)
+{
+  $LIST(<20:type_statement>) = ast_type_statement(
+    ast_type_reference(
+      SXML_T("CHARACTER"),
+      $LIST(<22:len_specification>)),
+    LOCATION(0), 
+    $LIST( <20c:character_name_list>));
+}
+
 *******************************************************************************
 
 <20a:scalar_name_list>
 		= <20a:scalar_name_list> ,  <20b:scalar_name> ;
 
+$LIST( <20a:scalar_name_list>)
+{
+  $LIST(<20a:scalar_name_list>) = SXML_LTL (
+    $LIST(<20a:scalar_name_list>'),
+    ",",
+    $LIST(<20b:scalar_name>));
+}
+
 *------------------------------------------------------------------------------
 
 <20a:scalar_name_list>
 		= <20b:scalar_name> ;
+
+$LIST( <20a:scalar_name_list>)
+{
+  $LIST(<20a:scalar_name_list>) = $LIST( <20b:scalar_name>);
+}
 
 *******************************************************************************
 
 <20b:scalar_name>
 		= <16:array_declarator> ;
 
+$LIST(<20b:scalar_name>)
+{
+  $LIST(<20b:scalar_name>) = $LIST( <16:array_declarator>);
+}
+
 *------------------------------------------------------------------------------
 
 <20b:scalar_name>
 		= <99:symbolic_name> ;
+
+$LIST(<20b:scalar_name>)
+{
+  $LIST(<20b:scalar_name>) =  ast_variable_declarator(
+    $LIST(<99:symbolic_name>),
+    NULL);
+}
 
 *******************************************************************************
 
 <20c:character_name_list>
 		= <20c:character_name_list> ,  <20d:character_name> ;
 
+$LIST( <20c:character_name_list>)
+{
+  $LIST(<20c:character_name_list>) = SXML_LTL (
+    $LIST(<20c:character_name_list>'),
+    ",\n",
+    $LIST(<20d:character_name>));
+}
+
 *------------------------------------------------------------------------------
 
 <20c:character_name_list>
 		= <20d:character_name> ;
+
+$LIST( <20c:character_name_list>)
+{
+  $LIST(<20c:character_name_list>) = $LIST( <20d:character_name>);
+}
 
 *******************************************************************************
 
 <20d:character_name>
 		= <20b:scalar_name> * <22:len_specification> ;
 
+$LIST(<20d:character_name>)
+{
+  $LIST(<20d:character_name>) = ast_add_declarator_len(
+    $LIST( <20b:scalar_name>),
+    $LIST( <22:len_specification>) );
+}
+
 *------------------------------------------------------------------------------
 
 <20d:character_name>
 		= <20b:scalar_name> ;
 
+$LIST(<20d:character_name>)
+{
+  $LIST(<20d:character_name>) = $LIST( <20b:scalar_name>);
+}
+
 *******************************************************************************
 
 <21:implicit_statement>
 		= IMPLICIT  <21a:implicit_body_list> ;
+
+$LIST(<21:implicit_statement>)
+{
+  $LIST(<21:implicit_statement>) = ast_implicit_statement(
+    LOCATION(0),
+    $LIST(<21a:implicit_body_list>)
+    );
+}    
 
 *------------------------------------------------------------------------------
 
@@ -968,6 +1738,13 @@ $LIST(<8:program_statement>)
 <21:implicit_statement>
 		= IMPLICIT  NONE ;
 
+$LIST(<21:implicit_statement>)
+{
+  $LIST(<21:implicit_statement>) = ast_implicit_none_statement(
+    LOCATION(0)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 * [[EXTENSION]]
@@ -975,50 +1752,124 @@ $LIST(<8:program_statement>)
 <21:implicit_statement>
 		= IMPLICIT  UNDEFINED  ( <21c:implicit_elem_list> ) ;
 
+$LIST(<21:implicit_statement>)
+{
+  $LIST(<21:implicit_statement>) = ast_implicit_statement(
+    LOCATION(0),
+    ast_implicit_body_parameter(
+      ast_type_reference(
+        SXML_T("UNDEFINED"),
+        NULL ),
+      $LIST(<21c:implicit_elem_list>) )
+   );
+}    
+
 *******************************************************************************
 
 <21a:implicit_body_list>
 		= <21a:implicit_body_list> ,  <21b:implicit_body> ;
+
+$LIST(<21a:implicit_body_list>)
+{
+  $LIST(<21a:implicit_body_list>) = SXML_LTL(
+    $LIST(<21a:implicit_body_list>'),
+    ",", 
+    $LIST(<21b:implicit_body>)
+    );
+}    
 
 *------------------------------------------------------------------------------
 
 <21a:implicit_body_list>
 		= <21b:implicit_body> ;
 
+$LIST(<21a:implicit_body_list>)
+{
+  $LIST(<21a:implicit_body_list>) = $LIST(<21b:implicit_body>);
+}     
+
 *******************************************************************************
 
 <21b:implicit_body>
 		= <10a:type>  ( <21c:implicit_elem_list> ) ;
+
+$LIST(<21b:implicit_body>)
+{
+  $LIST(<21b:implicit_body>) = ast_implicit_body_parameter(
+      $LIST(<10a:type>), 
+      $LIST(<21c:implicit_elem_list>)
+      );
+} 
 
 *******************************************************************************
 
 <21c:implicit_elem_list>
 		= <21c:implicit_elem_list> ,  <21d:implicit_elem> ;
 
+$LIST(<21c:implicit_elem_list>)
+{
+  $LIST(<21c:implicit_elem_list>) = SXML_LTL(
+    $LIST(<21c:implicit_elem_list>'), 
+    ",", 
+    $LIST(<21d:implicit_elem>)
+    );
+}
+
 *------------------------------------------------------------------------------
 
 <21c:implicit_elem_list>
 		= <21d:implicit_elem> ;
+
+$LIST(<21c:implicit_elem_list>)
+{
+  $LIST(<21c:implicit_elem_list>) = $LIST(<21d:implicit_elem>);
+}    
 
 *******************************************************************************
 
 <21d:implicit_elem>
 		= <99b:letter> ;
 
+$LIST(<21d:implicit_elem>)
+{
+  $LIST(<21d:implicit_elem>) = ast_implicit_element(
+    $NAME(<99b:letter>),
+    ""
+  );
+}
+
 *------------------------------------------------------------------------------
 
 <21d:implicit_elem>
 		= <99b:letter> - <99b:letter> ;
+
+$LIST(<21d:implicit_elem>)
+{
+  $LIST(<21d:implicit_elem>) = ast_implicit_element(
+    $NAME(<99b:letter>),
+    $NAME(<99b:letter>')
+  );
+}    
 
 *******************************************************************************
 
 <22:len_specification>
 		= ( * ) ;
 
+$LIST( <22:len_specification>)
+{
+  $LIST( <22:len_specification>) = ast_text_to_map("asterisk", "*");
+}
+
 *------------------------------------------------------------------------------
 
 <22:len_specification>
 		= <103:nonzero_unsigned_int_constant> ;
+
+$LIST( <22:len_specification>)
+{
+  $LIST( <22:len_specification>) = $LIST(<103:nonzero_unsigned_int_constant>) ;
+}
 
 *------------------------------------------------------------------------------
 
@@ -1028,264 +1879,643 @@ $LIST(<8:program_statement>)
 <22:len_specification>
 		= %int_id ;
 
+$LIST( <22:len_specification>)
+{
+  /* ce bloc dinstructions ne doit jamais etre execute */
+  assert (false);
+  // $LIST( <22:len_specification>) = SXML_T($ptext ("%int_id"));
+}
+
 *------------------------------------------------------------------------------
 
 <22:len_specification>
 		= ( <80:int_constant_expr> ) ;
+
+$LIST( <22:len_specification>)
+{
+  $LIST( <22:len_specification>) = $LIST(<80:int_constant_expr>);
+}
 
 *******************************************************************************
 
 <23:parameter_statement>
 		= PARAMETER  ( <23a:assign_list> ) ;
 
+$LIST( <23:parameter_statement>)
+{
+  $LIST( <23:parameter_statement>) = ast_parameter_statement(
+    LOCATION(0),
+    $LIST(<23a:assign_list>)
+    );
+}    
+
 *******************************************************************************
 
 <23a:assign_list>
 		= <23a:assign_list> ,  <23b:assign> ;
+
+$LIST( <23a:assign_list>)
+{
+  $LIST( <23a:assign_list>) = SXML_LTL(
+    $LIST(<23a:assign_list>'),
+    ",",
+    $LIST(<23b:assign>)
+    );
+}    
 
 *------------------------------------------------------------------------------
 
 <23a:assign_list>
 		= <23b:assign> ;
 
+$LIST( <23a:assign_list>)
+{
+  $LIST( <23a:assign_list>) = $LIST(<23b:assign>);
+}    
+
 *******************************************************************************
 
 <23b:assign>	= <99:symbolic_name>  =  <75:constant_expr> ;
+
+$LIST( <23b:assign>)
+{
+  $LIST( <23b:assign>) = ast_parameter_assign(
+    $LIST(<99:symbolic_name>), 
+    $LIST(<75:constant_expr>) 
+    );
+}
 
 *******************************************************************************
 
 <24:external_statement>
 		= EXTERNAL  <99a:symbolic_name_list> ;
 
+$LIST( <24:external_statement>)
+{
+  $LIST( <24:external_statement>) = $LIST(<99a:symbolic_name_list>);
+}    
+
 *******************************************************************************
 
 <25:intrinsic_statement>
 		= INTRINSIC  <99a:symbolic_name_list> ;
+
+$LIST( <25:intrinsic_statement>)
+{
+  $LIST( <25:intrinsic_statement>) = $LIST(<99a:symbolic_name_list>);
+}    
 
 *******************************************************************************
 
 <26:save_statement>
 		= SAVE ;
 
+$LIST( <26:save_statement>)
+{
+  $LIST( <26:save_statement>) = NULL;
+}    
+
 *------------------------------------------------------------------------------
 
 <26:save_statement>
 		= SAVE  <26a:save_statement_name_list> ;
+
+$LIST( <26:save_statement>)
+{
+  $LIST( <26:save_statement>) = $LIST(<26a:save_statement_name_list>);
+}    
 
 *******************************************************************************
 
 <26a:save_statement_name_list>
 		= <26a:save_statement_name_list> ,  <26b:save_statement_name> ;
 
+$LIST( <26a:save_statement_name_list>)
+{
+  $LIST( <26a:save_statement_name_list>) = SXML_LTL(
+    $LIST(<26a:save_statement_name_list>'),
+    ",",
+    $LIST(<26b:save_statement_name>)
+  );
+}
+
 *------------------------------------------------------------------------------
 
 <26a:save_statement_name_list>
 		= <26b:save_statement_name> ;
 
+$LIST( <26a:save_statement_name_list>)
+{
+  $LIST( <26a:save_statement_name_list>) = $LIST(<26b:save_statement_name>);
+}    
+
 *******************************************************************************
 
 <26b:save_statement_name>
 		= <99:symbolic_name> ;
+
+$LIST( <26b:save_statement_name>)
+{
+  $LIST( <26b:save_statement_name>) = $LIST(<99:symbolic_name>);
+}
 
 *------------------------------------------------------------------------------
 
 <26b:save_statement_name>
 		= / <99:symbolic_name> / ;
 
+$LIST( <26b:save_statement_name>)
+{
+  $LIST( <26b:save_statement_name>) = $LIST(<99:symbolic_name>);
+}    
+
 *******************************************************************************
 
 <27:data_statement>
 		= DATA  <27a:data_statement_body_list> ;
+
+$LIST( <27:data_statement>)
+{
+  $LIST( <27:data_statement>) = ast_data_statement(
+    LOCATION(0),
+    $LIST(<27a:data_statement_body_list>)
+  );
+}    
 
 *******************************************************************************
 
 <27a:data_statement_body_list>
 		= <27a:data_statement_body_list> ,  <27b:data_statement_body> ;
 
+$LIST( <27a:data_statement_body_list>)
+{
+  $LIST( <27a:data_statement_body_list>) = SXML_LTL(
+    $LIST(<27a:data_statement_body_list>'),
+    ",",
+    $LIST(<27b:data_statement_body>)
+  );
+}
+
 *------------------------------------------------------------------------------
 
 <27a:data_statement_body_list>
 		= <27a:data_statement_body_list> <27b:data_statement_body> ;
+
+$LIST( <27a:data_statement_body_list>)
+{
+  $LIST( <27a:data_statement_body_list>) = SXML_LTL(
+    $LIST(<27a:data_statement_body_list>'),
+    ",",
+    $LIST(<27b:data_statement_body>)
+  );
+}    
 
 *------------------------------------------------------------------------------
 
 <27a:data_statement_body_list>
 		= <27b:data_statement_body> ;
 
+$LIST( <27a:data_statement_body_list>)
+{
+  $LIST( <27a:data_statement_body_list>) = $LIST(<27b:data_statement_body>);
+}    
+
 *******************************************************************************
 
 <27b:data_statement_body>
 		= <27c:data_statement_name_list>  / <27e:data_statement_constant_list> / ;
+
+$LIST( <27b:data_statement_body>)
+{
+  $LIST( <27b:data_statement_body>) = ast_data_statement_parameter(
+    $LIST(<27c:data_statement_name_list>),
+    $LIST(<27e:data_statement_constant_list>)
+  );
+}    
 
 *******************************************************************************
 
 <27c:data_statement_name_list>
 		= <27c:data_statement_name_list> ,  <27d:data_statement_name> ;
 
+$LIST( <27c:data_statement_name_list>)
+{
+  $LIST( <27c:data_statement_name_list>) = SXML_LTL(
+    $LIST(<27c:data_statement_name_list>'),
+    ",",
+    $LIST(<27d:data_statement_name>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <27c:data_statement_name_list>
 		= <27d:data_statement_name> ;
+
+$LIST( <27c:data_statement_name_list>)
+{
+  $LIST( <27c:data_statement_name_list>) = $LIST(<27d:data_statement_name>);
+}    
 
 *******************************************************************************
 
 <27d:data_statement_name>
 		= <99:symbolic_name> ;
 
+$LIST( <27d:data_statement_name>)
+{
+  $LIST( <27d:data_statement_name>) = $LIST(<99:symbolic_name>);
+}
+
 *------------------------------------------------------------------------------
 
 <27d:data_statement_name>
 		= <88b:function_reference_or_array_element_name> ;
+
+$LIST( <27d:data_statement_name>)
+{
+  $LIST( <27d:data_statement_name>) = $LIST(<88b:function_reference_or_array_element_name>);
+}    
 
 *------------------------------------------------------------------------------
 
 <27d:data_statement_name>
 		= <89:substring_name> ;
 
+$LIST( <27d:data_statement_name>)
+{
+  $LIST( <27d:data_statement_name>) = $LIST(<89:substring_name>);
+}    
+
 *------------------------------------------------------------------------------
 
 <27d:data_statement_name>
 		= <28:data_imply_do_list> ;
+
+$LIST( <27d:data_statement_name>)
+{
+  $LIST( <27d:data_statement_name>) = $LIST(<28:data_imply_do_list>);
+}    
 
 *******************************************************************************
 
 <27e:data_statement_constant_list>
 		= <27e:data_statement_constant_list> ,  <27f:data_statement_constant> ;
 
+$LIST( <27e:data_statement_constant_list>)
+{
+  $LIST( <27e:data_statement_constant_list>) = SXML_LTL(
+    $LIST(<27e:data_statement_constant_list>'),
+    ",",
+    $LIST(<27f:data_statement_constant>)
+  );
+}     
+
 *------------------------------------------------------------------------------
 
 <27e:data_statement_constant_list>
 		= <27f:data_statement_constant>;
 
+$LIST( <27e:data_statement_constant_list>)
+{
+  $LIST( <27e:data_statement_constant_list>) = $LIST(<27f:data_statement_constant>);
+}     
+
 *******************************************************************************
 
 <27f:data_statement_constant>
 		= <99:symbolic_name> ;
+
+$LIST( <27f:data_statement_constant>)
+{
+  $LIST( <27f:data_statement_constant>) = ast_data_statement_constant(
+    ast_empty_map(),
+    $LIST(<99:symbolic_name>)
+  );
+}    
 
 *------------------------------------------------------------------------------
 
 <27f:data_statement_constant>
 		= <100:constant> ;
 
+$LIST( <27f:data_statement_constant>)
+{
+  $LIST( <27f:data_statement_constant>) = ast_data_statement_constant(
+    ast_empty_map(),
+    $LIST(<100:constant>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <27f:data_statement_constant>
 		= <103:nonzero_unsigned_int_constant>  *  <100:constant> ;
+
+$LIST( <27f:data_statement_constant>)
+{
+  $LIST( <27f:data_statement_constant>) = ast_data_statement_constant(
+    $LIST(<103:nonzero_unsigned_int_constant>),
+    $LIST(<100:constant>)
+  );
+}    
 
 *------------------------------------------------------------------------------
 
 <27f:data_statement_constant>
 		= <103:nonzero_unsigned_int_constant>  *  <99:symbolic_name> ;
 
+$LIST( <27f:data_statement_constant>)
+{
+  $LIST( <27f:data_statement_constant>) = ast_data_statement_constant(
+    $LIST(<103:nonzero_unsigned_int_constant>),
+    $LIST(<99:symbolic_name>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <27f:data_statement_constant>
 		= <99:symbolic_name>  *  <100:constant> ;
+
+$LIST( <27f:data_statement_constant>)
+{
+  $LIST( <27f:data_statement_constant>) = ast_data_statement_constant(
+    $LIST(<99:symbolic_name>),
+    $LIST(<100:constant>)
+  );
+}    
 
 *------------------------------------------------------------------------------
 
 <27f:data_statement_constant>
 		= <99:symbolic_name>  *  <99:symbolic_name> ;
 
+$LIST( <27f:data_statement_constant>)
+{
+  $LIST( <27f:data_statement_constant>) = ast_data_statement_constant(
+    $LIST(<99:symbolic_name>),
+    $LIST(<99:symbolic_name>)
+  );
+}    
+
 *******************************************************************************
 
 <28:data_imply_do_list>
 		= ( <28a:data_imply_do_list_head_list>  =  <80:int_constant_expr> ,  <80:int_constant_expr> ) ;
+
+$LIST( <28:data_imply_do_list>)
+{
+  $LIST( <28:data_imply_do_list>) = ast_data_imply_do_list(
+    $LIST(<28a:data_imply_do_list_head_list>),
+    ast_do_parameters(
+      $LIST(<80:int_constant_expr>),
+      $LIST(<80:int_constant_expr>'),
+      NULL)
+  );
+}
 
 *------------------------------------------------------------------------------
 
 <28:data_imply_do_list>
 		= ( <28a:data_imply_do_list_head_list>  =  <80:int_constant_expr> ,  <80:int_constant_expr> ,  <80:int_constant_expr> ) ;
 
+$LIST( <28:data_imply_do_list>)
+{
+  $LIST( <28:data_imply_do_list>) = ast_data_imply_do_list(
+    $LIST(<28a:data_imply_do_list_head_list>),
+    ast_do_parameters(
+      $LIST(<80:int_constant_expr>),
+      $LIST(<80:int_constant_expr>'),
+      $LIST(<80:int_constant_expr>'') )
+  ); 
+}   
+
 *******************************************************************************
 
 <28a:data_imply_do_list_head_list>
 		= <28b:data_imply_do_list_head> ,  <28a:data_imply_do_list_head_list> ;
+
+$LIST( <28a:data_imply_do_list_head_list>)
+{
+  $LIST( <28a:data_imply_do_list_head_list>) = SXML_LTL(
+    $LIST(<28b:data_imply_do_list_head>),
+    ",",
+    $LIST(<28a:data_imply_do_list_head_list>')
+  );
+}    
 
 *------------------------------------------------------------------------------
 
 <28a:data_imply_do_list_head_list>
 		= <28b:data_imply_do_list_head> ,  <99:symbolic_name> ;
 
+$LIST( <28a:data_imply_do_list_head_list>)
+{
+  $LIST( <28a:data_imply_do_list_head_list>) = SXML_LTL(
+    $LIST(<28b:data_imply_do_list_head>),
+    ",",
+    $LIST(<99:symbolic_name>)
+  );
+}    
+
 *******************************************************************************
 
 <28b:data_imply_do_list_head>
 		= <88b:function_reference_or_array_element_name> ;
+
+$LIST( <28b:data_imply_do_list_head>)
+{
+  $LIST( <28b:data_imply_do_list_head>) = $LIST(<88b:function_reference_or_array_element_name>);
+}    
 
 *------------------------------------------------------------------------------
 
 <28b:data_imply_do_list_head>
 		= <28:data_imply_do_list> ;
 
+$LIST( <28b:data_imply_do_list_head>)
+{
+  $LIST( <28b:data_imply_do_list_head>) = $LIST(<28:data_imply_do_list>);
+}  
+
 *******************************************************************************
 
 <29:assignment_statement>
 		= <29a:left_hand_side>  =  <74:expression> ;
+
+$LIST( <29:assignment_statement>)
+{
+  $LIST( <29:assignment_statement>) = ast_assignment_statement(
+    LOCATION(0),
+    $LIST(<29a:left_hand_side>),
+    $LIST(<74:expression>)
+  );
+}
 
 *------------------------------------------------------------------------------
 
 <29:assignment_statement>
 		= ASSIGN  <110b:label_ref>  TO  <99:symbolic_name> ;
 
+$LIST( <29:assignment_statement>)
+{
+  $LIST( <29:assignment_statement>) = ast_assignment_statement(
+    LOCATION(0),
+    $LIST(<110b:label_ref>),
+    $LIST(<99:symbolic_name>)
+  );
+}    
+
 *******************************************************************************
 
 <29a:left_hand_side>
 		= <99:symbolic_name> ;
+
+$LIST( <29a:left_hand_side>)
+{
+  $LIST( <29a:left_hand_side>) = $LIST(<99:symbolic_name>);
+}    
 
 *------------------------------------------------------------------------------
 
 <29a:left_hand_side>
 		= <88:array_element_name> ;
 
+$LIST( <29a:left_hand_side>)
+{
+  $LIST( <29a:left_hand_side>) = $LIST(<88:array_element_name>);
+}    
+
 *------------------------------------------------------------------------------
 
 <29a:left_hand_side>
 		= <89:substring_name> ;
+
+$LIST( <29a:left_hand_side>)
+{
+  $LIST( <29a:left_hand_side>) = $LIST(<89:substring_name>);
+}    
 
 *******************************************************************************
 
 <30:goto_statement>
 		= <31:unconditional_goto> ;
 
+$LIST( <30:goto_statement>)
+{
+  $LIST( <30:goto_statement>) = $LIST(<31:unconditional_goto>);
+}    
+
 *------------------------------------------------------------------------------
 
 <30:goto_statement>
 		= <32:computed_goto> ;
+
+$LIST( <30:goto_statement>)
+{
+  $LIST( <30:goto_statement>) = $LIST(<32:computed_goto>);
+}    
 
 *------------------------------------------------------------------------------
 
 <30:goto_statement>
 		= <33:assigned_goto> ;
 
+$LIST( <30:goto_statement>)
+{
+  $LIST( <30:goto_statement>) = $LIST(<33:assigned_goto>);
+}    
+
 *******************************************************************************
 
 <31:unconditional_goto>
 		= GO  TO  <110b:label_ref> ;
+
+$LIST( <31:unconditional_goto>)
+{
+  $LIST( <31:unconditional_goto>) = ast_goto_statement(
+    LOCATION(0),
+    "unconditional",
+    $LIST(<110b:label_ref>),
+    NULL
+  );
+}
 
 *******************************************************************************
 
 <32:computed_goto>
 		= GO  TO  ( <110a:label_ref_list> ) ,  <77:integer_expr> ;
 
+$LIST( <32:computed_goto>)
+{
+  $LIST( <32:computed_goto>) = ast_goto_statement(
+    LOCATION(0),
+    "computed",
+    $LIST(<110a:label_ref_list>),
+    $LIST(<77:integer_expr>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <32:computed_goto>
 		= GO  TO  ( <110a:label_ref_list> )  <77:integer_expr> ;
+
+$LIST( <32:computed_goto>)
+{
+  $LIST( <32:computed_goto>) = ast_goto_statement(
+    LOCATION(0),
+    "computed",
+    $LIST(<110a:label_ref_list>),
+    $LIST(<77:integer_expr>)
+  );
+}    
 
 *******************************************************************************
 
 <33:assigned_goto>
 		= GO  TO  <99:symbolic_name> ,  ( <110a:label_ref_list> ) ;
 
+$LIST( <33:assigned_goto>)
+{
+  $LIST( <33:assigned_goto>) = ast_goto_statement(
+    LOCATION(0),
+    "assigned",
+    $LIST(<110a:label_ref_list>),
+    $LIST(<99:symbolic_name>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <33:assigned_goto>
 		= GO  TO  <99:symbolic_name>  ( <110a:label_ref_list> ) ;
 
+$LIST( <33:assigned_goto>)
+{
+  $LIST( <33:assigned_goto>) = ast_goto_statement(
+    LOCATION(0),
+    "assigned",
+    $LIST(<110a:label_ref_list>),
+    $LIST(<99:symbolic_name>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <33:assigned_goto>
 		= GO  TO  <99:symbolic_name> ;
+
+$LIST( <33:assigned_goto>)
+{
+  $LIST( <33:assigned_goto>) = ast_goto_statement(
+    LOCATION(0),
+    "assigned",
+    NULL,
+    $LIST(<99:symbolic_name>)
+  );
+}    
 
 *******************************************************************************
 
@@ -1294,6 +2524,17 @@ $LIST(<8:program_statement>)
 <34:arithmetic_if_statement>
 		= IF  ( <74:expression> )  <110b:label_ref> ,  <110b:label_ref> ,  <110b:label_ref> ;
 
+$LIST( <34:arithmetic_if_statement>)
+{
+  $LIST( <34:arithmetic_if_statement>) = ast_arithmetic_if_statement(
+    LOCATION(0),
+    $LIST(<74:expression>),
+    $LIST(<110b:label_ref>),
+    $LIST(<110b:label_ref>'),
+    $LIST(<110b:label_ref>'')
+  );
+}    
+
 *******************************************************************************
 
 *The executable statement contained in a logical IF statement must not be
@@ -1301,6 +2542,14 @@ $LIST(<8:program_statement>)
 
 <35:logical_if_statement>
 		= IF  ( <74:expression> )  <7:executable_statement> ;
+
+$LIST(<35:logical_if_statement>)
+{
+  $LIST(<35:logical_if_statement>) = ast_logical_if_statement(
+    LOCATION(0),
+    $LIST(<74:expression>), 
+    $LIST(<7:executable_statement>)); 
+}    
 
 *******************************************************************************
 
@@ -1316,11 +2565,31 @@ $LIST(<8:program_statement>)
 		     <2c:statement_list>
 		  <36a:else_blocks> ;
 
+$LIST(<36:block_if_statement>)
+{
+  $LIST(<36:block_if_statement>) = ast_block_if_statement(
+    LOCATION(0),
+    $LIST(<74:expression>),
+    $LIST(<2c:statement_list>), 
+    $LIST(<36a:else_blocks>)
+  ); 
+}
+
 *------------------------------------------------------------------------------
 
 <36:block_if_statement>
 		= IF  ( <74:expression> )  THEN %EOL
 		  <36a:else_blocks> ;
+
+$LIST(<36:block_if_statement>)
+{
+  $LIST(<36:block_if_statement>) = ast_block_if_statement(
+    LOCATION(0),
+    $LIST(<74:expression>),
+    NULL, 
+    $LIST(<36a:else_blocks>)
+  ); 
+}      
 
 *******************************************************************************
 
@@ -1338,6 +2607,15 @@ $LIST(<8:program_statement>)
 <36a:else_blocks>
 		= <39:end_if_statement> ;
 
+$LIST(<36a:else_blocks>)
+{
+  $LIST(<36a:else_blocks>) = ast_else_block(
+    NULL,
+    NULL,
+    $LIST(<39:end_if_statement>)
+  );
+}
+
 *------------------------------------------------------------------------------
 
 <36a:else_blocks>
@@ -1345,11 +2623,29 @@ $LIST(<8:program_statement>)
 		     <2c:statement_list>
 		  <39:end_if_statement> ;
 
+$LIST(<36a:else_blocks>)
+{
+  $LIST(<36a:else_blocks>) = ast_else_block(
+    $LIST(<38:else_statement>),
+    $LIST(<2c:statement_list>),
+    $LIST(<39:end_if_statement>)
+  );
+}      
+
 *------------------------------------------------------------------------------
 
 <36a:else_blocks>
 		= <38:else_statement>
 		  <39:end_if_statement> ;
+
+$LIST(<36a:else_blocks>)
+{
+  $LIST(<36a:else_blocks>) =  ast_else_block(
+    $LIST(<38:else_statement>),
+    NULL,
+    $LIST(<39:end_if_statement>)
+  );
+}      
 
 *------------------------------------------------------------------------------
 
@@ -1358,41 +2654,108 @@ $LIST(<8:program_statement>)
 		     <2c:statement_list>
 		  <36a:else_blocks> ;
 
+$LIST(<36a:else_blocks>)
+{
+  $LIST(<36a:else_blocks>) = ast_else_if_else(
+    $LIST(<37:else_if_statement>),
+    $LIST(<2c:statement_list>),
+    $LIST(<36a:else_blocks>)
+  );
+}
+
 *------------------------------------------------------------------------------
 
 <36a:else_blocks>
 		= <37:else_if_statement>
 		  <36a:else_blocks> ;
+
+$LIST(<36a:else_blocks>)
+{
+  $LIST(<36a:else_blocks>) = ast_else_if_else(
+    $LIST(<37:else_if_statement>),
+    NULL,
+    $LIST(<36a:else_blocks>)
+  );
+}      
 
 *******************************************************************************
 
 <37:else_if_statement>
 		= ELSE  IF  ( <74:expression> )  THEN %EOL ;
 
+$LIST(<37:else_if_statement>)
+{
+  $LIST(<37:else_if_statement>) = ast_else_if_line(
+    LOCATION(0),
+    NULL,
+    $LIST(<74:expression>)
+  );
+}   
+
 *------------------------------------------------------------------------------
 
 <37:else_if_statement>
 		= <110:label> ELSE  IF  ( <74:expression> )  THEN %EOL ;
+
+$LIST(<37:else_if_statement>)
+{
+  $LIST(<37:else_if_statement>) = ast_else_if_line(
+    LOCATION(0),
+    $NAME(<110:label>),
+    $LIST(<74:expression>)
+  );
+}    
 
 *******************************************************************************
 
 <38:else_statement>
 		= ELSE %EOL ;
 
+$LIST(<38:else_statement>)
+{
+  $LIST(<38:else_statement>) = ast_else_line(
+    LOCATION(0),
+    NULL);
+}
+
 *------------------------------------------------------------------------------
 
 <38:else_statement>
 		= <110:label> ELSE %EOL ;
+
+$LIST(<38:else_statement>)
+{
+  $LIST(<38:else_statement>) = ast_else_line(
+    LOCATION(0),
+    $NAME(<110:label>)
+  );
+}    
 
 *******************************************************************************
 
 <39:end_if_statement>
 		= END  IF ;
 
+$LIST(<39:end_if_statement>)
+{
+  $LIST(<39:end_if_statement>) = ast_end_if(
+    LOCATION(0),
+    NULL
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <39:end_if_statement>
 		= <110:label> END  IF ;
+
+$LIST(<39:end_if_statement>)
+{
+  $LIST(<39:end_if_statement>) = ast_end_if(
+    LOCATION(0),
+    $NAME(<110:label>)
+  );
+}    
 
 *******************************************************************************
 
@@ -1432,6 +2795,15 @@ $LIST(<8:program_statement>)
 <40a:do_loop>	= <40:do_statement>
 		     <2c:statement_list> %ENDDO ;
 
+$LIST(<40a:do_loop>)
+ {
+   $LIST(<40a:do_loop>) = ast_do_loop(
+     $LIST(<40:do_statement>), 
+     $LIST(<2c:statement_list>),
+     NULL
+   );
+ }
+
 *------------------------------------------------------------------------------
 
 * [[EXTENSION]]
@@ -1441,6 +2813,19 @@ $LIST(<8:program_statement>)
 <40a:do_loop>	= DO  WHILE ( <84:logical_expression> ) %EOL
 		     <2c:statement_list>
                   <40c:end_do> ;
+
+$LIST(<40a:do_loop>)
+{
+   $LIST(<40a:do_loop>) = ast_do_loop(
+   	ast_do_while_statement(
+    	  LOCATION(0),
+	  NULL, 
+	  $LIST(<84:logical_expression>)
+  	),
+  	$LIST(<2c:statement_list>),
+  	$LIST(<40c:end_do>)
+  );
+ }
 
 *------------------------------------------------------------------------------
 
@@ -1452,15 +2837,49 @@ $LIST(<8:program_statement>)
 		     <2c:statement_list>
                   <40c:end_do> ;
 
+$LIST(<40a:do_loop>)
+ {
+   $LIST(<40a:do_loop>) = ast_do_loop(
+   	ast_do_statement(
+    	  LOCATION(0),
+	  NULL, 
+	  $LIST(<99:symbolic_name>), 
+	  $LIST(<40b:do_parameters>)
+  	),
+  	$LIST(<2c:statement_list>),
+  	$LIST(<40c:end_do>)
+  );
+ }
+
 *******************************************************************************
 
 <40:do_statement>
 		= DO  <110b:label_ref> ,  <99:symbolic_name>  =  <40b:do_parameters> %EOL ;
 
+$LIST(<40:do_statement>)
+{
+  $LIST(<40:do_statement>) = ast_do_statement(
+    LOCATION(0),
+    $LIST(<110b:label_ref>), 
+    $LIST(<99:symbolic_name>), 
+    $LIST(<40b:do_parameters>)
+  );
+}
+
 *------------------------------------------------------------------------------
 
 <40:do_statement>
 		= DO  <110b:label_ref>  <99:symbolic_name>  =  <40b:do_parameters> %EOL ;
+
+$LIST(<40:do_statement>)
+{
+  $LIST(<40:do_statement>) = ast_do_statement(
+    LOCATION(0), 
+    $LIST(<110b:label_ref>), 
+    $LIST(<99:symbolic_name>), 
+    $LIST(<40b:do_parameters>)
+  );
+}    
 
 *------------------------------------------------------------------------------
 
@@ -1468,35 +2887,88 @@ $LIST(<8:program_statement>)
 <40:do_statement>
 		= DO  <110b:label_ref>  WHILE ( <84:logical_expression> ) %EOL ;
 
+$LIST(<40:do_statement>)
+{
+  $LIST(<40:do_statement>) = ast_do_while_statement(
+    LOCATION(0), 
+    $LIST(<110b:label_ref>), 
+    $LIST(<84:logical_expression>)
+  );
+}
+
 *------------------------------------------------------------------------------
 
 * [[EXTENSION]]
 <40:do_statement>
 		= DO  <110b:label_ref> ,  WHILE ( <84:logical_expression> ) %EOL ;
 
+$LIST(<40:do_statement>)
+{
+  $LIST(<40:do_statement>) = ast_do_while_statement(
+    LOCATION(0), 
+    $LIST(<110b:label_ref>), 
+    $LIST(<84:logical_expression>)
+  );
+}
+
 *******************************************************************************
 
 * [[EXTENSION]]
 <40c:end_do>    = END  DO ;
 
+$LIST(<40c:end_do>)
+{
+  $LIST(<40c:end_do>) = ast_end_do("");
+}
+
 *------------------------------------------------------------------------------
 
 <40c:end_do>    = <110:label>  END  DO ;
+
+$LIST(<40c:end_do>)
+{
+  $LIST(<40c:end_do>) = ast_end_do(
+    $NAME(<110:label>)
+  );
+}
 
 *******************************************************************************
 
 <40b:do_parameters>
 		= <78:int_real_dp_expr> ,  <78:int_real_dp_expr> ,  <78:int_real_dp_expr> ;
 
+$LIST(<40b:do_parameters>)
+{
+  $LIST(<40b:do_parameters>) = ast_do_parameters(
+  	$LIST(<78:int_real_dp_expr>), 
+  	$LIST(<78:int_real_dp_expr>'), 
+  	$LIST(<78:int_real_dp_expr>'')
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <40b:do_parameters>
 		= <78:int_real_dp_expr> ,  <78:int_real_dp_expr> ;
 
+$LIST(<40b:do_parameters>)
+{
+  $LIST(<40b:do_parameters>) = ast_do_parameters(
+  	$LIST(<78:int_real_dp_expr>), 
+  	$LIST(<78:int_real_dp_expr>'), 
+  	NULL
+  );
+}    
+
 *******************************************************************************
 
 <41:continue_statement>
 		= CONTINUE ;
+
+$LIST( <41:continue_statement>)
+{
+  $LIST( <41:continue_statement>) = NULL;
+}    
 
 *******************************************************************************
 
@@ -1506,40 +2978,88 @@ $LIST(<8:program_statement>)
 <42:stop_statement>
 		= STOP ;
 
+$LIST( <42:stop_statement>)
+{
+  $LIST( <42:stop_statement>) = NULL;
+}
+
 *------------------------------------------------------------------------------
 
 <42:stop_statement>
 		= STOP  <102:unsigned_int_constant> ;
+
+$LIST( <42:stop_statement>)
+{
+  $LIST( <42:stop_statement>) = $LIST(<102:unsigned_int_constant>);
+}
 
 *------------------------------------------------------------------------------
 
 <42:stop_statement>
 		= STOP  <109:character_constant> ;
 
+$LIST( <42:stop_statement>)
+{
+  $LIST( <42:stop_statement>) = $LIST(<109:character_constant>);
+}
+
 *******************************************************************************
 
 <43:pause_statement>
 		= PAUSE  ;
+
+$LIST( <43:pause_statement>)
+{
+  $LIST( <43:pause_statement>) = NULL;
+}
 
 *------------------------------------------------------------------------------
 
 <43:pause_statement>
 		= PAUSE  <102:unsigned_int_constant> ;
 
+$LIST( <43:pause_statement>)
+{
+  $LIST( <43:pause_statement>) = $LIST(<102:unsigned_int_constant>);
+}
+
 *------------------------------------------------------------------------------
 
 <43:pause_statement>
 		= PAUSE  <109:character_constant> ;
+
+$LIST( <43:pause_statement>)
+{
+  $LIST( <43:pause_statement>) = $LIST(<109:character_constant>);
+}
 
 *******************************************************************************
 
 <44:write_statement>
 		= WRITE  ( <47:control_info_list> )  <48:io_list> ;
 
+$LIST( <44:write_statement>)
+{
+  $LIST( <44:write_statement>) = ast_write_statement(
+    LOCATION(0),
+    $LIST(<47:control_info_list>),
+    $LIST(<48:io_list>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <44:write_statement>
 		= WRITE  ( <47:control_info_list> ) ;
+
+$LIST( <44:write_statement>)
+{
+  $LIST( <44:write_statement>) = ast_write_statement(
+    LOCATION(0),
+    $LIST(<47:control_info_list>),
+    NULL
+  );
+}    
 
 *******************************************************************************
 
@@ -1550,30 +3070,88 @@ $LIST(<8:program_statement>)
 <45:read_statement>
 		= READ  ( <47:control_info_list> )  <48:io_list> ;
 
+$LIST( <45:read_statement>)
+{
+  $LIST( <45:read_statement>) = ast_read_statement(
+    LOCATION(0),
+    NULL,
+    $LIST(<47:control_info_list>),
+    $LIST(<48:io_list>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <45:read_statement>
 		= READ  ( <47:control_info_list> ) ;
+
+$LIST( <45:read_statement>)
+{
+  $LIST( <45:read_statement>) = ast_read_statement(
+    LOCATION(0),
+    NULL,
+    $LIST(<47:control_info_list>),
+    NULL  
+  );
+}    
 
 *------------------------------------------------------------------------------
 
 <45:read_statement>
 		= READkw  <57:format_identifier> ,  <48:io_list> ;
 
+$LIST( <45:read_statement>)
+{
+  $LIST( <45:read_statement>) = ast_read_statement(
+    LOCATION(0),
+    $LIST(<57:format_identifier>),
+    NULL,
+    $LIST(<48:io_list>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <45:read_statement>
 		= READkw  <57:format_identifier> ;
+
+$LIST( <45:read_statement>)
+{
+  $LIST( <45:read_statement>) = ast_read_statement(
+    LOCATION(0),
+    $LIST(<57:format_identifier>),
+    NULL,
+    NULL
+  );
+}
 
 *******************************************************************************
 
 <46:print_statement>
 		= PRINT  <57:format_identifier> ,  <48:io_list> ;
 
+$LIST( <46:print_statement>)
+{
+  $LIST( <46:print_statement>) = ast_print_statement(
+    LOCATION(0),
+    $LIST(<57:format_identifier>),
+    $LIST(<48:io_list>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <46:print_statement>
 		= PRINT  <57:format_identifier> ;
+
+$LIST( <46:print_statement>)
+{
+  $LIST( <46:print_statement>) = ast_print_statement(
+    LOCATION(0),
+    $LIST(<57:format_identifier>),
+    NULL
+  );
+}    
 
 *******************************************************************************
 
@@ -1584,60 +3162,153 @@ $LIST(<8:program_statement>)
 <47:control_info_list>
 		= <56:unit_identifier> ;
 
+$LIST( <47:control_info_list>)
+{ //TODO : object UnitIdentifier
+  $LIST( <47:control_info_list>) = $LIST(<56:unit_identifier>);
+}    
+
 *------------------------------------------------------------------------------
 
 <47:control_info_list>
 		= <47b:control_info_elem_list> ;
+
+$LIST( <47:control_info_list>)
+{
+  $LIST( <47:control_info_list>) = $LIST(<47b:control_info_elem_list>);
+}     
 
 *******************************************************************************
 
 <47b:control_info_elem_list>
 		= <47b:control_info_elem_list> ,  <47a:control_info_elem> ;
 
+$LIST( <47b:control_info_elem_list>)
+{
+  $LIST( <47b:control_info_elem_list>) = SXML_LTL(
+    $LIST(<47b:control_info_elem_list>'),
+    ",",
+    $LIST(<47a:control_info_elem>)
+  );
+}
+
 *------------------------------------------------------------------------------
 
 <47b:control_info_elem_list>
 		= <56:unit_identifier> ,  <57:format_identifier> ;
+
+$LIST( <47b:control_info_elem_list>)
+{
+  $LIST( <47b:control_info_elem_list>) = SXML_LTL(
+    $LIST(<56:unit_identifier>),
+    ",",
+    $LIST(<57:format_identifier>)
+  );
+}    
 
 *------------------------------------------------------------------------------
 
 <47b:control_info_elem_list>
 		= <56:unit_identifier> ,  <47a:control_info_elem> ;
 
+$LIST( <47b:control_info_elem_list>)
+{
+  $LIST( <47b:control_info_elem_list>) = SXML_LTL(
+    $LIST(<56:unit_identifier>),
+    ",",
+    $LIST(<47a:control_info_elem>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <47b:control_info_elem_list>
 		= <47a:control_info_elem> ;
+
+$LIST( <47b:control_info_elem_list>)
+{
+  $LIST( <47b:control_info_elem_list>) = ast_control_info_elem(
+    NULL,
+    $LIST(<47a:control_info_elem>)
+  );
+}    
 
 *******************************************************************************
 
 <47a:control_info_elem>
 		= FMT  =  <57:format_identifier> ;
 
+$LIST( <47a:control_info_elem>)
+{
+  $LIST( <47a:control_info_elem>) = ast_control_info_elem(
+    "FMT",
+    $LIST(<57:format_identifier>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <47a:control_info_elem>
 		= UNIT  =  <56:unit_identifier> ;
+
+$LIST( <47a:control_info_elem>)
+{
+  $LIST( <47a:control_info_elem>) = ast_control_info_elem(
+    "UNIT",
+    $LIST(<56:unit_identifier>)
+  );
+}
 
 *------------------------------------------------------------------------------
 
 <47a:control_info_elem>
 		= REC  =  <77:integer_expr> ;
 
+$LIST( <47a:control_info_elem>)
+{
+  $LIST( <47a:control_info_elem>) = ast_control_info_elem(
+    "REC",
+    $LIST(<77:integer_expr>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <47a:control_info_elem>
 		= END  =  <110b:label_ref> ;
+
+$LIST( <47a:control_info_elem>)
+{
+  $LIST( <47a:control_info_elem>) = ast_control_info_elem(
+    "END",
+    $LIST(<110b:label_ref>)
+  );
+}   
 
 *------------------------------------------------------------------------------
 
 <47a:control_info_elem>
 		= ERR  =  <110b:label_ref> ;
 
+$LIST( <47a:control_info_elem>)
+{
+  $LIST( <47a:control_info_elem>) = ast_control_info_elem(
+    "ERR",
+    $LIST(<110b:label_ref>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <47a:control_info_elem>
 		= IOSTAT  =  <88a:variable_or_array_element_name> ;
+
+$LIST( <47a:control_info_elem>)
+{
+  $LIST( <47a:control_info_elem>) = ast_control_info_elem(
+    "IOSTAT",
+    $LIST(<88a:variable_or_array_element_name>)
+  );
+}        
 
 *******************************************************************************
 
@@ -1648,27 +3319,83 @@ $LIST(<8:program_statement>)
 
 <48:io_list>	= <48:io_list> , &1  <74:expression> ;
 
+$LIST( <48:io_list>)
+{
+  $LIST( <48:io_list>) = SXML_LTL(
+    $LIST(<48:io_list>'),
+    ",",
+    $LIST(<74:expression>));
+}
+
 *------------------------------------------------------------------------------
 
 <48:io_list>	= <48:io_list> , &1  <49:io_imply_do_list> ;
+
+$LIST( <48:io_list>)
+{
+  $LIST( <48:io_list>) = SXML_LTL(
+    $LIST(<48:io_list>'),
+    ",",
+    $LIST(<49:io_imply_do_list>));
+}
 
 *------------------------------------------------------------------------------
 
 <48:io_list>	= <74:expression> ;
 
+$LIST( <48:io_list>)
+{
+  $LIST( <48:io_list>) = $LIST(<74:expression>);
+}
+
 *------------------------------------------------------------------------------
 
 <48:io_list>	= <49:io_imply_do_list> ;
+
+$LIST( <48:io_list>)
+{
+  $LIST( <48:io_list>) = $LIST(<49:io_imply_do_list>);
+}
 
 *******************************************************************************
 
 <49:io_imply_do_list>
 		= ( <48:io_list> , &1  <99:symbolic_name>  =  <78:int_real_dp_expr> ,  <78:int_real_dp_expr> ,  <78:int_real_dp_expr> ) ;
 
+$LIST( <49:io_imply_do_list>)
+{
+  $LIST( <49:io_imply_do_list>) = ast_data_imply_do_list(
+    SXML_LTL(
+    	$LIST(<48:io_list>), 
+    	",", 
+    	$LIST(<99:symbolic_name>)
+    ),
+    ast_do_parameters(
+      $LIST(<78:int_real_dp_expr>),
+      $LIST(<78:int_real_dp_expr>'),
+      $LIST(<78:int_real_dp_expr>'') )
+  );
+}
+
 *------------------------------------------------------------------------------
 
 <49:io_imply_do_list>
 		= ( <48:io_list> , &1  <99:symbolic_name>  =  <78:int_real_dp_expr> ,  <78:int_real_dp_expr> ) ;
+
+$LIST( <49:io_imply_do_list>)
+{
+  $LIST( <49:io_imply_do_list>) = ast_data_imply_do_list(
+    SXML_LTL(
+    	$LIST(<48:io_list>),
+    	",", 
+    	$LIST(<99:symbolic_name>)
+    ),
+    ast_do_parameters(
+      $LIST(<78:int_real_dp_expr>),
+      $LIST(<78:int_real_dp_expr>'),
+      NULL )
+  );
+}
 
 *******************************************************************************
 
@@ -1678,65 +3405,163 @@ $LIST(<8:program_statement>)
 <50:open_statement>
 		= OPEN  ( <50a:open_info_elem_list> ) ;
 
+$LIST( <50:open_statement>)
+{
+  $LIST( <50:open_statement>) = ast_open_statement(
+    LOCATION(0),
+    $LIST(<50a:open_info_elem_list>)
+  );
+}
+
 *******************************************************************************
 
 <50a:open_info_elem_list>
 		= <50a:open_info_elem_list> ,  <50b:open_info_elem> ;
+
+$LIST( <50a:open_info_elem_list>)
+{
+  $LIST( <50a:open_info_elem_list>) = SXML_LTL(
+    $LIST(<50a:open_info_elem_list>'),
+    ",",
+    $LIST(<50b:open_info_elem>));
+}    
 
 *------------------------------------------------------------------------------
 
 <50a:open_info_elem_list>
 		= <56:unit_identifier> ;
 
+$LIST( <50a:open_info_elem_list>)
+{
+  $LIST( <50a:open_info_elem_list>) = $LIST(<56:unit_identifier>);
+}     
+
 *------------------------------------------------------------------------------
 
 <50a:open_info_elem_list>
 		= <50b:open_info_elem> ;
+
+$LIST( <50a:open_info_elem_list>)
+{
+  $LIST( <50a:open_info_elem_list>) = $LIST(<50b:open_info_elem>);
+}    
 
 *******************************************************************************
 
 <50b:open_info_elem>
 		= UNIT  =  <56:unit_identifier> ;
 
+$LIST( <50b:open_info_elem>)
+{
+  $LIST( <50b:open_info_elem>) = ast_control_info_elem(
+    "UNIT",
+    $LIST(<56:unit_identifier>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <50b:open_info_elem>
 		= ERR  =  <110b:label_ref> ;
+
+$LIST( <50b:open_info_elem>)
+{
+  $LIST( <50b:open_info_elem>) = ast_control_info_elem(
+    "ERR",
+    $LIST(<110b:label_ref>)
+  );
+}   
 
 *------------------------------------------------------------------------------
 
 <50b:open_info_elem>
 		= FILE  =  <82a:character_or_non_typed_expression> ;
 
+$LIST( <50b:open_info_elem>)
+{
+  $LIST( <50b:open_info_elem>) = ast_control_info_elem(
+    "FILE",
+    $LIST(<82a:character_or_non_typed_expression>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <50b:open_info_elem>
 		= STATUS  =  <82a:character_or_non_typed_expression> ;
+
+$LIST( <50b:open_info_elem>)
+{
+  $LIST( <50b:open_info_elem>) = ast_control_info_elem(
+    "STATUS",
+    $LIST(<82a:character_or_non_typed_expression>)
+  );
+}    
 
 *------------------------------------------------------------------------------
 
 <50b:open_info_elem>
 		= ACCESS  =  <82a:character_or_non_typed_expression> ;
 
+$LIST( <50b:open_info_elem>)
+{
+  $LIST( <50b:open_info_elem>) = ast_control_info_elem(
+    "ACCESS",
+    $LIST(<82a:character_or_non_typed_expression>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <50b:open_info_elem>
 		= FORM  =  <82a:character_or_non_typed_expression> ;
+
+$LIST( <50b:open_info_elem>)
+{
+  $LIST( <50b:open_info_elem>) = ast_control_info_elem(
+    "FORM",
+    $LIST(<82a:character_or_non_typed_expression>)
+  );
+}    
 
 *------------------------------------------------------------------------------
 
 <50b:open_info_elem>
 		= RECL  =  <77:integer_expr> ;
 
+$LIST( <50b:open_info_elem>)
+{
+  $LIST( <50b:open_info_elem>) = ast_control_info_elem(
+    "RECL",
+    $LIST(<77:integer_expr>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <50b:open_info_elem>
 		= BLANK  =  <82a:character_or_non_typed_expression> ;
 
+$LIST( <50b:open_info_elem>)
+{
+  $LIST( <50b:open_info_elem>) = ast_control_info_elem(
+    "BLANK",
+    $LIST(<82a:character_or_non_typed_expression>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <50b:open_info_elem>
 		= IOSTAT  =  <88a:variable_or_array_element_name> ;
+
+$LIST( <50b:open_info_elem>)
+{
+  $LIST( <50b:open_info_elem>) = ast_control_info_elem(
+    "IOSTAT",
+    $LIST(<88a:variable_or_array_element_name>)
+  );
+}
 
 *******************************************************************************
 
@@ -1746,40 +3571,98 @@ $LIST(<8:program_statement>)
 <51:close_statement>
 		= CLOSE  ( <51a:close_info_elem_list> ) ;
 
+$LIST( <51:close_statement>)
+{
+  $LIST( <51:close_statement>) = ast_close_statement(
+    LOCATION(0),
+    $LIST(<51a:close_info_elem_list>)
+  );
+}    
+
 *******************************************************************************
 
 <51a:close_info_elem_list>
 		= <51a:close_info_elem_list> ,  <51b:close_info_elem> ;
+
+$LIST( <51a:close_info_elem_list>)
+{
+  $LIST( <51a:close_info_elem_list>) = SXML_LTL(
+    $LIST(<51a:close_info_elem_list>'),
+    ",",
+    $LIST(<51b:close_info_elem>));
+}     
 
 *------------------------------------------------------------------------------
 
 <51a:close_info_elem_list>
 		= <56:unit_identifier> ;
 
+$LIST( <51a:close_info_elem_list>)
+{
+  $LIST( <51a:close_info_elem_list>) = $LIST(<56:unit_identifier>);
+} 
+
 *------------------------------------------------------------------------------
 
 <51a:close_info_elem_list>
 		= <51b:close_info_elem> ;
+
+$LIST( <51a:close_info_elem_list>)
+{
+  $LIST( <51a:close_info_elem_list>) = $LIST(<51b:close_info_elem>);
+}    
 
 *******************************************************************************
 
 <51b:close_info_elem>
 		= UNIT  =  <56:unit_identifier> ;
 
+$LIST( <51b:close_info_elem>)
+{
+  $LIST( <51b:close_info_elem>) = ast_control_info_elem(
+    "UNIT",
+    $LIST(<56:unit_identifier>)
+  );
+}  
+
 *------------------------------------------------------------------------------
 
 <51b:close_info_elem>
 		= ERR  =  <110b:label_ref> ;
+
+$LIST( <51b:close_info_elem>)
+{
+  $LIST( <51b:close_info_elem>) = ast_control_info_elem(
+    "ERR",
+    $LIST(<110b:label_ref>)
+  );
+} 
 
 *------------------------------------------------------------------------------
 
 <51b:close_info_elem>
 		= STATUS  =  <82a:character_or_non_typed_expression> ;
 
+$LIST( <51b:close_info_elem>)
+{
+  $LIST( <51b:close_info_elem>) = ast_control_info_elem(
+    "STATUS",
+    $LIST(<82a:character_or_non_typed_expression>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <51b:close_info_elem>
 		= IOSTAT  =  <88a:variable_or_array_element_name> ;
+
+$LIST( <51b:close_info_elem>)
+{
+  $LIST( <51b:close_info_elem>) = ast_control_info_elem(
+    "IOSTAT",
+    $LIST(<88a:variable_or_array_element_name>)
+  );
+}
 
 *******************************************************************************
 
@@ -1789,115 +3672,248 @@ $LIST(<8:program_statement>)
 <52:inquire_statement>
 		= INQUIRE  ( <52a:inquire_info_elem_list> ) ;
 
+$LIST( <52:inquire_statement>)
+{
+  $LIST( <52:inquire_statement>) = ast_inquire_statement(
+    LOCATION(0),
+    $LIST(<52a:inquire_info_elem_list>)
+  );
+}
+
 *******************************************************************************
 
 <52a:inquire_info_elem_list>
 		= <52a:inquire_info_elem_list> ,  <52b:inquire_info_elem> ;
+
+$LIST( <52a:inquire_info_elem_list>)
+{
+  $LIST( <52a:inquire_info_elem_list>) = SXML_LTL(
+    $LIST(<52a:inquire_info_elem_list>'),
+    ",",
+    $LIST(<52b:inquire_info_elem>));
+}    
 
 *------------------------------------------------------------------------------
 
 <52a:inquire_info_elem_list>
 		= <56:unit_identifier> ;
 
+$LIST( <52a:inquire_info_elem_list>)
+{
+  $LIST( <52a:inquire_info_elem_list>) = $LIST(<56:unit_identifier>);
+}   
+
 *------------------------------------------------------------------------------
 
 <52a:inquire_info_elem_list>
 		= <52b:inquire_info_elem> ;
+
+$LIST( <52a:inquire_info_elem_list>)
+{
+  $LIST( <52a:inquire_info_elem_list>) = $LIST(<52b:inquire_info_elem>);
+}    
 
 *******************************************************************************
 
 <52b:inquire_info_elem>
 		= UNIT =   <56:unit_identifier> ;
 
+$LIST( <52b:inquire_info_elem>)
+{
+  $LIST( <52b:inquire_info_elem>) = ast_control_info_elem(
+    "UNIT",
+    $LIST(<56:unit_identifier>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <52b:inquire_info_elem>
 		= FILE  =  <82a:character_or_non_typed_expression> ;
+
+$LIST( <52b:inquire_info_elem>)
+{
+  $LIST( <52b:inquire_info_elem>) = ast_control_info_elem(
+    "FILE",
+    $LIST(<82a:character_or_non_typed_expression>)
+  );
+}    
 
 *------------------------------------------------------------------------------
 
 <52b:inquire_info_elem>
 		= ERR  =  <110b:label_ref> ;
 
+$LIST( <52b:inquire_info_elem>)
+{
+  $LIST( <52b:inquire_info_elem>) = ast_control_info_elem(
+    "ERR",
+    $LIST(<110b:label_ref>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <52b:inquire_info_elem>
 		= <52c:inquire_info_key>  =  <88a:variable_or_array_element_name> ;
+
+$LIST( <52b:inquire_info_elem>)
+{
+  $LIST( <52b:inquire_info_elem>) = ast_control_info_elem(
+    $NAME(<52c:inquire_info_key>),
+    $LIST(<88a:variable_or_array_element_name>)
+  );
+}    
 
 *******************************************************************************
 
 <52c:inquire_info_key>
 		= IOSTAT ;
 
+$NAME( <52c:inquire_info_key>)
+{
+  $NAME( <52c:inquire_info_key>) = "IOSTAT";
+}    
+
 *------------------------------------------------------------------------------
 
 <52c:inquire_info_key>
 		= EXIST ;
+
+$NAME( <52c:inquire_info_key>)
+{
+  $NAME( <52c:inquire_info_key>) = "EXIST";
+}    
 
 *------------------------------------------------------------------------------
 
 <52c:inquire_info_key>
 		= OPENED ;
 
+$NAME( <52c:inquire_info_key>)
+{
+  $NAME( <52c:inquire_info_key>) = "OPENED";
+}    
+
 *------------------------------------------------------------------------------
 
 <52c:inquire_info_key>
 		= NUMBER ;
+
+$NAME( <52c:inquire_info_key>)
+{
+  $NAME( <52c:inquire_info_key>) = "NUMBER";
+}    
 
 *------------------------------------------------------------------------------
 
 <52c:inquire_info_key>
 		= NAMED ;
 
+$NAME( <52c:inquire_info_key>)
+{
+  $NAME( <52c:inquire_info_key>) = "NAMED";
+}    
+
 *------------------------------------------------------------------------------
 
 <52c:inquire_info_key>
 		= NAME ;
+
+$NAME( <52c:inquire_info_key>)
+{
+  $NAME( <52c:inquire_info_key>) = "NAME";
+}    
 
 *------------------------------------------------------------------------------
 
 <52c:inquire_info_key>
 		= ACCESS ;
 
+$NAME( <52c:inquire_info_key>)
+{
+  $NAME( <52c:inquire_info_key>) = "ACCESS";
+}    
+
 *------------------------------------------------------------------------------
 
 <52c:inquire_info_key>
 		= SEQUENTIAL ;
+
+$NAME( <52c:inquire_info_key>)
+{
+  $NAME( <52c:inquire_info_key>) = "SEQUENTIAL";
+}
 
 *------------------------------------------------------------------------------
 
 <52c:inquire_info_key>
 		= DIRECT ;
 
+$NAME( <52c:inquire_info_key>)
+{
+  $NAME( <52c:inquire_info_key>) = "DIRECT";
+}
+
 *------------------------------------------------------------------------------
 
 <52c:inquire_info_key>
 		= FORM ;
+
+$NAME( <52c:inquire_info_key>)
+{
+  $NAME( <52c:inquire_info_key>) = "FORM";
+}
 
 *------------------------------------------------------------------------------
 
 <52c:inquire_info_key>
 		= FORMATTED ;
 
+$NAME( <52c:inquire_info_key>)
+{
+  $NAME( <52c:inquire_info_key>) = "FORMATTED";
+}
+
 *------------------------------------------------------------------------------
 
 <52c:inquire_info_key>
 		= UNFORMATTED ;
+
+$NAME( <52c:inquire_info_key>)
+{
+  $NAME( <52c:inquire_info_key>) = "UNFORMATTED";
+}
 
 *------------------------------------------------------------------------------
 
 <52c:inquire_info_key>
 		= RECL ;
 
+$NAME( <52c:inquire_info_key>)
+{
+  $NAME( <52c:inquire_info_key>) = "RECL";
+}
+
 *------------------------------------------------------------------------------
 
 <52c:inquire_info_key>
 		= NEXTREC ;
 
+$NAME( <52c:inquire_info_key>)
+{
+  $NAME( <52c:inquire_info_key>) = "NEXTREC";
+}
+
 *------------------------------------------------------------------------------
 
 <52c:inquire_info_key>
 		= BLANK ;
+
+$NAME( <52c:inquire_info_key>)
+{
+  $NAME( <52c:inquire_info_key>) = "BLANK";
+}
 
 *******************************************************************************
 
@@ -1909,40 +3925,98 @@ $LIST(<8:program_statement>)
 <53:backspace_statement>
 		= BACKSPACEkw  <56:unit_identifier> ;
 
+$LIST( <53:backspace_statement>)
+{
+  $LIST( <53:backspace_statement>) = ast_backspace_statement(
+    LOCATION(0),
+    $LIST(<56:unit_identifier>)
+  );
+}
+
 *------------------------------------------------------------------------------
 
 <53:backspace_statement>
 		= BACKSPACE  ( <53a:backspace_or_endfile_or_rewind_info_elem_list> ) ;
+
+$LIST( <53:backspace_statement>)
+{
+  $LIST( <53:backspace_statement>) = ast_backspace_statement(
+    LOCATION(0),
+    $LIST(<53a:backspace_or_endfile_or_rewind_info_elem_list>)
+  );
+}    
 
 *******************************************************************************
 
 <53a:backspace_or_endfile_or_rewind_info_elem_list>
 		= <53a:backspace_or_endfile_or_rewind_info_elem_list> ,  <53b:backspace_or_endfile_or_rewind_info_elem> ;
 
+$LIST( <53a:backspace_or_endfile_or_rewind_info_elem_list>)
+{
+  $LIST( <53a:backspace_or_endfile_or_rewind_info_elem_list>) = SXML_LTL(
+    $LIST(<53a:backspace_or_endfile_or_rewind_info_elem_list>'),
+    ",",
+    $LIST(<53b:backspace_or_endfile_or_rewind_info_elem>));
+}    
+
 *------------------------------------------------------------------------------
 
 <53a:backspace_or_endfile_or_rewind_info_elem_list>
 		= <56:unit_identifier> ;
+
+$LIST( <53a:backspace_or_endfile_or_rewind_info_elem_list>)
+{
+  $LIST( <53a:backspace_or_endfile_or_rewind_info_elem_list>) = $LIST(<56:unit_identifier>);
+}    
 
 *------------------------------------------------------------------------------
 
 <53a:backspace_or_endfile_or_rewind_info_elem_list>
 		= <53b:backspace_or_endfile_or_rewind_info_elem> ;
 
+$LIST( <53a:backspace_or_endfile_or_rewind_info_elem_list>)
+{
+  $LIST( <53a:backspace_or_endfile_or_rewind_info_elem_list>) = $LIST(<53b:backspace_or_endfile_or_rewind_info_elem>);
+}    
+
 *******************************************************************************
 
 <53b:backspace_or_endfile_or_rewind_info_elem>
 		= UNIT  =  <56:unit_identifier> ;
+
+$LIST( <53b:backspace_or_endfile_or_rewind_info_elem>)
+{
+  $LIST( <53b:backspace_or_endfile_or_rewind_info_elem>) = ast_control_info_elem(
+    "UNIT",
+    $LIST(<56:unit_identifier>)
+  );
+}    
 
 *------------------------------------------------------------------------------
 
 <53b:backspace_or_endfile_or_rewind_info_elem>
 		= ERR  =  <110b:label_ref> ;
 
+$LIST( <53b:backspace_or_endfile_or_rewind_info_elem>)
+{
+  $LIST( <53b:backspace_or_endfile_or_rewind_info_elem>) = ast_control_info_elem(
+    "ERR",
+    $LIST(<110b:label_ref>)
+  );
+}
+
 *------------------------------------------------------------------------------
 
 <53b:backspace_or_endfile_or_rewind_info_elem>
 		= IOSTAT  =  <88a:variable_or_array_element_name> ;
+
+$LIST( <53b:backspace_or_endfile_or_rewind_info_elem>)
+{
+  $LIST( <53b:backspace_or_endfile_or_rewind_info_elem>) = ast_control_info_elem(
+    "IOSTAT",
+    $LIST( <88a:variable_or_array_element_name>)
+  );
+}    
 
 *******************************************************************************
 
@@ -1951,10 +4025,26 @@ $LIST(<8:program_statement>)
 <54:endfile_statement>
 		= ENDFILEkw  <56:unit_identifier> ;
 
+$LIST( <54:endfile_statement>)
+{
+  $LIST( <54:endfile_statement>) = ast_endfile_statement(
+    LOCATION(0),
+    $LIST(<56:unit_identifier>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <54:endfile_statement>
 		= ENDFILE  ( <53a:backspace_or_endfile_or_rewind_info_elem_list> ) ;
+
+$LIST( <54:endfile_statement>)
+{
+  $LIST( <54:endfile_statement>) = ast_endfile_statement(
+    LOCATION(0),
+    $LIST(<53a:backspace_or_endfile_or_rewind_info_elem_list>)
+  );
+}     
 
 *******************************************************************************
 
@@ -1963,10 +4053,26 @@ $LIST(<8:program_statement>)
 <55:rewind_statement>
 		= REWINDkw  <56:unit_identifier> ;
 
+$LIST( <55:rewind_statement>)
+{
+  $LIST( <55:rewind_statement>) = ast_rewind_statement(
+    LOCATION(0),
+    $LIST(<56:unit_identifier>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <55:rewind_statement>
 		= REWIND  ( <53a:backspace_or_endfile_or_rewind_info_elem_list> ) ;
+
+$LIST( <55:rewind_statement>)
+{
+  $LIST( <55:rewind_statement>) = ast_rewind_statement(
+    LOCATION(0),
+    $LIST(<53a:backspace_or_endfile_or_rewind_info_elem_list>)
+  );
+}    
 
 *******************************************************************************
 
@@ -1975,15 +4081,33 @@ $LIST(<8:program_statement>)
 <56:unit_identifier>
 		= <77:integer_expr> ;
 
+$LIST( <56:unit_identifier>)
+{
+  $LIST( <56:unit_identifier>) = 
+    $LIST( <77:integer_expr>);
+}    
+
 *------------------------------------------------------------------------------
 
 <56:unit_identifier>
 		= <89:substring_name> ;
 
+$LIST( <56:unit_identifier>)
+{
+  $LIST( <56:unit_identifier>) = 
+    $LIST( <89:substring_name>);
+}    
+
 *------------------------------------------------------------------------------
 
 <56:unit_identifier>
 		= * ;
+
+$LIST( <56:unit_identifier>)
+{
+  $LIST( <56:unit_identifier>) = 
+    ast_text_to_map("asterisk", "*");
+}
 
 *******************************************************************************
 
@@ -1994,12 +4118,24 @@ $LIST(<8:program_statement>)
 <57:format_identifier>
 		= <110b:label_ref> ;
 
+$LIST( <57:format_identifier>)
+{
+  $LIST( <57:format_identifier>) = 
+    $LIST(<110b:label_ref>);
+}
+
 *------------------------------------------------------------------------------
 
 * (to be tested) Covers both <99:symbolic_name> and <82:character_expression>
 
 <57:format_identifier>
 		= <82a:character_or_non_typed_expression> ;
+
+$LIST( <57:format_identifier>)
+{
+  $LIST( <57:format_identifier>) = 
+    $LIST(<82a:character_or_non_typed_expression>);
+}
 
 *------------------------------------------------------------------------------
 
@@ -2011,202 +4147,485 @@ $LIST(<8:program_statement>)
 <57:format_identifier>
 		= * ;
 
+$LIST( <57:format_identifier>)
+{
+  $LIST( <57:format_identifier>) = 
+    ast_text_to_map("asterisk", "*");
+}    
+
 *******************************************************************************
 
 <58:format_statement>
 		= FORMAT  <59:format_specification> ;
+
+$LIST( <58:format_statement>)
+{
+  $LIST( <58:format_statement>) = ast_format_statement(
+    LOCATION(0),
+    $LIST( <59:format_specification>)
+  );
+}
+
 
 *******************************************************************************
 
 <59:format_specification>
 		= ( ) ;
 
+$LIST( <59:format_specification>)
+{
+  $LIST( <59:format_specification>) = NULL;
+}    
+
 *------------------------------------------------------------------------------
 
 <59:format_specification>
 		= ( <60:fmt_specification> ) ;
+
+$LIST( <59:format_specification>)
+{
+  $LIST( <59:format_specification>) = $LIST( <60:fmt_specification>);
+}    
 
 *******************************************************************************
 
 <60:fmt_specification>
 		= <60a:fmt_spec_list> ;
 
+$LIST( <60:fmt_specification>)
+
+{
+  $LIST( <60:fmt_specification>) = $LIST( <60a:fmt_spec_list>);
+}     
+
 *------------------------------------------------------------------------------
 
 <60:fmt_specification>
 		= <60b:fmt_spec_list_/:> ;
+
+$LIST( <60:fmt_specification>)    
+{
+  $LIST( <60:fmt_specification>) = $LIST( <60b:fmt_spec_list_/:>);
+}    
 
 *******************************************************************************
 
 <60a:fmt_spec_list>
 		= <60a:fmt_spec_list> ,  <60c:fmt_spec> ;
 
+$LIST( <60a:fmt_spec_list>)    
+{
+  $LIST( <60a:fmt_spec_list>) = SXML_LTL(
+    $LIST(<60a:fmt_spec_list>'),
+    ",",
+    $LIST(<60c:fmt_spec>));
+}    
+
 *------------------------------------------------------------------------------
 
 <60a:fmt_spec_list>
 		= <60b:fmt_spec_list_/:> <60c:fmt_spec> ;
+
+$LIST( <60a:fmt_spec_list>)    
+{
+  $LIST( <60a:fmt_spec_list>) = SXML_LL(
+    $LIST(<60b:fmt_spec_list_/:>),
+    $LIST(<60c:fmt_spec>));
+}    
 
 *------------------------------------------------------------------------------
 
 <60a:fmt_spec_list>
 		= <60b:fmt_spec_list_/:> ,  <60c:fmt_spec> ;
 
+$LIST( <60a:fmt_spec_list>)    
+{
+  $LIST( <60a:fmt_spec_list>) = SXML_LTL(
+    $LIST(<60b:fmt_spec_list_/:>),
+    ",",
+    $LIST(<60c:fmt_spec>));
+}    
+
 *------------------------------------------------------------------------------
 
 <60a:fmt_spec_list>
 		= <60c:fmt_spec> ;
+
+$LIST( <60a:fmt_spec_list>)    
+{
+  $LIST( <60a:fmt_spec_list>) = $LIST(<60c:fmt_spec>);
+}    
 
 *******************************************************************************
 
 <60b:fmt_spec_list_/:>
 		= <60b:fmt_spec_list_/:> <60d:fmt_spec_/:> ;
 
+$LIST( <60b:fmt_spec_list_/:>)    
+{
+  $LIST( <60b:fmt_spec_list_/:>) = SXML_LL(
+    $LIST(<60b:fmt_spec_list_/:>'),
+    $LIST(<60d:fmt_spec_/:>));
+}    
+
 *------------------------------------------------------------------------------
 
 <60b:fmt_spec_list_/:>
 		= <60b:fmt_spec_list_/:> ,  <60d:fmt_spec_/:> ;
+
+$LIST( <60b:fmt_spec_list_/:>)    
+{
+  $LIST( <60b:fmt_spec_list_/:>) = SXML_LTL(
+    $LIST(<60b:fmt_spec_list_/:>'),
+    ",",
+    $LIST(<60d:fmt_spec_/:>));
+}    
 
 *------------------------------------------------------------------------------
 
 <60b:fmt_spec_list_/:>
 		= <60a:fmt_spec_list> ,  <60d:fmt_spec_/:> ;
 
+$LIST( <60b:fmt_spec_list_/:>)    
+{
+  $LIST( <60b:fmt_spec_list_/:>) = SXML_LTL(
+    $LIST(<60a:fmt_spec_list>),
+    ",",
+    $LIST(<60d:fmt_spec_/:>));
+}    
+
 *------------------------------------------------------------------------------
 
 <60b:fmt_spec_list_/:>
 		= <60d:fmt_spec_/:> ;
 
+$LIST( <60b:fmt_spec_list_/:>)    
+{
+  $LIST( <60b:fmt_spec_list_/:>) = $LIST(<60d:fmt_spec_/:>);
+}    
+
 *******************************************************************************
 
 <60c:fmt_spec>	= <61a:[repeat_spec]> <60e:repeatable_edit_descriptor> ;
 
+$LIST( <60c:fmt_spec>)    
+{
+  SXML_TYPE_TEXT repeat_spec = $NAME(<61a:[repeat_spec]>);
+  if (repeat_spec == NULL) {
+    $LIST( <60c:fmt_spec>) = $LIST(<60e:repeatable_edit_descriptor>);
+  }
+  else {
+    $LIST( <60c:fmt_spec>) = SXML_TL(
+      repeat_spec,
+      $LIST(<60e:repeatable_edit_descriptor>)
+    );
+  }
+}
+
 *------------------------------------------------------------------------------
 
 <60c:fmt_spec>	= <60h:nonrepeatable_edit_descriptor> ;
+
+$LIST( <60c:fmt_spec>)    
+{
+  $LIST( <60c:fmt_spec>) = $LIST(<60h:nonrepeatable_edit_descriptor>);
+}
 
 *******************************************************************************
 
 <60d:fmt_spec_/:>
 		= <61a:[repeat_spec]> <60e:repeatable_edit_descriptor> <60f:/:> ;
 
+$LIST( <60d:fmt_spec_/:>)    
+{
+  $LIST( <60d:fmt_spec_/:>) = SXML_TLT(
+    $NAME(<61a:[repeat_spec]>),
+    $LIST(<60e:repeatable_edit_descriptor>),
+    $NAME(<60f:/:>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <60d:fmt_spec_/:>
 		= <60h:nonrepeatable_edit_descriptor> <60f:/:> ;
+
+$LIST( <60d:fmt_spec_/:>)    
+{
+  $LIST( <60d:fmt_spec_/:>) = SXML_LT(
+    $LIST(<60h:nonrepeatable_edit_descriptor>),
+    $NAME(<60f:/:>)
+  );
+}    
 
 *------------------------------------------------------------------------------
 
 <60d:fmt_spec_/:>
 		= <60f:/:> ;
 
+$LIST( <60d:fmt_spec_/:>)    
+{
+  $LIST( <60d:fmt_spec_/:>) = SXML_T( $NAME(<60f:/:>) );
+}
+
 *******************************************************************************
 
 <60e:repeatable_edit_descriptor>
 		= ( <60:fmt_specification> ) ;
+
+$LIST( <60e:repeatable_edit_descriptor>)    
+{
+  $LIST( <60e:repeatable_edit_descriptor>) = $LIST(<60:fmt_specification>);
+}    
 
 *------------------------------------------------------------------------------
 
 <60e:repeatable_edit_descriptor>
 		= I <62:w> ;
 
+$LIST( <60e:repeatable_edit_descriptor>)    
+{
+  $LIST( <60e:repeatable_edit_descriptor>) = SXML_TT(
+    "I",
+    $NAME(<62:w>)
+  );
+}
+
 *------------------------------------------------------------------------------
 
 <60e:repeatable_edit_descriptor>
 		= I <62:w> . <67:m> ;
+
+$LIST( <60e:repeatable_edit_descriptor>)    
+{
+  $LIST( <60e:repeatable_edit_descriptor>) = SXML_TTTT(
+    "I",
+    $NAME(<62:w>),
+    ".",
+    $NAME(<67:m>)
+  );
+}
 
 *------------------------------------------------------------------------------
 
 <60e:repeatable_edit_descriptor>
 		= A ;
 
+$LIST( <60e:repeatable_edit_descriptor>)    
+{
+  $LIST( <60e:repeatable_edit_descriptor>) = SXML_T("A");
+}    
+
 *------------------------------------------------------------------------------
 
 <60e:repeatable_edit_descriptor>
 		= A <62:w> ;
+
+$LIST( <60e:repeatable_edit_descriptor>)    
+{
+  $LIST( <60e:repeatable_edit_descriptor>) = SXML_TT(
+    "A",
+    $NAME(<62:w>)
+  );
+}    
 
 *------------------------------------------------------------------------------
 
 <60e:repeatable_edit_descriptor>
 		= L <62:w> ;
 
+$LIST( <60e:repeatable_edit_descriptor>)    
+{
+  $LIST( <60e:repeatable_edit_descriptor>) = SXML_TT(
+    "L",
+    $NAME(<62:w>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <60e:repeatable_edit_descriptor>
 		= <60g:float_editing> ;
+
+$LIST( <60e:repeatable_edit_descriptor>)    
+{
+  $LIST( <60e:repeatable_edit_descriptor>) = $LIST(<60g:float_editing>);
+}
 
 *******************************************************************************
 
 <60h:nonrepeatable_edit_descriptor>
 		= <68:k> P ;
 
+$LIST( <60h:nonrepeatable_edit_descriptor>)    
+{
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_LT(
+    $LIST(<68:k>),
+    "P"
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <60h:nonrepeatable_edit_descriptor>
 		= <68:k> P <61a:[repeat_spec]> <60g:float_editing> ;
+
+$LIST( <60h:nonrepeatable_edit_descriptor>)    
+{
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_LTTL(
+    $LIST(<68:k>),
+    "P",
+    $NAME(<61a:[repeat_spec]>),
+    $LIST(<60g:float_editing>)
+  );
+}    
 
 *------------------------------------------------------------------------------
 
 <60h:nonrepeatable_edit_descriptor>
 		= P ;
 
+$LIST( <60h:nonrepeatable_edit_descriptor>)    
+{
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_T("P" );
+}
+
 *------------------------------------------------------------------------------
 
 <60h:nonrepeatable_edit_descriptor>
 		= P <61a:[repeat_spec]> <60g:float_editing> ;
+
+$LIST( <60h:nonrepeatable_edit_descriptor>)    
+{
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_TTL(
+    "P",
+    $NAME(<61a:[repeat_spec]>),
+    $LIST(<60g:float_editing>)
+  );
+}    
 
 *------------------------------------------------------------------------------
 
 <60h:nonrepeatable_edit_descriptor>
 		= <109:character_constant> ;
 
+$LIST( <60h:nonrepeatable_edit_descriptor>)    
+{
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = $LIST(<109:character_constant> );
+}    
+
 *------------------------------------------------------------------------------
 
 <60h:nonrepeatable_edit_descriptor>
 		= T <65:c> ;
+
+$LIST( <60h:nonrepeatable_edit_descriptor>)    
+{
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_TT( 
+     "T",
+     $NAME(<65:c>)
+  );
+}
 
 *------------------------------------------------------------------------------
 
 <60h:nonrepeatable_edit_descriptor>
 		= T L <65:c> ;
 
+$LIST( <60h:nonrepeatable_edit_descriptor>)    
+{
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_TT(
+     "T L",
+     $NAME(<65:c>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <60h:nonrepeatable_edit_descriptor>
 		= T R <65:c> ;
+
+$LIST( <60h:nonrepeatable_edit_descriptor>)    
+{
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_TT(
+    	"T R",
+    	$NAME(<65:c>)
+  );
+}
 
 *------------------------------------------------------------------------------
 
 <60h:nonrepeatable_edit_descriptor>
 		= <64:n> X ;
 
+$LIST( <60h:nonrepeatable_edit_descriptor>)    
+{
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_TT(
+    $NAME(<64:n>),
+    "X"
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <60h:nonrepeatable_edit_descriptor>
 		= S ;
+
+$LIST( <60h:nonrepeatable_edit_descriptor>)    
+{
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_T("S");
+}    
 
 *------------------------------------------------------------------------------
 
 <60h:nonrepeatable_edit_descriptor>
 		= S P ;
 
+$LIST( <60h:nonrepeatable_edit_descriptor>)    
+{
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_T("S P" );
+}    
+
 *------------------------------------------------------------------------------
 
 <60h:nonrepeatable_edit_descriptor>
 		= S S ;
+
+$LIST( <60h:nonrepeatable_edit_descriptor>)    
+{
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_T("S S" );
+}    
 
 *------------------------------------------------------------------------------
 
 <60h:nonrepeatable_edit_descriptor>
 		= B N ;
 
+$LIST( <60h:nonrepeatable_edit_descriptor>)    
+{
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_T ("B N" );
+}    
+
 *------------------------------------------------------------------------------
 
 <60h:nonrepeatable_edit_descriptor>
 		= B Z ;
 
+$LIST( <60h:nonrepeatable_edit_descriptor>)    
+
+{
+  $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_T ( "B Z" );
+}
+
 *******************************************************************************
 
 <60f:/:>	= / ;
+
+$NAME( <60f:/:>)    
+
+{
+  $NAME( <60f:/:>) = "/";
+}
 
 *------------------------------------------------------------------------------
 
@@ -2224,39 +4643,118 @@ $LIST(<8:program_statement>)
 
 <60f:/:>	= // ;
 
+$NAME( <60f:/:>)    
+
+{
+  $NAME( <60f:/:>) = "//";
+}
+
 *------------------------------------------------------------------------------
 
 <60f:/:>	= : ;
+
+$NAME( <60f:/:>)
+
+{
+  $NAME( <60f:/:>) = ":";
+}
 
 *******************************************************************************
 
 <60g:float_editing>
 		= F <62:w> . <66:d> ;
 
+$LIST(<60g:float_editing>)
+
+{
+  $LIST(<60g:float_editing>) = SXML_TTTT(
+    "F",
+    $NAME(<62:w>),
+    ".",
+    $NAME(<66:d>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <60g:float_editing>
 		= D <62:w> . <66:d> ;
+
+$LIST(<60g:float_editing>)
+
+{
+  $LIST(<60g:float_editing>) = SXML_TTTT(
+    "D",
+    $NAME(<62:w>),
+    ".",
+    $NAME(<66:d>)
+  );
+}    
 
 *------------------------------------------------------------------------------
 
 <60g:float_editing>
 		= E <62:w> . <66:d> ;
 
+$LIST(<60g:float_editing>)
+
+{
+  $LIST(<60g:float_editing>) = SXML_TTTT(
+    "E",
+    $NAME(<62:w>),
+    ".",
+    $NAME(<66:d>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <60g:float_editing>
 		= E <62:w> . <66:d> E <63:e> ;
+
+$LIST(<60g:float_editing>)
+
+{
+  $LIST(<60g:float_editing>) = SXML_TTTTTT(
+    "E",
+    $NAME(<62:w>),
+    ".",
+    $NAME(<66:d>),
+    "E",
+    $NAME(<63:e>));
+}    
 
 *------------------------------------------------------------------------------
 
 <60g:float_editing>
 		= G <62:w> . <66:d> ;
 
+$LIST(<60g:float_editing>)
+
+{
+  $LIST(<60g:float_editing>) = SXML_TTTT(
+    "G",
+    $NAME(<62:w>),
+    ".",
+    $NAME(<66:d>));
+}
+
 *------------------------------------------------------------------------------
 
 <60g:float_editing>
 		= G <62:w> . <66:d> E <63:e> ;
+
+$LIST(<60g:float_editing>)
+
+{
+  $LIST(<60g:float_editing>) = SXML_TTTTTT(
+    "G",
+    $NAME(<62:w>),
+    ".",
+    $NAME(<66:d>),
+    "E",
+    $NAME(<63:e>));
+}    
 
 *******************************************************************************
 
@@ -2268,15 +4766,33 @@ $LIST(<8:program_statement>)
 <61:repeat_spec>
 		= %repeat_spec ;
 
+$NAME(<61:repeat_spec>)
+
+{
+  $NAME(<61:repeat_spec>) = $ptext ("%repeat_spec");
+}    
+
 *******************************************************************************
 
 <61a:[repeat_spec]>
 		= ;
 
+$NAME(<61a:[repeat_spec]>)
+
+{
+  $NAME(<61a:[repeat_spec]>) = NULL;
+}    
+
 *------------------------------------------------------------------------------
 
 <61a:[repeat_spec]>
 		= <61:repeat_spec> ;
+
+$NAME(<61a:[repeat_spec]>)
+
+{
+  $NAME(<61a:[repeat_spec]>) = $NAME( <61:repeat_spec>);
+}    
 
 *******************************************************************************
 
@@ -2284,11 +4800,22 @@ $LIST(<8:program_statement>)
 
 <62:w>		= %repeat_spec ;
 
+$NAME(<62:w>)
+{
+  $NAME(<62:w>) = $ptext ("%repeat_spec");
+}
+
 *******************************************************************************
 
 *<63:e>		= <103:nonzero_unsigned_int_constant> ;
 
 <63:e>		= %repeat_spec ;
+
+$NAME(<63:e>)
+
+{
+  $NAME(<63:e>) = $ptext ("%repeat_spec");
+}
 
 *******************************************************************************
 
@@ -2296,11 +4823,23 @@ $LIST(<8:program_statement>)
 
 <64:n>		= %repeat_spec ;
 
+$NAME(<64:n>)
+
+{
+  $NAME(<64:n>) = $ptext ("%repeat_spec");
+}
+
 *******************************************************************************
 
 *<65:c>		= <103:nonzero_unsigned_int_constant> ;
 
 <65:c>		= %repeat_spec ;
+
+$NAME(<65:c>)
+
+{
+  $NAME(<65:c>) = $ptext ("%repeat_spec");
+}
 
 *******************************************************************************
 
@@ -2308,11 +4847,23 @@ $LIST(<8:program_statement>)
 
 <66:d>		= %repeat_spec ;
 
+$NAME(<66:d>)
+
+{
+  $NAME(<66:d>) = $ptext ("%repeat_spec");
+}
+
 *******************************************************************************
 
 *<67:m>		= <102:unsigned_int_constant> ;
 
 <67:m>		= %repeat_spec ;
+
+$NAME(<67:m>)
+
+{
+  $NAME(<67:m>) = $ptext ("%repeat_spec");
+}
 
 *******************************************************************************
 
@@ -2320,9 +4871,21 @@ $LIST(<8:program_statement>)
 
 <68:k>		= %repeat_spec ;
 
+$LIST(<68:k>)
+
+{
+  $LIST(<68:k>) = SXML_T($ptext ("%repeat_spec"));
+}
+
 *------------------------------------------------------------------------------
 
 <68:k>		= <114:sign> %repeat_spec ;
+
+$LIST(<68:k>)
+
+{
+  $LIST(<68:k>) = SXML_TT($NAME(<114:sign>), $ptext ("%repeat_spec"));
+}
 
 *******************************************************************************
 
@@ -2332,6 +4895,16 @@ $LIST(<8:program_statement>)
 
 <70:statement_function_statement>
 		= <99:symbolic_name>  ( )  =  <74:expression> ;
+
+$LIST(<70:statement_function_statement>)
+{
+  $LIST(<70:statement_function_statement>) = ast_function_statement(
+    LOCATION(0),
+    $LIST(<99:symbolic_name>),
+    NULL,
+    $LIST(<74:expression>)    
+    );
+}    
 
 *------------------------------------------------------------------------------
 
@@ -2344,30 +4917,72 @@ $LIST(<8:program_statement>)
 <71:call_statement>
 		= CALL  <99:symbolic_name> ;
 
+$LIST(<71:call_statement>)
+{
+  $LIST(<71:call_statement>) = ast_call_statement(
+    $LIST(<99:symbolic_name>),
+    LOCATION(0),
+    NULL );
+}
+
 *------------------------------------------------------------------------------
 
 <71:call_statement>
 		= CALL  <99:symbolic_name>  ( ) ;
+
+$LIST(<71:call_statement>)
+{
+  $LIST(<71:call_statement>) = ast_call_statement(
+    $LIST(<99:symbolic_name>),
+    LOCATION(0),
+    NULL );
+}
 
 *------------------------------------------------------------------------------
 
 <71:call_statement>
 		= CALL  <99:symbolic_name>  ( <71a:actual_argument_list> ) ;
 
+$LIST( <71:call_statement>)
+{
+  $LIST(<71:call_statement>) = ast_call_statement(
+    $LIST(<99:symbolic_name>),
+    LOCATION(0),
+    $LIST( <71a:actual_argument_list>) );
+}
+
 *******************************************************************************
 
 <71a:actual_argument_list>
 		= <71a:actual_argument_list> ,  <71b:actual_argument> ;
+
+$LIST( <71a:actual_argument_list>)
+{
+  $LIST( <71a:actual_argument_list>) = SXML_LTL(
+    $LIST( <71a:actual_argument_list>'),
+    ",\n",
+    $LIST( <71b:actual_argument>) );
+}
 
 *------------------------------------------------------------------------------
 
 <71a:actual_argument_list>
 		= <71b:actual_argument> ;
 
+$LIST( <71a:actual_argument_list>)
+{
+  $LIST( <71a:actual_argument_list>) = $LIST(<71b:actual_argument>);
+}
+
 *******************************************************************************
 
 <71b:actual_argument>
 		= <74:expression> ;
+
+$LIST( <71b:actual_argument>)
+{
+  $LIST( <71b:actual_argument>) = $LIST(<74:expression>);
+}
 
 *------------------------------------------------------------------------------
 
@@ -2380,6 +4995,15 @@ $LIST(<8:program_statement>)
 <71b:actual_argument>
 		= * <110b:label_ref> ;
 
+$LIST( <71b:actual_argument>)
+{
+  $LIST( <71b:actual_argument>) = ast_alternate_return_specifier(
+    LOCATION(0),
+    "*",
+    $LIST(<110b:label_ref>)
+  );
+}
+
 *******************************************************************************
 
 * An alternate return is not allowed in a function subprogram.
@@ -2387,10 +5011,20 @@ $LIST(<8:program_statement>)
 <72:return_statement>
 		= RETURN ;
 
+$LIST( <72:return_statement>)
+{
+  $LIST( <72:return_statement>) = NULL;
+}
+
 *------------------------------------------------------------------------------
 
 <72:return_statement>
 		= RETURN  <77:integer_expr> ;
+
+$LIST( <72:return_statement>)
+{
+  $LIST( <72:return_statement>) = $LIST(<77:integer_expr>);
+}
 
 *******************************************************************************
 
@@ -2402,72 +5036,169 @@ $LIST(<8:program_statement>)
 
 <74:expression>	= <76:arithmetic_expression> ;
 
+$LIST( <74:expression>)
+{
+  $LIST( <74:expression>) = ast_expression(
+    "arithmetic_expression",
+    $LIST(<76:arithmetic_expression>)
+    );
+}
+
 *------------------------------------------------------------------------------
 
 <74:expression>	= <82:character_expression> ;
+
+$LIST( <74:expression>)
+{
+  $LIST( <74:expression>) = ast_expression(
+    "character_expression",
+    $LIST(<82:character_expression>)
+    );
+}
 
 *------------------------------------------------------------------------------
 
 <74:expression>	= <84:logical_expression> ;
 
+$LIST( <74:expression>)
+{
+  $LIST( <74:expression>) = ast_expression(
+    "logical_expression",
+    $LIST(<84:logical_expression>)
+    );
+}
+
 *------------------------------------------------------------------------------
 
 <74:expression>	= <74a:non_typed_expression> ;
+
+$LIST( <74:expression>)
+{
+  $LIST( <74:expression>) = $LIST(<74a:non_typed_expression>);
+}
 
 *******************************************************************************
 
 <74a:non_typed_expression>
 		= <99:symbolic_name> ;
+
+$LIST( <74a:non_typed_expression>)
+{
+  $LIST( <74a:non_typed_expression>) = $LIST(<99:symbolic_name>);
+}    
 
 *------------------------------------------------------------------------------
 
 <74a:non_typed_expression>
 		= <88b:function_reference_or_array_element_name> ;
 
+$LIST( <74a:non_typed_expression>)
+{
+  $LIST( <74a:non_typed_expression>) = $LIST(<88b:function_reference_or_array_element_name>);
+}    
+
 *------------------------------------------------------------------------------
 
 <74a:non_typed_expression>
 		= ( <74a:non_typed_expression> ) ;
+
+$LIST( <74a:non_typed_expression>)
+{
+  $LIST( <74a:non_typed_expression>) = ast_parenthesis_expression($LIST(<74a:non_typed_expression>'));
+}    
 
 *******************************************************************************
 
 <74b:expression_list>
 		= <74b:expression_list> ,  <74:expression> ;
 
+$LIST( <74b:expression_list>)
+{
+  $LIST( <74b:expression_list>) = SXML_LTL(
+    $LIST( <74b:expression_list>'),
+    ",\n",
+    $LIST( <74:expression>) 
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <74b:expression_list>
 		= <74:expression> ;
+
+$LIST( <74b:expression_list>)
+{
+  $LIST( <74b:expression_list>) = $LIST( <74:expression>);
+}    
 
 *******************************************************************************
 
 <75:constant_expr>
 		= <79:arithmetic_const_expr> ;
 
+$LIST( <75:constant_expr>)
+{
+  $LIST( <75:constant_expr>) = ast_const_expression(
+    "arithmetic_const_expr",
+    $LIST(<79:arithmetic_const_expr>)
+  );
+}   
+
 *------------------------------------------------------------------------------
 
 <75:constant_expr>
 		= <83:character_const_expr> ;
+
+$LIST( <75:constant_expr>)
+{
+  $LIST( <75:constant_expr>) = ast_const_expression(
+    "character_const_expr",
+    $LIST(<83:character_const_expr>)
+  );
+}    
 
 *------------------------------------------------------------------------------
 
 <75:constant_expr>
 		= <85:logical_const_expr> ;
 
+$LIST( <75:constant_expr>)
+{
+  $LIST( <75:constant_expr>) = ast_const_expression(
+    "logical_const_expr",
+    $LIST(<85:logical_const_expr>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <75:constant_expr>
 		= <75a:non_typed_const_expr> ;
+
+$LIST( <75:constant_expr>)
+{
+  $LIST( <75:constant_expr>) = $LIST(<75a:non_typed_const_expr>);
+}    
 
 *******************************************************************************
 
 <75a:non_typed_const_expr>
 		= <99:symbolic_name> ;
 
+$LIST( <75a:non_typed_const_expr>)
+{
+  $LIST( <75a:non_typed_const_expr>) = $LIST(<99:symbolic_name>);
+}    
+
 *------------------------------------------------------------------------------
 
 <75a:non_typed_const_expr>
 		=  ( <75a:non_typed_const_expr> ) ;
+
+$LIST( <75a:non_typed_const_expr>)
+{
+  $LIST( <75a:non_typed_const_expr>) = ast_parenthesis_expression($LIST(<75a:non_typed_const_expr>));
+}    
 
 *******************************************************************************
 
@@ -2478,55 +5209,133 @@ $LIST(<8:program_statement>)
 <76:arithmetic_expression>
 		= <114:sign> <76b:arithmetic_or_non_typed_expression> ;
 
+$LIST( <76:arithmetic_expression>)
+{
+  $LIST( <76:arithmetic_expression>) = ast_constant_signed(
+    $NAME(<114:sign>),
+    $LIST(<76b:arithmetic_or_non_typed_expression>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <76:arithmetic_expression>
 		= <76a:arithmetic_expression> ;
+
+$LIST( <76:arithmetic_expression>)
+{
+  $LIST( <76:arithmetic_expression>) = $LIST(<76a:arithmetic_expression>);
+}   
 
 *******************************************************************************
 
 <76a:arithmetic_expression>
 		= <76b:arithmetic_or_non_typed_expression> + <76b:arithmetic_or_non_typed_expression> ;
 
+$LIST( <76a:arithmetic_expression>)
+{
+  $LIST( <76a:arithmetic_expression>) = ast_binary_expression(
+    $LIST(<76b:arithmetic_or_non_typed_expression>),
+    "+",
+    $LIST(<76b:arithmetic_or_non_typed_expression>')
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <76a:arithmetic_expression>
 		= <76b:arithmetic_or_non_typed_expression> - <76b:arithmetic_or_non_typed_expression> ;
+
+$LIST( <76a:arithmetic_expression>)
+{
+  $LIST( <76a:arithmetic_expression>) = ast_binary_expression(
+    $LIST(<76b:arithmetic_or_non_typed_expression>),
+    "-",
+    $LIST(<76b:arithmetic_or_non_typed_expression>')
+  );
+}    
 
 *------------------------------------------------------------------------------
 
 <76a:arithmetic_expression>
 		= <76b:arithmetic_or_non_typed_expression> * <76b:arithmetic_or_non_typed_expression> ;
 
+$LIST( <76a:arithmetic_expression>)
+{
+  $LIST( <76a:arithmetic_expression>) = ast_binary_expression(
+    $LIST(<76b:arithmetic_or_non_typed_expression>),
+    "*",
+    $LIST(<76b:arithmetic_or_non_typed_expression>')
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <76a:arithmetic_expression>
 		= <76b:arithmetic_or_non_typed_expression> / <76b:arithmetic_or_non_typed_expression> ;
+
+$LIST( <76a:arithmetic_expression>)
+{
+  $LIST( <76a:arithmetic_expression>) = ast_binary_expression(
+    $LIST(<76b:arithmetic_or_non_typed_expression>),
+    "/",
+    $LIST(<76b:arithmetic_or_non_typed_expression>')
+  );
+}    
 
 *------------------------------------------------------------------------------
 
 <76a:arithmetic_expression>
 		= <76b:arithmetic_or_non_typed_expression> ** <76b:arithmetic_or_non_typed_expression> ;
 
+$LIST( <76a:arithmetic_expression>)
+{
+  $LIST( <76a:arithmetic_expression>) = ast_binary_expression(
+    $LIST(<76b:arithmetic_or_non_typed_expression>),
+    "**",
+    $LIST(<76b:arithmetic_or_non_typed_expression>')
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <76a:arithmetic_expression>
 		= <101:unsigned_arithmetic_constant> ;
+
+$LIST( <76a:arithmetic_expression>)
+{
+  $LIST( <76a:arithmetic_expression>) = $LIST(<101:unsigned_arithmetic_constant>);
+}    
 
 *------------------------------------------------------------------------------
 
 <76a:arithmetic_expression>
 		= ( <76:arithmetic_expression> ) ;
 
+$LIST( <76a:arithmetic_expression>)
+{
+  $LIST( <76a:arithmetic_expression>) = ast_parenthesis_expression($LIST(<76:arithmetic_expression>));
+}    
+
 *******************************************************************************
 
 <76b:arithmetic_or_non_typed_expression>
 		= <76a:arithmetic_expression> ;
 
+$LIST( <76b:arithmetic_or_non_typed_expression>)
+{
+  $LIST( <76b:arithmetic_or_non_typed_expression>) = $LIST(<76a:arithmetic_expression>);
+}    
+
 *------------------------------------------------------------------------------
 
 <76b:arithmetic_or_non_typed_expression>
 		= <74a:non_typed_expression> ;
+
+$LIST( <76b:arithmetic_or_non_typed_expression>)
+{
+  $LIST( <76b:arithmetic_or_non_typed_expression>) = $LIST(<74a:non_typed_expression>);
+}     
 
 *******************************************************************************
 
@@ -2535,30 +5344,60 @@ $LIST(<8:program_statement>)
 <77:integer_expr>
 		= <76:arithmetic_expression> ;
 
+$LIST( <77:integer_expr>)
+{
+  $LIST( <77:integer_expr>) = $LIST(<76:arithmetic_expression>);
+}
+
 *------------------------------------------------------------------------------
 
 <77:integer_expr>
 		= <74a:non_typed_expression> ;
+
+$LIST( <77:integer_expr>)
+{
+  $LIST( <77:integer_expr>) = $LIST(<74a:non_typed_expression>);
+}    
 
 *******************************************************************************
 
 <77a:integer_const_expr>
 		= <79:arithmetic_const_expr> ;
 
+$LIST( <77a:integer_const_expr>)
+{
+  $LIST( <77a:integer_const_expr>) = $LIST(<79:arithmetic_const_expr>);
+}    
+
 *------------------------------------------------------------------------------
 
 <77a:integer_const_expr>
 		= <75a:non_typed_const_expr> ;
+
+$LIST( <77a:integer_const_expr>)
+{
+  $LIST( <77a:integer_const_expr>) = $LIST(<75a:non_typed_const_expr>);
+}    
 
 *******************************************************************************
 
 <77b:[integer_expr]>
 		= <77:integer_expr> ;
 
+$LIST( <77b:[integer_expr]>)
+{
+  $LIST( <77b:[integer_expr]>) = $LIST(<77:integer_expr>);
+}    
+
 *------------------------------------------------------------------------------
 
 <77b:[integer_expr]>
 		= ;
+
+$LIST( <77b:[integer_expr]>)
+{
+  $LIST( <77b:[integer_expr]>) = NULL;
+}    
 
 *******************************************************************************
 
@@ -2567,6 +5406,11 @@ $LIST(<8:program_statement>)
 
 <78:int_real_dp_expr>
 		= <77:integer_expr> ;
+
+$LIST( <78:int_real_dp_expr>)
+{
+  $LIST( <78:int_real_dp_expr>) = $LIST(<77:integer_expr>);
+}    
 
 *******************************************************************************
 
@@ -2578,55 +5422,133 @@ $LIST(<8:program_statement>)
 <79:arithmetic_const_expr>
 		= <114:sign> <79b:arithmetic_or_non_typed_const_expr> ;
 
+$LIST( <79:arithmetic_const_expr>)
+{
+  $LIST( <79:arithmetic_const_expr>) = ast_constant_signed(
+    $NAME(<114:sign>),
+    $LIST(<79b:arithmetic_or_non_typed_const_expr>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <79:arithmetic_const_expr>
 		= <79a:arithmetic_const_expr> ;
+
+$LIST( <79:arithmetic_const_expr>)
+{
+  $LIST( <79:arithmetic_const_expr>) = $LIST(<79a:arithmetic_const_expr>);
+}    
 
 *******************************************************************************
 
 <79a:arithmetic_const_expr>
 		= <79b:arithmetic_or_non_typed_const_expr> + <79b:arithmetic_or_non_typed_const_expr> ;
 
+$LIST( <79a:arithmetic_const_expr>)
+{
+  $LIST( <79a:arithmetic_const_expr>) = ast_binary_expression(
+    $LIST(<79b:arithmetic_or_non_typed_const_expr>),
+    "+",
+    $LIST(<79b:arithmetic_or_non_typed_const_expr>')
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <79a:arithmetic_const_expr>
 		= <79b:arithmetic_or_non_typed_const_expr> - <79b:arithmetic_or_non_typed_const_expr> ;
+
+$LIST( <79a:arithmetic_const_expr>)
+{
+  $LIST( <79a:arithmetic_const_expr>) = ast_binary_expression(
+    $LIST(<79b:arithmetic_or_non_typed_const_expr>),
+    "-",
+    $LIST(<79b:arithmetic_or_non_typed_const_expr>')
+  );
+}    
 
 *------------------------------------------------------------------------------
 
 <79a:arithmetic_const_expr>
 		= <79b:arithmetic_or_non_typed_const_expr> * <79b:arithmetic_or_non_typed_const_expr> ;
 
+$LIST( <79a:arithmetic_const_expr>)
+{
+  $LIST( <79a:arithmetic_const_expr>) = ast_binary_expression(
+    $LIST(<79b:arithmetic_or_non_typed_const_expr>),
+    "*",
+    $LIST(<79b:arithmetic_or_non_typed_const_expr>')
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <79a:arithmetic_const_expr>
 		= <79b:arithmetic_or_non_typed_const_expr> / <79b:arithmetic_or_non_typed_const_expr> ;
+
+$LIST( <79a:arithmetic_const_expr>)
+{
+  $LIST( <79a:arithmetic_const_expr>) = ast_binary_expression(
+    $LIST(<79b:arithmetic_or_non_typed_const_expr>),
+    "/",
+    $LIST(<79b:arithmetic_or_non_typed_const_expr>')
+  );
+}    
 
 *------------------------------------------------------------------------------
 
 <79a:arithmetic_const_expr>
 		= <79b:arithmetic_or_non_typed_const_expr> ** <79b:arithmetic_or_non_typed_const_expr> ;
 
+$LIST( <79a:arithmetic_const_expr>)
+{
+  $LIST( <79a:arithmetic_const_expr>) = ast_binary_expression(
+    $LIST(<79b:arithmetic_or_non_typed_const_expr>),
+    "**",
+    $LIST(<79b:arithmetic_or_non_typed_const_expr>')
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <79a:arithmetic_const_expr>
 		= <101:unsigned_arithmetic_constant> ;
+
+$LIST( <79a:arithmetic_const_expr>)
+{
+  $LIST( <79a:arithmetic_const_expr>) = $LIST(<101:unsigned_arithmetic_constant>);
+}   
 
 *------------------------------------------------------------------------------
 
 <79a:arithmetic_const_expr>
 		= ( <79:arithmetic_const_expr> ) ;
 
+$LIST( <79a:arithmetic_const_expr>)
+{
+  $LIST( <79a:arithmetic_const_expr>) = ast_parenthesis_expression($LIST(<79:arithmetic_const_expr>));
+}    
+
 *******************************************************************************
 
 <79b:arithmetic_or_non_typed_const_expr>
 		= <79a:arithmetic_const_expr> ;
 
+$LIST( <79b:arithmetic_or_non_typed_const_expr>)
+{
+  $LIST( <79b:arithmetic_or_non_typed_const_expr>) = $LIST(<79a:arithmetic_const_expr>);
+}
+
 *------------------------------------------------------------------------------
 
 <79b:arithmetic_or_non_typed_const_expr>
 		= <75a:non_typed_const_expr> ;
+
+$LIST( <79b:arithmetic_or_non_typed_const_expr>)
+{
+  $LIST( <79b:arithmetic_or_non_typed_const_expr>) = $LIST(<75a:non_typed_const_expr>);
+}    
 
 *******************************************************************************
 
@@ -2635,50 +5557,121 @@ $LIST(<8:program_statement>)
 <80:int_constant_expr>
 		= <114:sign> <80a:int_constant_expr> ;
 
+$LIST( <80:int_constant_expr>)
+{
+  $LIST( <80:int_constant_expr>) = ast_constant_signed(
+    $NAME( <114:sign>),
+    $LIST( <80a:int_constant_expr>) );
+}
+
 *------------------------------------------------------------------------------
 
 <80:int_constant_expr>
 		= <80a:int_constant_expr> ;
+
+$LIST( <80:int_constant_expr>)
+{
+  $LIST( <80:int_constant_expr>) = $LIST( <80a:int_constant_expr>);
+}
 
 *******************************************************************************
 
 <80a:int_constant_expr>
 		= <80a:int_constant_expr> + <80a:int_constant_expr> ;
 
+$LIST( <80a:int_constant_expr>)
+{
+  $LIST( <80a:int_constant_expr>) = ast_binary_expression(
+    $LIST( <80a:int_constant_expr>' ),
+    "+",
+    $LIST( <80a:int_constant_expr>'') );
+}
+
 *------------------------------------------------------------------------------
 
 <80a:int_constant_expr>
 		= <80a:int_constant_expr> - <80a:int_constant_expr> ;
+
+$LIST( <80a:int_constant_expr>)
+{
+  $LIST( <80a:int_constant_expr>) = ast_binary_expression(
+    $LIST( <80a:int_constant_expr>' ),
+    "-",
+    $LIST( <80a:int_constant_expr>'') );
+}
 
 *------------------------------------------------------------------------------
 
 <80a:int_constant_expr>
 		= <80a:int_constant_expr> * <80a:int_constant_expr> ;
 
+$LIST( <80a:int_constant_expr>)
+{
+  $LIST( <80a:int_constant_expr>) = ast_binary_expression(
+    $LIST( <80a:int_constant_expr>' ),
+    "*",
+    $LIST( <80a:int_constant_expr>'') );
+}
+
 *------------------------------------------------------------------------------
 
 <80a:int_constant_expr>
 		= <80a:int_constant_expr> / <80a:int_constant_expr> ;
+
+$LIST( <80a:int_constant_expr>)
+{
+  $LIST( <80a:int_constant_expr>) = ast_binary_expression(
+    $LIST( <80a:int_constant_expr>' ),
+    "/",
+    $LIST( <80a:int_constant_expr>'') );
+}
 
 *------------------------------------------------------------------------------
 
 <80a:int_constant_expr>
 		= <80a:int_constant_expr> ** <80a:int_constant_expr> ;
 
+$LIST( <80a:int_constant_expr>)
+{
+  $LIST( <80a:int_constant_expr>) = ast_binary_expression(
+    $LIST( <80a:int_constant_expr>' ),
+    "**",
+    $LIST( <80a:int_constant_expr>'') );
+}
+
 *------------------------------------------------------------------------------
 
 <80a:int_constant_expr>
 		= <102:unsigned_int_constant> ;
+
+$LIST( <80a:int_constant_expr>)
+{
+  $LIST( <80a:int_constant_expr>) = ast_literal_expression(
+    $LIST( <102:unsigned_int_constant>) );
+}
 
 *------------------------------------------------------------------------------
 
 <80a:int_constant_expr>
 		= <99:symbolic_name> ;
 
+$LIST( <80a:int_constant_expr>)
+{
+  $LIST( <80a:int_constant_expr>) = ast_variable_expression(
+    $LIST(<99:symbolic_name>) 
+  );
+}
+
 *------------------------------------------------------------------------------
 
 <80a:int_constant_expr>
 		= ( <80:int_constant_expr> ) ;
+
+$LIST( <80a:int_constant_expr>)
+{
+  $LIST( <80a:int_constant_expr>) = ast_parenthesis_expression(
+    $LIST( <80:int_constant_expr>) );
+}
 
 *******************************************************************************
 
@@ -2687,6 +5680,11 @@ $LIST(<8:program_statement>)
 
 <81:dim_bound_expr>
 		= <80:int_constant_expr> ;
+
+$LIST( <81:dim_bound_expr>)
+{
+  $LIST( <81:dim_bound_expr>) = $LIST( <80:int_constant_expr>);
+}
 
 *------------------------------------------------------------------------------
 
@@ -2725,30 +5723,64 @@ $LIST(<8:program_statement>)
 <82:character_expression>
 		= <82a:character_or_non_typed_expression> // <82a:character_or_non_typed_expression> ;
 
+$LIST( <82:character_expression>)
+{
+  $LIST( <82:character_expression>) = ast_binary_expression(
+    $LIST(<82a:character_or_non_typed_expression>),
+    "//",
+    $LIST(<82a:character_or_non_typed_expression>')  
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <82:character_expression>
 		= <109:character_constant> ;
+
+$LIST( <82:character_expression>)
+{
+  $LIST( <82:character_expression>) = $LIST(<109:character_constant>);
+}    
 
 *------------------------------------------------------------------------------
 
 <82:character_expression>
 		= <89:substring_name> ;
 
+$LIST( <82:character_expression>)
+{
+  $LIST( <82:character_expression>) = $LIST(<89:substring_name>);
+}    
+
 *------------------------------------------------------------------------------
 
 <82:character_expression>
 		= ( <82:character_expression> ) ;
+
+$LIST( <82:character_expression>)
+{
+  $LIST( <82:character_expression>) = ast_parenthesis_expression($LIST(<82:character_expression>'));
+}    
 
 *******************************************************************************
 
 <82a:character_or_non_typed_expression>
 		= <82:character_expression> ;
 
+$LIST( <82a:character_or_non_typed_expression>)
+{
+  $LIST( <82a:character_or_non_typed_expression>) = $LIST(<82:character_expression>);
+}    
+
 *------------------------------------------------------------------------------
 
 <82a:character_or_non_typed_expression>
 		= <74a:non_typed_expression> ;
+
+$LIST( <82a:character_or_non_typed_expression>)
+{
+  $LIST( <82a:character_or_non_typed_expression>) = $LIST(<74a:non_typed_expression>);
+}    
 
 *******************************************************************************
 
@@ -2757,10 +5789,24 @@ $LIST(<8:program_statement>)
 <83:character_const_expr>
 		= <83:character_const_expr> // <83:character_const_expr> ;
 
+$LIST( <83:character_const_expr>)
+{
+  $LIST( <83:character_const_expr>) = ast_binary_expression(
+    $LIST(<83:character_const_expr>'),
+    "//",
+    $LIST(<83:character_const_expr>'')
+  );
+}
+
 *------------------------------------------------------------------------------
 
 <83:character_const_expr>
 		= <109:character_constant> ;
+
+$LIST( <83:character_const_expr>)
+{
+  $LIST( <83:character_const_expr>) = $LIST(<109:character_constant>);
+}    
 
 *------------------------------------------------------------------------------
 
@@ -2773,6 +5819,11 @@ $LIST(<8:program_statement>)
 <83:character_const_expr>
 		= ( <83:character_const_expr> ) ;
 
+$LIST( <83:character_const_expr>)
+{
+  $LIST( <83:character_const_expr>) = ast_parenthesis_expression($LIST(<83:character_const_expr>'));
+}    
+
 *******************************************************************************
 
 * A constant name, variable name, array element name, or function reference
@@ -2781,70 +5832,168 @@ $LIST(<8:program_statement>)
 <84:logical_expression>
 		= <84b:logical_or_non_typed_expression>  .AND.  <84b:logical_or_non_typed_expression> ;
 
+$LIST( <84:logical_expression>)
+{
+  $LIST( <84:logical_expression>) = ast_binary_expression(
+    $LIST(<84b:logical_or_non_typed_expression>),
+    ".AND.",
+    $LIST(<84b:logical_or_non_typed_expression>')
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <84:logical_expression>
 		= <84b:logical_or_non_typed_expression>  .OR.  <84b:logical_or_non_typed_expression> ;
+
+$LIST( <84:logical_expression>)
+{
+  $LIST( <84:logical_expression>) = ast_binary_expression(
+    $LIST(<84b:logical_or_non_typed_expression>),
+    ".OR.",
+    $LIST(<84b:logical_or_non_typed_expression>')
+  );
+}   
 
 *------------------------------------------------------------------------------
 
 <84:logical_expression>
 		= <84b:logical_or_non_typed_expression>  .EQV.  <84b:logical_or_non_typed_expression> ;
 
+$LIST( <84:logical_expression>)
+{
+  $LIST( <84:logical_expression>) = ast_binary_expression(
+    $LIST(<84b:logical_or_non_typed_expression>),
+    ".EQV.",
+    $LIST(<84b:logical_or_non_typed_expression>')
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <84:logical_expression>
 		= <84b:logical_or_non_typed_expression>  .NEQV.  <84b:logical_or_non_typed_expression> ;
+
+$LIST( <84:logical_expression>)
+{
+  $LIST( <84:logical_expression>) = ast_binary_expression(
+    $LIST(<84b:logical_or_non_typed_expression>),
+    ".NEQV.",
+    $LIST(<84b:logical_or_non_typed_expression>')
+  );
+}    
 
 *------------------------------------------------------------------------------
 
 <84:logical_expression>
 		= <84c:logical_factor> ;
 
+$LIST( <84:logical_expression>)
+{
+  $LIST( <84:logical_expression>) = $LIST(<84c:logical_factor>);
+}    
+
 *******************************************************************************
 
 <84c:logical_factor>
 		= <84d:logical_primary> ;
+
+$LIST( <84c:logical_factor>)
+{
+  $LIST( <84c:logical_factor>) = ast_logical_factor(
+    "false",
+    $LIST(<84d:logical_primary>)
+  );
+}    
 
 *------------------------------------------------------------------------------
 
 <84c:logical_factor>
 		= .NOT.  <84e:logical_or_non_typed_primary> ;
 
+$LIST( <84c:logical_factor>)
+{
+  $LIST( <84c:logical_factor>) = ast_logical_factor(
+    "true",
+    $LIST(<84e:logical_or_non_typed_primary>)
+  );
+}    
+
 *******************************************************************************
 
 <84d:logical_primary>
 		= <108:logical_constant> ;
+
+$LIST( <84d:logical_primary>)
+{
+  $LIST( <84d:logical_primary>) = ast_logical_primary(
+    $LIST(<108:logical_constant>)
+  );
+}    
 
 *------------------------------------------------------------------------------
 
 <84d:logical_primary>
 		= <86:relational_expression> ;
 
+$LIST( <84d:logical_primary>)
+{
+  $LIST( <84d:logical_primary>) = ast_logical_primary(
+    $LIST(<86:relational_expression>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <84d:logical_primary>
 		= ( <84:logical_expression> ) ;
+
+$LIST( <84d:logical_primary>)
+{
+  $LIST( <84d:logical_primary>) = ast_logical_primary(
+    $LIST(<84:logical_expression>)
+  );
+}    
 
 *******************************************************************************
 
 <84b:logical_or_non_typed_expression>
 		= <84:logical_expression> ;
 
+$LIST( <84b:logical_or_non_typed_expression>)
+{
+  $LIST( <84b:logical_or_non_typed_expression>) = $LIST(<84:logical_expression>);
+}
+
 *------------------------------------------------------------------------------
 
 <84b:logical_or_non_typed_expression>
 		= <74a:non_typed_expression> ;
+
+$LIST( <84b:logical_or_non_typed_expression>)
+{
+  $LIST( <84b:logical_or_non_typed_expression>) = $LIST(<74a:non_typed_expression>);
+}    
 
 *******************************************************************************
 
 <84e:logical_or_non_typed_primary>
 		= <84d:logical_primary> ;
 
+$LIST( <84e:logical_or_non_typed_primary>)
+{
+  $LIST( <84e:logical_or_non_typed_primary>) = $LIST(<84d:logical_primary>);
+}    
+
 *------------------------------------------------------------------------------
 
 <84e:logical_or_non_typed_primary>
 		= <74a:non_typed_expression> ;
+
+$LIST( <84e:logical_or_non_typed_primary>)
+{
+  $LIST( <84e:logical_or_non_typed_primary>) = $LIST(<74a:non_typed_expression>);
+}    
 
 *******************************************************************************
 
@@ -2854,70 +6003,159 @@ $LIST(<8:program_statement>)
 <85:logical_const_expr>
 		= <85b:logical_or_non_typed_const_expr>  .AND.  <85b:logical_or_non_typed_const_expr> ;
 
+$LIST( <85:logical_const_expr>)
+{
+  $LIST( <85:logical_const_expr>) = ast_binary_expression(
+    $LIST(<85b:logical_or_non_typed_const_expr>),
+    ".AND.",
+    $LIST(<85b:logical_or_non_typed_const_expr>')
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <85:logical_const_expr>
 		= <85b:logical_or_non_typed_const_expr>  .OR.  <85b:logical_or_non_typed_const_expr> ;
+
+$LIST( <85:logical_const_expr>)
+{
+  $LIST( <85:logical_const_expr>) = ast_binary_expression(
+    $LIST(<85b:logical_or_non_typed_const_expr>),
+    ".OR.",
+    $LIST(<85b:logical_or_non_typed_const_expr>')
+  );
+}    
 
 *------------------------------------------------------------------------------
 
 <85:logical_const_expr>
 		= <85b:logical_or_non_typed_const_expr>  .EQV.  <85b:logical_or_non_typed_const_expr> ;
 
+$LIST( <85:logical_const_expr>)
+{
+  $LIST( <85:logical_const_expr>) = ast_binary_expression(
+    $LIST(<85b:logical_or_non_typed_const_expr>),
+    ".EQV.",
+    $LIST(<85b:logical_or_non_typed_const_expr>')
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <85:logical_const_expr>
 		= <85b:logical_or_non_typed_const_expr>  .NEQV.  <85b:logical_or_non_typed_const_expr> ;
+
+$LIST( <85:logical_const_expr>)
+{
+  $LIST( <85:logical_const_expr>) = ast_binary_expression(
+    $LIST(<85b:logical_or_non_typed_const_expr>),
+    ".NEQV.",
+    $LIST(<85b:logical_or_non_typed_const_expr>')
+  );
+}
 
 *------------------------------------------------------------------------------
 
 <85:logical_const_expr>
 		= <85c:logical_const_fact> ;
 
+$LIST( <85:logical_const_expr>)
+{
+  $LIST( <85:logical_const_expr>) = $LIST(<85c:logical_const_fact>);
+}    
+
 *******************************************************************************
 
 <85c:logical_const_fact>
 		= <85d:logical_const_prim> ;
+
+$LIST( <85c:logical_const_fact>)
+{
+  $LIST( <85c:logical_const_fact>) = $LIST(<85d:logical_const_prim>);
+}    
 
 *------------------------------------------------------------------------------
 
 <85c:logical_const_fact>
 		= .NOT. <85e:logical_or_non_typed_const_prim> ;
 
+$LIST( <85c:logical_const_fact>)
+{
+  $LIST( <85c:logical_const_fact>) = ast_constant_signed(
+    ".NOT.",
+    $LIST(<85e:logical_or_non_typed_const_prim>)
+  );
+}    
+
 *******************************************************************************
 
 <85d:logical_const_prim>
 		= <108:logical_constant> ;
+
+$LIST( <85d:logical_const_prim>)
+{
+  $LIST( <85d:logical_const_prim>) = $LIST(<108:logical_constant>);
+}    
 
 *------------------------------------------------------------------------------
 
 <85d:logical_const_prim>
 		= <86a:relational_const_expr> ;
 
+$LIST( <85d:logical_const_prim>)
+{
+  $LIST( <85d:logical_const_prim>) = $LIST(<86a:relational_const_expr>);
+}    
+
 *------------------------------------------------------------------------------
 
 <85d:logical_const_prim>
 		= ( <85:logical_const_expr> ) ;
+
+$LIST( <85d:logical_const_prim>)
+{
+  $LIST( <85d:logical_const_prim>) = ast_parenthesis_expression($LIST(<85:logical_const_expr>));
+}    
 
 *******************************************************************************
 
 <85b:logical_or_non_typed_const_expr>
 		= <85:logical_const_expr> ;
 
+$LIST( <85b:logical_or_non_typed_const_expr>)
+{
+  $LIST( <85b:logical_or_non_typed_const_expr>) = $LIST(<85:logical_const_expr>);
+}        
+
 *------------------------------------------------------------------------------
 
 <85b:logical_or_non_typed_const_expr>
 		= <75a:non_typed_const_expr> ;
+
+$LIST( <85b:logical_or_non_typed_const_expr>)
+{
+  $LIST( <85b:logical_or_non_typed_const_expr>) = $LIST(<75a:non_typed_const_expr>);
+}    
 
 *******************************************************************************
 
 <85e:logical_or_non_typed_const_prim>
 		= <85d:logical_const_prim> ;
 
+$LIST( <85e:logical_or_non_typed_const_prim>)
+{
+  $LIST( <85e:logical_or_non_typed_const_prim>) = $LIST(<85d:logical_const_prim>);
+}    
+
 *------------------------------------------------------------------------------
 
 <85e:logical_or_non_typed_const_prim>
 		= <75a:non_typed_const_expr> ;
+
+$LIST( <85e:logical_or_non_typed_const_prim>)
+{
+  $LIST( <85e:logical_or_non_typed_const_prim>) = $LIST(<75a:non_typed_const_expr>);
+}    
 
 *******************************************************************************
 
@@ -2926,6 +6164,15 @@ $LIST(<8:program_statement>)
 
 <86:relational_expression>
 		= <86b:arithmetic_or_character_expression>  <87:rel_op>  <86b:arithmetic_or_character_expression> ;
+
+$LIST( <86:relational_expression>)
+{
+  $LIST( <86:relational_expression>) = ast_binary_expression(
+    $LIST(<86b:arithmetic_or_character_expression>),
+    $NAME(<87:rel_op>),
+    $LIST(<86b:arithmetic_or_character_expression>')
+  );
+}    
 
 *------------------------------------------------------------------------------
 
@@ -2949,6 +6196,15 @@ $LIST(<8:program_statement>)
 <86a:relational_const_expr>
 		= <86c:arithmetic_or_character_const_expr> <87:rel_op> <86c:arithmetic_or_character_const_expr> ;
 
+$LIST( <86a:relational_const_expr>)
+{
+  $LIST( <86a:relational_const_expr>) = ast_binary_expression(
+    $LIST(<86c:arithmetic_or_character_const_expr>),
+    $NAME(<87:rel_op>),
+    $LIST(<86c:arithmetic_or_character_const_expr>')
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 *<86a:relational_const_expr>
@@ -2971,44 +6227,94 @@ $LIST(<8:program_statement>)
 <86b:arithmetic_or_character_expression>
 		= <77:integer_expr> ;
 
+$LIST( <86b:arithmetic_or_character_expression>)
+{
+  $LIST( <86b:arithmetic_or_character_expression>) = $LIST(<77:integer_expr>);
+}    
+
 *------------------------------------------------------------------------------
 
 <86b:arithmetic_or_character_expression>
 		= <82:character_expression> ;
+
+$LIST( <86b:arithmetic_or_character_expression>)
+{
+  $LIST( <86b:arithmetic_or_character_expression>) = $LIST(<82:character_expression>);
+}    
 
 *******************************************************************************
 
 <86c:arithmetic_or_character_const_expr>
 		= <77a:integer_const_expr> ;
 
+$LIST( <86c:arithmetic_or_character_const_expr>)
+{
+  $LIST( <86c:arithmetic_or_character_const_expr>) = $LIST(<77a:integer_const_expr>);
+}    
+
 *------------------------------------------------------------------------------
 
 <86c:arithmetic_or_character_const_expr>
 		= <83:character_const_expr> ;
 
+$LIST( <86c:arithmetic_or_character_const_expr>)
+{
+  $LIST( <86c:arithmetic_or_character_const_expr>) = $LIST(<83:character_const_expr>);
+}    
+
 *******************************************************************************
 
 <87:rel_op>	= .LT. ;
+
+$NAME( <87:rel_op>)
+{
+  $NAME( <87:rel_op>) = ".LT.";
+}
 
 *------------------------------------------------------------------------------
 
 <87:rel_op>	= .LE. ;
 
+$NAME( <87:rel_op>)
+{
+  $NAME( <87:rel_op>) = ".LE.";
+}
+
 *------------------------------------------------------------------------------
 
 <87:rel_op>	= .EQ. ;
+
+$NAME( <87:rel_op>)
+{
+  $NAME( <87:rel_op>) = ".EQ.";
+}
 
 *------------------------------------------------------------------------------
 
 <87:rel_op>	= .NE. ;
 
+$NAME( <87:rel_op>)
+{
+  $NAME( <87:rel_op>) = ".NE.";
+}
+
 *------------------------------------------------------------------------------
 
 <87:rel_op>	= .GT. ;
 
+$NAME( <87:rel_op>)
+{
+  $NAME( <87:rel_op>) = ".GT.";
+}
+
 *------------------------------------------------------------------------------
 
 <87:rel_op>	= .GE. ;
+
+$NAME( <87:rel_op>)
+{
+  $NAME( <87:rel_op>) = ".GE.";
+}
 
 *******************************************************************************
 
@@ -3017,25 +6323,53 @@ $LIST(<8:program_statement>)
 <88:array_element_name>
 		= <99:symbolic_name>  ( <74b:expression_list> ) ;
 
+$LIST( <88:array_element_name>)
+{
+  $LIST( <88:array_element_name>) = ast_array_element_name(
+    $LIST(<99:symbolic_name>),
+    $LIST(<74b:expression_list>)
+  );
+}   
+
 *******************************************************************************
 
 <88b:function_reference_or_array_element_name>
 		= <88:array_element_name> ;
+
+$LIST( <88b:function_reference_or_array_element_name>)
+{
+  $LIST( <88b:function_reference_or_array_element_name>) = $LIST(<88:array_element_name>);
+}    
 
 *------------------------------------------------------------------------------
 
 <88b:function_reference_or_array_element_name>
 		= <99:symbolic_name>  ( ) ;
 
+$LIST( <88b:function_reference_or_array_element_name>)
+{
+  $LIST( <88b:function_reference_or_array_element_name>) = ast_function_reference($LIST(<99:symbolic_name>));
+}    
+
 *******************************************************************************
 
 <88a:variable_or_array_element_name>
 		= <99:symbolic_name> ;
 
+$LIST( <88a:variable_or_array_element_name>)
+{
+  $LIST( <88a:variable_or_array_element_name>) = $LIST(<99:symbolic_name>);
+}    
+
 *------------------------------------------------------------------------------
 
 <88a:variable_or_array_element_name>
 		= <88b:function_reference_or_array_element_name> ;
+
+$LIST( <88a:variable_or_array_element_name>)
+{
+  $LIST( <88a:variable_or_array_element_name>) = $LIST(<88b:function_reference_or_array_element_name>);
+}    
 
 *******************************************************************************
 
@@ -3044,15 +6378,45 @@ $LIST(<8:program_statement>)
 <89:substring_name>
 		= <99:symbolic_name>  ( <74:expression>  :  <77b:[integer_expr]> ) ;
 
+$LIST( <89:substring_name>)
+{
+  $LIST( <89:substring_name>) = ast_substring(
+    $LIST(<99:symbolic_name>),
+    NULL,
+    $LIST(<74:expression>),
+    $LIST(<77b:[integer_expr]>)
+  );
+}   
+
 *------------------------------------------------------------------------------
 
 <89:substring_name>
 		= <99:symbolic_name>  ( :  <77b:[integer_expr]> ) ;
 
+$LIST( <89:substring_name>)
+{
+  $LIST( <89:substring_name>) = ast_substring(
+    $LIST(<99:symbolic_name>),
+    NULL,
+    ast_empty_string(),
+    $LIST(<77b:[integer_expr]>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <89:substring_name>
 		= <88b:function_reference_or_array_element_name>  ( <77b:[integer_expr]>  :  <77b:[integer_expr]> ) ;
+
+$LIST( <89:substring_name>)
+{
+  $LIST( <89:substring_name>) = ast_substring(
+    NULL,
+    $LIST(<88b:function_reference_or_array_element_name>),
+    $LIST(<77b:[integer_expr]>),
+    $LIST(<77b:[integer_expr]>')
+  );
+}    
 
 *******************************************************************************
 
@@ -3082,70 +6446,150 @@ $LIST(<8:program_statement>)
 <99:symbolic_name> 
 		= %symbolic_name ;
 
-$NAME(<99:symbolic_name>)
+$LIST(<99:symbolic_name>)
 
-	$NAME(<99:symbolic_name>) = $ptext ("%symbolic_name");
+	$LIST(<99:symbolic_name>) = ast_symbolic_name(LOCATION(0), $ptext ("%symbolic_name"));
 	
 *******************************************************************************
 
 <99a:symbolic_name_list>
 		= <99a:symbolic_name_list> ,  <99:symbolic_name> ;
 
+$LIST(<99a:symbolic_name_list>)
+{
+  $LIST(<99a:symbolic_name_list>) = SXML_LTL(
+    $LIST( <99a:symbolic_name_list>'),
+    ",\n",
+    $LIST(<99:symbolic_name>) 
+  );
+}
+
 *------------------------------------------------------------------------------
 
 <99a:symbolic_name_list>
 		= <99:symbolic_name> ;
+
+$LIST(<99a:symbolic_name_list>)
+{
+  $LIST(<99a:symbolic_name_list>) = $LIST(<99:symbolic_name>);
+}
 
 *******************************************************************************
 
 <99b:letter>
 		= %letter ;
 
+$NAME(<99b:letter>)
+{
+   $NAME(<99b:letter>) = $ptext ("%letter");
+}
+
 *******************************************************************************
 
 <100:constant>	= <101:unsigned_arithmetic_constant> ;
+
+$LIST( <100:constant>)
+{
+  $LIST( <100:constant>) = $LIST(<101:unsigned_arithmetic_constant>);
+}
 
 *------------------------------------------------------------------------------
 
 <100:constant>	= <114:sign> <101:unsigned_arithmetic_constant> ;
 
+$LIST( <100:constant>)
+{
+  $LIST( <100:constant>) = ast_constant_signed(
+    $NAME(<114:sign>),
+    $LIST(<101:unsigned_arithmetic_constant>)
+  );
+}
+
 *------------------------------------------------------------------------------
 
 <100:constant>	= <109:character_constant> ;
 
+$LIST( <100:constant>)
+{
+  $LIST( <100:constant>) = $LIST(<109:character_constant>);
+}
+
 *------------------------------------------------------------------------------
 
 <100:constant>	= <108:logical_constant> ;
+
+$LIST( <100:constant>)
+{
+  $LIST( <100:constant>) = $LIST(<108:logical_constant>);
+}
 
 *******************************************************************************
 
 <101:unsigned_arithmetic_constant>
 		= <102:unsigned_int_constant> ;
 
+$LIST( <101:unsigned_arithmetic_constant>)
+{
+  $LIST( <101:unsigned_arithmetic_constant>) = $LIST(<102:unsigned_int_constant>);
+}
+
 *------------------------------------------------------------------------------
 
 <101:unsigned_arithmetic_constant>
 		= <105:unsigned_real_constant> ;
+
+$LIST( <101:unsigned_arithmetic_constant>)
+{
+  $LIST( <101:unsigned_arithmetic_constant>) = $LIST(<105:unsigned_real_constant>);
+}    
 
 *------------------------------------------------------------------------------
 
 <101:unsigned_arithmetic_constant>
 		= <106:unsigned_dp_constant> ;
 
+$LIST( <101:unsigned_arithmetic_constant>)
+{
+  $LIST( <101:unsigned_arithmetic_constant>) = $LIST(<106:unsigned_dp_constant>);
+}    
+
 *------------------------------------------------------------------------------
 
 <101:unsigned_arithmetic_constant>
 		= <107:complex_constant> ;
+
+$LIST( <101:unsigned_arithmetic_constant>)
+{
+  $LIST( <101:unsigned_arithmetic_constant>) = $LIST(<107:complex_constant>);
+}    
 
 *******************************************************************************
 
 <102:unsigned_int_constant>
 		= %unsigned_int_constant ;
 
+$LIST( <102:unsigned_int_constant>)
+{
+  $LIST( <102:unsigned_int_constant>) = ast_constant(
+    LOCATION(0),
+    "unsigned_int_constant",
+    $ptext( "%unsigned_int_constant")  
+  );
+}
+
 *******************************************************************************
 
 <103:nonzero_unsigned_int_constant>
 		= %unsigned_int_constant ;
+
+$LIST( <103:nonzero_unsigned_int_constant>)
+{
+  $LIST( <103:nonzero_unsigned_int_constant>) = ast_constant(
+    LOCATION(0),
+    "nonzero_unsigned_int_constant",
+    $ptext( "%unsigned_int_constant")   
+  );
+}
 
 *******************************************************************************
 
@@ -3159,75 +6603,193 @@ $NAME(<99:symbolic_name>)
 <105:unsigned_real_constant>
 		= %unsigned_real_constant ;
 
+$LIST( <105:unsigned_real_constant>)
+{
+  $LIST( <105:unsigned_real_constant>) = ast_constant(
+    LOCATION(0),
+    "unsigned_real_constant",
+    $ptext( "%unsigned_real_constant")    
+  );
+}    
+
 *******************************************************************************
 
 <106:unsigned_dp_constant>
 		= %unsigned_dp_constant ;
+
+$LIST( <106:unsigned_dp_constant>)
+{
+  $LIST( <106:unsigned_dp_constant>) = ast_constant(
+    LOCATION(0),
+    "unsigned_dp_constant",
+    $ptext( "%unsigned_dp_constant")    
+  );
+}    
 
 *******************************************************************************
 
 <107:complex_constant>
 		= ( <107a:real_part> ,  <107b:complex_part> ) ;
 
+$LIST( <107:complex_constant>)
+{
+  $LIST( <107:complex_constant>) = ast_complex_constant(
+    LOCATION(0),
+    $LIST(<107a:real_part>),
+    $LIST(<107b:complex_part>)
+  );
+}        
+
 *******************************************************************************
 
 <107a:real_part>
 		= <105:unsigned_real_constant> ;
+
+$LIST( <107a:real_part>)
+{
+  $LIST( <107a:real_part>) = ast_complex_constant_real_part(
+    NULL,
+    $LIST(<105:unsigned_real_constant>)
+  );
+}   
 
 *------------------------------------------------------------------------------
 
 <107a:real_part>
 		= <102:unsigned_int_constant> ;
 
+$LIST( <107a:real_part>)
+{
+  $LIST( <107a:real_part>) = ast_complex_constant_real_part(
+    NULL,
+    $LIST(<102:unsigned_int_constant>)
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <107a:real_part>
 		= <114:sign> <105:unsigned_real_constant> ;
+
+$LIST( <107a:real_part>)
+{
+  $LIST( <107a:real_part>) = ast_complex_constant_real_part(
+    $NAME(<114:sign>),
+    $LIST(<105:unsigned_real_constant>)
+  );
+}    
 
 *------------------------------------------------------------------------------
 
 <107a:real_part>
 		= <114:sign> <102:unsigned_int_constant> ;
 
+$LIST( <107a:real_part>)
+{
+  $LIST( <107a:real_part>) = ast_complex_constant_real_part(
+    $NAME(<114:sign>),
+    $LIST(<102:unsigned_int_constant>)
+  );
+}    
+
 *******************************************************************************
 
 <107b:complex_part>
 		= <107a:real_part> ;
+
+$LIST( <107b:complex_part>)
+{
+  $LIST( <107b:complex_part>) = $LIST(<107a:real_part>);
+}    
 
 *******************************************************************************
 
 <108:logical_constant>
 		= .TRUE. ;
 
+$LIST( <108:logical_constant>)
+{
+  $LIST( <108:logical_constant>) = ast_constant(
+    LOCATION(0),
+    "logical_constant",
+    ".TRUE."
+  );
+}    
+
 *------------------------------------------------------------------------------
 
 <108:logical_constant>
 		= .FALSE. ;
+
+$LIST( <108:logical_constant>)
+{
+  $LIST( <108:logical_constant>) = ast_constant(
+    LOCATION(0),
+    "logical_constant",
+    ".FALSE."
+  );
+}
 
 *******************************************************************************
 
 <109:character_constant>
 		= %character_constant ;
 
+$LIST (<109:character_constant>)
+{
+  $LIST (<109:character_constant>) = ast_constant(
+    LOCATION(0),
+    "character_constant",
+    $ptext( "%character_constant")
+  );
+}
+
 *******************************************************************************
 
 * At most 5 digits are allowed in a label or in a label_ref
 <110:label>	= %label ;
+
+$NAME( <110:label>)
+{
+  $NAME( <110:label>) = $ptext ("%label");
+}
 
 *******************************************************************************
 
 <110a:label_ref_list>
 		= <110a:label_ref_list> ,  <110b:label_ref> ;
 
+$LIST(<110a:label_ref_list>)
+{
+  $LIST(<110a:label_ref_list>) = SXML_LTL(
+    $LIST( <110a:label_ref_list>'),
+    ",\n",
+    $LIST( <110b:label_ref>)
+  );
+}
+
 *------------------------------------------------------------------------------
 
 <110a:label_ref_list>
 		= <110b:label_ref> ;
 
+$LIST(<110a:label_ref_list>)
+{
+  $LIST(<110a:label_ref_list>) = $LIST( <110b:label_ref>);
+}
+
 *******************************************************************************
 
 <110b:label_ref>
 		= %unsigned_int_constant ;
+
+$LIST( <110b:label_ref>)
+{
+  $LIST( <110b:label_ref>) = ast_text_to_map(
+    "label_ref",
+    $ptext ("%unsigned_int_constant")
+  );
+}    
 
 *******************************************************************************
 
@@ -3274,9 +6836,19 @@ $NAME(<99:symbolic_name>)
 
 <114:sign>	= + ;
 
+$NAME( <114:sign>)
+{
+  $NAME( <114:sign>) = "+";
+}
+
 *------------------------------------------------------------------------------
 
 <114:sign>	= - ;
+
+$NAME( <114:sign>)
+{
+  $NAME( <114:sign>) = "-";
+}
 
 *******************************************************************************
 
@@ -3321,4 +6893,3 @@ $NAME(<99:symbolic_name>)
 *<116:letter>	= Z ;
 
 *******************************************************************************
-
