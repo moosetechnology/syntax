@@ -4,9 +4,14 @@
 
 COMMAND=`basename "$0"`
 
+SX=`dirname "$0"`/../..
+ARCH=`$SX/etc/bin/arch`
+F77=bin/f77
+PPF77=bin/ppf77
+PPF77OUT=bin.$ARCH/ppf77.out
+
 SPLIT_OPTION=0
 VALGRIND_OPTION=0
-VALGRIND="valgrind --quiet --track-origins=yes"
 
 while true
 do
@@ -56,6 +61,14 @@ fi
 
 #------------------------------------------------------------------------------
 
+if [ $VALGRIND_OPTION = 1 ]
+then
+	VALGRIND="valgrind --quiet --track-origins=yes"
+	export VALGRIND
+fi
+
+#------------------------------------------------------------------------------
+
 FILTER() {
 	# remove columns 72-80 of all lines not starting with a "C"
 	awk '/^C/ { print ; next } { print substr ($0, 1, 72) }' |
@@ -72,6 +85,25 @@ FILTER() {
 
 #------------------------------------------------------------------------------
 
+RUN() {
+	if [ $VALGRIND_OPTION = 1 ]
+	then
+		echo ""
+		# on a positionne la variable globale $VALGRIND
+		$F77 $*
+		return
+	fi
+
+	$F77 $*
+	STATUS=$?
+	if [ $STATUS != 0 ]
+	then
+		echo "  exit status is $STATUS"
+	fi
+}
+
+#------------------------------------------------------------------------------
+
 echo "*** testing f77"
 
 for FILE in `ls test/evref/*.FOR test/misc/*.f test/nist/*.FOR`
@@ -81,29 +113,24 @@ do
 
 	case "$FILE" in
 		test/evref/extension-* )
-			OPTION="-X"
+			# extended F77
+			RUN -X $FILE
 			;;
 		* )
-			OPTION=""
+			# standard F77
+			# we can test with and without option -X
+			RUN $FILE
+			RUN -X $FILE
 			;;
 	esac
-
-	if [ $VALGRIND_OPTION = 1 ]
-	then
-		echo ""
-		$VALGRIND bin/f77.out $OPTION $FILE
-		continue
-	fi
-
-	bin/f77.out $OPTION $FILE
-	STATUS=$?
-	if [ $STATUS != 0 ]
-	then
-		echo "  exit status is $STATUS"
-	fi
 done 
 
 #------------------------------------------------------------------------------
+
+if [ ! -x $PPF77OUT ]
+then
+	exit 0
+fi
 
 echo ""
 echo "*** testing ppf77"
@@ -129,14 +156,15 @@ do
 	if [ $VALGRIND_OPTION = 1 ]
 	then
 		echo ""
-		$VALGRIND bin/ppf77.out $OPTION $TMP1
+		# on a positionne la variable globale $VALGRIND
+		$PPF77 $OPTION $TMP1
 		continue
 	fi
 
-	bin/ppf77.out $OPTION < $TMP1 > $TMP2
+	$PPF77 $OPTION < $TMP1 > $TMP2
 
-	bin/ppf77.out $OPTION $TMP1
-	# ici $TMP1 a ete modifie par ppf77.out
+	$PPF77 $OPTION $TMP1
+	# ici $TMP1 a ete modifie par ppf77
 	STATUS=$?
 	if [ $STATUS != 0 ]
 	then
@@ -146,7 +174,7 @@ do
 	cmp -s $TMP1 $TMP2
 	if [ $? != 0 ]
 	then
-		echo "   pff77.out $OPTION < file and pff77.out file give different results"
+		echo "   pff77 $OPTION < FILE and pff77 FILE give different results"
 	fi
 
 	# here, files $TMP1 and $TMP2 are identical
@@ -158,7 +186,7 @@ do
 	# here, $TMP1 is the input FORTRAN file (filtered by FILTER)
 
 	# to compare $TMP1 and $TMP2, one must understand the changes made
-	# by ppf77.out :
+	# by ppf77 :
 	# - it preserves the comments
 	# - it removes fully empty lines
 	# - it removes the contents of columns 72-80 of each non-comment line
