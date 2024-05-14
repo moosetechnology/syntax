@@ -611,6 +611,20 @@ SXML_TYPE_LIST SXML_LLLTLTL (
 
 /* ------------------------------------------------------------------------- */
 
+SXML_TYPE_LIST SXML_LLTLLLL (
+		SXML_TYPE_LIST L1,
+		SXML_TYPE_LIST L2,
+		SXML_TYPE_TEXT T3,
+		SXML_TYPE_LIST L4,
+		SXML_TYPE_LIST L5,
+		SXML_TYPE_LIST L6,
+		SXML_TYPE_LIST L7)
+{
+	return SXML_LLL (SXML_LLT (L1, L2, T3), SXML_LL (L4, L5), SXML_LL (L6, L7));
+}
+
+/* ------------------------------------------------------------------------- */
+
 SXML_TYPE_LIST SXML_TTTLTLT (
 		SXML_TYPE_TEXT T1,
 		SXML_TYPE_TEXT T2,

@@ -711,7 +711,7 @@ SXML_TYPE_LIST ast_data_statement_variable(
         ast_tag_("variable"),
         location,
         ",\n",
-        JSON_KU("name", variable)
+        JSON_KU("variable_name", variable)
       )  
     );
 }
@@ -1237,25 +1237,6 @@ SXML_TYPE_LIST ast_control_info_elem(SXML_TYPE_LIST location,
 
 
 /* -------------------------------------------------------------------------
- * outputs a unit parameter. separated from the options above, since here it omits [UNIT = ] part
- * could be an integer, * or substring. In two later cases [UNIT = ] would be a syntactical error
- * - option value
- */
-SXML_TYPE_LIST ast_unit_identifier(SXML_TYPE_LIST location,
-            SXML_TYPE_LIST parameter) {
-
-  return JSON_MAP(
-    SXML_LLTL(
-      ast_tag_( "unit_control_option"),
-      location,
-      ",\n",
-      JSON_KU("unit_option_value", parameter)
-    )
-  );
-}
-
-
-/* -------------------------------------------------------------------------
  * outputs a constant
  * location
  * constant type (int, real, dp; signed or unsigned)
@@ -1392,7 +1373,7 @@ SXML_TYPE_LIST ast_variable_expression( SXML_TYPE_LIST variable) {
   return JSON_MAP (
     SXML_LL(
       ast_tag_( "variable_expression"),
-      JSON_KU( "variable", variable) ));
+      JSON_KU( "variable_name", variable) ));
 }
 
 
@@ -1424,7 +1405,7 @@ SXML_TYPE_LIST ast_variable( SXML_TYPE_LIST location,
       ast_tag_( "variable"),
       location,
       ",\n",
-      JSON_KU( "name", variable) 
+      JSON_KU( "variable_name", variable) 
     )
   );
 }
@@ -1471,9 +1452,9 @@ SXML_TYPE_LIST ast_binary_expression( SXML_TYPE_LIST location,
       ast_tag_( "binary_expression"),
       location,
       ",\n",
-      JSON_KU_ ( "lhs", lhs_expression),
+      JSON_KU_ ( "left", lhs_expression),
       JSON_KU_( "operator", binary_operator),
-      JSON_KU ( "rhs", rhs_expression) ));
+      JSON_KU ( "right", rhs_expression) ));
 }
 
 
@@ -1523,7 +1504,7 @@ SXML_TYPE_LIST ast_variable_declarator( SXML_TYPE_LIST location,
      ast_tag_( "variable_declarator"),
      location,
      ",\n",
-     JSON_KU_( "variable", variable),
+     JSON_KU_( "variable_name", variable),
      JSON_KU (  "dimension_declarators", JSON_ARRAY( dimension_declarator)) ) );
 }
 
@@ -1590,7 +1571,7 @@ SXML_TYPE_LIST ast_substring(SXML_TYPE_LIST location,
   SXML_TYPE_LIST lower_bound_safe = lower_bound;
 
   if (array == NULL) {
-    variable_or_array = JSON_KU_("variable", variable);
+    variable_or_array = JSON_KU_("variable_name", variable);
   } 
   else 
     variable_or_array = JSON_KU_("array", array);
@@ -1787,6 +1768,7 @@ SXML_TYPE_LIST ast_do_loop(
  */
 SXML_TYPE_LIST ast_do_statement(
             SXML_TYPE_LIST location,
+            SXML_TYPE_LIST loop_control_location,
             SXML_TYPE_LIST statement_number,
             SXML_TYPE_LIST variable_name,
             SXML_TYPE_LIST do_parameters) {
@@ -1797,7 +1779,8 @@ SXML_TYPE_LIST ast_do_statement(
       ",\n",
       JSON_KU_ ("loop_control", 
         JSON_MAP(
-          SXML_LL(
+          SXML_LLL(
+            loop_control_location,
             JSON_KU_("variable_name", variable_name),
             do_parameters
           )
@@ -1812,7 +1795,8 @@ SXML_TYPE_LIST ast_do_statement(
     JSON_KU_ ("statement_number", statement_number),
     JSON_KU_ ("loop_control", 
       JSON_MAP(
-        SXML_LL(
+        SXML_LLL(
+          loop_control_location,
           JSON_KU_("variable_name", variable_name),
           do_parameters
         )
@@ -2118,7 +2102,7 @@ SXML_TYPE_LIST ast_label_ref(
               SXML_TYPE_TEXT value) {
   return JSON_MAP(
     SXML_LLTL(
-      ast_tag_("label_ref"),
+      ast_tag_("label_reference"),
       location,
       ",\n",
       JSON_KQ("label_ref_value", value)

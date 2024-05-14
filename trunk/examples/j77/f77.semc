@@ -1331,14 +1331,9 @@ $LIST( <16e:last_upper_dimension_bound>)
 
 $LIST( <16e:last_upper_dimension_bound>)
 {
-  $LIST( <16e:last_upper_dimension_bound>) = ast_literal_expression(
-  	LOCATION(0),
-  	ast_text_to_map(
-  		LOCATION(0),
-  		"asterisk", 
-  		"*"
-  	)
-  );
+  $LIST( <16e:last_upper_dimension_bound>) = ast_asterisk(
+  	LOCATION(0)
+	);
 }
 
 *******************************************************************************
@@ -1910,10 +1905,8 @@ $LIST(<21d:implicit_elem>)
 
 $LIST( <22:len_specification>)
 {
-  $LIST( <22:len_specification>) = ast_text_to_map(
-  	LOCATION(1),
-  	"asterisk", 
-  	"*"
+  $LIST( <22:len_specification>) = ast_asterisk(
+  	LOCATION(1)
   );
 }
 
@@ -2947,6 +2940,7 @@ printf("<2c:statement_list>\n");
    $LIST(<40a:do_loop>) = ast_do_loop(
    	ast_do_statement(
     	LOCATION(0),
+    	TOKEN_LOCATION("start_pos", 1),
 	  	NULL, 
 	  	$LIST(<99:symbolic_name>), 
 	  	$LIST(<40b:do_parameters>)
@@ -2965,6 +2959,7 @@ $LIST(<40:do_statement>)
 {
   $LIST(<40:do_statement>) = ast_do_statement(
     LOCATION(0),
+    TOKEN_LOCATION("start_pos", 3),
     $LIST(<110b:label_ref>), 
     $LIST(<99:symbolic_name>), 
     $LIST(<40b:do_parameters>)
@@ -2980,6 +2975,7 @@ $LIST(<40:do_statement>)
 {
   $LIST(<40:do_statement>) = ast_do_statement(
     LOCATION(0), 
+    TOKEN_LOCATION("start_pos", 2),
     $LIST(<110b:label_ref>), 
     $LIST(<99:symbolic_name>), 
     $LIST(<40b:do_parameters>)
@@ -4240,10 +4236,7 @@ $LIST( <55:rewind_statement>)
 
 $LIST( <56:unit_identifier>)
 {
-  $LIST( <56:unit_identifier>) = ast_unit_identifier(
-  	LOCATION(0),
-    $LIST( <77:integer_expr>)
-  );
+  $LIST( <56:unit_identifier>) = $LIST( <77:integer_expr>);
 }    
 
 *------------------------------------------------------------------------------
@@ -4253,10 +4246,7 @@ $LIST( <56:unit_identifier>)
 
 $LIST( <56:unit_identifier>)
 {
-  $LIST( <56:unit_identifier>) = ast_unit_identifier(
-  	LOCATION(0),
-    $LIST( <89:substring_name>)
-  );
+  $LIST( <56:unit_identifier>) = $LIST( <89:substring_name>);
 }    
 
 *------------------------------------------------------------------------------
@@ -4266,10 +4256,7 @@ $LIST( <56:unit_identifier>)
 
 $LIST( <56:unit_identifier>)
 {
-  $LIST( <56:unit_identifier>) = ast_unit_identifier(
-  	LOCATION(0),
-    ast_text_to_map(LOCATION(0),"asterisk", "*")
-  );
+  $LIST( <56:unit_identifier>) = ast_asterisk(LOCATION(0));
 }
 
 *******************************************************************************
@@ -4312,9 +4299,8 @@ $LIST( <57:format_identifier>)
 
 $LIST( <57:format_identifier>)
 {
-  $LIST( <57:format_identifier>) = ast_text_to_map(
-  	LOCATION(0),
-  	"asterisk", "*"
+  $LIST( <57:format_identifier>) = ast_asterisk(
+  	LOCATION(0)
   );
 }    
 
