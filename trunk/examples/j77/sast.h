@@ -810,7 +810,7 @@ SXML_TYPE_LIST ast_equiv_group(SXML_TYPE_LIST location,
         ast_tag_("equivalence_group"),
         location,
         ",\n",
-        JSON_KU("equivalence_group", JSON_ARRAY(entity_list))
+        JSON_KU("equivalence_group_elements", JSON_ARRAY(entity_list))
       )
     );
 }
@@ -1293,7 +1293,7 @@ SXML_TYPE_LIST ast_const_expression(
       ast_tag_(type),
       location,
       ",\n",
-      JSON_KU( "expression_value", expression)
+      JSON_KU( "expression", expression)
     )
   );
 }
@@ -1361,7 +1361,7 @@ SXML_TYPE_LIST ast_literal_expression( SXML_TYPE_LIST location,
       ast_tag_( "literal_expression"),
       location,
       ",\n",
-      JSON_KU( "expression_value", literal) ));
+      JSON_KU( "expression", literal) ));
 }
 
 
@@ -2105,7 +2105,7 @@ SXML_TYPE_LIST ast_label_ref(
       ast_tag_("label_reference"),
       location,
       ",\n",
-      JSON_KQ("label_ref_value", value)
+      JSON_KQ("label", value)
     )
   );
 }
