@@ -21,7 +21,16 @@
 * This grammar of FORTRAN 77 is based upon the ANSI standard syntax charts
 * Annex F of https://nvlpubs.nist.gov/nistpubs/Legacy/FIPS/fipspub69-1.pdf
 *
-* Il contains a few usual extensions, marked with the string [[EXTENSION]]
+* Il contains a few usual extensions, marked with the string [[EXTENSION]].
+* 
+* The semantic action @1 indicates that one has just detected two consecutive
+* arithmetic operators (e.g., X * - Y), which is an extension not allowed
+* in standard FORTRAN 77. This action will trigger a warning if f77 is not
+* invoked with the -X option.
+*
+* This grammar is also used to build the ppf77 pretty-printer. Il contains
+* some directives, e.g., ~COL(7)~, ~MARGIN~, etc. used by the PARADIS tool.
+*
 
 *******************************************************************************
 
@@ -2282,6 +2291,13 @@
 <76:arithmetic_expression>
 		= <76a:arithmetic_expression> ;
 
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<76:arithmetic_expression>
+		= <114:sign> <114:sign> @1 <76b:arithmetic_or_non_typed_expression> ;
+
 *******************************************************************************
 
 <76a:arithmetic_expression>
@@ -2306,6 +2322,41 @@
 
 <76a:arithmetic_expression>
 		= <76b:arithmetic_or_non_typed_expression> ** <76b:arithmetic_or_non_typed_expression> ;
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<76a:arithmetic_expression>
+		= <76b:arithmetic_or_non_typed_expression> + <114:sign> @1 <76b:arithmetic_or_non_typed_expression> ;
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<76a:arithmetic_expression>
+		= <76b:arithmetic_or_non_typed_expression> - <114:sign> @1 <76b:arithmetic_or_non_typed_expression> ;
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<76a:arithmetic_expression>
+		= <76b:arithmetic_or_non_typed_expression> * <114:sign> @1 <76b:arithmetic_or_non_typed_expression> ;
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<76a:arithmetic_expression>
+		= <76b:arithmetic_or_non_typed_expression> / <114:sign> @1 <76b:arithmetic_or_non_typed_expression> ;
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<76a:arithmetic_expression>
+		= <76b:arithmetic_or_non_typed_expression> ** <114:sign> @1 <76b:arithmetic_or_non_typed_expression> ;
 
 *------------------------------------------------------------------------------
 
@@ -2439,6 +2490,13 @@
 <80:int_constant_expr>
 		= <80a:int_constant_expr> ;
 
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<80:int_constant_expr>
+		= <114:sign> <114:sign> @1 <80a:int_constant_expr> ;
+
 *******************************************************************************
 
 <80a:int_constant_expr>
@@ -2463,6 +2521,41 @@
 
 <80a:int_constant_expr>
 		= <80a:int_constant_expr> ** <80a:int_constant_expr> ;
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<80a:int_constant_expr>
+		= <80a:int_constant_expr> + <114:sign> @1 <80a:int_constant_expr> ;
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<80a:int_constant_expr>
+		= <80a:int_constant_expr> - <114:sign> @1 <80a:int_constant_expr> ;
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<80a:int_constant_expr>
+		= <80a:int_constant_expr> * <114:sign> @1 <80a:int_constant_expr> ;
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<80a:int_constant_expr>
+		= <80a:int_constant_expr> / <114:sign> @1 <80a:int_constant_expr> ;
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<80a:int_constant_expr>
+		= <80a:int_constant_expr> ** <114:sign> @1 <80a:int_constant_expr> ;
 
 *------------------------------------------------------------------------------
 

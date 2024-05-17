@@ -1870,7 +1870,8 @@ static bool is_ansi_lgth_already_checked;
 #define XIMPLICIT_kind     3
 #define XDO_LOOP_kind      4
 #define XDO_WHILE_kind     5
-#define Xlast_kind         5
+#define X2ops_kind         6
+#define Xlast_kind         6
 
 static bool extension_already_seen [Xlast_kind+1];
 
@@ -1882,6 +1883,7 @@ static char *extension_mess [] =
     "IMPLICIT statement",
     "DO-LOOP statement",
     "DO-WHILE statement",
+    "operator sequence",
   };
 
 static SXINT head_tok_no; /* On se souvient du tok_no du 1er token d'une ligne */
@@ -3591,6 +3593,11 @@ SXINT f77_parsact (SXINT code, SXINT act_no)
 associated with the type CHARACTER.",
 			 sxsvar.sxtables->err_titles [1]+1 /* warning */);
 	    }
+	    return 0;
+	    
+	case 1:
+	    /* @1 : on vient de détecter exactement 2 opérateurs consécutifs, cette [[EXTENSION]] est non valide en standard */
+	    extension_hit (X2ops_kind, SXGET_TOKEN (sxplocals.atok_no - 1).source_index);
 	    return 0;
 
           default:
