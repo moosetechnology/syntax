@@ -94,8 +94,7 @@ SXML_TYPE_LIST ast_program_unit( SXML_TYPE_TEXT tag,
     SXML_LLLTLTL(
       ast_tag_(tag),
       (header == NULL
-       ? SXML_LL(
-	  JSON_KQ_ ("name", "null"),
+       ? SXML_L(
 	  JSON_KU_ ("prog_unit_parameters", JSON_ARRAY(NULL)))
        : header),
       location,
@@ -330,7 +329,7 @@ SXML_TYPE_LIST ast_edit_descriptor( SXML_TYPE_LIST location,
         location,
         ",\n", 
         JSON_KQ_("descriptor_purpose", descriptor_purpose),
-        JSON_KU("descriptor_value", descriptor)
+        JSON_KU("value", descriptor)
       )
     );
 }
