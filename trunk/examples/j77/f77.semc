@@ -21,14 +21,12 @@
 * This grammar of FORTRAN 77 is based upon the ANSI standard syntax charts
 * Annex F of https://nvlpubs.nist.gov/nistpubs/Legacy/FIPS/fipspub69-1.pdf
 *
-* Il contains a few usual extensions, marked with the string [[EXTENSION+ * 
+* Il contains a few usual extensions, marked with the string [[EXTENSION]].
+* 
 * The semantic action @1 indicates that one has just detected two consecutive
 * arithmetic operators (e.g., X * - Y), which is an extension not allowed
 * in standard FORTRAN 77. This action will trigger a warning if f77 is not
 * invoked with the -X option.
-*
-* This grammar is also used to build the ppf77 pretty-printer. Il contains
-* some directives, e.g., ~COL(7)~, ~MARGIN~, etc. used by the PARADIS tool.
 *
 
 *******************************************************************************
@@ -116,7 +114,6 @@ $
 <0:F77>		= <1a:executable_program_list> ;
 
 $LIST(<0:F77>)
-
 {
   $LIST(<0:F77>) = ast_program_file(
     sxcurrent_parsed_file_name (0),
@@ -134,7 +131,6 @@ $LIST(<0:F77>)
 <0:F77>		= !DO  <110b:label_ref>  <99:symbolic_name>  =  <40b:do_parameters> ;
 
 $LIST(<0:F77>)
-
 {
   fprintf (stderr, "$LIST(<0:F77>) computed on zombie token !DO\n");
   $LIST(<0:F77>) = SXML_T ("zombie token !DO");
@@ -148,11 +144,10 @@ $LIST(<0:F77>)
 <0:F77>		= !DO  <99:symbolic_name>  =  <40b:do_parameters> ;
 
 $LIST(<0:F77>)
-
 {
-	fprintf (stderr, "$LIST(<0:F77>) computed on zombie token !DO without label\n");
-	$LIST(<0:F77>) = SXML_T ("zombie token !DO without label");
-	}
+  fprintf (stderr, "$LIST(<0:F77>) computed on zombie token !DO without label\n");
+  $LIST(<0:F77>) = SXML_T ("zombie token !DO without label");
+}
 
 *------------------------------------------------------------------------------
 
@@ -161,7 +156,6 @@ $LIST(<0:F77>)
 <0:F77>		= !FORMAT <59:format_specification> ;
 
 $LIST(<0:F77>)
-
 {
   fprintf (stderr, "$LIST(<0:F77>) computed on zombie token !FORMAT\n");
   $LIST(<0:F77>) = SXML_T ("zombie token !FORMAT");
@@ -177,7 +171,6 @@ $LIST(<0:F77>)
 		= <2:main_program> %EOL ;
 
 $LIST(<1:executable_program>)
-
 {
   $LIST(<1:executable_program>) = $LIST(<2:main_program>);
 }
@@ -188,7 +181,6 @@ $LIST(<1:executable_program>)
 		= <3:function_subprogram> %EOL ;
 
 $LIST(<1:executable_program>)
-
 {
   $LIST(<1:executable_program>) = $LIST(<3:function_subprogram>);
 }
@@ -199,7 +191,6 @@ $LIST(<1:executable_program>)
 		= <4:subroutine_subprogram> %EOL ;
 
 $LIST(<1:executable_program>)
-
 {
   $LIST(<1:executable_program>) = $LIST(<4:subroutine_subprogram>);
 }
@@ -210,7 +201,6 @@ $LIST(<1:executable_program>)
 		= <5:block_data_subprogram> %EOL ;
 
 $LIST(<1:executable_program>)
-
 {
   $LIST(<1:executable_program>) = $LIST(<5:block_data_subprogram>);
 }
@@ -223,7 +213,6 @@ $LIST(<1:executable_program>)
 		  <1:executable_program> ;
 
 $LIST(<1a:executable_program_list>)
-
 {
   $LIST(<1a:executable_program_list>) = SXML_LTL (
     $LIST(<1a:executable_program_list>'),
@@ -260,7 +249,6 @@ $LIST(<2:main_program>)
     NULL );
 }
 
-
 *------------------------------------------------------------------------------
 
 <2:main_program>
@@ -275,7 +263,6 @@ $LIST(<2:main_program>)
     $LIST( <2a:end_statement>),
     NULL );
 }
-
 
 *------------------------------------------------------------------------------
 
@@ -294,7 +281,6 @@ $LIST(<2:main_program>)
     $LIST(<2c:statement_list>) );
 }
 
-
 *------------------------------------------------------------------------------
 
 <2:main_program>
@@ -311,7 +297,6 @@ $LIST(<2:main_program>)
     $LIST(<2c:statement_list>) );
 }
 
-
 *******************************************************************************
 
 * An END statement is also an executable statement and must appear as the
@@ -321,7 +306,6 @@ $LIST(<2:main_program>)
 		= <110:label> END ;
 
 $LIST(<2a:end_statement>)
-
 {
   $LIST(<2a:end_statement>) = ENDING_LOCATION (0, "END");
 }
@@ -333,7 +317,6 @@ $LIST(<2a:end_statement>)
 		= END ;
 
 $LIST(<2a:end_statement>)
-
 {
   $LIST(<2a:end_statement>) = ENDING_LOCATION (0, "END");
 }
@@ -346,7 +329,6 @@ $LIST(<2a:end_statement>)
 		  <2d:labeled_statement> %EOL ;
 
 $LIST(<2c:statement_list>)
-
 {
   $LIST(<2c:statement_list>) = SXML_LTL (
     $LIST(<2c:statement_list>'),
@@ -497,7 +479,6 @@ $LIST(<3:function_subprogram>)
 
 		  
 $LIST(<3:function_subprogram>)
-
 {
   $LIST(<3:function_subprogram>) = ast_program_unit(
     "function",
@@ -514,7 +495,6 @@ $LIST(<3:function_subprogram>)
 		  <2a:end_statement> ;
 		  
 $LIST(<4:subroutine_subprogram>)
-
 {
   $LIST(<4:subroutine_subprogram>) = ast_program_unit(
     "subroutine",
@@ -533,7 +513,6 @@ $LIST(<4:subroutine_subprogram>)
 
 		  
 $LIST(<4:subroutine_subprogram>)
-
 {
   $LIST(<4:subroutine_subprogram>) = ast_program_unit(
     "subroutine",
@@ -553,7 +532,6 @@ $LIST(<4:subroutine_subprogram>)
 		  <2a:end_statement> ;
 
 $LIST( <5:block_data_subprogram>)
-
 {
   $LIST( <5:block_data_subprogram>) = ast_program_unit(
     "block_data",
@@ -571,7 +549,6 @@ $LIST( <5:block_data_subprogram>)
 		  <2a:end_statement> ;
 
 $LIST( <5:block_data_subprogram>)
-
 {
   $LIST( <5:block_data_subprogram>) = ast_program_unit(
     "block_data",
@@ -890,7 +867,6 @@ $LIST(<8:program_statement>)
   );
 }
 
-
 *******************************************************************************
 
 <9:entry_statement>
@@ -1029,7 +1005,6 @@ $LIST( <10b:scalar_type>)
 		= <99:symbolic_name>  ( ) ;
 
 $LIST(<10d:function_header>)
-
 {
   $LIST(<10d:function_header>) = ast_subprogram_unit_header(
     $LIST(<99:symbolic_name>),
@@ -1169,7 +1144,7 @@ $LIST( <13:function_or_subroutine_entry>)
 
 $LIST( <14:block_data_statement>)
 {
-  $LIST( <14:block_data_statement>) = NULL;
+  $LIST( <14:block_data_statement>) = SXML_T("");
 }    
 
 *------------------------------------------------------------------------------
@@ -1237,7 +1212,6 @@ $LIST( <16a:array_declarator_list>)
 *******************************************************************************
 
 * The maximum number of dimensions is seven.
-*** Why the order is inversed here ?
 
 <16b:dimension_declarator_list>
 		= <16c:dimension_declarator> ,  <16b:dimension_declarator_list> ;
@@ -1281,7 +1255,7 @@ $LIST( <16c:dimension_declarator>)
 $LIST( <16c:dimension_declarator>)
 {
   $LIST( <16c:dimension_declarator>) = ast_lower_upper_bound(
-  	NULL, 
+    NULL, 
     $LIST( <81:dim_bound_expr>)
     );
 }
@@ -1980,7 +1954,7 @@ $LIST( <25:intrinsic_statement>)
 
 $LIST( <26:save_statement>)
 {
-  $LIST( <26:save_statement>) = NULL;
+  $LIST( <26:save_statement>) = SXML_T("");
 }    
 
 *------------------------------------------------------------------------------
@@ -2975,7 +2949,7 @@ $LIST(<40b:do_parameters>)
 
 $LIST( <41:continue_statement>)
 {
-  $LIST( <41:continue_statement>) = NULL;
+  $LIST( <41:continue_statement>) = SXML_T("");
 }    
 
 *******************************************************************************
@@ -2988,7 +2962,7 @@ $LIST( <41:continue_statement>)
 
 $LIST( <42:stop_statement>)
 {
-  $LIST( <42:stop_statement>) = NULL;
+  $LIST( <42:stop_statement>) = SXML_T("");
 }
 
 *------------------------------------------------------------------------------
@@ -3018,7 +2992,7 @@ $LIST( <42:stop_statement>)
 
 $LIST( <43:pause_statement>)
 {
-  $LIST( <43:pause_statement>) = NULL;
+  $LIST( <43:pause_statement>) = SXML_T("");
 }
 
 *------------------------------------------------------------------------------
@@ -4182,7 +4156,7 @@ $LIST( <58:format_statement>)
 
 $LIST( <59:format_specification>)
 {
-  $LIST( <59:format_specification>) = NULL;
+  $LIST( <59:format_specification>) = SXML_T("");
 }    
 
 *------------------------------------------------------------------------------
@@ -4319,15 +4293,10 @@ $LIST( <60b:fmt_spec_list_/:>)
 $LIST( <60c:fmt_spec>)    
 {
   SXML_TYPE_TEXT repeat_spec = $NAME(<61a:[repeat_spec]>);
-  if (repeat_spec == NULL) {
-    $LIST( <60c:fmt_spec>) = $LIST(<60e:repeatable_edit_descriptor>);
-  }
-  else {
     $LIST( <60c:fmt_spec>) = SXML_TL(
       repeat_spec,
       $LIST(<60e:repeatable_edit_descriptor>)
     );
-  }
 }
 
 *------------------------------------------------------------------------------
@@ -4620,7 +4589,6 @@ $LIST( <60h:nonrepeatable_edit_descriptor>)
 		= B Z ;
 
 $LIST( <60h:nonrepeatable_edit_descriptor>)    
-
 {
   $LIST( <60h:nonrepeatable_edit_descriptor>) = SXML_T ( "B Z" );
 }
@@ -4630,7 +4598,6 @@ $LIST( <60h:nonrepeatable_edit_descriptor>)
 <60f:/:>	= / ;
 
 $NAME( <60f:/:>)    
-
 {
   $NAME( <60f:/:>) = "/";
 }
@@ -4652,7 +4619,6 @@ $NAME( <60f:/:>)
 <60f:/:>	= // ;
 
 $NAME( <60f:/:>)    
-
 {
   $NAME( <60f:/:>) = "//";
 }
@@ -4673,7 +4639,6 @@ $NAME( <60f:/:>)
 		= F <62:w> . <66:d> ;
 
 $LIST(<60g:float_editing>)
-
 {
   $LIST(<60g:float_editing>) = SXML_TTTT(
     "F",
@@ -4689,7 +4654,6 @@ $LIST(<60g:float_editing>)
 		= D <62:w> . <66:d> ;
 
 $LIST(<60g:float_editing>)
-
 {
   $LIST(<60g:float_editing>) = SXML_TTTT(
     "D",
@@ -4705,7 +4669,6 @@ $LIST(<60g:float_editing>)
 		= E <62:w> . <66:d> ;
 
 $LIST(<60g:float_editing>)
-
 {
   $LIST(<60g:float_editing>) = SXML_TTTT(
     "E",
@@ -4721,7 +4684,6 @@ $LIST(<60g:float_editing>)
 		= E <62:w> . <66:d> E <63:e> ;
 
 $LIST(<60g:float_editing>)
-
 {
   $LIST(<60g:float_editing>) = SXML_TTTTTT(
     "E",
@@ -4738,7 +4700,6 @@ $LIST(<60g:float_editing>)
 		= G <62:w> . <66:d> ;
 
 $LIST(<60g:float_editing>)
-
 {
   $LIST(<60g:float_editing>) = SXML_TTTT(
     "G",
@@ -4753,7 +4714,6 @@ $LIST(<60g:float_editing>)
 		= G <62:w> . <66:d> E <63:e> ;
 
 $LIST(<60g:float_editing>)
-
 {
   $LIST(<60g:float_editing>) = SXML_TTTTTT(
     "G",
@@ -4775,7 +4735,6 @@ $LIST(<60g:float_editing>)
 		= %repeat_spec ;
 
 $NAME(<61:repeat_spec>)
-
 {
   $NAME(<61:repeat_spec>) = $ptext ("%repeat_spec");
 }    
@@ -4786,9 +4745,8 @@ $NAME(<61:repeat_spec>)
 		= ;
 
 $NAME(<61a:[repeat_spec]>)
-
 {
-  $NAME(<61a:[repeat_spec]>) = NULL;
+  $NAME(<61a:[repeat_spec]>) = "";
 }    
 
 *------------------------------------------------------------------------------
@@ -4797,7 +4755,6 @@ $NAME(<61a:[repeat_spec]>)
 		= <61:repeat_spec> ;
 
 $NAME(<61a:[repeat_spec]>)
-
 {
   $NAME(<61a:[repeat_spec]>) = $NAME( <61:repeat_spec>);
 }    
@@ -4820,7 +4777,6 @@ $NAME(<62:w>)
 <63:e>		= %repeat_spec ;
 
 $NAME(<63:e>)
-
 {
   $NAME(<63:e>) = $ptext ("%repeat_spec");
 }
@@ -4832,7 +4788,6 @@ $NAME(<63:e>)
 <64:n>		= %repeat_spec ;
 
 $NAME(<64:n>)
-
 {
   $NAME(<64:n>) = $ptext ("%repeat_spec");
 }
@@ -4844,7 +4799,6 @@ $NAME(<64:n>)
 <65:c>		= %repeat_spec ;
 
 $NAME(<65:c>)
-
 {
   $NAME(<65:c>) = $ptext ("%repeat_spec");
 }
@@ -4856,7 +4810,6 @@ $NAME(<65:c>)
 <66:d>		= %repeat_spec ;
 
 $NAME(<66:d>)
-
 {
   $NAME(<66:d>) = $ptext ("%repeat_spec");
 }
@@ -4868,7 +4821,6 @@ $NAME(<66:d>)
 <67:m>		= %repeat_spec ;
 
 $NAME(<67:m>)
-
 {
   $NAME(<67:m>) = $ptext ("%repeat_spec");
 }
@@ -4880,7 +4832,6 @@ $NAME(<67:m>)
 <68:k>		= %repeat_spec ;
 
 $LIST(<68:k>)
-
 {
   $LIST(<68:k>) = SXML_T($ptext ("%repeat_spec"));
 }
@@ -4890,7 +4841,6 @@ $LIST(<68:k>)
 <68:k>		= <114:sign> %repeat_spec ;
 
 $LIST(<68:k>)
-
 {
   $LIST(<68:k>) = SXML_TT($NAME(<114:sign>), $ptext ("%repeat_spec"));
 }
@@ -5021,7 +4971,7 @@ $LIST( <71b:actual_argument>)
 
 $LIST( <72:return_statement>)
 {
-  $LIST( <72:return_statement>) = NULL;
+  $LIST( <72:return_statement>) = SXML_T("");
 }
 
 *------------------------------------------------------------------------------
@@ -5240,7 +5190,7 @@ $LIST( <76:arithmetic_expression>)
 * [[EXTENSION]]
 
 <76:arithmetic_expression>
-		= <114:sign> <114:sign> @1 <76b:arithmetic_or_non_typed_expression> ;  
+		= <114:sign> <114:sign> @1 <76b:arithmetic_or_non_typed_expression> ;
 
 $LIST( <76:arithmetic_expression>)
 {
@@ -5513,7 +5463,7 @@ $LIST( <77b:[integer_expr]>)
 
 $LIST( <77b:[integer_expr]>)
 {
-  $LIST( <77b:[integer_expr]>) = NULL;
+  $LIST( <77b:[integer_expr]>) = SXML_T("");
 }    
 
 *******************************************************************************
@@ -5702,7 +5652,7 @@ $LIST( <80:int_constant_expr>)
 {
   $LIST( <80:int_constant_expr>) = ast_multiple_operator(
   	LOCATION(0),
-    NULL,
+        NULL,
   	$NAME(<114:sign>),
   	$NAME(<114:sign>'),
   	$LIST(<80a:int_constant_expr>)
@@ -6672,9 +6622,9 @@ $LIST( <89:substring_name>)
 		= %symbolic_name ;
 
 $LIST(<99:symbolic_name>)
-
-	$LIST(<99:symbolic_name>) = ast_symbolic_name(LOCATION(0), $ptext ("%symbolic_name"));
-	
+{
+  $LIST(<99:symbolic_name>) = ast_symbolic_name(LOCATION(0), $ptext ("%symbolic_name"));
+}	
 *******************************************************************************
 
 <99a:symbolic_name_list>
@@ -7118,3 +7068,4 @@ $NAME( <114:sign>)
 *<116:letter>	= Z ;
 
 *******************************************************************************
+
