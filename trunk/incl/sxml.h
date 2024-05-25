@@ -99,6 +99,7 @@ SXML_TYPE_TEXT SXML_QUOTED (char C1, char *S, char C2)
 }
 
 /* ------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------- */
 
 #define SXML_Q(T) ((T) == NULL ? NULL : SXML_QUOTED ('\"', (T), '\"'))
 
@@ -189,6 +190,8 @@ SXML_TYPE_LIST SXML_LT (
 		SXML_TYPE_LIST L1,
 		SXML_TYPE_TEXT T2)
 {
+	assert (L1 != NULL);
+	assert (T2 != NULL);
 	return SXML_LL (L1, SXML_T (T2));
 }
 
@@ -198,6 +201,8 @@ SXML_TYPE_LIST SXML_TL (
 		SXML_TYPE_TEXT T1,
 		SXML_TYPE_LIST L2)
 {
+	assert (T1 != NULL);
+	assert (L2 != NULL);
 	return SXML_LL (SXML_T (T1), L2);
 }
 
@@ -207,6 +212,8 @@ SXML_TYPE_LIST SXML_TT (
 		SXML_TYPE_TEXT T1,
 		SXML_TYPE_TEXT T2)
 {
+	assert (T1 != NULL);
+	assert (T2 != NULL);
 	return SXML_LL (SXML_T (T1), SXML_T (T2));
 }
 
@@ -217,6 +224,9 @@ SXML_TYPE_LIST SXML_LLL (
 		SXML_TYPE_LIST L2,
 		SXML_TYPE_LIST L3)
 {
+	assert (L1 != NULL);
+	assert (L2 != NULL);
+	assert (L3 != NULL);
 	return SXML_LL (SXML_LL (L1, L2), L3);
 }
 
@@ -227,6 +237,9 @@ SXML_TYPE_LIST SXML_LLT (
 		SXML_TYPE_LIST L2,
 		SXML_TYPE_TEXT T3)
 {
+	assert (L1 != NULL);
+	assert (L2 != NULL);
+	assert (T3 != NULL);
 	return SXML_LLL (L1, L2, SXML_T (T3));
 }
 
@@ -237,6 +250,9 @@ SXML_TYPE_LIST SXML_LTL (
 		SXML_TYPE_TEXT T2,
 		SXML_TYPE_LIST L3)
 {
+	assert (L1 != NULL);
+	assert (T2 != NULL);
+	assert (L3 != NULL);
 	return SXML_LLL (L1, SXML_T (T2), L3);
 }
 
@@ -247,6 +263,9 @@ SXML_TYPE_LIST SXML_LTT (
 		SXML_TYPE_TEXT T2,
 		SXML_TYPE_TEXT T3)
 {
+	assert (L1 != NULL);
+	assert (T2 != NULL);
+	assert (T3 != NULL);
 	return SXML_LLL (L1, SXML_T (T2), SXML_T (T3));
 }
 
@@ -257,6 +276,9 @@ SXML_TYPE_LIST SXML_TLL (
 		SXML_TYPE_LIST L2,
 		SXML_TYPE_LIST L3)
 {
+	assert (T1 != NULL);
+	assert (L2 != NULL);
+	assert (L3 != NULL);
 	return SXML_LLL (SXML_T (T1), L2, L3);
 }
 
@@ -267,6 +289,9 @@ SXML_TYPE_LIST SXML_TLT (
 		SXML_TYPE_LIST L2,
 		SXML_TYPE_TEXT T3)
 {
+	assert (T1 != NULL);
+	assert (L2 != NULL);
+	assert (T3 != NULL);
 	return SXML_LLL (SXML_T (T1), L2, SXML_T (T3));
 }
 
@@ -277,6 +302,9 @@ SXML_TYPE_LIST SXML_TTL (
 		SXML_TYPE_TEXT T2,
 		SXML_TYPE_LIST L3)
 {
+	assert (T1 != NULL);
+	assert (T2 != NULL);
+	assert (L3 != NULL);
 	return SXML_LLL (SXML_T (T1), SXML_T (T2), L3);
 }
 
@@ -287,6 +315,9 @@ SXML_TYPE_LIST SXML_TTT (
 		SXML_TYPE_TEXT T2,
 	 	SXML_TYPE_TEXT T3)
 {
+	assert (T1 != NULL);
+	assert (T2 != NULL);
+	assert (T3 != NULL);
 	return SXML_LLL (SXML_T (T1), SXML_T (T2), SXML_T (T3));
 }
 
@@ -298,6 +329,10 @@ SXML_TYPE_LIST SXML_LLLL (
 		SXML_TYPE_LIST L3,
 		SXML_TYPE_LIST L4)
 {
+	assert (L1 != NULL);
+	assert (L2 != NULL);
+	assert (L3 != NULL);
+	assert (L4 != NULL);
 	return SXML_LL (SXML_LLL (L1, L2, L3), L4);
 }
 
@@ -309,6 +344,10 @@ SXML_TYPE_LIST SXML_LLLT (
                 SXML_TYPE_LIST L3,
                 SXML_TYPE_TEXT T4)
 {
+	assert (L1 != NULL);
+	assert (L2 != NULL);
+	assert (L3 != NULL);
+	assert (T4 != NULL);
         return SXML_LL (SXML_LLL (L1, L2, L3), SXML_T (T4));
 }
 
@@ -320,6 +359,11 @@ SXML_TYPE_LIST SXML_LLTL (
 		SXML_TYPE_TEXT T3,
 		SXML_TYPE_LIST L4)
 {
+        assert (L1 != NULL);
+	assert (L2 != NULL);
+	assert (T3 != NULL);
+	assert (L4 != NULL);
+
 	return SXML_LLLL (L1, L2, SXML_T (T3), L4);
 }
 
@@ -331,6 +375,11 @@ SXML_TYPE_LIST SXML_LLTT (
 		SXML_TYPE_TEXT T3,
 		SXML_TYPE_TEXT T4)
 {
+        assert (L1 != NULL);
+	assert (L2 != NULL);
+	assert (T3 != NULL);
+	assert (T4 != NULL);
+
 	return SXML_LLLL (L1, L2, SXML_T (T3), SXML_T (T4));
 }
 
@@ -342,6 +391,11 @@ SXML_TYPE_LIST SXML_LTLL (
 		SXML_TYPE_LIST L3,
 		SXML_TYPE_LIST L4)
 {
+        assert (L1 != NULL);
+	assert (T2 != NULL);
+	assert (L3 != NULL);
+	assert (L4 != NULL);
+
 	return SXML_LLLL (L1, SXML_T (T2), L3, L4);
 }
 
@@ -353,6 +407,11 @@ SXML_TYPE_LIST SXML_LTLT (
 		SXML_TYPE_LIST L3,
 		SXML_TYPE_TEXT T4)
 {
+        assert (L1 != NULL);
+	assert (T2 != NULL);
+	assert (L3 != NULL);
+	assert (T4 != NULL);
+
  	return SXML_LLLL (L1, SXML_T (T2), L3, SXML_T (T4));
 }
 
@@ -364,6 +423,11 @@ SXML_TYPE_LIST SXML_LTTL (
 		SXML_TYPE_TEXT T3,
 		SXML_TYPE_LIST L4)
 {
+        assert (L1 != NULL);
+	assert (T2 != NULL);
+	assert (T3 != NULL);
+	assert (L4 != NULL);
+
 	return SXML_LLL (L1, SXML_TT (T2, T3), L4);
 }
 
@@ -375,6 +439,11 @@ SXML_TYPE_LIST SXML_LTTT (
 		SXML_TYPE_TEXT T3,
 		SXML_TYPE_TEXT T4)
 {
+        assert (L1 != NULL);
+	assert (T2 != NULL);
+	assert (T3 != NULL);
+	assert (T4 != NULL);
+
 	return SXML_LL (L1, SXML_TTT (T2, T3, T4));
 }
 
@@ -386,6 +455,11 @@ SXML_TYPE_LIST SXML_TLLT (
 		SXML_TYPE_LIST L3,
 		SXML_TYPE_TEXT T4)
 {
+        assert (T1 != NULL);
+	assert (L2 != NULL);
+	assert (L3 != NULL);
+	assert (T4 != NULL);
+
 	return SXML_LLLL (SXML_T (T1), L2, L3, SXML_T (T4));
 }
 
@@ -397,6 +471,11 @@ SXML_TYPE_LIST SXML_TTLL (
 		SXML_TYPE_LIST L3,
 		SXML_TYPE_LIST L4)
 {
+        assert (T1 != NULL);
+	assert (T2 != NULL);
+	assert (L3 != NULL);
+	assert (L4 != NULL);
+
 	return SXML_LLLL (SXML_T (T1), SXML_T (T2), L3, L4);
 }
 
@@ -408,6 +487,11 @@ SXML_TYPE_LIST SXML_TTTL (
 		SXML_TYPE_TEXT T3,
 		SXML_TYPE_LIST L4)
 {
+        assert (T1 != NULL);
+	assert (T2 != NULL);
+	assert (T3 != NULL);
+	assert (L4 != NULL);
+
 	return SXML_LL (SXML_TTT (T1, T2, T3), L4);
 }
 
@@ -419,6 +503,11 @@ SXML_TYPE_LIST SXML_TTTT (
 	 	SXML_TYPE_TEXT T3,
 		SXML_TYPE_TEXT T4)
 {
+        assert (T1 != NULL);
+	assert (T2 != NULL);
+	assert (T3 != NULL);
+	assert (T4 != NULL);
+
 	return SXML_LLLL (SXML_T (T1), SXML_T (T2), SXML_T (T3), SXML_T (T4));
 }
 
@@ -431,6 +520,12 @@ SXML_TYPE_LIST SXML_LLLLL (
 		SXML_TYPE_LIST L4,
 		SXML_TYPE_LIST L5)
 {
+        assert (L1 != NULL);
+	assert (L2 != NULL);
+	assert (L3 != NULL);
+	assert (L4 != NULL);
+	assert (L5 != NULL);
+
 	return SXML_LL (SXML_LLLL (L1, L2, L3, L4), L5);
 }
 
@@ -443,6 +538,12 @@ SXML_TYPE_LIST SXML_LLLTL (
 		SXML_TYPE_TEXT T4,
 		SXML_TYPE_LIST L5)
 {
+        assert (L1 != NULL);
+	assert (L2 != NULL);
+	assert (L3 != NULL);
+	assert (T4 != NULL);
+	assert (L5 != NULL);
+
 	return SXML_LLLLL (L1, L2, L3, SXML_T (T4), L5);
 }
 
@@ -455,6 +556,12 @@ SXML_TYPE_LIST SXML_LLTLL (
 		SXML_TYPE_LIST L4,
 		SXML_TYPE_LIST L5)
 {
+        assert (L1 != NULL);
+	assert (L2 != NULL);
+	assert (T3 != NULL);
+	assert (L4 != NULL);
+	assert (L5 != NULL);
+
 	return SXML_LLLLL (L1, L2, SXML_T (T3), L4, L5);
 }
 
@@ -467,6 +574,12 @@ SXML_TYPE_LIST SXML_LTLLL (
 		SXML_TYPE_LIST L4,
 		SXML_TYPE_LIST L5)
 {
+        assert (L1 != NULL);
+	assert (T2 != NULL);
+	assert (L3 != NULL);
+	assert (L4 != NULL);
+	assert (L5 != NULL);
+
 	return SXML_LLLLL (L1, SXML_T (T2), L3, L4, L5);
 }
 
@@ -479,6 +592,12 @@ SXML_TYPE_LIST SXML_LTLTL (
 		SXML_TYPE_TEXT T4,
 		SXML_TYPE_LIST L5)
 {
+        assert (L1 != NULL);
+	assert (T2 != NULL);
+	assert (L3 != NULL);
+	assert (T4 != NULL);
+	assert (L5 != NULL);
+
 	return SXML_LLLLL (L1, SXML_T (T2), L3, SXML_T (T4), L5);
 }
 
@@ -491,6 +610,12 @@ SXML_TYPE_LIST SXML_TLLLT (
 		SXML_TYPE_LIST L4,
 		SXML_TYPE_TEXT T5)
 {
+        assert (T1 != NULL);
+	assert (L2 != NULL);
+	assert (L3 != NULL);
+	assert (L4 != NULL);
+	assert (T5 != NULL);
+
 	return SXML_LLLLL (SXML_T (T1), L2, L3, L4, SXML_T (T5));
 }
 
@@ -503,6 +628,12 @@ SXML_TYPE_LIST SXML_TTTLT (
 		SXML_TYPE_LIST L4,
 		SXML_TYPE_TEXT T5)
 {
+        assert (T1 != NULL);
+	assert (T2 != NULL);
+	assert (T3 != NULL);
+	assert (L4 != NULL);
+	assert (T5 != NULL);
+
 	return SXML_LLL (SXML_TTT (T1, T2, T3), L4, SXML_T (T5));
 }
 
@@ -515,6 +646,12 @@ SXML_TYPE_LIST SXML_TTTTL (
 		SXML_TYPE_TEXT T4,
 		SXML_TYPE_LIST L5)
 {
+        assert (T1 != NULL);
+	assert (T2 != NULL);
+	assert (T3 != NULL);
+	assert (T4 != NULL);
+	assert (L5 != NULL);
+
 	return SXML_LL (SXML_TTTT (T1, T2, T3, T4), L5);
 }
 
@@ -527,6 +664,12 @@ SXML_TYPE_LIST SXML_TTTTT (
 		SXML_TYPE_TEXT T4,
 		SXML_TYPE_TEXT T5)
 {
+        assert (T1 != NULL);
+	assert (T2 != NULL);
+	assert (T3 != NULL);
+	assert (T4 != NULL);
+	assert (T5 != NULL);
+
 	return SXML_LL (SXML_TTT (T1, T2, T3), SXML_TT (T4, T5));
 }
 
@@ -540,6 +683,13 @@ SXML_TYPE_LIST SXML_LLTLLL (
 		SXML_TYPE_LIST L5,
 		SXML_TYPE_LIST L6)
 {
+        assert (L1 != NULL);
+	assert (L2 != NULL);
+	assert (T3 != NULL);
+	assert (L4 != NULL);
+	assert (L5 != NULL);
+	assert (L6 != NULL);
+
 	return SXML_LL (SXML_LLT (L1, L2, T3), SXML_LLL (L4, L5, L6));
 }
 
@@ -553,6 +703,13 @@ SXML_TYPE_LIST SXML_LLTLTL (
 		SXML_TYPE_TEXT T5,
 		SXML_TYPE_LIST L6)
 {
+        assert (L1 != NULL);
+	assert (L2 != NULL);
+	assert (T3 != NULL);
+	assert (L4 != NULL);
+	assert (T5 != NULL);
+	assert (L6 != NULL);
+
 	return SXML_LL (SXML_LLT (L1, L2, T3), SXML_LTL (L4, T5, L6));
 }
 
@@ -566,6 +723,13 @@ SXML_TYPE_LIST SXML_LTLLLL (
 		SXML_TYPE_LIST L5,
 		SXML_TYPE_LIST L6)
 {
+        assert (L1 != NULL);
+	assert (T2 != NULL);
+	assert (L3 != NULL);
+	assert (L4 != NULL);
+	assert (L5 != NULL);
+	assert (L6 != NULL);
+
 	return SXML_LL (SXML_LTL (L1, T2, L3), SXML_LLL (L4, L5, L6));
 }
 
@@ -579,6 +743,13 @@ SXML_TYPE_LIST SXML_TTTTTT (
 		SXML_TYPE_TEXT T5,
 		SXML_TYPE_TEXT T6)
 {
+        assert (T1 != NULL);
+	assert (T2 != NULL);
+	assert (T3 != NULL);
+	assert (T4 != NULL);
+	assert (T5 != NULL);
+	assert (T6 != NULL);
+
 	return SXML_LL (SXML_TTT (T1, T2, T3), SXML_TTT (T4, T5, T6));
 }
 
@@ -593,6 +764,14 @@ SXML_TYPE_LIST SXML_LLLTLTL (
 		SXML_TYPE_TEXT T6,
 		SXML_TYPE_LIST L7)
 {
+        assert (L1 != NULL);
+	assert (L2 != NULL);
+	assert (L3 != NULL);
+	assert (T4 != NULL);
+	assert (L5 != NULL);
+	assert (T6 != NULL);
+	assert (L7 != NULL);
+
 	return SXML_LLL (SXML_LLL (L1, L2, L3), SXML_TL (T4, L5), SXML_TL (T6, L7));
 }
 
@@ -607,6 +786,14 @@ SXML_TYPE_LIST SXML_LLTLLLL (
 		SXML_TYPE_LIST L6,
 		SXML_TYPE_LIST L7)
 {
+        assert (L1 != NULL);
+	assert (L2 != NULL);
+	assert (T3 != NULL);
+	assert (L4 != NULL);
+	assert (L5 != NULL);
+	assert (L6 != NULL);
+	assert (L7 != NULL);
+
 	return SXML_LL (SXML_LLT (L1, L2, T3), SXML_LLLL (L4, L5, L6, L7));
 }
 
@@ -621,6 +808,14 @@ SXML_TYPE_LIST SXML_TTTLTLT (
 		SXML_TYPE_LIST L6,
 		SXML_TYPE_TEXT T7)
 {
+        assert (T1 != NULL);
+	assert (T2 != NULL);
+	assert (T3 != NULL);
+	assert (L4 != NULL);
+	assert (T5 != NULL);
+	assert (L6 != NULL);
+	assert (T7 != NULL);
+
 	return SXML_LLL (SXML_TTTLT (T1, T2, T3, L4, T5), L6, SXML_T (T7));
 }
 
@@ -635,6 +830,14 @@ SXML_TYPE_LIST SXML_TTTTTTT (
 		SXML_TYPE_TEXT T6,
 		SXML_TYPE_TEXT T7)
 {
+        assert (T1 != NULL);
+	assert (T2 != NULL);
+	assert (T3 != NULL);
+	assert (T4 != NULL);
+	assert (T5 != NULL);
+	assert (T6 != NULL);
+	assert (T7 != NULL);
+
 	return SXML_LL (SXML_TTTT (T1, T2, T3, T4), SXML_TTT (T5, T6, T7));
 }
 
@@ -650,6 +853,15 @@ SXML_TYPE_LIST SXML_TTTTTTTT (
 		SXML_TYPE_TEXT T7,
 		SXML_TYPE_TEXT T8)
 {
+        assert (T1 != NULL);
+	assert (T2 != NULL);
+	assert (T3 != NULL);
+	assert (T4 != NULL);
+	assert (T5 != NULL);
+	assert (T6 != NULL);
+	assert (T7 != NULL);
+	assert (T8 != NULL);
+
 	return SXML_LL (SXML_TTTT (T1, T2, T3, T4), SXML_TTTT (T5, T6, T7, T8));
 }
 
@@ -666,6 +878,16 @@ SXML_TYPE_LIST SXML_TTTTTTTTT (
 		SXML_TYPE_TEXT T8,
 		SXML_TYPE_TEXT T9)
 {
+        assert (T1 != NULL);
+	assert (T2 != NULL);
+	assert (T3 != NULL);
+	assert (T4 != NULL);
+	assert (T5 != NULL);
+	assert (T6 != NULL);
+	assert (T7 != NULL);
+	assert (T8 != NULL);
+	assert (T9 != NULL);
+
 	return SXML_LL (SXML_TTTT (T1, T2, T3, T4), SXML_TTTTT (T5, T6, T7, T8, T9));
 }
 
@@ -684,15 +906,27 @@ SXML_TYPE_LIST SXML_TTTTTTTTTTT (
 		SXML_TYPE_TEXT T10,
 		SXML_TYPE_TEXT T11)
 {
+        assert (T1 != NULL);
+	assert (T2 != NULL);
+	assert (T3 != NULL);
+	assert (T4 != NULL);
+	assert (T5 != NULL);
+	assert (T6 != NULL);
+	assert (T7 != NULL);
+	assert (T8 != NULL);
+        assert (T9 != NULL);
+        assert (T10 != NULL);
+        assert (T11 != NULL);
+
+
 	return SXML_LL (SXML_TTTTT (T1, T2, T3, T4, T5), SXML_TTTTTT (T6, T7, T8, T9, T10, T11));
 }
 
 /* ------------------------------------------------------------------------- */
 
 
+
 SXML_TYPE_LIST SXML_QUOTED_LIST (SXML_TYPE_LIST L)
 {
 	return SXML_TLT("\"", L, "\"");
 }
-
-/* ------------------------------------------------------------------------- */
