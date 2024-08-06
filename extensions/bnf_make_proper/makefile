@@ -1,6 +1,29 @@
 
-all:
-	# to be provided
+include $(SX)/etc/make/gccoptions
+
+BMP=$(SX)/../extensions/bnf_make_proper
+
+BIN=$(BMP)/bin.$(ARCH)
+LIB=$(BMP)/lib.$(ARCH)
+
+EXTINCL=$(SX)/../extensions/incl
+
+SXEXTBIBS=$(SXLIB)/libsxext.a $(SXBIBS)
+
+CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util -I$(EXTINCL) $(CFLAGS)
+
+all: $(LIB)/make_proper_main.o
+
+#NEEDS=	$(LIB)/make_proper_main.o
+
+#$(BIN)/make_proper_main.out:	$(NEEDS)	$(SXEXTBIBS)
+#	@rm -f $@
+#	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXEXTBIBS) || (rm $@;exit 1)
+
+$(LIB)/make_proper_main.o:	$(SXINCL)/sxunix.h		\
+			make_proper_main.c
+	$(CC) -o $@ -c make_proper_main.c		\
+			-DLC_TABLES_H=\"dummy_lc_tables.h\"
 
 # debut de code produit par "make-makefile make_proper"
 

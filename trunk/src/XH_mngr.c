@@ -19,12 +19,12 @@
 
 static char	ME [] = "XH_mngr";
 
-#include        "sxversion.h"
-#include	<stdio.h>
-#include	"XH.h"
-#include        "sxcommon.h"
+#include "sxversion.h"
+#include <stdio.h>
+#include "XH.h"
+#include "sxcommon.h"
 
-char WHAT_XH_MNGR[] = "@(#)SYNTAX - $Id: XH_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_XH_MNGR[] = "@(#)SYNTAX - $Id: XH_mngr.c 3917 2024-04-23 08:33:57Z garavel $" WHAT_DEBUG;
 
 extern void sxtrap (char *caller, char *message);
 extern SXINT  sxnext_prime (SXINT germe);

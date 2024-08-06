@@ -7,16 +7,11 @@
    *                                                      *
    ******************************************************** */
 
-
-
-
 /* ********************************************************
    *                                                      *
    *  Produit de l'equipe Langages et Traducteurs.	  *
    *                                                      *
    ******************************************************** */
-
-
 
 /************************************************************************/
 /* Historique des modifications, en ordre chronologique inverse:	*/
@@ -140,9 +135,7 @@ void	(*more_scan_act) ();
 
 
 
-lig_scan_act (code, act_no)
-    int		code;
-    int		act_no;
+bool lig_scan_act (SXINT code, SXINT act_no)
 {
     switch (code) {
     case SXOPEN:
@@ -153,7 +146,7 @@ lig_scan_act (code, act_no)
 	    (*more_scan_act) (code, act_no);
 	}
 
-	return;
+	return SXANY_BOOL;
 
     case SXCLOSE:
 	if (more_scan_act != NULL) {
@@ -165,7 +158,7 @@ lig_scan_act (code, act_no)
 	    sxfree (comments);
 	}
 
-	return;
+	return SXANY_BOOL;
 
     case SXINIT:
 	if (more_scan_act != NULL) {
@@ -185,7 +178,7 @@ lig_scan_act (code, act_no)
 		    ts_null ();
 		    lig_comment_put (xprod - 1, sxsvar.sxlv_s.token_string, sxsvar.sxlv.ts_lgth);
 
-		    return;
+		    return SXANY_BOOL;
 		}
 		else {
 		    ts_put (c);
@@ -202,7 +195,7 @@ lig_scan_act (code, act_no)
 	    (*more_scan_act) (code, act_no);
 	}
 
-	return;
+	return SXANY_BOOL;
 
     case SXACTION:
 	switch (act_no) {
@@ -245,7 +238,7 @@ lig_scan_act (code, act_no)
 				 sxsvar.sxlv.ts_lgth);
 	    }
 
-	    return;
+	    return SXANY_BOOL;
 
 	case 2:
 	    /* \nnn => char */
@@ -264,7 +257,7 @@ lig_scan_act (code, act_no)
 		sxsvar.sxlv.mark.index = -1;
 	    }
 
-	    return;
+	    return SXANY_BOOL;
 
 	}
 

@@ -36,7 +36,7 @@ static char     ME [] = "lfg_lex_smp";
 #include "sxversion.h"
 #include "varstr.h"
 #include "sxunix.h"
-char WHAT_LFGLEXSMP[] = "@(#)SYNTAX - $Id: lfg_lex_smp.c 3715 2024-02-10 07:15:06Z garavel $" WHAT_DEBUG;
+char WHAT_LFGLEXSMP[] = "@(#)SYNTAX - $Id: lfg_lex_smp.c 4146 2024-08-02 10:21:59Z garavel $" WHAT_DEBUG;
 
 extern bool  use_a_dico; /* true => sxdico, false => sxword */
 extern bool  make_proper_will_be_used;
@@ -3051,7 +3051,7 @@ static void lfg_lex_pd (void) {
     D E R I V E D
   */
 
-  SXINT           field_top, field_id, atom_id, macro_id, compound_field_id, struct_id, name;
+  SXINT           field_top, field_id, atom_id, macro_id, compound_field_id, struct_id = 0, name;
   SXBA          current_atom_set;
 #ifndef ESSAI
   SXINT           *int_ptr, *atom2local_id, *local2atom_id;

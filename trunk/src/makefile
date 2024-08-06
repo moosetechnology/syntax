@@ -44,7 +44,6 @@ SX_BITS_ARRAY=		$(BIB)(sxbitsarray.o)	\
 			$(BIB)(sxba_ops3.o)	\
 			$(BIB)(sxba_ops4.o)	\
 			$(BIB)(sxba_2op.o)	\
-			$(BIB)(sxba_bag_mngr.o)\
 			$(BIB)(sxbatrap.o)	\
 			$(BIB)(sxbitsmatrix.o)
 SX_CHAR_TO_STRING=	$(BIB)(sxc_to_str.o)
@@ -56,20 +55,15 @@ SX_ERROR_MANAGER=	$(BIB)(sxcheckmagic.o)	\
 			$(BIB)(sxerr_mngr.o)
 SX_ERROR_RECOVERY=	$(BIB)(sxp_rcvr.o)	\
 			$(BIB)(sxp_rcvr32.o)	\
-			$(BIB)(sxp_srcvr.o)	\
-			$(BIB)(sxp_srcvr32.o)	\
 			$(BIB)(sxs_rcvr.o)	\
-			$(BIB)(sxs_rcvr32.o)	\
-			$(BIB)(sxs_srcvr.o)	\
-			$(BIB)(sxs_srcvr32.o)
+			$(BIB)(sxs_rcvr32.o)
 SX_FILE_MANAGER=	$(BIB)(sxfilecopy.o)	\
 			$(BIB)(sxtmpfile.o)
 SX_GET_BIT=		$(BIB)(sxgetbit.o)	\
 			$(BIB)(sxgetprdct.o)
 SX_INDEX=		$(BIB)(sxindex_mngr.o)
 SX_LISTING_OUTPUT=	$(BIB)(sxlistout.o)
-SX_MEMORY_MANAGER=	$(BIB)(sxmem_mngr.o)	\
-			$(BIB)(sxgc.o)
+SX_MEMORY_MANAGER=	$(BIB)(sxmem_mngr.o)
 SX_NEXT_PRIME=		$(BIB)(sxnext_prime.o)
 SX_PARAGRAPHEURS=	$(BIB)(sxppp.o)	\
 			$(BIB)(sxpptree.o)
@@ -80,13 +74,11 @@ SX_SCANNER=		$(BIB)(sxscanner.o)	\
 SX_SOURCE_MANAGER=	$(BIB)(sxsrc_mngr.o)	\
 			$(BIB)(sxincl_mngr.o)
 SX_STRINGS_MANAGER=	$(BIB)(sxstr_mngr.o)	\
-			$(BIB)(sxword_mngr.o)	\
 			$(BIB)(sxscrmbl.o)
 SX_SYNTAX_MANAGER=	$(BIB)(sxopentty.o)	\
 			$(BIB)(sxsyntax.o)	\
 			$(BIB)(sxtm_mngr.o)	\
-			$(BIB)(sxvars.o)	\
-			$(BIB)(sxvars2.o)
+			$(BIB)(sxvars.o)
 SX_TOKEN_MANAGER=	$(BIB)(sxtoken_mngr.o)
 SS_MNGR=		$(BIB)(SS_mngr.o)
 VARSTR=			$(BIB)(varstralloc.o)	\
@@ -95,18 +87,16 @@ VARSTR=			$(BIB)(varstralloc.o)	\
 			$(BIB)(varstrraz.o)
 X_MNGR=			$(BIB)(X_mngr.o)
 X_ROOT_MNGR=		$(BIB)(X_root_mngr.o)
-SXLIST_MNGR=		$(BIB)(XH_mngr.o)	\
-			$(BIB)(sxsubset_mngr.o)
+SXLIST_MNGR=		$(BIB)(XH_mngr.o)
 XxY_MNGR=		$(BIB)(XxY_mngr.o)
 XxYxZ_MNGR=		$(BIB)(XxYxZ_mngr.o)
 FSA_MNGR=		$(BIB)(fsa_mngr.o)
-PUT_EDIT=		$(BIB)(puteditcut.o)	\
-			$(BIB)(puteditfnb.o)	\
+PUT_EDIT=		$(BIB)(puteditfnb.o)	\
 			$(BIB)(puteditnl.o)	\
 			$(BIB)(puteditpos.o)
 EQ_SORT=		$(BIB)(eq_sort.o)	\
 			$(BIB)(fermer.o)
-void=			$(BIB)(sxvoid.o)
+SX_VOID=		$(BIB)(sxvoid.o)
 
 $(BIB):		$(FORCE)		\
 		$(FSA_MNGR)		\
@@ -143,8 +133,7 @@ $(BIB):		$(FORCE)		\
 		$(XxYxZ_MNGR)		\
 		$(PUT_EDIT)		\
 		$(EQ_SORT)		\
-		$(void)
-
+		$(SX_VOID)
 	cd $(SXLIB) ; $(RANLIB) $@
 
 $(DEBUG_ACTION)		:	$(FORCE)
@@ -175,13 +164,13 @@ $(SS_MNGR)		:	$(FORCE)
 $(VARSTR)		:	$(FORCE)
 $(X_MNGR)		:	$(FORCE)	$(SXINCL)/X.h
 $(X_ROOT_MNGR)		:	$(FORCE)	$(SXINCL)/X_root.h
-$(SXLIST_MNGR)		:	$(FORCE) 	$(SXINCL)/XH.h $(SXINCL)/sxsubset.h
+$(SXLIST_MNGR)		:	$(FORCE) 	$(SXINCL)/XH.h
 $(XxY_MNGR)		:	$(FORCE)	$(SXINCL)/XxY.h
 $(XxYxZ_MNGR)		:	$(FORCE)	$(SXINCL)/XxYxZ.h
 $(FSA_MNGR)		:	$(FORCE)        $(SXINCL)/fsa.h
 $(PUT_EDIT)		:	$(FORCE)
 $(EQ_SORT)		:	$(FORCE)	$(SXINCL)/sxba.h	$(SXINCL)/sxstack.h
-$(void)		:	$(FORCE)
+$(SX_VOID)		:	$(FORCE)
 
 $(SXINCL)/sxversion.h: 
 	$(SX)/etc/bin/make-sxversion $(SX)

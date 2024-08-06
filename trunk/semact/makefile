@@ -2,18 +2,15 @@
 include $(SX)/etc/make/gccoptions
 
 ACT=$(SX)/semact
-LIB=$(ACT)/lib
+LIB=$(ACT)/lib.$(ARCH)
 BOOT=$(ACT)/boot
 
 BNF=$(SX)/bnf
-BNFLIB=$(BNF)/lib
+BNFLIB=$(BNF)/lib.$(ARCH)
 
 CC=$(COMPILER) -I$(BOOT) -I$(BNF) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
 all: $(SXBIN)/semact.out
-
-$(SXBIN)/semact.out:	$(ACT)/semact.out
-	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
 NEEDS=	$(LIB)/semact_main.o		\
 	$(LIB)/semact_sact.o		\
@@ -26,7 +23,7 @@ NEEDS=	$(LIB)/semact_main.o		\
 	$(BNFLIB)/bnf_symtab.o		\
 	$(BNFLIB)/bnf_t.o
 
-$(ACT)/semact.out:	$(NEEDS)	$(SXBIBS)
+$(SXBIN)/semact.out:	$(NEEDS)	$(SXBIBS)
 	@rm -f $@
 	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@; exit 1)
 
@@ -65,7 +62,7 @@ semact.rt: semact.bt semact.st semact.recor
 # fin de code produit par "make-makefile semact"
 
 clean:
-	/bin/rm -f $(LIB)/*.o $(ACT)/semact.out
+	/bin/rm -f $(LIB)/*.o
 	/bin/rm -f semact_t.c
 	/bin/rm -f semact.bt semact.pt semact.rt semact.st 
 # pas de semact.dt 

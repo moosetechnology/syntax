@@ -91,7 +91,7 @@ your attribute declarations...
 #define S1_clear(t)	S1_top(t)=0
 #define S1_alloc(t,l)	(t=(SXINT*) sxalloc(l+2,sizeof(SXINT))+1),S1_size(t)=(l),S1_clear(t)
 #define S1_free(t)	sxfree((t)-1)
-#define S1_is_empty(t)	S1_top(t)==0
+#define S1_is_empty(t)	(S1_top(t)==0)
 #define S1_sature(t)	S1_size(t)*=2,t=(SXINT*)sxrealloc(t-1,S1_size(t)+2,sizeof(SXINT))+1
 #define S1_push(t,x)	(t[++(S1_top(t))]=(x)),((S1_top(t)>=S1_size(t))?(S1_sature(t)):NULL)
 #define S1_pop(t)	t[S1_top(t)--]

@@ -23,7 +23,7 @@
 
 /* Representation of the Abstract Data Type X */
 
-#include	"X_root.h"
+#include "X_root.h"
 
 #define X_7F			X_root_7F
 #define X_80			X_root_80

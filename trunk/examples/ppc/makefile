@@ -2,8 +2,8 @@
 include $(SX)/etc/make/gccoptions
 
 PPC=$(SX)/examples/ppc
-BIN=$(PPC)/bin
-LIB=$(PPC)/lib
+BIN=$(PPC)/bin.$(ARCH)
+LIB=$(PPC)/lib.$(ARCH)
 
 CC=$(COMPILER) -I$(SXINCL) $(CFLAGS) -c
 

@@ -46,7 +46,7 @@ static char	ME [] = "rcg_smp";
 #include <string.h>
 #include <stdlib.h>
 
-char WHAT_RCGSMP[] = "@(#)SYNTAX - $Id: rcg_smp.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_RCGSMP[] = "@(#)SYNTAX - $Id: rcg_smp.c 4147 2024-08-02 10:32:28Z garavel $" WHAT_DEBUG;
 
 SXINT       clause2lhs_nt (SXINT clause);
 extern void gen_clause_comment (FILE *parser_file, SXINT clause);
@@ -450,8 +450,8 @@ rcg_pi (void)
 			     sxtab_ptr->err_titles [2]+1);
 	    }
 	    else {
-	      if (SXVISITED->degree > 0 || lhs_arg_nb != 1)
-		is_a_complete_terminal_grammar = false;
+		if (SXVISITED->degree > 0 || lhs_arg_nb != 1)
+		    is_a_complete_terminal_grammar = false;
 
 		if (ovar_nb > lhs_max_ovar_nb)
 		    lhs_max_ovar_nb = ovar_nb;
@@ -2421,13 +2421,13 @@ is_instantiable_clause (void)
 static void
 check_counter_args (void)
 {
-  SXINT     top, param, bot, size, symb, prdct_bot, prdct_code, Ak, k, Bh, prdct_top, x, y, rhs, prdct, A, rhs_bot, rhs_top, param_bot, param_top;
+  SXINT     top, param, size, symb, prdct_bot, prdct_code, Ak, k, Bh, prdct_top, x, y, rhs, prdct, A, rhs_bot, rhs_top, param_bot, param_top;
   SXBA      has_t_param_set, counter_param_set, variable_set, *prdct2clause_set, local_clause_set;
   SXINT     *Ak_stack_check_counter_args;
   SXNODE    *prdct_ptr, *param_ptr;
   bool has_var;
 
-  sxinitialise (bot); /* pour faire taire gcc -Wunused -Wuninitialized */
+
 
   top = XH_top (rcg_parameters);
 
@@ -6185,7 +6185,7 @@ static void
 fill_infix_args (SXINT fill_infix_args_clause, SXINT lhs_cur3, SXINT lhs_top3, SXINT rhs)
 {
     /* On met ds infix_args les iargs qui correspondend a la reconnaissance de la position lhs_cur3 */
-    SXINT		symb, cur, top, bot, prdct, bot2, top2, nt, cur2, k, param, bot3, top3, lcur3, cur3, x;
+    SXINT		symb, cur, top, bot, prdct, bot2, top2, nt, cur2, param, bot3, top3, lcur3, cur3, x;
     bool	is_lgth_1 = false;
 
     symb = XH_list_elem (rcg_parameters, lhs_cur3);
@@ -6220,7 +6220,7 @@ fill_infix_args (SXINT fill_infix_args_clause, SXINT lhs_cur3, SXINT lhs_top3, S
 	    if ((nt > 0  && SXBA_bit_is_set (is_lhs_nt, nt)) || nt == STRLEN_ic || nt == STREQ_ic || nt == STREQLEN_ic) {
 		top2 = XH_X (rcg_predicates, prdct+1);
 
-		for (k = 0, cur2 = bot2+2; cur2 < top2; k++, cur2++) {
+		for (cur2 = bot2+2; cur2 < top2; cur2++) {
 		    if (cur2 > bot2+2 || nt != STRLEN_ic) {
 			param = XH_list_elem (rcg_predicates, cur2);
 			/* lhs_cur3, lhs_top3 sont ds arg

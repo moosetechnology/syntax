@@ -26,7 +26,7 @@ static char	*ME;
 #include "bstr.h"
 #include "SS.h"
 
-char WHAT_XCSYNTLALR1[] = "@(#)SYNTAX - $Id: LALR1.c 3652 2023-12-24 09:43:15Z garavel $" WHAT_DEBUG;
+char WHAT_XCSYNTLALR1[] = "@(#)SYNTAX - $Id: LALR1.c 4146 2024-08-02 10:21:59Z garavel $" WHAT_DEBUG;
 
 extern bool	prio_read (SXINT t_priorities_size, 
 			   SXINT r_priorities_size,
@@ -1747,7 +1747,8 @@ SXINT	LALR1 (void)
     limpro = bnf_ag.WS_TBL_SIZE.xnbpro + 1;
     has_xprod = limpro > bnf_ag.WS_TBL_SIZE.actpro + 1;
     not_used_red_set = sxba_calloc (bnf_ag.WS_TBL_SIZE.actpro + 1);
-    sxba_fill (not_used_red_set), SXBA_0_bit (not_used_red_set, 0);
+    sxba_fill (not_used_red_set);
+    SXBA_0_bit (not_used_red_set, 0);
 
     if (is_tspe) {
 

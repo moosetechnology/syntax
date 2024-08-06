@@ -649,8 +649,7 @@ trico_process ()
 
 
 
-void
-trico_sem_act (int code, int numact)
+void trico_sem_act (int code, int numact)
 {
   int			ste;
 
@@ -736,15 +735,14 @@ trico_sem_act (int code, int numact)
 }
 
 
-void
-trico_scan_act (int code, int act_no)
+bool trico_scan_act (int code, int act_no)
 {
   switch (code) {
   case SXOPEN:
   case SXCLOSE:
   case SXINIT:
   case SXFINAL:
-    return;
+    return SXANY_BOOL;
 
   case SXACTION:
     switch (act_no) {
@@ -764,8 +762,7 @@ trico_scan_act (int code, int act_no)
       sxsvar.sxlv.ts_lgth = sxsvar.sxlv.mark.index + 1;
       sxsvar.sxlv.mark.index = -1;
     }
-
-    return;
+    return SXANY_BOOL;
 
     default:
       break /* to gripe */ ;
@@ -773,5 +770,7 @@ trico_scan_act (int code, int act_no)
 
   default:
     gripe ();
+    /* NOTREACHED */
+    return SXANY_BOOL;
   }
 }

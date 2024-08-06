@@ -1230,8 +1230,8 @@ static char *err_titles[SXSEVERITIES]={
 "\002Error:\t",
 };
 static char abstract []= "%d errors and %d warnings are reported.";
-extern int PARSACT();
-extern bool sxndprecovery();
+extern SXPARSACT_FUNCTION PARSACT;
+extern SXPRECOVERY_FUNCTION sxndprecovery;
 
 static unsigned char S_char_to_simple_class[]={
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
@@ -1673,17 +1673,16 @@ static char *S_global_mess[]={
 "EOF",
 "%sLexical analysis stops on EOF.",
 };
-extern int sxscan_it();
-extern bool sxsrecovery();
-static int check_keyword();
-extern int sxscanner();
-extern int sxndparser();
+extern SXPARSER_FUNCTION sxndparser;
 extern int ESAMBIG();
-extern int SEMACT();
+extern SXSEMACT_FUNCTION SEMACT;
+static SXCHECK_KEYWORD_FUNCTION sxcheck_keyword;
 
 struct sxtables sxtables={
 52113, /* magic */
-{sxscanner,sxndparser}, {255, 84, 1, 3, 4, 51, 0, 49, 0, 1, 0, 
+sxscanner,
+sxndparser,
+{255, 84, 1, 3, 4, 51, 0, 49, 0, 1, 0, 
 S_is_a_keyword,S_is_a_generic_terminal,S_transition_matrix-1,
 SXS_action_or_prdct_code-1,
 S_adrp-1,
@@ -1695,7 +1694,7 @@ S_global_mess-1,
 S_lregle-1,
 NULL,
 sxsrecovery,
-check_keyword,
+sxcheck_keyword
 },
 {59, 195, 199, 244, 311, 395, 417, 1031, 84, 67, 230, 230, 196, 113, 0, 11, 4, 7, 2, 5, 11, 2, 6,
 reductions-1,
@@ -1713,7 +1712,8 @@ NULL,
 P_lregle-1,P_right_ctxt_head-1,
 SXP_local_mess-1,
 P_no_delete,P_no_insert,
-P_global_mess,PER_tset,sxscan_it,sxndprecovery,
+P_global_mess,PER_tset,sxscan_it,
+sxndprecovery,
 PARSACT
 ,ESAMBIG
 ,SEMACT},
@@ -1731,9 +1731,7 @@ abstract,
 
 
 
-static int check_keyword (string, length)
-register char	*string;
-register int	length;
+static SXINT sxcheck_keyword (char *string, SXINT length)
 {
    register int  t_code, delta;
    register char *keyword;

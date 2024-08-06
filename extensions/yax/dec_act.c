@@ -22,7 +22,7 @@
 #include "B_tables.h"
 #include "yax_vars.h"
 
-char WHAT_YAXDECACT[] = "@(#)SYNTAX - $Id: dec_act.c 3695 2024-02-07 17:44:37Z garavel $" WHAT_DEBUG;
+char WHAT_YAXDECACT[] = "@(#)SYNTAX - $Id: dec_act.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
 
 extern struct sxtables	bnf_tables;
 
@@ -48,25 +48,27 @@ SXINLINE static void prepro_line (SXUINT lineno, char *filename)
 }
 
 
-void	dec_scanact (SXINT code, SXINT numact)
+bool dec_scanact (SXINT code, SXINT numact)
 {
     switch (code) {
 
     case SXERROR:
-      is_err = true;
+	is_err = true;
+	return SXANY_BOOL;
+
     case SXOPEN:
     case SXCLOSE:
     case SXFINAL:
     case SXSEMPASS:
     case SXINIT:
-	return;
+	return SXANY_BOOL;
 
     case SXACTION:
 	switch (numact) {
 
 	case /*STOP = "<"&Is_First_Col @*/ 0:
 	    bnf_found_bad_beginning_of_rule ();
-	    return;
+	    return SXANY_BOOL;
 	default:
 #if EBUG
 	  sxtrap("dec_scanact","unknown switch case");
@@ -82,8 +84,9 @@ void	dec_scanact (SXINT code, SXINT numact)
 }
 
 
-void	dec_semact (SXINT code, SXINT numact)
+void dec_semact (SXINT code, SXINT numact, struct sxtables *arg)
 {
+    (void) arg;
     switch (code) {
 	static bool must_init;
 
@@ -186,8 +189,8 @@ void	dec_semact (SXINT code, SXINT numact)
 			attr_nt [xattr] [xnt] = true;
 		}
 	    }
-
 	    return;
+
 	default:
 #if EBUG
 	  sxtrap("dec_semact","unknown switch case");

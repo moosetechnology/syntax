@@ -2026,11 +2026,10 @@ SXLIG_sem_pass (S0n)
 
 
 #if is_initial_LIG==0
-int
-SXLIG_actions (what, arg)
-    int		what;
-    struct sxtables	*arg;
+int SXLIG_actions (SXINT what, SXINT action_no, struct sxtables *arg)
 {
+    (void) action_no;
+    (void) arg;
     switch (what) {
     case SXOPEN:
 	for_semact.sem_init = SXLIG_semact_init;

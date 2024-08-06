@@ -375,7 +375,6 @@ static char *err_titles[SXSEVERITIES]={
 "\002Error:\t",
 };
 static char abstract []= "%ld warnings and %ld errors are reported.";
-extern bool sxprecovery (SXINT what_to_do, SXINT *at_state, SXINT latok_no);
 
 static unsigned char S_char_to_simple_class[]={
 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
@@ -592,11 +591,9 @@ static char *S_global_mess[]={0,
 "%sScanning stops on End Of File.",
 };
 #ifdef SCANACT
-extern SXINT SCANACT(SXINT what, SXINT act_no);
-#endif /* SCANACT */
-extern SXINT sxscan_it(void);
-extern bool sxsrecovery (SXINT sxsrecovery_what, SXINT state_no, unsigned char *class);
-static SXINT check_keyword(char *init_string, SXINT init_length);
+extern SXSCANACT_FUNCTION SCANACT;
+#endif
+static SXCHECK_KEYWORD_FUNCTION sxcheck_keyword;
 static struct SXT_node_info SXT_node_info[]={{0,0},
 {21,1},{0,5},{0,6},{27,8},{25,9},{23,10},{0,12},{30,13},{13,13},{0,15},{15,17},{14,18},
 {0,20},{10,22},{31,23},{22,23},{4,23},{0,24},{19,26},{18,27},{18,29},{18,31},{9,33},{25,38},
@@ -640,22 +637,23 @@ static char *T_node_name[]={NULL,
 "VOID",
 "X",
 };
-extern SXINT sempass(SXINT what, struct sxtables *sxtables_ptr);
+extern SXSEMPASS_FUNCTION SEMPASS;
 static char T_stack_schema[]={0,
 0,1,2,3,1,0,2,0,0,0,1,0,0,1,0,1,0,1,3,0,1,0,0,0,1,
 0,0,1,0,1,0,1,0,1,2,3,4,1,1,0,1,1,0,1,2,0,0,1,1,3,
 1,3,0,2,0,2,0,1,1,1,0,0,2,0,0,2,0,0,0,2,0,0,1,0,1,
 2,3,4,5,6,2,0,0,2,1,1,3,1,1,0,1,0,};
 
-static struct SXT_tables SXT_tables=
-{SXT_node_info, T_ter_to_node_name, T_stack_schema, sempass, T_node_name};
-extern SXINT sxscanner(SXINT what_to_do, struct sxtables *arg);
-extern SXINT sxparser(SXINT what_to_do, struct sxtables *arg);
-extern SXINT sxatc(SXINT what, ...);
+static struct SXT_tables SXT_tables={
+SXT_node_info, T_ter_to_node_name, T_stack_schema, SEMPASS, T_node_name
+};
+extern SXSEMACT_FUNCTION sxatc;
 
 struct sxtables sxtables={
 52113, /* magic */
-{sxscanner,(SXPARSER_T) sxparser}, {255, 36, 1, 3, 4, 30, 2, 25, 1, 1, 0, 
+sxscanner,
+sxparser,
+{255, 36, 1, 3, 4, 30, 2, 25, 1, 1, 0, 
 S_is_a_keyword,S_is_a_generic_terminal,S_transition_matrix,
 SXS_action_or_prdct_code,
 S_adrp,
@@ -667,12 +665,12 @@ S_no_insert,
 S_global_mess,
 S_lregle,
 #ifdef SCANACT
-(SXSCANACT_T) SCANACT,
-#else /* SCANACT */
-(SXSCANACT_T) NULL,
-#endif /* SCANACT */
-(SXRECOVERY_T) sxsrecovery,
-check_keyword,
+SCANACT,
+#else
+(SXSCANACT_FUNCTION *) NULL,
+#endif
+sxsrecovery,
+sxcheck_keyword
 },
 {23, 61, 61, 93, 102, 153, 169, 229, 36, 41, 65, 65, 92, 42, 0, 11, 4, 7, 2, 5, 11, 2, 6,
 reductions,
@@ -694,18 +692,20 @@ P_right_ctxt_head,
 SXP_local_mess,
 P_no_delete,
 P_no_insert,
-P_global_mess,PER_tset,sxscan_it,(SXRECOVERY_T) sxprecovery,
-(SXPARSER_T) NULL,
-(SXDESAMBIG_T) NULL,
-(SXSEMACT_T) sxatc
+P_global_mess,PER_tset,
+sxscan_it,
+sxprecovery,
+(SXPARSACT_FUNCTION *) NULL,
+(SXDESAMBIG_FUNCTION *) NULL,
+sxatc
 },
 err_titles,
 abstract,
-(sxsem_tables*)&SXT_tables,
-NULL,
+(sxsem_tables *) &SXT_tables,
+NULL
 };
 
-#include	"sxdico.h"
+#include "sxdico.h"
 
 #define KW_NB		20
 #define INIT_BASE	1
@@ -769,6 +769,6 @@ static unsigned char char2class [256] = {
 '\000', 
 };
 
-#include	"sxcheck_keyword.h"
+#include "sxcheck_keyword.h"
 
 /* End of sxtables for recor */

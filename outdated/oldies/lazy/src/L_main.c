@@ -75,7 +75,7 @@ int main (int argc, char *argv [])
 
     sxopentty ();
     sxstr_mngr (SXBEGIN) /* Creation de la table des chaines */ ;
-    (*(sxtables.analyzers.parser)) (SXBEGIN) /* Allocation des variables globales du parser */ ;
+    (*(sxtables.SX_parser)) (SXBEGIN, NULL /* dummy */) /* Allocation des variables globales du parser */ ;
     syntax (SXOPEN, &sxtables) /* Initialisation de SYNTAX (mono-langage) */ ;
 
     if (argc == 1) {
@@ -131,7 +131,7 @@ int main (int argc, char *argv [])
     }
 
     syntax (SXCLOSE, &sxtables);
-    (*(sxtables.analyzers.parser)) (SXEND) /* Inutile puisque le process va etre termine */ ;
+    (*(sxtables.SX_parser)) (SXEND, NULL /* dummy */) /* Inutile puisque le process va etre termine */ ;
     sxstr_mngr (SXEND) /* Inutile puisque le process va etre termine */ ;
 
     {

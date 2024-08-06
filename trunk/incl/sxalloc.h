@@ -23,9 +23,20 @@
 #include "sxcommon.h"
 
 SX_GLOBAL_VAR bool SYNTAX_is_in_critical_zone;
-SX_GLOBAL_VAR void *sxcont_malloc (size_t size), *sxcont_alloc (size_t n, size_t size), *sxcont_realloc (void *table, size_t size), *sxcont_recalloc (void *table, size_t old_size, size_t new_size);
-SX_GLOBAL_VAR void sxcont_free (void *zone);
-SX_GLOBAL_VAR bool sxpush_in_tobereset_signature (void *ptr, size_t size);
+
+SX_GLOBAL_VAR void (*sxgc_recovery) (void);
+
+extern void *sxcont_malloc (size_t size);
+
+extern void *sxcont_alloc (size_t n, size_t size);
+
+extern void *sxcont_realloc (void *table, size_t size);
+
+extern void *sxcont_recalloc (void *table, size_t old_size, size_t new_size);
+
+extern void sxcont_free (void *zone);
+
+extern bool sxpush_in_tobereset_signature (void *ptr, size_t size);
 
 #define sxprepare_for_possible_reset(data) (mem_signature_mode ? sxpush_in_tobereset_signature ((void*) &(data), sizeof (data)) : false)
 #define sxprepare_ptr_for_possible_reset(ptr,size) (mem_signature_mode ? sxpush_in_tobereset_signature ((void*) (ptr), (size)) : false)
@@ -34,7 +45,6 @@ SX_GLOBAL_VAR bool sxpush_in_tobereset_signature (void *ptr, size_t size);
 
 /* the definitions of malloc(), calloc(), realloc() ... are here -> */
 #include <stdlib.h>
-
 
 #define sxalloc(NB, SZ)		malloc ((size_t)((NB)*(SZ)))
 #define sxcalloc(NB, SZ)		calloc ((size_t)(NB), (size_t)(SZ))
@@ -52,8 +62,6 @@ SX_GLOBAL_VAR bool sxpush_in_tobereset_signature (void *ptr, size_t size);
 
 #endif /* lint */
 
-extern void * sx_alloc_and_copy (size_t nbemb, size_t size, void *original_content, size_t copy_size);
-
 SX_GLOBAL_VAR bool mem_signature_mode;
 
 struct mem_signature {
@@ -66,9 +74,15 @@ SX_GLOBAL_VAR struct mem_signatures {
   size_t *tobereset_sizes;
 } *mem_signatures;
 
-SX_GLOBAL_VAR void sxmem_signatures_allocate (SXINT size), sxmem_signatures_raz (void), sxmem_signatures_free (void);
+extern void sxmem_signatures_allocate (SXINT size);
 
-SX_GLOBAL_VAR void (*sxgc_recovery) (void);
+extern void sxmem_signatures_raz (void);
+
+extern void sxmem_signatures_free (void);
+
+extern bool sxfree_mem_signatures_content (void);
+
+extern void *sx_alloc_and_copy (size_t nbemb, size_t size, void *original_content, size_t copy_size);
 
 #include "SXpost.h"
 #endif /* sxalloc_h */

@@ -184,7 +184,6 @@ static char *err_titles[SXSEVERITIES]={
 "\002Error:\t",
 };
 static char abstract []= "%d warnings and %d errors are reported.";
-extern bool sxprecovery();
 
 static unsigned char S_char_to_simple_class[]={
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
@@ -313,10 +312,7 @@ static char *S_global_mess[]={
 "End Of File",
 "%sScanning stops on End Of File.",
 };
-extern int SCANACT();
-extern int sxscan_it();
-extern bool sxsrecovery();
-static int check_keyword();
+extern SXSCANACT_FUNCTION SCANACT;
 static struct SXT_node_info SXT_node_info[]={
 {12,1},{0,2},{14,4},{13,5},{0,6},{8,8},{0,9},{0,10},{7,11},{0,13},{2,15},{3,16},
 {4,17},{11,18},{0,19},{10,20},{16,21},{5,21},{9,21},{16,21},{16,21},{16,21},{16,21},{16,21},
@@ -342,19 +338,20 @@ static char *T_node_name[]={
 "VOID",
 "string",
 };
-extern int sempass();
+extern SXSEMPASS_FUNCTION SEMPASS;
 static char T_stack_schema[]={
 0,0,1,0,1,0,1,1,1,0,2,4,0,1,0,0,0,0,0,0,0,};
 
-static struct SXT_tables SXT_tables=
-{SXT_node_info-1, T_ter_to_node_name, T_stack_schema-1, sempass, T_node_name-1};
-extern int sxscanner();
-extern int sxparser();
-extern int sxatc();
+static struct SXT_tables SXT_tables={
+SXT_node_info-1, T_ter_to_node_name, T_stack_schema-1, SEMPASS, T_node_name-1
+};
+extern SXSEMACT_FUNCTION sxatc;
+static SXCHECK_KEYWORD_FUNCTION sxcheck_keyword;
 
 struct sxtables sxtables={
 56431012, /* magic */
-{sxscanner,sxparser}, 
+sxscanner,
+sxparser, 
 {255, 21, 1, 3, 4, 15, 2, 1, 1, 
 S_is_a_keyword,S_is_a_generic_terminal,S_transition_matrix-1,
 SXS_action_or_prdct_code-1,
@@ -367,7 +364,7 @@ S_global_mess-1,
 S_lregle-1,
 SCANACT,
 sxsrecovery,
-check_keyword,
+sxcheck_keyword
 },
 {9, 27, 27, 38, 58, 61, 63, 102, 21, 9, 26, 21, 9, 4, 7, 2, 5, 11, 5, 4,
 reductions-1,
@@ -382,8 +379,8 @@ SXP_local_mess-1,
 P_no_delete,P_no_insert,
 P_global_mess,PER_tset,sxscan_it,
 sxprecovery,
-NULL
-,sxatc},
+NULL,
+sxatc},
 err_titles,
 abstract,
 (sxsem_tables*)&SXT_tables
@@ -398,9 +395,7 @@ abstract,
 
 
 
-static int check_keyword (string, length)
-register char	*string;
-register int	length;
+static SXINT sxcheck_keyword (char *string, SXINT length)
 {
    register int  t_code, delta;
    register char *keyword;

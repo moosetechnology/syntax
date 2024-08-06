@@ -3,15 +3,15 @@ include $(SX)/etc/make/gccoptions
 
 ND=$(SX)/../outdated/oldies
 NDSRC=$(ND)/src
-NDLIB=$(ND)/lib
+NDLIB=$(ND)/lib.$(ARCH)
 
 NDETC=$(ND)/etc
-NDETCLIB=$(NDETC)/lib
+NDETCLIB=$(NDETC)/lib.$(ARCH)
 NDETCINCL=$(NDETC)/incl
 
 C=$(ND)/c
 SRC=$(C)/src
-LIB=$(C)/lib
+LIB=$(C)/lib.$(ARCH)
 INCL=$(C)/incl
 
 CC=cc -I$(SXINCL) -I$(NDETCINCL) -I$(INCL) $(CFLAGS)
@@ -49,7 +49,7 @@ $(LIB)/c_t.o:		$(SXINCL)/sxunix.h 	\
 	$(CC) -o $@ -c $(SRC)/c_t.c		\
 		-DESAMBIG=c_desambig		\
 		-DPARSACT=sxvoid		\
-		-DSEMACT=sxvoid
+		-DSEMACT=sxwvoid
 
 
 $(LIB)/c_desambig.o:	$(SXINCL)/sxunix.h		\
@@ -70,7 +70,7 @@ $(LIB)/dc_t.o:		$(SXINCL)/sxunix.h 	\
 			$(SRC)/dc_t.c
 	$(CC) -o $@ -c $(SRC)/dc_t.c		\
 		-DPARSACT=dc_parsact		\
-		-Dsempass=dc_smp
+		-DSEMPASS=dc_smp
 
 $(LIB)/dc_parsact.o:	$(SXINCL)/sxunix.h		\
 			$(ND)/incl/sxba.h		\
@@ -98,7 +98,7 @@ $(LIB)/ndc_t.o:		$(SXINCL)/sxunix.h 	\
 		-Dsxndprecovery=sxndpallcorrections    \
 		-DESAMBIG=sxvoid		\
 		-DPARSACT=ndc_parsact		\
-		-Dsempass=sxvoid
+		-DSEMPASS=sxvoid
 
 $(LIB)/ndc_parsact.o:	$(SXINCL)/sxunix.h		\
 			$(ND)/incl/sxba.h		\

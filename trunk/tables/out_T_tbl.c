@@ -22,13 +22,14 @@
 #include "tables.h"
 #include "out.h"
 
-char WHAT_TABLESOUTTTBL[] = "@(#)SYNTAX - $Id: out_T_tbl.c 3650 2023-12-23 07:32:10Z garavel $" WHAT_DEBUG;
+char WHAT_TABLESOUTTTBL[] = "@(#)SYNTAX - $Id: out_T_tbl.c 4076 2024-06-19 10:31:35Z garavel $" WHAT_DEBUG;
 
 
 static void	out_tables (void)
 {
-    puts ("\nstatic struct SXT_tables SXT_tables=\n\
-{SXT_node_info, T_ter_to_node_name, T_stack_schema, sempass, T_node_name};");
+    puts ("\nstatic struct SXT_tables SXT_tables={");
+    puts ("SXT_node_info, T_ter_to_node_name, T_stack_schema, SEMPASS, T_node_name");
+    puts ("};");
 }
 
 
@@ -139,7 +140,7 @@ out_T_tables (void)
     out_T_node_info ();
     out_T_ter_to_node_name ();
     out_T_node_name ();
-    out_ext_int_newstyle ("sempass(SXINT what, struct sxtables *sxtables_ptr)");
+    puts ("extern SXSEMPASS_FUNCTION SEMPASS;");
     out_T_stack_schema ();
     out_tables ();
 }

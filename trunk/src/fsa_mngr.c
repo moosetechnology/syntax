@@ -20,7 +20,7 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXDAG_MNGR[] = "@(#)SYNTAX - $Id: fsa_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_SXDAG_MNGR[] = "@(#)SYNTAX - $Id: fsa_mngr.c 4164 2024-08-02 14:02:35Z garavel $" WHAT_DEBUG;
 
 static char	ME [] = "fsa_mngr";
 
@@ -31,7 +31,6 @@ static char	ME [] = "fsa_mngr";
 #include "sxstack.h"
 #include "XH.h"
 #include "sxdico.h"
-
 
 static SXINT     *old_state2max_path_lgth, *old_state2new_state /*, normalized_fsa_final_state */;
 static SXBA      state_set;
@@ -1536,7 +1535,7 @@ nfa2dfa (SXINT init_state,
 
 
 
-char WHAT_FSA_TO_RE[] = "@(#)SYNTAX - $Id: fsa_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_FSA_TO_RE[] = "@(#)SYNTAX - $Id: fsa_mngr.c 4164 2024-08-02 14:02:35Z garavel $" WHAT_DEBUG;
 
 #define leaf (SXINT)1
 #define concat (SXINT)2
@@ -7939,13 +7938,13 @@ sxdfa_comb2c (struct sxdfa_comb *sxdfa_comb_ptr, FILE *file, char *dico_name, bo
 	  (SXINT) sxdfa_comb_ptr->max, (SXINT) sxdfa_comb_ptr->init_base, (SXINT) sxdfa_comb_ptr->class_mask, (SXINT) sxdfa_comb_ptr->stop_mask, (SXINT) sxdfa_comb_ptr->base_shift);
 	    
   fprintf (file, "%s_char2class, %s_comb_vector,\n", dico_name == NULL ? "" : dico_name, dico_name == NULL ? "" : dico_name);
-  fprintf (file, "1 /* is_static */, %i /* is_a_dag */,\n", (int)sxdfa_comb_ptr->is_a_dag);
+  fprintf (file, "true /* is_static */, %s /* is_a_dag */,\n", sxdfa_comb_ptr->is_a_dag ? "true" : "false");
   if (sxdfa_comb_ptr->base2stack)
     fprintf (file, "%s_base2stack /* base2stack */,\n %s_char_stack_list /* char_stack_list */, %ld,\n", dico_name, dico_name, char_stack_list_top);
   else
     fputs ("NULL /* base2stack */, NULL /* char_stack_list */, 0,\n", file);
   fprintf (file, "\"%s\" /* name */, 0,\n", dico_name);
-  fprintf (file, "{%i /* from_left_to_right */,}\n};\n", (int)sxdfa_comb_ptr->private.from_left_to_right);
+  fprintf (file, "{%s /* from_left_to_right */, {NULL} /* private ptr */}\n};\n", sxdfa_comb_ptr->private.from_left_to_right ? "true" : "false");
 }
 
 

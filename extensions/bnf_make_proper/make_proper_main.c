@@ -31,9 +31,8 @@ static char	ME [] = "make_proper_main";
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_MAKE_PROPER_MAIN[] = "@(#)SYNTAX - $Id: make_proper_main.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_MAKE_PROPER_MAIN[] = "@(#)SYNTAX - $Id: make_proper_main.c 4160 2024-08-02 13:05:50Z garavel $" WHAT_DEBUG;
 
-//#ifdef LC_TABLES_H
 /* On compile les tables "left_corner" ... */
 /* ... uniquement celles dont on va avoir besoin ds lexicalizer_mngr */
 
@@ -55,7 +54,6 @@ char WHAT_MAKE_PROPER_MAIN[] = "@(#)SYNTAX - $Id: make_proper_main.c 3633 2023-1
    non plus sous la forme d'un sxword */
 
 #include LC_TABLES_H
-//#endif /* LC_TABLES_H */
 
 /* Pour avoir la definition et l'initialisation de spf faite ici par sxspf.h et celle de idag faite par udag_scanner.h */
 #define SX_DFN_EXT_VAR2
@@ -65,13 +63,6 @@ char WHAT_MAKE_PROPER_MAIN[] = "@(#)SYNTAX - $Id: make_proper_main.c 3633 2023-1
 
 SXINT n;
 bool is_print_time;
-
-VARSTR   concat_ff_tstr (VARSTR vstr, char* ff, int Tpq) {return NULL;}
-struct sxtoken *tok_no2tok (int tok_no) {return NULL;}
-int      get_SEMLEX_lahead () {return 0;}
-void     local_fill_Tij2tok_no () {}
-void fill_Tij2tok_no () {}
-
 
 extern struct sxtables  sxtables;
 extern SXBA            basic_item_set; 
@@ -134,8 +125,7 @@ static SXINT	option_kind [] = {
 
 
 
-static SXINT	option_get_kind (arg)
-    char	*arg;
+static SXINT	option_get_kind (char *arg)
 {
   char	**opt;
 
@@ -154,9 +144,8 @@ static SXINT	option_get_kind (arg)
 }
 
 
-
-static char	*option_get_text (kind)
-    SXINT	kind;
+#if 0
+static char	*option_get_text (SXINT kind)
 {
   SXINT	i;
 
@@ -167,12 +156,12 @@ static char	*option_get_text (kind)
 
   return option_tbl [i];
 }
+#endif
 
 
 
 static void
-make_proper_run (pathname)
-    char	*pathname;
+make_proper_run (char *pathname)
 {
   FILE	*infile;
 
@@ -221,13 +210,12 @@ make_proper_run (pathname)
 
 
 /************************************************************************/
-/* main function
+/* main function                                                        */
 /************************************************************************/
 int main(int argc, char *argv[])
 {
   SXINT		argnum;
   bool	is_source_file, is_stdin;
-  char          *source_file;
 
   n = 0;
 
@@ -256,6 +244,7 @@ int main(int argc, char *argv[])
 
     case EXCLUDE:
       is_exclude = true;
+      break;
 
     case PROD_MAPPING:
       is_prod_mapping = true;
@@ -276,25 +265,30 @@ int main(int argc, char *argv[])
     case SOURCE_FILE:
       is_stdin = false;
       is_source_file = true;
-      source_file = argv [argnum];
+      source_file_name = argv [argnum];
       break;
 
     case UNKNOWN_ARG:
+    default:
       fprintf (sxstderr, "%s: unknown option \"%s\".\n", ME, argv [argnum]);
       fprintf (sxstderr, Usage, ME);
       sxexit (3);
     }
   }
 
-  if (!is_stdin && !is_source_file || is_help) {
+  if ((!is_stdin && !is_source_file) || is_help) {
     fprintf (sxstderr, Usage, ME);
     sxexit (3);
   }
 
+  /* Modif car intialisation partielle interdite avec le -W ci-dessous */
+  /* warning: missing field 'outputG' initializer [-Wmissing-field-initializers] */
+  spf.inputG = spf_inputG;
+
 
   syntax (SXINIT, &sxtables, false /* no includes */);
 
-  make_proper_run (is_stdin ? NULL : source_file);
+  make_proper_run (is_stdin ? NULL : source_file_name);
 
   syntax (SXFINAL, &sxtables, true);
 
@@ -341,14 +335,16 @@ output_prod (SXINT prod)
   fputs (";\n", stdout);
 }
 
+
+/* Attention, lexicalizer_mngr doit etre compile' avec l'option -DMAKE_PROPER */
+extern bool lexicalizer2basic_item_set (bool, bool); // au cas ou...
 /* "Semantique" de make_proper */
-void
-make_proper_semact (what, arg)
-    SXINT		what, arg;
+
+void make_proper_semact (SXINT what, struct sxtables *sxtables_ptr)
 {
-  static SXINT          word_pos;//, glbl_source_size;
+  static SXINT          word_pos;
   struct sxtoken	*tok;
-  SXINT                 t_code, new_prod, word_lgth;
+  SXINT                 t_code, new_prod, word_lgth, arg;
   char                  *word;
 
   switch (what) {
@@ -368,6 +364,8 @@ make_proper_semact (what, arg)
     break;
 
   case SXACTION:
+    arg = (SXINT) (intptr_t) sxtables_ptr;
+
     if (arg == 0)
 	return;
 
@@ -445,7 +443,7 @@ make_proper_semact (what, arg)
     /* Attention, lexicalizer_mngr doit etre compile' avec l'option -DMAKE_PROPER */
     if (lexicalizer2basic_item_set (false, false)) {
       /* On sort la grammaire reduite contenue ds spf.insideG */
-      SXINT               new_prod, prod, i, X;
+      SXINT               prod, i, X;
     
       printf ("\
 *   *****************************************************************************************\n\
@@ -460,7 +458,7 @@ make_proper_semact (what, arg)
 	prod = spf.insideG.prod2init_prod [new_prod];
 
 	if (is_prod_mapping)
-	  printf ("*[P%i %i]\n", new_prod, prod);
+	  printf ("*[P%li %li]\n", new_prod, prod);
 
 	output_prod (prod);
       }
@@ -470,7 +468,7 @@ make_proper_semact (what, arg)
 
 	for (i = 1; i <= spf.insideG.maxnt; i++) {
 	  X = spf.insideG.nt2init_nt [i];
-	  printf ("\n*[N%i %i] ", i, X);
+	  printf ("\n*[N%li %li] ", i, X);
 	  output_nt (X);
 	}
 
@@ -482,7 +480,7 @@ make_proper_semact (what, arg)
 
 	for (i = 1; i < -spf.insideG.maxt; i++) {
 	  X = spf.insideG.t2init_t [i];
-	  printf ("\n*[T%i %i] ", i, X);
+	  printf ("\n*[T%li %li] ", i, X);
 	  output_t (X);
 	}
 
@@ -539,7 +537,7 @@ make_proper_semact (what, arg)
 	prod = spf.inputG.prolis [item];
 
 	if (is_prod_mapping)
-	  printf ("*[P%i %i]\n", ++new_prod, prod);
+	  printf ("*[P%li %li]\n", ++new_prod, prod);
 
 	output_prod (prod);
 
@@ -592,7 +590,7 @@ make_proper_semact (what, arg)
 
 	for (i = 1; i < top_nt_names; i++) {
 	  X = new_nt2old_nt [i];
-	  printf ("\n*[N%i %i] ", i, X);
+	  printf ("\n*[N%li %li] ", i, X);
 	  output_nt (X);
 	}
 
@@ -607,7 +605,7 @@ make_proper_semact (what, arg)
 
 	for (i = 1; i < top_t_names; i++) {
 	  X = new_t2old_t [i];
-	  printf ("\n*[T%i %i] ", i, X);
+	  printf ("\n*[T%li %li] ", i, X);
 	  output_t (X);
 	}
 
@@ -647,21 +645,17 @@ make_proper_semact (what, arg)
 }
 
 
-void
-make_proper_scanact (code, act_no)
-    SXINT		code;
-    SXINT		act_no;
+bool make_proper_scanact (SXINT code, SXINT act_no)
 {
   switch (code) {
   case SXOPEN:
   case SXCLOSE:
   case SXINIT:
   case SXFINAL:
-    return;
+    return false;
 
   case SXACTION:
     switch (act_no) {
-      short	c;
 
     case 1: /* \nnn => char */
       {
@@ -678,9 +672,12 @@ make_proper_scanact (code, act_no)
 	sxsvar.sxlv.ts_lgth = sxsvar.sxlv.mark.index + 1;
 	sxsvar.sxlv.mark.index = -1;
       }
+      return SXANY_BOOL;
 
-      return;
+    default:
+       break;
     }
+    /* FALLTHROUGH */;
 
   default:
     fputs ("The function \"make_proper_scanact\" is out of date with respect to its specification.\n", sxstderr);
@@ -689,12 +686,12 @@ make_proper_scanact (code, act_no)
 }
 
 /* Appelees ds sxspf_mngr */
-void idag_source_processing  (SXINT i, SXBA *t2suffix_t_set, SXBA *mlstn2suffix_source_set, SXBA *mlstn2la_tset, SXBA *t2la_t_set){}
-SXINT get_repair_Tpq2tok_no (SXINT Tpq) {return 0;}
-void   idag_p_t_q2tok_no_stack (SXINT **tok_no_stack_ptr, SXINT p, SXINT t, SXINT q) {};
-VARSTR  rcvr_out_range    (VARSTR vstr, SXINT lb, SXINT ub) {return NULL;}
-SXINT   special_Apq_name  (char *string, SXINT lgth) {return 0;}
-SXINT   special_Tpq_name  (char *string, SXINT lgth) {return 0;}
-VARSTR sub_dag_to_comment      (VARSTR vstr, SXINT p, SXINT q) {return NULL;}
-void sxearley_open_for_semact (void) {};
-SXINT  dag_scanner             (SXINT what, struct sxtables *arg) {return 1;};
+//void idag_source_processing  (SXINT i, SXBA *t2suffix_t_set, SXBA *mlstn2suffix_source_set, SXBA *mlstn2la_tset, SXBA *t2la_t_set){}
+//SXINT get_repair_Tpq2tok_no (SXINT Tpq) {return 0;}
+//void   idag_p_t_q2tok_no_stack (SXINT **tok_no_stack_ptr, SXINT p, SXINT t, SXINT q) {};
+//VARSTR  rcvr_out_range    (VARSTR vstr, SXINT lb, SXINT ub) {return NULL;}
+//SXINT   special_Apq_name  (char *string, SXINT lgth) {return 0;}
+//SXINT   special_Tpq_name  (char *string, SXINT lgth) {return 0;}
+//VARSTR sub_dag_to_comment      (VARSTR vstr, SXINT p, SXINT q) {return NULL;}
+//void sxearley_open_for_semact (void) {};
+//SXINT  dag_scanner             (SXINT what, struct sxtables *arg) {return 1;};

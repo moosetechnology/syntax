@@ -2,22 +2,20 @@
 include $(SX)/etc/make/gccoptions
 
 TRICO=$(SX)/trico
-LIB=$(TRICO)/lib
+BIN=$(TRICO)/bin.$(ARCH)
+LIB=$(TRICO)/lib.$(ARCH)
 
 CC=cc -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
-ALL=$(SX)/bin/trico.out	
+ALL=$(BIN)/trico.out	
 
 all: $(ALL)
-
-$(SX)/bin/trico.out:	$(TRICO)/trico.out
-	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
 NEEDED=$(LIB)/trico_act.o	\
        $(LIB)/trico_main.o	\
        $(LIB)/trico_t.o
 
-$(TRICO)/trico.out:	$(NEEDED)	$(SXBIBS)
+$(BIN)/trico.out:	$(NEEDED)	$(SXBIBS)
 	rm -f $@; cc -o $@ `echo $(NEEDED) $(CFLAGS) $(LDFLAGS) $(SXBIBS)` || (rm $@;exit 1)
 
 $(LIB)/trico_act.o:	$(SXINCL)/sxunix.h	\
@@ -60,6 +58,5 @@ trico.rt: trico.bt trico.st trico.recor
 
 clean:
 	rm -f $(ALL) $(NEEDED)
-	rm -f $(TRICO)/trico.out
 	rm -f trico_t.c trico.bt trico.st trico.pt trico.rt
 

@@ -227,7 +227,7 @@ le comportement du scanner. Voici en effet le bout de code du scanner :
     case ReducePost:
 	ts_null ();
 	if (sxsvar.sxlv.mode.with_user_act)
-	    (void) (*sxsvar.SXS_tables.scanact) (SXACTION, action_or_prdct_code->action_or_prdct_no);
+	    (void) (*sxsvar.SXS_tables.S_scanact) (SXACTION, action_or_prdct_code->action_or_prdct_no);
 	if (sxsvar.sxlv.terminal_token.lahead == 0) {
 	    /* Dans tous les cas, la post-action s'est occupee des commentaires eventuels. */
 	    if (sxsvar.sxlv.terminal_token.string_table_entry  == SXERROR_STE)
@@ -272,7 +272,7 @@ A la fin de fichier, on veut inclure un fichier auxiliaire (donnant
 des instructions de configuration). Le contenu de ce fichier auxiliaire
 est généré dynamiquement en fonction de la ligne de commande. Il
 faut ouvrir ce fichier et aller analyser son contenu selon une règle
-BNF qui dit à peu près :
+BNF qui dit a peu pres :
 
     "end" "module" <contenu-auxiliaire-inclus>
 
@@ -432,7 +432,7 @@ comparaison peut se faire simplement avec la commande "cmp" ou "diff" d'Unix.
 
 ------------------------------------------------------------------------------
 
-Hubert - 26 fevr 2025
+Hubert - 26 fevr 2024
 
 Sur macOS, on  peut débugger facilement les accès mémoire
 (malloc/free) en positionnant des variables d'environnement :
@@ -450,8 +450,34 @@ soi-même, mais de positionner simplement
     export MALLOC_SCRIBBLE=1
 
 Ensuite, quand on appelles le script trunk/com/lecl, il appellera
-à son tour etc/scribble/malloc_options qui positionnera les
+a son tour etc/scribble/malloc_options qui positionnera les
 variables Apple juste pour le binaire SYNTAX.
+
+------------------------------------------------------------------------------
+
+Hubert et Pierre - 27 mars 2024
+
+A propos d'une limitation de SEMC et comment la contourner.
+
+Si on a une regle BNF :
+	<21d:implicit_elem> = %letter - %letter ; 
+on ne sait pas recuperer les valeurs des deux lexemes %letter.
+
+On peut utiliser $ptext ("%letter") pour avoir la première lettre,
+mais $ptext ("%letter'") avec un prime ne marche pas. 
+
+Une solution est de modifier la grammaire comme suit :
+	<21d:implicit_elem> = <99b:letter> - <99bletter> ; 
+	<99b:letter> = %letter ;
+
+Ainsi, dans la seconde regle, on peut appeler $ptext ("%letter") et le
+renvoyer par un attribut, par exemple $NAME(<99b:letter>) a la premiere
+regle. Celle-ci pourra utiliser la notation "prime" :
+	$NAME(<99b:letter>) et $NAME(<99b:letter>')
+
+------------------------------------------------------------------------------
+
+
 
 ------------------------------------------------------------------------------
 

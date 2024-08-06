@@ -4,12 +4,12 @@ include $(SX)/etc/make/gccoptions
 # LECL=$(SX)/lecl
 LECL=$(SX)/../outdated/oldies/reg_exp
 LECLSRC=$(LECL)/src
-LECLLIB=$(LECL)/lib
+LECLLIB=$(LECL)/lib.$(ARCH)
 LECLINCL=$(LECL)/incl
 
 RE=$(SX)/../outdated/oldies/reg_exp
 RESRC=$(RE)/src
-RELIB=$(RE)/lib
+RELIB=$(RE)/lib.$(ARCH)
 REINCL=$(RE)/incl
 
 CC=cc -I$(REINCL) -I$(LECLINCL) -I$(SXINCL) -I$(SXINCL)/util -I$(SX)/../extensions/incl $(CFLAGS)

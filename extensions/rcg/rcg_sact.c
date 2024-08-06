@@ -17,18 +17,17 @@
  *   can be found at, e.g., http://www.cecill.info
  *****************************************************************************/
 
-
 #include "sxunix.h"
 #include "varstr.h"
 #include <ctype.h>
-char WHAT_RCGSACT[] = "@(#)SYNTAX - $Id: rcg_sact.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
+
+char WHAT_RCGSACT[] = "@(#)SYNTAX - $Id: rcg_sact.c 4125 2024-07-29 10:59:13Z garavel $" WHAT_DEBUG;
 
 extern struct sxtables	rcg_tables;
 
 static VARSTR	vstr;
 
-
-static void	gripe (void)
+static _Noreturn void	gripe (void)
 {
     fputs ("\nThe function \"rcg_scan_act\" is out of date with respect to its specification.\n", sxstderr);
     sxexit(1);
@@ -40,7 +39,8 @@ static void	gripe (void)
    rcg_scan_act (SXACTION) drcg ... rcg_scan_act (SXCLOSE) drcg ... rcg_scan_act (SXCLOSE) rcg ...
    et donc vstr est alloue 2 fois (pas trop grave) mais surtout on le libere 2 fois de suite...
    D'ou les tests a l'alloc et a la liberation */
-SXINT rcg_scan_act (SXINT code, SXINT act_no)
+
+bool rcg_scan_act (SXINT code, SXINT act_no)
 {
     SXINT 	x, kw;
     char	c;
@@ -48,6 +48,7 @@ SXINT rcg_scan_act (SXINT code, SXINT act_no)
     switch (code) {
     default:
 	gripe ();
+        /* NOTREACHED */
 
     case SXOPEN:
 	if (vstr == NULL)
@@ -69,6 +70,7 @@ SXINT rcg_scan_act (SXINT code, SXINT act_no)
 	switch (act_no) {
 	default:
 	    gripe ();
+	    /* NOTREACHED */
 
 	case 1:
 	    /* On regarde si la version minuscule de token_string est un predicat predefini */
@@ -86,9 +88,9 @@ SXINT rcg_scan_act (SXINT code, SXINT act_no)
 		    varstr_catchar (vstr, c);
 		}
 
-		varstr_complete (vstr);
+		(void) varstr_complete (vstr);
 
-		if ((kw = (*sxsvar.SXS_tables.check_keyword) (varstr_tostr (vstr), sxsvar.sxlv.ts_lgth)) > 0) {
+		if ((kw = (*sxsvar.SXS_tables.S_check_keyword) (varstr_tostr (vstr), sxsvar.sxlv.ts_lgth)) > 0) {
 		    /* C'est un predicat predefini */
 		    sxsvar.sxlv.terminal_token.lahead = kw;
 		    sxsvar.sxlv.terminal_token.string_table_entry = SXEMPTY_STE;
@@ -100,6 +102,6 @@ SXINT rcg_scan_act (SXINT code, SXINT act_no)
 	break;
     }
 
-    return 0;
+    return SXANY_BOOL;
 }
 

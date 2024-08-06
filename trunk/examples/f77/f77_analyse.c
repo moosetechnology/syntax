@@ -89,7 +89,7 @@ static char ME [] = "f77_analyse.c";
 #include "f77_td.h"
 #include <ctype.h>
 
-char WHAT_F77ANALYSE[] = "@(#)SYNTAX - $Id: f77_analyse.c 3813 2024-04-08 09:04:50Z garavel $";
+char WHAT_F77ANALYSE[] = "@(#)SYNTAX - $Id: f77_analyse.c 4130 2024-07-29 12:27:32Z garavel $";
 
 /* Il faudrait INTERDIRE l'insertion d'un EOL par le rattrapage d'erreur
    du scanner. Utiliser sxs_srcvr? */
@@ -1870,7 +1870,8 @@ static bool is_ansi_lgth_already_checked;
 #define XIMPLICIT_kind     3
 #define XDO_LOOP_kind      4
 #define XDO_WHILE_kind     5
-#define Xlast_kind         5
+#define X2ops_kind         6
+#define Xlast_kind         6
 
 static bool extension_already_seen [Xlast_kind+1];
 
@@ -1882,6 +1883,7 @@ static char *extension_mess [] =
     "IMPLICIT statement",
     "DO-LOOP statement",
     "DO-WHILE statement",
+    "operator sequence",
   };
 
 static SXINT head_tok_no; /* On se souvient du tok_no du 1er token d'une ligne */
@@ -2485,7 +2487,7 @@ static void extension_hit (SXINT Xstmt_kind, struct sxsource_coord source_index)
     extension_already_seen [Xstmt_kind] = true;
     sxerror (source_index,
 	     sxsvar.sxtables->err_titles [1][0] /* warning */,
-	     "%sNot a valid f77 %s,\n\
+	     "%s Not a valid f77 %s,\n\
 For extended FORTRAN, use the \"-X\" option.\n\
 Subsequent non-f77 %ss will not be reported.",
 	     sxsvar.sxtables->err_titles [1]+1 /* warning */,
@@ -3564,20 +3566,20 @@ or an INQUIRE by Unit.",
 }
 
 
-SXINT f77_parsact (SXINT code, SXINT act_no)
+bool f77_parsact (SXINT code, SXINT act_no)
 {
     SXINT lahead, tok_no;
 
     switch (code) {
     case SXOPEN:
     case SXCLOSE:
-	return 0;
+	return SXANY_BOOL;
 
     case SXINIT:
-	return 0;
+	return SXANY_BOOL;
 
     case SXFINAL:
-	return 0;
+	return SXANY_BOOL;
 
     case SXACTION:
 	switch (act_no) {
@@ -3591,42 +3593,48 @@ SXINT f77_parsact (SXINT code, SXINT act_no)
 associated with the type CHARACTER.",
 			 sxsvar.sxtables->err_titles [1]+1 /* warning */);
 	    }
-	    return 0;
+	    return SXANY_BOOL;
+	    
+	case 1:
+	    /* @1 : on vient de détecter exactement 2 opérateurs consécutifs, cette [[EXTENSION]] est non valide en standard */
+	    extension_hit (X2ops_kind, SXGET_TOKEN (sxplocals.atok_no - 1).source_index);
+	    return SXANY_BOOL;
 
           default:
-	    return 0; /* Hubert : au lieu de "break" */
+	    break;
 	}
         break;
 
     case SXPREDICATE:
 	switch (act_no) {
 	case 0:
-            return 0; /* Hubert : au lieu de "break" */
+            return false; /* Hubert : au lieu de "break" */
 
 	case 1:
 	    /* On est sur une virgule dans une io_list, une io_imply_do_list ou une
 	       constante complexe. retourne VRAI si on n'est pas dans un complexe. */
 	    if ((lahead = sxget_token (tok_no = sxplocals.ptok_no + 1)->lahead) == ID_t)
-		return 1;
+		return true;
 
 	    if (lahead == PLUS_t || lahead == MINUS_t)
 		lahead = sxget_token (++tok_no)->lahead;
 
 	    if ((lahead == UIC_t || lahead == URC_t) &&
 		sxget_token (tok_no + 1)->lahead == RIGHTP_t)
-		return 0;
+		return false;
 		
-	    return 1;
+	    return true;
 
           default:
-            return 0; /* Hubert : au lieu de "break" */
+            break;
 	}
         break;
 
     default:
-	fputs ("The function \"f77_parsact\" is out of date with respect to its specification.\n", sxstderr);
-	abort ();
+        break;
     }
+    fputs ("The function \"f77_parsact\" is out of date with respect to its specification.\n", sxstderr);
+    abort ();
 }
 
 
@@ -3903,7 +3911,7 @@ static void unclosed_do_loop (SXINT tok_no) {
 }
 
 
-SXINT f77_scanact (SXINT code, SXINT act_no) {
+bool f77_scanact (SXINT code, SXINT act_no) {
   SXINT prev_lahead;
 #if EBUG
   SXINT old_Mtok_no;
@@ -4143,7 +4151,7 @@ SXINT f77_scanact (SXINT code, SXINT act_no) {
 #endif
 
 	  /* ... et on laisse au scanner le soin de ranger cet ID_t */
-	  return 0;
+	  return SXANY_BOOL;
 
 	default:
 	  break;
@@ -4157,7 +4165,7 @@ SXINT f77_scanact (SXINT code, SXINT act_no) {
 	    /* Ici l'id initial a été transformé, à l'aide du contexte droit considere comme une chaine de caracteres, en les
 	       mots clés IMPLICIT (CHARACTER | COMPLEX | DOUBLE PRECISION | INTEGER | LOGICAL | NONE |REAL | UNDEFINED)
 	       On laisse au scanner le soin de ranger le dernier token */
-	    return 0;
+	    return SXANY_BOOL;
 
 	  /* si on n'est pas (exactement) dans ce cas, on continue... */
 	    
@@ -4487,7 +4495,7 @@ SXINT f77_scanact (SXINT code, SXINT act_no) {
 		    SXINT ste, kw;
 				    
 		    ste = SXGET_TOKEN (tok_no).string_table_entry;
-		    kw = (*sxsvar.SXS_tables.check_keyword) (sxstrget (ste), sxstrlen (ste));
+		    kw = (*sxsvar.SXS_tables.S_check_keyword) (sxstrget (ste), sxstrlen (ste));
 				    
 		    if (kw != 0) {
 		      SXGET_TOKEN (tok_no).lahead = lahead = kw;
@@ -5128,7 +5136,7 @@ This one, and all others in the sequel, are converted into the corresponding upp
 	       (SXINT) sxplocals.Mtok_no);
 #endif
 	    
-      return col >= 1 && col <= 5;
+      return (col >= 1) && (col <= 5);
     }
 
     default:
@@ -5141,5 +5149,5 @@ This one, and all others in the sequel, are converted into the corresponding upp
     abort ();
   }
     
-  return 0;
+  return SXANY_BOOL;
 }

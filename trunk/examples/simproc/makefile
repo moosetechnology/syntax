@@ -2,7 +2,7 @@
 
 LANGUAGE	= simproc
 
-SXBIN		= $(SX)/bin
+SXCOM		= $(SX)/bin
 SXINCL		= $(SX)/incl
 
 # -----------------------------------------------------------------------------
@@ -24,12 +24,12 @@ SYNTAX_OUTPUTS = $(LANGUAGE)_s.c $(LANGUAGE)_t.c
 notraian : $(SYNTAX_OUTPUTS)
 
 $(SYNTAX_OUTPUTS) : $(SYNTAX_INPUTS)
-	$(SXBIN)/semc -rhs 15 $(LANGUAGE).semc > $(LANGUAGE)_s.c
-	$(SXBIN)/lecl $(LANGUAGE).lecl
-	$(SXBIN)/recor $(LANGUAGE).recor
-	$(SXBIN)/prio $(LANGUAGE).prio
-	$(SXBIN)/csynt $(LANGUAGE)
-	$(SXBIN)/tables_c $(LANGUAGE) > $(LANGUAGE)_t.c
+	$(SXCOM)/semc -rhs 15 $(LANGUAGE).semc > $(LANGUAGE)_s.c
+	$(SXCOM)/lecl $(LANGUAGE).lecl
+	$(SXCOM)/recor $(LANGUAGE).recor
+	$(SXCOM)/prio $(LANGUAGE).prio
+	$(SXCOM)/csynt $(LANGUAGE)
+	$(SXCOM)/tables_c $(LANGUAGE) > $(LANGUAGE)_t.c
 	@/bin/rm -f  *.bn.l *.lc.l *.rc.l *.pr.l *.bt *.dt *.pt *.rt *.st 
 
 # -----------------------------------------------------------------------------
@@ -53,7 +53,7 @@ INCL = -I. -I$(LNTDIR)/incl -I$(SXINCL)
 
 $(LANGUAGE) : $(SYNTAX_OUTPUTS) $(TRAIAN_OUTPUTS) main.c
 	$(CC) -c $(CFLAGS) $(LOCAL_CFLAGS) $(INCL) $(LANGUAGE)_s.c
-	$(CC) -c $(CFLAGS) $(INCL) -DSEMACT=$(LANGUAGE)_act -DSCANACT=scanner_act $(LANGUAGE)_t.c
+	$(CC) -c $(CFLAGS) $(INCL) $(LANGUAGE)_t.c
 	$(CC) $(CFLAGS) $(LOCAL_CFLAGS) $(INCL) main.c $(LANGUAGE)_s.o $(LANGUAGE)_t.o $(LNTDIR)/bin.$(ARCH)/lotosnt_exceptions.o -L$(SX)/lib.$(ARCH) -lsx -lm -o $@
 	@/bin/rm -f *.o
 

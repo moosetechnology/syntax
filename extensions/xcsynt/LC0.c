@@ -34,7 +34,7 @@ static char	ME [] = "left_corner automaton constructor";
 #include "P_tables.h"
 #include "csynt_optim.h"
 
-char WHAT_XCSYNTLC0[] = "@(#)SYNTAX - $Id: LC0.c 3717 2024-02-10 07:24:01Z garavel $" WHAT_DEBUG;
+char WHAT_XCSYNTLC0[] = "@(#)SYNTAX - $Id: LC0.c 4146 2024-08-02 10:21:59Z garavel $" WHAT_DEBUG;
 
 extern char	*laset (VARSTR varstring, SXINT maxi, SXBA look_ahead_set);
 
@@ -1123,7 +1123,8 @@ LC0 (void)
     INDPRO = max (10, limitem);
     has_xprod = limpro > bnf_ag.WS_TBL_SIZE.actpro + 1;
     not_used_red_set = sxba_calloc (bnf_ag.WS_TBL_SIZE.actpro + 1);
-    sxba_fill (not_used_red_set), SXBA_0_bit (not_used_red_set, 0);
+    sxba_fill (not_used_red_set);
+    SXBA_0_bit (not_used_red_set, 0);
 
     left_corner = sxbm_calloc (bnf_ag.WS_TBL_SIZE.ntmax + 1, bnf_ag.WS_TBL_SIZE.ntmax + 1);
     left_corner_star = sxbm_calloc (bnf_ag.WS_TBL_SIZE.ntmax + 1, bnf_ag.WS_TBL_SIZE.ntmax + 1);

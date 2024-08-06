@@ -17,20 +17,18 @@
  *   can be found at, e.g., http://www.cecill.info
  *****************************************************************************/
 
-
 /* Actions du scanner associe a l'analyseur de grammaires LFG definissant
    la partie lexicale et qui permet le traitement des includes */
-
 
 #if 0
 static char	ME [] = "lfg_lex_scanact";
 #endif
 
 #include "sxunix.h"
-char WHAT_LFGLEXSCANACT[] = "@(#)SYNTAX - $Id: lfg_lex_scanact.c 3691 2024-02-07 17:07:52Z garavel $" WHAT_DEBUG;
 
-void
-lfg_lex_scanact (SXINT entry, SXINT act_no)
+char WHAT_LFGLEXSCANACT[] = "@(#)SYNTAX - $Id: lfg_lex_scanact.c 4125 2024-07-29 10:59:13Z garavel $" WHAT_DEBUG;
+
+bool lfg_lex_scanact (SXINT entry, SXINT act_no)
 {
   switch (entry) {
     case SXOPEN:
@@ -38,7 +36,7 @@ lfg_lex_scanact (SXINT entry, SXINT act_no)
     case SXINIT:
     case SXFINAL:
       sxincl_mngr (entry);
-      return;
+      return SXANY_BOOL;
 
     case SXACTION:
       switch (act_no) {
@@ -46,7 +44,7 @@ lfg_lex_scanact (SXINT entry, SXINT act_no)
 	/* The pathname of the include file is in token_string */
 	if (sxpush_incl (sxsvar.sxlv_s.token_string))
 	  /* Now, the source text comes from the include file ... */
-	  return;
+	  return SXANY_BOOL;
 
 	/* something failed (unable to open, recursive call, ...) */
 	/* Error message */
@@ -57,12 +55,12 @@ lfg_lex_scanact (SXINT entry, SXINT act_no)
 		 sxsvar.sxlv_s.token_string /* Include file name */
 		 );
 	/* However, scanning of the current files goes on ... */
-	return;
+	return SXANY_BOOL;
 
       case 2:
 	/* End of include processing */
 	if (sxpop_incl ())
-	  return;
+	  return SXANY_BOOL;
 
 	/* Something really goes wrong ... */
 	/* Error message */
@@ -80,7 +78,7 @@ lfg_lex_scanact (SXINT entry, SXINT act_no)
 		   );
 	}
 	
-	return;
+	return SXANY_BOOL;
 
       case 4:
 	/* CONTRAINT	= -"=" -"c"&true (-BLANK&true | ANY @4 @Release) ; --	@4 => Error constraint assumed */
@@ -92,7 +90,7 @@ lfg_lex_scanact (SXINT entry, SXINT act_no)
 		 );
 	/* However, scanning will restart on the non blank character ... */
 	
-	return;
+	return SXANY_BOOL;
 
       default:
 	break;

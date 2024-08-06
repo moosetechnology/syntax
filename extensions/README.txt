@@ -1,4 +1,4 @@
-Hubert Garavel - Wed Jan 18 09:58:30 CET 2023
+Hubert Garavel - Fri Apr 19 09:43:46 CEST 2024
 
 The 'extensions' directory contains files that were originally in the
 'trunk' directory, but have been set apart in January 2023 because it
@@ -26,9 +26,6 @@ DAG:
 	This directory contains the 'dag' processor. No documentation
 	was found for this processor.
 
-doxygen.cfg:
-	Configuration file for Doxygen.
-
 csynt_lc:
 	See the README file in the csynt_lc directory.
 
@@ -48,6 +45,11 @@ dummy_csynt:
 examples:
 	This directory contains examples files that have been moved from
 	trunk/examples to here.
+
+ext:
+	This directory contains C source files that have been moved from
+	trunk/src to here. These components are not needed for deterministic
+	parsing.
 
 incl:
 	This directory contains C include files that have been moved from
@@ -72,15 +74,6 @@ rcg:
 	Range Concatenation Grammars. No documentation was found for these
 	processors.
 
-src:
-	This directory contains C source files that have been moved from
-	trunk/src to here. These components are not needed for deterministic
-	parsing.
-
-makefile:
-	A makefile for compiling certain components of the SYNTAX library
-	with debugging flags set.
-
 xcsynt:
 	This directory apparently contains a variant of CSYNT that can
 	handle (deterministically) a wider class of context-free languages,
@@ -91,11 +84,12 @@ xcsynt:
 	xcsynt/README.txt).
 
 yax:
-	This directory contains a processor (yax) that accepts semantic
-	definitions "a la YACC" on top of syntactic definitions "a la
-	SYNTAX". It seems that this processor, which was introduced in
-	version 2.0 of SYNTAX, was later superseded by the TABC processor
-	(the latter being called SEMC at present).
+	This directory contains a processor (yax) that accepts a BNF grammar
+	that contains semantic definitions "a la YACC" on top of syntactic
+	definitions "a la SYNTAX". This processor was introduced in version
+	2.0 of SYNTAX by Philippe Deschamp. It was seldom used and, in
+	practical applications, is often replaced by the TABC processor
+	(which is called SEMC at present).
 
 ysx:
 	This directory contains a conversion tool from YACC sources to SYNTAX

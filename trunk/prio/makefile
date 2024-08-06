@@ -2,23 +2,19 @@
 include $(SX)/etc/make/gccoptions
 
 PRIO=$(SX)/prio
-LIB=$(PRIO)/lib
+LIB=$(PRIO)/lib.$(ARCH)
 BOOT=$(PRIO)/boot
 
 CC=$(COMPILER) -I$(BOOT) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
 all: $(SXBIN)/prio.out
 
-$(SXBIN)/prio.out:	$(PRIO)/prio.out
-	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
-
 NEEDS=	$(LIB)/prio_t.o			\
 	$(LIB)/prio_main.o		\
 	$(LIB)/prio_sact.o		\
 	$(LIB)/prio_action.o
 
-
-$(PRIO)/prio.out:	$(NEEDS)	$(SXBIBS)
+$(SXBIN)/prio.out:	$(NEEDS)	$(SXBIBS)
 	@rm -f $@
 	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
@@ -68,7 +64,7 @@ prio.rt: prio.bt prio.st prio.recor
 # fin de code produit par "make-makefile prio"
 
 clean:
-	/bin/rm -f $(LIB)/*.o $(PRIO)/prio.out
+	/bin/rm -f $(LIB)/*.o
 	/bin/rm -f prio_td.h prio_t.c
 	/bin/rm -f prio.bt prio.pt prio.rt prio.st 
 # pas de prio.dt 

@@ -2,22 +2,19 @@
 include $(SX)/etc/make/gccoptions
 
 TDEF=$(SX)/tdef
-LIB=$(TDEF)/lib
+LIB=$(TDEF)/lib.$(ARCH)
 BOOT=$(TDEF)/boot
 
 CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
 all: $(SXBIN)/tdef.out
 
-$(SXBIN)/tdef.out:	$(TDEF)/tdef.out
-	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
-
 NEEDS=	$(LIB)/tdef_t.o			\
 	$(LIB)/tdef_main.o		\
 	$(LIB)/tdef_sact.o		\
 	$(LIB)/tdef_action.o
 
-$(TDEF)/tdef.out:	$(NEEDS)	$(SXBIBS)
+$(SXBIN)/tdef.out:	$(NEEDS)	$(SXBIBS)
 	@rm -f $@
 	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
@@ -64,7 +61,7 @@ tdef.rt: tdef.bt tdef.st tdef.recor
 # fin de code produit par "make-makefile tdef"
 
 clean:
-	/bin/rm -f $(LIB)/*.o $(TDEF)/tdef.out
+	/bin/rm -f $(LIB)/*.o
 	/bin/rm -f tdef_t.c
 # pas de tdef_td.h
 	/bin/rm -f tdef.bt tdef.pt tdef.rt tdef.st 

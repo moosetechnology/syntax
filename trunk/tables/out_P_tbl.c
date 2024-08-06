@@ -24,7 +24,7 @@
 #include "tables.h"
 #include "out.h"
 
-char WHAT_TABLESOUTPTBL[] = "@(#)SYNTAX - $Id: out_P_tbl.c 3650 2023-12-23 07:32:10Z garavel $" WHAT_DEBUG;
+char WHAT_TABLESOUTPTBL[] = "@(#)SYNTAX - $Id: out_P_tbl.c 4104 2024-06-21 15:32:04Z garavel $" WHAT_DEBUG;
 
 extern bool		is_lig;
 
@@ -376,13 +376,15 @@ out_P_tables (void)
     if (PPR != NULL || PC.xnbpro > PC.nbpro) {
 	/* P_is_user_action_or_predicate */
       puts ("#ifdef PARSACT");
-      out_ext_int_newstyle ("PARSACT(SXINT what, SXINT action_no)");
-      puts ("#endif /* PARSACT */");
+      puts ("extern SXPARSACT_FUNCTION PARSACT;");
+      puts ("#endif");
     }
 
-    out_ext_BOOLEAN_newstyle (RC.P_nbcart == 0
-		     ? (PC.nd_degree >= 0 ? "sxndpsrecovery(SXINT what)" : "sxpsrecovery(SXINT what, SXINT *at_state, SXINT latok_no)")
-		     : (PC.nd_degree >= 0 ? "sxndprecovery(SXINT what_to_do)" : "sxprecovery (SXINT what_to_do, SXINT *at_state, SXINT latok_no)"));
+    if (PC.nd_degree >= 0) {
+       puts ("extern SXPRECOVERY_FUNCTION sxndprecovery;");
+    } else {
+       /* rien a faire : sxprecovery() est declare dans sxunix.h */
+    }
 }
 
 SXINT max_P_tables (void)

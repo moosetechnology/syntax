@@ -273,9 +273,7 @@ ARN_action_final ()
 
 
 
-int ARN_parsact (which, arg)
-    int		which;
-    struct sxtables	*arg;
+bool ARN_parsact (int which, struct sxtables *arg)
 {
     switch (which)
     {
@@ -335,7 +333,7 @@ int ARN_parsact (which, arg)
 	parse_stack.for_parsact.sons_oflw = ARN_sons_oflw;
 	parse_stack.for_parsact.symbols_oflw = ARN_symbols_oflw;
 
-	return 0;
+	return SXANY_BOOL;
 
     case SXCLOSE:
 	sxfree (ARN.symbol_set);
@@ -354,19 +352,19 @@ int ARN_parsact (which, arg)
 
 	sxfree (ARN.stack);
 
-	return 0;
+	return SXANY_BOOL;
 
     case SXINIT:
 	sxplocals.mode.with_do_undo = true;
 
-	return 0;
+	return SXANY_BOOL;
 
     case SXFINAL:
-	return 0;
+	return SXANY_BOOL;
 
     case SXACTION:
 	/* La memorisation se fait ds "PREDICATE:" */
-	return 0;
+	return SXANY_BOOL;
 
     case SXDO:
 	return 0;
@@ -380,5 +378,5 @@ int ARN_parsact (which, arg)
 	abort ();
     }
 
-    return 0;
+    return SXANY_BOOL;
 }

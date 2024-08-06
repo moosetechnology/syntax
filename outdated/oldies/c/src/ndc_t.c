@@ -1272,8 +1272,8 @@ static char *err_titles[SXSEVERITIES]={
 "\002Error:\t",
 };
 static char abstract []= "%d errors and %d warnings are reported.";
-extern int PARSACT();
-extern bool sxndprecovery();
+extern SXPARSACT_FUNCTION PARSACT;
+extern SXPRECOVERY_FUNCTION sxndprecovery;
 
 static unsigned char S_char_to_simple_class[]={
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
@@ -1715,9 +1715,6 @@ static char *S_global_mess[]={
 "EOF",
 "%sLexical analysis stops on EOF.",
 };
-extern int sxscan_it();
-extern bool sxsrecovery();
-static int check_keyword();
 static struct SXT_node_info SXT_node_info[]={
 {0,1},{83,2},{82,3},{81,4},{84,5},{0,6},{0,7},{0,8},{0,9},{39,10},{38,12},{37,14},
 {46,16},{43,18},{42,19},{45,20},{44,21},{51,22},{49,24},{50,25},{80,26},{80,26},{80,26},{80,26},
@@ -1827,7 +1824,7 @@ static char *T_node_name[]={
 "integer_constant",
 "string_literal",
 };
-extern int sempass();
+extern SXSEMPASS_FUNCTION SEMPASS;
 static char T_stack_schema[]={
 0,0,0,0,0,0,0,0,1,1,3,1,3,0,2,0,2,1,1,0,0,0,1,0,1,
 0,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,
@@ -1842,16 +1839,19 @@ static char T_stack_schema[]={
 0,0,1,0,0,1,0,2,4,5,0,2,4,5,0,2,4,0,1,2,0,1,2,0,1,
 0,1,1,1,3,0,1,0,1,0,};
 
-static struct SXT_tables SXT_tables=
-{SXT_node_info-1, T_ter_to_node_name, T_stack_schema-1, sempass, T_node_name-1};
-extern int sxscanner();
-extern int sxndparser();
+static struct SXT_tables SXT_tables={
+SXT_node_info-1, T_ter_to_node_name, T_stack_schema-1, SEMPASS, T_node_name-1
+};
+extern SXPARSER_FUNCTION sxndparser;
 extern int ESAMBIG();
-extern int sxatc();
+extern SXSEMACT_FUNCTION sxatc;
+static SXCHECK_KEYWORD_FUNCTION sxcheck_keyword;
 
 struct sxtables sxtables={
 52113, /* magic */
-{sxscanner,sxndparser}, {255, 84, 1, 3, 4, 51, 0, 49, 0, 1, 0, 
+sxscanner,
+sxndparser,
+{255, 84, 1, 3, 4, 51, 0, 49, 0, 1, 0, 
 S_is_a_keyword,S_is_a_generic_terminal,S_transition_matrix-1,
 SXS_action_or_prdct_code-1,
 S_adrp-1,
@@ -1863,7 +1863,7 @@ S_global_mess-1,
 S_lregle-1,
 NULL,
 sxsrecovery,
-check_keyword,
+sxcheck_keyword
 },
 {100, 230, 240, 297, 378, 461, 508, 1069, 84, 80, 227, 238, 221, 139, 1, 11, 4, 7, 2, 5, 11, 2, 6,
 reductions-1,
@@ -1881,7 +1881,8 @@ prdct_list-1,
 P_lregle-1,P_right_ctxt_head-1,
 SXP_local_mess-1,
 P_no_delete,P_no_insert,
-P_global_mess,PER_tset,sxscan_it,sxndprecovery,
+P_global_mess,PER_tset,sxscan_it,
+sxndprecovery,
 PARSACT
 ,ESAMBIG
 ,sxatc},
@@ -1899,9 +1900,7 @@ abstract,
 
 
 
-static int check_keyword (string, length)
-register char	*string;
-register int	length;
+static SXINT sxcheck_keyword (char *string, SXINT length)
 {
    register int  t_code, delta;
    register char *keyword;

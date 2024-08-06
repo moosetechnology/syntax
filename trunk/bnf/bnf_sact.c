@@ -22,7 +22,7 @@
 #include "B_tables.h"
 #include "bnf_vars.h"
 
-char WHAT_BNFSACT[] = "@(#)SYNTAX - $Id: bnf_sact.c 3632 2023-12-20 17:58:08Z garavel $" WHAT_DEBUG;
+char WHAT_BNFSACT[] = "@(#)SYNTAX - $Id: bnf_sact.c 4124 2024-07-29 10:58:45Z garavel $" WHAT_DEBUG;
 
 #define rule_slice 100
 
@@ -108,8 +108,7 @@ static void	gripe (void)
 extern SXINT	(*more_scan_act) (SXINT code, SXINT act_no);
 
 
-void
-bnf_scan_act (SXINT code, SXINT act_no)
+bool bnf_scan_act (SXINT code, SXINT act_no)
 {
     switch (code) {
     case SXOPEN:
@@ -119,7 +118,7 @@ bnf_scan_act (SXINT code, SXINT act_no)
 	    (*more_scan_act) (code, act_no);
 	}
 
-	return;
+	return SXANY_BOOL;
 
     case SXCLOSE:
 	if (more_scan_act != NULL) {
@@ -130,7 +129,7 @@ bnf_scan_act (SXINT code, SXINT act_no)
 	    sxfree (coords);
 	}
 
-	return;
+	return SXANY_BOOL;
 
     case SXINIT:
 	is_predicate = false;
@@ -147,7 +146,7 @@ bnf_scan_act (SXINT code, SXINT act_no)
 	    while (c != EOF)
 		if (c == '<' && sxsrcmngr.source_coord.column == 1) {
 		    coords [xprod = 1].head = sxsrcmngr.source_coord.line;
-		    return;
+		    return SXANY_BOOL;
 		}
 		else
 		    c = sxnext_char ();
@@ -161,7 +160,7 @@ bnf_scan_act (SXINT code, SXINT act_no)
 	    (*more_scan_act) (code, act_no);
 	}
 
-	return;
+	return SXANY_BOOL;
 
     case SXACTION:
 	switch (act_no) {
@@ -185,13 +184,13 @@ bnf_scan_act (SXINT code, SXINT act_no)
 			}
 
 			coords [xprod].head = sxsrcmngr.source_coord.line;
-			return;
+			return SXANY_BOOL;
 		    }
 		    else
 			c = sxnext_char ();
 	    }
 
-	    return;
+	    return SXANY_BOOL;
 
 	case 2:
 	    /* \nnn => char */
@@ -210,12 +209,12 @@ bnf_scan_act (SXINT code, SXINT act_no)
 		sxsvar.sxlv.mark.index = -1;
 	    }
 
-	    return;
+	    return SXANY_BOOL;
 
 	case 3:
 	    /* Post-action de %SXPREDICATE : is_predicate est utilise dans bnf_symtab */
 	    is_predicate = true;
-	    return;
+	    return SXANY_BOOL;
 	default:
 #if EBUG
 	  sxtrap("bnf_sact","unknown switch case #1");

@@ -2,16 +2,13 @@
 include $(SX)/etc/make/gccoptions
 
 XBNF=$(SX)/../outdated/oldies/xbnf
-LIB=$(XBNF)/lib
+LIB=$(XBNF)/lib.$(ARCH)
 
 CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
-all: $(SX)/bin/xbnf.out 	\
+all: $(XBNF)/xbnf.out 	\
      $(XBNF)/print_bt.out	\
      $(XBNF)/xbnf2lex_prdct.out
-
-$(SX)/bin/xbnf.out:	$(XBNF)/xbnf.out
-	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
 NEEDS1= $(LIB)/xbnf_folcon.o		\
 	$(LIB)/xbnf_lo.o    		\
@@ -81,7 +78,7 @@ $(LIB)/xbnf_t.o:	$(SXINCL)/sxunix.h 	\
 	$(CC) -o $@ -c xbnf_t.c			\
 		-Dsxtables=xbnf_tables		\
 		-DSCANACT=xbnf_scan_act		\
-		-Dsempass=sxxbnfsmp
+		-DSEMPASS=sxxbnfsmp
 
 NEEDS2= $(LIB)/xbnf_dump.o		\
 	$(LIB)/print_bt.o
@@ -131,7 +128,7 @@ $(LIB)/xbnf2lex_prdct_t.o:		$(SXINCL)/sxunix.h 	\
 	$(CC) -o $@ -c xbnf_t.c	-o $(LIB)/xbnf2lex_prdct_t.o		\
 		-Dsxtables=xbnf_tables		\
 		-DSCANACT=xbnf_scan_act		\
-		-Dsempass=xbnf2lexprdct_smp
+		-DSEMPASS=xbnf2lexprdct_smp
 
 # debut de code produit par "make-makefile xbnf"
 

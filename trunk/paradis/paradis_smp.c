@@ -29,7 +29,7 @@
 #include "sem_by.h"
 #include "varstr.h"
 
-char WHAT_PARADISSMP[] = "@(#)SYNTAX - $Id: paradis_smp.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_PARADISSMP[] = "@(#)SYNTAX - $Id: paradis_smp.c 4124 2024-07-29 10:58:45Z garavel $" WHAT_DEBUG;
 
 
 extern void    bnf_get_rule_tail (SXUINT rule_no, SXUINT *tline, SXUINT *tcol);
@@ -673,13 +673,12 @@ void	paradis_smp (SXINT what, struct sxtables *paradis_smp_paradis_tables)
 }
 
 
-void
-paradis_scan_act (SXINT code, SXINT act_no)
+bool paradis_scan_act (SXINT code, SXINT act_no)
 {
     switch (code) {
     case SXOPEN:
 	coords = (struct coords*) sxalloc ((mtok = 3 * bnf_ag.WS_TBL_SIZE.indpro) + 1, sizeof (struct coords));
-	return;
+	return SXANY_BOOL;
 
     case SXCLOSE:
 	if (coords != NULL) {
@@ -687,7 +686,7 @@ paradis_scan_act (SXINT code, SXINT act_no)
 	    coords = NULL;
 	}
 
-	return;
+	return SXANY_BOOL;
 
     case SXINIT:
 	xtok = 0;
@@ -697,16 +696,16 @@ paradis_scan_act (SXINT code, SXINT act_no)
 	    sxexit (3);
 	}
 
-	return;
+	return SXANY_BOOL;
 
     case SXFINAL:
-	return;
+	return SXANY_BOOL;
 
     case SXACTION:
 	switch (act_no) {
 	case 1:
 	    skip_sem ();
-	    return;
+	    return SXANY_BOOL;
 
 	case 2:
 	    /* post-action : on memorise les coordonnees du debut du token suivant */
@@ -718,7 +717,7 @@ paradis_scan_act (SXINT code, SXINT act_no)
 	    coords [xtok].line = sxsvar.sxlv_s.counters [1];
 	    sxsvar.sxlv_s.counters [1] = 0;
 	    coords [xtok].column = sxsvar.sxlv_s.counters [2];
-	    return;
+	    return SXANY_BOOL;
 
 	case 3:
 	    /* HT */
@@ -732,7 +731,7 @@ paradis_scan_act (SXINT code, SXINT act_no)
 		*a += tabs - (*a - 1) % tabs;
 	    }
 
-	    return;
+	    return SXANY_BOOL;
 	default:
 #if EBUG
 	  sxtrap("paradis_smp","unknown switch case #2");

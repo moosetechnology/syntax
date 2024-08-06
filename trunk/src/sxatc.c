@@ -27,7 +27,7 @@
 
 #include <memory.h>
 
-char WHAT_SXATC[] = "@(#)SYNTAX - $Id: sxatc.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_SXATC[] = "@(#)SYNTAX - $Id: sxatc.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
 
 struct sxatc_area {
     struct sxatc_area	*next;
@@ -615,7 +615,7 @@ static void	atc_open (struct sxtables *tables)
     sxatcvar.atc_lv.node_size = sizeof (SXNODE) /* default value for dummy smp */ ;
     sxatcvar.atc_lv.are_comments_erased = tables->SXS_tables.S_are_comments_erased;
     sxatcvar.atc_lv.early_visit_set = NULL;
-    (*sxatcvar.SXT_tables.sempass) (SXOPEN, tables);
+    (*sxatcvar.SXT_tables.T_sempass) (SXOPEN, tables);
 
     if (sxatcvar.atc_lv.early_visit_set == NULL)
 	sxatcvar.atc_lv.u.Old.area_size = 0;
@@ -700,12 +700,12 @@ static void	action (SXINT act)
 
 
 
-void	sxatc (SXINT sxatc_what, struct sxtables *arg)
-    /* si sxatc_what=SXACTION, arg est un entier entre 0 et 6 ;  si sxatc_what != SXACTION, arg est un pointeur vers des tables. */
+void sxatc (SXINT what, SXINT action_no, struct sxtables *arg)
+    /* si what=SXACTION, action_no est un entier entre 0 et 6 ;  si what != SXACTION, arg est un pointeur vers des tables. */
 {
     SXINT l;
 
-    switch (sxatc_what) {
+    switch (what) {
     case SXOPEN:
 	sxcheck_magic_number (arg->magic, SXMAGIC_NUMBER, "atc");
 	atc_open (arg);
@@ -720,21 +720,21 @@ void	sxatc (SXINT sxatc_what, struct sxtables *arg)
 	break;
 
     case SXACTION:
-      /* puisque sxatc_what=SXACTION, arg n'est pas un pointeur vers des tables, mais bien un entier entre 0
+      /* puisque what=SXACTION, arg n'est pas un pointeur vers des tables, mais bien un entier entre 0
 	 et 6, on veut que le compilo C ne hurle pas sur un probleme de typage, d'ou le(s?) cast(s?) */
-	action ((SXINT) (intptr_t) arg);
+	action (action_no);
 
 	/* pbs sur les listes..., appel sur chaque nouveau fils. */
 	if (sxatcvar.atc_lv.early_visit_set != NULL &&
 	    SXBA_bit_is_set (sxatcvar.atc_lv.early_visit_set, sxatcvar.atc_lv.abstract_tree_root->name))
-	    (*sxatcvar.SXT_tables.sempass) (SXSEMPASS, arg);
+	    (*sxatcvar.SXT_tables.T_sempass) (SXSEMPASS, arg);
 
 	break;
 
     case SXERROR:
 	sxatcvar.atc_lv.abstract_tree_is_error_node = true;
 
-	if ((l = (intptr_t) arg) > 0) {
+	if ((l = action_no) > 0) {
 	    action ((SXINT) 4);
 
 	    while (--l > 0) {
@@ -752,12 +752,12 @@ void	sxatc (SXINT sxatc_what, struct sxtables *arg)
 	break;
 
     case SXSEMPASS:
-	(*sxatcvar.SXT_tables.sempass) (SXACTION, arg);
+	(*sxatcvar.SXT_tables.T_sempass) (SXACTION, arg);
 	break;
 
     case SXCLOSE:
 	free_node ();
-	(*sxatcvar.SXT_tables.sempass) (SXCLOSE, arg);
+	(*sxatcvar.SXT_tables.T_sempass) (SXCLOSE, arg);
 	break;
 
     default:

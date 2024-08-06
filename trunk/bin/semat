@@ -39,8 +39,8 @@ TARGET_ARCH=`dirname "$ME" | sed -e 's+.*/bin++' | sed -e 's+^[.]++'`
 
 if [ $EXAMPLE = 1 ]
 then
-	# ME is located in "*/examples/*/bin" : provisory action
-	ME="$ME.out"
+	# ME is located in "*/examples/*/bin"
+	ME=`echo "$ME.out" | sed -e "s+/bin/+/bin.$ARCH/+"`
 elif [ "$TARGET_ARCH" = "$ARCH" ]
 then
 	# $ME is located in "*/bin.$ARCH": native compilation

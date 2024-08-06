@@ -39,11 +39,9 @@ char WHAT[] = "@(#)sxdligparsact.c	- SYNTAX [unix] - Lundi 23 Janvier 1995";
 static char	ME [] = "sxdligparsact";
 #endif
 
-
-
-#include	"sxunix.h"
-#include	"sxindex.h"
-#include	"SS.h"
+#include "sxunix.h"
+#include "sxindex.h"
+#include "SS.h"
 
 #define SECONDARY	0
 #define PRIMARY		1
@@ -73,9 +71,7 @@ static void tank_oflw (ptank, old_line_nb, old_size)
 }
 
 
-int sxdligparsact (which, arg)
-    int		which;
-    struct sxtables	*arg;
+bool sxdligparsact (int	which, struct sxtables *arg)
 {
     int *p, *plim, i, code, *pc, stack_id, *cur_stack, *pclim, xs, si, newtop, top, act_no, pop_nb, push_nb, elem;
 
@@ -111,7 +107,7 @@ int sxdligparsact (which, arg)
 
 	(*sxliglocals.code.parsact) (which, arg);
 
-	return 0;
+	return SXANY_BOOL;
 
     case SXCLOSE:
 	sxfree (sxliglocals.DO_stack);
@@ -130,18 +126,18 @@ int sxdligparsact (which, arg)
 
 	(*sxliglocals.code.parsact) (which, arg);
 
-	return 0;
+	return SXANY_BOOL;
 
     case SXINIT:
 	sxplocals.mode.with_do_undo = true;
 	(*sxliglocals.code.parsact) (which, arg);
 
-	return 0;
+	return SXANY_BOOL;
 
     case SXFINAL:
 	(*sxliglocals.code.parsact) (which, arg);
 
-	return 0;
+	return SXANY_BOOL;
 
     case SXACTION:
 	act_no = (long) arg;
@@ -149,14 +145,14 @@ int sxdligparsact (which, arg)
 	if (act_no < 10000)
 	{
 	    (*sxliglocals.code.parsact) (which, act_no);
-	    return 0; 
+	    return SXANY_BOOL; 
 	}
 	
 	act_no -= 10000;
 
 	if (act_no == 0)
 	    /* empty action */
-	    return 0;
+	    return SXANY_BOOL;
 
 	if (SS_top (sxliglocals.where [0]->act.ss) == sxliglocals.where [0]->act.cur_bot)
 	{
@@ -206,7 +202,10 @@ int sxdligparsact (which, arg)
 	/* post-action */
 	code = sxliglocals.code.prdct_or_act_code [sxliglocals.code.prdct_or_act_disp [act_no + 1] - 1];
 
-	return (code >= 0) ? (*sxliglocals.code.parsact) (which, code) : 0;
+	if (code >= 0) {
+           (void) ((*sxliglocals.code.parsact) (which, code));
+        }
+	return SXANY_BOOL;
 
     case SXDO:
 	/*
@@ -227,14 +226,14 @@ int sxdligparsact (which, arg)
 	if (act_no < 10000)
 	{
 	    (*sxliglocals.code.parsact) (which, act_no);
-	    return 0; 
+	    return false; 
 	}
 
 	act_no -= 10000;
 
 	if (act_no == 0)
 	    /* empty action */
-	    return 0;
+	    return false;
 
 	pc = sxliglocals.code.prdct_or_act_code + sxliglocals.code.prdct_or_act_disp [act_no];
 	code = *pc++;
@@ -320,7 +319,10 @@ int sxdligparsact (which, arg)
 	sxliglocals.DO_stack [newtop] = stack_id;
 
 	/* Appel de la post-action utilisateur eventuelle */
-	return (*pclim >= 0) ? (*sxliglocals.code.parsact) (which, *pclim) : 0;
+	if (*pclim >= 0) {
+           (void) ((*sxliglocals.code.parsact) (which, *pclim));
+        }
+	return SXANY_BOOL;
 
 
     case SXUNDO:
@@ -329,14 +331,14 @@ int sxdligparsact (which, arg)
 	if (act_no < 10000)
 	{
 	    (*sxliglocals.code.parsact) (which, act_no);
-	    return 0; 
+	    return false; 
 	}
 
 	act_no -= 10000;
 
 	if (act_no == 0)
 	    /* empty action */
-	    return 0;
+	    return false;
 
 	if (SS_top (sxliglocals.where [1]->act.ss) == sxliglocals.where [1]->act.cur_bot)
 	{
@@ -400,7 +402,7 @@ int sxdligparsact (which, arg)
 	    /* On rend la pile */
 	    sxindex_release (sxliglocals.tank, stack_id);
 
-	return 0;
+	return false;
 
     case SXPREDICATE:
 	act_no = (long) arg;
@@ -434,24 +436,24 @@ int sxdligparsact (which, arg)
 	      {
 		if (SS_bot (cur_stack) == top)
 		  /* La pile est vide */
-		  return 0;
+		  return false;
 
 		if (SS_get (cur_stack, --top) != *pclim--)
-		  return 0;
+		  return false;
 	      }
 
 	    if (code == SECONDARY && SS_bot (cur_stack) != top)
 	      /* La pile doit etre vide */
-		return 0;
+		return false;
 	  }
 
-	return (act_no >= 0) ? (*sxliglocals.code.parsact) (which, act_no) : 1;
+	return (act_no >= 0) ? (*sxliglocals.code.parsact) (which, act_no) : true;
 
     default:
 	fputs ("The function \"sxdligparsact\" is out of date with respect to its specification.\n", sxstderr);
 	sxexit(1);
     }
 
-    /* NOTREACHED return 0; */
+    /* NOTREACHED return SXANY_BOOL; */
 }
 

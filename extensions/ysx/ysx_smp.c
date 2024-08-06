@@ -21,6 +21,8 @@
 
 static char	ME [] = "ysx_smp";
 
+#include <stdarg.h>
+
 #define SXNODE struct ysx_node
 
 #include "sxunix.h"
@@ -28,7 +30,7 @@ static char	ME [] = "ysx_smp";
 #include "varstr.h"
 #include "ysx_vars.h"
 
-char WHAT_YSXSMP[] = "@(#)SYNTAX - $Id: ysx_smp.c 3696 2024-02-07 17:54:34Z garavel $" WHAT_DEBUG;
+char WHAT_YSXSMP[] = "@(#)SYNTAX - $Id: ysx_smp.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
 
 struct ysx_node {
     SXNODE_HEADER_S	SXVOID_NAME;
@@ -539,28 +541,22 @@ SXINLINE static void	out_action (SXNODE *node)
 
 
 
-void	yaction (SXINT code, SXINT numact)
+bool yaction_scanact (SXINT what, SXINT numact)
 {
-    switch (code) {
-    default:
-fault:	gripe ("yaction");
-
+    switch (what) {
     case SXOPEN:
     case SXCLOSE:
     case SXINIT:
     case SXFINAL:
     case SXSEMPASS:
-	return;
+	return SXANY_BOOL;
 
     case SXACTION:
 	switch (numact) {
-	default:
-	    goto fault;
-
 	case 0:
 	    /* <action> = ; */
 	    fprintf (yax_file, "\n");
-	    return;
+	    return SXANY_BOOL;
 
 	case 1:
 	    /* {C_CODE | ATTRIBUTE}+ */
@@ -584,14 +580,26 @@ fault:	gripe ("yaction");
 	    /* [-] {DIGIT}+ */
 	    fprintf (yax_file, "%ld", (SXINT) atoi (sxsvar.sxlv_s.token_string) - action_offset);
 	    break;
+
+	default:
+	    gripe ("yaction");
 	}
 
 	sxsvar.sxlv.terminal_token.source_index = sxsrcmngr.source_coord;
 	sxsvar.sxlv.ts_lgth = 0;
-	return;
+	return SXANY_BOOL;
+
+    default:
+	gripe ("yaction");
     }
 }
 
+void yaction_semact (SXINT what, SXINT act_no, struct sxtables *arg)
+{
+    (void) act_no;
+    (void) arg;
+    yaction_scanact (what, (SXINT) 0);
+}
 
 
 SXINLINE static void	out_rhs (SXNODE *node)

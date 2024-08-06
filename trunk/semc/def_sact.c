@@ -20,26 +20,25 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SEMC_DEFSACT[] = "@(#)SYNTAX - $Id: def_sact.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
+char WHAT_SEMC_DEFSACT[] = "@(#)SYNTAX - $Id: def_sact.c 4125 2024-07-29 10:59:13Z garavel $" WHAT_DEBUG;
 
 extern void    bnf_skip_rule (void);
 extern void    bnf_found_bad_beginning_of_rule (void);
 
-
-SXINT def_scan_act (SXINT code, SXINT act_no)
+bool def_scan_act (SXINT code, SXINT act_no)
 {
     switch (code) {
     case SXINIT:
     case SXFINAL:
     case SXOPEN:
     case SXCLOSE:
-	return 0;
+	return SXANY_BOOL;
 
     case SXACTION:
 	switch (act_no) {
 	case 0:
 	    bnf_found_bad_beginning_of_rule ();
-	    return 0;
+	    return SXANY_BOOL;
 
 	case 1:
 	    /* \nnn => char */
@@ -58,7 +57,7 @@ SXINT def_scan_act (SXINT code, SXINT act_no)
 		sxsvar.sxlv.mark.index = -1;
 	    }
 
-	    return 0;
+	    return SXANY_BOOL;
 
 	case 2:
 	    sxerror (sxsrcmngr.source_coord,
@@ -66,11 +65,11 @@ SXINT def_scan_act (SXINT code, SXINT act_no)
 		     "%s\"%s)\" is forced before End Of Line.",
 		     sxsvar.sxtables->err_titles [1]+1, 
 		     SXCHAR_TO_STRING (sxsvar.sxlv_s.token_string [sxsvar.sxlv.ts_lgth - 1]));
-	    return 0;
+	    return SXANY_BOOL;
 
 	case 3:
 	    bnf_skip_rule ();
-	    return 0;
+	    return SXANY_BOOL;
 	default:
 #if EBUG
 	  sxtrap("def_sact","unknown switch case #1");
@@ -84,6 +83,6 @@ SXINT def_scan_act (SXINT code, SXINT act_no)
     default:
 	fputs ("\nThe function \"def_scan_act\" is out of date with respect to its specification.\n", sxstderr);
 	sxexit(1);
-	return 0; /* pour faire taire gcc -Wreturn-type */
+	return SXANY_BOOL; /* pour faire taire gcc -Wreturn-type */
     }
 }

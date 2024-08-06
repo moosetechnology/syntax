@@ -37,7 +37,7 @@ extern short sxgetchar (void);
 #endif /* sxgetchar_is_redefined */
 
 #ifndef VARIANT_32
-char WHAT_SXSCANNER[] = "@(#)SYNTAX - $Id: sxscanner.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_SXSCANNER[] = "@(#)SYNTAX - $Id: sxscanner.c 4077 2024-06-19 16:33:12Z garavel $" WHAT_DEBUG;
 #endif
 
 static char	ME [] = "SCANNER";
@@ -122,7 +122,7 @@ SWITCH:
 	{
 	    unsigned char	class;
 
-	    if ((*sxsvar.SXS_tables.recovery) (SXACTION, current_state, &class)) {
+	    if ((*sxsvar.SXS_tables.S_recovery) (SXACTION, current_state, &class)) {
 		if (IS_IN_LA) {
 		    current_class_in_la = class;
 		    goto read_la_transition;
@@ -195,7 +195,7 @@ done:
 	    ts_null ();
 
 	    if (sxsvar.sxlv.mode.with_user_act)
-		(void) (*sxsvar.SXS_tables.scanact) (SXACTION, sxsvar.sxlv.include_action);
+		(void) (*sxsvar.SXS_tables.S_scanact) (SXACTION, sxsvar.sxlv.include_action);
 
 	    goto ccnewlextok; /* sur l'ancien source */
 	}
@@ -205,7 +205,7 @@ done:
     case HashReduce:
     case HashReducePost:
 	if ((sxsvar.sxlv.terminal_token.lahead =
-	     (*sxsvar.SXS_tables.check_keyword) (sxsvar.sxlv_s.token_string, sxsvar.sxlv.ts_lgth)) == 0) {
+	     (*sxsvar.SXS_tables.S_check_keyword) (sxsvar.sxlv_s.token_string, sxsvar.sxlv.ts_lgth)) == 0) {
 	    /* not a keyword */
 	    sxsvar.sxlv.terminal_token.lahead = NEXT (stmt);
 
@@ -303,7 +303,7 @@ read_la_transition:
 		    ts_null ();
 
 		    if (sxsvar.sxlv.mode.with_user_prdct)
-			is_prdct_satisfied = (*sxsvar.SXS_tables.scanact) (SXPREDICATE, action_or_prdct_code->
+			is_prdct_satisfied = (*sxsvar.SXS_tables.S_scanact) (SXPREDICATE, action_or_prdct_code->
 			 action_or_prdct_no);
 
 		    if (action_or_prdct_code->param != 0)
@@ -446,7 +446,7 @@ read_la_transition:
 		ts_null ();
 
 		if (sxsvar.sxlv.mode.with_user_act)
-		    (void) (*sxsvar.SXS_tables.scanact) (SXACTION, action_or_prdct_code->action_or_prdct_no);
+		    (void) (*sxsvar.SXS_tables.S_scanact) (SXACTION, action_or_prdct_code->action_or_prdct_no);
 		current_class = char_to_class (sxsrcmngr.current_char);
 		
 
@@ -476,7 +476,7 @@ read_la_transition:
 	ts_null ();
 
 	if (sxsvar.sxlv.mode.with_user_act)
-	    (void) (*sxsvar.SXS_tables.scanact) (SXACTION, action_or_prdct_code->action_or_prdct_no);
+	    (void) (*sxsvar.SXS_tables.S_scanact) (SXACTION, action_or_prdct_code->action_or_prdct_no);
 
 	if (sxsvar.sxlv.terminal_token.lahead == 0) {
 	    /* Dans tous les cas, la post-action s'est occupee des commentaires eventuels. */
@@ -529,11 +529,11 @@ read_la_transition:
 
 /* VARARGS1 */
 
-SXINT sxscanner (SXINT what_to_do, struct sxtables *arg)
+void sxscanner (SXINT what, struct sxtables *arg)
 {
     SXINT i;
 
-    switch (what_to_do) {
+    switch (what) {
     case SXOPEN:
 	/* new language: new tables, */
 	/* the global variable "sxsvar" must have been saved in case of
@@ -591,11 +591,11 @@ SXINT sxscanner (SXINT what_to_do, struct sxtables *arg)
 	if (sxsvar_include != NULL)
 	    sxfree (sxsvar_include), sxsvar_include = NULL;
 
-	(*sxsvar.SXS_tables.recovery) (SXCLOSE);
+	(*sxsvar.SXS_tables.S_recovery) (SXCLOSE, (SXINT) 0 /* dummy */, NULL /* dummy */);
 
 	if (!sxsvar.SXS_tables.S_are_comments_erased)
 	  sxcomment_mngr (SXCLOSE, 0);
-	
+
 	break;
 
     default:
@@ -603,6 +603,4 @@ SXINT sxscanner (SXINT what_to_do, struct sxtables *arg)
 	sxexit(1);
 	    /*NOTREACHED*/
     }
-
-    return 0;
 }

@@ -36,7 +36,7 @@
 static char	ME [] = "drcg";
 #endif
 
-char WHAT_DRCGSMP[] = "@(#)SYNTAX - $Id: drcg_smp.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_DRCGSMP[] = "@(#)SYNTAX - $Id: drcg_smp.c 3905 2024-04-20 08:22:12Z garavel $" WHAT_DEBUG;
 
 struct drcg_node {
     SXNODE_HEADER_S SXVOID_NAME;
@@ -353,7 +353,7 @@ drcg_write (void)
     static char		drcg_write_ME [] = "drcg_write";
     SXINT		lt;
     FILE		*F_drcg;
-    char		file_name [64], istr [8];
+    char		file_name [64], istr [20];
     VARSTR		vstr;
     SXINT			prod, item, t;
     SXINT			param_nb, x, *term_ptr, term, list;

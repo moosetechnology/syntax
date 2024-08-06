@@ -20,7 +20,7 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXCHECKMAGIC[] = "@(#)SYNTAX - $Id: sxcheckmagic.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
+char WHAT_SXCHECKMAGIC[] = "@(#)SYNTAX - $Id: sxcheckmagic.c 3975 2024-05-27 12:27:34Z garavel $" WHAT_DEBUG;
 
 void	sxcheck_magic_number (SXUINT m1, SXUINT m2, char *who)
 {
@@ -28,6 +28,6 @@ void	sxcheck_magic_number (SXUINT m1, SXUINT m2, char *who)
 	return;
     }
 
-    fprintf (sxstderr, "\n%s: Tables garbled, code %ld.\n", who, m1);
+    fprintf (sxstderr, "\n%s: Tables garbled (code %lu vs %lu)\n", who, m1, m2);
     sxexit (SXSEVERITIES);
 }

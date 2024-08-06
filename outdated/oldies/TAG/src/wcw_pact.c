@@ -10,23 +10,23 @@ static int bot;
 #define	a	2
 #define	b	3
 
-int	wcw_pars_act (entry, action_no)
+bool wcw_pars_act (entry, action_no)
     int		entry, action_no;
 {
     switch (entry) {
     case SXOPEN:
     case SXCLOSE:
-	return;
+	return SXANY_BOOL;
 
     case SXINIT:
 	stack = SS_alloc (100);
 	SS_push (stack, 0);
 	bot = SS_bot (stack) + 1;
-	return;
+	return SXANY_BOOL;
 
     case SXFINAL:
 	SS_free (stack);
-	return;
+	return SXANY_BOOL;
 
     case SXPREDICATE:
 	switch (action_no) {
@@ -45,13 +45,13 @@ int	wcw_pars_act (entry, action_no)
 	switch (action_no) {
 	case 1:
 	    bot++;
-	    return;
+	    return SXANY_BOOL;
 	case 2:
 	    SS_push (stack, a);
-	    return;
+	    return SXANY_BOOL;
 	case 3:
 	    SS_push (stack, b);
-	    return;
+	    return SXANY_BOOL;
 
 	default:
 	    break;

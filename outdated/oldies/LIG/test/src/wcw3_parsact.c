@@ -28,28 +28,24 @@ char WHAT[] = "@(#)wcw3_parsact.c	- SYNTAX [unix] - Mar 23 Aou 1994 13:40:43";
 
 static char	ME [] = "wcw3_parsact";
 
-
-
-#include	"sxunix.h"
-#include	"wcw3_tdef.h"
+#include "sxunix.h"
+#include "wcw3_tdef.h"
 
 static int	middle;
 
-int wcw3_parsact (which, arg)
-    int		which;
-    struct sxtables	*arg;
+bool wcw3_parsact (int which, struct sxtables	*arg)
 {
     int act_no;
 
     switch (which) {
     case SXOPEN:
     case SXCLOSE:
-	return 0;
+	return SXANY_BOOL;
 
     case SXINIT:
 	/* On lit tout le texte source */
 	do {
-	    (*(sxplocals.SXP_tables.scanit)) ();
+	    (*(sxplocals.SXP_tables.P_scan_it)) ();
 	} while (SXGET_TOKEN (sxplocals.Mtok_no).lahead != sxplocals.SXP_tables.P_tmax);
 
 	/* Mtok_no doit etre pair */
@@ -81,10 +77,10 @@ int wcw3_parsact (which, arg)
 	   SXGET_TOKEN (middle).lahead = c_code;
 	}
 
-	return 0;
+	return SXANY_BOOL;
 
     case SXFINAL:
-	return 0;
+	return SXANY_BOOL;
 
     case SXACTION:
     case SXDO:
@@ -104,6 +100,6 @@ int wcw3_parsact (which, arg)
 	abort ();
     }
 
-    return 0;
+    return SXANY_BOOL;
 }
 

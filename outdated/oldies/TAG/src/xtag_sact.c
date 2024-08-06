@@ -7,16 +7,11 @@
    *                                                      *
    ******************************************************** */
 
-
-
-
 /* ********************************************************
    *                                                      *
    *  Produit de l'equipe Langages et Traducteurs.	  *
    *                                                      *
    ******************************************************** */
-
-
 
 /************************************************************************/
 /* Historique des modifications, en ordre chronologique inverse:	*/
@@ -37,40 +32,33 @@ gripe ()
     abort ();
 }
 
-
-
 void	(*more_scan_act) ();
 
-
-
-xtag_scan_act (code, act_no)
-    int		code;
-    int		act_no;
+bool xtag_scan_act (SXINT code, SXINT act_no)
 {
     switch (code) {
     case SXOPEN:
-	return;
+	return SXANY_BOOL;
 
     case SXCLOSE:
-	return;
+	return SXANY_BOOL;
 
     case SXINIT:
-	return;
+	return SXANY_BOOL;
 
     case SXFINAL:
-	return;
+	return SXANY_BOOL;
 
     case SXACTION:
 	switch (act_no) {
 	case 1:
 	  if (--sxsvar.sxlv_s.counters [1] == 0)
 	    sxsvar.sxlv_s.counters [0] = 0;
-
-	  return;
-
+	  return SXANY_BOOL;
 	}
 
     default:
 	gripe ();
     }
 }
+

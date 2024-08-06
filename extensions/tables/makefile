@@ -2,14 +2,14 @@
 include $(SX)/etc/make/gccoptions
 
 TABLES=$(SX)/../extensions/tables
-LIB=$(TABLES)/lib
+BIN=$(TABLES)/bin.$(ARCH)
+LIB=$(TABLES)/lib.$(ARCH)
+
+SXEXTBIBS=$(SXLIB)/libsxext.a $(SXBIBS)
 
 CC=$(COMPILER) -I$(SXINCL) -I$(TABLES) -I$(SXINCL)/util -I$(SX)/../extensions/incl -I$(SX)/../outdated/oldies/LIG/incl $(CFLAGS)
 
-all: $(SXBIN)/tables_c.out
-
-$(SXBIN)/tables_c.out:	$(TABLES)/tables_c.out
-	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
+all: $(BIN)/tables_c.out
 
 NEEDS=	$(LIB)/init_tbl.o	\
 	$(LIB)/out_P_tbl.o	\
@@ -23,9 +23,9 @@ NEEDS=	$(LIB)/init_tbl.o	\
 	$(LIB)/out.o		\
 	$(LIB)/tables_c.o
 
-$(TABLES)/tables_c.out:	$(NEEDS)	$(SXBIBS)
+$(BIN)/tables_c.out:	$(NEEDS)	$(SXEXTBIBS)
 	@rm -f $@
-	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXEXTBIBS) || (rm $@;exit 1)
 
 $(LIB)/tables_c.o:	$(SXINCL)/sxunix.h	\
 			tables.h	\
@@ -107,5 +107,5 @@ $(LIB)/out.o:		$(SXINCL)/sxunix.h	\
 	$(CC) -o $@ -c out.c
 
 clean:
-	/bin/rm -f $(LIB)/*.o $(TABLES)/tables_c.out
+	/bin/rm -f $(LIB)/*.o $(BIN)/tables_c.out
 

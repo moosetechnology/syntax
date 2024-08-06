@@ -2,15 +2,11 @@
 include $(SX)/etc/make/gccoptions
 
 TABLES=$(SX)/tables
-LIB=$(TABLES)/lib
+LIB=$(TABLES)/lib.$(ARCH)
 
 CC=$(COMPILER) -I$(SXINCL) -I$(TABLES) -I$(SXINCL)/util $(CFLAGS)
 
 all: $(SXBIN)/tables_c.out
-
-$(SXBIN)/tables_c.out:	$(TABLES)/tables_c.out
-	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
-
 
 NEEDS=	$(LIB)/init_tbl.o	\
 	$(LIB)/out_P_tbl.o	\
@@ -24,7 +20,7 @@ NEEDS=	$(LIB)/init_tbl.o	\
 	$(LIB)/out.o		\
 	$(LIB)/tables_c.o
 
-$(TABLES)/tables_c.out:	$(NEEDS)	$(SXBIBS)
+$(SXBIN)/tables_c.out:	$(NEEDS)	$(SXBIBS)
 	@rm -f $@
 	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
@@ -107,4 +103,4 @@ $(LIB)/out.o:		$(SXINCL)/sxunix.h	\
 	$(CC) -o $@ -c out.c
 
 clean:
-	/bin/rm -f $(LIB)/*.o $(TABLES)/tables_c.out
+	/bin/rm -f $(LIB)/*.o

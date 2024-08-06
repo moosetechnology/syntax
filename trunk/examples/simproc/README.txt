@@ -13,7 +13,7 @@ and implemented using the SYNTAX compiler-generation tool, which can be
 downloaded from https://sourcesup.renater.fr/projects/syntax.
 
 The semantic analysis and code generation parts of the SIMPROC compiler are
-specified in the LOTOS NT language, which is then translated to C using the
+specified in the LNT language, which is then translated to C using the
 TRAIAN compiler, which is available from https://vasy.inria.fr/traian.
 
 This directory contains the following files:
@@ -26,7 +26,7 @@ This directory contains the following files:
         simproc.recor   :       syntax error recovery patterns
         simproc.prio    :       resolution of syntax conflicts (here empty)
 
-   - LOTOS NT source code
+   - LNT source code
 
         simproc.lnt     :       definition of abstract syntax tree, semantic
 				checks, and C code generation

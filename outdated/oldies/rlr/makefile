@@ -3,18 +3,16 @@ include $(SX)/etc/make/gccoptions
 
 RLR=$(SX)/../outdated/oldies/rlr
 SRC=$(RLR)/src
-LIB=$(RLR)/lib
+BIN=$(RLR)/bin.$(ARCH)
+LIB=$(RLR)/lib.$(ARCH)
 INCL=$(RLR)/incl
 
 CC=cc -I$(INCL) -I$(SXINCL) -I$(SXINCL)/util -I$(SX)/../outdated/oldies/incl $(CFLAGS)
 
-ALL=$(SX)/bin/rlr.out			\
-     $(RLR)/primes_nb.out
+ALL=$(BIN)/rlr.out			\
+     $(BIN)/primes_nb.out
 
 all: $(ALL)
-
-$(SX)/bin/rlr.out:	$(RLR)/rlr.out
-	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
 NEEDS=	$(LIB)/rlr_main.o		\
 	$(LIB)/LR0.o			\
@@ -38,13 +36,13 @@ NEEDS2= $(LIB)/rlrd_main.o
 
 NEEDS3= $(LIB)/primes_nb.o
 
-$(RLR)/rlr.out:	$(NEEDS)	$(SXBIBS)
+$(BIN)/rlr.out:	$(NEEDS)	$(SXBIBS)
 	rm -f $@; cc -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@; exit 1)
 
-$(RLR)/rlrd.out:	$(NEEDS2)	$(SXBIBS)
+$(BIN)/rlrd.out:	$(NEEDS2)	$(SXBIBS)
 	rm -f $@; cc -o $@ $(NEEDS2) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@; exit 1)
 
-$(RLR)/primes_nb.out:	$(NEEDS3)	$(SXBIBS)
+$(BIN)/primes_nb.out:	$(NEEDS3)	$(SXBIBS)
 	rm -f $@; cc -o $@ $(NEEDS3) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@; exit 1)
 
 $(LIB)/rlr_main.o:	$(INCL)/rlr_optim.h		\
@@ -289,5 +287,5 @@ $(LIB)/primes_nb.o:	$(SX)/incl/sxunix.h		\
 
 clean:
 	rm -f $(ALL) $(NEEDS) $(NEEDS2) $(NEEDS3)
-	rm -f $(RLR)/rlrd.out $(RLR)/rlrd.out
+	rm -f $(BIN)/rlrd.out
 

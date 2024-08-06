@@ -19,10 +19,10 @@
 
 #include "sxversion.h"
 #include "sxunix.h"
-#include "varstr.h"    
+#include "varstr.h"
 #include "bstr.h"
 
-char WHAT_BSTR[] = "@(#)SYNTAX - $Id: bstr.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
+char WHAT_BSTR[] = "@(#)SYNTAX - $Id: bstr.c 3917 2024-04-23 08:33:57Z garavel $" WHAT_DEBUG;
 
 static char	blancs [ /* 132 */ ] = "                                                                                                                                    " ;
 static char	*blanks = blancs + sizeof blancs - 1;

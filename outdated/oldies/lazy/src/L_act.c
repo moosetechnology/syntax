@@ -752,9 +752,7 @@ ACTION_2 (delete)
 static int (*semact)();
 int L_semact ();
 
-int
-L_parsact (what, act_no)
-    int		what, act_no;
+bool L_parsact (SXINT what, SXINT act_no)
 {
     int			name, rule, x, bot, xt, tnt, lhs_case, prev_xname, prev_lhs_case,
                         prev_block, prdct_no, param_type_name;
@@ -764,8 +762,8 @@ L_parsact (what, act_no)
     switch (what) {
     case SXOPEN:
         /* On filtre les appels a "semact" pour utiliser "sem_stack". */
-        semact = sxplocals.SXP_tables.semact;
-	sxplocals.SXP_tables.semact = L_semact;
+        semact = sxplocals.SXP_tables.P_semact;
+	sxplocals.SXP_tables.P_semact = L_semact;
 
 	sxsymbol_table_alloc (&symbol_table, 500, 750, symbol_table_oflw);
 	/* name == 1, bidon pour version avec predicats, ca permet d'identifier
@@ -809,7 +807,7 @@ L_parsact (what, act_no)
 	        
 	cur_nt = XxY_top (SXDG.xnt);
 
-	return true;
+	return SXANY_BOOL;
 
     case SXINIT:
 	SXDG.desambig = desambig;
@@ -856,28 +854,28 @@ L_parsact (what, act_no)
 	    gen_labels (); /* Du (dummy) bloc externe */
 	}
 
-	return true;
+	return SXANY_BOOL;
 
     case SXFINAL:
-	return true;
+	return SXANY_BOOL;
 
     case SXACTION:
 	switch (act_no) {
 	case 0:
-	    return true;
+	    return SXANY_BOOL;
 	    
 	case 1:			/* <BLOCK> = { @1 <DECL*> <STMT*> } @2 ; */
 	    /* Entree de block */
 	    is_record_body = false;
 	    ACTION_1 ();
 
-	    return true;
+	    return SXANY_BOOL;
 	    
 	case 2:			/* <BLOCK> = { @1 <DECL*> <STMT*> } @2 ; */
 	    /* Sortie de block */
 	    ACTION_2 (true);
 
-	    return true;
+	    return SXANY_BOOL;
 
 	case 3:	/* <DECL> = <TYPE_NAME> @3 <DECLARATOR+> ";" ;
 		   <DECL> = subtype <BASIC_TYPE_NAME> @3 <SUBTYPE_NAME+> ;
@@ -905,7 +903,7 @@ L_parsact (what, act_no)
 	    /* On reserve la place pour <RECTYPE_LHS> "." */
 	    symbols_top = is_record_body ? 3 : 1;
 
-	    return true;
+	    return SXANY_BOOL;
 
 	case 5:			/* <INT_EXPR+> = <INT_EXPR+> ,  <INT_EXPR> @5 ;
 				   <INT_EXPR+> = <INT_EXPR> @5 ; */
@@ -916,7 +914,7 @@ L_parsact (what, act_no)
 	    symbols [++symbols_top] = -CROC_G;
 	    symbols [++symbols_top] = INT_EXPR;
 	    symbols [++symbols_top] = -CROC_D;
-	    return true;
+	    return SXANY_BOOL;
 
 	case 8:			/* <PROFILE> = %id  @7 ( <TYPE_NAME*> ) @8 ; */
 	    symbols [++symbols_top] = -PAR_D;
@@ -1106,11 +1104,11 @@ L_parsact (what, act_no)
 		}
 	    }
 
-	    return true;
+	    return SXANY_BOOL;
 
 	case 7:			/* <PROFILE> = %id  ( @7 <TYPE_NAME*> @8 ) ; */
 	    symbols [++symbols_top] = -PAR_G;
-	    return true;
+	    return SXANY_BOOL;
 
 	case 9:			/* <TYPE_NAME+> = <TYPE_NAME+> , <TYPE_NAME> @9 ; */
 	    symbols [++symbols_top] = -VIRG;
@@ -1150,7 +1148,7 @@ L_parsact (what, act_no)
 						      x);
 	    listof_level = 0;
 
-	    return true;
+	    return SXANY_BOOL;
 
 	case 11: /* <DYNAM_OPER> = ( <DYNOP_PRIO> , <DYNOP_CLASS> , <DYNOP_ASSOC> @11 ) ; */
 	    if ((xt = symbols [1]) != 0)
@@ -1209,7 +1207,7 @@ L_parsact (what, act_no)
 				 sxplocals.sxtables->err_titles [2]);
 	    }
 
-	    return true;
+	    return SXANY_BOOL;
 
 	case 13: /* <SUBTYPE_NAME+> = <SUBTYPE_NAME+> , %id @13 ;
 		    <SUBTYPE_NAME+> = %id @13 ; */
@@ -1469,7 +1467,7 @@ L_parsact (what, act_no)
 		}
 	    }
 
-	    return true;
+	    return SXANY_BOOL;
 
 	case 14: /* <STMT>	= <LABEL> @14 <STMT> ; */
 	    /* Supprime la regle definissant <LABEL> */
@@ -1478,16 +1476,16 @@ L_parsact (what, act_no)
 	    /* desactivee pour le reste du bloc, elle sera detruite ou reactivee
 	       en sortie de bloc par le mecanisme usuel. */
 
-	    return true;
+	    return SXANY_BOOL;
 
 	case 15: /* <TYPE_NAME>	= listof @15 <TYPE_NAME> ; */
 	    listof_level++;
-	    return true; 
+	    return SXANY_BOOL; 
 
 	case 16: /* <T>		= { @16 ; */
 	    SS_push (block_stack, current_block_nb);
 	    current_block_nb = ++block_nb;
-	    return true; 
+	    return SXANY_BOOL; 
 
 	case 17: /* <T>		= : @17 ; */
 	    ptok = &(SXGET_TOKEN (sxplocals.atok_no - 2));
@@ -1499,11 +1497,11 @@ L_parsact (what, act_no)
 		XxY_set (&labels_hd, current_block_nb, ptok->string_table_entry, &label);
 	    }
 
-	    return true; 
+	    return SXANY_BOOL; 
 
 	case 18: /* <T>		= } @18 ; */
 	    current_block_nb = SS_pop (block_stack);
-	    return true; 
+	    return SXANY_BOOL; 
 
 	
 	case 19: /* <TYPE_DECL> = record @19 %id 
@@ -1654,7 +1652,7 @@ L_parsact (what, act_no)
 		XxY_set (&type_nameXrule, name, rule, &couple);
 	    }
 
-	    return true; 
+	    return SXANY_BOOL; 
 
 /* @20 et @21 doivent-ils etre mis dans SXDO/SXUNDO ?? */
 	case 20: /* <STMT> = with <RECORDTYPE_LHS> do @20 <STMT> ";" @21 ; */
@@ -1698,13 +1696,13 @@ L_parsact (what, act_no)
 		}
 	    }
 
-	    return true; 
+	    return SXANY_BOOL; 
 
 	case 21: /* <STMT> = with <RECORDTYPE_VAR> do @20 <STMT> ";" @21 ; */
 	    /* @21 : Supprimer les re`gles generees par @20. */    
 	    rules_at_block_exit (true);
 
-	    return true; 
+	    return SXANY_BOOL; 
 
 	case 22:
 	    /* No 22 est utilise' ds semact, pourrait repasser ici. */
@@ -1720,7 +1718,7 @@ L_parsact (what, act_no)
 	    current_block_nb = ++block_nb;
 	    sxsymbol_table_open (symbol_table, block_level);
 
-	    return true; 
+	    return SXANY_BOOL; 
 
 	case 24: /* <TYPE_DECL> = record @19 %id 
 		                     { @23
@@ -1739,7 +1737,7 @@ L_parsact (what, act_no)
 	    block_level--;
 	    current_block_nb = SS_pop (block_stack);
 
-	    return true; 
+	    return SXANY_BOOL; 
 
 	default:
 	    break;
@@ -1764,7 +1762,7 @@ L_parsact (what, act_no)
 	if (act_no == 1)
 	    ACTION_1 ();
 
-	return true;
+	return SXANY_BOOL;
 
     case SXUNDO:
 	if (act_no == 1)
@@ -1773,7 +1771,7 @@ L_parsact (what, act_no)
 	    block_nb--;
 	}
 
-	return true;
+	return SXANY_BOOL;
 
     case SXPREDICATE:
 	/* Peut-etre un peu simple !!! */
@@ -1804,7 +1802,7 @@ L_parsact (what, act_no)
 	sxfree (type_steXblock_nb_to_attr);
 	sxfree (listof_to_attr);
 	sxfree (sem_stack);
-	return true;
+	return SXANY_BOOL;
 
     default:
 	break;
@@ -1817,8 +1815,7 @@ L_parsact (what, act_no)
 }
 
 
-int
-L_semact (what, act_no)
+int L_semact (what, act_no)
     int		what, act_no;
 {
     /* Filtre les vrais appels a "semact". */

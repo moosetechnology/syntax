@@ -20,7 +20,7 @@
 #include "sxunix.h"
 #include "sxdico.h"
 
-char WHAT_DICOACT[] = "@(#)SYNTAX - $Id: dico_act.c 3690 2024-02-07 17:04:15Z garavel $" WHAT_DEBUG;
+char WHAT_DICOACT[] = "@(#)SYNTAX - $Id: dico_act.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
 
 extern SXINT             optim_kind, process_kind, print_on_sxtty;
 extern char            *dico_name, *prgentname;
@@ -89,10 +89,11 @@ gen_header (void)
 
 
 
-SXINT dico_sem_act (SXINT code, SXINT numact)
+void dico_sem_act (SXINT code, SXINT numact, struct sxtables *arg)
 {
   SXINT			ate;
 
+  (void) arg;
   switch (code) {
   case SXOPEN:
     if (dico_file == NULL)
@@ -102,7 +103,7 @@ SXINT dico_sem_act (SXINT code, SXINT numact)
   case SXCLOSE:
   case SXSEMPASS:
   case SXERROR:
-    return 0;
+    return;
 
   case SXINIT:
     mot2.string = (char**) sxalloc ((mot2.size = 100) + 1, sizeof (char*));
@@ -112,13 +113,13 @@ SXINT dico_sem_act (SXINT code, SXINT numact)
     mot2.lgth = (SXINT*) sxalloc (mot2.size + 1, sizeof (SXINT));
     mot2.lgth [0] = 0;
     word_list_set = sxba_calloc ((word_list_set_size = 100) + 1);
-    return 0;
+    return;
 
   case SXFINAL:
     sxfree (mot2.string), mot2.string = NULL;
     sxfree (mot2.code), mot2.code = NULL;
     sxfree (mot2.lgth), mot2.lgth = NULL;
-    return 0;
+    return;
 
   case SXACTION:
     switch (numact) {
@@ -157,8 +158,7 @@ SXINT dico_sem_act (SXINT code, SXINT numact)
 	sxfree (mot2.min), mot2.min = NULL;
 	sxfree (mot2.max), mot2.max = NULL;
       }
-
-      return 0;
+      return;
 
     case 4:
       /* <simple_list>	= <simple_list> %string 		; 4 */
@@ -178,8 +178,7 @@ SXINT dico_sem_act (SXINT code, SXINT numact)
 	mot2.code [mot2.nb] = mot2.nb;
 	mot2.total_lgth += mot2.lgth [mot2.nb] = sxstrlen (ate);
       }
-
-      return 0;
+      return;
 
     case 3:
       /* <simple_list>	= %string 				; 3 */
@@ -192,7 +191,7 @@ SXINT dico_sem_act (SXINT code, SXINT numact)
       sxba_1_bit (word_list_set, ate);
       mot2.code [mot2.nb] = mot2.nb;
       mot2.lgth [mot2.nb] = mot2.total_lgth = sxstrlen (ate);
-      return 0;
+      return;
 
     case 2:
       /* <double_list>	= <double_list> %string %integer 	; 2 */
@@ -212,8 +211,7 @@ SXINT dico_sem_act (SXINT code, SXINT numact)
 	mot2.code [mot2.nb] = atol (sxstrget (SXSTACKtoken (SXSTACKtop ()).string_table_entry));
 	mot2.total_lgth += mot2.lgth [mot2.nb] = sxstrlen (ate);
       }
-
-      return 0;
+      return;
 
     case 1:
       /* <double_list>	= %string %integer 			; 1 */
@@ -226,10 +224,10 @@ SXINT dico_sem_act (SXINT code, SXINT numact)
       sxba_1_bit (word_list_set, ate);
       mot2.code [mot2.nb] = atol (sxstrget (SXSTACKtoken (SXSTACKtop ()).string_table_entry));
       mot2.lgth [mot2.nb] = mot2.total_lgth = sxstrlen (ate);
-      return 0;
+      return;
 
     case 0:
-      return 0;
+      return;
 
     default:
       break;
@@ -241,7 +239,7 @@ SXINT dico_sem_act (SXINT code, SXINT numact)
     /*NOTREACHED*/
   }
 
-  return 0;
+  return;
 }
 
 
@@ -249,8 +247,7 @@ SXINT dico_sem_act (SXINT code, SXINT numact)
 extern struct sxtables	dico_tables;
 
 
-
-SXINT dico_scan_act (SXINT code, SXINT act_no)
+bool dico_scan_act (SXINT code, SXINT act_no)
 {
     switch (code) {
     default:
@@ -261,7 +258,7 @@ SXINT dico_scan_act (SXINT code, SXINT act_no)
     case SXCLOSE:
     case SXINIT:
     case SXFINAL:
-	return 0;
+	return SXANY_BOOL;
 
     case SXACTION:
 	switch (act_no) {
@@ -282,7 +279,7 @@ SXINT dico_scan_act (SXINT code, SXINT act_no)
 		sxsvar.sxlv.mark.index = -1;
 	    }
 
-	    return 0;
+	    return SXANY_BOOL;
 
 	default:
 	    break;
@@ -290,5 +287,5 @@ SXINT dico_scan_act (SXINT code, SXINT act_no)
 	}
     }
 
-    return 0;
+    return SXANY_BOOL;
 }

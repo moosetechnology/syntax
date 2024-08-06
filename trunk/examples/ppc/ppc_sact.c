@@ -19,7 +19,7 @@
 
 #include "sxunix.h"
 
-char WHAT_PPCSACT[] = "@(#)SYNTAX - $Id: ppc_sact.c 3633 2023-12-20 18:41:19Z garavel $";
+char WHAT_PPCSACT[] = "@(#)SYNTAX - $Id: ppc_sact.c 4125 2024-07-29 10:59:13Z garavel $";
 
 extern struct sxtables	ppc_args_tables, *ppc_tables;
 extern SXINT	ppc_TYPE;
@@ -41,25 +41,24 @@ static bool	*user_types;
 static SXINT	typ_lgth;
 
 
-void
-ppc_scan_act (SXINT code, SXINT act_no)
+bool ppc_scan_act (SXINT code, SXINT act_no)
 {
     switch (code) {
     case SXBEGIN:
 	user_types = (bool*) sxcalloc (typ_lgth = sxstrmngr.tablength, sizeof (bool));
-	return;
+	return SXANY_BOOL;
 
     case SXEND:
 	sxfree (user_types);
-	return;
+	return SXANY_BOOL;
 
     case SXOPEN:
     case SXCLOSE:
-	return;
+	return SXANY_BOOL;
 
     case SXINIT:
     case SXFINAL:
-	return;
+	return SXANY_BOOL;
 
     case SXACTION:
 	if (typ_lgth < sxstrmngr.top) {
@@ -81,7 +80,7 @@ ppc_scan_act (SXINT code, SXINT act_no)
 	case 1:
 	    /* {lower}+ */
 	    if (sxkeywordp (ppc_tables, sxsvar.sxlv.terminal_token.lahead)) {
-		return;
+		return SXANY_BOOL;
 	    }
             /* FALLTHROUGH */ /* added par H. Garavel, confirmed by P. Boullier */
 
@@ -96,26 +95,24 @@ ppc_scan_act (SXINT code, SXINT act_no)
 	    gripe (ppc_tables, act_no);
             /* NOTREACHED */
 	}
-	return;
+	return SXANY_BOOL;
 
     default:
 	gripe (ppc_tables, code);
+        /* NOTREACHED */
+	return SXANY_BOOL;
     }
 }
 
 
-void
-ppc_args_scan_act (SXINT code, SXINT act_no)
+bool ppc_args_scan_act (SXINT code, SXINT act_no)
 {
     switch (code) {
-    default:
-	gripe (&ppc_args_tables, code);
-
     case SXOPEN:
     case SXCLOSE:
     case SXINIT:
     case SXFINAL:
-	return;
+	return SXANY_BOOL;
 
     case SXACTION:
 	switch (act_no) {
@@ -146,7 +143,9 @@ ppc_args_scan_act (SXINT code, SXINT act_no)
 	default:
 	    gripe (&ppc_args_tables, act_no);
 	}
-
 	break;
+    default:
+	gripe (&ppc_args_tables, code);
     }
+    return SXANY_BOOL;
 }

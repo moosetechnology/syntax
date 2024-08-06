@@ -3,30 +3,28 @@ include $(SX)/etc/make/gccoptions
 
 MAKE_A_DICO=$(SX)/../extensions/make_a_dico
 
-LIB=$(MAKE_A_DICO)/lib
+BIN=$(MAKE_A_DICO)/bin.$(ARCH)
+LIB=$(MAKE_A_DICO)/lib.$(ARCH)
 
-CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
+EXTINCL=$(SX)/../extensions/incl
+SXEXTBIBS=$(SXLIB)/libsxext.a $(SXBIBS)
 
-all: $(SXBIN)/make_a_dico.out	\
-     $(SXBIN)/amlgm_cmpd.out
+CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util -I$(EXTINCL) $(CFLAGS)
 
-$(SXBIN)/make_a_dico.out:	$(MAKE_A_DICO)/make_a_dico.out
-	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
-
-$(SXBIN)/amlgm_cmpd.out:	$(MAKE_A_DICO)/amlgm_cmpd.out
-	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
+all: $(BIN)/make_a_dico.out	\
+     $(BIN)/amlgm_cmpd.out
 
 NEEDS=	$(LIB)/make_a_dico.o	\
 	$(LIB)/make_a_dico_t.o
 
-$(MAKE_A_DICO)/make_a_dico.out:	$(NEEDS)	$(SXBIBS)
+$(BIN)/make_a_dico.out:	$(NEEDS)	$(SXEXTBIBS)
 	@rm -f $@
-	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXEXTBIBS) || (rm $@;exit 1)
 
 $(LIB)/make_a_dico.o:	$(SXINCL)/sxunix.h		\
 			$(SXINCL)/XxY.h			\
-			$(SXINCL)/sxword.h		\
 			$(SXINCL)/fsa.h			\
+			$(EXTINCL)/sxword.h		\
 			make_a_dico.c
 	$(CC) -o $@ -c make_a_dico.c
 
@@ -40,9 +38,9 @@ NEEDS2=	$(LIB)/amlgm_cmpd_main.o	\
 	$(LIB)/amlgm_cmpd_smp.o		\
 	$(LIB)/amlgm_cmpd_t.o
 
-$(MAKE_A_DICO)/amlgm_cmpd.out:	$(NEEDS2)	$(SXBIBS)
+$(BIN)/amlgm_cmpd.out:	$(NEEDS2)	$(SXEXTBIBS)
 	@rm -f $@
-	$(COMPILER) -o $@ $(NEEDS2) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(NEEDS2) $(CFLAGS) $(LDFLAGS) $(SXEXTBIBS) || (rm $@;exit 1)
 
 $(LIB)/amlgm_cmpd_smp.o:$(SXINCL)/sxunix.h	\
 			$(SXINCL)/XH.h		\
@@ -55,7 +53,7 @@ $(LIB)/amlgm_cmpd_smp.o:$(SXINCL)/sxunix.h	\
 $(LIB)/amlgm_cmpd_t.o:	$(SXINCL)/sxunix.h 	\
 			amlgm_cmpd_t.c
 	$(CC) -o $@ -c amlgm_cmpd_t.c		\
-		-Dsempass=amlgm_cmpd_smp
+		-DSEMPASS=amlgm_cmpd_smp
 
 $(LIB)/amlgm_cmpd_main.o:	$(SXINCL)/sxunix.h	\
 			$(SXINCL)/fsa.h			\
@@ -101,8 +99,7 @@ amlgm_cmpd.rt: amlgm_cmpd.bt amlgm_cmpd.st amlgm_cmpd.recor
 # fin de code produit par "make-makefile amlgm_cmpd"
 
 clean:
-	/bin/rm -f $(LIB)/*.o
-	/bin/rm -f $(MAKE_A_DICO)/make_a_dico.out $(MAKE_A_DICO)/amlgm_cmpd.out
+	/bin/rm -f $(LIB)/*.o $(BIN)/make_a_dico.out $(BIN)/amlgm_cmpd.out
 	/bin/rm -f $(MAKE_A_DICO)/make_a_dico.*.l $(MAKE_A_DICO)/amlgm_cmpd.*.l
 	/bin/rm -f $(MAKE_A_DICO)/make_a_dico.bt $(MAKE_A_DICO)/make_a_dico.pt
 	/bin/rm -f $(MAKE_A_DICO)/make_a_dico.rt $(MAKE_A_DICO)/make_a_dico.st
@@ -111,5 +108,4 @@ clean:
 	/bin/rm -f $(MAKE_A_DICO)/amlgm_cmpd.rt $(MAKE_A_DICO)/amlgm_cmpd.st
 	/bin/rm -f $(MAKE_A_DICO)/amlgm_cmpd.att $(MAKE_A_DICO)/amlgm_cmpd_mix.c
 	/bin/rm -f $(MAKE_A_DICO)/amlgm_cmpd_t.c
-
 

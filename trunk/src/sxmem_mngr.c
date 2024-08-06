@@ -21,7 +21,7 @@
 #include "sxunix.h"
 #include "X.h"
 
-char WHAT_SXMEM_MNGR[] = "@(#)SYNTAX - $Id: sxmem_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_SXMEM_MNGR[] = "@(#)SYNTAX - $Id: sxmem_mngr.c 3926 2024-04-27 12:37:23Z garavel $" WHAT_DEBUG;
 
 #if EBUG_ALLOC
 static bool debug_initiated = {false};
@@ -58,7 +58,16 @@ extern SXINT 	malloc_debug (size_t size);
 #endif
 
 
-extern void	sxgc (void) /* exit when no more allocation is possible */ ;
+static void	sxgc (void)
+/* Must return to its caller only if memory map has changed */
+{
+  fprintf (sxstderr, "\tNO MORE ALLOCATION POSSIBLE...%c\n", sxbell);
+
+    if (sxgc_recovery && mem_signature_mode)
+      sxgc_recovery ();
+    else
+      sxexit (SXSEVERITIES);
+}
 
 static void freeing_null (bool bypass) {
   fprintf (sxstderr, "\tInternal error%s: freeing NULL...%c\n", bypass ? " (bypassed)" : "", sxbell);
@@ -456,7 +465,7 @@ bool  sxfree_mem_signatures_content (void)
 
 */
 
-void * sx_alloc_and_copy (size_t nbemb, size_t size, void *original_content, size_t copy_size)
+void *sx_alloc_and_copy (size_t nbemb, size_t size, void *original_content, size_t copy_size)
 {
   char *ptr;
 

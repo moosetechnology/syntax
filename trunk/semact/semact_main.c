@@ -31,12 +31,13 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-char WHAT_SEMACTMAIN[] = "@(#)SYNTAX - $Id: semact_main.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_SEMACTMAIN[] = "@(#)SYNTAX - $Id: semact_main.c 4139 2024-07-31 16:02:45Z garavel $" WHAT_DEBUG;
 
 char	by_mess [] = "the SYNTAX grammar & action processor SEMACT";
 
-extern  SXINT	semact_scan_act (SXINT code, SXINT act_no);
-SXINT	(*more_scan_act) (SXINT code, SXINT act_no) = {semact_scan_act};
+extern  SXSCANACT_FUNCTION semact_scan_act;
+
+SXSCANACT_FUNCTION *more_scan_act = {semact_scan_act};
 
 extern void	no_tables (void), bnf_lo (void);
 extern bool  semact_sem (void);

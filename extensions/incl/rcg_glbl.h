@@ -731,7 +731,7 @@ struct which_guide {
 
 /* FIRST_LAST est aussi utilise par &First et &Last */
 #if is_sdag
-extern bool is_AND();
+extern bool is_AND(SXBA bits_array, SXBA_INDEX bit);
 #if is_generator
 #define FIRST_LAST(tok,fl)	(!SXBA_bit_is_set(tok,ANY) && !is_AND(tok,fl))
 #else /* is_generator */

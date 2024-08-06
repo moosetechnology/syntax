@@ -2,18 +2,18 @@
 include $(SX)/etc/make/gccoptions
 
 RCG=$(SX)/../extensions/rcg
-LIB=$(RCG)/lib
+BIN=$(RCG)/bin.$(ARCH)
+LIB=$(RCG)/lib.$(ARCH)
+
+SXEXTBIBS=$(SXLIB)/libsxext.a $(SXBIBS)
 
 RCG_CFLAGS= 
 # RCG_CFLAGS= -g -DEBUG -DSTATS
 
 CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util -I$(SX)/../extensions/incl $(RCG_CFLAGS) $(CFLAGS)
 
-all: $(RCG)/rcg.out \
-     $(RCG)/drcg.out
-
-# $(SXBIN)/rcg.out:	$(RCG)/rcg.out
-#	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
+all: $(BIN)/rcg.out \
+     $(BIN)/drcg.out
 
 NEEDS1=\
 	$(LIB)/rcg_main.o		\
@@ -24,17 +24,19 @@ NEEDS1=\
 	$(LIB)/rcg_gen_bnf.o   		\
 	$(LIB)/rcg_t.o
 
-$(RCG)/rcg.out:	$(NEEDS1)	$(SXBIBS)
+$(BIN)/rcg.out:	$(NEEDS1)	$(SXEXTBIBS)
 	@rm -f $@
-	$(COMPILER) -o $@ $(NEEDS1) $(RCG_CFLAGS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(NEEDS1) $(RCG_CFLAGS) $(CFLAGS) $(LDFLAGS) $(SXEXTBIBS) || (rm $@;exit 1)
 
 $(LIB)/rcg_main.o:	$(SXINCL)/sxunix.h	\
+			rcg_td.h	\
 			rcg.h		\
 			rcg_main.c
 	$(CC) -o $@ -c rcg_main.c
 
 $(LIB)/rcg_sact.o:	$(SXINCL)/sxunix.h	\
 			$(SXINCL)/varstr.h	\
+			rcg_td.h	\
 			rcg.h		\
 			rcg_sact.c
 	$(CC) -o $@ -c rcg_sact.c
@@ -88,10 +90,7 @@ $(LIB)/rcg_t.o:		$(SXINCL)/sxunix.h 	\
 	$(CC) -o $@ -c rcg_t.c			\
 		-Dsxtables=rcg_tables		\
 		-DSCANACT=rcg_scan_act		\
-		-Dsempass=rcg_smp
-
-$(SXBIN)/drcg.out:	$(RCG)/drcg.out
-	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
+		-DSEMPASS=rcg_smp
 
 NEEDS2=\
 	$(LIB)/drcg_main.o		\
@@ -104,18 +103,15 @@ NEEDS2=\
 	$(LIB)/drcg_smp.o    		\
 	$(LIB)/drcg_t.o
 
-
-$(RCG)/drcg.out:	$(NEEDS2)	$(SXBIBS)
+$(BIN)/drcg.out:	$(NEEDS2)	$(SXEXTBIBS)
 	@rm -f $@
-	$(COMPILER) -o $@ $(NEEDS2) $(RCG_CFLAGS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
-
+	$(COMPILER) -o $@ $(NEEDS2) $(RCG_CFLAGS) $(CFLAGS) $(LDFLAGS) $(SXEXTBIBS) || (rm $@;exit 1)
 
 $(LIB)/drcg_main.o:	$(SXINCL)/sxunix.h	\
+			rcg_td.h	\
 			rcg.h			\
 			drcg_main.c
 	$(CC) -o $@ -c drcg_main.c
-
-
 
 $(LIB)/drcg_smp.o:	$(SXINCL)/sxunix.h	\
 			$(SXINCL)/sxba.h	\
@@ -124,7 +120,7 @@ $(LIB)/drcg_smp.o:	$(SXINCL)/sxunix.h	\
 			$(SXINCL)/XxY.h		\
 			rcg_td.h		\
 			rcg.h			\
-			$(SXINCL)/dcg_cst.h	\
+			$(SX)/../extensions/incl/dcg_cst.h	\
 			drcg_smp.c
 	$(CC) -o $@ -c drcg_smp.c
 
@@ -133,7 +129,7 @@ $(LIB)/drcg_t.o:	$(SXINCL)/sxunix.h 	\
 	$(CC) -o $@ -c drcg_t.c			\
 		-Dsxtables=drcg_tables		\
 		-DSCANACT=rcg_scan_act		\
-		-Dsempass=drcg_smp
+		-DSEMPASS=drcg_smp
 
 # debut de code produit par "make-makefile rcg"
 
@@ -177,7 +173,7 @@ drcg.rt: drcg.bt drcg.st drcg.recor
 # fin de code produit par "make-makefile drcg"
 
 clean:
-	/bin/rm -f $(LIB)/*.o $(RCG)/rcg.out $(RCG)/drcg.out
+	/bin/rm -f $(LIB)/*.o $(BIN)/rcg.out $(BIN)/drcg.out
 	/bin/rm -f rcg.*.l drcg.*.l
 	/bin/rm -f rcg.att rcg.bt rcg.pt rcg.rt rcg.st rcg_mix.c rcg_t.c rcg_td.h
 	/bin/rm -f drcg.att drcg.bt drcg.pt drcg.rt drcg.st drcg_mix.c drcg_t.c

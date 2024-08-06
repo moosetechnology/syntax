@@ -150,7 +150,6 @@ static char *err_titles[SXSEVERITIES]={
 "\002Error:\t",
 };
 static char abstract []= "%d warnings and %d errors are reported.";
-extern bool sxprecovery();
 
 static unsigned char S_char_to_simple_class[]={
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
@@ -374,9 +373,7 @@ static char *S_global_mess[]={
 "End Of File",
 "%sScanning stops on End Of File.",
 };
-extern int SCANACT();
-extern int sxscan_it();
-extern bool sxsrecovery();
+extern SXSCANACT_FUNCTION SCANACT;
 static struct SXT_node_info SXT_node_info[]={
 {6,1},{0,2},{12,4},{11,5},{0,9},{16,11},{10,11},{18,14},{2,16},{5,17},{14,20},{3,21},
 {17,22},{17,22},{15,22},{0,22},{17,24},{8,24},{17,25},{2,25},{17,26},{9,26},{13,27},{0,28},
@@ -403,20 +400,20 @@ static char *T_node_name[]={
 "VOID",
 "X_TERMINAL",
 };
-extern int sempass();
+extern SXSEMPASS_FUNCTION SEMPASS;
 static char T_stack_schema[]={
 0,0,1,0,0,1,2,3,0,1,0,1,2,0,1,0,0,1,2,0,0,0,1,0,0,
 1,1,0,};
 
-static struct SXT_tables SXT_tables=
-{SXT_node_info-1, T_ter_to_node_name, T_stack_schema-1, sempass, T_node_name-1};
-extern int sxscanner();
-extern int sxparser();
-extern int sxatc();
+static struct SXT_tables SXT_tables={
+SXT_node_info-1, T_ter_to_node_name, T_stack_schema-1, SEMPASS, T_node_name-1
+};
+extern SXSEMACT_FUNCTION sxatc;
 
 struct sxtables sxtables={
 56431012, /* magic */
-{sxscanner,sxparser}, 
+sxscanner,
+sxparser, 
 {255, 12, 1, 3, 4, 33, 2, 1, 0, 
 S_is_a_keyword,S_is_a_generic_terminal,S_transition_matrix-1,
 SXS_action_or_prdct_code-1,
@@ -429,7 +426,7 @@ S_global_mess-1,
 S_lregle-1,
 SCANACT,
 sxsrecovery,
-NULL,
+NULL
 },
 {7, 24, 24, 33, 45, 48, 50, 67, 12, 13, 23, 14, 9, 4, 7, 2, 5, 11, 5, 4,
 reductions-1,
@@ -444,8 +441,8 @@ SXP_local_mess-1,
 P_no_delete,P_no_insert,
 P_global_mess,PER_tset,sxscan_it,
 sxprecovery,
-NULL
-,sxatc},
+NULL,
+sxatc},
 err_titles,
 abstract,
 (sxsem_tables*)&SXT_tables

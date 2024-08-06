@@ -24,7 +24,7 @@
 #include "put_edit.h"
 #include "B_tables.h"
 
-char WHAT_TDEFACTION[] = "@(#)SYNTAX - $Id: tdef_action.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_TDEFACTION[] = "@(#)SYNTAX - $Id: tdef_action.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
 
 /*   E X T E R N S   */
 
@@ -219,8 +219,7 @@ static void	final (void)
 
 
 
-SXINT
-tdef_action (SXINT what, struct sxtables *arg)
+void tdef_action (SXINT what, SXINT action_no, struct sxtables *arg)
 {
     switch (what) {
     case SXOPEN:
@@ -232,7 +231,7 @@ tdef_action (SXINT what, struct sxtables *arg)
 	break;
 
     case SXACTION:
-	action ((intptr_t) arg);
+	action (action_no);
 	break;
 
     case SXERROR:
@@ -251,6 +250,4 @@ tdef_action (SXINT what, struct sxtables *arg)
 	fputs ("The function \"tdef_action\" is out of date with respect to its specification.\n", sxstderr);
 	sxexit(1);
     }
-
-    return 0;
 }

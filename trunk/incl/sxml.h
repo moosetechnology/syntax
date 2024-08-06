@@ -100,10 +100,6 @@ SXML_TYPE_TEXT SXML_QUOTED (char C1, char *S, char C2)
 
 /* ------------------------------------------------------------------------- */
 
-#define SXML_Q(T) ((T) == NULL ? NULL : SXML_QUOTED ('\"', (T), '\"'))
-
-/* ------------------------------------------------------------------------- */
-
 typedef struct SXML_STRUCT_LIST {
    SXML_TYPE_TEXT TEXT;
    struct SXML_STRUCT_LIST *SUCC;
@@ -662,10 +658,3 @@ SXML_TYPE_LIST SXML_TTTTTTTTTTT (
 
 /* ------------------------------------------------------------------------- */
 
-
-SXML_TYPE_LIST SXML_QUOTED_LIST (SXML_TYPE_LIST L)
-{
-	return SXML_TLT("\"", L, "\"");
-}
-
-/* ------------------------------------------------------------------------- */

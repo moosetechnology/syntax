@@ -126,7 +126,6 @@ static char *err_titles[SXSEVERITIES]={
 "\002Error:\t",
 };
 static char abstract []= "%ld warnings and %ld errors are reported.";
-extern bool sxprecovery (SXINT what_to_do, SXINT *at_state, SXINT latok_no);
 
 static unsigned char S_char_to_simple_class[]={
 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
@@ -286,19 +285,15 @@ static char *S_global_mess[]={0,
 "End Of File",
 "%sScanning stops on End Of File.",
 };
-extern SXINT sxscan_it(void);
-extern bool sxsrecovery (SXINT sxsrecovery_what, SXINT state_no, unsigned char *class);
-extern SXINT sxscanner(SXINT what_to_do, struct sxtables *arg);
-extern SXINT sxparser(SXINT what_to_do, struct sxtables *arg);
 #ifdef SEMACT
-#ifndef SCANACT_AND_SEMACT_ARE_IDENTICAL
-extern SXINT SEMACT(SXINT what, struct sxtables *arg);
+extern SXSEMACT_FUNCTION SEMACT;
 #endif
-#endif /* SEMACT */
 
 struct sxtables sxtables={
 52113, /* magic */
-{sxscanner,(SXPARSER_T) sxparser}, {255, 5, 1, 3, 4, 23, 1, 28, 0, 0, 0, 
+sxscanner,
+sxparser,
+{255, 5, 1, 3, 4, 23, 1, 28, 0, 0, 0, 
 S_is_a_keyword,S_is_a_generic_terminal,S_transition_matrix,
 SXS_action_or_prdct_code,
 S_adrp,
@@ -310,8 +305,8 @@ S_no_insert,
 S_global_mess,
 S_lregle,
 NULL,
-(SXRECOVERY_T) sxsrecovery,
-NULL,
+sxsrecovery,
+NULL
 },
 {1, 6, 6, 10, 10, 13, 15, 21, 5, 4, 6, 6, 7, 5, 0, 9, 4, 7, 2, 5, 11, 5, 4,
 reductions,
@@ -333,18 +328,21 @@ P_right_ctxt_head,
 SXP_local_mess,
 P_no_delete,
 P_no_insert,
-P_global_mess,PER_tset,sxscan_it,(SXRECOVERY_T) sxprecovery,
+P_global_mess,
+PER_tset,
+sxscan_it,
+sxprecovery,
 NULL,
 NULL,
 #ifdef SEMACT
-(SXSEMACT_T) SEMACT
-#else /* SEMACT */
-NULL,
-#endif /* SEMACT */
+SEMACT
+#else
+(SXSEMACT_FUNCTION *) NULL
+#endif
 },
 err_titles,
 abstract,
 (sxsem_tables*)NULL,
-NULL,
+NULL
 };
 /* End of sxtables for udag [Thu Dec 10 11:46:09 2009] */

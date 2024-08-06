@@ -21,12 +21,12 @@
 
 #include "sxunix.h"
 
-char WHAT_PPCMAIN[] = "@(#)SYNTAX - $Id: ppc_main.c 3633 2023-12-20 18:41:19Z garavel $";
+char WHAT_PPCMAIN[] = "@(#)SYNTAX - $Id: ppc_main.c 4143 2024-08-02 08:50:12Z garavel $";
 
 /* Les tables engendrees par SYNTAX */
 extern struct sxtables	ppc_args_tables;
 
-extern void ppc_scan_act (SXINT code, SXINT act_no);
+extern bool ppc_scan_act (SXINT code, SXINT act_no);
 
 #include "ppc1_td.h"
 #include "ppc2_td.h"
@@ -117,9 +117,9 @@ static void	option_dir (char *dir)
     save_lv.scan_lv = sxsvar.sxlv;
     save_lv.pars_lv = sxplocals;
     save_lv.src_lv = sxsrcmngr;
-    (*ppc_args_tables.analyzers.parser) (SXOPEN, &ppc_args_tables);
+    (*ppc_args_tables.SX_parser) (SXOPEN, &ppc_args_tables);
     option_file (dir);
-    (*ppc_args_tables.analyzers.parser) (SXCLOSE, &ppc_args_tables);
+    (*ppc_args_tables.SX_parser) (SXCLOSE, &ppc_args_tables);
     sxsrcmngr = save_lv.src_lv;
     sxplocals = save_lv.pars_lv;
     sxsvar.sxlv = save_lv.scan_lv;
@@ -241,8 +241,9 @@ static void	user_args_error (char *message)
 
 
 
-void	ppc_args_semact (SXINT what, SXINT which)
+void ppc_args_semact (SXINT what, SXINT action_no, struct sxtables *arg)
 {
+    (void) arg;
     switch (what) {
     case SXERROR:
 	fprintf (sxstderr, Usage, ME);
@@ -256,7 +257,7 @@ void	ppc_args_semact (SXINT what, SXINT which)
 	break;
 
     case SXACTION:
-	switch (which) {
+	switch (action_no) {
 	case 0:
 	    break;
 
@@ -303,7 +304,7 @@ void	ppc_args_semact (SXINT what, SXINT which)
 
 	case 7:
 	    /* <-arg> = -TYPE %IDENTIFIER			*/
-	    ppc_scan_act (SXACTION, 0);
+	    (void) ppc_scan_act (SXACTION, 0);
 	    break;
 
 	case 8:
@@ -429,12 +430,12 @@ int main (int argc, char *argv[])
 
     syntax (SXINIT, &ppc_args_tables, false /* no includes */);
 
-    ppc_scan_act (SXBEGIN, 0);
+    (void) ppc_scan_act (SXBEGIN, 0);
     decode_options (argc, argv);
     syntax (SXCLOSE, &ppc_args_tables);
 
     if (sxerrmngr.nbmess [1] != 0 || sxerrmngr.nbmess [2] != 0) {
-	ppc_args_semact (SXERROR, 0);
+	ppc_args_semact (SXERROR, 0, NULL);
 	/* NOTREACHED */
     }
 
@@ -459,7 +460,7 @@ int main (int argc, char *argv[])
 
     syntax (SXFINAL, ppc_tables, true);
 
-    ppc_scan_act (SXEND, 0);
+    (void) ppc_scan_act (SXEND, 0);
     sxerr_mngr (SXEND);
 
     sxexit (sxerr_max_severity ());

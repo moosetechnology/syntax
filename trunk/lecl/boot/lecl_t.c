@@ -665,9 +665,8 @@ static char *err_titles[SXSEVERITIES]={
 };
 static char abstract []= "%ld warnings and %ld errors are reported.";
 #ifdef PARSACT
-extern SXINT PARSACT(SXINT what, SXINT action_no);
-#endif /* PARSACT */
-extern bool sxprecovery (SXINT what_to_do, SXINT *at_state, SXINT latok_no);
+extern SXPARSACT_FUNCTION PARSACT;
+#endif
 
 static unsigned char S_char_to_simple_class[]={
 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
@@ -1054,11 +1053,9 @@ static char *S_global_mess[]={0,
 "%sScanning stops on End Of File.",
 };
 #ifdef SCANACT
-extern SXINT SCANACT(SXINT what, SXINT act_no);
-#endif /* SCANACT */
-extern SXINT sxscan_it(void);
-extern bool sxsrecovery (SXINT sxsrecovery_what, SXINT state_no, unsigned char *class);
-static SXINT check_keyword(char *init_string, SXINT init_length);
+extern SXSCANACT_FUNCTION SCANACT;
+#endif
+static SXCHECK_KEYWORD_FUNCTION sxcheck_keyword;
 static struct SXT_node_info SXT_node_info[]={{0,0},
 {67,1},{93,7},{0,7},{0,8},{12,10},{10,11},{11,13},{58,14},{52,16},{0,18},{0,19},{0,20},
 {0,21},{0,22},{80,23},{33,25},{81,26},{56,27},{93,28},{0,28},{0,29},{5,31},{2,32},{2,34},
@@ -1175,7 +1172,7 @@ static char *T_node_name[]={NULL,
 "ZOMBIE_NAME",
 "ZOMBIE_S",
 };
-extern SXINT sempass(SXINT what, struct sxtables *sxtables_ptr);
+extern SXSEMPASS_FUNCTION SEMPASS;
 static char T_stack_schema[]={0,
 0,1,2,3,4,5,1,0,2,0,0,2,0,0,2,0,2,0,1,0,0,0,0,2,0,
 0,0,1,0,2,0,0,2,0,2,0,0,0,0,2,0,0,1,0,1,0,0,0,1,0,
@@ -1186,15 +1183,16 @@ static char T_stack_schema[]={0,
 1,1,0,0,0,0,1,1,1,0,2,0,0,2,0,2,0,0,1,0,2,0,0,0,0,
 0,1,1,0,2,0,0,1,0,};
 
-static struct SXT_tables SXT_tables=
-{SXT_node_info, T_ter_to_node_name, T_stack_schema, sempass, T_node_name};
-extern SXINT sxscanner(SXINT what_to_do, struct sxtables *arg);
-extern SXINT sxparser(SXINT what_to_do, struct sxtables *arg);
-extern SXINT sxatc(SXINT what, ...);
+static struct SXT_tables SXT_tables={
+SXT_node_info, T_ter_to_node_name, T_stack_schema, SEMPASS, T_node_name
+};
+extern SXSEMACT_FUNCTION sxatc;
 
 struct sxtables sxtables={
 52113, /* magic */
-{sxscanner,(SXPARSER_T) sxparser}, {255, 70, 1, 3, 4, 40, 0, 46, 1, 1, 0, 
+sxscanner,
+sxparser,
+{255, 70, 1, 3, 4, 40, 0, 46, 1, 1, 0, 
 S_is_a_keyword,S_is_a_generic_terminal,S_transition_matrix,
 SXS_action_or_prdct_code,
 S_adrp,
@@ -1206,12 +1204,12 @@ S_no_insert,
 S_global_mess,
 S_lregle,
 #ifdef SCANACT
-(SXSCANACT_T) SCANACT,
-#else /* SCANACT */
-(SXSCANACT_T) NULL,
-#endif /* SCANACT */
-(SXRECOVERY_T) sxsrecovery,
-check_keyword,
+SCANACT,
+#else
+(SXSCANACT_FUNCTION *) NULL,
+#endif
+sxsrecovery,
+sxcheck_keyword
 },
 {43, 151, 165, 208, 231, 308, 372, 537, 70, 72, 171, 171, 143, 67, 0, 11, 4, 7, 2, 5, 11, 2, 6,
 reductions,
@@ -1239,22 +1237,24 @@ P_right_ctxt_head,
 SXP_local_mess,
 P_no_delete,
 P_no_insert,
-P_global_mess,PER_tset,sxscan_it,(SXRECOVERY_T) sxprecovery,
+P_global_mess,PER_tset,
+sxscan_it,
+sxprecovery,
 #ifdef PARSACT
-(SXPARSER_T) PARSACT,
-#else /* PARSACT */
-(SXPARSER_T) NULL,
-#endif /* PARSACT */
-(SXDESAMBIG_T) NULL,
-(SXSEMACT_T) sxatc
+PARSACT,
+#else
+(SXPARSACT_FUNCTION *) NULL,
+#endif
+(SXDESAMBIG_FUNCTION *) NULL,
+sxatc
 },
 err_titles,
 abstract,
-(sxsem_tables*)&SXT_tables,
-NULL,
+(sxsem_tables *) &SXT_tables,
+NULL
 };
 
-#include	"sxdico.h"
+#include "sxdico.h"
 
 #define KW_NB		44
 #define INIT_BASE	1
@@ -1330,6 +1330,6 @@ static unsigned char char2class [256] = {
 '\000', 
 };
 
-#include	"sxcheck_keyword.h"
+#include "sxcheck_keyword.h"
 
 /* End of sxtables for lecl */

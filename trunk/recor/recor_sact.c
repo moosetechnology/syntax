@@ -17,14 +17,10 @@
  *   can be found at, e.g., http://www.cecill.info
  *****************************************************************************/
 
-
-
-
-
-
 #include "sxversion.h"
 #include "sxunix.h"
-char WHAT_RECORSACT[] = "@(#)SYNTAX - $Id: recor_sact.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
+
+char WHAT_RECORSACT[] = "@(#)SYNTAX - $Id: recor_sact.c 4124 2024-07-29 10:58:45Z garavel $" WHAT_DEBUG;
 
 #ifdef __GNUC__
 __attribute__ ((noreturn))
@@ -35,16 +31,14 @@ static void	gripe (void)
     sxexit(1);
 }
 
-
-
-void	recor_scan_act (SXINT what, SXINT act_no)
+bool recor_scan_act (SXINT what, SXINT act_no)
 {
     switch (what) {
     case SXOPEN:
     case SXCLOSE:
     case SXINIT:
     case SXFINAL:
-	return;
+	return SXANY_BOOL;
 
     case SXACTION:
 	switch (act_no) {
@@ -54,7 +48,7 @@ void	recor_scan_act (SXINT what, SXINT act_no)
 			 sxsvar.sxtables->err_titles [1][0],
 			 "%sA dark symbol must be built up with the same character.",
 			 sxsvar.sxtables->err_titles [1]+1);
-	    return;
+	    return SXANY_BOOL;
 
 	case 2:
 	    /* \nnn => char */
@@ -72,7 +66,7 @@ void	recor_scan_act (SXINT what, SXINT act_no)
 		sxsvar.sxlv.ts_lgth = sxsvar.sxlv.mark.index + 1;
 		sxsvar.sxlv.mark.index = -1;
 	    }
-	    return;
+	    return SXANY_BOOL;
 
 	default:
 #if EBUG

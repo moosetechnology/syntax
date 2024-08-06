@@ -2,7 +2,7 @@
 include $(SX)/etc/make/gccoptions
 
 BNF=$(SX)/bnf
-LIB=$(BNF)/lib
+LIB=$(BNF)/lib.$(ARCH)
 BOOT=$(BNF)/boot
 
 CC=$(COMPILER) -I$(BOOT) -I$(SXINCL) -I$(SXINCL)/util -I$(BNF) $(CFLAGS)
@@ -10,9 +10,6 @@ CC=$(COMPILER) -I$(BOOT) -I$(SXINCL) -I$(SXINCL)/util -I$(BNF) $(CFLAGS)
 all: $(SXBIN)/bnf.out \
      $(SXAUX)/print_bt.out	\
      $(SXAUX)/check_bnf.out
-
-$(SXBIN)/bnf.out:	$(BNF)/bnf.out
-	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
 NEEDS1=\
 	$(LIB)/bnf_folcon.o		\
@@ -26,7 +23,7 @@ NEEDS1=\
 	$(LIB)/bnf_terminal.o		\
 	$(LIB)/bnf_t.o
 
-$(BNF)/bnf.out:	$(NEEDS1)	$(SXBIBS)
+$(SXBIN)/bnf.out:	$(NEEDS1)	$(SXBIBS)
 	@rm -f $@
 	$(COMPILER) -o $@ $(NEEDS1) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@; exit 1)
 
@@ -84,7 +81,6 @@ $(LIB)/bnf_symtab.o:	$(SXINCL)/sxunix.h	\
 $(LIB)/bnf_huge.o:	$(SXINCL)/sxunix.h	\
 			$(SXINCL)/sxba.h	\
 			$(SXINCL)/varstr.h	\
-			$(SXINCL)/sxword.h	\
 			$(SXINCL)/util/B_tables.h	\
 			bnf_huge.c
 	$(CC) -o $@ -c bnf_huge.c
@@ -99,7 +95,7 @@ $(LIB)/bnf_t.o:		$(SXINCL)/sxunix.h 	\
 	$(CC) -o $@ -c $(BOOT)/bnf_t.c			\
 		-Dsxtables=bnf_tables		\
 		-DSCANACT=bnf_scan_act		\
-		-Dsempass=sxbnfsmp
+		-DSEMPASS=sxbnfsmp
 
 NEEDS2=\
 	$(LIB)/bnf_dump.o		\
@@ -156,7 +152,7 @@ bnf.rt: bnf.bt bnf.st bnf.recor
 # fin de code produit par "make-makefile bnf"
 
 clean:
-	/bin/rm -f $(LIB)/*.o $(SXAUX)/print_bt.out $(SXAUX)/check_bnf.out $(BNF)/bnf.out
+	/bin/rm -f $(LIB)/*.o $(SXAUX)/print_bt.out $(SXAUX)/check_bnf.out
 	/bin/rm -f bnf.att bnf.bt bnf.pt bnf.rt bnf.st
 	/bin/rm -f bnf.bn.l bnf.lc.l bnf.rc.l
 	/bin/rm -f bnf.c.skeleton bnf_t.c

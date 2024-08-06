@@ -2,19 +2,16 @@
 include $(SX)/etc/make/gccoptions
 
 BNF=$(SX)/bnf
-BNFLIB=$(BNF)/lib
+BNFLIB=$(BNF)/lib.$(ARCH)
 
 PARADIS=$(SX)/paradis
-LIB=$(PARADIS)/lib
+LIB=$(PARADIS)/lib.$(ARCH)
 INCL=$(PARADIS)/incl
 BOOT=$(PARADIS)/boot
 
 CC=$(COMPILER) -I$(BOOT) -I$(BNF) -I$(SXINCL) -I$(SXINCL)/util -Dsxtables=paradis_tables $(CFLAGS)
 
 all: $(SXBIN)/paradis.out $(SXAUX)/print_ppt.out
-
-$(SXBIN)/paradis.out:	$(PARADIS)/paradis.out
-	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
 NEEDS=		$(BNFLIB)/bnf_sact.o	\
 		$(BNFLIB)/bnf_t.o    	\
@@ -29,7 +26,7 @@ NEEDS=		$(BNFLIB)/bnf_sact.o	\
 
 PRINT=		$(LIB)/print_ppt.o
 
-$(PARADIS)/paradis.out:	$(NEEDS)	$(SXBIBS)
+$(SXBIN)/paradis.out:	$(NEEDS)	$(SXBIBS)
 	@rm -f $@
 	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
@@ -41,7 +38,7 @@ $(LIB)/paradis_t.o: 	$(SXINCL)/sxunix.h $(BOOT)/paradis_t.c
 	$(CC) -o $@ -c $(BOOT)/paradis_t.c		\
 		-Dsxtables=paradis_tables	\
 		-DSCANACT=paradis_scan_act	\
-		-Dsempass=paradis_smp
+		-DSEMPASS=paradis_smp
 
 $(LIB)/paradis_main.o:	$(SXINCL)/sxunix.h	\
 			$(SXINCL)/util/B_tables.h 	\
@@ -86,7 +83,7 @@ paradis.rt: paradis.bt paradis.st paradis.recor
 # fin de code produit par "make-makefile paradis"
 
 clean:
-	/bin/rm -f $(LIB)/*.o $(PARADIS)/paradis.out $(SXAUX)/print_ppt.out
+	/bin/rm -f $(LIB)/*.o $(SXAUX)/print_ppt.out
 	/bin/rm -f paradis.att paradis.bt paradis.pt paradis.rt paradis.st
 	/bin/rm -f paradis.bn.l paradis.lc.l paradis.rc.l
 	/bin/rm -f paradis.c.skeleton paradis_t.c

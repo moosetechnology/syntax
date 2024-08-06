@@ -3,7 +3,7 @@ include $(SX)/etc/make/gccoptions
 
 ARN=$(SX)/../outdated/oldies/ARN
 SRC=$(ARN)/src
-LIB=$(ARN)/lib
+LIB=$(ARN)/lib.$(ARCH)
 INCL=$(ARN)/incl
 
 CC=cc -I$(INCL) -I$(SXINCL) -I$(SX)/incl/util -I$(SX)/../extensions/incl $(CFLAGS) -DEBUG
@@ -25,7 +25,7 @@ $(LIB)/ARN_t.o:		$(SXINCL)/sxunix.h 	\
 			$(SRC)/ARN_t.c
 	$(CC) -o $@ -c $(SRC)/ARN_t.c		\
 		-DPARSACT=ARN_parsact		\
-		-DSEMACT=sxvoid			\
+		-DSEMACT=sxwvoid			\
 	        -DESAMBIG=sxvoid		\
 	        -DPARSACT_2=sxvoid
 

@@ -23,7 +23,7 @@
 #include "B_tables.h"
 #include "bnf_vars.h"
 
-char WHAT_SEMACT_SACT[] = "@(#)SYNTAX - $Id: semact_sact.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_SEMACT_SACT[] = "@(#)SYNTAX - $Id: semact_sact.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
 
 static SXINT	*user_actions;
 static SXINT	act_lgth, rule_no;
@@ -36,10 +36,9 @@ static void	gripe (void)
 }
 
 
-void
-semact_semact (SXINT code, SXINT numact)
+void semact_semact (SXINT code, SXINT numact, struct sxtables *arg)
 {
-
+    (void) arg;
     switch (code) {
     case SXOPEN:
     case SXCLOSE:
@@ -100,7 +99,7 @@ bool		semact_sem (void)
 
 
 
-SXINT	semact_scan_act (SXINT code, SXINT act_no)
+bool semact_scan_act (SXINT code, SXINT act_no)
 {
     static struct {
 	       struct sxsvar	sxsvar;
@@ -154,24 +153,11 @@ SXINT	semact_scan_act (SXINT code, SXINT act_no)
    SXINIT du scanner) avec ";" comme previous char et le caractere suivant le ';' comme
    caractere courant. */
 	    sxsyntax (SXACTION, &semact_tables);
-/*
-	    (*(semact_tables.analyzers.scanner)) (SXINIT, &semact_tables);
-
-	    if (semact_tables.SXS_tables.S_is_user_action_or_prdct)
-		(*(semact_tables.SXS_tables.scanact)) (SXINIT, &semact_tables);
-
-	    (*(semact_tables.analyzers.parser)) (SXACTION, &semact_tables);
-
-	    if (semact_tables.SXS_tables.S_is_user_action_or_prdct)
-		(*(semact_tables.SXS_tables.scanact)) (SXFINAL, &semact_tables);
-
-	    (*(semact_tables.analyzers.scanner)) (SXFINAL, &semact_tables);
-*/
 	    semact.sxsvar = sxsvar;
 	    semact.sxplocals = sxplocals;
 	    sxsvar = bnf.sxsvar;
 	    sxplocals = bnf.sxplocals;
-	    return 0;
+	    return SXANY_BOOL;
 
 	default:
 	    break;
@@ -183,7 +169,7 @@ SXINT	semact_scan_act (SXINT code, SXINT act_no)
 	    /*NOTREACHED*/
     }
 
-    return 0;
+    return SXANY_BOOL;
 }
 
 

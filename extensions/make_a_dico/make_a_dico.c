@@ -125,7 +125,7 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXMAIN[] = "@(#)SYNTAX - $Id: make_a_dico.c 3731 2024-02-13 08:56:37Z garavel $" WHAT_DEBUG;
+char WHAT_SXMAIN[] = "@(#)SYNTAX - $Id: make_a_dico.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
 
 static char ME [] = "make_a_dico.c";
 
@@ -627,15 +627,14 @@ main (int argc, char *argv[])
     return EXIT_SUCCESS;
 }
 
-void
-make_a_dico_scanact (SXINT entry, SXINT act_no)
+bool make_a_dico_scanact (SXINT entry, SXINT act_no)
 {
   switch (entry) {
     case SXOPEN:
     case SXCLOSE:
     case SXINIT:
     case SXFINAL:
-      return;
+      return SXANY_BOOL;
 
     case SXACTION:
       switch (act_no) {
@@ -643,7 +642,7 @@ make_a_dico_scanact (SXINT entry, SXINT act_no)
 	/* The pathname of the include file is in token_string */
 	if (sxpush_incl (sxsvar.sxlv_s.token_string))
 	  /* Now, the source text comes from the include file ... */
-	  return;
+	  return SXANY_BOOL;
 
 	/* something failed (unable to open, recursive call, ...) */
 	/* Error message */
@@ -654,12 +653,12 @@ make_a_dico_scanact (SXINT entry, SXINT act_no)
 		 sxsvar.sxlv_s.token_string /* Include file name */
 		 );
 	/* However, scanning of the current files goes on ... */
-	return;
+	return SXANY_BOOL;
 
       case 2:
 	/* End of include processing */
 	if (sxpop_incl ())
-	  return;
+	  return SXANY_BOOL;
 
 	/* Something really goes wrong ... */
 	/* Error message */
@@ -1511,9 +1510,9 @@ final (void)
 }
 
 
-SXINT
-make_a_dico_action (SXINT what, struct sxtables *arg)
+void make_a_dico_action (SXINT what, SXINT action_no, struct sxtables *arg)
 {
+  (void) arg;
   switch (what) {
   case SXOPEN:
     break;
@@ -1523,7 +1522,7 @@ make_a_dico_action (SXINT what, struct sxtables *arg)
     break;
 
   case SXACTION:
-    action ((SXINT)arg);
+    action (action_no);
     break;
 
   case SXERROR:
@@ -1542,6 +1541,4 @@ make_a_dico_action (SXINT what, struct sxtables *arg)
     fputs ("The function \"udag_action\" is out of date with respect to its specification.\n", sxstderr);
     sxexit (SXSEVERITIES);
   }
-
-  return 0;
 }

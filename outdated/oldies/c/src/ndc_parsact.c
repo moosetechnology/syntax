@@ -236,8 +236,7 @@ static void close_hook ()
 
 
 
-int ndc_parsact (entry, action_nb)
-    int entry, action_nb;
+bool ndc_parsact (SXINT entry, SXINT action_nb)
 {
     switch (entry) {
     case SXOPEN:
@@ -245,13 +244,13 @@ int ndc_parsact (entry, action_nb)
 	sxsymbol_table_alloc (&identifiers, 200, 200, identifiers_oflw);
 	id_kind = (int*) sxalloc (sxsymbol_table_size (identifiers) + 1, sizeof (int));
 	id_kind [0] = UNDEF_NAME;
-	return 1;
+	return SXANY_BOOL;
 
     case SXCLOSE:
 	sxfree (palvs);
 	sxfree (id_kind);
 	sxsymbol_table_free (&identifiers);
-	return 1;
+	return SXANY_BOOL;
 
     case SXINIT:
 	palvs_top = 0;
@@ -265,14 +264,16 @@ int ndc_parsact (entry, action_nb)
 		     close_hook,
 		     NULL /* nodes_oflw */);
 
-	return 1;
+	return SXANY_BOOL;
 
     case SXFINAL:
-	return 1;
+	return SXANY_BOOL;
 
     case SXPREDICATE:
+	return true;
+
     case SXACTION:
-	return 1;
+	return SXANY_BOOL;
 
     default:
 	break;

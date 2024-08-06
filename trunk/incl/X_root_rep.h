@@ -23,8 +23,8 @@
 
 /* Representation of the Abstract Data Type X_root */
 
-#include	<stdio.h>
-#include	"sxalloc.h"
+#include <stdio.h>
+#include "sxalloc.h"
 
 #define X_root_7F		SXINT_MAX
 #define X_root_80		(~X_root_7F)

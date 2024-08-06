@@ -17,37 +17,55 @@
  *   can be found at, e.g., http://www.cecill.info
  *****************************************************************************/
 
-
 #include "sxversion.h"
-#include "sxcommon.h"
-#include "sxba.h"
+#include "sxunix.h"
 
-char WHAT_SXVOID[] = "@(#)SYNTAX - $Id: sxvoid.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_SXVOID[] = "@(#)SYNTAX - $Id: sxvoid.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
 
-void
-sxvoid (void)
+void sxvoid (void)
 /* procedure ne faisant rien */
 {
 }
 
-bool
-sxbvoid (void)
+bool sxbvoid (void)
 /* procedure ne faisant rien */
 {
   return false;
 }
 
-SXINT
-sxivoid (void)
+SXINT sxivoid (void)
 /* procedure ne faisant rien */
 {
   return 0;
 }
 
-SXINT
-sxivoid_int (SXINT i)
+SXINT sxivoid_int (SXINT i)
 /* procedure ne faisant rien */
 {
   sxuse (i);
   return 0;
 }
+
+bool sxjvoid (SXINT what, SXINT act_no)
+/* procedure ne faisant rien */
+{
+  sxuse (what);
+  sxuse (act_no);
+  return 0;
+}
+
+void sxsvoid (SXINT what, struct sxtables *sxtables_ptr)
+/* procedure ne faisant rien */
+{
+  sxuse (what);
+  sxuse (sxtables_ptr);
+}
+
+void sxwvoid (SXINT what, SXINT action_no, struct sxtables *sxtables_ptr)
+/* procedure ne faisant rien */
+{
+  sxuse (what);
+  sxuse (action_no);
+  sxuse (sxtables_ptr);
+}
+

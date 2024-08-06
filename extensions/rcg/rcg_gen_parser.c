@@ -41,7 +41,7 @@
 
 static char	ME [] = "rcg_gen_parser";
 
-char WHAT_RCGGENPARSER[] = "@(#)SYNTAX - $Id: rcg_gen_parser.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_RCGGENPARSER[] = "@(#)SYNTAX - $Id: rcg_gen_parser.c 4152 2024-08-02 11:46:01Z garavel $" WHAT_DEBUG;
 
 
 extern SXINT		is_in_Tstar (SXINT, SXINT);
@@ -267,7 +267,7 @@ clear_struct (void)
 static VARSTR
 i2varstr (VARSTR vstr, SXINT i)
 {
-  char	istr [8];
+  char	istr [20];
 
   sprintf (istr, "%ld", (SXINT) i);
   return varstr_catenate (vstr, istr);
@@ -343,7 +343,7 @@ nt2varstr (VARSTR vstr, SXINT A)
 static VARSTR
 t2varstr (VARSTR vstr, SXINT t)
 {
-  char *str, alpha [12];
+  char *str, alpha [20];
 
   if (t == 0)
     return varstr_catenate (vstr, "\\\"\\\"");
@@ -1047,7 +1047,7 @@ substitute_atom_in_eq (SXINT *substitute_atom_in_eq_equation_stack2, char *exit_
   SXINT		xeq, atom, atom2, Xnb, Xnb2, xeq2, i, v, kind1, kind2, kind; 
   SXINT		*eq_ptr, *eq_ptr2;
   bool	is_useful = true;
-  char	string [16];
+  char	string [24];
 
   xeq = POP (substitute_atom_in_eq_equation_stack2);
   SXBA_1_bit (equation_already_substituted_set, xeq);
@@ -2021,16 +2021,18 @@ static void
 gen_nl_stmt_list (void)
 {
   SXINT       lhs_prdct, lhs_bot2_gen_nl_stmt_list, lhs_top2_gen_nl_stmt_list, lhs_cur2, lhs_nt, rhs, top, bot, cur, pos, param, bot3, top3, cur3, size, clause, nb, rhs_pos, top_list, bot1, top1, cur1;
-  SXINT       symb, rhs_prdct_pos, prdct, bot2, top2, cur2, nt, cur_pos, k, Ak, lb_pos, x, max_symb, main_clause, top_symb_stack, next, pos1, pos2, adr;
+  SXINT       symb, prdct, bot2, top2, cur2, nt, cur_pos, Ak, x, max_symb, main_clause, top_symb_stack, next, pos1, pos2;
+#if 0
+  SXINT       adr;
+#endif
   SXINT       symb_id, cur_lhs_t_nb;
   SXINT       *pos2symb_stack, *symb_stack, *symb2pos, *pos_stack, *symb_pos2next, *clause2nl_stmt_list_hd, *pos_symb_stack, *top_pos_symb_stack;
   SXINT       *rhs_pos2pos_stack_disp;
   XH_header   nl_stmt_list, XH_arg_pos_list, XH_pos_stack_disp;
-  bool   is_a_non_linear_clause, is_a_true_non_linear_clause; 
-
-  sxinitialise (lb_pos); /* pour faire taire gcc -Wunused -Wuninitialized */
-  sxinitialise (k); /* pour faire taire gcc -Wunused -Wuninitialized */
-  sxinitialise (rhs_prdct_pos); /* pour faire taire gcc -Wunused -Wuninitialized */
+  bool   is_a_true_non_linear_clause; 
+#if 0
+  bool   is_a_non_linear_clause; 
+#endif
 
   pos2symb_stack = (SXINT *) sxalloc (max_clause_arg_nb+1, sizeof (SXINT));
   symb_stack = (SXINT *) sxalloc (max_clause_arg_nb*(max_arg_size+1)+1, sizeof (SXINT));
@@ -2058,7 +2060,9 @@ gen_nl_stmt_list (void)
 
     clause2rhs_pos_disp [clause] = 0; /* init val */
 
+#if 0
     is_a_non_linear_clause = false;
+#endif
 
     if (!SXBA_bit_is_set (false_clause_set, clause)) {
       if ((main_clause = clause2identical [clause]) == clause) {
@@ -2082,9 +2086,11 @@ gen_nl_stmt_list (void)
 	  param = XH_list_elem (rcg_predicates, lhs_cur2);
 
 	  if (param > 0)  {
+#if 0
 	    if (!(is_left_linear_grammar && is_right_linear_grammar)
 		&& SXBA_bit_is_set (non_linear_Ak_set, Ak))
 	      is_a_non_linear_clause = true;
+#endif
 
 	    /* On fait c,a meme si la clause est lineaire */
 	    bot3 = XH_X (rcg_parameters, param);
@@ -2151,9 +2157,11 @@ gen_nl_stmt_list (void)
 	      pos2symb_stack [cur_pos] = top_symb_stack = DTOP (symb_stack);
 
 	      if (nt > 0) {
+#if 0
 		if (!(is_left_linear_grammar && is_right_linear_grammar)
 		    && SXBA_bit_is_set (non_linear_Ak_set, Ak))
 		  is_a_non_linear_clause = true;
+#endif
 
 		param = XH_list_elem (rcg_predicates, cur2);
 
@@ -2270,7 +2278,9 @@ gen_nl_stmt_list (void)
 	  }
 	}
 
+#if 0
 	adr = 0; /* Le symbole le + a gauche ds la liste des args de la lhs a l'"adresse" 1 */
+#endif
 
 	for (pos = 0; pos < lhs_arity; pos++) {
 	  pos_symb_stack = symb_stack + pos2symb_stack [pos];
@@ -2286,7 +2296,9 @@ gen_nl_stmt_list (void)
 
 	    while (++pos_symb_stack <= top_pos_symb_stack) {
 	      symb = *pos_symb_stack;
+#if 0
 	      adr++;  /* "adresse" du symb courant ds la liste des arguments */
+#endif
 
 	      if (symb < 0) {
 		if (symb >= -max_ste) {
@@ -2564,11 +2576,16 @@ static void
 gen_dag_parser (SXINT clause)
 {
   SXINT     lhs_prdct, lhs_bot2_gen_dag_parser, lhs_top2_gen_dag_parser, lhs_cur2, lhs_nt, nb_of_arg_tbp, rhs, top, bot, cur, adr, pos, param, bot3, top3, cur3, size, level;
-  SXINT     ladr, symb, madr, counter, radr, rhs_prdct_pos, prdct, bot2, top2, cur2, nt, cur_pos, k, Ak, lb_pos, len, x, rhs_prdct_arity, var, t_nb, local_lhs_t_nb, Tpq_stack_pos, lhs_symb;
-  bool has_changed, is_pos_call, rhs_prdct_args_are_known, is_a_counter, is_a_non_linear_clause, has_strlen; 
+  SXINT     ladr, symb, madr, counter, radr, rhs_prdct_pos, prdct, bot2, top2, cur2, nt, cur_pos, k, Ak, len, x, rhs_prdct_arity, var, local_lhs_t_nb, Tpq_stack_pos, lhs_symb;
+#if 0
+  SXINT t_nb;
+#endif
+  bool has_changed, is_pos_call, rhs_prdct_args_are_known, is_a_counter, has_strlen; 
   char      *exit_stmt;
+#if 0
+  bool is_a_non_linear_clause; 
+#endif
 
-  sxinitialise(lb_pos); /* pour faire taire gcc -Wunused -Wuninitialized */
   sxinitialise (bot3); /* pour faire taire gcc -Wuninitialized */
   sxinitialise (top3); /* pour faire taire gcc -Wuninitialized */
   sxinitialise (size); /* pour faire taire gcc -Wuninitialized */
@@ -2583,7 +2600,9 @@ gen_dag_parser (SXINT clause)
   lhs_top2_gen_dag_parser = XH_X (rcg_predicates, lhs_prdct+1);
   lhs_nt = XH_list_elem (rcg_predicates, lhs_bot2_gen_dag_parser+1);
   nb_of_arg_tbp = lhs_arity = nt2arity [lhs_nt];
+#if 0
   is_a_non_linear_clause = false;
+#endif
   local_lhs_t_nb = 0;
 
   adr = 1;
@@ -2599,9 +2618,11 @@ gen_dag_parser (SXINT clause)
       size = top3-bot3;
     }
 
+#if 0
     if (param > 0 && !(is_left_linear_grammar && is_right_linear_grammar) && SXBA_bit_is_set (non_linear_Ak_set, Ak)) {
       is_a_non_linear_clause = true;
     }
+#endif
 
     if (param > 0) {
       pos2adr [pos] = adr;
@@ -2790,9 +2811,11 @@ if ((rho [%ld] = p_T_q2Tpq (adr2bound_values[%ld], %ld, adr2bound_values[%ld])) 
     }
 
     for (cur2 = bot2+2; cur2 < top2; Ak++, cur2++) {
+#if 0
       if (nt > 0 && !(is_left_linear_grammar && is_right_linear_grammar) && SXBA_bit_is_set (non_linear_Ak_set, Ak)) {
 	is_a_non_linear_clause = true;
       }
+#endif
 
       nb_of_arg_tbp++;
       SXBA_1_bit (dag_arg_tbp_set, cur_pos);
@@ -3059,7 +3082,7 @@ if ((rho [%ld] = p_T_q2Tpq (adr2bound_values[%ld], %ld, adr2bound_values[%ld])) 
 
 			if (madr > 0) {
 			  /* C'est un bon */
-			  lhs_symb = XH_list_elem (rcg_parameters, bot4);
+			  lhs_symb = XH_list_elem (rcg_parameters, bot4); (void) lhs_symb;
 
 			  /* On genere */
 			  len = XH_list_elem (rcg_predicates, bot2+2);
@@ -3137,6 +3160,8 @@ adr2bound_values [%ld] = SS_pop (SS_stack); // on pop le sommet\n", madr, len, l
 	    }
 	    else {
 	      /* Vrai terminal, on le scanne */
+#if 0
+	      /* t_nb est non utilisé!! */
 	      /* On compte le nb de terminaux entre cur3 et top3 */
 	      t_nb = 1; /* celui de cur3 */
 
@@ -3144,6 +3169,7 @@ adr2bound_values [%ld] = SS_pop (SS_stack); // on pop le sommet\n", madr, len, l
 		if (XH_list_elem (rcg_parameters, x) < 0)
 		  t_nb++;
 	      }
+#endif
 	      
 	      is_GET_QSTACK = true;
 
@@ -3373,7 +3399,7 @@ fill_param_pos (SXINT clause)
   SXINT         counter, counter_nb;
   char	kind;
   SXBA	wmadr_set, equiv_adr_set;
-  char	lstring [16], ustring [16], string [32];
+  char	lstring [25], ustring [25], string [32];
   VARSTR	vstr;
     
   sxinitialise(rcur3) /* Pour un compilateur croisé pour l'architecture itanium64 qui est gcc version 3.4.5
@@ -5445,10 +5471,10 @@ gen_StrEq_spcl (SXINT prdct_pos, SXINT arg_pos, SXINT bot3, SXINT top3, char *ex
             fprintf (parser_file, "if ((Tpq = p_T_q2Tpq (olb[%ld], %ld, oub[%ld])) == 0) %s;\n",
                      (SXINT) arg_pos, (SXINT) -symb, (SXINT) arg_pos, exit_string);
 
-            if (is_drcg && (tooth = rhs_prdct_pos2tooth [prdct_pos]) > 0) {
+          if (is_drcg && (tooth = rhs_prdct_pos2tooth [prdct_pos]) > 0) {
                 /* Pour definite part eventuel */
                 fprintf (parser_file, "rho[%ld] = -oub[%ld];\n", (SXINT) tooth+1, (SXINT) arg_pos);
-            }
+          }
         }
         else {
 	  if (terminal_file)
@@ -7199,7 +7225,7 @@ unknown_arg_size (SXINT pos)
 {
   /* On calcule ds wvstr la somme cummulee des tailles inconnues (apres) pos */
   SXINT		tnb, ladr, radr, symb, atom;
-  char	        string [12];
+  char	        string [23];
   bool	is_first = true;
 
   wvstr = varstr_raz (wvstr);
@@ -7283,7 +7309,7 @@ lhs_arg_processing (SXINT clause, SXINT pos, char *exit_stmt, bool first_call)
   SXINT           Ak;
   bool       has_counter, has_range;
 #endif
-  char	          string [16];
+  char	          string [22];
 
   ladr = lhs_pos2ladr [pos];
   radr = lhs_pos2radr [pos];
@@ -8366,7 +8392,7 @@ gen_level (SXINT level, SXINT clause, char *exit_stmt)
 {
   SXINT		pos, xeq, mpos, atom, Xnb, xeq2, ladr, radr, lmadr, rmadr, symb, max;
   SXINT		*eq_ptr, *eq2_ptr;
-  char	string [16];
+  char	string [28];
 
   while (!IS_EMPTY (equation_stack)) {
     while (!IS_EMPTY (equation_stack))
@@ -9783,6 +9809,7 @@ static SXINT\t*source, *lsource;\n\
       }
 
       id = sxword_2save (&t_names, str, lgth); /* id == t+1 */
+      (void) id;
     }
 
     sxword_to_c (&t_names, parser_file, "t_names", true);
@@ -10847,7 +10874,7 @@ gen_first_last_pp (void)
     /* Pour chaque clause k qui a un predicat predefini &first ou &last en position i on
        genere le SXBA first|last_k_i */
     SXINT		clause, rhs, top, bot, rhs_prdct_pos, cur, prdct, bot2, nt, param, bot3, cur3, top3, symb;
-    char	istr [16];
+    char	istr [40];
     SXBA	t_set;
 
     fputs ("\n/************** U S E R ' S   F I R S T   &   L A S T **********************/\n", parser_file);
@@ -10901,7 +10928,7 @@ gen_first_last (void)
 {
     SXINT 	Ak, A, k;
     SXBA	t_set;
-    char	istr [8];
+    char	istr [20];
 
     fputs ("\n#if is_first_last\n", parser_file);
 
@@ -13488,7 +13515,7 @@ gen_clause_comment (FILE *gen_clause_comment_parser_file, SXINT clause)
 static void
 nt2cst (SXBA nt2cst_A_clause_set)
 {
-    SXINT		clause, nt2cst_lhs_bot2, nt2cst_lhs_top2, isize_nb, pos, cur2, param, cur3, bot3, top3, var_nb, symb, symb_nb;
+    SXINT		clause, nt2cst_lhs_bot2, nt2cst_lhs_top2, isize_nb, cur2, param, cur3, bot3, top3, var_nb, symb, symb_nb;
     SXINT		Sindex_nb, var, rhs, top, bot, nt2cst_rhs_arg_nb, cur, prdct, bot2, top2, rhs_prdct_nb, etc_nb, nt2cst_lhs_t_nb, lhs_adr_nb;
 
     Aisize_nb = ASindex_nb = Avar_nb = Arhs_arg_nb = Arhs_prdct_nb = Aetc_nb = Alhs_t_nb = Alhs_adr_nb = 0;
@@ -13505,7 +13532,7 @@ nt2cst (SXBA nt2cst_A_clause_set)
 	nt2cst_lhs_top2 = XH_X (rcg_predicates, prdct+1);
 	isize_nb = nt2cst_lhs_t_nb = lhs_adr_nb = 0;
 
-	for (pos = 0, cur2 = nt2cst_lhs_bot2+2; cur2 < nt2cst_lhs_top2; pos++, cur2++) {
+	for (cur2 = nt2cst_lhs_bot2+2; cur2 < nt2cst_lhs_top2; cur2++) {
 	    param = XH_list_elem (rcg_predicates, cur2);
 
 	    if (param > 0) {
@@ -14134,20 +14161,20 @@ fputs ("sxword_reuse (&t_names, \"t_names\", sxcont_malloc, sxcont_alloc, sxcont
   parser_file);
 fputs ("#endif /* 0 */\n", parser_file);
 
-if (is_GET_QSTACK)
-     /* Le parseur utilise GET_QSTACK */
-     fputs ("G.is_GET_QSTACK = true;\n", parser_file);
+     if (is_GET_QSTACK)
+        /* Le parseur utilise GET_QSTACK */
+        fputs ("G.is_GET_QSTACK = true;\n", parser_file);
 
      if (is_GET_PSTACK)
-     /* Le parseur utilise GET_PSTACK */
-     fputs ("G.is_GET_PSTACK = true;\n", parser_file);
+        /* Le parseur utilise GET_PSTACK */
+        fputs ("G.is_GET_PSTACK = true;\n", parser_file);
 
      A = 0;
 
      while ((A = sxba_scan (is_nt_external, A)) > 0) {
-if (SXBA_bit_is_set (is_lhs_nt, A))
-     /* A est externe et defini ici */
-     fprintf (parser_file, "%s_pid = G.pid;\n", sxstrget (nt2ste [A]));
+        if (SXBA_bit_is_set (is_lhs_nt, A))
+           /* A est externe et defini ici */
+           fprintf (parser_file, "%s_pid = G.pid;\n", sxstrget (nt2ste [A]));
      }
 
 fputs ("#if !is_grammar_alone\n", parser_file);
@@ -14391,7 +14418,7 @@ gen_dynamic_lexicalization_A_i_clauses (SXINT A, SXINT i)
 
 	lhs_prdct = XxY_X (rcg_clauses, clause) & lhs_prdct_filter;
 	lhs_bot = XH_X (rcg_predicates, lhs_prdct);
-	lhs_top = XH_X (rcg_predicates, lhs_prdct+1);
+	lhs_top = XH_X (rcg_predicates, lhs_prdct+1); (void) lhs_top;
 
 	rhs = XxY_Y (rcg_clauses, clause);	
 	top = XH_X (rcg_rhs, rhs+1);
@@ -14486,7 +14513,7 @@ gen_nl_A_i_clauses (SXINT A, SXINT i)
 
 	lhs_prdct = XxY_X (rcg_clauses, clause) & lhs_prdct_filter;
 	lhs_bot = XH_X (rcg_predicates, lhs_prdct);
-	lhs_top = XH_X (rcg_predicates, lhs_prdct+1);
+	lhs_top = XH_X (rcg_predicates, lhs_prdct+1); (void) lhs_top;
 
 	rhs = XxY_Y (rcg_clauses, clause);	
 	top = XH_X (rcg_rhs, rhs+1);
@@ -14596,7 +14623,7 @@ _terminal_%s (void)\n\
     lhs_prdct = XxY_X (rcg_clauses, clause) & lhs_prdct_filter;
     lhs_bot = XH_X (rcg_predicates, lhs_prdct);
     lhs_top = XH_X (rcg_predicates, lhs_prdct+1);
-    lhs_nt = XH_list_elem (rcg_predicates, lhs_bot+1);
+    lhs_nt = XH_list_elem (rcg_predicates, lhs_bot+1); (void) lhs_nt;
 
     is_first_t = true;
 
@@ -14942,7 +14969,7 @@ gen_parser (void)
 	A_arity = nt2arity [A];
 
 	A_is_internal = SXBA_bit_is_set (is_nt_internal, A);
-	A_is_external = SXBA_bit_is_set (is_nt_external, A);
+	A_is_external = SXBA_bit_is_set (is_nt_external, A); (void) A_is_external;
 	A_is_loop = SXBA_bit_is_set (loop_nt_set, A);
 	A_is_cyclic = SXBA_bit_is_set (cyclic_nt_set, A);
 

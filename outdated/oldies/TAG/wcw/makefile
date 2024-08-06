@@ -41,7 +41,7 @@ $(LIB)/wcw_t.o:		$(SXINCL)/sxunix.h 	\
 			$(SRC)/wcw_t.c
 	$(CC) -o $@ -c $(SRC)/wcw_t.c		\
 		-DPARSACT=sxndligparsact	\
-		-DSEMACT=sxvoid			\
+		-DSEMACT=sxwvoid			\
 		-DESAMBIG=sxvoid		\
 	        -DPARSACT_2=sxvoid
 
@@ -52,7 +52,7 @@ $(LIB)/wcw_post_t.o:	$(SXINCL)/sxunix.h 	\
 			$(SRC)/wcw_post_t.c
 	$(CC) -o $@ -c $(SRC)/wcw_post_t.c	\
 		-DPARSACT=sxndligpost		\
-		-DSEMACT=sxvoid			\
+		-DSEMACT=sxwvoid			\
 		-DESAMBIG=sxvoid		\
 	        -DPARSACT_2=sxvoid
 
@@ -63,7 +63,7 @@ $(LIB)/wcw_mixt_t.o:	$(SXINCL)/sxunix.h 	\
 			$(SRC)/wcw_mixt_t.c
 	$(CC) -o $@ -c $(SRC)/wcw_mixt_t.c	\
 		-DPARSACT=sxndligmixt		\
-		-DSEMACT=sxvoid			\
+		-DSEMACT=sxwvoid			\
 		-DESAMBIG=sxvoid		\
 	        -DPARSACT_2=sxvoid
 
@@ -74,7 +74,7 @@ $(LIB)/wcw_bylev_t.o:	$(SXINCL)/sxunix.h 	\
 			$(SRC)/wcw_bylev_t.c
 	$(CC) -o $@ -c $(SRC)/wcw_bylev_t.c	\
 		-DPARSACT=sxndligbylev		\
-		-DSEMACT=sxvoid			\
+		-DSEMACT=sxwvoid			\
 		-DESAMBIG=sxvoid		\
 	        -DPARSACT_2=sxvoid
 
@@ -85,7 +85,7 @@ $(LIB)/wcw_post2_t.o:	$(SXINCL)/sxunix.h 	\
 			$(SRC)/wcw_post2_t.c
 	$(CC) -o $@ -c $(SRC)/wcw_post2_t.c	\
 		-DPARSACT=sxndligpost2		\
-		-DSEMACT=sxvoid			\
+		-DSEMACT=sxwvoid			\
 		-DESAMBIG=sxvoid		\
 	        -DPARSACT_2=sxvoid
 

@@ -275,7 +275,7 @@ run:
     }
 
     sxstr_mngr (SXBEGIN);
-    (*(dcg_tables.analyzers.parser)) (SXBEGIN);
+    (*(dcg_tables.SX_parser)) (SXBEGIN, NULL /* dummy */);
     syntax (SXOPEN, &dcg_tables);
 
     if (options_set & OPTION (LANGUAGE_NAME)) {
@@ -292,7 +292,7 @@ run:
     }
 
     syntax (SXCLOSE, &dcg_tables);
-    (*(dcg_tables.analyzers.parser)) (SXEND);
+    (*(dcg_tables.SX_parser)) (SXEND, NULL /* dummy */);
     sxstr_mngr (SXEND);
 
     {

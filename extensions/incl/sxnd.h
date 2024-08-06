@@ -40,6 +40,114 @@
 #include 	"XxYxZ.h"
 #include 	"SS.h"
 
+#if (defined(SXS_MAX) && SXS_MAX >= SHRT_MAX)
+
+#ifndef sxndparser
+#define sxndparser sxndparser32
+#endif
+
+#ifndef sxndparse_clean_forest
+#define sxndparse_clean_forest sxndparse_clean_forest32
+#endif
+
+#ifndef sxndparse_pack_forest
+#define sxndparse_pack_forest sxndparse_pack_forest32
+#endif
+
+#ifndef sxndparse_erase_hook_item
+#define sxndparse_erase_hook_item sxndparse_erase_hook_item32
+#endif
+
+#ifndef sxndparser_GC
+#define sxndparser_GC sxndparser_GC32
+#endif
+
+#ifndef sxnd2parser_GC
+#define sxnd2parser_GC sxnd2parser_GC32
+#endif
+
+#ifndef sxndprecovery
+#define sxndprecovery sxndprecovery32
+#endif
+
+#ifndef sxndparse_in_la
+#define sxndparse_in_la sxndparse_in_la32
+#endif
+
+#ifndef sxnd2parser
+#define sxnd2parser sxnd2parser32
+#endif
+
+#ifndef NDP_access
+#define NDP_access NDP_access32
+#endif
+
+#ifndef new_symbol
+#define new_symbol new_symbol32
+#endif
+
+#ifndef set_rule
+#define set_rule set_rule32
+#endif
+
+#ifndef set_start_symbol
+#define set_start_symbol set_start_symbol32
+#endif
+
+#ifndef mreds_push
+#define mreds_push mreds_push32
+#endif
+
+#ifndef new_parser
+#define new_parser new_parser32
+#endif
+
+#ifndef sxndsubparse_a_token
+#define sxndsubparse_a_token sxndsubparse_a_token32
+#endif
+
+#ifndef reducer
+#define reducer reducer32
+#endif
+
+#ifndef output_repair_string
+#define output_repair_string output_repair_string32
+#endif
+
+#ifndef output_repair_list
+#define output_repair_list output_repair_list32
+#endif
+
+#ifndef sxndpallcorrections
+#define sxndpallcorrections sxndpallcorrections32
+#endif
+
+#ifndef ndlv_clear
+#define ndlv_clear ndlv_clear32
+#endif
+
+#ifndef clone_active_scanner
+#define clone_active_scanner clone_active_scanner32
+#endif
+
+#ifndef action_processing
+#define action_processing action_processing32
+#endif
+
+#ifndef sxndscanner
+#define sxndscanner sxndscanner32
+#endif
+
+#ifndef sxndscan_it
+#define sxndscan_it sxndscan_it32
+#endif
+
+#ifndef sxndsrecovery
+#define sxndsrecovery sxndsrecovery32
+#endif
+
+#endif
+
 typedef SXINT (*sxaction_new_top_t) (SXINT, SXINT, SXINT);
 
 extern bool	sxndparse_in_la (SXINT ep_la, SXINT Ttok_no, SXINT *Htok_no, struct sxparse_mode *mode_ptr);
@@ -78,136 +186,6 @@ struct ctrl_stack {
 
 /*      E N D   C T R L - S T A C K   M A N A G E R	*/
 
-
-
-#if 0
-/* S I N G L E - E L E M E N T - S T A C K  */
-
-struct sxses {
-    SXBA	set;
-    SXINT		*stack;
-};
-
-#define sxses_set(ses)		ses.set
-
-#define sxses_alloc(ses,size)	ses.set = sxba_calloc (size + 1),			\
-                                ses.stack = (SXINT *) sxalloc (size + 1, sizeof (SXINT)),	\
-                                ses.stack [0] = 0
-
-#define sxses_resize(ses,size)	ses.set = sxba_resize (ses.set, size + 1),		\
-                                ses.stack = (SXINT *) sxrealloc (ses.stack, size + 1, sizeof (SXINT))
-
-#define sxses_is_free(ses)	(ses.set == NULL)
-
-#define sxses_clean(ses)	ses.set = NULL,						\
-                                ses.stack = NULL
-
-#define sxses_free(ses)		sxfree (ses.set),					\
-                                sxfree (ses.stack),					\
-                                sxses_clean (ses)
-
-#define sxses_size(ses)		(SXBASIZE(ses.set) - 1)
-
-#define sxses_top(ses)		ses.stack [0]
-
-#define sxses_is_empty(ses)	(sxses_top(ses) == 0)
-
-#define sxses_raz(ses)		sxba_empty (ses.set), ses.stack [0] = 0
-
-#define sxses_get(ses,i)	ses.stack [i]
-
-#define sxses_spush(ses,x)	ses.stack [++*ses.stack] = x
-
-#define sxses_push(ses,x)	(SXBA_bit_is_reset_set (ses.set, x)			\
-                                    ? ses.stack [++*ses.stack] = x			\
-                                    : 0)
-
-#define sxses_fpush(ses,x)	SXBA_1_bit (ses.set, x),				\
-                                ses.stack [++*ses.stack] = x
-
-#define sxses_pop(ses)		ses.stack [(*ses.stack)--]
-
-
-/* E N D   of  S I N G L E - E L E M E N T - S T A C K  */
-
-
-/* XxY  by  L A Y E R */
-
-struct XxY_layer {
-    XxY_header		local;
-    struct XxY_elem	*global;
-    SXINT			base, size;
-};
-
-struct XxY_layer	*_LAYER_HEADER_PTR;
-
-
-static void XxY_layer_oflw (old_size, new_size)
-    SXINT old_size, new_size;
-{
-    _LAYER_HEADER_PTR->size += new_size - old_size;
-    _LAYER_HEADER_PTR->global =
-	(struct XxY_elem *) sxrealloc (_LAYER_HEADER_PTR->global,
-				       _LAYER_HEADER_PTR->size + 1,
-				       sizeof (struct XxY_elem));
-}
-
-static void XxY_layer_alloc (header, size)
-    struct XxY_layer	*header;
-    SXINT			size;
-{
-    XxY_alloc (&(header->local), "local", size, 1, 0, 0, XxY_layer_oflw, NULL);
-    header->size = XxY_size (header->local);
-    header->global = (struct XxY_elem *) sxalloc (header->size + 1, sizeof (struct XxY_elem));
-    header->base = 0;
-}
-
-static SXINT XxY_layer_put (header, X, Y)
-    struct XxY_layer	*header;
-    SXINT			X, Y;
-{
-    struct XxY_elem	*eptr;
-    SXINT			index;
-    bool		is_new;
-
-    _LAYER_HEADER_PTR = header;
-    is_new = !XxY_set (&(header->local), X, Y, &index);
-    index += header->base;
-    
-    if (is_new) {
-	eptr = header->global + index;
-	eptr->X = X;
-	eptr->Y = Y;
-    }
-
-    return index;
-}
-
-static void XxY_new_layer (header)
-    struct XxY_layer	*header;
-{
-    SXINT top;
-
-    if ((top = XxY_top (header->local)) > 0) {
-	header->base += top;
-	XxY_clear (&(header->local));
-	_LAYER_HEADER_PTR = header;
-	XxY_layer_oflw (header->size, header->size + XxY_size (header->local));
-    }
-}
-
-static void XxY_layer_free (header)
-    struct XxY_layer	*header;
-{
-    XxY_free (&(header->local));
-    sxfree (header->global);
-}
-
-#define	XxY_layer_get(header,x,i,j)	i=header.global[x].X,j=header.global[x].Y 
-
-/* END XxY  by  L A Y E R */
-
-#endif
 
 /* INCLUDE	sxmilstn.h	*/
 
@@ -682,6 +660,6 @@ SX_GLOBAL_VAR_ND struct sxndtkn {
 #define MS_EXHAUSTED	32
 
 extern void 	ndlv_clear (struct sxndlv *ndlv, bool keep_comments);
-extern void	sxndscan_it (void);
+extern SXSCANIT_FUNCTION sxndscan_it;
 
 #endif

@@ -61,7 +61,7 @@ static char	ME [] = "dag_scanner.c";
 #include "dag_scanner.h"
 #include "sxnd.h"
 
-char WHAT_DAG_SCANNER[] = "@(#)SYNTAX - $Id: dag_scanner.c 3678 2024-02-06 08:38:24Z garavel $" WHAT_DEBUG;
+char WHAT_DAG_SCANNER[] = "@(#)SYNTAX - $Id: dag_scanner.c 4042 2024-06-15 08:16:56Z garavel $" WHAT_DEBUG;
 
 #if 0
 /* !! ce n'est pas vrai ds le cas HUGE ou le code des mots du source est recherche directement ds un dico */
@@ -693,7 +693,7 @@ fill_dag_infos ()
     save_sxsrcmngr = sxsrcmngr;
     sxsrc_mngr (SXFINAL); /* Celui du DAG */
     sxtkn_mngr (SXOPEN, 1); /* Gestion des nouveaux tokens */
-    (*(tables->analyzers.scanner)) (SXOPEN, tables); /* On prepare le scanneur de "tables" */
+    (*(tables->SX_scanner)) (SXOPEN, tables); /* On prepare le scanneur de "tables" */
   }
 
   last_trans = XxYxZ_top (dag_hd);
@@ -866,8 +866,8 @@ fill_dag_infos ()
 	 demande son avis au lecl, même si on a un lexique, et même si ledit lexique a répondu
 	 positivement */
       if (tables) {
-	if (tables->SXS_tables.check_keyword)
-	  id = (*tables->SXS_tables.check_keyword) (str, lgth);
+	if (tables->SXS_tables.S_check_keyword)
+	  id = (*tables->SXS_tables.S_check_keyword) (str, lgth);
 	else
 	  /* Les tables qui permettent de recuperer les vrais codes des terminaux n'ont pas de mots-clefs */
 	  id = 0;
@@ -877,7 +877,7 @@ fill_dag_infos ()
 	  sxsrc_mngr (SXINIT, NULL, str); /* On va scanner str */
 	  sxnext_char (); /* initialisation de la lecture */
 	  sxtkn_mngr (SXINIT, 0); /* Resultat a l'indice 1 */
-	  (*(tables->SXP_tables.scanit)) (); /* On le scanne */
+	  (*(tables->SXP_tables.P_scan_it)) (); /* On le scanne */
 	  id = SXGET_TOKEN (sxplocals.Mtok_no).lahead; /* ... et voila le resultat */
 
 	  if (id) {
@@ -885,7 +885,7 @@ fill_dag_infos ()
 	    /* En fait il faudrait fabriquer des ids (et les transitions ds le dag)
 	       tant que str n'est pas epuise' !! */
 	    /* Ici on fait simple ... */
-	    (*(tables->SXP_tables.scanit)) (); /* On scanne le suivant ... */
+	    (*(tables->SXP_tables.P_scan_it)) (); /* On scanne le suivant ... */
 	    
 	    /* ... qui doit etre eof */
 	    if (SXGET_TOKEN (sxplocals.Mtok_no).lahead != eof)
@@ -925,7 +925,7 @@ fill_dag_infos ()
   }
 
   if (tables) {
-    (*(tables->analyzers.scanner)) (SXCLOSE, tables); /* Fin du scanneur de "tables" */
+    (*(tables->SX_scanner)) (SXCLOSE, tables); /* Fin du scanneur de "tables" */
     sxtkn_mngr (SXCLOSE, 0); /* Soyons propres */
     sxsrc_mngr (SXFINAL); /* Celui de "tables" */
     sxsrcmngr = save_sxsrcmngr; /* C,a permet a sxput_error de ressortir le source!! */

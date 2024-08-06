@@ -36,7 +36,7 @@ static char	ME [] = "rcg_1rcg_2var";
 #include <stdlib.h>
 #include "sxmatrix2vector.h"
 
-char WHAT_RCG1RCG2VAR[] = "@(#)SYNTAX - $Id: rcg_1rcg_2var.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_RCG1RCG2VAR[] = "@(#)SYNTAX - $Id: rcg_1rcg_2var.c 3900 2024-04-20 07:47:18Z garavel $" WHAT_DEBUG;
 
 extern SXINT is_arg_in_Tstar (SXINT param);
 
@@ -3193,7 +3193,7 @@ static SXINT		*new_clause_rhs_nts, new_clause_rhs_nts_top, *new_clause2rhs_nt_di
 static SXINT		*nt2clause_nb, *clause2eq, *clause2eq_list, *nt2ident_list, *clause2ident, *clause2ident_list;
 static SXBA		clause1_set, clause2_set, pseudo_equiv_hd_set;
 
-static SXINT
+static int
 new_compar (const SXINT *p1, const SXINT *p2)
 {
     SXINT	item1, item2;
@@ -6713,7 +6713,7 @@ fsa2c (SXINT *last_index, SXINT *last_red)
   } *fsa_red_trans;
 
   SXINT  i, p, X, q, triple, top, *ip, *intarea, fsa_red_top, prod, final_state, prev_final_state, fsa_shift_nb;
-  char string [16];
+  char string [22];
   SXBA for_look_ahead = NULL;
 
   final_state = sxba_scan (fsa_final_state_set, -1);
@@ -7346,7 +7346,7 @@ lrfsa (void)
 
 	if (symb == EOF || isspace (symb)) {
 	  if (varstr_length (prdct_name)) {
-	    varstr_complete (prdct_name);
+	    (void) varstr_complete (prdct_name);
 	    ste = sxstrretrieve (varstr_tostr (prdct_name));
 	    varstr_raz (prdct_name);
 

@@ -3,7 +3,7 @@ include $(SX)/etc/make/gccoptions
 
 TEST=$(SX)/../outdated/oldies/LIG_LC
 SRC=$(TEST)/src
-LIB=$(TEST)/lib
+LIB=$(TEST)/lib.$(ARCH)
 
 #CFLAGS= -O2
 #CFLAGS= -g -DEBUG_ALLOC
@@ -40,7 +40,7 @@ WCW=$(LIB)/wcw_pt.o		\
 	$(LIB)/wcw_ligt.o
 
 $(TEST)/wcw.out:	$(WCW)	$(SXBIBS)
-	cc -o $@ $(WCW) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@; exit 1)
+	cc -o $@ $(WCW) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@; exit 1)
 
 $(LIB)/sxearley_main.o: $(SXINCL)/sxunix.h		\
 			$(SX)/csynt_lc/test/sxearley_main.c
@@ -71,7 +71,7 @@ WCW_LR=$(LIB)/wcw_lr_t.o	\
 	$(LIB)/wcw_lr_ligt.o
 
 $(TEST)/wcw_lr.out:	$(WCW_LR)	$(SXBIBS)
-	cc -o $@ $(WCW_LR) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@; exit 1)
+	cc -o $@ $(WCW_LR) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@; exit 1)
 
 $(LIB)/wcw_lr_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/wcw_lr_t.c
@@ -92,7 +92,7 @@ NNF=$(LIB)/nnf_pt.o		\
 	$(LIB)/nnf_ligt.o
 
 $(TEST)/nnf.out:	$(NNF)	$(SXBIBS)
-	cc -o $@ $(NNF) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@; exit 1)
+	cc -o $@ $(NNF) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@; exit 1)
 
 $(LIB)/nnf_pt.o:	$(SRC)/nnf_pt.c	\
 		$(SXINCL)/sxp_rcvr_earley_lc.h \
@@ -117,7 +117,7 @@ NNF_LR=$(LIB)/nnf_lr_t.o	\
 	$(LIB)/nnf_lr_ligt.o
 
 $(TEST)/nnf_lr.out:	$(NNF_LR)	$(SXBIBS)
-	cc -o $@ $(NNF_LR) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@; exit 1)
+	cc -o $@ $(NNF_LR) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@; exit 1)
 
 $(LIB)/nnf_lr_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/nnf_lr_t.c
@@ -137,7 +137,7 @@ CYC=$(LIB)/cyc_pt.o		\
 	$(LIB)/cyc_ligt.o
 
 $(TEST)/cyc.out:	$(CYC)	$(SXBIBS)
-	cc -o $@ $(CYC) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@; exit 1)
+	cc -o $@ $(CYC) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@; exit 1)
 
 $(LIB)/cyc_pt.o:	$(SRC)/cyc_pt.c	\
 		$(SXINCL)/sxp_rcvr_earley_lc.h \
@@ -161,7 +161,7 @@ CYC_LR=$(LIB)/cyc_lr_t.o		\
 	$(LIB)/cyc_lr_ligt.o
 
 $(TEST)/cyc_lr.out:	$(CYC_LR)	$(SXBIBS)
-	cc -o $@ $(CYC_LR) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@; exit 1)
+	cc -o $@ $(CYC_LR) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@; exit 1)
 
 $(LIB)/cyc_lr_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/cyc_lr_t.c
@@ -181,7 +181,7 @@ CYC2=$(LIB)/cyc2_pt.o		\
 	$(LIB)/cyc2_ligt.o
 
 $(TEST)/cyc2.out:	$(CYC2)	$(SXBIBS)
-	cc -o $@ $(CYC2) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@; exit 1)
+	cc -o $@ $(CYC2) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@; exit 1)
 
 $(LIB)/cyc2_pt.o:	$(SRC)/cyc2_pt.c	\
 		$(SXINCL)/sxp_rcvr_earley_lc.h \
@@ -205,7 +205,7 @@ CYC2_LR=$(LIB)/cyc2_lr_t.o	\
 	$(LIB)/cyc2_lr_ligt.o
 
 $(TEST)/cyc2_lr.out:	$(CYC2_LR)	$(SXBIBS)
-	cc -o $@ $(CYC2_LR) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@; exit 1)
+	cc -o $@ $(CYC2_LR) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@; exit 1)
 
 $(LIB)/cyc2_lr_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/cyc2_lr_t.c
@@ -225,7 +225,7 @@ ANBM=$(LIB)/anbmcndm_pt.o	\
 	$(LIB)/anbmcndm_ligt.o
 
 $(TEST)/anbmcndm.out:	$(ANBM)	$(SXBIBS)
-	cc -o $@ $(ANBM) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@; exit 1)
+	cc -o $@ $(ANBM) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@; exit 1)
 
 $(LIB)/anbmcndm_pt.o:	$(SRC)/anbmcndm_pt.c	\
 		$(SXINCL)/sxp_rcvr_earley_lc.h \
@@ -249,7 +249,7 @@ ANBM_LR=$(LIB)/anbmcndm_lr_t.o	\
 	$(LIB)/anbmcndm_lr_ligt.o
 
 $(TEST)/anbmcndm_lr.out:	$(ANBM_LR)	$(SXBIBS)
-	cc -o $@ $(ANBM_LR) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@; exit 1)
+	cc -o $@ $(ANBM_LR) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@; exit 1)
 
 $(LIB)/anbmcndm_lr_t.o: 	$(SXINCL)/sxunix.h	\
 			$(SRC)/anbmcndm_lr_t.c
@@ -269,7 +269,7 @@ ANBNCN=$(LIB)/anbncn_pt.o	\
 	$(LIB)/anbncn_ligt.o
 
 $(TEST)/anbncn.out:	$(ANBNCN)	$(SXBIBS)
-	cc -o $@ $(ANBNCN) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@; exit 1)
+	cc -o $@ $(ANBNCN) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@; exit 1)
 
 $(LIB)/anbncn_pt.o:	$(SRC)/anbncn_pt.c	\
 		$(SXINCL)/sxp_rcvr_earley_lc.h \

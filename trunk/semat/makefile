@@ -2,19 +2,16 @@
 include $(SX)/etc/make/gccoptions
 
 SEMAT=$(SX)/semat
-LIB=$(SEMAT)/lib
+LIB=$(SEMAT)/lib.$(ARCH)
 BOOT=$(SEMAT)/boot
 
 BNF=$(SX)/bnf
-BNFLIB=$(BNF)/lib
+BNFLIB=$(BNF)/lib.$(ARCH)
 
 CC=$(COMPILER) -I$(BNF) -I$(BOOT) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
 all: $(SXBIN)/semat.out	\
      $(SXAUX)/print_att.out
-
-$(SXBIN)/semat.out:	$(SEMAT)/semat.out
-	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
 NEEDS=	$(LIB)/genat_c.o		\
 	$(LIB)/semat_main.o		\
@@ -30,7 +27,7 @@ NEEDS=	$(LIB)/genat_c.o		\
 
 PRINT=	$(LIB)/print_att.o
 
-$(SEMAT)/semat.out:	$(NEEDS)	$(SXBIBS)
+$(SXBIN)/semat.out:	$(NEEDS)	$(SXBIBS)
 	@rm -f $@
 	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
@@ -61,7 +58,7 @@ $(LIB)/semat_t.o:	$(SXINCL)/sxunix.h $(BOOT)/semat_t.c
 	$(CC) -o $@ -c $(BOOT)/semat_t.c			\
 		-Dsxtables=semat_tables		\
 		-DSEMACT=semat_semact		\
-		-Dsempass=semat_sem
+		-DSEMPASS=semat_sem
 
 $(SXAUX)/print_att.out:	$(PRINT)	$(SXBIBS)
 	@rm -f $@
@@ -93,7 +90,7 @@ semat.rt: semat.bt semat.st semat.recor
 # fin de code produit par "make-makefile semat"
 
 clean:
-	/bin/rm -f $(LIB)/*.o $(SXAUX)/print_att.out $(SEMAT)/semat.out
+	/bin/rm -f $(LIB)/*.o $(SXAUX)/print_att.out
 	/bin/rm -f semat_t.c
 	/bin/rm -f semat.bt semat.pt semat.rt semat.st 
 # pas de semat.dt 

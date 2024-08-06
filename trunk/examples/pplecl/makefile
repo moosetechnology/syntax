@@ -2,8 +2,8 @@
 include $(SX)/etc/make/gccoptions
 
 PPLECL=$(SX)/examples/pplecl
-BIN=$(PPLECL)/bin
-LIB=$(PPLECL)/lib
+BIN=$(PPLECL)/bin.$(ARCH)
+LIB=$(PPLECL)/lib.$(ARCH)
 
 CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS) -c
 

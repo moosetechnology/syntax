@@ -3,21 +3,19 @@ include $(SX)/etc/make/gccoptions
 
 DICO=$(SX)/../extensions/dico
 
-LIB=$(DICO)/lib
+BIN=$(DICO)/bin.$(ARCH)
+LIB=$(DICO)/lib.$(ARCH)
 
 CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
-all: $(SXBIN)/dico.out	
-
-$(SXBIN)/dico.out:	$(DICO)/dico.out
-	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
+all: $(BIN)/dico.out	
 
 NEEDED=\
 	$(LIB)/dico_main.o	\
 	$(LIB)/dico_t.o		\
 	$(LIB)/dico_act.o
 
-$(DICO)/dico.out:	$(NEEDED)	$(SXBIBS)
+$(BIN)/dico.out:	$(NEEDED)	$(SXBIBS)
 	@rm -f $@
 	$(COMPILER) -o $@ $(NEEDED) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
@@ -61,7 +59,7 @@ dico.rt: dico.bt dico.st dico.recor
 # fin de code produit par "make-makefile dico"
 
 clean:
-	/bin/rm -f $(LIB)/*.o $(DICO)/dico.out
+	/bin/rm -f $(LIB)/*.o $(BIN)/dico.out
 	/bin/rm -f $(DICO)/dico.*.l
 	/bin/rm -f $(DICO)/dico.bt $(DICO)/dico.pt $(DICO)/dico.rt 
 	/bin/rm -f $(DICO)/dico.st $(DICO)/dico_t.c

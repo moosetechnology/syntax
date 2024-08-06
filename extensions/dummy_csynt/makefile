@@ -2,18 +2,16 @@
 include $(SX)/etc/make/gccoptions
 
 DUMMY_CSYNT=$(SX)/../extensions/dummy_csynt
-LIB=$(DUMMY_CSYNT)/lib
+BIN=$(DUMMY_CSYNT)/bin.$(ARCH)
+LIB=$(DUMMY_CSYNT)/lib.$(ARCH)
 
 CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
-all: $(SXBIN)/dummy_csynt.out
-
-$(SXBIN)/dummy_csynt.out:	$(DUMMY_CSYNT)/dummy_csynt.out
-	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
+all: $(BIN)/dummy_csynt.out
 
 NEEDS=	$(LIB)/dummy_csynt.o
 
-$(DUMMY_CSYNT)/dummy_csynt.out:	$(NEEDS)	$(SXBIBS)
+$(BIN)/dummy_csynt.out:	$(NEEDS)	$(SXBIBS)
 	@rm -f $@
 	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
@@ -24,4 +22,4 @@ $(LIB)/dummy_csynt.o:	$(SXINCL)/sxunix.h		\
 	$(CC) -o $@ -c dummy_csynt.c
 
 clean:
-	/bin/rm -f $(LIB)/*.o $(DUMMY_CSYNT)/dummy_csynt.out
+	/bin/rm -f $(LIB)/*.o $(BIN)/dummy_csynt.out

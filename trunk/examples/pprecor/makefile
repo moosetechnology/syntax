@@ -2,8 +2,8 @@
 include $(SX)/etc/make/gccoptions
 
 PPRECOR=$(SX)/examples/pprecor
-BIN=$(PPRECOR)/bin
-LIB=$(PPRECOR)/lib
+BIN=$(PPRECOR)/bin.$(ARCH)
+LIB=$(PPRECOR)/lib.$(ARCH)
 
 CC=$(COMPILER) -I$(SXINCL) $(CFLAGS) -c
 
