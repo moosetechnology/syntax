@@ -23,7 +23,7 @@
 #include "lecl_ag.h"
 #include "sxdico.h"
 
-char WHAT_LECLGENCHECKKW[] = "@(#)SYNTAX - $Id: gen_check_kw.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_LECLGENCHECKKW[] = "@(#)SYNTAX - $Id: gen_check_kw.c 3986 2024-06-01 10:06:49Z garavel $" WHAT_DEBUG;
 
 #define char_max 256
 
@@ -37,21 +37,24 @@ static struct kw {
 } *kws;
 
 static char blanks [] = "                                                                                                   ";
+
 static SXINT blanks_len;
+
 static char this_program [] = "   *  This program has been generated from ";
+
 static char	head [] = "\n\
-static SXINT check_keyword (string, length)\n\
-unsigned char	*string;\n\
-SXINT	length;\n\
+static SXINT sxcheck_keyword (unsigned char *string, SXINT length)\n\
 {\n\
    SXINT  t_code, delta;\n\
    unsigned char *keyword;";
+
 static char	tail [] = "   do {\n\
       if (*string++ != *keyword++)\n\
           return 0;\n\
    } while (--length > 0) ;\n\
 \n\
    return t_code;\n";
+
 static SXINT	*sorted, *sorted_by_char;
 static SXBA	char_set1, char_set2;
 static SXINT	x_char, x_couple, x_couple_syno;
@@ -493,7 +496,7 @@ void gen_check_kw (void)
 
 	check_kw = varstr_alloc (2500 /* partie fixe */ + 10 /* en moyenne */ * (nbndef+dico.max));
 
-	cat_ap ("\n#include	\"sxdico.h\"\n");
+	cat_ap ("\n#include \"sxdico.h\"\n");
 	cat_apnnl ("#define KW_NB		");
 	cat_apnb (nbndef);
 	cat_ap ("");
@@ -601,7 +604,7 @@ void gen_check_kw (void)
 	    cat_ap ("\n};");
 	}
 
-	cat_ap ("\n#include	\"sxcheck_keyword.h\"");
+	cat_ap ("\n#include \"sxcheck_keyword.h\"");
 
 	sxfree (mot2.string), mot2.string = NULL;
 	sxfree (mot2.code), mot2.code = NULL;
@@ -615,7 +618,7 @@ void gen_check_kw (void)
 	if (dico.comb_vector) sxfree (dico.comb_vector), dico.comb_vector = NULL; 
     }
     else {
-	/* "check_keyword" est directement une fonction C */
+	/* "sxcheck_keyword" est directement une fonction C */
 	/* Attention les mots cles sont entre double quotes */
 	/* La longueur n'en tient pas compte */
 	for (i=1; i <= nbndef;i++) {

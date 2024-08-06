@@ -20,16 +20,16 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_LECLSACT[] = "@(#)SYNTAX - $Id: lecl_sact.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
+char WHAT_LECLSACT[] = "@(#)SYNTAX - $Id: lecl_sact.c 4122 2024-07-27 14:30:36Z garavel $" WHAT_DEBUG;
 
-void	lecl_scan_act (SXINT what, SXINT act_no)
+bool lecl_scan_act (SXINT what, SXINT act_no)
 {
     switch (what) {
     case SXOPEN:
     case SXCLOSE:
     case SXINIT:
     case SXFINAL:
-	return;
+	return SXANY_BOOL;
 
     case SXACTION:
 	switch (act_no) {
@@ -41,7 +41,7 @@ void	lecl_scan_act (SXINT what, SXINT act_no)
 			 "%sA dark symbol must be built up with the same character.",
 			 sxsvar.sxtables->err_titles [1]+1 /* Warning */ );
 
-	    return;
+	    return SXANY_BOOL;
 
 	case 2:
 	    /* \nnn => char */
@@ -60,7 +60,7 @@ void	lecl_scan_act (SXINT what, SXINT act_no)
 		sxsvar.sxlv.mark.index = -1;
 	    }
 
-	    return;
+	    return SXANY_BOOL;
 
 	default:
 	    /* valeur inattendu */

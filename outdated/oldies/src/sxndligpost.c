@@ -1299,8 +1299,7 @@ sxndlig_post_do_it ()
 
 
 
-int
-sxndligpost (which, arg)
+bool sxndligpost (which, arg)
     int		which;
     struct sxtables	*arg;
 {
@@ -1322,12 +1321,12 @@ sxndligpost (which, arg)
 
     (*sxndlig_common.code.parsact) (which, arg);
 
-    return 0;
+    return SXANY_BOOL;
 
   case SXCLOSE:
     (*sxndlig_common.code.parsact) (which, arg);
 
-    return 0;
+    return SXANY_BOOL;
 
   case SXINIT:
     sxplocals.mode.with_semact = false;
@@ -1335,7 +1334,7 @@ sxndligpost (which, arg)
     sxplocals.mode.with_parsprdct = false;
     (*sxndlig_common.code.parsact) (which, arg);
 
-    return 0;
+    return SXANY_BOOL;
 
   case SXFINAL:
     if (sxndlig.uf.is_new_symbols)
@@ -1346,25 +1345,25 @@ sxndligpost (which, arg)
 	   (sxndligparsact, sxndligpost2, ...) */
 	(*sxndlig_common.code.parsact) (which, arg);
 
-    return 0;
+    return SXANY_BOOL;
 
   case SXACTION:
-    return 0;
+    return SXANY_BOOL;
 
   case SXDO:
-    return 0;
+    return SXANY_BOOL;
 
   case SXUNDO:
-    return 0;
+    return SXANY_BOOL;
 
   case SXPREDICATE:
-    return 1;
+    return true;
 
   default:
     fputs ("The function \"sxndligpost\" is out of date with respect to its specification.\n", sxstderr);
     sxexit(1);
   }
 
-  /* NOTREACHED return 0; */
+  /* NOTREACHED return SXANY_BOOL; */
 }
 

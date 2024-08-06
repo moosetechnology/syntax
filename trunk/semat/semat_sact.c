@@ -29,7 +29,7 @@ static char	ME [] = "semat";
 #include "T_tables.h"
 #include "varstr.h"
 
-char WHAT_SEMATSACT[] = "@(#)SYNTAX - $Id: semat_sact.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_SEMATSACT[] = "@(#)SYNTAX - $Id: semat_sact.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
 
 #define NO_ACT 			0
 #define CREATE_FAMILY 		1
@@ -269,9 +269,9 @@ static void	gripe (void)
 }
 
 
-SXINT
-semat_semact (SXINT code, SXINT numact)
+void semat_semact (SXINT code, SXINT numact, struct sxtables *arg)
 {
+    (void) arg;
     switch (code) {
     case SXOPEN:
     case SXCLOSE:
@@ -287,11 +287,11 @@ semat_semact (SXINT code, SXINT numact)
 	case 0:
 	    tok [rule_no] = null_token;
 	    tok [rule_no].source_index = current_rule_semi_colon_source_index;
-	    return 0;
+	    return;
 
 	case 1:
 	    tok [rule_no] = SXSTACKtoken (SXSTACKtop ());
-	    return 0;
+	    return;
 	default:
 #if EBUG
 	  sxtrap("semat_sact","unknown switch case #1");
@@ -302,8 +302,6 @@ semat_semact (SXINT code, SXINT numact)
     default:
 	gripe ();
     }
-
-    return 0;
 }
 
 
@@ -732,7 +730,7 @@ void	semat_lo (void)
 
 
 
-SXINT	semat_scan_act (SXINT code, SXINT act_no)
+bool semat_scan_act (SXINT code, SXINT act_no)
 {
     static struct {
 	       struct sxsvar	sxsvar;
@@ -789,7 +787,7 @@ SXINT	semat_scan_act (SXINT code, SXINT act_no)
 	    semat.sxplocals = sxplocals;
 	    sxsvar = bnf.sxsvar;
 	    sxplocals = bnf.sxplocals;
-	    return 0;
+	    return SXANY_BOOL;
 
 	default:
 #if EBUG
@@ -802,7 +800,7 @@ SXINT	semat_scan_act (SXINT code, SXINT act_no)
 	gripe ();
     }
 
-    return 0;
+    return SXANY_BOOL;
 }
 
 

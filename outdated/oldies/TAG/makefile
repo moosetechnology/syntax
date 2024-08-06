@@ -3,7 +3,7 @@ include $(SX)/etc/make/gccoptions
 
 TAG=$(SX)/../outdated/oldies/TAG
 SRC=$(TAG)/src
-LIB=$(TAG)/lib
+LIB=$(TAG)/lib.$(ARCH)
 INCL=$(TAG)/incl
 
 CC=cc -I$(INCL) -I$(SXINCL) -I$(SXINCL)/util -I$(TAG)/../incl $(CFLAGS)
@@ -43,8 +43,8 @@ $(LIB)/xtag_t.o:	$(SXINCL)/sxunix.h 	\
 	$(CC) -o $@ -c $(SRC)/xtag_t.c		\
 		-Dsxtables=xtag_tables		\
 		-DSCANACT=xtag_scan_act		\
-		-DSEMACT=sxvoid			\
-		-Dsempass=xtag_smp
+		-DSEMACT=sxwvoid			\
+		-DSEMPASS=xtag_smp
 
 clean:
 	rm -f $(ALL) $(NEEDS1)

@@ -18,15 +18,15 @@ static char ME [] = "read_a_dag";
 
 #define sxparser sxparser_dag_tcut
 #define sxtables dag_tables
-#define SCANACT  sxvoid
-#define PARSACT  sxvoid
-#define sempass  dag_smp
+#define SCANACT  sxjvoid
+#define PARSACT  sxjvoid
+#define SEMPASS  dag_smp
 #include "sxcommon.h"
 #include "dag_t.h"
 #include "dag_scanner.h"
 #include <stdarg.h>
 
-char WHAT_READADAG[] = "@(#)SYNTAX - $Id: read_a_dag.c 3678 2024-02-06 08:38:24Z garavel $" WHAT_DEBUG;
+char WHAT_READADAG[] = "@(#)SYNTAX - $Id: read_a_dag.c 4139 2024-07-31 16:02:45Z garavel $" WHAT_DEBUG;
 
 struct dag_node {
   SXNODE_HEADER_S SXVOID_NAME;
@@ -427,7 +427,7 @@ int read_a_dag ( void (*f)(SXBA, SXINT, struct sxtoken *, SXBA) /* store_dag */,
   /* sxstr_mngr (SXBEGIN); Fait depuis l'exterieur */
   /* sxsrc_mngr (SXINIT, source_file, source_file_name); Fait depuis l'exterieur */
 
-  (*(dag_tables.analyzers.parser)) (SXBEGIN, &dag_tables) /* Allocation des variables globales du parser */ ;
+  (*(dag_tables.SX_parser)) (SXBEGIN, &dag_tables) /* Allocation des variables globales du parser */ ;
   syntax (SXOPEN, &dag_tables) /* Initialisation de SYNTAX */ ;
 
   /* sxerr_mngr (SXBEGIN); Fait depuis l'exterieur */
@@ -438,7 +438,7 @@ int read_a_dag ( void (*f)(SXBA, SXINT, struct sxtoken *, SXBA) /* store_dag */,
 
   /* sxerr_mngr (SXEND); Fait a` l'exterieur */
   syntax (SXCLOSE, &dag_tables);
-  (*(dag_tables.analyzers.parser)) (SXEND, &dag_tables);
+  (*(dag_tables.SX_parser)) (SXEND, &dag_tables);
   /* sxstr_mngr (SXEND); Fait a` l'exterieur */
   /* sxsrc_mngr (SXFINAL); Fait a` l'exterieur */
 
@@ -448,7 +448,6 @@ int read_a_dag ( void (*f)(SXBA, SXINT, struct sxtoken *, SXBA) /* store_dag */,
 #define eol_code 1
 
 #undef sxparser
-extern SXINT sxparser  (SXINT	what_to_do, struct sxtables *arg);
 
 extern SXINT sxivoid  (SXINT what, ...);
 extern SXINT is_print_time, n;
@@ -473,7 +472,7 @@ sxparser_dag_tcut  (SXINT what_to_do, struct sxtables *arg)
 
     do {
       do {
-	(*(sxplocals.SXP_tables.scanit)) ();
+	(*(sxplocals.SXP_tables.P_scan_it)) ();
 	ptoken = &SXGET_TOKEN (sxplocals.Mtok_no);
 	lahead = ptoken->lahead;
       } while (lahead != -tmax && lahead != eol_code);
@@ -489,7 +488,7 @@ sxparser_dag_tcut  (SXINT what_to_do, struct sxtables *arg)
 	(*raz_dag)();
 
 	ret_val &= sxparser (what_to_do, arg);
-	(*(arg->SXP_tables.semact)) (SXSEMPASS, arg);
+	(*(arg->SXP_tables.P_semact)) (SXSEMPASS, arg);
 
 	sxsvar_saved = sxsvar; // car ce qui suit fait appel à un "autre" scanner si #if no_dico
 	sxplocals_toks_buf_saved = sxplocals.toks_buf;
@@ -504,7 +503,7 @@ sxparser_dag_tcut  (SXINT what_to_do, struct sxtables *arg)
 	sxsvar = sxsvar_saved; // on restore le scanner de DAG
 	{
 	  // et on le prépare à parser un nouveau DAG
-	  /* (équiv. à (*(arg->analyzers.scanner)) (SXINIT, arg) sans le sxnext_char final, car déjà fait en lisant le eol */
+	  /* (équiv. à (*(arg->SX_scanner)) (SXINIT, arg) sans le sxnext_char final, car déjà fait en lisant le eol */
 	  SXINT i;
 	    
 	  sxsvar.sxlv_s.include_no = 0;
@@ -524,8 +523,8 @@ sxparser_dag_tcut  (SXINT what_to_do, struct sxtables *arg)
 
     } while (lahead != -tmax);
 
-    semact_saved = arg->SXP_tables.semact;
-    arg->SXP_tables.semact = sxivoid; // pour ne pas faire 2 fois semact (i.e. dag_smp) sur le dernier dag
+    semact_saved = arg->SXP_tables.P_semact;
+    arg->SXP_tables.P_semact = sxivoid; // pour ne pas faire 2 fois semact (i.e. dag_smp) sur le dernier dag
 
     if (store_print_time) {
       is_print_time = true;
@@ -534,7 +533,7 @@ sxparser_dag_tcut  (SXINT what_to_do, struct sxtables *arg)
     
     break;
   case SXCLOSE:
-    arg->SXP_tables.semact = semact_saved; // prudence, on restore le semact initial après l'avoir sxvoidé
+    arg->SXP_tables.P_semact = semact_saved; // prudence, on restore le semact initial après l'avoir sxvoidé
     /* pas de break */
   default:
     sxparser (what_to_do, arg);

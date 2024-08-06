@@ -21,7 +21,7 @@
 #include "B_tables.h"
 #include "yax_vars.h"
 
-char WHAT_TAXDEFACT[] = "@(#)SYNTAX - $Id: def_act.c 3695 2024-02-07 17:44:37Z garavel $" WHAT_DEBUG;
+char WHAT_TAXDEFACT[] = "@(#)SYNTAX - $Id: def_act.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
 
 static bool	has_defining_occurrence = false, has_semantics = false;
 static SXINT	attribute_needed = 0;
@@ -56,9 +56,6 @@ static bool	pos_ok (SXINT pos, bool is_typed)
     return true;
 }
 
-
-
-
 /*   --------------------------------------------------------- */
 
 static bool	nt_ok (SXINT nt)
@@ -76,9 +73,6 @@ static bool	nt_ok (SXINT nt)
     return true;
 }
 
-
-
-
 /*   --------------------------------------------------------- */
 
 static void	put_named_type (SXINT ste)
@@ -87,8 +81,6 @@ static void	put_named_type (SXINT ste)
     /* LINTED this cast from long to int is needed by printf() */
     fprintf (sxstdout, ".%.*s", (int) sxstrlen (ste) - 2, sxstrget (ste) + 1);
 }
-
-
 
 static void	put_type (SXINT nt)
 {
@@ -109,9 +101,6 @@ static void	put_type (SXINT nt)
     is_err = true;
 }
 
-
-
-
 /*   --------------------------------------------------------- */
 
 static void	found_text (void)
@@ -122,9 +111,6 @@ static void	found_text (void)
 	     sxlv.terminal_token.source_index.file_name);
     }
 }
-
-
-
 
 /*   --------------------------------------------------------- */
 
@@ -153,9 +139,6 @@ static void	default_identity (void)
 		 sxstrget (attr_to_ste [attribute_needed]) + 1);
     }
 }
-
-
-
 
 /*   --------------------------------------------------------- */
 
@@ -195,9 +178,6 @@ static void	found_rule (void)
     }
 }
 
-
-
-
 /*   --------------------------------------------------------- */
 
 static void	gripe (void)
@@ -217,7 +197,7 @@ static void	gripe (void)
 /*     A C T I O N     */
 
 
-void	def_scanact (SXINT code, SXINT numact)
+bool def_scanact (SXINT code, SXINT numact)
 {
     switch (code) {
     default:
@@ -228,11 +208,11 @@ void	def_scanact (SXINT code, SXINT numact)
     case SXINIT:
     case SXFINAL:
     case SXSEMPASS:
-	return;
+	return SXANY_BOOL;
 
     case SXERROR:
 	is_err = true;
-	return;
+	return SXANY_BOOL;
 
     case SXACTION:
 	switch (numact) {
@@ -245,7 +225,7 @@ void	def_scanact (SXINT code, SXINT numact)
 	case 0:
 	    /* "<"&Is_First_Col when it should not */
 	    bnf_found_bad_beginning_of_rule ();
-	    return;
+	    return SXANY_BOOL;
 
 	case 1:
 	    /* RULE */
@@ -260,7 +240,7 @@ void	def_scanact (SXINT code, SXINT numact)
 
 	case 3:
 	    bnf_skip_rule ();
-	    return;
+	    return SXANY_BOOL;
 
 	case 5:
 	    /* $$ */
@@ -324,7 +304,7 @@ void	def_scanact (SXINT code, SXINT numact)
 	    xattr = chercher_attr (type_ste = sxstr2save (sxsvar.sxlv_s.token_string, sxsvar.sxlv.ts_lgth));
 	    /* Don't touch the current source coordinates */
 	    sxsvar.sxlv.ts_lgth = 0;
-	    return;
+	    return SXANY_BOOL;
 
 	case 11:
 	    /* BNF_COMMENT */
@@ -337,17 +317,15 @@ void	def_scanact (SXINT code, SXINT numact)
 
 	sxsvar.sxlv.terminal_token.source_index = sxsrcmngr.source_coord;
 	sxsvar.sxlv.ts_lgth = 0;
-	return;
+	return SXANY_BOOL;
     }
 }
 
 
-void	def_semact (SXINT code, SXINT numact)
+void def_semact (SXINT code, SXINT numact, struct sxtables *arg)
 {
+    (void) arg;
     switch (code) {
-    default:
-	gripe ();
-
     case SXERROR:
       is_err = true;
     case SXOPEN:
@@ -369,5 +347,8 @@ void	def_semact (SXINT code, SXINT numact)
 	    put_postlude ();
 	    return;
 	}
+
+    default:
+	gripe ();
     }
 }

@@ -17,16 +17,13 @@
  *   can be found at, e.g., http://www.cecill.info
  *****************************************************************************/
 
-
 /* Procedure commune a str_mngr et word_mngr. */
 
+#include "sxversion.h"
+#include "sxcommon.h"
+#include "sxscrmbl.h"
 
-
-#include        "sxversion.h"
-#include        "sxcommon.h"
-#include	"sxscrmbl.h"
-
-char WHAT_SXSCRMBL[] = "@(#)SYNTAX - $Id: sxscrmbl.c 2428 2023-01-18 12:54:10Z garavel $" WHAT_DEBUG;
+char WHAT_SXSCRMBL[] = "@(#)SYNTAX - $Id: sxscrmbl.c 3917 2024-04-23 08:33:57Z garavel $" WHAT_DEBUG;
 
 #ifndef SXBITS_PER_LONG
 #define SXBITS_PER_LONG	32

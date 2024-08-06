@@ -24,7 +24,7 @@ static char	ME [] = "algoV";
 #include "sxunix.h"
 #include "sxba.h"
 
-char WHAT_XCSYNTALGOV[] = "@(#)SYNTAX - $Id: algoV.c 3652 2023-12-24 09:43:15Z garavel $" WHAT_DEBUG;
+char WHAT_XCSYNTALGOV[] = "@(#)SYNTAX - $Id: algoV.c 4146 2024-08-02 10:21:59Z garavel $" WHAT_DEBUG;
 
 struct state {
     SXINT               lgth, start;
@@ -436,7 +436,8 @@ void	algoV (bool is_nt,
    Vj dont l'intersection Vic avec Vi est non libre, les Ei sont stockes dans Ecp */
 
     not_yet_processed = sxba_calloc (state_no + 1);
-    sxba_fill (not_yet_processed), SXBA_0_bit (not_yet_processed, 0);
+    sxba_fill (not_yet_processed);
+    SXBA_0_bit (not_yet_processed, 0);
     Vic = (SXINT*) sxcalloc (tmax + 1, sizeof (SXINT));
     Vic_set = sxba_calloc (tmax + 1);
     Ei_set = sxba_calloc (state_no + 1);

@@ -27,7 +27,7 @@
 #include "out.h"
 #include "sxsstmt.h"
 
-char WHAT_TABLESOUTSTBL[] = "@(#)SYNTAX - $Id: out_S_tbl.c 3650 2023-12-23 07:32:10Z garavel $" WHAT_DEBUG;
+char WHAT_TABLESOUTSTBL[] = "@(#)SYNTAX - $Id: out_S_tbl.c 4094 2024-06-21 13:27:46Z garavel $" WHAT_DEBUG;
 
 
 static SXINT	max; /* Positionne par l'appel a max_S_tables() */
@@ -323,21 +323,20 @@ bool		out_S_tables (void)
 
     if (SC.S_is_user_action_or_prdct != 0) {
       puts ("#ifdef SCANACT");
-      out_ext_int_newstyle ("SCANACT(SXINT what, SXINT act_no)");
-      puts ("#endif /* SCANACT */");
+      puts ("extern SXSCANACT_FUNCTION SCANACT;");
+      puts ("#endif");
     }
 
     if (SC.S_is_non_deterministic) {
-	out_ext_int_newstyle ("sxndscan_it(void)");
-	out_ext_BOOLEAN_newstyle (RC.S_nbcart == 0 ? "sxndssrecovery(SXINT what)" : "sxndsrecovery(SXINT what)");
-    }
-    else {
-	out_ext_int_newstyle ("sxscan_it(void)");
-	out_ext_BOOLEAN_newstyle (RC.S_nbcart == 0 ? "sxssrecovery (SXINT sxsrecovery_what, SXINT state_no, unsigned char *class)" : "sxsrecovery (SXINT sxsrecovery_what, SXINT state_no, unsigned char *class)");
+	puts ("extern SXSCANIT_FUNCTION sxndscan_it;");
+        puts ("extern SXSRECOVERY_FUNCTION sxndsrecovery;");
+    } else {
+	/* rien : sxscan_it() est declaree dans sxunix.h */
+        /* rien : sxsrecovery() est declaree dans sxunix.h */
     }
 
     if (SC.S_check_kw_lgth != 0)
-	puts ("static SXINT check_keyword(char *init_string, SXINT init_length);");
+	puts ("static SXCHECK_KEYWORD_FUNCTION sxcheck_keyword;");
 
     return true;
 }

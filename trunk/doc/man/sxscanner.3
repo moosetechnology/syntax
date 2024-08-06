@@ -3,9 +3,8 @@
 .SH NAME
 sxscanner,
 sxscan_it,
-check_keyword,
+sxcheck_keyword,
 sxsrecovery,
-sxssrecovery,
 SXSCAN_LA_P,
 SXCURRENT_SCANNED_CHAR,
 sxttext,
@@ -39,12 +38,6 @@ int sxcheck_keyword (string, length)
 	int	length\|;
 
 bool sxsrecovery (what, state_no, class)
-.ta \w'SXBOO'u +\w'unsigned char 'u
-	int	what,
-		state_no\|;
-	unsigned char	*class\|;
-
-bool sxssrecovery (what, state_no, class)
 .ta \w'SXBOO'u +\w'unsigned char 'u
 	int	what,
 		state_no\|;
@@ -238,7 +231,7 @@ equivalent to
 .IR sxscanner \|( SXCLOSE , \|tables )
 terminates all scanning for a given language.
 .TP
-.IR (*sxsvar.SXS_tables.check_keyword) \|( string , \|length )
+.IR (*sxsvar.SXS_tables.S_check_keyword) \|( string , \|length )
 if
 .I string
 of length
@@ -246,10 +239,9 @@ of length
 represents a keyword returns its internal code as terminal symbol else 0.
 This function can only be used via the current \fIS_tables\fP.
 .TP
-\fIsxsrecovery\fP and \fIsxssrecovery\fP
-are the lexical level error processing modules\|; the first is the standard one
-(correction and recovery) while the second is a simplified (hence compact)
-version which only deletes the erroneous character.
+\fIsxsrecovery\fP
+is the lexical level error processing function, which does correction and
+recovery from erroneous characters.
 .TP
 .I SXSCAN_LA_P
 is a (bool) macro which may be used in the code of a user's predicate

@@ -15,26 +15,26 @@ main.o	: main.c
 $(TOOL).bt	: semat
 
 $(TOOL)_t.o	: $(TOOL)_t.c 
-	$(COMPILER) $(CFLAGS) -c -DSEMACT=$(TOOL)_act -DSCANACT=scanner_act -Dsempass=$(TOOL)_smp \
+	$(COMPILER) $(CFLAGS) -c -DSEMPASS=$(TOOL)_smp \
 		-I$(SXINCL)    $(TOOL)_t.c -o $(TOOL)_t.o
 
 $(TOOL)_t.c	: $(TOOL).pt $(TOOL).rt $(TOOL).st $(TOOL).bt
-	$(SXBIN)/tables_c $(TOOL) > $(TOOL)_t.c
+	$(SXCOM)/tables_c $(TOOL) > $(TOOL)_t.c
 
 $(TOOL).pt	: $(TOOL).dt $(TOOL).bt
-	$(SXBIN)/csynt $(TOOL)
+	$(SXCOM)/csynt $(TOOL)
 	rm -f $(TOOL).la.l
 
 $(TOOL).rt	: $(TOOL).bt $(TOOL).st $(TOOL).recor
-	$(SXBIN)/recor $(TOOL).recor
+	$(SXCOM)/recor $(TOOL).recor
 	rm -f $(TOOL).rc.l
 
 $(TOOL).st	: $(TOOL).bt $(TOOL).lecl
-	$(SXBIN)/lecl $(TOOL).lecl
+	$(SXCOM)/lecl $(TOOL).lecl
 	rm -f $(TOOL).lc.l
 
 $(TOOL).dt	: $(TOOL).bt $(TOOL).prio
-	$(SXBIN)/prio $(TOOL).prio
+	$(SXCOM)/prio $(TOOL).prio
 	rm -f $(TOOL).pr.l
 
 $(TOOL).o : $(TOOL).c
@@ -44,7 +44,7 @@ $(TOOL).c :
 	@echo "faites make semat. Attention $(TOOL).c sera ecrase"
 
 semat	: $(TOOL).at
-	$(SXBIN)/semat $(TOOL).at > $(TOOL).c
+	$(SXCOM)/semat $(TOOL).at > $(TOOL).c
 	rm -f $(TOOL).bn.l
 
 clean	:

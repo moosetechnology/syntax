@@ -33,25 +33,6 @@ OLDIES="$SX/../outdated/oldies"
 
 ARCH=`$ETC_BIN/arch`
 
-if [ $ARCH = "win32" ]
-then
-	case "`uname -s`" in
-		CYGWIN_NT-* )
-			# sous Cygwin, avec le compilateur Gcc standard
-			# et son option -m32, la compilation en 32 bits
-			# echoue a cause d'un #error dans le fichier
-			# /usr/include/cygwin/signal.h (mars 2023) :
-			# on force donc la compilation en 64 bits
-			ARCH="win64"
-			# pour les futurs appels a "etc/bin/arch"
-			CADP_BITS=64
-			export CADP_BITS
-			;;
-	esac  
-fi
-
-# ----------------------------------------------------------------------------
-
 case $ARCH in
 	sun5 | sun64 | sol86 | sol64 )
 		# cas de Solaris ou OpenIndiana : on utilise GNU make, qui
@@ -88,7 +69,7 @@ fi
 
 if [ "$CONVECSX" != "" ]
 then
-	# verifications specific to the CONVECS team (for win32 and win64)
+	# verifications specific to the CONVECS team (for win64)
 	if [ "$CADP" = "" ]
 	then
 		echo "$COMMAND: environment variable \$CADP is not set"
@@ -111,6 +92,27 @@ BANNER() {
 
 # ----------------------------------------------------------------------------
 
+PREPARE_DIRECTORIES() {
+	TARGET_ARCH="$1"
+	LOCATION="$2"
+	(
+	if [ "$LOCATION" = "" ]
+	then
+		echo "starting compilation for $TARGET_ARCH"
+		cd "$SX"
+		mkdir -p bin.$TARGET_ARCH
+		mkdir -p lib.$TARGET_ARCH
+		mkdir -p aux.$TARGET_ARCH
+	else
+		cd "$LOCATION"
+		mkdir -p bin.$TARGET_ARCH
+		mkdir -p lib.$TARGET_ARCH
+	fi
+	)
+}
+
+# ----------------------------------------------------------------------------
+
 SET_PERMISSIONS() {
 	if [ "$CONVECSX" != "" ]
 	then
@@ -124,9 +126,16 @@ SET_PERMISSIONS() {
 
 CLEAN() {
 	# assert `pwd` = $SX
-	for FILE in `ls */makefile` `ls examples/*/makefile` 
+	TARGET_ARCH="$1"
+	# on nettoie les processeurs SYNTAX
+	for FILE in `ls */makefile`
 	do
-		( cd `dirname "$FILE"` ; $MAKE -s clean )
+		( cd `dirname "$FILE"` ; $MAKE -s clean ; rm -rf bin bin.$TARGET_ARCH lib.$TARGET_ARCH )
+	done			
+	# on nettoie les exemples SYNTAX (sans effacer les repertoires bin/)
+	for FILE in `ls examples/*/makefile` 
+	do
+		( cd `dirname "$FILE"` ; $MAKE -s clean ; rm -rf bin.$TARGET_ARCH lib.$TARGET_ARCH )
 	done			
 }
 
@@ -134,26 +143,19 @@ CLEAN() {
 
 FULL_CLEAN() {
 	# assert `pwd` = $SX
+	TARGET_ARCH="$1"
 	# on nettoie ce qui traine encore dans trunk, au risque d'effacer
-	# bin.wrappers, bin.backup, lib.backup, mais on preserve
-	# le repertoire bin.aux
-	for DIR in `ls -d bin.* lib.* 2>/dev/null`
+	# bin.backup
+	for DIR in `ls -d aux.* bin.* lib.* 2>/dev/null`
 	do
-		if [ $DIR != bin.aux ]
-		then
-			rm -rf $DIR
-		fi
+		rm -rf $DIR
 	done
 	# on efface un fichier .h qui est genere automatiquement
 	rm -f incl/sxversion.h
-	# on efface aussi bin et lib si ce sont des liens symboliques
+	# on efface aussi bin (si c'est un lien symbolique)
 	if [ -L bin ]
 	then
 		rm -f bin
-	fi
-	if [ -L lib ]
-	then
-		rm -f lib
 	fi
 	# on efface les repertoires tmp parfois crees par l'hypergenese
 	for DIR in `ls -d */tmp 2> /dev/null`
@@ -179,7 +181,7 @@ FULL_CLEAN() {
 		cd ../extensions
 		for FILE in `ls */makefile`
 		do
-			( cd `dirname "$FILE"` ; $MAKE -s clean )
+			( cd `dirname "$FILE"` ; $MAKE -s clean ; rm -rf bin bin.$TARGET_ARCH lib.$TARGET_ARCH )
 		done
 		)
 	fi
@@ -190,7 +192,7 @@ FULL_CLEAN() {
 		cd ../outdated/oldies
 		for FILE in `ls */makefile`
 		do
-			( cd `dirname "$FILE"` ; $MAKE -s clean )
+			( cd `dirname "$FILE"` ; $MAKE -s clean ; rm -rf bin bin.$TARGET_ARCH lib.$TARGET_ARCH )
 		done
 		)
 	fi
@@ -201,8 +203,6 @@ FULL_CLEAN() {
 COMPILE() {
 	TARGET_ARCH="$1"
 	shift
-
-	sh $SX/etc/bin/vasy-prepare-directories.sh $TARGET_ARCH
 
 	SRC_DONE=0
 	UTIL_DONE=0
@@ -216,6 +216,7 @@ COMPILE() {
 				continue
 			else
 				SRC_DONE=1
+				TOOL_DIR=""
 			fi
 		elif [ $FILE = $SX/util/makefile ]
 		then
@@ -225,12 +226,66 @@ COMPILE() {
 				continue
 			else
 				UTIL_DONE=1
+				TOOL_DIR=""
 			fi
+		else
+			# cas des outils bnf, lecl, semc, etc.
+			TOOL_DIR=`dirname "$FILE"`
 		fi
+
+		# preparation des repertoires
+		PREPARE_DIRECTORIES $TARGET_ARCH
+		if [ "$TOOL_DIR" != "" ]
+		then
+			PREPARE_DIRECTORIES $TARGET_ARCH $TOOL_DIR
+		fi
+
+		# compilation proprement dite
 		( cd `dirname "$FILE"` ; $MAKE "ARCH=$TARGET_ARCH" "$@" )
 	done
+}
 
-	sh $SX/etc/bin/vasy-prepare-directories.sh restore
+# ----------------------------------------------------------------------------
+
+COMPUTE_GCC_WARNINGS() {
+	# argument $1 : $TARGET_ARCH
+	# argument $2 : $COMPILER ("gcc", "cc", etc.)
+
+	# determination de la version de GCC
+	# (code repris de $CADP/src/com/cadp_compiler)
+	PREFIX='^gcc[ ]version[ ]'
+	VERSION=`($2 -v 2>&1 < /dev/null) | grep "$PREFIX" | sed -e "s/$PREFIX//" | sed -e "s/[ ]*$//"`
+	# ici, $VERSION vaut "" si $2 n'est pas un compilateur Gcc
+
+	case "$2" in
+		cc|gcc|*-gcc )
+			case $VERSION in
+				[1-8].* )
+					# l'option -std=c2x n'existe pas
+					GCC_STD="-std=c1x"
+					if [ "$2" = "$CC_WIN64-gcc" ]
+					then
+						# cas specifique CONVECS : avec
+						# gcc version 8.3-win32 20190406
+						# -std=c1x declenche l'erreur
+						# "sys/wait.h: No such file or
+						# directory"
+						GCC_STD=""
+					fi
+					;;
+				* )
+					# l'option -std=c2x apparait avec Gcc 9
+					GCC_STD="-std=c2x"
+			esac
+			;;
+		* )
+			GCC_STD="-std=c2x"
+	esac
+
+	GCC_WARNINGS="-Wall -Wextra -Wswitch-default -Wdeclaration-after-statement -Wundef -Wshadow -Wbad-function-cast -Wcast-qual -Wredundant-decls -Wno-char-subscripts -Wcast-align -fno-common -Wstrict-prototypes -Wformat -Wuninitialized -fstrict-aliasing -Wold-style-definition $GCC_STD"
+
+	# exportation de cette variable pour gccoptions
+	export GCC_WARNINGS
 }
 
 # ----------------------------------------------------------------------------
@@ -240,6 +295,7 @@ COMPUTE_FLAGS() {
 	case $ARCH in
 		iX86 )
 			COMPILER="gcc"
+			COMPUTE_GCC_WARNINGS $TARGET_ARCH $COMPILER
 			if [ "$CONVECSX" != "" -a "$TARGET_ARCH" = iX86 ]
 			then
 				# CONVECS-specific compile options
@@ -252,6 +308,7 @@ COMPUTE_FLAGS() {
 			;;
 		x64 )
 			COMPILER="gcc"
+			COMPUTE_GCC_WARNINGS $TARGET_ARCH $COMPILER
 			if [ "$CONVECSX" != "" -a "$TARGET_ARCH" = iX86 ]
 			then
 				# CONVECS-specific compile options
@@ -265,18 +322,17 @@ COMPUTE_FLAGS() {
 			;;
 		sol64 )
 			COMPILER="cc"
+			# COMPUTE_GCC_WARNINGS $TARGET_ARCH $COMPILER
 			CFLAGS="-m64 $EXTRA_CFLAGS"
 			;;
-		mac64 )
+		mac64|arm64 )
 			COMPILER="cc"
+			COMPUTE_GCC_WARNINGS $TARGET_ARCH $COMPILER
 			CFLAGS="$GCC_WARNINGS $EXTRA_CFLAGS"
-			;;
-		win32 )
-			COMPILER="cc"
-			CFLAGS="-m32 $GCC_WARNINGS $EXTRA_CFLAGS"
 			;;
 		win64 )
 			COMPILER="cc"
+			COMPUTE_GCC_WARNINGS $TARGET_ARCH $COMPILER
 			CFLAGS="-m64 $GCC_WARNINGS $EXTRA_CFLAGS"
 			;;
 		* )
@@ -310,7 +366,7 @@ LOCAL_COMPILE_BASE() {
 	else
 		BANNER "LOCAL COMPILATION FOR ARCHITECTURE $ARCH"
 	fi
-	CLEAN
+	CLEAN $TARGET_ARCH
 	LOCAL_COMPILE $TARGET_ARCH
 	SET_PERMISSIONS
 }
@@ -327,7 +383,8 @@ LOCAL_COMPILE_EXAMPLE() {
 		echo "$COMMAND: SYNTAX must be compiled before example $EXAMPLE"
 		exit 1	
 	fi
-	sh $SX/etc/bin/vasy-prepare-directories.sh $ARCH
+	PREPARE_DIRECTORIES $ARCH
+	PREPARE_DIRECTORIES $ARCH $SX/examples/$EXAMPLE
 	( 
 		PATH="$SX/bin:$PATH"
 		cd $SX/examples/$EXAMPLE
@@ -337,7 +394,6 @@ LOCAL_COMPILE_EXAMPLE() {
 			"LDFLAGS=$LDFLAGS" \
 			clean all
 	)
-	sh $SX/etc/bin/vasy-prepare-directories.sh restore
 }
 
 # ----------------------------------------------------------------------------
@@ -352,7 +408,8 @@ LOCAL_COMPILE_EXTENSION() {
 		echo "$COMMAND: SYNTAX must be compiled before extension $EXTENSION"
 		exit 1	
 	fi
-	sh $SX/etc/bin/vasy-prepare-directories.sh $ARCH
+	PREPARE_DIRECTORIES $ARCH
+	PREPARE_DIRECTORIES $ARCH $EXTENSIONS/$EXTENSION
 	( 
 		PATH="$SX/bin:$PATH"
 		cd $EXTENSIONS/$EXTENSION
@@ -362,7 +419,6 @@ LOCAL_COMPILE_EXTENSION() {
 			"LDFLAGS=$LDFLAGS" \
 			clean all
 	)
-	sh $SX/etc/bin/vasy-prepare-directories.sh restore
 }
 
 # ----------------------------------------------------------------------------
@@ -377,7 +433,8 @@ LOCAL_COMPILE_OLDIE() {
 		echo "$COMMAND: SYNTAX must be compiled before oldie $OLDIE"
 		exit 1	
 	fi
-	sh $SX/etc/bin/vasy-prepare-directories.sh $ARCH
+	PREPARE_DIRECTORIES $ARCH
+	PREPARE_DIRECTORIES $ARCH $OLDIES/$OLDIE
 	( 
 		PATH="$SX/bin:$PATH"
 		cd $OLDIES/$OLDIE
@@ -387,7 +444,6 @@ LOCAL_COMPILE_OLDIE() {
 			"LDFLAGS=$LDFLAGS" \
 			clean all
 	)
-	sh $SX/etc/bin/vasy-prepare-directories.sh restore
 }
 
 # ----------------------------------------------------------------------------
@@ -401,7 +457,7 @@ HYPERGENESIS() {
 	N=`expr $N + 1`
 	BANNER "BOOTSTRAP PHASE $N - generating source files with the new programs"
 
-	sh $SX/etc/bin/vasy-prepare-directories.sh $ARCH
+	PREPARE_DIRECTORIES $ARCH
 
 	rm -rf $SX/*/tmp 2> /dev/null
 
@@ -438,7 +494,7 @@ HYPERGENESIS() {
 						# modified by the user, leading
 						# to a new skeleton $NEW_FILE
 						# that is different from the
-						# one recorded in $OLD_FILE ;
+						# one recorded in $OLD_FILE ;
 						# all we can do is to ask the
 						# user to update manually the
 						# source C file $AT_UPDATE
@@ -479,8 +535,6 @@ HYPERGENESIS() {
 			set -e
 		done
 	done
-
-	sh $SX/etc/bin/vasy-prepare-directories.sh restore
 
 	if [ $STATUS -eq 0 ]
 	then
@@ -534,8 +588,8 @@ fi
 # exporting $EXTRA_CFLAGS is mandatory
 export EXTRA_CFLAGS
 
-# duplication de trunk/etc/make/gccoptions
-GCC_WARNINGS="-Wall -Wextra -Wswitch-default -Wdeclaration-after-statement -Wundef -Wshadow -Wbad-function-cast -Wcast-qual -Wredundant-decls -Wno-char-subscripts -Wcast-align -fno-common -Wstrict-prototypes -Wformat -Wuninitialized -fstrict-aliasing -Wold-style-definition -std=c2x"
+# dummy value that only shows up is COMPUTE_GCC_WARNINGS() has not been called
+GCC_WARNINGS="sxmake-unknown-option"
 
 # ----------------------------------------------------------------------------
 
@@ -553,7 +607,7 @@ then
 		for TARGET_ARCH in `Make-whole`
 		do
 			MACH=`Make-mach $TARGET_ARCH`
-			# the value of $CADP must be sent for win32/win64
+			# the value of $CADP must be sent for win64
 			( ssh $MACH "source /common/com/path ; setenv CONVECSX $CONVECSX ; setenv CADP $CADP ; sh $SX/etc/bin/sxmake $OPTION_DEBUG $TARGET_ARCH" 2>&1 ) | tee _$TARGET_ARCH.log
 			# suppression de _.log, que subsume _$TARGET_ARCH.log
 			rm -f _.log
@@ -607,12 +661,12 @@ fi
 case "$1" in
 
 	clean )
-		CLEAN
+		CLEAN $ARCH
 		;;
 
 	full-clean )
-		CLEAN
-		FULL_CLEAN
+		CLEAN $ARCH
+		FULL_CLEAN $ARCH
 		;;
 
 	all-flags )
@@ -653,7 +707,7 @@ case "$1" in
 		;;
 
 	scribble )
-		if [ "$ARCH" != "mac64" ]
+		if [ "$ARCH" != "mac64" -a "$ARCH" != "arm64" ]
 		then
 			echo "$COMMAND: warning: option scribble is only effective on macOS"
 		fi
@@ -662,7 +716,7 @@ case "$1" in
 		export MALLOC_DEBUG
 		sh $SX/etc/bin/vasy-bootstrap.sh $ARCH 2>&1
 		)
-		if [ "$ARCH" = "mac64" ]
+		if [ "$ARCH" = "mac64" -o "$ARCH" = "arm64" ]
 		then
 			cat $SX/_scribble.log | egrep -v "malloc: protecting edges|malloc: recording malloc stacks|enabling scribbling to detect mods to free blocks|checks heap after|will sleep for .* seconds on heap corruption|stack logs being written into|stack logs deleted from|malloc: MallocCheckHeap: PASSED check"
 		else
@@ -728,6 +782,17 @@ case "$1" in
 		fi
 		;;
 
+	arm64 )
+		if [ $ARCH = arm64 ]
+		then
+			# local compilation (most likely using Xcode's cc)
+			LOCAL_COMPILE_BASE 2>&1 | tee _.log
+			SUMMARIZE_ERRORS_WARNINGS _.log
+		else
+			echo "$COMMAND: no cross-compilation available on $ARCH for arm64"
+			exit 1
+		fi
+		;;
 	mac64 )
 		if [ $ARCH = mac64 ]
 		then
@@ -806,7 +871,8 @@ case "$1" in
 			fi
 			# cross-compilation on the current machine
 			BANNER "CROSS-COMPILATION ON HOST $ARCH FOR TARGET mac64"
-			CLEAN
+			CLEAN mac64
+			COMPUTE_GCC_WARNINGS mac64 $CC_MAC64-cc
 			COMPILE mac64 \
 				"COMPILER=$CC_MAC64-cc" \
 				"CFLAGS=$GCC_WARNINGS $EXTRA_CFLAGS $VASY_CFLAGS" \
@@ -818,59 +884,8 @@ case "$1" in
 		fi
 		;;
 
-	win32 )
-		if [ $ARCH = win32 -o $ARCH = win64 ]
-		then
-			# local compilation (most likely using Cygwin's gcc)
-			LOCAL_COMPILE_BASE win32 2>&1 | tee _.log
-			SUMMARIZE_ERRORS_WARNINGS _.log
-		else
-			# cross-compilation for win32, e.g., on x64
-			if [ "$CC_WIN32" != "" ]
-			then
-				WIN32_SET=1
-			else
-				WIN32_SET=0
-				# try a plausible value that works for CONVECS
-				CC_WIN32="/usr/bin/i686-w64-mingw32"
-				export CC_WIN32
-			fi
-			if [ ! -x "$CC_WIN32-gcc" ]
-			then
-				if [ "$WIN32_SET" = 1 ]
-				then
-					echo "$COMMAND: cross-compiler \$CC_WIN32(\"$CC_WIN32\")-gcc does not exist"
-				else
-					echo "$COMMAND: environment variable \$CC_WIN32 is not set"
-				fi
-				exit 1
-			fi 
-			if [ "$CONVECSX" != "" ]
-			then
-				# CONVECS-specific compile options
-				VASY_CFLAGS='-I$(CADP)/incl -DVASY_LIB'
-				VASY_LDFLAGS='-L$(CADP)/bin.win32 -lm'
-			else
-				# standard compile options
-				VASY_CFLAGS=""
-				VASY_LDFLAGS=""
-			fi	
-			# cross-compilation on the current machine
-			BANNER "CROSS-COMPILATION ON HOST $ARCH FOR TARGET win32"
-			CLEAN
-			COMPILE win32 \
-				"COMPILER=$CC_WIN32-gcc" \
-				"CFLAGS=-m32 $GCC_WARNINGS $EXTRA_CFLAGS $VASY_CFLAGS" \
-				"LDFLAGS=$LDFLAGS $VASY_LDFLAGS" \
-				"AR=$CC_WIN32-ar" \
-				"RANLIB=$CC_WIN32-ranlib" 2>&1 | tee _.log
-			SET_PERMISSIONS
-			SUMMARIZE_ERRORS_WARNINGS _.log
-		fi
-		;;
-
 	win64 )
-		if [ $ARCH = win32 -o $ARCH = win64 ]
+		if [ $ARCH = win64 ]
 		then
 			# local compilation (most likely using Cygwin's gcc)
 			LOCAL_COMPILE_BASE win64 2>&1 | tee _.log
@@ -908,7 +923,8 @@ case "$1" in
 			fi	
 			# cross-compilation on the current machine
 			BANNER "CROSS-COMPILATION ON HOST $ARCH FOR TARGET win64"
-			CLEAN
+			CLEAN win64
+			COMPUTE_GCC_WARNINGS win64 $CC_WIN64-gcc
 			COMPILE win64 \
 				"COMPILER=$CC_WIN64-gcc" \
 				"CFLAGS=-m64 $GCC_WARNINGS $EXTRA_CFLAGS $VASY_CFLAGS" \

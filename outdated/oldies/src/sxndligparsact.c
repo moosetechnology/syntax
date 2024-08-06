@@ -1839,9 +1839,7 @@ sxndligparsact_post_do_it ()
 
 
 
-int sxndligparsact (which, arg)
-    int		which;
-    struct sxtables	*arg;
+bool sxndligparsact (int which, struct sxtables	*arg)
 {
     int act_no;
 
@@ -1903,7 +1901,7 @@ int sxndligparsact (which, arg)
 
 	(*sxndlig_common.code.parsact) (which, arg);
 
-	return 0;
+	return SXANY_BOOL;
 
     case SXCLOSE:
 	XxY_free (&sxndlig.main_trans);
@@ -1943,7 +1941,7 @@ int sxndligparsact (which, arg)
 
 	(*sxndlig_common.code.parsact) (which, arg);
 
-	return 0;
+	return SXANY_BOOL;
 
     case SXINIT:
 	sxplocals.mode.with_do_undo = true;
@@ -1953,25 +1951,25 @@ int sxndligparsact (which, arg)
 
 	(*sxndlig_common.code.parsact) (which, arg);
 
-	return 0;
+	return SXANY_BOOL;
 
     case SXFINAL:
 	sxndligpost (SXFINAL, 0); /* Pour un free... */
 
 	(*sxndlig_common.code.parsact) (which, arg);
 
-	return 0;
+	return SXANY_BOOL;
 
     case SXACTION:
 	/* La memorisation se fait ds "SXPREDICATE:" */
-	return 0;
+	return SXANY_BOOL;
 
     case SXDO:
-	return 0;
+	return SXANY_BOOL;
 
 
     case SXUNDO:
-	return 0;
+	return SXANY_BOOL;
 
     case SXPREDICATE:
 	act_no = (long) arg;
@@ -2002,5 +2000,5 @@ int sxndligparsact (which, arg)
 	sxexit(1);
     }
 
-    /* NOTREACHED return 0; */
+    /* NOTREACHED return SXANY_BOOL; */
 }

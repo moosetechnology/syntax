@@ -17,6 +17,9 @@
  *   can be found at, e.g., http://www.cecill.info
  *****************************************************************************/
 
+#define P0 "NULL,"
+#define P0_WITHOUT_COMMA "NULL"
+
 extern void out_bit(char *nom, SXBA chb);
 
 extern void out_struct(char *nom, char *elt_m1);
@@ -27,16 +30,12 @@ extern void out_short(char *nom);
 
 extern void out_int(char *nom, char *elt_m1);
 
-extern void out_ext_int(char *nom);
-extern void out_ext_int_newstyle(char *nom);
+extern void out_extern_int(char *nom);
 
 extern void out_char(char *nom, char *elt_m1);
 
 extern void out_end_struct (void);
 extern void out_rcvr_trans (void);
-extern void out_ext_BOOLEAN (char *nom);
-extern void out_ext_BOOLEAN_newstyle (char *nom);
+extern void out_extern_bool (char *nom);
 extern void out_bitc (char *nom, SXBA chb);
-
-SX_GLOBAL_VAR_TABLES char P0 [] SX_INIT_VAL_TABLES("NULL,");
 

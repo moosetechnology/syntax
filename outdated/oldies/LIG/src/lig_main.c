@@ -277,7 +277,7 @@ run:
     }
 
     sxstr_mngr (SXBEGIN);
-    (*(lig_tables.analyzers.parser)) (SXBEGIN);
+    (*(lig_tables.SX_parser)) (SXBEGIN, NULL /* dummy */);
     syntax (SXOPEN, &lig_tables);
 
     if (options_set & OPTION (LANGUAGE_NAME)) {
@@ -294,7 +294,7 @@ run:
     }
 
     syntax (SXCLOSE, &lig_tables);
-    (*(lig_tables.analyzers.parser)) (SXEND);
+    (*(lig_tables.SX_parser)) (SXEND, NULL /* dummy */);
     sxstr_mngr (SXEND);
 
     {

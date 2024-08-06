@@ -22,7 +22,7 @@
 #include "sxunix.h"
 #include "ppada_td.h"
 
-char WHAT_PPADAMAIN[] = "@(#)SYNTAX - $Id: ppada_main.c 3633 2023-12-20 18:41:19Z garavel $";
+char WHAT_PPADAMAIN[] = "@(#)SYNTAX - $Id: ppada_main.c 4143 2024-08-02 08:50:12Z garavel $";
 
 extern struct sxtables	ppada_args_tables, ppada_tables;
 
@@ -104,9 +104,9 @@ static void	option_dir (char *dir)
     save_lv.scan_lv = sxsvar.sxlv;
     save_lv.pars_lv = sxplocals;
     save_lv.src_lv = sxsrcmngr;
-    (*ppada_args_tables.analyzers.parser) (SXOPEN, &ppada_args_tables);
+    (*ppada_args_tables.SX_parser) (SXOPEN, &ppada_args_tables);
     option_file (dir);
-    (*ppada_args_tables.analyzers.parser) (SXCLOSE, &ppada_args_tables);
+    (*ppada_args_tables.SX_parser) (SXCLOSE, &ppada_args_tables);
     sxsrcmngr = save_lv.src_lv;
     sxplocals = save_lv.pars_lv;
     sxsvar.sxlv = save_lv.scan_lv;
@@ -238,8 +238,9 @@ static void	ppada_run (SXINT in_ste, SXINT out_ste)
     sxsrc_mngr (SXFINAL);
 }
 
-void	ppada_args_semact (SXINT what, SXINT which)
+void ppada_args_semact (SXINT what, SXINT action_no, struct sxtables *arg)
 {
+    (void) arg;
     switch (what) {
     case SXERROR:
 	fprintf (sxstderr, Usage, ME);
@@ -253,7 +254,7 @@ void	ppada_args_semact (SXINT what, SXINT which)
 	break;
 
     case SXACTION:
-	switch (which) {
+	switch (action_no) {
 	case 0:
 	    break;
 
@@ -433,7 +434,7 @@ int main (int argc, char *argv[])
     syntax (SXCLOSE, &ppada_args_tables);
 
     if (sxerrmngr.nbmess [1] != 0 || sxerrmngr.nbmess [2] != 0) {
-	ppada_args_semact (SXERROR, 0);
+	ppada_args_semact (SXERROR, 0, NULL);
 	/* NOTREACHED */
     }
 

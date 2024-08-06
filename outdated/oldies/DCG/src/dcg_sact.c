@@ -1,8 +1,7 @@
 #include "sxunix.h"
 #include "dcg_td.h"
 
-void	dcg_scan_act (what, act_no)
-    int		what, act_no;
+bool dcg_scan_act (SXINT what, SXINT act_no)
 {
     int cur_lahead, c0, c1, c2;
 
@@ -11,7 +10,7 @@ void	dcg_scan_act (what, act_no)
     case SXCLOSE:
     case SXINIT:
     case SXFINAL:
-	return;
+	return SXANY_BOOL;
 
     case SXACTION:
 	switch (act_no) {
@@ -24,7 +23,7 @@ void	dcg_scan_act (what, act_no)
 
 	    switch (cur_lahead = sxsvar.sxlv.terminal_token.lahead) {
 	    case atom_t:
-		return;
+		return SXANY_BOOL;
 
 	    case is_t: /* is */
 		if (c1 != 0 || c2 == 0) {
@@ -32,8 +31,7 @@ void	dcg_scan_act (what, act_no)
 		    sxsvar.sxlv.terminal_token.lahead = atom_t;
 		    sxsvar.sxlv.terminal_token.string_table_entry = sxstr2save ("is", 2);
 		}
-
-		return;
+		return SXANY_BOOL;
 
 	    case less_t:
 		if (c1 == 0 && c2 == 0) {
@@ -41,64 +39,63 @@ void	dcg_scan_act (what, act_no)
 		    sxsvar.sxlv.terminal_token.lahead = atom_t;
 		    sxsvar.sxlv.terminal_token.string_table_entry = sxstr2save ("<", 1);
 		}
+		return SXANY_BOOL;
 
-		return;
 	    case less_equal_t:
 		if (c1 == 0 && c2 == 0) {
 		    /* Ce n'est pas le mot-cle "=<" */
 		    sxsvar.sxlv.terminal_token.lahead = atom_t;
 		    sxsvar.sxlv.terminal_token.string_table_entry = sxstr2save ("=<", 2);
 		}
+		return SXANY_BOOL;
 
-		return;
 	    case sup_t:
 		if (c1 == 0 && c2 == 0) {
 		    /* Ce n'est pas le mot-cle ">" */
 		    sxsvar.sxlv.terminal_token.lahead = atom_t;
 		    sxsvar.sxlv.terminal_token.string_table_entry = sxstr2save (">", 1);
 		}
+		return SXANY_BOOL;
 
-		return;
 	    case sup_equal_t:
 		if (c1 == 0 && c2 == 0) {
 		    /* Ce n'est pas le mot-cle ">=" */
 		    sxsvar.sxlv.terminal_token.lahead = atom_t;
 		    sxsvar.sxlv.terminal_token.string_table_entry = sxstr2save (">=", 1);
 		}
+		return SXANY_BOOL;
 
-		return;
 	    case plus_t:
 		if (c1 == 0 && c2 == 0) {
 		    /* Ce n'est pas le mot-cle "+" */
 		    sxsvar.sxlv.terminal_token.lahead = atom_t;
 		    sxsvar.sxlv.terminal_token.string_table_entry = sxstr2save ("+", 1);
 		}
+		return SXANY_BOOL;
 
-		return;
 	    case minus_t:
 		if (c1 == 0 && c2 == 0) {
 		    /* Ce n'est pas le mot-cle "-" */
 		    sxsvar.sxlv.terminal_token.lahead = atom_t;
 		    sxsvar.sxlv.terminal_token.string_table_entry = sxstr2save ("-", 1);
 		}
+		return SXANY_BOOL;
 
-		return;
 	    case multiply_t:
 		if (c1 == 0 && c2 == 0) {
 		    /* Ce n'est pas le mot-cle "*" */
 		    sxsvar.sxlv.terminal_token.lahead = atom_t;
 		    sxsvar.sxlv.terminal_token.string_table_entry = sxstr2save ("*", 1);
 		}
+		return SXANY_BOOL;
 
-		return;
 	    case divide_t:
 		if (c1 == 0 && c2 == 0) {
 		    /* Ce n'est pas le mot-cle "/" */
 		    sxsvar.sxlv.terminal_token.lahead = atom_t;
 		    sxsvar.sxlv.terminal_token.string_table_entry = sxstr2save ("/", 1);
 		}
-
-		return;
+		return SXANY_BOOL;
 
 	    case modulo_t: /* mod */
 		if (c1 == 0 && c2 == 0) {
@@ -106,8 +103,7 @@ void	dcg_scan_act (what, act_no)
 		    sxsvar.sxlv.terminal_token.lahead = atom_t;
 		    sxsvar.sxlv.terminal_token.string_table_entry = sxstr2save ("mod", 3);
 		}
-
-		return;
+		return SXANY_BOOL;
 
 	    case lhs_rhs_sep_t:	/* "-->" */
 		if (c0 != 0 || c1 != 0 || c2 != 0) {
@@ -115,9 +111,7 @@ void	dcg_scan_act (what, act_no)
 		    sxsvar.sxlv.terminal_token.lahead = atom_t;
 		    sxsvar.sxlv.terminal_token.string_table_entry = sxstr2save ("-->", 3);
 		}
-
-		return;
-
+		return SXANY_BOOL;
 
 	    default:
 		break;

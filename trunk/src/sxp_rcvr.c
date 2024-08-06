@@ -22,8 +22,14 @@
 #include "SS.h"
 
 #ifndef VARIANT_32
-char WHAT_SXP_RECOVERY[] = "@(#)SYNTAX - $Id: sxp_rcvr.c 3794 2024-03-14 10:15:04Z garavel $" WHAT_DEBUG;
+char WHAT_SXP_RECOVERY[] = "@(#)SYNTAX - $Id: sxp_rcvr.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
 #endif
+
+/*
+ * Note: a simpler version of this module once existed. It performed a
+ * simplified form of parser recovery. The source code of this module can be
+ * found in outdated/deleted/src/sxp_srcvr.c
+ */
 
 #define Commun 1
 #define Propre 2
@@ -307,7 +313,7 @@ static void undo (void)
 		sxpglobals.xps--;
 	    }
 
-	    (*sxplocals.SXP_tables.parsact) (SXUNDO, ared->action);
+	    (*sxplocals.SXP_tables.P_parsact) (SXUNDO, ared->action);
 	}
 
 	SS_clear (sxplocals.rcvr.undo_stack);
@@ -379,7 +385,7 @@ static bool	REF_is_a_right_ctxt (bool bscan,
 	    }
 
 #if CYCLE_DETECTION >= 1
-	    if ((sxplocals.SXP_tables.parsact != NULL)
+	    if ((sxplocals.SXP_tables.P_parsact != NULL)
                /*
                 * On est dans le cas ou il y a des actions syntaxiques
                 * (c'est-a-dire, des predicats &1, &2, etc. dans la
@@ -459,7 +465,7 @@ static bool	REF_is_a_right_ctxt (bool bscan,
 
 		    while (aprdct->prdct >= 0 /* User's predicate */  &&
 			   (!sxplocals.mode.with_parsprdct ||
-			    !(*sxplocals.SXP_tables.parsact) (SXPREDICATE, aprdct->prdct)))
+			    !(*sxplocals.SXP_tables.P_parsact) (SXPREDICATE, aprdct->prdct)))
 			/* returning False */ 
 			aprdct++;
 
@@ -505,7 +511,7 @@ static bool	REF_is_a_right_ctxt (bool bscan,
 			sxpglobals.xps--;
 		    }
 
-		    (*sxplocals.SXP_tables.parsact) (SXDO, ared->action);
+		    (*sxplocals.SXP_tables.P_parsact) (SXDO, ared->action);
 
 		    sxpglobals.xps = old_xps;
 
@@ -537,7 +543,7 @@ static bool	REF_is_a_right_ctxt (bool bscan,
 			    sxpglobals.xps--;
 			}
 
-			(*sxplocals.SXP_tables.parsact) (SXUNDO, ared->action);
+			(*sxplocals.SXP_tables.P_parsact) (SXUNDO, ared->action);
 
 			sxpglobals.xps = old_xps;
 		    }
@@ -835,7 +841,7 @@ static bool match_a_tok (SXINT cur_mod, SXINT n, SXINT tok)
 
     sxplocals.rcvr.TOK_i = sxplocals.rcvr.TOK_0 + n - 1;
 
-    if (sxplocals.sxtables->SXS_tables.check_keyword == NULL
+    if (sxplocals.sxtables->SXS_tables.S_check_keyword == NULL
 	|| sxstrlen (j = SXGET_TOKEN (sxplocals.rcvr.TOK_i).string_table_entry) <= 2
 	|| !sxkeywordp (sxplocals.sxtables, tok)
 	|| !morgan (sxstrget (j), sxttext (sxplocals.sxtables, tok)))
@@ -1114,7 +1120,7 @@ static void new_ref (SXINT k, SXINT n, SXINT xstd, SXP_SHORT ref, SXP_SHORT test
 
 	    while (aprdct->prdct >= 0 /* User's predicate */  &&
 		   (!sxplocals.mode.with_parsprdct ||
-		    !(*sxplocals.SXP_tables.parsact) (SXPREDICATE, aprdct->prdct)))
+		    !(*sxplocals.SXP_tables.P_parsact) (SXPREDICATE, aprdct->prdct)))
 		/* returning False */ 
 		aprdct++;
 
@@ -1173,7 +1179,7 @@ static void new_ref (SXINT k, SXINT n, SXINT xstd, SXP_SHORT ref, SXP_SHORT test
 			sxpglobals.xps--;
 		    }
 
-		    (*sxplocals.SXP_tables.parsact) (SXDO, ared->action);
+		    (*sxplocals.SXP_tables.P_parsact) (SXDO, ared->action);
 
 		    sxpglobals.xps = old_xps;
 
@@ -1200,7 +1206,7 @@ static void new_ref (SXINT k, SXINT n, SXINT xstd, SXP_SHORT ref, SXP_SHORT test
 			sxpglobals.xps--;
 		    }
 
-		    (*sxplocals.SXP_tables.parsact) (SXUNDO, ared->action);
+		    (*sxplocals.SXP_tables.P_parsact) (SXUNDO, ared->action);
 
 		    sxpglobals.xps = old_xps;
 
@@ -1575,7 +1581,9 @@ static bool	recovery (void)
     restaure_stack (sxpglobals.stack_bot + 1, xps);
 
     if (!is_a_correction (no_correction_on_previous_token, xps, state)) {
-	/* correction a echouee */
+	/* La correction a échoué */
+	 sxplocals.mode.global_errors_nb++; /* Décompte du nombre d'erreurs qui n'ont pas été corrigées */
+
 	if (sxplocals.mode.kind == SXWITH_CORRECTION)
 	    /* Seule une tentative de correction a ete demandee. */
 	    return false;
@@ -1583,6 +1591,7 @@ static bool	recovery (void)
 	goto riennevaplus;
     }
 
+    sxplocals.mode.local_errors_nb++; /* Décompte du nombre de corrections (qui ont marché) */
 
 /* OK ca a marche */
 
@@ -1846,7 +1855,7 @@ riennevaplus:
 	       pour les actions */
 	    sxpglobals.xps-- /* pour SXSTACKtop */;
 	    sxpglobals.pspl = sxpglobals.xps - sxpglobals.stack_bot - 1 /* pour STACKnew_top */ ;
-	    (*(sxplocals.SXP_tables.semact)) (SXERROR, 1);
+	    (*(sxplocals.SXP_tables.P_semact)) (SXERROR, 1, NULL);
 	    sxplocals.ptok_no = sxplocals.atok_no;
 	    return false;
 	}
@@ -1920,7 +1929,7 @@ riennevaplus:
        qui n'existait pas et correspondait au terminal qui se trouvait en xps */
     /* La modif ci-dessous a l'air de marcher mais je ne sais pas vraiment pourquoi !! */
     sxpglobals.pspl = sxpglobals.xps - xps;
-    (*(sxplocals.SXP_tables.semact)) (SXERROR, xs2 - xps);
+    (*(sxplocals.SXP_tables.P_semact)) (SXERROR, xs2 - xps, NULL);
 
     /* reajustement de la pile */
     while (xps <= xs2) {
@@ -1930,7 +1939,7 @@ riennevaplus:
     }
 #else
     sxpglobals.pspl = sxpglobals.xps - xps - 1 /* pour SXSTACKnewtop() eventuel */ ;
-    (*(sxplocals.SXP_tables.semact)) (SXERROR, xs2 - xps);
+    (*(sxplocals.SXP_tables.P_semact)) (SXERROR, xs2 - xps);
 
     /* reajustement de la pile */
     while (++xps <= xs2) {
@@ -1979,11 +1988,11 @@ riennevaplus:
 
 
 
-bool		sxprecovery (SXINT what_to_do, SXINT *at_state, SXINT latok_no)
+bool		sxprecovery (SXINT what, SXINT *at_state, SXINT latok_no)
 {
     SXINT i;
 
-    switch (what_to_do) {
+    switch (what) {
     case SXOPEN:
 	/* Allocation will be done at first call. */
 	break;
@@ -2020,7 +2029,7 @@ bool		sxprecovery (SXINT what_to_do, SXINT *at_state, SXINT latok_no)
 	      sxplocals.rcvr.PER_trans_sets [i] = (SXBA) sxba_calloc (sxplocals.SXP_tables.PER_trans_sets [i][0]);
 	}
 
-	return (what_to_do == SXACTION) ? recovery () : ARC_recovery (at_state, latok_no);
+	return (what == SXACTION) ? recovery () : ARC_recovery (at_state, latok_no);
 
     case SXCLOSE:
 	if (sxplocals.rcvr.stack != NULL) {

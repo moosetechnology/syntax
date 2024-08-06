@@ -32,13 +32,12 @@
 /*									*/
 /*  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * */
 
-
-#include        "sxversion.h"
-#include        "sxcommon.h"
+#include "sxversion.h"
+#include "sxcommon.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-char WHAT_SXPPTREE[] = "@(#)SYNTAX - $Id: sxpptree.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_SXPPTREE[] = "@(#)SYNTAX - $Id: sxpptree.c 3917 2024-04-23 08:33:57Z garavel $" WHAT_DEBUG;
 
 #define USER_PTR	void*		/* Any pointer */
 
@@ -148,13 +147,9 @@ static void	min_max_pos (void)
 }
 
 
-
-
 #include <setjmp.h>
 
 static jmp_buf	no_space;
-
-
 
 
 #ifdef SIMPLE

@@ -1307,11 +1307,9 @@ SXLIG_sem_pass (S0n)
     return true;
 }
 
-int
-SXLIG_actions (what, arg)
-    int		what;
-    struct sxtables	*arg;
+void SXLIG_actions (SXINT what, SXINT action_no, struct sxtables *arg)
 {
+    (void) action_no;
     switch (what) {
     case SXOPEN:
 	sxndlig_common.sxtables = arg;

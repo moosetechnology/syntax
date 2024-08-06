@@ -3,7 +3,7 @@
 # CADP (CONSTRUCTION AND ANALYSIS OF DISTRIBUTED PROCESSES)
 # http://cadp.inria.fr
 
-# arch version 1.52 -- date 2023/12/15 18:38:03 -- Hubert Garavel
+# arch version 1.52 (PATCHED) -- date 2023/12/15 18:38:03 -- Hubert Garavel
 
 PATH="/bin:$PATH" ; export PATH
 
@@ -178,7 +178,7 @@ case $UNAME_MACHINE-$UNAME_SYSTEM-$UNAME_RELEASE in
 		then
 			echo "mac64-arm"
 		else
-			echo "mac64"
+			echo "arm64"
 		fi
 		;;
 	* )

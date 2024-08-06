@@ -43,6 +43,6 @@
 #define WORD_test_and_2save	SXWORD_test_and_2save
 #define WORD_top		SXWORD_top
 
+#include "sxword.h"
 
-#include    "sxword.h"
 #endif

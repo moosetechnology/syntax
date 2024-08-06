@@ -23,7 +23,7 @@
 
 /* Interface of the Abstract Data Type X_root */
 
-#include	"X_root_rep.h"
+#include "X_root_rep.h"
 
 /* This package is the basis for the X[xY[xZ]] managers. */
 

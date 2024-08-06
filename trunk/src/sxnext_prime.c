@@ -16,13 +16,14 @@
  *   CeCILL-C license. Information about the CeCILL and CeCILL-C licenses
  *   can be found at, e.g., http://www.cecill.info
  *****************************************************************************/
-#include        "sxversion.h"
-#include        "sxcommon.h"
+
+#include "sxversion.h"
+#include "sxcommon.h"
 
 static SXINT primes [] = {1, 2, 5, 11, 17, 37, 67, 131, 257, 521, 1031, 2053, 4099, 8209, 16411, 32771, 65539, 131101, 262217, 524309, 1048583, 2097169};
 #define primes_size	(sizeof (primes) / sizeof (SXINT))
 
-char WHAT_SXNEXT_PRIME[] = "@(#)SYNTAX - $Id: sxnext_prime.c 2428 2023-01-18 12:54:10Z garavel $" WHAT_DEBUG;
+char WHAT_SXNEXT_PRIME[] = "@(#)SYNTAX - $Id: sxnext_prime.c 3917 2024-04-23 08:33:57Z garavel $" WHAT_DEBUG;
 
 static SXINT	LASTBIT [] = {0, 1, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4};
 

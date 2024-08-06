@@ -135,7 +135,6 @@ static char *err_titles[SXSEVERITIES]={
 "\002Error:\t",
 };
 static char abstract []= "%ld warnings and %ld errors are reported.";
-extern bool sxprecovery (SXINT what_to_do, SXINT *at_state, SXINT latok_no);
 
 static unsigned char S_char_to_simple_class[]={
 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
@@ -339,19 +338,15 @@ static char *S_global_mess[]={0,
 "End Of File",
 "%sScanning stops on End Of File.",
 };
-extern SXINT sxscan_it(void);
-extern bool sxsrecovery (SXINT sxsrecovery_what, SXINT state_no, unsigned char *class);
-extern SXINT sxscanner(SXINT what_to_do, struct sxtables *arg);
-extern SXINT sxparser(SXINT what_to_do, struct sxtables *arg);
 #ifdef SEMACT
-#ifndef SCANACT_AND_SEMACT_ARE_IDENTICAL
-extern SXINT SEMACT(SXINT what, struct sxtables *arg);
+extern SXSEMACT_FUNCTION SEMACT;
 #endif
-#endif /* SEMACT */
 
 struct sxtables sxtables={
 52113, /* magic */
-{sxscanner,(SXPARSER_T) sxparser}, {255, 7, 1, 3, 4, 28, 1, 32, 0, 0, 0, 
+sxscanner,
+sxparser,
+{255, 7, 1, 3, 4, 28, 1, 32, 0, 0, 0, 
 S_is_a_keyword,S_is_a_generic_terminal,S_transition_matrix,
 SXS_action_or_prdct_code,
 S_adrp,
@@ -362,9 +357,9 @@ S_no_delete,
 S_no_insert,
 S_global_mess,
 S_lregle,
-(SXSCANACT_T) NULL,
-(SXRECOVERY_T) sxsrecovery,
-(SXCHECKKEYWORD_T) NULL,
+(SXSCANACT_FUNCTION *) NULL,
+sxsrecovery,
+(SXCHECK_KEYWORD_FUNCTION *) NULL
 },
 {2, 11, 11, 16, 16, 20, 22, 29, 7, 7, 11, 11, 9, 6, 0, 9, 4, 7, 2, 5, 11, 5, 4,
 reductions,
@@ -386,18 +381,21 @@ P_right_ctxt_head,
 SXP_local_mess,
 P_no_delete,
 P_no_insert,
-P_global_mess,PER_tset,sxscan_it,(SXRECOVERY_T) sxprecovery,
-(SXPARSACT_T) NULL,
-(SXDESAMBIG_T) NULL,
+P_global_mess,
+PER_tset,
+sxscan_it,
+sxprecovery,
+(SXPARSACT_FUNCTION *) NULL,
+(SXDESAMBIG_FUNCTION *) NULL,
 #ifdef SEMACT
-(SXSEMACT_T) SEMACT
-#else /* SEMACT */
-NULL,
-#endif /* SEMACT */
+SEMACT
+#else
+(SXSEMACT_FUNCTION *) NULL
+#endif
 },
 err_titles,
 abstract,
-(sxsem_tables*)NULL,
-NULL,
+(sxsem_tables *) NULL,
+NULL
 };
 /* End of sxtables for sdag [Thu Oct  2 13:03:34 2008] */

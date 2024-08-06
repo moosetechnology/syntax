@@ -22,7 +22,7 @@ static char	ME [] = "ATCPP";
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXATCPP[] = "@(#)SYNTAX - $Id: sxatcpp.c 3790 2024-03-12 10:13:55Z garavel $" WHAT_DEBUG;
+char WHAT_SXATCPP[] = "@(#)SYNTAX - $Id: sxatcpp.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
 
 /* Gestion dans le tas : */
 
@@ -289,9 +289,9 @@ static void	error (void)
 
 
 
-void	sxatcpp (SXINT sxatcpp_what, struct sxtables *arg /* or action number */)
+void	sxatcpp (SXINT what, SXINT action_no, struct sxtables *arg)
 {
-    switch (sxatcpp_what) {
+    switch (what) {
     case SXOPEN:
 	sxcheck_magic_number (arg->magic, SXMAGIC_NUMBER, "atcpp");
 #if defined (__GNUC__) && (__GNUC__ - 0 >= 7)
@@ -299,7 +299,7 @@ void	sxatcpp (SXINT sxatcpp_what, struct sxtables *arg /* or action number */)
 #endif
 
     case SXCLOSE:
-	sxppp (sxatcpp_what, arg);
+	sxppp (what, arg);
 	break;
 
     case SXINIT:
@@ -311,7 +311,7 @@ void	sxatcpp (SXINT sxatcpp_what, struct sxtables *arg /* or action number */)
 	break;
 
     case SXACTION:
-	if ((intptr_t) arg != 0) {	/* 0 when simple reduction */
+	if (action_no != 0) {	/* 0 when simple reduction */
 	    action ();
 	}
 	break;

@@ -2,8 +2,8 @@
 include $(SX)/etc/make/gccoptions
 
 PPADA=$(SX)/examples/ppada
-BIN=$(PPADA)/bin
-LIB=$(PPADA)/lib
+BIN=$(PPADA)/bin.$(ARCH)
+LIB=$(PPADA)/lib.$(ARCH)
 
 CC=$(COMPILER) -I$(SXINCL) $(CFLAGS) -c
 

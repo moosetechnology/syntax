@@ -137,7 +137,6 @@ static char *err_titles[SXSEVERITIES]={
 "\002Error:\t",
 };
 static char abstract []= "%ld warnings and %ld errors are reported.";
-extern bool sxprecovery (SXINT what_to_do, SXINT *at_state, SXINT latok_no);
 
 static unsigned char S_char_to_simple_class[]={
 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
@@ -290,21 +289,20 @@ static char *S_global_mess[]={0,
 "%sScanning stops on End Of File.",
 };
 #ifdef SCANACT
-extern SXINT SCANACT(SXINT what, SXINT act_no);
-#endif /* SCANACT */
-extern SXINT sxscan_it(void);
-extern bool sxsrecovery (SXINT sxsrecovery_what, SXINT state_no, unsigned char *class);
-extern SXINT sxscanner(SXINT what_to_do, struct sxtables *arg);
-extern SXINT sxparser(SXINT what_to_do, struct sxtables *arg);
-#ifdef SEMACT
-#ifndef SCANACT_AND_SEMACT_ARE_IDENTICAL
-extern SXINT SEMACT(SXINT what, struct sxtables *arg);
+extern SXSCANACT_FUNCTION SCANACT;
 #endif
-#endif /* SEMACT */
+#ifdef SEMACT
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wredundant-decls"
+extern SXSEMACT_FUNCTION SEMACT;
+#pragma GCC diagnostic pop
+#endif
 
 struct sxtables sxtables={
 52113, /* magic */
-{sxscanner,(SXPARSER_T) sxparser}, {255, 6, 1, 3, 4, 26, 0, 17, 1, 1, 0, 
+sxscanner,
+sxparser,
+{255, 6, 1, 3, 4, 26, 0, 17, 1, 1, 0, 
 S_is_a_keyword,S_is_a_generic_terminal,S_transition_matrix,
 SXS_action_or_prdct_code,
 S_adrp,
@@ -316,12 +314,12 @@ S_no_insert,
 S_global_mess,
 S_lregle,
 #ifdef SCANACT
-(SXSCANACT_T) SCANACT,
-#else /* SCANACT */
-(SXSCANACT_T) NULL,
-#endif /* SCANACT */
-(SXRECOVERY_T) sxsrecovery,
-(SXCHECKKEYWORD_T) NULL,
+SCANACT,
+#else
+(SXSCANACT_FUNCTION *) NULL,
+#endif
+sxsrecovery,
+(SXCHECK_KEYWORD_FUNCTION *) NULL
 },
 {1, 8, 8, 11, 11, 16, 18, 23, 6, 4, 8, 8, 8, 4, 0, 9, 4, 7, 2, 5, 11, 5, 4,
 reductions,
@@ -343,18 +341,20 @@ P_right_ctxt_head,
 SXP_local_mess,
 P_no_delete,
 P_no_insert,
-P_global_mess,PER_tset,sxscan_it,(SXRECOVERY_T) sxprecovery,
-(SXPARSER_T) NULL,
-(SXDESAMBIG_T) NULL,
+P_global_mess,PER_tset,
+sxscan_it,
+sxprecovery,
+(SXPARSACT_FUNCTION *) NULL,
+(SXDESAMBIG_FUNCTION *) NULL,
 #ifdef SEMACT
-(SXSEMACT_T) SEMACT
-#else /* SEMACT */
-(SXSEMACT_T) NULL,
-#endif /* SEMACT */
+SEMACT
+#else
+(SXSEMACT_FUNCTION *) NULL
+#endif
 },
 err_titles,
 abstract,
-(sxsem_tables*)NULL,
-NULL,
+(sxsem_tables *) NULL,
+NULL
 };
 /* End of sxtables for tdef */

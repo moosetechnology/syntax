@@ -531,5 +531,5 @@ struct sxndtkn {
 #define MS_EXHAUSTED	32
 
 extern void 	ndlv_clear ();
-extern void	sxndscan_it ();
+extern SXSCANIT_FUNCTION	sxndscan_it;
 

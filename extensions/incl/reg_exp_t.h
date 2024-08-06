@@ -1,1 +1,1 @@
-../../trunk/lecl/src/lecl_t.c
+../../trunk/lecl/boot/lecl_t.c

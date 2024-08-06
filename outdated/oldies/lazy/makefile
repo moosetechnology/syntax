@@ -3,7 +3,7 @@ include $(SX)/etc/make/gccoptions
 
 L=$(SX)/../outdated/oldies/lazy
 SRC=$(L)/src
-LIB=$(L)/lib
+LIB=$(L)/lib.$(ARCH)
 INCL=$(L)/incl
 
 CC=cc -I$(SXINCL) -I$(SXINCL)/util -I$(INCL) $(CFLAGS) -DEBUG
@@ -40,7 +40,7 @@ $(LIB)/SL_t.o:	$(SXINCL)/sxunix.h 		\
 			$(SRC)/SL_t.c
 	$(CC) -o $@ -c $(SRC)/SL_t.c		\
 		-Dsxparser=sxdynam_parser	\
-		-DSEMACT=sxvoid			\
+		-DSEMACT=sxwvoid			\
 		-DPARSACT=L_parsact
 
 $(L)/DL.out:	$(DL_NEEDS)	$(SXBIBS)
@@ -50,7 +50,7 @@ $(LIB)/DL_t.o:	$(SXINCL)/sxunix.h 		\
 			$(SRC)/DL_t.c
 	$(CC) -o $@ -c $(SRC)/DL_t.c		\
 		-Dsxparser=sxdynam_parser	\
-		-DSEMACT=sxvoid			\
+		-DSEMACT=sxwvoid			\
 		-DPARSACT=L_parsact
 
 $(LIB)/L_act.o:	$(SXINCL)/sxunix.h 		\

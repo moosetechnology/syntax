@@ -3,7 +3,7 @@ include $(SX)/etc/make/gccoptions
 
 DCG=$(SX)/../outdated/oldies/DCG
 SRC=$(DCG)/src
-LIB=$(DCG)/lib
+LIB=$(DCG)/lib.$(ARCH)
 INCL=$(DCG)/incl
 
 CFLAGS= -g -DEBUG_ALLOC -DEBUG
@@ -50,7 +50,7 @@ $(LIB)/dcg_t.o:		$(SXINCL)/sxunix.h 	\
 	$(CC) -o $@ -c $(SRC)/dcg_t.c		\
 		-Dsxtables=dcg_tables		\
 		-DSCANACT=dcg_scan_act		\
-		-Dsempass=dcg_smp
+		-DSEMPASS=dcg_smp
 
 PARS=\
 	$(LIB)/dcg_main.o		\
@@ -66,7 +66,7 @@ $(LIB)/dcg_nosem_t.o:		$(SXINCL)/sxunix.h 	\
 	$(CC) -o $@ -c $(SRC)/dcg_t.c		\
 		-Dsxtables=dcg_tables		\
 		-DSCANACT=dcg_scan_act		\
-		-Dsempass=sxvoid -o dcg_nosem_t.o
+		-DSEMPASS=sxvoid -o dcg_nosem_t.o
 
 clean:
 	rm -f $(ALL) $(NEEDS1) $(PARS)

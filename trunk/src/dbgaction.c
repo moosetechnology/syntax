@@ -22,7 +22,7 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_DBGACTION[] = "@(#)SYNTAX - $Id: dbgaction.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
+char WHAT_DBGACTION[] = "@(#)SYNTAX - $Id: dbgaction.c 4139 2024-07-31 16:02:45Z garavel $" WHAT_DEBUG;
 
 #if BUG
 
@@ -125,7 +125,7 @@ static void	print_scanner_state (void)
 
 
 
-SXINT	dbgscanact (SXINT what_to_do, SXINT arg)
+bool dbgscanact (SXINT what_to_do, SXINT arg)
 {
     switch (what_to_do) {
     case SXACTION:
@@ -136,7 +136,7 @@ SXINT	dbgscanact (SXINT what_to_do, SXINT arg)
     case SXPREDICATE:
 	printf ("scanact: predicate = %ld, ", (SXINT) arg);
 	print_scanner_state ();
-	return 1;
+	return true;
 
     case SXOPEN:
 	puts ("scanact: SXOPEN");
@@ -158,6 +158,6 @@ SXINT	dbgscanact (SXINT what_to_do, SXINT arg)
 	gripe ("scanact");
     }
 
-    return 0;
+    return SXANY_BOOL;
 }
 

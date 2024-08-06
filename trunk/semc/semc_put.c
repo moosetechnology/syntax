@@ -22,7 +22,7 @@
 #include "B_tables.h"
 #include "semc_vars.h"
 
-char WHAT_SEMC_PUT[] = "@(#)SYNTAX - $Id: semc_put.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_SEMC_PUT[] = "@(#)SYNTAX - $Id: semc_put.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
 
 /* --------------------------------------------------------- */
 
@@ -44,8 +44,9 @@ static void put_actact (void)
 fputs("\n\n/* A C T I O N */", sxstdout);
 fputs("\nvoid ", sxstdout);
 fputs(prgentname, sxstdout);
-fputs("_act(SXINT code, SXINT numact)", sxstdout);
+fputs("_act(SXINT code, SXINT numact, struct sxtables *arg)", sxstdout);
 fputs("\n{", sxstdout);
+fputs("\n(void) arg;", sxstdout);
 fputs("\nswitch (code)", sxstdout);
 fputs("\n{", sxstdout);
 fputs("\ncase SXOPEN:", sxstdout);

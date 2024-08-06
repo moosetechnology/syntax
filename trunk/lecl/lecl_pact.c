@@ -21,23 +21,23 @@
 #include "sxunix.h"
 #include "lecl_td.h"
 
-char WHAT_LECLPACT[] = "@(#)SYNTAX - $Id: lecl_pact.c 3603 2023-09-23 20:02:36Z garavel $" WHAT_DEBUG;
+char WHAT_LECLPACT[] = "@(#)SYNTAX - $Id: lecl_pact.c 4120 2024-07-25 16:22:46Z garavel $" WHAT_DEBUG;
 
 static SXINT	NOT_ste, KEYWORD_ste;
 
-SXINT	lecl_pars_act (SXINT entry, SXINT action_no)
+bool lecl_pars_act (SXINT entry, SXINT action_no)
 {
     switch (entry) {
     case SXOPEN:
     case SXCLOSE:
     case SXFINAL:
-	return 0;
+	return SXANY_BOOL;
 
     case SXINIT:
 	/* The keywords "NOT" and "KEYWORD" are not reserved. */
 	NOT_ste = sxstrsave ("NOT");
 	KEYWORD_ste = sxstrsave ("KEYWORD");
-	return 0;
+	return SXANY_BOOL;
 
     case SXPREDICATE: {
 	switch (action_no) {
@@ -61,5 +61,5 @@ SXINT	lecl_pars_act (SXINT entry, SXINT action_no)
     fputs ("The function \"lecl_pars_act\" is out of date \
 with respect to its specification.\n", sxstderr);
     sxexit(1);
-    return 0; /* pour faire taire gcc -Wreturn-type */
+    return SXANY_BOOL; /* pour faire taire gcc -Wreturn-type */
 }

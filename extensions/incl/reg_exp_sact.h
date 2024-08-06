@@ -16,16 +16,18 @@
  *   CeCILL-C license. Information about the CeCILL and CeCILL-C licenses
  *   can be found at, e.g., http://www.cecill.info
  *****************************************************************************/
-#include "sxunix.h"
 
-SXINT	lecl_scan_act (SXINT lecl_scan_act_what, SXINT act_no)
+#include "sxunix.h"
+#include <stdarg.h>
+
+bool lecl_scan_act (SXINT what, SXINT act_no)
 {
-    switch (lecl_scan_act_what) {
+    switch (what) {
     case SXOPEN:
     case SXCLOSE:
     case SXINIT:
     case SXFINAL:
-	return 1;
+	return SXANY_BOOL;
 
     case SXACTION: {
 	switch (act_no) {
@@ -34,7 +36,7 @@ SXINT	lecl_scan_act (SXINT lecl_scan_act_what, SXINT act_no)
 	    if (sxsrcmngr.current_char != sxsvar.sxlv_s.token_string [sxsvar.sxlv.ts_lgth - 1])
 		sxerror (sxsrcmngr.source_coord, sxsvar.sxtables->err_titles [1][0], "%sA dark symbol must be built up with the same character.", sxsvar.sxtables->err_titles [1]+1 /* Warning */ );
 
-	    return 1;
+	    return SXANY_BOOL;
 
 	case 2:
 	    /* \nnn => char */
@@ -53,10 +55,10 @@ SXINT	lecl_scan_act (SXINT lecl_scan_act_what, SXINT act_no)
 		sxsvar.sxlv.mark.index = -1;
 	    }
 
-	    return 1;
+	    return SXANY_BOOL;
 
 	default:
-	    /* valeur inattendu */
+	    /* valeur inattendue */
 	    break;
 	}
 #if defined (__GNUC__) && (__GNUC__ - 0 >= 7)
@@ -68,5 +70,5 @@ SXINT	lecl_scan_act (SXINT lecl_scan_act_what, SXINT act_no)
 	sxexit (1);
     }
 
-    return 0; /*NOTREACHED*/
+    return SXANY_BOOL; /*NOTREACHED*/
 }

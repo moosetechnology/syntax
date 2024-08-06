@@ -54,8 +54,7 @@ $(LIB)/f77_t.o: 	$(SXINCL)/sxunix.h		\
 			-Dsxtables=f77_tables		\
 			-DSCANACT=f77_scanact		\
 			-DPARSACT=f77_parsact		\
-			-DSEMACT=sxvoid			\
-			-DSCANACT_AND_SEMACT_ARE_IDENTICAL
+			-DSEMACT=sxwvoid
 
 $(LIB)/f77_main.o:	$(SXINCL)/sxunix.h		\
 			f77_main.c

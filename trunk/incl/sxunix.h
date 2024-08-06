@@ -132,6 +132,11 @@ extern void sxcheck_magic_number (SXUINT m1, SXUINT m2, char *who);
 
 #define SXRAZ		SXCLEAR /* deprecated: use SXCLEAR */
 
+/* Constantes "dummy" */
+
+#define SXANY_BOOL	false
+#define SXANY_INT	-123456789
+
 /* Constantes de la table des chaines */
 
 #ifndef SXHASH_LENGTH
@@ -226,124 +231,16 @@ SX_GLOBAL_VAR bool sxverbosep SX_INIT_VAL (false) /* Should we animate the user'
 #define sxprecovery sxprecovery32
 #endif
 
-#ifndef sxpsrecovery
-#define sxpsrecovery sxpsrecovery32
-#endif
-
-#ifndef sxndparser
-#define sxndparser sxndparser32
-#endif
-
-#ifndef sxndparse_clean_forest
-#define sxndparse_clean_forest sxndparse_clean_forest32
-#endif
-
-#ifndef sxndparse_pack_forest
-#define sxndparse_pack_forest sxndparse_pack_forest32
-#endif
-
-#ifndef sxndparse_erase_hook_item
-#define sxndparse_erase_hook_item sxndparse_erase_hook_item32
-#endif
-
-#ifndef sxndparser_GC
-#define sxndparser_GC sxndparser_GC32
-#endif
-
-#ifndef sxnd2parser_GC
-#define sxnd2parser_GC sxnd2parser_GC32
-#endif
-
 #ifndef set_first_trans
 #define set_first_trans set_first_trans32
-#endif
-
-#ifndef set2_first_trans
-#define set2_first_trans set2_first_trans32
 #endif
 
 #ifndef set_next_trans
 #define set_next_trans set_next_trans32
 #endif
 
-#ifndef set2_next_trans
-#define set2_next_trans set2_next_trans32
-#endif
-
-#ifndef sxndprecovery
-#define sxndprecovery sxndprecovery32
-#endif
-
-#ifndef sxndparse_in_la
-#define sxndparse_in_la sxndparse_in_la32
-#endif
-
-#ifndef sxnd2parser
-#define sxnd2parser sxnd2parser32
-#endif
-
-#ifndef NDP_access
-#define NDP_access NDP_access32
-#endif
-
-#ifndef new_symbol
-#define new_symbol new_symbol32
-#endif
-
-#ifndef set_rule
-#define set_rule set_rule32
-#endif
-
-#ifndef set_start_symbol
-#define set_start_symbol set_start_symbol32
-#endif
-
-#ifndef mreds_push
-#define mreds_push mreds_push32
-#endif
-
-#ifndef new_parser
-#define new_parser new_parser32
-#endif
-
-#ifndef sxndsubparse_a_token
-#define sxndsubparse_a_token sxndsubparse_a_token32
-#endif
-
-#ifndef reducer
-#define reducer reducer32
-#endif
-
-#ifndef output_repair_string
-#define output_repair_string output_repair_string32
-#endif
-
-#ifndef output_repair_list
-#define output_repair_list output_repair_list32
-#endif
-
-#ifndef sxndpallcorrections
-#define sxndpallcorrections sxndpallcorrections32
-#endif
-
-#ifndef sxndpsrecovery
-#define sxndpsrecovery sxndpsrecovery32
-#endif
-
-#ifndef ndlv_clear
-#define ndlv_clear ndlv_clear32
-#endif
-
-#ifndef clone_active_scanner
-#define clone_active_scanner clone_active_scanner32
-#endif
-
 #ifndef predicate_processing
 #define predicate_processing predicate_processing32
-#endif
-
-#ifndef action_processing
-#define action_processing action_processing32
 #endif
 
 #ifndef sxparse_in_la
@@ -373,47 +270,23 @@ SX_GLOBAL_VAR bool sxverbosep SX_INIT_VAL (false) /* Should we animate the user'
 #define sxsrecovery sxsrecovery32
 #endif
 
-#ifndef sxssrecovery
-#define sxssrecovery sxssrecovery32
-#endif
-
-#ifndef sxndscanner
-#define sxndscanner sxndscanner32
-#endif
-
-#ifndef sxndscan_it
-#define sxndscan_it sxndscan_it32
-#endif
-
-#ifndef sxndsrecovery
-#define sxndsrecovery sxndsrecovery32
-#endif
-
 #else
 #define SXSTMI unsigned short
 #endif
 
 /* Structures des tables elles-memes */
 
-#define SXSCANACT_T SXINT(*)(SXINT what, ...)
-/* the type SXSCANACT_T denotes 'a scan function, which can be stored in
-   SXS_tables.scanact' */
+typedef bool (SXSCANACT_FUNCTION) (SXINT what, SXINT action_no);
+/* the type SXSCANACT_FUNCTION denotes a scanning function, which can be
+   stored in SXS_tables.S_scanact */
 
-#define SXPARSACT_T SXINT(*)(SXINT what, ...)
-/* the type SXPARSACT_T denotes 'a parse function which can be stored in
-   SXP_tables.parsact' */
+typedef bool (SXSRECOVERY_FUNCTION) (SXINT what, SXINT state_no, unsigned char *class);
+/* the type SXSRECOVERY_FUNCTION denotes a recovery function, which can be
+   stored in SXS_tables.S_recovery */
 
-#define SXSEMACT_T SXINT(*)(SXINT what, ...)
-/* the type SXSEMACT_T denotes 'a semantic function which can be stored in
-   SXP_tables.semact' */
-
-#define SXRECOVERY_T bool(*)(SXINT what, ...)
-/* the type SXRECOVERY_T denotes 'a recovery function, which can be stored in
-   SXS_tables.recovery' */
-
-#define SXCHECKKEYWORD_T SXINT(*)(char *, SXINT)
-/* the type SXCHECKKEYWORD_T denotes 'a keyword checking function, which can be
-   stored in SXS_tables.check_keyword' */
+typedef SXINT (SXCHECK_KEYWORD_FUNCTION) (char *token_string, SXINT token_lgth);
+/* the type SXCHECK_KEYWORD_FUNCTION denotes a keyword checking function,
+   which can be stored in SXS_tables.S_check_keyword */
 
 struct SXS_tables {
     SXINT		S_last_char_code, S_termax, S_constructor_kind, S_nbcart, S_nmax,
@@ -431,11 +304,32 @@ struct SXS_tables {
     SXINT	        *S_no_insert;
     char	**S_global_mess;
     SXINT	        **S_lregle;
-    SXINT		(*scanact) (SXINT what, ...);
-    bool	        (*recovery) (SXINT what, ...);
-    SXINT		(*check_keyword) (char *token_string, SXINT token_lgth);
+    SXSCANACT_FUNCTION       *S_scanact;
+    SXSRECOVERY_FUNCTION     *S_recovery;
+    SXCHECK_KEYWORD_FUNCTION *S_check_keyword;
 };
 
+struct sxtables; /* forward declaration needed by struct SXT_tables */
+
+typedef void (SXSCANIT_FUNCTION) (void);
+/* the type SXSCANIT_FUNCTION denotes a scan function, which can be stored
+   in SXP_tables.P_scan_it */
+
+typedef bool (SXPRECOVERY_FUNCTION) (SXINT what, SXINT *at_state, SXINT latok_no);
+/* the type SXPRECOVERY_FUNCTION denotes a recovery function, which can be
+   stored in SXP_tables.P_recovery */
+
+typedef bool (SXPARSACT_FUNCTION) (SXINT what, SXINT action_no);
+/* the type SXPARSACT_FUNCTION denotes a parse function which can be stored
+   in SXP_tables.P_parsact */
+
+typedef SXINT (SXDESAMBIG_FUNCTION) (SXINT what);
+/* the type SXDESAMBIG_FUNCTION denotes a desambiguation function, which can
+   be stored in SXP_tables.P_desambig */
+
+typedef void (SXSEMACT_FUNCTION) (SXINT what, SXINT action_no, struct sxtables *arg);
+/* the type SXSEMACT_FUNCTION denotes a semantic function which can be stored
+   in SXP_tables.P_semact */
 
 struct SXP_tables {
     SXINT	        Mrednt, Mred, Mprdct, Mfe, M0ref, Mref, mxvec, Mxvec,
@@ -453,45 +347,42 @@ struct SXP_tables {
     struct SXP_prdct		*prdcts;
     SXP_SHORT	                *germe_to_gr_act;
     struct SXP_prdct_list	*prdct_list;
-    SXINT			        **P_lregle;
-    SXINT				*P_right_ctxt_head;
+    SXINT		        **P_lregle;
+    SXINT			*P_right_ctxt_head;
     struct SXP_local_mess	*SXP_local_mess;
-    SXINT			        *P_no_delete;
-    SXINT			        *P_no_insert;
+    SXINT		        *P_no_delete;
+    SXINT		        *P_no_insert;
     char			**P_global_mess;
-    SXINT			        *PER_tset;
-    SXINT				(*scanit) (void);
-    bool			        (*recovery) (SXINT what, ...);
-    SXINT				(*parsact) (SXINT what, ...);
-    SXINT				(*desambig) (SXINT what);
-    SXINT				(*semact) (SXINT what, ...);
+    SXINT		        *PER_tset;
+    SXSCANIT_FUNCTION		*P_scan_it;
+    SXPRECOVERY_FUNCTION	*P_recovery;
+    SXPARSACT_FUNCTION		*P_parsact;
+    SXDESAMBIG_FUNCTION		*P_desambig;
+    SXSEMACT_FUNCTION		*P_semact;
 };
 
-struct sxtables; /* forward declaration needed by struct SXT_tables */
+typedef void (SXSEMPASS_FUNCTION) (SXINT what, struct sxtables *sxtables_ptr);
+/* the type SXSEMPASS_FUNCTION denotes a semantic-pass function, which can
+   be stored in SXT_tables.T_sempass */
 
 struct SXT_tables {
-    struct SXT_node_info	*SXT_node_info;
-    SXINT         *T_ter_to_node_name;
-    char	*T_stack_schema;
-    SXINT		(*sempass) (SXINT what, struct sxtables *sxtables_ptr);
-    char	**T_node_name;
+    struct SXT_node_info  *SXT_node_info;
+    SXINT                 *T_ter_to_node_name;
+    char	          *T_stack_schema;
+    SXSEMPASS_FUNCTION    *T_sempass;
+    char	          **T_node_name;
 };
-
 
 struct SXPP_schema {
     SXINT	PP_codop, PP_act;
 };
-
-
 
 /* To bypass the stupid bug in the type-checking on pointers towards union : */
 
 typedef union {
 	    struct SXT_tables	SXT_tables;
 	    struct SXPP_schema	*PP_tables;
-	}	sxsem_tables;
-
-
+}	sxsem_tables;
 
 /********************************************/
 /* Actions & Predicates specified from a    */
@@ -499,29 +390,27 @@ typedef union {
 /********************************************/
 
 struct sxligparsact {
-    SXINT	*prdct_or_act_disp,
-        *prdct_or_act_code,
-        *map_disp,
-        *map_code;
-    SXINT	(*parsact) (SXINT what, ...); /* Possible user's action or predicates */
+    SXINT	*prdct_or_act_disp;
+    SXINT       *prdct_or_act_code;
+    SXINT       *map_disp;
+    SXINT       *map_code;
+    SXPARSACT_FUNCTION *parsact; /* Possible user's action or predicates */
 };
 
 /* ------------------------------ THE TABLES ------------------------------ */
 
-#define SXPARSER_T SXINT(*)(SXINT what, ...)
-/* the type SXPARSER_T denotes 'a parsing function, which can be stored in
-   sxtables.analyzers.parser' */
+typedef void (SXSCANNER_FUNCTION) (SXINT what, struct sxtables *arg);
+/* the type SXSCANNER_FUNCTION denotes a scanning function, which can be stored
+   in sxtables.SX_scanner */
 
-#define SXDESAMBIG_T SXINT(*)(SXINT)
-/* the type SXDESAMBIG_T denotes 'a desambiguation function, which can be
-   stored in sxtables.analyzers.parser' */
+typedef void (SXPARSER_FUNCTION) (SXINT what, struct sxtables *arg);
+/* the type SXPARSER_FUNCTION denotes a parsing function, which can be stored
+   in sxtables.SX_parser */
 
 struct sxtables {
     SXUINT	magic;
-    struct {
-	SXINT	(*scanner) (SXINT what_to_do, struct sxtables *arg);
-	SXINT	(*parser) (SXINT what_to_do, ...);
-    }	analyzers;
+    SXSCANNER_FUNCTION *SX_scanner;
+    SXPARSER_FUNCTION *SX_parser;
     struct SXS_tables	SXS_tables;
     struct SXP_tables	SXP_tables;
     char	**err_titles /* 0 = comment, 1 = warning, 2 = error, ... */ ;
@@ -530,10 +419,7 @@ struct sxtables {
     struct sxligparsact	*sxligparsact; /* Ajout le 17/08/94 */
 };
 
-
-
 /*****************************************************************************/
-
 
 /* Reperes vers le source analyse */
 
@@ -1188,9 +1074,12 @@ extern void  fermer (SXBA *R, SXBA_INDEX taille);
 extern void  fermer2 (SXBA *R, SXBA_INDEX taille);
 
 extern void		sxvoid (void);
-extern bool	sxbvoid (void);
+extern bool		sxbvoid (void);
 extern SXINT		sxivoid (void);
 extern SXINT		sxivoid_int (SXINT i);
+extern SXPARSACT_FUNCTION /* ou SXSCANACT_FUNCTION */ sxjvoid;
+extern SXSEMPASS_FUNCTION sxsvoid;
+extern SXSEMACT_FUNCTION sxwvoid;
 
 /**************************************/
 /* STRING MANAGER (see sxstr_mngr(3)) */
@@ -1320,6 +1209,10 @@ extern bool sxparse_in_la (SXINT ep_la, SXINT Ttok_no, SXINT *Htok_no, struct sx
 
 extern SXINT sxP_get_parse_stack_size (void); /* permet de recuperer la taille actuelle de la parse_stack */
 
+extern SXPARSER_FUNCTION sxparser;
+
+extern SXPRECOVERY_FUNCTION sxprecovery;
+
 /***************************************/
 /* TOKEN_MANAGER (see sxtoken_mngr(3)) */
 /***************************************/
@@ -1427,9 +1320,6 @@ extern void sxincl_depend_but (FILE *f, SXINT order, SXINT excluded_index);
 
 #define sxscanner_counter(n) (sxsvar.sxlv_s.counters [(n)])
 
-extern SXINT sxcheck_keyword (char *token_string, SXINT token_lgth);
-
-
 /* Utilisation de diverses informations contenues dans les tables */
 
 #define sxttext(sxtables, look_ahead)					\
@@ -1448,6 +1338,12 @@ extern SXINT sxcheck_keyword (char *token_string, SXINT token_lgth);
 	(sxgetbit ((sxtables)->SXS_tables.S_is_a_generic_terminal, look_ahead) > 0)
 
 extern SXINT sxgetbit (SXINT *tab, SXINT val);
+
+extern SXSCANIT_FUNCTION sxscan_it;
+
+extern SXSCANNER_FUNCTION sxscanner;
+
+extern SXSRECOVERY_FUNCTION sxsrecovery;
 
 /********************************************/
 /* ABSTRACT TREE CONSTRUCTOR (see sxatc(3)) */

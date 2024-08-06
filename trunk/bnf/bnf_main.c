@@ -30,7 +30,7 @@
 #include <sys/stat.h>
 #include <sys/timeb.h>
 
-char WHAT_BNFMAIN[] = "@(#)SYNTAX - $Id: bnf_main.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_BNFMAIN[] = "@(#)SYNTAX - $Id: bnf_main.c 4108 2024-07-17 10:22:21Z garavel $" WHAT_DEBUG;
 
 char	by_mess [] = "the SYNTAX grammar processor BNF";
 
@@ -213,6 +213,10 @@ int main(int argc, char *argv[])
     int 	argnum;
 
     sxopentty ();
+
+#if EBUG
+    fprintf (sxstdout, "\n(bnf_)main : Magic numbers (bnf_tables = %lu, local value = %lu)\n", bnf_tables.magic, SXMAGIC_NUMBER);
+#endif
 
     if (argc == 1) {
 	fprintf (sxstderr, Usage, ME);

@@ -2,15 +2,15 @@
 # To avoid problems with other shells:
 SHELL=/bin/sh
 
-LNorCP=ln -s
+SXAUX=$(SX)/aux.$(ARCH)
 
-SXAUX=$(SX)/bin.aux
+SXBIN=$(SX)/bin.$(ARCH)
 
-SXBIN=$(SX)/bin
+SXCOM=$(SX)/bin
 
 SXINCL=$(SX)/incl
 
-SXLIB=$(SX)/lib
+SXLIB=$(SX)/lib.$(ARCH)
 
 SXSRC=$(SX)/src
 
@@ -18,7 +18,7 @@ SXUTIL=$(SX)/util
 
 SXBIBS=$(SXLIB)/libsxutil.a $(SXLIB)/libsx.a
 
-GCC_WARNINGS=-Wall -Wextra -Wswitch-default -Wdeclaration-after-statement -Wundef -Wshadow -Wbad-function-cast -Wcast-qual -Wredundant-decls -Wno-char-subscripts -Wcast-align -fno-common -Wstrict-prototypes -Wformat -Wuninitialized -fstrict-aliasing -Wold-style-definition -std=c2x
+# We inherit $GCC_WARNINGS from the environment (see sxmake)
 
 COMPILER=gcc $(GCC_WARNINGS) $(EXTRA_CFLAGS)
 

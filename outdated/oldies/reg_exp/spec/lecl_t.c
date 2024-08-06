@@ -669,8 +669,7 @@ static char *err_titles[SXSEVERITIES]={
 "\002Error:\t",
 };
 static char abstract []= "%d warnings and %d errors are reported.";
-extern int PARSACT();
-extern bool sxprecovery();
+extern SXPARSACT_FUNCTION PARSACT;
 
 static unsigned char S_char_to_simple_class[]={
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
@@ -1055,10 +1054,7 @@ static char *S_global_mess[]={
 "End Of File",
 "%sScanning stops on End Of File.",
 };
-extern int SCANACT();
-extern int sxscan_it();
-extern bool sxsrecovery();
-static int check_keyword();
+extern SXSCANACT_FUNCTION SCANACT;
 static struct SXT_node_info SXT_node_info[]={
 {67,1},{93,6},{0,6},{0,7},{12,9},{10,10},{11,12},{58,13},{52,15},{0,17},{0,18},{0,19},
 {0,20},{0,21},{80,22},{33,24},{81,25},{56,26},{93,27},{0,27},{0,28},{5,30},{2,31},{2,33},
@@ -1172,7 +1168,7 @@ static char *T_node_name[]={
 "VOID",
 "WORD_LENGTH",
 };
-extern int sempass();
+extern SXSEMPASS_FUNCTION SEMPASS;
 static char T_stack_schema[]={
 0,1,2,3,4,1,0,2,0,0,2,0,0,2,0,2,0,1,0,0,0,0,2,0,0,
 0,1,0,2,0,0,2,0,2,0,0,0,0,2,0,0,1,0,1,0,0,0,0,0,1,
@@ -1183,15 +1179,17 @@ static char T_stack_schema[]={
 1,0,2,0,0,2,0,2,0,0,1,0,2,0,0,0,0,0,1,1,0,2,0,0,1,
 0,};
 
-static struct SXT_tables SXT_tables=
-{SXT_node_info-1, T_ter_to_node_name, T_stack_schema-1, sempass, T_node_name-1};
-extern int sxscanner();
-extern int sxparser();
-extern int sxatc();
+static struct SXT_tables SXT_tables={
+SXT_node_info-1, T_ter_to_node_name, T_stack_schema-1, SEMPASS, T_node_name-1
+};
+extern SXSEMACT_FUNCTION sxatc;
+static SXCHECK_KEYWORD_FUNCTION sxcheck_keyword;
 
 struct sxtables sxtables={
 52113, /* magic */
-{sxscanner,sxparser}, {255, 69, 1, 3, 4, 40, 0, 46, 1, 1, 0, 
+sxscanner
+sxparser,
+{255, 69, 1, 3, 4, 40, 0, 46, 1, 1, 0, 
 S_is_a_keyword,S_is_a_generic_terminal,S_transition_matrix-1,
 SXS_action_or_prdct_code-1,
 S_adrp-1,
@@ -1203,7 +1201,7 @@ S_global_mess-1,
 S_lregle-1,
 SCANACT,
 sxsrecovery,
-check_keyword,
+sxcheck_keyword
 },
 {63, 166, 181, 222, 244, 320, 361, 550, 69, 69, 164, 164, 139, 64, 0, 11, 4, 7, 2, 5, 11, 2, 6,
 reductions-1,
@@ -1222,9 +1220,9 @@ P_lregle-1,P_right_ctxt_head-1,
 SXP_local_mess-1,
 P_no_delete,P_no_insert,
 P_global_mess,PER_tset,sxscan_it,sxprecovery,
-PARSACT
-,NULL
-,sxatc},
+PARSACT,
+NULL,
+sxatc},
 err_titles,
 abstract,
 (sxsem_tables*)&SXT_tables
@@ -1239,9 +1237,7 @@ abstract,
 
 
 
-static int check_keyword (string, length)
-register char	*string;
-register int	length;
+static SXINT sxcheck_keyword (char *string, SXINT length)
 {
    register int  t_code, delta;
    register char *keyword;

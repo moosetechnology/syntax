@@ -323,7 +323,7 @@ function CHECK_NUMBER (NUM : NUMBER, out CORRECT2 : BOOL)  is
     if (NUM.TEXT != "SEMC-ERROR-TOKEN")
     then
 	var RESU : INT in
-	    trap exception CONVERSION_ERROR is
+	    trap CONVERSION_ERROR : exit ->
 		PRINTFERROR(NUM.LINE, NUM.TEXT, "unreadable");
 		CORRECT2 := FALSE
 	    in

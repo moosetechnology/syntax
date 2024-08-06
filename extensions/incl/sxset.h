@@ -51,8 +51,8 @@
 #ifndef sxset_h
 #define sxset_h
 
-#include	<stdio.h>
-#include        "sxalloc.h"
+#include <stdio.h>
+#include "sxalloc.h"
 
 
 typedef struct sxset_header sxset_header;

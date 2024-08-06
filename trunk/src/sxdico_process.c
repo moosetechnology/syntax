@@ -21,7 +21,7 @@
 #include "sxunix.h"
 #include "sxdico.h"
 
-char WHAT_SXDICO_PROCESS[] = "@(#)SYNTAX - $Id: sxdico_process.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_SXDICO_PROCESS[] = "@(#)SYNTAX - $Id: sxdico_process.c 3917 2024-04-23 08:33:57Z garavel $" WHAT_DEBUG;
 
 static struct mot2 mot2;
 
@@ -720,7 +720,7 @@ sxdico2c (struct dico *sxdico2c_dico, FILE *file, char *dico_name, bool is_stati
   unsigned char	class;
   SXUINT i;
 
-  fputs ("\n#include	\"sxdico.h\"\n", file);
+  fputs ("\n#include \"sxdico.h\"\n", file);
 
   fprintf (file, "\nstatic SXUINT %scomb_vector [%ld] = {", dico_name == NULL ? "" : dico_name, (SXINT) sxdico2c_dico->max+1);
 

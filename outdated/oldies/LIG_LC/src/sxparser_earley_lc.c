@@ -1,1 +1,1 @@
-../../earley/src/sxparser_earley_lc.c
+../../earley_LC/src/sxparser_earley_lc.c

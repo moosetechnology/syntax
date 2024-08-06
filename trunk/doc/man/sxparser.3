@@ -32,9 +32,11 @@ struct sxtoken *sxget_token (tok_no)
 .ta \w'SXVOI'u +\w'int  'u
 	int	tok_no\|;
 
-bool sxprecovery (what)
+bool sxprecovery (what, at_state, latok_no)
 .ta \w'SXVOI'u +\w'int  'u
-	int	what\|;
+	SXINT	what\|;
+	SXINT	*at_state\|;
+	SXINT	latok_no\|;
 
 .fi
 .SH DESCRIPTION

@@ -23,10 +23,10 @@
 
 /* Interface of the Abstract Data Type X */
 
-#include	"X_rep.h"
-#include	<unistd.h>
-#include        <string.h>
-#include        "sxcommon.h" /* for SXINT */
+#include "X_rep.h"
+#include <unistd.h>
+#include <string.h>
+#include "sxcommon.h" /* for SXINT */
 
 /* This package can manage any number of "SXINT". */
 

@@ -19,9 +19,8 @@
 #ifndef XH_h
 #define XH_h
 
-#include	<stdio.h>
-#include        "sxalloc.h"
-
+#include <stdio.h>
+#include "sxalloc.h"
 
 struct XH_elem {
     SXINT			lnk;

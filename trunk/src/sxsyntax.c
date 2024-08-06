@@ -23,7 +23,7 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXSYNTAX[] = "@(#)SYNTAX - $Id: sxsyntax.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_SXSYNTAX[] = "@(#)SYNTAX - $Id: sxsyntax.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
 
 /*---------------------------------------------------------------------------*/
 
@@ -42,33 +42,33 @@ void	syntax (SXINT syntax_what, struct sxtables *tables, ...)
     case SXOPEN: /* arguments: syntax (SXOPEN, tables) */
 
 	/* CONVECS: syntax (SXOPEN...) is reserved to advanced users */
-	(*(tables->analyzers.scanner)) (SXOPEN, tables);
-	(*(tables->analyzers.parser)) (SXOPEN, tables);
+	(*(tables->SX_scanner)) (SXOPEN, tables);
+	(*(tables->SX_parser)) (SXOPEN, tables);
 
 	if (tables->SXS_tables.S_is_user_action_or_prdct)
-	    (*(tables->SXS_tables.scanact)) (SXOPEN, tables);
+	    (*(tables->SXS_tables.S_scanact)) (SXOPEN, SXANY_INT);
 
-	if (tables->SXP_tables.parsact != NULL)
-	    (*(tables->SXP_tables.parsact)) (SXOPEN, tables);
+	if (tables->SXP_tables.P_parsact != NULL)
+	    (*(tables->SXP_tables.P_parsact)) (SXOPEN, SXANY_INT);
 
-	if (tables->SXP_tables.semact != NULL)
-	  (*(tables->SXP_tables.semact)) (SXOPEN, tables);
+	if (tables->SXP_tables.P_semact != NULL)
+	  (*(tables->SXP_tables.P_semact)) (SXOPEN, SXANY_INT, tables);
 	break;
 
     case SXCLOSE: /* arguments: syntax (SXCLOSE, tables) */
 
 	/* CONVECS: syntax (SXCLOSE...) is reserved to advanced users */
-	if (tables->SXP_tables.semact != NULL)
-	  (*(tables->SXP_tables.semact)) (SXCLOSE, tables);
+	if (tables->SXP_tables.P_semact != NULL)
+	  (*(tables->SXP_tables.P_semact)) (SXCLOSE, SXANY_INT, tables);
 
-	if (tables->SXP_tables.parsact != NULL)
-	    (*(tables->SXP_tables.parsact)) (SXCLOSE, tables);
+	if (tables->SXP_tables.P_parsact != NULL)
+	    (*(tables->SXP_tables.P_parsact)) (SXCLOSE, SXANY_INT);
 
 	if (tables->SXS_tables.S_is_user_action_or_prdct)
-	    (*(tables->SXS_tables.scanact)) (SXCLOSE, tables);
+	    (*(tables->SXS_tables.S_scanact)) (SXCLOSE, SXANY_INT);
 
-	(*(tables->analyzers.parser)) (SXCLOSE, tables);
-	(*(tables->analyzers.scanner)) (SXCLOSE, tables);
+	(*(tables->SX_parser)) (SXCLOSE, tables);
+	(*(tables->SX_scanner)) (SXCLOSE, tables);
 	break;
 
     case SXINIT: /* arguments: syntax (SXINIT, tables, sxuses_incl_mngr) */
@@ -78,7 +78,7 @@ void	syntax (SXINT syntax_what, struct sxtables *tables, ...)
         sxuses_incl_mngr = va_arg (ap, SXINT /* bool */);
 	sxopentty ();
 	sxstr_mngr (SXBEGIN);
-	(*(tables->analyzers.parser)) (SXBEGIN, tables); /* it is unclear if the 'tables' parameter is really needed after SXBEGIN */
+	(*(tables->SX_parser)) (SXBEGIN, tables); /* it is unclear if the 'tables' parameter is really needed after SXBEGIN */
 	syntax (SXOPEN, tables);
 	if (sxuses_incl_mngr)
 	    sxincl_mngr (SXOPEN);
@@ -101,34 +101,34 @@ void	syntax (SXINT syntax_what, struct sxtables *tables, ...)
 
     case SXACTION: /* arguments: syntax (SXACTION, tables) */
 
-	(*(tables->analyzers.scanner)) (SXINIT, tables);
-	(*(tables->analyzers.parser)) (SXINIT, tables);
+	(*(tables->SX_scanner)) (SXINIT, tables);
+	(*(tables->SX_parser)) (SXINIT, tables);
 
 	if (tables->SXS_tables.S_is_user_action_or_prdct)
-	    (*(tables->SXS_tables.scanact)) (SXINIT, tables);
+	    (*(tables->SXS_tables.S_scanact)) (SXINIT, SXANY_INT);
 
-	if (tables->SXP_tables.parsact != NULL)
-	    (*(tables->SXP_tables.parsact)) (SXINIT, tables);
+	if (tables->SXP_tables.P_parsact != NULL)
+	    (*(tables->SXP_tables.P_parsact)) (SXINIT, SXANY_INT);
 
-	if (tables->SXP_tables.semact != NULL)
-	  (*(tables->SXP_tables.semact)) (SXINIT, tables);
+	if (tables->SXP_tables.P_semact != NULL)
+	  (*(tables->SXP_tables.P_semact)) (SXINIT, SXANY_INT, tables);
 
-	(*(tables->analyzers.parser)) (SXACTION, tables);
+	(*(tables->SX_parser)) (SXACTION, tables);
 	
-	if (tables->SXP_tables.semact != NULL)
-	  (*(tables->SXP_tables.semact)) (SXFINAL, tables);
+	if (tables->SXP_tables.P_semact != NULL)
+	  (*(tables->SXP_tables.P_semact)) (SXFINAL, SXANY_INT, tables);
 
-	if (tables->SXP_tables.parsact != NULL)
-	    (*(tables->SXP_tables.parsact)) (SXFINAL, tables);
+	if (tables->SXP_tables.P_parsact != NULL)
+	    (*(tables->SXP_tables.P_parsact)) (SXFINAL, SXANY_INT);
 
 	if (tables->SXS_tables.S_is_user_action_or_prdct)
-	    (*(tables->SXS_tables.scanact)) (SXFINAL, tables);
+	    (*(tables->SXS_tables.S_scanact)) (SXFINAL, SXANY_INT);
 
-	(*(tables->analyzers.parser)) (SXFINAL, tables);
-	(*(tables->analyzers.scanner)) (SXFINAL, tables);
+	(*(tables->SX_parser)) (SXFINAL, tables);
+	(*(tables->SX_scanner)) (SXFINAL, tables);
 
-	if (tables->SXP_tables.semact != NULL)
-	  (*(tables->SXP_tables.semact)) (SXSEMPASS, tables);
+	if (tables->SXP_tables.P_semact != NULL)
+	  (*(tables->SXP_tables.P_semact)) (SXSEMPASS, SXANY_INT, tables);
 	break;
 
     case SXEND: /* arguments: syntax (SXEND, tables) */
@@ -147,7 +147,7 @@ void	syntax (SXINT syntax_what, struct sxtables *tables, ...)
 	va_start (ap, tables);
 	sxdelete_str_mngr = va_arg (ap, SXINT /* bool */);
 	syntax (SXCLOSE, tables);
-	(*(tables->analyzers.parser)) (SXEND, tables);  /* it is unclear if the 'tables' parameter is really needed after SXEND */
+	(*(tables->SX_parser)) (SXEND, tables);  /* it is unclear if the 'tables' parameter is really needed after SXEND */
 	if (sxuses_incl_mngr)
 	    sxincl_mngr (SXCLOSE);
 	if (sxdelete_str_mngr)

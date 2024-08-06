@@ -25,7 +25,7 @@ static char	ME [] = "SINGLE";
 
 #include "csynt_optim.h"
 
-char WHAT_XCSYNTSINGLE[] = "@(#)SYNTAX - $Id: single.c 3652 2023-12-24 09:43:15Z garavel $" WHAT_DEBUG;
+char WHAT_XCSYNTSINGLE[] = "@(#)SYNTAX - $Id: single.c 4146 2024-08-02 10:21:59Z garavel $" WHAT_DEBUG;
 
 static SXINT	xnt_trans, nt_trans_size, max_lhs;
 static struct nt_trans {
@@ -74,8 +74,27 @@ static SXINT	set_an_xnt (SXINT nt, SXINT prdct)
 
     if (is_new_xnt)
 	sprintf (bnf_ag.NT_STRING + xntstr, ">%ld<", (SXINT) nt);
-    else
+    else {
+#if defined (__GNUC__) && ! defined (__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wrestrict"
+/* 
+ * Pierre Boullier et Hubert Garavel (avril 2024) :
+ * on supprime un avertissement de GCC qui s'inquiete que le 1er argument de
+ * sprintf(), c'est-a-dire (bnf_ag.NT_STRING + xntstr), puisse etre en
+ * recouvrement avec le 3eme argument, c'est-a-dire get_nt_string (nt), qui
+ * est egal a (bnf_ag.NT_STRING + bnf_ag.ADR [nt]) ; ceci ne peut pas arriver
+ * car on a verifie ci-dessus que la nouvelle chaine creee par sprintf() tient
+ * dans bnf_ag.NT_STRING (avec reallocation eventuelle) et cette nouvelle
+ * chaine est mise a partir du premier emplacement libre, c'est-a-dire l'index
+ * xntstr (voir sa gestion ci-dessous)
+ */
+#endif
 	sprintf (bnf_ag.NT_STRING + xntstr, "%s &%ld", get_nt_string (nt), (SXINT) prdct);
+#if defined (__GNUC__) && ! defined (__clang__)
+#pragma GCC diagnostic pop
+#endif
+    }
 
     xntstr += strlen (bnf_ag.NT_STRING + xntstr) + 1;
     bnf_ag.ADR [bnf_ag.WS_TBL_SIZE.xntmax + 1] = xntstr;
@@ -366,7 +385,8 @@ static SXINT	complete_transition (SXBA state_set,
     if (i != 0) {
 	/* A ne convient pas */
 	/* calcul de xnt_set1 */
-	sxba_fill (*xnt_set1), SXBA_0_bit (*xnt_set1, 0);
+	sxba_fill (*xnt_set1);
+	SXBA_0_bit (*xnt_set1, 0);
 	SXBA_0_bit (*xnt_set1, A) /* A ne convient pas */ ;
 	SXBA_0_bit (*xnt_set1, C) /* C ne convient pas */ ;
 	i = 0;

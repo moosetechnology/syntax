@@ -336,7 +336,7 @@ int main (int argc, char *argv[])
   }
 
   sxstr_mngr (SXBEGIN) /* Création de la table des chaines */ ;
-  (*(trico_tables.analyzers.parser)) (SXBEGIN) /* Allocation des variables globales du parser */ ;
+  (*(trico_tables.SX_parser)) (SXBEGIN, NULL /* dummy */) /* Allocation des variables globales du parser */ ;
   syntax (SXOPEN, &trico_tables) /* Initialisation de SYNTAX (mono-langage) */ ;
 
   if (options_set & OPTION (LANGAGE)) {
@@ -354,7 +354,7 @@ int main (int argc, char *argv[])
   }
 
   syntax (SXCLOSE, &trico_tables);
-  (*(trico_tables.analyzers.parser)) (SXEND) /* Inutile puisque le process va etre termine */ ;
+  (*(trico_tables.SX_parser)) (SXEND, NULL /* dummy */) /* Inutile puisque le process va etre termine */ ;
   sxstr_mngr (SXEND) /* Inutile puisque le process va etre termine */ ;
 
   {

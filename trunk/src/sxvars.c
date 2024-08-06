@@ -17,18 +17,16 @@
  *   can be found at, e.g., http://www.cecill.info
  *****************************************************************************/
 
-/* THIS FILE IS NOT PART OF THE SYNTAX LIBRARY */
-
 /*
-   Déclaration de toutes les variables globales de SYNTAX, pour éviter
-   les duplicatas (si, "s" au pluriel, voir « les rectifications de
-   l'orthographe du français » de 1990).
+   Declaration de toutes les variables globales de SYNTAX, pour eviter
+   les definitions dupliquees entre les fichiers .h et .c
 */
-/* commentaire ci-dessus incompréhensible, et laissé pour investigations ultérieures */
 
-#define SX_DFN_EXT_VAR	/* C'est ça qui fait tout */
+#define SX_DFN_EXT_VAR	/* C'est ca qui fait tout */
+
 #include "sxversion.h"
 #include "sxunix.h"
 #include "put_edit.h"
 
-char WHAT_SXVARS[] = "@(#)SYNTAX - $Id: sxvars.c 2428 2023-01-18 12:54:10Z garavel $" WHAT_DEBUG;
+char WHAT_SXVARS[] = "@(#)SYNTAX - $Id: sxvars.c 3960 2024-05-02 14:49:11Z garavel $" WHAT_DEBUG;
+

@@ -20,10 +20,9 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_TDEFSACT[] = "@(#)SYNTAX - $Id: tdef_sact.c 3595 2023-09-18 10:32:54Z garavel $" WHAT_DEBUG;
+char WHAT_TDEFSACT[] = "@(#)SYNTAX - $Id: tdef_sact.c 4124 2024-07-29 10:58:45Z garavel $" WHAT_DEBUG;
 
-SXINT
-tdef_scan_act (SXINT code, SXINT act_no)
+bool tdef_scan_act (SXINT code, SXINT act_no)
 {
     switch (code) {
     case SXOPEN:
@@ -50,7 +49,7 @@ tdef_scan_act (SXINT code, SXINT act_no)
 		sxsvar.sxlv.ts_lgth = sxsvar.sxlv.mark.index + 1;
 		sxsvar.sxlv.mark.index = -1;
 	    }
-	    return 0;
+	    return SXANY_BOOL;
 
 	default:
 	    break;
@@ -62,5 +61,5 @@ tdef_scan_act (SXINT code, SXINT act_no)
 	sxexit(1);
     }
 
-    return 0;
+    return SXANY_BOOL;
 }

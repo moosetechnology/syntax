@@ -4,7 +4,7 @@ include $(SX)/etc/make/gccoptions
 LIG=$(SX)/../outdated/oldies/LIG/test
 
 SRC=$(LIG)/src
-LIB=$(LIG)/lib
+LIB=$(LIG)/lib.$(ARCH)
 INCL=$(LIG)/incl
 
 CC=cc -I$(INCL) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS) -DEBUG
@@ -68,7 +68,7 @@ $(LIB)/wcw_t.o:		$(SXINCL)/sxunix.h 	\
 			$(SRC)/wcw_t.c
 	$(CC) -o $@ -c $(SRC)/wcw_t.c		\
 		-DPARSACT=sxdligparsact		\
-		-DSEMACT=sxvoid			\
+		-DSEMACT=sxwvoid			\
 	        -DPARSACT_2=sxvoid
 
 
@@ -79,7 +79,7 @@ $(LIB)/wcw2_t.o:	$(SXINCL)/sxunix.h 	\
 			$(SRC)/wcw2_t.c
 	$(CC) -o $@ -c $(SRC)/wcw2_t.c		\
 		-DPARSACT=sxdligparsact		\
-		-DSEMACT=sxvoid			\
+		-DSEMACT=sxwvoid			\
 	        -DPARSACT_2=sxvoid
 
 
@@ -95,7 +95,7 @@ $(LIB)/wcw3_t.o:	$(SXINCL)/sxunix.h 	\
 			$(SRC)/wcw3_t.c
 	$(CC) -o $@ -c $(SRC)/wcw3_t.c		\
 		-DPARSACT=sxdligparsact		\
-		-DSEMACT=sxvoid			\
+		-DSEMACT=sxwvoid			\
 	        -DPARSACT_2=wcw3_parsact
 
 
@@ -106,7 +106,7 @@ $(LIB)/ndwcw3_t.o:	$(SXINCL)/sxunix.h 	\
 			$(SRC)/ndwcw3_t.c
 	$(CC) -o $@ -c $(SRC)/ndwcw3_t.c	\
 		-DPARSACT=sxndligparsact	\
-		-DSEMACT=sxvoid			\
+		-DSEMACT=sxwvoid			\
 		-DESAMBIG=sxvoid		\
 	        -DPARSACT_2=sxvoid
 
@@ -118,7 +118,7 @@ $(LIB)/ndwcw3_post2_t.o: $(SXINCL)/sxunix.h 	\
 			$(SRC)/ndwcw3_post2_t.c
 	$(CC) -o $@ -c $(SRC)/ndwcw3_post2_t.c	\
 		-DPARSACT=sxndligpost2		\
-		-DSEMACT=sxvoid			\
+		-DSEMACT=sxwvoid			\
 		-DESAMBIG=sxvoid		\
 	        -DPARSACT_2=sxvoid
 
@@ -130,7 +130,7 @@ $(LIB)/cycle_t.o:	$(SXINCL)/sxunix.h 	\
 			$(SRC)/cycle_t.c
 	$(CC) -o $@ -c $(SRC)/cycle_t.c		\
 		-DPARSACT=sxndligparsact	\
-		-DSEMACT=sxvoid			\
+		-DSEMACT=sxwvoid			\
 		-DESAMBIG=sxvoid		\
 	        -DPARSACT_2=sxvoid
 
@@ -141,7 +141,7 @@ $(LIB)/cycle_mixt_t.o:	$(SXINCL)/sxunix.h 	\
 			$(SRC)/cycle_mixt_t.c
 	$(CC) -o $@ -c $(SRC)/cycle_mixt_t.c	\
 		-DPARSACT=sxndligmixt		\
-		-DSEMACT=sxvoid			\
+		-DSEMACT=sxwvoid			\
 		-DESAMBIG=sxvoid		\
 	        -DPARSACT_2=sxvoid
 
@@ -152,7 +152,7 @@ $(LIB)/cycle_bylev_t.o:	$(SXINCL)/sxunix.h 	\
 			$(SRC)/cycle_bylev_t.c
 	$(CC) -o $@ -c $(SRC)/cycle_bylev_t.c	\
 		-DPARSACT=sxndligbylev		\
-		-DSEMACT=sxvoid			\
+		-DSEMACT=sxwvoid			\
 		-DESAMBIG=sxvoid		\
 	        -DPARSACT_2=sxvoid
 
@@ -163,7 +163,7 @@ $(LIB)/cycle_post_t.o:	$(SXINCL)/sxunix.h 	\
 			$(SRC)/cycle_post_t.c
 	$(CC) -o $@ -c $(SRC)/cycle_post_t.c	\
 		-DPARSACT=sxndligpost		\
-		-DSEMACT=sxvoid			\
+		-DSEMACT=sxwvoid			\
 		-DESAMBIG=sxvoid		\
 	        -DPARSACT_2=sxvoid
 
@@ -174,7 +174,7 @@ $(LIB)/cycle_post2_t.o:	$(SXINCL)/sxunix.h 	\
 			$(SRC)/cycle_post2_t.c
 	$(CC) -o $@ -c $(SRC)/cycle_post2_t.c	\
 		-DPARSACT=sxndligpost2		\
-		-DSEMACT=sxvoid			\
+		-DSEMACT=sxwvoid			\
 		-DESAMBIG=sxvoid		\
 	        -DPARSACT_2=sxvoid
 

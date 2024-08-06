@@ -2,8 +2,8 @@
 include $(SX)/etc/make/gccoptions
 
 CX=$(SX)/examples/cx
-BIN=$(CX)/bin
-LIB=$(CX)/lib
+BIN=$(CX)/bin.$(ARCH)
+LIB=$(CX)/lib.$(ARCH)
 
 CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util -Dsxtables=cx_tables $(CFLAGS) -c
 
@@ -22,7 +22,7 @@ $(LIB)/cx_t.o: 	$(SXINCL)/sxunix.h		\
 	$(CC) -o $@ cx_t.c		\
 			-Dsxtables=cx_tables	\
 			-DSEMACT=cx_act		\
-			-Dsempass=sxvoid
+			-DSEMPASS=sxvoid
 
 $(LIB)/cx_main.o:	$(SXINCL)/sxunix.h	\
 			cx_main.c

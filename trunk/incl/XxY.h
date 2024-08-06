@@ -23,7 +23,7 @@
 
 /* Interface of the Abstract Data Type XxY */
 
-#include	"XxY_rep.h"
+#include "XxY_rep.h"
 
 /* This package can manage a binary relation in NxN. */
 

@@ -24,7 +24,7 @@ static char	ME [] = "ARC";
 #include "SS.h"
 #include "RLR.h"
 
-char WHAT_XCSYNTARC[] = "@(#)SYNTAX - $Id: ARC.c 3698 2024-02-07 18:16:44Z garavel $" WHAT_DEBUG;
+char WHAT_XCSYNTARC[] = "@(#)SYNTAX - $Id: ARC.c 4148 2024-08-02 10:43:56Z garavel $" WHAT_DEBUG;
 
 extern bool		erase_quads (SXINT ARC_kind, SXINT qtq);
 extern void		solved_by_ARC (SXINT germe_local, SXINT arc_no, SXBA solved_by_ARC_t_set);
@@ -1888,8 +1888,7 @@ static bool fh_propagate_lgth (struct ARC_struct *ARC, SXINT qtq)
     if (attr->is_marked++) {
 	/* On vient de detecter un cycle */
 	if (pss_kind == UNBOUNDED_ && attr->lgth != -1)
-	    ARC_walk_forward (ARC, qtq, fh_propagate_cycle, (bool(*)())NULL);
-
+	    ARC_walk_forward (ARC, qtq, fh_propagate_cycle, (bool(*)(struct ARC_struct *, SXINT)) NULL);
 	return false;
     }
 
@@ -3337,12 +3336,13 @@ static struct ARC_struct *call_ARC_building (struct ARC_struct *XARC, SXINT qtq)
 
     /* On remonte dans l'XARC en marquant les etats accessibles. */
     XARC->attr [XARC_state].is_marked = true;
-    ARC_walk_backward (XARC, qtq, bh_mark, (bool(*)())NULL);
+    ARC_walk_backward (XARC, qtq, bh_mark, (bool(*)(struct ARC_struct *, SXINT)) NULL);
 
     ARC_building (ARC, ARC_trans, ARC_UNBOUNDED_get_conflict_kind);
     
     /* On enleve les marques. */
-    ARC_walk_backward (XARC, qtq, bh_unmark, (bool(*)())NULL);
+    ARC_walk_backward (XARC, qtq, bh_unmark, (bool(*)(struct ARC_struct *, SXINT)) NULL);
+
     XARC->attr [XARC_state].is_marked = false;
     ARC->is_clonable = XARC->is_clonable;
     pss_kind = FSA_;
@@ -3460,7 +3460,8 @@ SXINT	ARC_building (struct ARC_struct *ARC,
     sxinitialise (x_tree_orig); /* pour faire taire gcc -Wuninitialized */
     sxba_empty (ARC->Q_set);
     SS_clear (ARC->Q_stack);
-    SS_push (ARC->Q_stack, 1), SXBA_1_bit (ARC->Q_set, 1); /* Etat initial */
+    SS_push (ARC->Q_stack, 1);
+    SXBA_1_bit (ARC->Q_set, 1); /* Etat initial */
     
     while (!SS_is_empty (ARC->Q_stack)) {
 	ARC_state = SS_pop (ARC->Q_stack);
@@ -3491,7 +3492,8 @@ SXINT	ARC_building (struct ARC_struct *ARC,
 			 attr->lgth > 0 && attr->lgth < k_value &&
 			 t != -bnf_ag.WS_TBL_SIZE.tmax)) &&
 			!SXBA_bit_is_set (ARC->Q_set, next_ARC_state)) {
-			SS_push (ARC->Q_stack, next_ARC_state), SXBA_1_bit (ARC->Q_set, next_ARC_state);
+			SS_push (ARC->Q_stack, next_ARC_state);
+                        SXBA_1_bit (ARC->Q_set, next_ARC_state);
 		    }
 		}
 		else {
@@ -3531,7 +3533,7 @@ SXINT	ARC_building (struct ARC_struct *ARC,
 			}
 
 			if (ck != NO_CONFLICT_)
-			    ARC_walk_backward (ARC, qtq, bh_not_pure_tree, (bool(*)())NULL);
+			    ARC_walk_backward (ARC, qtq, bh_not_pure_tree, (bool(*)(struct ARC_struct *, SXINT)) NULL);
 			
 			if (ck == NO_CONFLICT_ ||
 			    (!ARC->is_XARC && pss_kind == UNBOUNDED_ && is_lr_constructor &&
@@ -3540,7 +3542,8 @@ SXINT	ARC_building (struct ARC_struct *ARC,
 			    /* On continue la generation d'un ARC en LALR lorsque la distance
 			       n'est pas bonne et que la construction LR est demandee. */
 			    if (is_new_ARC_state) {
-				SS_push (ARC->Q_stack, next_ARC_state), SXBA_1_bit (ARC->Q_set, next_ARC_state);
+				SS_push (ARC->Q_stack, next_ARC_state);
+				SXBA_1_bit (ARC->Q_set, next_ARC_state);
 			    }
 			}
 			else if (!ARC_conflicting_node_processing (ARC, qtq)) {

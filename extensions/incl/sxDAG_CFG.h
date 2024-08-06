@@ -96,7 +96,7 @@ static struct recognize_item {
 static SXBA	*item_is_used;
 
 
-#include		"XxY.h"
+#include "XxY.h"
 static XxY_header	FSA_pXq_hd, FSA_pXt_hd, FSA_pqXt_hd;
 #define	FSA_any		0
 
@@ -3747,7 +3747,7 @@ sxearley_parser (what_to_do, arg)
 	sxplocals.SXP_tables = arg->SXP_tables;
 	sxtkn_mngr (SXOPEN, 2);
 #if is_rcvr
-	(*sxplocals.SXP_tables.recovery) (SXOPEN);
+	(*sxplocals.SXP_tables.P_recovery) (SXOPEN, NULL /* dummy */, (SXINT) 0 /* dummy */);
 #endif
 	return true;
 
@@ -3793,7 +3793,7 @@ sxearley_parser (what_to_do, arg)
 
 #if 0
 	do {
-	    (*(sxplocals.SXP_tables.scanit)) ();
+	    (*(sxplocals.SXP_tables.P_scan_it)) ();
 	} while (SXGET_TOKEN (sxplocals.Mtok_no).lahead != -tmax);
 
 	n = sxplocals.Mtok_no - 1;
@@ -3884,7 +3884,7 @@ sxearley_parser (what_to_do, arg)
 	/* end of language: free the local arrays */
 	sxtkn_mngr (SXCLOSE, 0);
 #if is_rcvr
-	(*sxplocals.SXP_tables.recovery) (SXCLOSE);
+	(*sxplocals.SXP_tables.P_recovery) (SXCLOSE, NULL /* dummy */, (SXINT) 0 /* dummy */);
 #endif
 
 	return true;

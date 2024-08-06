@@ -3,23 +3,22 @@ include $(SX)/etc/make/gccoptions
 
 DAG=$(SX)/../extensions/DAG
 
-LIB=$(DAG)/lib
+BIN=$(DAG)/bin.$(ARCH)
+LIB=$(DAG)/lib.$(ARCH)
 
-CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
+EXTINCL=$(SX)/../extensions/incl
 
-all: $(SXBIN)/dag2udag.out
+SXEXTBIBS=$(SXLIB)/libsxext.a $(SXBIBS)
 
-$(SXBIN)/dag2udag.out:	$(DAG)/dag2udag.out
-	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
+CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util -I$(EXTINCL) $(CFLAGS)
 
-$(SXBIN)/amlgm_cmpd.out:	$(DAG)/amlgm_cmpd.out
-	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
+all: $(BIN)/dag2udag.out
 
 NEEDS=	$(LIB)/dag2udag_main.o
 
-$(DAG)/dag2udag.out:	$(NEEDS)	$(SXBIBS)
+$(BIN)/dag2udag.out:	$(NEEDS)	$(SXEXTBIBS)
 	@rm -f $@
-	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXEXTBIBS) || (rm $@;exit 1)
 
 $(LIB)/dag2udag_main.o:	$(SXINCL)/sxunix.h		\
 			$(SXINCL)/sxstack.h		\
@@ -28,7 +27,7 @@ $(LIB)/dag2udag_main.o:	$(SXINCL)/sxunix.h		\
 			$(SXINCL)/XxYxZ.h		\
 			$(SXINCL)/XxY.h			\
 			dag2udag_main.c
-	$(CC) -o $@ -c -I$(SX)/../extensions/incl dag2udag_main.c
+	$(CC) -o $@ -c dag2udag_main.c
 
 # debut de code produit par "make-makefile re"
 
@@ -125,6 +124,6 @@ text.rt: text.bt text.st text.recor
 
 # fin de code produit par "make-makefile text -dummy_csynt"
 
-
 clean:
-	/bin/rm -f $(LIB)/*.o $(DAG)/dag2udag.out $(DAG)/amlgm_cmpd.out
+	/bin/rm -f $(LIB)/*.o $(BIN)/dag2udag.out
+

@@ -22,7 +22,7 @@
 #include "B_tables.h"
 #include "xbnf_vars.h"
 
-char WHAT_XBNFSACT[] = "@(#)SYNTAX - $Id: xbnf_sact.c 3678 2024-02-06 08:38:24Z garavel $" WHAT_DEBUG;
+char WHAT_XBNFSACT[] = "@(#)SYNTAX - $Id: xbnf_sact.c 4139 2024-07-31 16:02:45Z garavel $" WHAT_DEBUG;
 
 #define rule_slice 100
 
@@ -105,8 +105,7 @@ static void	gripe (void)
 void	(*more_scan_act) (SXINT code, SXINT act_no);
 
 
-void
-xbnf_scan_act (SXINT code, SXINT act_no)
+bool xbnf_scan_act (SXINT code, SXINT act_no)
 {
     switch (code) {
     case SXOPEN:
@@ -116,7 +115,7 @@ xbnf_scan_act (SXINT code, SXINT act_no)
 	    (*more_scan_act) (code, act_no);
 	}
 
-	return;
+	return SXANY_BOOL;
 
     case SXCLOSE:
 	if (more_scan_act != NULL) {
@@ -127,7 +126,7 @@ xbnf_scan_act (SXINT code, SXINT act_no)
 	    sxfree (coords);
 	}
 
-	return;
+	return SXANY_BOOL;
 
     case SXINIT:
 	is_predicate = false;
@@ -144,7 +143,7 @@ xbnf_scan_act (SXINT code, SXINT act_no)
 	    while (c != EOF)
 		if (c == '<' && sxsrcmngr.source_coord.column == 1) {
 		    coords [xprod = 1].head = sxsrcmngr.source_coord.line;
-		    return;
+		    return SXANY_BOOL;
 		}
 		else
 		    c = sxnext_char ();
@@ -158,7 +157,7 @@ xbnf_scan_act (SXINT code, SXINT act_no)
 	    (*more_scan_act) (code, act_no);
 	}
 
-	return;
+	return SXANY_BOOL;
 
     case SXACTION:
 	switch (act_no) {
@@ -182,12 +181,12 @@ xbnf_scan_act (SXINT code, SXINT act_no)
 			}
 
 			coords [xprod].head = sxsrcmngr.source_coord.line;
-			return;
+			return SXANY_BOOL;
 		    }
 		    else
 			c = sxnext_char ();
 	    }
-	    return;
+	    return SXANY_BOOL;
 
 	case 2:
 	    /* \nnn => char */
@@ -205,12 +204,12 @@ xbnf_scan_act (SXINT code, SXINT act_no)
 		sxsvar.sxlv.ts_lgth = sxsvar.sxlv.mark.index + 1;
 		sxsvar.sxlv.mark.index = -1;
 	    }
-	    return;
+	    return SXANY_BOOL;
 
 	case 3:
 	    /* Post-action de %SXPREDICATE : is_predicate est utilise dans bnf_symtab */
 	    is_predicate = true;
-	    return;
+	    return SXANY_BOOL;
 
 	default:
 #if EBUG
@@ -223,4 +222,5 @@ xbnf_scan_act (SXINT code, SXINT act_no)
     default:
 	gripe ();
     }
+    return SXANY_BOOL;
 }

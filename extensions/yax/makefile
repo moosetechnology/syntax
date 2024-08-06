@@ -2,17 +2,15 @@
 include $(SX)/etc/make/gccoptions
 
 BNF=$(SX)/bnf
-BNL=$(BNF)/lib
+BNL=$(BNF)/lib.$(ARCH)
 
 YAX=$(SX)/../extensions/yax
-LIB=$(YAX)/lib
+BIN=$(YAX)/bin.$(ARCH)
+LIB=$(YAX)/lib.$(ARCH)
 
 CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util -I$(BNF) $(CFLAGS)
 
-all: $(SXBIN)/yax.out
-
-$(SXBIN)/yax.out:	$(YAX)/yax.out
-	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
+all: $(BIN)/yax.out
 
 NEEDS=	$(LIB)/yax_put.o	\
 	$(LIB)/yax.o		\
@@ -29,7 +27,7 @@ NEEDS=	$(LIB)/yax_put.o	\
 	$(BNL)/bnf_symtab.o	\
 	$(BNL)/bnf_t.o
 
-$(YAX)/yax.out:		$(NEEDS)	$(SXBIBS)
+$(BIN)/yax.out:		$(NEEDS)	$(SXBIBS)
 	@rm -f $@
 	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@; exit 1)
 
@@ -120,7 +118,7 @@ def.rt: def.bt def.st def.recor
 # fin de code produit par "make-makefile def"
 
 clean:
-	/bin/rm -f $(LIB)/*.o $(YAX)/yax.out
+	/bin/rm -f $(LIB)/*.o $(BIN)/yax.out
 	/bin/rm -f $(YAX)/dec.*.l $(YAX)/def.*.l
 	/bin/rm -f $(YAX)/dec.bt $(YAX)/dec.pt $(YAX)/dec.rt $(YAX)/dec.st
 	/bin/rm -f $(YAX)/dec_t.c

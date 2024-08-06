@@ -39,9 +39,9 @@
       - Plus gourmand en place et temps que XH.
 */
 
-#include	<stdio.h>
-#include	"X.h"
-#include	"sxindex.h"
+#include <stdio.h>
+#include "X.h"
+#include "sxindex.h"
 
 struct sxlist_to_attr {
     SXINT next_list, scrmbl, list_lgth, first_elem;

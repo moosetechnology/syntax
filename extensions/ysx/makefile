@@ -2,21 +2,19 @@
 include $(SX)/etc/make/gccoptions
 
 YSX=$(SX)/../extensions/ysx
-LIB=$(YSX)/lib
+BIN=$(YSX)/bin.$(ARCH)
+LIB=$(YSX)/lib.$(ARCH)
 
 CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
-all: $(SXBIN)/ysx.out
-
-$(SXBIN)/ysx.out:	$(YSX)/ysx.out
-	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
+all: $(BIN)/ysx.out
 
 NEEDS=	$(LIB)/ysx_main.o	\
 	$(LIB)/ysx_smp.o	\
 	$(LIB)/ysx_t.o		\
 	$(LIB)/yaction_t.o
 
-$(YSX)/ysx.out:		$(NEEDS)	$(SXBIBS)
+$(BIN)/ysx.out:		$(NEEDS)	$(SXBIBS)
 	@rm -f $@
 	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@; exit 1)
 
@@ -35,14 +33,11 @@ $(LIB)/ysx_smp.o:	$(SXINCL)/sxunix.h	\
 
 $(LIB)/ysx_t.o:		$(SXINCL)/sxunix.h	\
 			ysx_t.c
-	$(CC) -o $@ -c ysx_t.c -Dsempass=ysx_smp -Dsxtables=ysx_tables
+	$(CC) -o $@ -c ysx_t.c -DSEMPASS=ysx_smp -Dsxtables=ysx_tables
 
 $(LIB)/yaction_t.o:	$(SXINCL)/sxunix.h	\
 			yaction_t.c
-	$(CC) -o $@ -c yaction_t.c -DSCANACT=yaction -DSEMACT=yaction -Dsxtables=yaction_tables -DSCANACT_AND_SEMACT_ARE_IDENTICAL
-# pour la documentation de cette macro SCANACT_AND_SEMACT_ARE_IDENTICAL,
-# consulter le fichier $SX/tables/src/out.c et les commentaires de la
-# fonction out_ext_int()
+	$(CC) -o $@ -c yaction_t.c -DSCANACT=yaction_scanact -DSEMACT=yaction_semact -Dsxtables=yaction_tables
 
 # debut de code produit par "make-makefile ysx"
 
@@ -83,7 +78,7 @@ yaction.rt: yaction.bt yaction.st yaction.recor
 # fin de code produit par "make-makefile yaction"
 
 clean:
-	/bin/rm -f $(LIB)/*.o $(YSX)/ysx.out $(YSX)/ysx.*.l $(YSX)/yaction.*.l
+	/bin/rm -f $(LIB)/*.o $(BIN)/ysx.out $(YSX)/ysx.*.l $(YSX)/yaction.*.l
 	/bin/rm -f $(YSX)/ysx.att $(YSX)/ysx.bt $(YSX)/ysx.pt $(YSX)/ysx.rt
 	/bin/rm -f $(YSX)/ysx.st $(YSX)/ysx_mix.c $(YSX)/ysx_t.c
 	/bin/rm -f $(YSX)/yaction.bt $(YSX)/yaction.pt $(YSX)/yaction.rt

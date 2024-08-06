@@ -36,7 +36,7 @@ static char     ME [] = "lfg_smp";
 #include "varstr.h"
 #include "sxunix.h"
 #include <ctype.h>
-char WHAT_LFGSMP[] = "@(#)SYNTAX - $Id: lfg_smp.c 3715 2024-02-10 07:15:06Z garavel $" WHAT_DEBUG;
+char WHAT_LFGSMP[] = "@(#)SYNTAX - $Id: lfg_smp.c 3974 2024-05-24 17:18:48Z garavel $" WHAT_DEBUG;
 
  /* definies ds le main */
 extern     FILE              *bnf_file, *vocabulary_file;
@@ -3107,7 +3107,7 @@ output_vocabulary (void)
      De plus il peut y avoir des nt de la forme "[A]" qui ne sont pas accepte's par le scanner du .lex !! */
   fputs ("\n\n\
 ######################################################\n\
-# déclaration des catégories syntaxiques (auxiliaires)\n\
+# declaration des categories syntaxiques (auxiliaires)\n\
 ######################################################\n\
 \n\
 # CATEGORY\n", vocabulary_file);  
@@ -3137,7 +3137,7 @@ output_vocabulary (void)
   if (used_field_set && (field_id = sxba_scan (used_field_set, 0)) > 0) {
     /* ... Et on en profile pour utiliser CATEGORY pour autre chose ... */fputs ("\n\n\
 ################################################################\n\
-# Liste des champs réellement utilisés dans la partie syntaxique\n\
+# Liste des champs reellement utilises dans la partie syntaxique\n\
 ################################################################\n\
 \n\
 CATEGORY\n", vocabulary_file);
@@ -3149,7 +3149,7 @@ CATEGORY\n", vocabulary_file);
 
   fputs ("\n\n\
 ###################################################\n\
-# déclaration des catégories lexicales (terminales)\n\
+# declaration des categories lexicales (terminales)\n\
 ###################################################\n\
 \n\
 TERMINAL\n", vocabulary_file);  
@@ -3698,7 +3698,7 @@ output_code (void)
 #endif /* ESSAI */
 
   out_ifdef ("prod2rule");
-  fputs ("\n/* Permet le mapping entre la \"prod\" de BNF et les équations associées à la \"rule\" de la spécif LFG */\n\
+  fputs ("\n/* Permet le mapping entre la \"prod\" de BNF et les equations associees e la \"rule\" de la specif LFG */\n\
 static SXINT prod2rule [PRODS_NB+1] = {\n\
 /* 0 */ 0, ", output_file);
 

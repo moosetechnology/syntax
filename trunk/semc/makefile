@@ -2,10 +2,10 @@
 include $(SX)/etc/make/gccoptions
 
 BNF=$(SX)/bnf
-BNL=$(BNF)/lib
+BNL=$(BNF)/lib.$(ARCH)
 
 TAB=$(SX)/semc
-LIB=$(TAB)/lib
+LIB=$(TAB)/lib.$(ARCH)
 BOOT=$(TAB)/boot
 
 CC=$(COMPILER) -I$(TAB) -I$(SXINCL) -I$(SXINCL)/util -I$(BNF) $(CFLAGS)
@@ -20,10 +20,7 @@ NEEDS= \
  $(LIB)/dec.o		$(LIB)/def.o		$(LIB)/def_sact.o	\
  $(LIB)/dec_t.o		$(LIB)/def_t.o		$(LIB)/semc_lo.o
 
-$(SXBIN)/semc.out:	$(TAB)/semc.out
-	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
-
-$(TAB)/semc.out:	$(NEEDS)	$(SXBIBS)
+$(SXBIN)/semc.out:	$(NEEDS)	$(SXBIBS)
 	@rm -f $@
 	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
@@ -137,7 +134,7 @@ def.rt: def.bt def.st def.recor
 # fin de code produit par "make-makefile def"
 
 clean:
-	/bin/rm -f $(LIB)/*.o $(TAB)/semc.out
+	/bin/rm -f $(LIB)/*.o
 	/bin/rm -f dec.c dec_t.c
 	/bin/rm -f dec.bt dec.pt dec.rt dec.st 
 # pas de dec.dt dec_td.h 

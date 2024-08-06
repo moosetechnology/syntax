@@ -22,7 +22,7 @@
 #include "sem_by.h"
 #include "tables.h"
 
-char WHAT_TABLESOUT[] = "@(#)SYNTAX - $Id: out.c 3650 2023-12-23 07:32:10Z garavel $" WHAT_DEBUG;
+char WHAT_TABLESOUT[] = "@(#)SYNTAX - $Id: out.c 4024 2024-06-07 07:55:42Z garavel $" WHAT_DEBUG;
 
 
 void
@@ -122,73 +122,15 @@ out_tab_int (char *nom, SXINT tab[], SXINT deb, SXINT fin, char *elt_m1)
     out_tab ("SXINT", nom, tab, deb, fin, elt_m1);
 }
 
-
 void
-out_ext_int (char *nom)
+out_extern_int (char *nom)
 {
-  if ( !strcmp ( nom, "SEMACT" ) ) {
-
-    /* CAS SPECIAL 'SEMACT' ->
-
-       Il existe des cas ou cette fonction doit generer des declarations externes
-       qui sont des macros de preprocesseur. Par exemple dans les constructeurs
-       yax et ysx, elle genere les declarations externes des macros SEMACT et
-       SCANACT. Nous essayons de gerer le cas ou ces 2 macros ont la meme valeur.
-       Dans ce cas, il ne faut generer qu'une seule declaration externe. C'est le
-       but de la macro SCANACT_AND_SEMACT_ARE_IDENTICAL : si le developpeur veut
-       donner la meme valeur aux 2 macros SCANACT et SEMACT, alors il doit
-       positionner la macro SCANACT_AND_SEMACT_ARE_IDENTICAL a 1 afin qu'on ne
-       genere qu'une seule declaration externe.
-
-       Ce mecanisme n'est pas dangereux, voici toutes les combinaisons possibles :
-
-       - si SCANACT et SEMACT sont differents :
-
-        - et si SCANACT_AND_SEMACT_ARE_IDENTICAL n'est pas positionne
-          alors on generera 2 declarations externes (1 pour SCANACT et 1 pour SEMACT)
-        - et si SCANACT_AND_SEMACT_ARE_IDENTICAL est positionne
-          alors on ne generera qu'1 declaration externe, et on verra apparaitre
-          un warning "missing declaration"
-
-       - si SCANACT et SEMACT sont identiques :
-
-        - et si SCANACT_AND_SEMACT_ARE_IDENTICAL n'est pas positionne
-          alors on generera 2 declarations externes, et on verra apparaitre un
-          warning "redundant redeclaration"
-        - et si SCANACT_AND_SEMACT_ARE_IDENTICAL est positionne
-          alors on ne generera qu'1 declaration externe
-
-    */
-
-    printf ("#ifndef SCANACT_AND_SEMACT_ARE_IDENTICAL\n");
-    printf ("extern SXINT SEMACT();\n");
-    printf ("#endif");
-  } else {
-    printf ("extern SXINT %s();\n", nom);
-  }
-}
-
-void
-out_ext_int_newstyle (char *nom)
-{
-  if ( ( strlen ( nom ) >= 6 ) && !strncmp ( nom, "SEMACT", 6 ) ) {
-    /* special case 'SEMACT' */
-    printf ("#ifndef SCANACT_AND_SEMACT_ARE_IDENTICAL\n");
-    printf ("extern SXINT %s;\n",nom);
-    printf ("#endif\n");
-  } else {
+    /* assert nom != "SEMACT" */
     printf ("extern SXINT %s;\n", nom);
-  }
 }
 
 void
-out_ext_BOOLEAN (char *nom)
-{
-    printf ("extern bool %s();\n", nom);
-}
-
-void
-out_ext_BOOLEAN_newstyle (char *nom)
+out_extern_bool (char *nom)
 {
     printf ("extern bool %s;\n", nom);
 }

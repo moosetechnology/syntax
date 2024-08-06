@@ -2,27 +2,22 @@
 include $(SX)/etc/make/gccoptions
 
 LC=$(SX)/../extensions/csynt_lc
-LIB=$(LC)/lib
+BIN=$(LC)/bin.$(ARCH)
+LIB=$(LC)/lib.$(ARCH)
 
-#CFLAGS= -O2
-#CFLAGS= -g -DEBUG_ALLOC
-#CFLAGS= -g -DEBUG_ALLOC -DEBUG
-#CFLAGS= -g -DEBUG_ALLOC -p
-CFLAGS= -g
+SXEXTBIBS=$(SXLIB)/libsxext.a $(SXBIBS)
 
 CC=$(COMPILER) -I$(LC) -I$(SXINCL) -I$(SXINCL)/util -I$(SX)/../extensions/incl $(CFLAGS)
 
-all: $(SXBIN)/csynt_lc.out
-
-$(SXBIN)/csynt_lc.out:	$(LC)/lc1.out
-	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
+# all: $(BIN)/csynt_lc.out
+all: $(BIN)/lc1.out
 
 NEEDS=	$(LIB)/lc_main.o		\
 	$(LIB)/LC1.o
 
-$(LC)/lc1.out:	$(NEEDS)	$(SXBIBS)
+$(BIN)/lc1.out:	$(NEEDS)	$(SXEXTBIBS)
 	@rm -f $@
-	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXEXTBIBS) || (rm $@;exit 1)
 
 $(LIB)/lc_main.o:	lc.h			\
 			$(SXINCL)/sxunix.h		\
@@ -42,5 +37,5 @@ $(LIB)/LC1.o:		lc.h			\
 	$(CC) -o $@ -c LC1.c
 
 clean:
-	/bin/rm -f $(LIB)/*.o $(LC)/lc1.out
+	/bin/rm -f $(LIB)/*.o $(BIN)/lc1.out
 

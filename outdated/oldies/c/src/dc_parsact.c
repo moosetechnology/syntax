@@ -37,8 +37,7 @@ static void identifiers_oflw (old_size, new_size)
 }
 
 
-int dc_parsact (entry, action_nb)
-    int entry, action_nb;
+bool dc_parsact (SXINT entry, SXINT action_nb)
 {
     int x;
     bool is_ok;
@@ -49,21 +48,21 @@ int dc_parsact (entry, action_nb)
 	sxsymbol_table_alloc (&identifiers, 200, 200, identifiers_oflw);
 	id_kind = (int*) sxalloc (sxsymbol_table_size (identifiers) + 1, sizeof (int));
 	id_kind [0] = UNDEF_NAME;
-	return;
+	return SXANY_BOOL;
 
     case SXCLOSE:
 	sxfree (stack);
 	sxfree (id_kind);
 	sxsymbol_table_free (&identifiers);
-	return;
+	return SXANY_BOOL;
 
     case SXINIT:
 	is_typedef = false;
 	struct_level = block_level = 0;
-	return;
+	return SXANY_BOOL;
 
     case SXFINAL:
-	return;
+	return SXANY_BOOL;
 
     case SXPREDICATE:
 	switch (action_nb) {
@@ -81,7 +80,7 @@ int dc_parsact (entry, action_nb)
 	switch (action_nb) {
 	case 1: /* <storage-class-specifier> = @1 typedef ; */
 	    is_typedef = true;
-	    return;
+	    return SXANY_BOOL;
 
 	case 2:
 /*
@@ -93,7 +92,7 @@ int dc_parsact (entry, action_nb)
 <internal-declaration> = <declaration-specifiers-1> ";" @2 ;
 */
 	    is_typedef = false;
-	    return;
+	    return SXANY_BOOL;
 
 	case 3:
 	case 9:
@@ -114,7 +113,7 @@ int dc_parsact (entry, action_nb)
 	    if (action_nb == 9)
 		struct_level++;
 
-	    return;
+	    return SXANY_BOOL;
 
 	case 6:
 /*
@@ -127,7 +126,7 @@ int dc_parsact (entry, action_nb)
 */	    
 	    block_level++;
 	    sxsymbol_table_open (identifiers, block_level);
-	    return;
+	    return SXANY_BOOL;
 
 	case 4:
 	case 10:
@@ -143,7 +142,7 @@ int dc_parsact (entry, action_nb)
 	    if (action_nb == 10)
 		struct_level--;
 
-	    return;
+	    return SXANY_BOOL;
 
 	case 7:
 	case 11:
@@ -158,7 +157,7 @@ int dc_parsact (entry, action_nb)
 	    block_level--;
 
 	    if (action_nb == 7)
-		return;
+		return SXANY_BOOL;
 	    
 	case 8:
 /*
@@ -168,7 +167,7 @@ int dc_parsact (entry, action_nb)
 <parameter-declaration> = <declaration-specifiers-1> <function-declarator> @8 ;
 */	    
 	    sxsymbol_table_close (&identifiers, block_level + 1, true);
-	    return;
+	    return SXANY_BOOL;
 
 	case 5: /* <d-identifier> = @5 %identifier ; */
 	    if (struct_level == 0) {
@@ -191,7 +190,7 @@ int dc_parsact (entry, action_nb)
 #endif
 	    }
 	    
-	    return;
+	    return SXANY_BOOL;
 
 	default:
 	    break;
@@ -200,7 +199,7 @@ int dc_parsact (entry, action_nb)
 	break;;
 
     default:
-	return;
+	return SXANY_BOOL;
     }
 
     fputs ("The function \"dc_parsact\" is out of date.\n", sxstderr);

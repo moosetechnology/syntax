@@ -2103,7 +2103,7 @@ bylev_init ()
 }
 
 
-int sxndligbylev (which, arg)
+bool sxndligbylev (which, arg)
     int		which;
     struct sxtables	*arg;
 {
@@ -2162,7 +2162,7 @@ int sxndligbylev (which, arg)
 
 	(*sxndlig_common.code.parsact) (which, arg);
 
-	return 0;
+	return SXANY_BOOL;
 
     case SXCLOSE:
 	XxY_free (&sxndlig.main_trans);
@@ -2194,7 +2194,7 @@ int sxndligbylev (which, arg)
 
 	(*sxndlig_common.code.parsact) (which, arg);
 
-	return 0;
+	return SXANY_BOOL;
 
     case SXINIT:
 	sxplocals.mode.with_do_undo = true;
@@ -2204,7 +2204,7 @@ int sxndligbylev (which, arg)
 
 	(*sxndlig_common.code.parsact) (which, arg);
 
-	return 0;
+	return SXANY_BOOL;
 
     case SXFINAL:
 	if (sxndlig.uf.is_new_symbols)
@@ -2212,25 +2212,25 @@ int sxndligbylev (which, arg)
 
 	(*sxndlig_common.code.parsact) (which, arg);
 
-	return 0;
+	return SXANY_BOOL;
 
     case SXACTION:
 	/* La memorisation se fait ds "SXPREDICATE:" */
-	return 0;
+	return SXANY_BOOL;
 
     case SXDO:
-	return 0;
+	return SXANY_BOOL;
 
 
     case SXUNDO:
-	return 0;
+	return SXANY_BOOL;
 
     case SXPREDICATE:
 	act_no = (long) arg;
 
 	if (act_no >= 10000) {
 	    sxndlig.prdct_no = act_no  - 10000;
-	    return 1;
+	    return true;
 	}
 
 	/* Devrait sans doute etre execute' "par niveau" avec les predicats des LIG !!! */
@@ -2241,5 +2241,5 @@ int sxndligbylev (which, arg)
 	sxexit(1);
     }
 
-    /* NOTREACHED return 0; */
+    /* NOTREACHED return SXANY_BOOL; */
 }

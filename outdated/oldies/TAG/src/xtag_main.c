@@ -289,7 +289,7 @@ run:
     }
 
     sxstr_mngr (SXBEGIN);
-    (*(xtag_tables.analyzers.parser)) (SXBEGIN);
+    (*(xtag_tables.SX_parser)) (SXBEGIN, NULL /* dummy */);
     syntax (SXOPEN, &xtag_tables);
 
     if (options_set & OPTION (LANGUAGE_NAME)) {
@@ -311,7 +311,7 @@ run:
     }
 
     syntax (SXCLOSE, &xtag_tables);
-    (*(xtag_tables.analyzers.parser)) (SXEND);
+    (*(xtag_tables.SX_parser)) (SXEND, NULL /* dummy */);
 
     xtag_second_pass ();
 

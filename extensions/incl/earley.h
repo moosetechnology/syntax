@@ -38,8 +38,7 @@ extern void             print_symb (FILE *out_file, SXINT symb, SXINT i, SXINT j
      2. c'est négatif, et c'est l'opposée de la clé de la liste des tok_no de Tpq dans le XH nommé spf.outputG.Tpq2XH_tok_no 
    Ensuite, le passage de tok_no à tok est assuré par tok_no2tok (int tok_no) */
 
-
-#include        "rcg_sglbl.h"
+#include "rcg_sglbl.h"
 
 SX_GLOBAL_VAR SXINT	      n /* nb de token du source */;
 
@@ -51,6 +50,11 @@ SX_GLOBAL_VAR double          beam_value;
 SX_GLOBAL_VAR bool	      beam_value_is_set;
 
 SX_GLOBAL_VAR struct mem_signatures   parser_mem_signatures;
+
+/* repris de sxunix.h: */
+struct sxtables;
+typedef bool (SXPARSACT_FUNCTION) (SXINT what, SXINT action_no);
+typedef void (SXSEMACT_FUNCTION) (SXINT what, SXINT action_no, struct sxtables *arg);
 
 #if defined(SXVERSION) && ( EBUG || LOG || LLOG )
 #define statistics	(stdout)
@@ -131,9 +135,10 @@ SX_GLOBAL_VAR struct for_semact {
     (*timeout_mngr) (int), /* BS 26/04/06 */
     (*vtimeout_mngr) (int);
 
+    SXPARSACT_FUNCTION *parsact;
+    SXSEMACT_FUNCTION *semact;
+
   SXINT      (*prdct) (SXINT, SXINT, SXINT, SXINT, SXINT),
-    (*parsact) (),
-    (*semact) (),
     (*constraint) (SXINT, SXINT, SXINT, SXBA, SXINT, SXINT),
     (*sem_pass) (),
     (*rcvr) (),

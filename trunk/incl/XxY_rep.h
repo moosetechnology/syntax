@@ -23,8 +23,8 @@
 
 /* Representation of the Abstract Data Type XxY */
 
-#include		"X.h"
-#include		"sxba.h"
+#include "X.h"
+#include "sxba.h"
 
 #define XxY_7F			X_root_7F
 #define XxY_80			X_root_80

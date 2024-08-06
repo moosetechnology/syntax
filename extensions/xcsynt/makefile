@@ -4,18 +4,16 @@ include $(SX)/etc/make/gccoptions
 ND=$(SX)/../extensions
 
 NDCSYNT=$(ND)/xcsynt
-NDLIB=$(NDCSYNT)/lib
+BIN=$(NDCSYNT)/bin.$(ARCH)
+NDLIB=$(NDCSYNT)/lib.$(ARCH)
 
 CC=$(COMPILER) -I$(NDCSYNT) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
 CC2=$(COMPILER) -I$(ND)/incl -I$(ND)/incl/util $(CFLAGS)
 
-all: $(SXBIN)/xcsynt.out	\
-	$(NDCSYNT)/lc.out
-#	$(NDCSYNT)/csyntd.out	\
-
-$(SXBIN)/xcsynt.out:	$(NDCSYNT)/csynt.out
-	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
+all: $(BIN)/xcsynt.out	\
+	$(BIN)/lc.out
+#	$(BIN)/csyntd.out	\
 
 NEEDS=	$(NDLIB)/csynt.o		\
 	$(NDLIB)/LR0.o			\
@@ -46,7 +44,7 @@ NEEDS3=	$(NDLIB)/left_corner.o		\
 	$(NDLIB)/xprdct_mngr.o		\
 	$(NDLIB)/OPTIM.o
 
-$(NDCSYNT)/csynt.out:	$(NEEDS)	$(SXBIBS)
+$(BIN)/xcsynt.out:	$(NEEDS)	$(SXBIBS)
 	@rm -f $@
 	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
@@ -251,7 +249,7 @@ $(NDLIB)/algoV.o:	csynt_optim.h		\
 			algoV.c
 	$(CC) -o $@ -c algoV.c
 
-$(NDCSYNT)/csyntd.out:	$(NEEDS2)	$(SXBIBS)
+$(BIN)/csyntd.out:	$(NEEDS2)	$(SXBIBS)
 	@rm -f $@
 	$(COMPILER) -o $@ $(NEEDS2) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
@@ -260,7 +258,7 @@ $(NDLIB)/csyntd_main.o:	$(ND)/incl/sxunix.h		\
 		csyntd_main.c
 	$(CC2) -o $@ -c csyntd_main.c
 
-$(NDCSYNT)/lc.out:	$(NEEDS3)	$(SXBIBS)
+$(BIN)/lc.out:	$(NEEDS3)	$(SXBIBS)
 	@rm -f $@
 	$(COMPILER) -o $@ $(NEEDS3) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
@@ -287,5 +285,5 @@ $(NDLIB)/LC0.o:	csynt_optim.h			\
 	$(CC) -o $@ -c LC0.c
 
 clean:
-	/bin/rm -f $(NDLIB)/*.o $(NDCSYNT)/lc.out $(NDCSYNT)/csynt.out
+	/bin/rm -f $(NDLIB)/*.o $(BIN)/lc.out $(BIN)/xcsynt.out
 

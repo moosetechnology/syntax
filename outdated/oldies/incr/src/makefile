@@ -4,7 +4,7 @@ include $(SX)/etc/make/gccoptions
 IND=$(SX)/../outdated/oldies/incr
 
 INDSRC=$(IND)/src
-INDLIB=$(IND)/lib
+INDLIB=$(IND)/lib.$(ARCH)
 INDINCL=$(IND)/incl
 
 CC=cc -I$(INDINCL) -I$(SX)/incl -$(CFLAGS)

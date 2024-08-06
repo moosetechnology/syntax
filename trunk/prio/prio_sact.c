@@ -20,17 +20,16 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_PRIOSACT[] = "@(#)SYNTAX - $Id: prio_sact.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
+char WHAT_PRIOSACT[] = "@(#)SYNTAX - $Id: prio_sact.c 4124 2024-07-29 10:58:45Z garavel $" WHAT_DEBUG;
 
-void
-prio_scan_act (SXINT code, SXINT act_no)
+bool prio_scan_act (SXINT code, SXINT act_no)
 {
     switch (code) {
     case SXOPEN:
     case SXCLOSE:
     case SXINIT:
     case SXFINAL:
-	return;
+	return SXANY_BOOL;
 
     case SXACTION:
 	switch (act_no) {
@@ -50,8 +49,7 @@ prio_scan_act (SXINT code, SXINT act_no)
 		sxsvar.sxlv.ts_lgth = sxsvar.sxlv.mark.index + 1;
 		sxsvar.sxlv.mark.index = -1;
 	    }
-
-	    return;
+	    return SXANY_BOOL;
 
 	default:
 	    /* valeur inattendue */

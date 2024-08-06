@@ -35,10 +35,10 @@
         actuelle.
 */
 
-#include	<stdio.h>
-#include	"X.h"
-#include	"XxY.h"
-#include	"sxba.h"
+#include <stdio.h>
+#include "X.h"
+#include "XxY.h"
+#include "sxba.h"
 
 typedef struct {
     XxY_header		tree;

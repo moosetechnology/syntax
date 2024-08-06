@@ -118,8 +118,8 @@ static char *err_titles[SXSEVERITIES]={
 "\002Error:\t",
 };
 static char abstract []= "%d warnings and %d errors are reported.";
-extern int PARSACT();
-extern bool sxndprecovery();
+extern SXPARSACT_FUNCTION PARSACT;
+extern SXPRECOVERY_FUNCTION sxndprecovery;
 
 static unsigned char S_char_to_simple_class[]={
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
@@ -185,16 +185,15 @@ static char *S_global_mess[]={
 "End Of File",
 "%sScanning stops on End Of File.",
 };
-extern int sxscan_it();
-extern bool sxsrecovery();
-extern int sxscanner();
-extern int sxndparser();
+extern SXPARSER_FUNCTION sxndparser;
 extern int ESAMBIG();
-extern int SEMACT();
+extern SXSEMACT_FUNCTION SEMACT;
 
 struct sxtables sxtables={
 52113, /* magic */
-{sxscanner,sxndparser}, {255, 4, 1, 3, 4, 5, 0, 1, 0, 1, 0, 
+sxscanner,
+sxndparser,
+{255, 4, 1, 3, 4, 5, 0, 1, 0, 1, 0, 
 S_is_a_keyword,S_is_a_generic_terminal,S_transition_matrix-1,
 NULL,
 S_adrp-1,
@@ -206,7 +205,7 @@ S_global_mess-1,
 S_lregle-1,
 NULL,
 sxsrecovery,
-NULL,
+NULL
 },
 {4, 9, 15, 17, 19, 21, 23, 32, 4, 2, 8, 8, 6, 5, 0, 9, 4, 7, 2, 5, 11, 5, 4,
 reductions-1,
@@ -224,7 +223,8 @@ NULL,
 P_lregle-1,P_right_ctxt_head-1,
 SXP_local_mess-1,
 P_no_delete,P_no_insert,
-P_global_mess,PER_tset,sxscan_it,sxndprecovery,
+P_global_mess,PER_tset,sxscan_it,
+sxndprecovery,
 PARSACT
 ,ESAMBIG
 ,SEMACT},

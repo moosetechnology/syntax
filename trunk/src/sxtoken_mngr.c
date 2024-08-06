@@ -20,7 +20,7 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXTOKEN_MNGR[] = "@(#)SYNTAX - $Id: sxtoken_mngr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_SXTOKEN_MNGR[] = "@(#)SYNTAX - $Id: sxtoken_mngr.c 4031 2024-06-07 12:59:12Z garavel $" WHAT_DEBUG;
 
 /*	TOKEN   MANAGER
 
@@ -143,7 +143,7 @@ struct sxtoken	*sxget_token (SXINT n)
 		} while (n > sxplocals.Mtok_no);
 	    }
 	    else
-		(*(sxplocals.SXP_tables.scanit)) ();
+		(*(sxplocals.SXP_tables.P_scan_it)) ();
 	    /* Le scanner a appele' sxput_token */
 	    /* Mtok_no peut etre > a n, les post-actions du scanner ayant pu appeler
 	       sxput_token plusieurs fois. */

@@ -24,7 +24,7 @@
 /* Representation of the Abstract Data Type XxYxZ */
 
 /* Definition of XxY_header and X_header */
-#include		"XxY.h"
+#include "XxY.h"
 
 #define XxYxZ_7F		X_root_7F
 #define XxYxZ_80		X_root_80

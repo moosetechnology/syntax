@@ -2109,12 +2109,12 @@ chaîne de caractères ``\verb|begin|'' étant reconnue par
 clé.
 
 {\LECL} construit le texte en langage C d'une fonction de nom
-\verb|check_keyword| qui permet de vérifier si une chaîne est ou non
+\verb|sxcheck_keyword| qui permet de vérifier si une chaîne est ou non
 un mot clé.  Le texte de cette fonction fait partie intégrante des
 tables d'analyse produites par le module {\TABLESC}---voir le
 chapitre~\ref{chap:tablesc}.  Chaque fois qu'un terminal est reconnu
 par une unité lexicale pouvant reconnaître des mots clés,
-l'analyseur lexical appelle \verb|check_keyword| qui retourne\,:
+l'analyseur lexical appelle \verb|sxcheck_keyword| qui retourne\,:
 \begin{itemize}
 
  \item $0$\,: le terminal n'est pas un mot clé\,; le code retourné par
@@ -2162,7 +2162,7 @@ nombre de fois sur lui-même (par la séquence \verb|"c" {BS "c"}+| pour
 créer une impression de gras.  Chaque mot clé peut donc maintenant avoir
 un nombre infini de représentations dont la reconnaissance, si on adopte
 la philosophie pronée par {\LECL} (dégrossissage de la reconnaissance
-par une expression régulière puis utilisation de la fonction \verb|check_keyword|
+par une expression régulière puis utilisation de la fonction \verb|sxcheck_keyword|
 générée automatiquement) nécessite l'obtention d'une forme normale.  Or {\LECL}
 a la possibilité de modifier la chaîne source (voir en~\ref{sec:operateur-moins}
 et~\ref{sec:actions-lecl}) pour obtenir une forme interne qui sera réellement
@@ -2200,7 +2200,7 @@ KEYWORD = "@" DARK_WORD ;
 \end{verbatim}
 \end{quote}
 permette automatiquement de reconnaître les mots clés désignant les
-actions système (et de générer la fonction \verb|check_keyword|).  Or
+actions système (et de générer la fonction \verb|sxcheck_keyword|).  Or
 du fait de la présence de l'opérateur "{\tt +}" dans la définition d'une
 lettre grasse, chaque lettre est répétée au moins deux fois et ne
 correspond donc pas à la forme normale bien que la forme interne obtenue
@@ -4005,7 +4005,7 @@ nom-du-langage}, toutes les tables nécessaires à l'analyse et au
 traitement de la sémantique, produites par les diverses phases de la
 construction.  Il contient en outre, si {\it nom-du-langage} comporte
 des mots clés, le texte, en langage~C, de la fonction
-\verb|check_keyword|.
+\verb|sxcheck_keyword|.
 
 
 \chapter{Analyse d'un texte source}
@@ -4252,9 +4252,7 @@ void  (*more_scan_act) ();
 
 
 
-bnf_scan_act (code, act_no)
-    int         code;
-    int         act_no;
+bool bnf_scan_act (SXINT code, SXINT act_no)
 {
     switch (code) {
     case SXOPEN:
@@ -4266,7 +4264,7 @@ bnf_scan_act (code, act_no)
             (*more_scan_act) (code, act_no);
         }
 
-        return;
+        return SXANY_BOOL;
 
     case SXCLOSE:
         if (more_scan_act != NULL) {
@@ -4277,7 +4275,7 @@ bnf_scan_act (code, act_no)
             sxfree (coords + 1);
         }
 
-        return;
+        return SXANY_BOOL;
 
     case SXINIT:
         if (more_scan_act != NULL) {
@@ -4293,7 +4291,7 @@ bnf_scan_act (code, act_no)
                 if (c == '<' && sxsrcmngr.source_coord.column == 1) {
                     coords [xprod = 1].head =
                          sxsrcmngr.source_coord.line;
-                    return;
+                    return SXANY_BOOL;
                 }
                 else
                     c = sxnext_char ();
@@ -4308,7 +4306,7 @@ See you later.\n");
             (*more_scan_act) (code, act_no);
         }
 
-        return;
+        return SXANY_BOOL;
 
     case SXACTION:
         switch (act_no) {
@@ -4335,12 +4333,12 @@ See you later.\n");
                     }
 
                     coords [xprod].head = sxsrcmngr.source_coord.line;
-                    return;
+                    return SXANY_BOOL;
                 }
                 else
                     c = sxnext_char ();
 
-            return;
+            return SXANY_BOOL;
 
         case 2:
             /* \nnn => char */
@@ -4359,7 +4357,7 @@ See you later.\n");
                 sxsvar.sxlv.mark.index = -1;
             }
 
-            return;
+            return SXANY_BOOL;
         }
 
     default:
@@ -4811,15 +4809,14 @@ prédicat) associées à la description lexicale de {\LECL}.
 \begin{verbatim}
 #include "sxunix.h"
 
-void    lecl_scan_act (entry, act_no)
-    int         entry, act_no;
+bool lecl_scan_act (SXINT entry, SXINT act_no)
 {
     switch (entry) {
     case SXOPEN:
     case SXCLOSE:
     case SXINIT:
     case SXFINAL:
-        return;
+        return SXANY_BOOL;
 
     case SXACTION:
         switch (act_no) {
@@ -4835,7 +4832,7 @@ void    lecl_scan_act (entry, act_no)
 A dark symbol must be built up with the same character.",
                       sxsvar.sxtables->err_titles [1]+1 );
 
-            return;
+            return SXANY_BOOL;
 
         case 2:
             /* \nnn => char */
@@ -4854,7 +4851,7 @@ A dark symbol must be built up with the same character.",
                 sxsvar.sxlv.mark.index = -1;
             }
 
-            return;
+            return SXANY_BOOL;
 
         default:
             break;
@@ -4882,20 +4879,19 @@ pas d'action) associés à la description syntaxique de {\LECL}.
 
 static int	NOT_code, KEYWORD_code;
 
-int	lecl_pars_act (entry, action_no)
-    int		entry, action_no;
+bool lecl_pars_act (SXINT entry, SXINT action_no)
 {
     switch (entry) {
     case SXOPEN:
     case SXCLOSE:
     case SXFINAL:
-	return;
+	return SXANY_BOOL;
 
     case SXINIT:
 	/* The keywords "NOT" and "KEYWORD" are not reserved. */
 	NOT_code = sxstrsave ("NOT");
 	KEYWORD_code = sxstrsave ("KEYWORD");
-	return;
+	return SXANY_BOOL;
 
     case SXPREDICATE:
 	switch (action_no) {
@@ -5491,7 +5487,7 @@ number 8.
 #include "sxunix.h"
 #include "XNT_td.h" /* defines c_code to be 1 and a_code to be 2 */
 
-int     XNT_parsact (entry, action_no)
+bool XNT_parsact (entry, action_no)
     int         entry, action_no;
 {
     switch (entry) {
@@ -5499,7 +5495,7 @@ int     XNT_parsact (entry, action_no)
     case SXCLOSE:
     case SXFINAL:
     case SXINIT:
-        return;
+        return SXANY_BOOL;
 
     case SXPREDICATE:
         switch (action_no) {
@@ -5522,7 +5518,7 @@ int     XNT_parsact (entry, action_no)
 
     fputs ("The function \"XNT_parsact\" is out of date \
 with respect to its specification.\n", sxstderr);
-    abort ();
+    exit (1);
 }
 \end{verbatim}
 }
@@ -5572,19 +5568,18 @@ with respect to its specification.\n", sxstderr);
 
 static int      a_s, b_s, a_number, k;
 
-int     NDL_parsact (entry, action_no)
-    int         entry, action_no;
+bool NDL_parsact (SXINT entry, SXINT action_no)
 {
     switch (entry) {
     case SXOPEN:
     case SXCLOSE:
     case SXFINAL:
-        return;
+        return SXANY_BOOL;
 
     case SXINIT:
         a_number = 1;
         a_s = b_s = k = 0;
-        return;
+        return SXANY_BOOL;
 
     case SXPREDICATE:
         switch (action_no) {
@@ -5620,11 +5615,11 @@ int     NDL_parsact (entry, action_no)
                 }
             }
 
-            return;
+            return SXANY_BOOL;
 
         case 2:
             a_number++;
-            return;
+            return SXANY_BOOL;
         }
     }
 
@@ -5721,7 +5716,7 @@ llev_sact (entry, action_no)
     case SXCLOSE:
         llev_svar = sxsvar;
         sxsvar = hlev_svar;
-        (*(llev_svar.sxtables->analyzers.scanner)) (entry, &hlev_tables);
+        (*(llev_svar.sxtables->SX_scanner)) (entry, &hlev_tables);
         hlev_svar = sxsvar;
         sxsvar = llev_svar;
         return;
@@ -5739,7 +5734,7 @@ llev_sact (entry, action_no)
             llev_svar = sxsvar;
             sxsvar = hlev_svar;
             source_coord = sxsrcmngr.source_coord;
-            (*(sxplocals.SXP_tables.scanit)) (); /* Quick Scanner Call */
+            (*(sxplocals.SXP_tables.P_scan_it)) (); /* Quick Scanner Call */
             hlev_svar = sxsvar;
             sxsvar = llev_svar;
 
@@ -5752,7 +5747,7 @@ llev_sact (entry, action_no)
         case 1 /* Call From Level Greater Than 0 (hlev scanner) */ :
             /* sxsvar is already correct */
             source_coord = sxsrcmngr.source_coord;
-            (*(sxplocals.SXP_tables.scanit)) (); /* Quick Scanner Call */
+            (*(sxplocals.SXP_tables.P_scan_it)) (); /* Quick Scanner Call */
 
             if (sxsrcmngr.current_char != '}')
                 sxerror (source_coord, sxsvar.sxtables->err_titles [2][0], "%sSub-Comment not closed.",
@@ -5791,8 +5786,7 @@ source erroné.
 \begin{verbatim}
 #include "sxunix.h"
 
-void    your_scan_act (entry, act_no)
-    int         entry, act_no;
+bool your_scan_act (SXINT entry, SXINT act_no)
 {
     switch (entry) {
     case SXOPEN:
@@ -5800,7 +5794,7 @@ void    your_scan_act (entry, act_no)
     case SXINIT:
     case SXFINAL:
         sxincl_mngr (entry);
-        return;
+        return SXANY_BOOL;
 
     case SXACTION:
         switch (act_no) {
@@ -5813,7 +5807,7 @@ void    your_scan_act (entry, act_no)
         case 1:
             if (sxpush_incl (path))
                 /* The source text now comes from the include file */
-                return;
+                return SXANY_BOOL;
 
             /* something failed (unable to open, recursive call, ...) */
             /* error message: */
@@ -5827,12 +5821,12 @@ void    your_scan_act (entry, act_no)
                  path /* include file name */
                  );
             /* however scanning of the current file is going on: */
-            return;
+            return SXANY_BOOL;
 
         case 2:
             /* End of include processing */
             if (sxpop_incl ())
-                return;
+                return SXANY_BOOL;
 
             /* something really wrong */
             /* error message */

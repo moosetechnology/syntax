@@ -2365,19 +2365,19 @@ SXLIG_semantics (S0n)
 /* Les "features_action" peuvent etre appele depuis ici ou directement depuis
    le parser lorsque ces features sont associes a une CFG (et non a une LIG). */
 /* sxsyntax appelle
-   (*(tables->SXP_tables.semact)) (SXOPEN, tables);
+   (*(tables->SXP_tables.P_semact)) (SXOPEN, tables);
    qui est connecte soit ici (avec SXLIG_actions) ds le cas des LIG
    soit avec L_features_action ds le cas CFG. Ce point d'entree ne fait rien.
    Il en est de meme de
-   (*(tables->SXP_tables.semact)) (SXINIT, tables);
-   (*(tables->SXP_tables.semact)) (SXFINAL, tables);
-   (*(tables->SXP_tables.semact)) (SXSEMPASS, tables);
-   (*(tables->SXP_tables.semact)) (SXCLOSE, tables);
+   (*(tables->SXP_tables.P_semact)) (SXINIT, tables);
+   (*(tables->SXP_tables.P_semact)) (SXFINAL, tables);
+   (*(tables->SXP_tables.P_semact)) (SXSEMPASS, tables);
+   (*(tables->SXP_tables.P_semact)) (SXCLOSE, tables);
 
    En revanche, le point d'entree
-   (*(tables->analyzers.parser)) (SXACTION, tables);
+   (*(tables->SX_parser)) (SXACTION, tables);
    du parser appelle
-   (*(sxplocals.SXP_tables.semact)) (SXACTION, &for_semact);
+   (*(sxplocals.SXP_tables.P_semact)) (SXACTION, &for_semact);
    qui va remplir tous les champs de for_semact :
 
 struct for_semact {
@@ -3286,12 +3286,11 @@ SXLIG_post_td_init ()
     SXLIGalloc (pAij_top+1);
 }
 
-int
-SXLIG_actions (which, arg)
-    int		which;
-    struct sxtables	*arg;
+int SXLIG_actions (SXINT what, SXINT action_no, struct sxtables *arg)
 {
-  switch (which) {
+  (void) action_no;
+  (void) arg;
+  switch (what) {
   case SXOPEN:
 /*  inutile : valeurs par defaut... 
     parse_stack.for_parsact.action_top = NULL;
@@ -3345,13 +3344,11 @@ SXLIG_actions (which, arg)
   return 0;
 }
 #else
-int
-SXLIG_actions (what, arg)
-    int		what;
-    char	*arg;
+int SXLIG_actions (SXINT what, SXINT action_no, char *arg)
 {
     struct for_semact	*for_semact;
 
+    (void) action_no;
     switch (what) {
     case SXOPEN:
     case SXINIT:
@@ -3380,9 +3377,6 @@ SXLIG_actions (what, arg)
 #endif
 
 	break;
-
-	
-    
 
     default:
 	fputs ("The function \"SXLIG_actions\" is out of date with respect to its specification.\n", sxstderr);

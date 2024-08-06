@@ -71,7 +71,7 @@ initialises an analyzer for the language described by
 This call successively invokes
 \fIsxopentty()\fP,
 \fIsxstr_mngr (SXBEGIN)\fP,
-\fI(*(tables->analyzers.parser)) (SXBEGIN, tables)\fP,
+\fI(*(tables->SX_parser)) (SXBEGIN, tables)\fP,
 \fIsyntax (SXOPEN, tables)\fP,
 and, if \fIuse_include_manager\fP is equal to \fItrue\fP,
 it also invokes
@@ -126,7 +126,7 @@ the \fBstr_mngr\fP (keeping the string table may be useful if data structures
 referring to entries in this table are still in use). This call successively
 invokes
 \fIsyntax (SXCLOSE, tables)\fP,
-\fI(*(tables->analyzers.parser)) (SXEND, tables)\fP,
+\fI(*(tables->SX_parser)) (SXEND, tables)\fP,
 and, if \fIuse_include_manager\fP was equal to \fItrue\fP in the prior call
 to \fIsxsyntax (SXINIT, ...)\fP, it also invokes
 \fIsxincl_mngr (SXINIT)\fP. Finally, if \fIdelete_str_manager\fP is
@@ -280,16 +280,14 @@ invokes \fIsxopentty()\fP.
 
 The skeleton of the function \fIscanner_act\fP defining the effect of the scanner actions is as follows:
 .nf
-    void scanner_act (ENTRY, ACTION_NUMBER)
-    int ENTRY;
-    int ACTION_NUMBER;
+    bool scanner_act (SXINT ENTRY, SXINT ACTION_NUMBER)
     {
         switch (ENTRY) {
         case SXOPEN:
         case SXCLOSE:
         case SXINIT:
         case SXFINAL:
-            return;
+            return SXANY_BOOL;
         case SXACTION:
             switch (ACTION_NUMBER) {
             case 1:
@@ -300,11 +298,11 @@ The skeleton of the function \fIscanner_act\fP defining the effect of the scanne
                  break;
             default:
                  /* error message */
-                 return;
+                 return SXANY_BOOL;
             }
         default:
             /* error message */
-            return;
+            return SXANY_BOOL;
         }
     }
 .fi

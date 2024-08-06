@@ -29,8 +29,15 @@
 #endif /* defined(SXVERSION) */
 
 #ifndef VARIANT_32
-char WHAT_SXS_RECOVERY[] = "@(#)SYNTAX - $Id: sxs_rcvr.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_SXS_RECOVERY[] = "@(#)SYNTAX - $Id: sxs_rcvr.c 4089 2024-06-21 12:41:17Z garavel $" WHAT_DEBUG;
 #endif
+
+/*
+ * Note: a simpler version of this module once existed. It performed a
+ * simplified form of scanner recovery, by deleting the incorrect character. 
+ * The source code of this module can be found in 
+ * outdated/deleted/src/sxs_srcvr.c 
+ */
 
 /* Tables pour la correction erreur de taille max de tous les langages */
 
@@ -596,9 +603,9 @@ static void	recovery_free (void)
 
 
 
-bool		sxsrecovery (SXINT sxsrecovery_what, SXINT state_no, unsigned char *class)
+bool		sxsrecovery (SXINT what, SXINT state_no, unsigned char *class)
 {
-    switch (sxsrecovery_what) {
+    switch (what) {
     case SXACTION:
 	return recovery (state_no, class);
 

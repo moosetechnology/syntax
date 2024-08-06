@@ -152,7 +152,6 @@ static char *err_titles[SXSEVERITIES]={
 "\002Error:\t",
 };
 static char abstract []= "%ld warnings and %ld errors are reported.";
-extern bool sxprecovery (SXINT what_to_do, SXINT *at_state, SXINT latok_no);
 
 static unsigned char S_char_to_simple_class[]={
 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
@@ -251,8 +250,6 @@ static char *S_global_mess[]={0,
 "End Of File",
 "%sScanning stops on End Of File.",
 };
-extern SXINT sxscan_it(void);
-extern bool sxsrecovery (SXINT sxsrecovery_what, SXINT state_no, unsigned char *class);
 static struct SXT_node_info SXT_node_info[]={{0,0},
 {5,1},{7,2},{0,3},{2,5},{0,6},{6,8},{3,9},{4,10},{8,11},{0,12},};
 static SXINT T_ter_to_node_name[]={
@@ -267,19 +264,20 @@ static char *T_node_name[]={NULL,
 "SIMPLE_REGULAR_EXPRESSION",
 "WORD",
 };
-extern SXINT sempass(SXINT what, struct sxtables *sxtables_ptr);
+extern SXSEMPASS_FUNCTION SEMPASS;
 static char T_stack_schema[]={0,
 1,0,0,2,0,0,1,0,1,1,0,0,};
 
-static struct SXT_tables SXT_tables=
-{SXT_node_info, T_ter_to_node_name, T_stack_schema, sempass, T_node_name};
-extern SXINT sxscanner(SXINT what_to_do, struct sxtables *arg);
-extern SXINT sxparser(SXINT what_to_do, struct sxtables *arg);
-extern SXINT sxatc(SXINT what, ...);
+static struct SXT_tables SXT_tables={
+SXT_node_info, T_ter_to_node_name, T_stack_schema, SEMPASS, T_node_name
+};
+extern SXSEMACT_FUNCTION sxatc;
 
 struct sxtables sxtables={
 52113, /* magic */
-{sxscanner,(SXPARSER_T) sxparser}, {255, 8, 1, 3, 4, 14, 1, 8, 0, 0, 0, 
+sxscanner,
+sxparser,
+{255, 8, 1, 3, 4, 14, 1, 8, 0, 0, 0, 
 S_is_a_keyword,S_is_a_generic_terminal,S_transition_matrix,
 SXS_action_or_prdct_code,
 S_adrp,
@@ -291,8 +289,8 @@ S_no_insert,
 S_global_mess,
 S_lregle,
 NULL,
-(SXRECOVERY_T) sxsrecovery,
-NULL,
+sxsrecovery,
+NULL
 },
 {2, 10, 10, 12, 16, 22, 24, 37, 8, 5, 9, 9, 12, 7, 0, 11, 4, 7, 2, 5, 11, 2, 6,
 reductions,
@@ -314,10 +312,13 @@ P_right_ctxt_head,
 SXP_local_mess,
 P_no_delete,
 P_no_insert,
-P_global_mess,PER_tset,sxscan_it,(SXRECOVERY_T) sxprecovery,
+P_global_mess,
+PER_tset,
+sxscan_it,
+sxprecovery,
 NULL,
 NULL,
-(SXSEMACT_T) sxatc
+sxatc
 },
 err_titles,
 abstract,

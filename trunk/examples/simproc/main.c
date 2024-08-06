@@ -30,7 +30,6 @@ int  main (int argc, char *argv[])
 
      sxstdout = stdout;
      sxstderr = stderr;
-     sxopentty ();
 
      if (argc == 1) {
 	  fprintf (stderr, "simproc: no argument given (a file name was expected)\n");
@@ -45,11 +44,8 @@ int  main (int argc, char *argv[])
      TRAIAN_INIT ();
 
      fprintf (stderr, "simproc: syntax analysis of %s\n", FILENAME);
-     sxstr_mngr (SXBEGIN);
-     (*(sxtables.analyzers.parser)) (SXBEGIN);
-     syntax (SXOPEN, &sxtables);
-     sxsrc_mngr (SXINIT, FILE_SOURCE, FILENAME);
-     sxerr_mngr (SXBEGIN);
+     syntax (SXINIT, &sxtables, false /* no includes */);
+     syntax (SXBEGIN, &sxtables, FILE_SOURCE, FILENAME);
 #ifdef SX_GLOBAL_VAR
      /*
       * en Syntax V6, l'appel ci-dessous est indispensable pour avoir les
@@ -63,10 +59,8 @@ int  main (int argc, char *argv[])
 
      syntax (SXACTION, &sxtables);
 
-     sxsrc_mngr (SXFINAL);
-     sxerr_mngr (SXEND);
-     syntax (SXCLOSE, &sxtables);
-     (*(sxtables.analyzers.parser)) (SXEND);
+     syntax (SXEND, &sxtables);
+     syntax (SXFINAL, &sxtables, false);
 
      fclose (FILE_SOURCE);
 

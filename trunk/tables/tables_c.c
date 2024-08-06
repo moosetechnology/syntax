@@ -28,7 +28,7 @@ static char	ME [] = "tables_c";
 #include "out.h"
 #include "sxba.h"
 
-char WHAT_TABLESC[] = "@(#)SYNTAX - $Id: tables_c.c 3650 2023-12-23 07:32:10Z garavel $" WHAT_DEBUG;
+char WHAT_TABLESC[] = "@(#)SYNTAX - $Id: tables_c.c 4134 2024-07-30 08:59:37Z garavel $" WHAT_DEBUG;
 
 bool		is_lig;
 
@@ -95,34 +95,48 @@ out_SXS_MAX (void)
 
 static void	out_sxtables (void)
 {
-    out_ext_int_newstyle (SC.S_is_non_deterministic ? "sxndscanner(SXINT what_to_do, struct sxtables *arg)" : "sxscanner(SXINT what_to_do, struct sxtables *arg)");
-    out_ext_int_newstyle (PC.nd_degree >= 0 ? "sxndparser (SXINT what_to_do, struct sxtables *arg)" : "sxparser(SXINT what_to_do, struct sxtables *arg)");
+    if (SC.S_is_non_deterministic) {
+       puts ("extern SXSCANNER_FUNCTION sxndscanner;");
+    } else {
+       /* rien : sxscanner() est declaree dans sxunix.h */
+    }
+
+    if (PC.nd_degree >= 0) {
+       puts ("extern SXPARSER_FUNCTION sxndparser;");
+    } else {
+       /* rien, car sxparser() est declare dans "sxunix.h" */
+    }
 
     if (PC.nd_degree >= 0) {
       puts ("#ifdef ESAMBIG");
-      out_ext_int_newstyle ("ESAMBIG(SXINT what)");
+      out_extern_int ("ESAMBIG(SXINT what)");
       puts ("#endif /* ESAMBIG */");
     }
 
     switch (PC.sem_kind) {
     case sem_by_abstract_tree:
-	out_ext_int_newstyle ("sxatc(SXINT what, ...)");
+	puts ("extern SXSEMACT_FUNCTION sxatc;");
 	break;
 
     case sem_by_paradis:
-	out_ext_int_newstyle ("sxatcpp(SXINT what, ...)");
+	puts ("extern SXSEMACT_FUNCTION sxatcpp;");
 	break;
 
     default:
+      /* CAS SPECIAL 'SEMACT' */
       puts ("#ifdef SEMACT");
-      out_ext_int_newstyle ("SEMACT(SXINT what, struct sxtables *arg)");
-      puts ("#endif /* SEMACT */");
+      /* pour supprimer un warning eventuel de GCC */
+      puts ("#pragma GCC diagnostic push");
+      puts ("#pragma GCC diagnostic ignored \"-Wredundant-decls\"");
+      puts ("extern SXSEMACT_FUNCTION SEMACT;");
+      puts ("#pragma GCC diagnostic pop");
+      puts ("#endif");
     }
 
     puts ("\nstruct sxtables sxtables={");
     printf ("%lu, /* magic */\n", SXMAGIC_NUMBER);
-    /* for the next line, the macro 'SXPARSER_T' denotes the type for the function sxparser() */
-    printf ("{sx%sscanner,(SXPARSER_T) sx%sparser}, ", SC.S_is_non_deterministic ? "nd" : "", PC.nd_degree >= 0 ? "nd" : "");
+    printf ("sx%sscanner,\n", SC.S_is_non_deterministic ? "nd" : "");
+    printf ("sx%sparser,\n", PC.nd_degree >= 0 ? "nd" : "");
     printf ("{%ld, %ld, %ld, ", (SXINT) SC.S_last_char_code < 255 ? SC.S_last_char_code : 255, (SXINT) SC.S_termax, (SXINT) SC.S_constructor_kind);
     printf ("%ld, %ld, ", (SXINT) RC.S_nbcart, (SXINT) RC.S_nmax);
     printf ("%ld, %ld, %ld, ", (SXINT) SC.S_last_simple_class_no, (SXINT) SC.S_counters_size, (SXINT) SC.S_last_state_no);
@@ -139,23 +153,22 @@ static void	out_sxtables (void)
     puts (RC.S_nbcart == 0 ? P0 : "S_lregle,");
     if (SC.S_is_user_action_or_prdct) {
       puts ("#ifdef SCANACT");
-      puts ("(SXSCANACT_T) SCANACT,");
-      puts ("#else /* SCANACT */");
-      printf ("(SXSCANACT_T) ");
+      puts ("SCANACT,");
+      puts ("#else");
+      printf ("(SXSCANACT_FUNCTION *) ");
       puts (P0);
-      puts ("#endif /* SCANACT */");
+      puts ("#endif");
     }
     else {
-      printf ("(SXSCANACT_T) ");
+      printf ("(SXSCANACT_FUNCTION *) ");
       puts (P0);
     }
-    /* for the next line, the macro 'SXRECOVERY_T' denotes the type for the function recovery() */
-    printf ("(SXRECOVERY_T) sx%ss%srecovery,\n", SC.S_is_non_deterministic ? "nd" : "", RC.S_nbcart == 0 ? "s" : "");
+    printf ("sx%ss%srecovery,\n", SC.S_is_non_deterministic ? "nd" : "", RC.S_nbcart == 0 ? "s" : "");
     if (SC.S_check_kw_lgth == 0) {
-      printf ("(SXCHECKKEYWORD_T) ");
-      puts (P0);
+      printf ("(SXCHECK_KEYWORD_FUNCTION *) ");
+      puts (P0_WITHOUT_COMMA);
     } else {
-      puts ("check_keyword,");
+      puts ("sxcheck_keyword");
     }
     puts ("},");
     printf ("{%ld, %ld, %ld, %ld, ", (SXINT) -PC.mMrednt, (SXINT) -PC.mMred, (SXINT) -PC.mMprdct, (SXINT) PC.Mfe);
@@ -194,21 +207,21 @@ static void	out_sxtables (void)
     puts ("SXP_local_mess,");
     puts (RC.P_nbcart == 0 ? P0 : "P_no_delete,");
     puts (RC.P_nbcart == 0 ? P0 : "P_no_insert,");
-    printf ("P_global_mess,PER_tset,sx%sscan_it,", SC.S_is_non_deterministic ? "nd" : "");
-    /* for the next line, the macro 'SXRECOVERY_T' denotes the type for the function recovery() */
-    printf ("(SXRECOVERY_T) sx%sp%srecovery,\n", PC.nd_degree >= 0 ? "nd" : "", RC.P_nbcart == 0 ? "s" : "");
+    printf ("P_global_mess,PER_tset,\n");
+    printf ("sx%sscan_it,\n", SC.S_is_non_deterministic ? "nd" : "");
+    printf ("sx%sp%srecovery,\n", PC.nd_degree >= 0 ? "nd" : "", RC.P_nbcart == 0 ? "s" : "");
 
-    /* for the next line, the macro 'SXPARSER_T' denotes the type for the function PARSACT() */
+    /* for the next line, the macro 'SXPARSACT_FUNCTION' denotes the type of the function PARSACT() */
     if (PPR != NULL || PC.xnbpro > PC.nbpro /* P_is_user_action_or_predicate */) {
       puts ("#ifdef PARSACT");
-      puts ("(SXPARSER_T) PARSACT,");
-      puts ("#else /* PARSACT */");
-      printf ("(SXPARSER_T) ");
+      puts ("PARSACT,");
+      puts ("#else");
+      printf ("(SXPARSACT_FUNCTION *) ");
       puts (P0);
-      puts ("#endif /* PARSACT */");
+      puts ("#endif");
     }
     else {
-      printf ("(SXPARSER_T) ");
+      printf ("(SXPARSACT_FUNCTION *) ");
       puts (P0);    
     }
 
@@ -216,31 +229,31 @@ static void	out_sxtables (void)
       puts ("#ifdef ESAMBIG");
       puts ("ESAMBIG,");
       puts ("#else /* ESAMBIG */");
-      printf ("(SXDESAMBIG_T) ");
+      printf ("(SXDESAMBIG_FUNCTION *) ");
       puts (P0);
       puts ("#endif /* ESAMBIG */");
     }
     else {
-      printf ("(SXDESAMBIG_T) ");
+      printf ("(SXDESAMBIG_FUNCTION *) ");
       puts (P0);    
     }
 
     switch (PC.sem_kind) {
     case sem_by_abstract_tree:
-      puts ("(SXSEMACT_T) sxatc");
+      puts ("sxatc");
       break;
       
     case sem_by_paradis:
-      puts ("(SXSEMACT_T) sxatcpp");
+      puts ("sxatcpp");
       break;
       
     default:
       puts ("#ifdef SEMACT");
-      puts ("(SXSEMACT_T) SEMACT");
-      puts ("#else /* SEMACT */");
-      printf ("(SXSEMACT_T) ");
-      puts (P0);
-      puts ("#endif /* SEMACT */");
+      puts ("SEMACT");
+      puts ("#else");
+      printf ("(SXSEMACT_FUNCTION *) ");
+      puts (P0_WITHOUT_COMMA);
+      puts ("#endif");
       break;
     }
     puts ("},");
@@ -264,10 +277,10 @@ static void	out_sxtables (void)
 	    sem = P0;
 	}
 
-	printf ("(sxsem_tables*)%s\n", sem);
+	printf ("(sxsem_tables *) %s\n", sem);
     }
 
-    puts (is_lig ? "&sxligparsact," : P0);
+    puts (is_lig ? "&sxligparsact," : P0_WITHOUT_COMMA);
 
     out_end_struct ();
 }

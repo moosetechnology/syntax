@@ -3,18 +3,16 @@ include $(SX)/etc/make/gccoptions
 
 MIX=$(SX)/../outdated/oldies/mix
 SRC=$(MIX)/src
-LIB=$(MIX)/lib
+BIN=$(MIX)/bin.$(ARCH)
+LIB=$(MIX)/lib.$(ARCH)
 
 CC=cc -I$(SXINCL) $(CFLAGS)
 
-all: $(SX)/bin/mix.out
-
-$(SX)/bin/mix.out:	$(MIX)/mix.out
-	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
+all: $(BIN)/mix.out
 
 NEEDS=	$(LIB)/mix_main.o
 
-$(MIX)/mix.out:	$(NEEDS)	$(SXBIBS)
+$(BIN)/mix.out:	$(NEEDS)	$(SXBIBS)
 	rm -f $@; cc -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@; exit 1)
 
 $(LIB)/mix_main.o:	$(SXINCL)/sxunix.h	\
@@ -22,5 +20,5 @@ $(LIB)/mix_main.o:	$(SXINCL)/sxunix.h	\
 	$(CC) -o $@ -c $(SRC)/mix_main.c
 
 clean:
-	/bin/rm -f $(SX)/bin/mix.out $(MIX)/mix.out $(LIB)/mix_main.o
+	/bin/rm -f $(BIN)/mix.out $(LIB)/mix_main.o
 

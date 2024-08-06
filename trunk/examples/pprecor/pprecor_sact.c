@@ -16,17 +16,19 @@
  *   CeCILL-C license. Information about the CeCILL and CeCILL-C licenses
  *   can be found at, e.g., http://www.cecill.info
  *****************************************************************************/
-#include "sxunix.h"
-char WHAT_PPRECORSACT[] = "@(#)SYNTAX - $Id: pprecor_sact.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
 
-void	pp_recor_scan_act (SXINT what, SXINT act_no)
+#include "sxunix.h"
+
+char WHAT_PPRECORSACT[] = "@(#)SYNTAX - $Id: pprecor_sact.c 4125 2024-07-29 10:59:13Z garavel $" WHAT_DEBUG;
+
+bool pp_recor_scan_act (SXINT what, SXINT act_no)
 {
     switch (what) {
     case SXOPEN:
     case SXCLOSE:
     case SXINIT:
     case SXFINAL:
-	return;
+	return SXANY_BOOL;
 
     case SXACTION:
 	switch (act_no) {
@@ -37,7 +39,7 @@ void	pp_recor_scan_act (SXINT what, SXINT act_no)
 			 "%sA dark symbol must be built up with the same character.",
 			 sxsvar.sxtables->err_titles [1]+1);
 
-	    return;
+	    return SXANY_BOOL;
 
 	case 2:
 	    do {
@@ -56,7 +58,7 @@ void	pp_recor_scan_act (SXINT what, SXINT act_no)
 		break;
 	    } while (sxsvar.sxlv.ts_lgth > 0);
 
-	    return;
+	    return SXANY_BOOL;
 
 	default:
 	    /* value inattendue */

@@ -528,8 +528,7 @@ static char *err_titles[SXSEVERITIES]={
 "\002Error:\t",
 };
 static char abstract []= "%d errors and %d warnings are reported.";
-extern int PARSACT();
-extern bool sxprecovery();
+extern SXPARSACT_FUNCTION PARSACT;
 
 static unsigned char S_char_to_simple_class[]={
 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
@@ -676,16 +675,13 @@ static char *S_global_mess[]={
 "End Of File",
 "%sScanning stops on End Of File.",
 };
-extern int sxscan_it();
-extern bool sxsrecovery();
-static int check_keyword();
-extern int sxscanner();
-extern int sxparser();
-extern int SEMACT();
+extern SXSEMACT_FUNCTION SEMACT;
+static SXCHECK_KEYWORD_FUNCTION sxcheck_keyword;
 
 struct sxtables sxtables={
 56431012, /* magic */
-{sxscanner,sxparser}, 
+sxscanner,
+sxparser, 
 {255, 47, 1, 3, 4, 24, 0, 0, 1, 
 S_is_a_keyword,S_is_a_generic_terminal,S_transition_matrix-1,
 NULL,
@@ -698,7 +694,7 @@ S_global_mess-1,
 S_lregle-1,
 NULL,
 sxsrecovery,
-check_keyword,
+sxcheck_keyword
 },
 {30, 127, 127, 187, 269, 279, 324, 471, 47, 61, 123, 83, 11, 4, 7, 2, 5, 11, 2, 6,
 reductions-1,
@@ -729,9 +725,7 @@ abstract,
 
 
 
-static int check_keyword (string, length)
-register char	*string;
-register int	length;
+static SXINT sxcheck_keyword (char *string, SXINT length)
 {
    register int  t_code, delta;
    register char *keyword;

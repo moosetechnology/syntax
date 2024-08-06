@@ -87,7 +87,7 @@ EX1=$(LIB)/RCG_main.o	\
 	$(LIB)/ex1_parser.o
 
 $(TEST)/ex1.out:	$(EX1)	$(SXBIBS)
-	$(COMPILER) -o $@ $(EX1) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(EX1) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/ex1_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -110,7 +110,7 @@ $(LIB)/ex1_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/ex1_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/ex1_t.c
-	$(CC) -o $@ -c $(SRC)/ex1_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/ex1_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 EX2=$(LIB)/RCG_main.o	\
@@ -119,7 +119,7 @@ EX2=$(LIB)/RCG_main.o	\
 	$(LIB)/ex2_parser.o
 
 $(TEST)/ex2.out:	$(EX2)	$(SXBIBS)
-	$(COMPILER) -o $@ $(EX2) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(EX2) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/ex2_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -142,7 +142,7 @@ $(LIB)/ex2_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/ex2_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/ex2_t.c
-	$(CC) -o $@ -c $(SRC)/ex2_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/ex2_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 
@@ -152,7 +152,7 @@ EX3=$(LIB)/RCG_main.o	\
 	$(LIB)/ex3_parser.o
 
 $(TEST)/ex3.out:	$(EX3)	$(SXBIBS)
-	$(COMPILER) -o $@ $(EX3) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(EX3) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/ex3_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -175,7 +175,7 @@ $(LIB)/ex3_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/ex3_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/ex3_t.c
-	$(CC) -o $@ -c $(SRC)/ex3_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/ex3_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 AN=$(LIB)/RCG_main.o	\
@@ -184,7 +184,7 @@ AN=$(LIB)/RCG_main.o	\
 	$(LIB)/an_parser.o
 
 $(TEST)/an.out:	$(AN)	$(SXBIBS)
-	$(COMPILER) -o $@ $(AN) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(AN) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/an_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -207,7 +207,7 @@ $(LIB)/an_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/an_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/an_t.c
-	$(CC) -o $@ -c $(SRC)/an_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/an_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 PRIME=$(LIB)/RCG_main.o	\
@@ -216,7 +216,7 @@ PRIME=$(LIB)/RCG_main.o	\
 	$(LIB)/prime_parser.o
 
 $(TEST)/prime.out:	$(PRIME)	$(SXBIBS)
-	$(COMPILER) -o $@ $(PRIME) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(PRIME) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/prime_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -239,7 +239,7 @@ $(LIB)/prime_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/prime_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/prime_t.c
-	$(CC) -o $@ -c $(SRC)/prime_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/prime_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 PRIME2=$(LIB)/RCG_main.o	\
@@ -248,7 +248,7 @@ PRIME2=$(LIB)/RCG_main.o	\
 	$(LIB)/prime2_parser.o
 
 $(TEST)/prime2.out:	$(PRIME2)	$(SXBIBS)
-	$(COMPILER) -o $@ $(PRIME2) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(PRIME2) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/prime2_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -271,7 +271,7 @@ $(LIB)/prime2_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/prime2_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/prime2_t.c
-	$(CC) -o $@ -c $(SRC)/prime2_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/prime2_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 PRIME3=$(LIB)/RCG_main.o	\
@@ -280,7 +280,7 @@ PRIME3=$(LIB)/RCG_main.o	\
 	$(LIB)/prime3_parser.o
 
 $(TEST)/prime3.out:	$(PRIME3)	$(SXBIBS)
-	$(COMPILER) -o $@ $(PRIME3) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(PRIME3) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/prime3_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -303,7 +303,7 @@ $(LIB)/prime3_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/prime3_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/prime3_t.c
-	$(CC) -o $@ -c $(SRC)/prime3_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/prime3_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 PRIME4=$(LIB)/RCG_main.o	\
@@ -312,7 +312,7 @@ PRIME4=$(LIB)/RCG_main.o	\
 	$(LIB)/prime4_parser.o
 
 $(TEST)/prime4.out:	$(PRIME4)	$(SXBIBS)
-	$(COMPILER) -o $@ $(PRIME4) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(PRIME4) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/prime4_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -335,7 +335,7 @@ $(LIB)/prime4_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/prime4_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/prime4_t.c
-	$(CC) -o $@ -c $(SRC)/prime4_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/prime4_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 PRIME5=$(LIB)/RCG_main.o	\
@@ -344,7 +344,7 @@ PRIME5=$(LIB)/RCG_main.o	\
 	$(LIB)/prime5_parser.o
 
 $(TEST)/prime5.out:	$(PRIME5)	$(SXBIBS)
-	$(COMPILER) -o $@ $(PRIME5) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(PRIME5) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/prime5_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -367,7 +367,7 @@ $(LIB)/prime5_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/prime5_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/prime5_t.c
-	$(CC) -o $@ -c $(SRC)/prime5_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/prime5_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 PRIME6=$(LIB)/RCG_main.o	\
@@ -377,7 +377,7 @@ PRIME6=$(LIB)/RCG_main.o	\
 	$(LIB)/prime6_parser.o
 
 $(TEST)/prime6.out:	$(PRIME6)	$(SXBIBS)
-	$(COMPILER) -o $@ $(PRIME6) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(PRIME6) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/prime6_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -405,7 +405,7 @@ $(LIB)/prime6_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/prime6_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/prime6_t.c
-	$(CC) -o $@ -c $(SRC)/prime6_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/prime6_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 
@@ -415,7 +415,7 @@ EX8=$(LIB)/RCG_main.o	\
 	$(LIB)/ex8_parser.o
 
 $(TEST)/ex8.out:	$(EX8)	$(SXBIBS)
-	$(COMPILER) -o $@ $(EX8) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(EX8) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/ex8_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -438,7 +438,7 @@ $(LIB)/ex8_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/ex8_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/ex8_t.c
-	$(CC) -o $@ -c $(SRC)/ex8_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/ex8_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 WCW=$(LIB)/RCG_main.o			\
@@ -450,7 +450,7 @@ WCW=$(LIB)/RCG_main.o			\
 	$(LIB)/wcw_parser.o
 
 $(TEST)/wcw.out:	$(WCW)	$(SXBIBS)
-	$(COMPILER) -o $@ $(WCW) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(WCW) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/ext_prime4_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -506,7 +506,7 @@ $(LIB)/wcw_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/wcw_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/wcw_t.c
-	$(CC) -o $@ -c $(SRC)/wcw_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/wcw_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 BETA_SHEETS=$(LIB)/RCG_main.o	\
@@ -515,7 +515,7 @@ BETA_SHEETS=$(LIB)/RCG_main.o	\
 	$(LIB)/BetaSheets_parser.o
 
 $(TEST)/BetaSheets.out:	$(BETA_SHEETS)	$(SXBIBS)
-	$(COMPILER) -o $@ $(BETA_SHEETS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(BETA_SHEETS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/BetaSheets_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -539,7 +539,7 @@ $(LIB)/BetaSheets_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/BetaSheets_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/BetaSheets_t.c
-	$(CC) -o $@ -c $(SRC)/BetaSheets_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/BetaSheets_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 FAS=$(LIB)/RCG_main.o	\
@@ -548,7 +548,7 @@ FAS=$(LIB)/RCG_main.o	\
 	$(LIB)/fas_parser.o
 
 $(TEST)/fas.out:	$(FAS)	$(SXBIBS)
-	$(COMPILER) -o $@ $(FAS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(FAS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/fas_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -572,7 +572,7 @@ $(LIB)/fas_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/fas_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/fas_t.c
-	$(CC) -o $@ -c $(SRC)/fas_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/fas_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 CYCLIC=$(LIB)/RCG_main.o	\
 	$(LIB)/cyclic_t.o	\
@@ -580,7 +580,7 @@ CYCLIC=$(LIB)/RCG_main.o	\
 	$(LIB)/cyclic_parser.o
 
 $(TEST)/cyclic.out:	$(CYCLIC)	$(SXBIBS)
-	$(COMPILER) -o $@ $(CYCLIC) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(CYCLIC) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/cyclic_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -604,7 +604,7 @@ $(LIB)/cyclic_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/cyclic_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/cyclic_t.c
-	$(CC) -o $@ -c $(SRC)/cyclic_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/cyclic_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 METEO=$(LIB)/RCG_main.o		\
 	$(LIB)/meteo_t.o	\
@@ -614,7 +614,7 @@ METEO=$(LIB)/RCG_main.o		\
 	$(LIB)/meteo_parser.o
 
 $(TEST)/meteo.out:	$(METEO)	$(SXBIBS)
-	$(COMPILER) -o $@ $(METEO) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(METEO) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/meteo_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -656,7 +656,7 @@ $(LIB)/meteo_sem_fun.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/meteo_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/meteo_t.c
-	$(CC) -o $@ -c $(SRC)/meteo_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/meteo_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 DTEST=$(LIB)/RCG_main.o		\
 	$(LIB)/dtest_t.o	\
@@ -666,7 +666,7 @@ DTEST=$(LIB)/RCG_main.o		\
 	$(LIB)/dtest_parser.o
 
 $(TEST)/dtest.out:	$(DTEST)	$(SXBIBS)
-	$(COMPILER) -o $@ $(DTEST) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(DTEST) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/dtest_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -705,7 +705,7 @@ $(LIB)/dtest_sem_fun.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/dtest_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/dtest_t.c
-	$(CC) -o $@ -c $(SRC)/dtest_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/dtest_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 DTEST2=$(LIB)/RCG_main.o	\
 	$(LIB)/dtest2_t.o	\
@@ -715,7 +715,7 @@ DTEST2=$(LIB)/RCG_main.o	\
 	$(LIB)/dtest2_parser.o
 
 $(TEST)/dtest2.out:	$(DTEST2)	$(SXBIBS)
-	$(COMPILER) -o $@ $(DTEST2) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(DTEST2) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/dtest2_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -755,7 +755,7 @@ $(LIB)/dtest2_sem_fun.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/dtest2_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/dtest2_t.c
-	$(CC) -o $@ -c $(SRC)/dtest2_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/dtest2_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 
@@ -767,7 +767,7 @@ DTEST3=$(LIB)/RCG_main.o	\
 	$(LIB)/dtest3_parser.o
 
 $(TEST)/dtest3.out:	$(DTEST3)	$(SXBIBS)
-	$(COMPILER) -o $@ $(DTEST3) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(DTEST3) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/dtest3_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -805,7 +805,7 @@ $(LIB)/dtest3_sem_fun.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/dtest3_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/dtest3_t.c
-	$(CC) -o $@ -c $(SRC)/dtest3_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/dtest3_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 
@@ -818,7 +818,7 @@ DTEST4=$(LIB)/RCG_main.o	\
 	$(LIB)/dtest4_parser.o
 
 $(TEST)/dtest4.out:	$(DTEST4)	$(SXBIBS)
-	$(COMPILER) -o $@ $(DTEST4) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(DTEST4) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/dtest4_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -857,7 +857,7 @@ $(LIB)/dtest4_sem_fun.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/dtest4_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/dtest4_t.c
-	$(CC) -o $@ -c $(SRC)/dtest4_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/dtest4_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 N2=$(LIB)/RCG_main.o		\
@@ -866,7 +866,7 @@ N2=$(LIB)/RCG_main.o		\
 	$(LIB)/n2_parser.o
 
 $(TEST)/n2.out:	$(N2)	$(SXBIBS)
-	$(COMPILER) -o $@ $(N2) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(N2) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/n2_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -890,7 +890,7 @@ $(LIB)/n2_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/n2_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/n2_t.c
-	$(CC) -o $@ -c $(SRC)/n2_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/n2_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 ARITY0=$(LIB)/RCG_main.o	\
@@ -899,7 +899,7 @@ ARITY0=$(LIB)/RCG_main.o	\
 	$(LIB)/arity0_parser.o
 
 $(TEST)/arity0.out:	$(ARITY0)	$(SXBIBS)
-	$(COMPILER) -o $@ $(ARITY0) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(ARITY0) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/arity0_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -922,7 +922,7 @@ $(LIB)/arity0_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/arity0_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/arity0_t.c
-	$(CC) -o $@ -c $(SRC)/arity0_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/arity0_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 W_PWR_W=$(LIB)/RCG_main.o		\
 	$(LIB)/w_pwr_w_t.o		\
@@ -930,7 +930,7 @@ W_PWR_W=$(LIB)/RCG_main.o		\
 	$(LIB)/w_pwr_w_parser.o
 
 $(TEST)/w_pwr_w.out:	$(W_PWR_W)	$(SXBIBS)
-	$(COMPILER) -o $@ $(W_PWR_W) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(W_PWR_W) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/w_pwr_w_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -954,7 +954,7 @@ $(LIB)/w_pwr_w_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/w_pwr_w_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/w_pwr_w_t.c
-	$(CC) -o $@ -c $(SRC)/w_pwr_w_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/w_pwr_w_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 
@@ -967,7 +967,7 @@ W_PWR_W_PR=$(LIB)/RCG_main.o		\
 	$(LIB)/w_pwr_w_pr_parser.o
 
 $(TEST)/w_pwr_w_pr.out:	$(W_PWR_W_PR)	$(SXBIBS)
-	$(COMPILER) -o $@ $(W_PWR_W_PR) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(W_PWR_W_PR) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/w_pwr_w_pr_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -991,7 +991,7 @@ $(LIB)/w_pwr_w_pr_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/w_pwr_w_pr_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/w_pwr_w_pr_t.c
-	$(CC) -o $@ -c $(SRC)/w_pwr_w_pr_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/w_pwr_w_pr_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 # Test en generation a partir de gan.drcg (ecrite a la main)
@@ -1004,7 +1004,7 @@ GAN=$(LIB)/RCG_main.o		\
 	$(LIB)/gan_parser.o
 
 $(TEST)/gan.out:	$(GAN)	$(SXBIBS)
-	$(COMPILER) -o $@ $(GAN) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(GAN) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/gan_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -1044,7 +1044,7 @@ $(LIB)/gan_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/gan_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/gan_t.c
-	$(CC) -o $@ -c $(SRC)/gan_t.c -Dsxtables=RCG_tables -Dsxscanner=sxvoid -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/gan_t.c -Dsxtables=RCG_tables -Dsxscanner=sxvoid -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 DISTANCE=$(LIB)/RCG_main.o	\
@@ -1053,7 +1053,7 @@ DISTANCE=$(LIB)/RCG_main.o	\
 	$(LIB)/distance_parser.o
 
 $(TEST)/distance.out:	$(DISTANCE)	$(SXBIBS)
-	$(COMPILER) -o $@ $(DISTANCE) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(DISTANCE) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/distance_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -1081,7 +1081,7 @@ $(LIB)/distance_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/distance_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/distance_t.c
-	$(CC) -o $@ -c $(SRC)/distance_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/distance_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 # Test de la correction d'erreur a partir de rcvr.drcg (ecrite a la main depuis rcvr.rcg)
@@ -1097,7 +1097,7 @@ RCVR=$(LIB)/RCG_main.o		\
 
 
 $(TEST)/rcvr.out:	$(RCVR)	$(SXBIBS)
-	$(COMPILER) -o $@ $(RCVR) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(RCVR) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 # rcvr_rcgp.c est compile' 2 fois une fois en analyse et une fois en generation
 $(LIB)/rcvr_rcgp.o: $(SXINCL)/sxunix.h \
@@ -1155,7 +1155,7 @@ $(LIB)/rcvr_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/rcvr_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/rcvr_t.c
-	$(CC) -o $@ -c $(SRC)/rcvr_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/rcvr_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 
@@ -1167,7 +1167,7 @@ ICG1=$(LIB)/RCG_main.o	\
 	$(LIB)/icg1_parser.o
 
 $(TEST)/icg1.out:	$(ICG1)	$(SXBIBS)
-	$(COMPILER) -o $@ $(ICG1) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(ICG1) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/icg1_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -1190,7 +1190,7 @@ $(LIB)/icg1_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/icg1_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/icg1_t.c
-	$(CC) -o $@ -c $(SRC)/icg1_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/icg1_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 
@@ -1201,7 +1201,7 @@ ICG2=$(LIB)/RCG_main.o	\
 	$(LIB)/icg2_parser.o
 
 $(TEST)/icg2.out:	$(ICG2)	$(SXBIBS)
-	$(COMPILER) -o $@ $(ICG2) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(ICG2) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/icg2_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -1224,7 +1224,7 @@ $(LIB)/icg2_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/icg2_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/icg2_t.c
-	$(CC) -o $@ -c $(SRC)/icg2_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/icg2_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 ICG3=$(LIB)/RCG_main.o	\
@@ -1233,7 +1233,7 @@ ICG3=$(LIB)/RCG_main.o	\
 	$(LIB)/icg3_parser.o
 
 $(TEST)/icg3.out:	$(ICG3)	$(SXBIBS)
-	 $(COMPILER) -o $@ $(ICG3) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	 $(COMPILER) -o $@ $(ICG3) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/icg3_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -1256,7 +1256,7 @@ $(LIB)/icg3_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/icg3_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/icg3_t.c
-	$(CC) -o $@ -c $(SRC)/icg3_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/icg3_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 ANBM=$(LIB)/RCG_main.o	\
@@ -1265,7 +1265,7 @@ ANBM=$(LIB)/RCG_main.o	\
 	$(LIB)/anbm_parser.o
 
 $(TEST)/anbm.out:	$(ANBM)	$(SXBIBS)
-	$(COMPILER) -o $@ $(ANBM) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(ANBM) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/anbm_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -1288,7 +1288,7 @@ $(LIB)/anbm_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/anbm_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/anbm_t.c
-	$(CC) -o $@ -c $(SRC)/anbm_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/anbm_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 CFG=$(LIB)/RCG_main.o	\
@@ -1297,7 +1297,7 @@ CFG=$(LIB)/RCG_main.o	\
 	$(LIB)/cfg_parser.o
 
 $(TEST)/cfg.out:	$(CFG)	$(SXBIBS)
-	$(COMPILER) -o $@ $(CFG) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(CFG) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/cfg_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -1326,7 +1326,7 @@ $(LIB)/cfg_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/cfg_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/cfg_t.c
-	$(CC) -o $@ -c $(SRC)/cfg_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/cfg_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 
@@ -1336,7 +1336,7 @@ BINARY=$(LIB)/RCG_main.o	\
 	$(LIB)/binary_parser.o
 
 $(TEST)/binary.out:	$(BINARY)	$(SXBIBS)
-	$(COMPILER) -o $@ $(BINARY) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(BINARY) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/binary_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -1366,7 +1366,7 @@ $(LIB)/binary_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/binary_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/binary_t.c
-	$(CC) -o $@ -c $(SRC)/binary_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/binary_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 
@@ -1377,7 +1377,7 @@ RNATAG=$(LIB)/RCG_main.o	\
 	$(LIB)/rnatag_parser.o
 
 $(TEST)/rnatag.out:	$(RNATAG)	$(SXBIBS)
-	$(COMPILER) -o $@ $(RNATAG) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(RNATAG) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/rnatag_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -1407,7 +1407,7 @@ $(LIB)/rnatag_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/rnatag_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/rnatag_t.c
-	$(CC) -o $@ -c $(SRC)/rnatag_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/rnatag_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 
@@ -1419,7 +1419,7 @@ RNA=$(LIB)/RCG_main.o	\
 	$(LIB)/RNA_parser.o
 
 $(TEST)/RNA.out:	$(RNA)	$(SXBIBS)
-	$(COMPILER) -o $@ $(RNA) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(RNA) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/RNA_rcgp.o: $(SXINCL)/sxunix.h 	\
 		$(SXINCL)/rcg_glbl.h	\
@@ -1449,7 +1449,7 @@ $(LIB)/RNA_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/RNA_t.o: 	$(SXINCL)/sxunix.h	\
 			$(SRC)/RNA_t.c
-	$(CC) -o $@ -c $(SRC)/RNA_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/RNA_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 SCR=$(LIB)/RCG_main.o	\
@@ -1458,7 +1458,7 @@ SCR=$(LIB)/RCG_main.o	\
 	$(LIB)/SCR_parser.o
 
 $(TEST)/SCR.out:	$(SCR)	$(SXBIBS)
-	$(COMPILER) -o $@ $(SCR) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(SCR) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/SCR_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -1488,7 +1488,7 @@ $(LIB)/SCR_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/SCR_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/SCR_t.c
-	$(CC) -o $@ -c $(SRC)/SCR_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/SCR_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 
@@ -1498,7 +1498,7 @@ NIL=$(LIB)/RCG_main.o	\
 	$(LIB)/nil_parser.o
 
 $(TEST)/nil.out:	$(NIL)	$(SXBIBS)
-	$(COMPILER) -o $@ $(NIL) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(NIL) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/nil_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -1527,7 +1527,7 @@ $(LIB)/nil_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/nil_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/nil_t.c
-	$(CC) -o $@ -c $(SRC)/nil_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/nil_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 
@@ -1539,7 +1539,7 @@ COUNT=$(LIB)/RCG_main.o	\
 	$(LIB)/count_parser.o
 
 $(TEST)/count.out:	$(COUNT)	$(SXBIBS)
-	$(COMPILER) -o $@ $(COUNT) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(COUNT) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/count_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -1584,7 +1584,7 @@ $(LIB)/count_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/count_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/count_t.c
-	$(CC) -o $@ -c $(SRC)/count_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/count_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 TAG_ERIC=$(LIB)/RCG_main.o	\
@@ -1593,7 +1593,7 @@ TAG_ERIC=$(LIB)/RCG_main.o	\
 	$(LIB)/tag_eric_parser.o
 
 $(TEST)/tag_eric.out:	$(TAG_ERIC)	$(SXBIBS)
-	$(COMPILER) -o $@ $(TAG_ERIC) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(TAG_ERIC) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/tag_eric_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -1623,7 +1623,7 @@ $(LIB)/tag_eric_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/tag_eric_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/tag_eric_t.c
-	$(CC) -o $@ -c $(SRC)/tag_eric_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/tag_eric_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 ANBNCN=$(LIB)/RCG_main.o	\
 	$(LIB)/anbncn_t.o	\
@@ -1631,7 +1631,7 @@ ANBNCN=$(LIB)/RCG_main.o	\
 	$(LIB)/anbncn_parser.o
 
 $(TEST)/anbncn.out:	$(ANBNCN)	$(SXBIBS)
-	$(COMPILER) -o $@ $(ANBNCN) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(ANBNCN) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/anbncn_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -1658,7 +1658,7 @@ $(LIB)/anbncn_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/anbncn_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/anbncn_t.c
-	$(CC) -o $@ -c $(SRC)/anbncn_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/anbncn_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 WW=$(LIB)/RCG_main.o		\
@@ -1667,7 +1667,7 @@ WW=$(LIB)/RCG_main.o		\
 	$(LIB)/ww_parser.o
 
 $(TEST)/ww.out:	$(WW)	$(SXBIBS)
-	$(COMPILER) -o $@ $(WW) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(WW) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/ww_rcgp.o: $(SXINCL)/sxunix.h	\
 		$(SXINCL)/rcg_glbl.h	\
@@ -1694,7 +1694,7 @@ $(LIB)/ww_parser.o: $(SXINCL)/sxunix.h	\
 
 $(LIB)/ww_t.o: 	$(SXINCL)/sxunix.h	\
 			$(SRC)/ww_t.c
-	$(CC) -o $@ -c $(SRC)/ww_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/ww_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 PLURIEL=$(LIB)/RCG_main.o	\
@@ -1703,7 +1703,7 @@ PLURIEL=$(LIB)/RCG_main.o	\
 	$(LIB)/pluriel_parser.o
 
 $(TEST)/pluriel.out:	$(PLURIEL)	$(SXBIBS)
-	$(COMPILER) -o $@ $(PLURIEL) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(PLURIEL) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/pluriel_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -1726,7 +1726,7 @@ $(LIB)/pluriel_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/pluriel_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/pluriel_t.c
-	$(CC) -o $@ -c $(SRC)/pluriel_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/pluriel_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 
@@ -1737,7 +1737,7 @@ GEN_PLURIEL=$(LIB)/RCG_main.o		\
 	$(LIB)/pluriel_0_parser.o
 
 $(TEST)/gen_pluriel.out:	$(GEN_PLURIEL)	$(SXBIBS)
-	$(COMPILER) -o $@ $(GEN_PLURIEL) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(GEN_PLURIEL) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/pluriel_0_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -1776,7 +1776,7 @@ $(LIB)/pluriel_0_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/pluriel_0_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/pluriel_0_t.c
-	$(CC) -o $@ -c $(SRC)/pluriel_0_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/pluriel_0_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 
@@ -1786,7 +1786,7 @@ TEST_IDAG=$(LIB)/RCG_main.o	\
 	$(LIB)/test_idag_parser.o
 
 $(TEST)/test_idag.out:	$(TEST_IDAG)	$(SXBIBS)
-	$(COMPILER) -o $@ $(TEST_IDAG) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(TEST_IDAG) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/test_idag_dagrcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -1815,7 +1815,7 @@ $(LIB)/test_idag_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/test_idag_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/test_idag_t.c
-	$(CC) -o $@ -c $(SRC)/test_idag_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/test_idag_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 
@@ -1825,7 +1825,7 @@ FB=$(LIB)/RCG_main.o	\
 	$(LIB)/FB_parser.o
 
 $(TEST)/FB.out:	$(FB)	$(SXBIBS)
-	$(COMPILER) -o $@ $(FB) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(FB) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/FB_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -1860,7 +1860,7 @@ $(LIB)/FB_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/FB_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/FB_t.c
-	$(CC) -o $@ -c $(SRC)/FB_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/FB_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 OLTAG=$(LIB)/RCG_main.o	\
@@ -1869,7 +1869,7 @@ OLTAG=$(LIB)/RCG_main.o	\
 	$(LIB)/OLTAG_parser.o
 
 $(TEST)/OLTAG.out:	$(OLTAG)	$(SXBIBS)
-	$(COMPILER) -o $@ $(OLTAG) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(OLTAG) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/OLTAG_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -1914,7 +1914,7 @@ FXTAG=$(LIB)/RCG_main.o	\
 	$(LIB)/fxtag_parser.o
 
 $(TEST)/fxtag.out:	$(FXTAG)	$(SXBIBS)
-	$(COMPILER) -o $@ $(FXTAG) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(FXTAG) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/fxtag_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -1961,7 +1961,7 @@ PERMUTE=$(LIB)/RCG_main.o	\
 	$(LIB)/permute_parser.o
 
 $(TEST)/permute.out:	$(PERMUTE)	$(SXBIBS)
-	$(COMPILER) -o $@ $(PERMUTE) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(PERMUTE) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/permute_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -1990,7 +1990,7 @@ $(LIB)/permute_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/permute_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/permute_t.c
-	$(CC) -o $@ -c $(SRC)/permute_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/permute_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 
@@ -2000,7 +2000,7 @@ NEW_PRIME=$(LIB)/RCG_main.o	\
 	$(LIB)/new_prime_parser.o
 
 $(TEST)/new_prime.out:	$(NEW_PRIME)	$(SXBIBS)
-	$(COMPILER) -o $@ $(NEW_PRIME) $(CFLAGS) $(LDFLAGS) $(SXBIBS) /usr/lib/libm.a || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(NEW_PRIME) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/new_prime_rcgp.o: $(SXINCL)/sxunix.h \
 		$(SXINCL)/rcg_glbl.h	\
@@ -2029,7 +2029,7 @@ $(LIB)/new_prime_parser.o: $(SXINCL)/sxunix.h \
 
 $(LIB)/new_prime_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/new_prime_t.c
-	$(CC) -o $@ -c $(SRC)/new_prime_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxvoid
+	$(CC) -o $@ -c $(SRC)/new_prime_t.c -Dsxtables=RCG_tables -Dsxparser=sxrcg_parser -DSEMACT=sxwvoid
 
 
 

@@ -3,7 +3,7 @@ include $(SX)/etc/make/gccoptions
 
 LIG=$(SX)/../outdated/oldies/LIG
 SRC=$(LIG)/src
-LIB=$(LIG)/lib
+LIB=$(LIG)/lib.$(ARCH)
 INCL=$(LIG)/incl
 
 CFLAGS= -g -DEBUG_ALLOC -DEBUG
@@ -44,7 +44,7 @@ $(LIB)/lig_t.o:		$(SXINCL)/sxunix.h 	\
 	$(CC) -o $@ -c $(SRC)/lig_t.c		\
 		-Dsxtables=lig_tables		\
 		-DSCANACT=lig_scan_act		\
-		-Dsempass=lig_smp
+		-DSEMPASS=lig_smp
 
 clean:
 	rm -f $(ALL) $(NEEDS1)

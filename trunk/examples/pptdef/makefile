@@ -2,8 +2,8 @@
 include $(SX)/etc/make/gccoptions
 
 PPTDEF=$(SX)/examples/pptdef
-BIN=$(PPTDEF)/bin
-LIB=$(PPTDEF)/lib
+BIN=$(PPTDEF)/bin.$(ARCH)
+LIB=$(PPTDEF)/lib.$(ARCH)
 
 CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS) -c
 

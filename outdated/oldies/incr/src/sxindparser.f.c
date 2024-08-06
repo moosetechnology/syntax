@@ -999,7 +999,7 @@ static bool ltd_shifter (parse_time_building)
   n = ++sxplocals.ptok_no;
   
   while (n > sxplocals.Mtok_no)
-      (*(sxplocals.SXP_tables.scanit)) ();
+      (*(sxplocals.SXP_tables.P_scan_it)) ();
   
   ltd_parse_stack.current_token = SXGET_TOKEN (n).lahead;
   /* for_scanner = for_shifter */
@@ -1941,7 +1941,7 @@ static bool shifter ()
   n = ++sxplocals.ptok_no;
   
   while (n > sxplocals.Mtok_no)
-      (*(sxplocals.SXP_tables.scanit)) ();
+      (*(sxplocals.SXP_tables.P_scan_it)) ();
   
   parse_stack.current_token = SXGET_TOKEN (n).lahead;
   /* for_scanner = for_shifter */
@@ -2419,7 +2419,7 @@ bool sxindparser (what_to_do, arg)
     sxplocals.sxtables = arg;
     sxplocals.SXP_tables = arg->SXP_tables;
     sxtkn_mngr (SXOPEN, NULL, sxplocals.SXP_tables.P_sizofpts * 8);
-    (*sxplocals.SXP_tables.recovery) (SXOPEN);
+    (*sxplocals.SXP_tables.P_recovery) (SXOPEN, NULL /* dummy */, (SXINT) 0 /* dummy */);
     return true;
     
   case SXINIT:
@@ -2528,7 +2528,7 @@ bool sxindparser (what_to_do, arg)
     return true;
     
   case SXEND:
-    (*sxplocals.SXP_tables.recovery) (SXCLOSE);
+    (*sxplocals.SXP_tables.P_recovery) (SXCLOSE, NULL /* dummy */, (SXINT) 0 /* dummy */);
     return true;
     
   default:

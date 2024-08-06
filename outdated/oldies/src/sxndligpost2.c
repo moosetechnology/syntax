@@ -828,10 +828,7 @@ sxndlig_post2_do_it ()
 
 
 
-int
-sxndligpost2 (which, arg)
-    int		which;
-    struct sxtables	*arg;
+bool sxndligpost2 (int which, struct sxtables *arg)
 {
   switch (which) {
   case SXOPEN:
@@ -851,12 +848,12 @@ sxndligpost2 (which, arg)
 
     (*sxndlig_common.code.parsact) (which, arg);
 
-    return 0;
+    return SXANY_BOOL;
 
   case SXCLOSE:
     (*sxndlig_common.code.parsact) (which, arg);
 
-    return 0;
+    return SXANY_BOOL;
 
   case SXINIT:
     sxplocals.mode.with_semact = false;
@@ -864,31 +861,31 @@ sxndligpost2 (which, arg)
     sxplocals.mode.with_parsprdct = false;
     (*sxndlig_common.code.parsact) (which, arg);
 
-    return 0;
+    return SXANY_BOOL;
 
   case SXFINAL:
     sxndligpost (SXFINAL, 0); /* Pour un free... */
 
     (*sxndlig_common.code.parsact) (which, arg);
 
-    return 0;
+    return SXANY_BOOL;
 
   case SXACTION:
-    return 0;
+    return SXANY_BOOL;
 
   case SXDO:
-    return 0;
+    return SXANY_BOOL;
 
   case SXUNDO:
-    return 0;
+    return SXANY_BOOL;
 
   case SXPREDICATE:
-    return 1;
+    return true;
 
   default:
     fputs ("The function \"sxndligpost2\" is out of date with respect to its specification.\n", sxstderr);
     sxexit(1);
   }
 
-  /* NOTREACHED return 0; */
+  /* NOTREACHED return SXANY_BOOL; */
 }

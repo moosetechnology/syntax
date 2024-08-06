@@ -23,7 +23,7 @@
 
 /* Interface of the Abstract Data Type XxYxZ */
 
-#include	"XxYxZ_rep.h"
+#include "XxYxZ_rep.h"
 
 /* This package can manage a ternary relation in NxNxN. */
 

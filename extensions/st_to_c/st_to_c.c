@@ -29,7 +29,7 @@
 #include "S_tables.h"
 #include "put_edit.h"
 
-char WHAT_LECLSTTOC[] = "@(#)SYNTAX - $Id: st_to_c.c 3651 2023-12-24 09:37:54Z garavel $" WHAT_DEBUG;
+char WHAT_LECLSTTOC[] = "@(#)SYNTAX - $Id: st_to_c.c 4097 2024-06-21 14:36:16Z garavel $" WHAT_DEBUG;
 
 extern SXINT	equality_sort (SXINT *t, SXINT bi, SXINT bs, bool (*less_equal) (SXINT, SXINT), bool (*equal) (SXINT, SXINT));
 extern void     lecl_free(struct lecl_tables_s *lecl_tables_ptr);
@@ -334,7 +334,7 @@ static void	reduce (SXINT tok, bool is_keep, bool is_scan, bool is_hash, bool is
 
 static void	gen_error (SXINT state_no)
 {
-    put_edit_apnnl ("if (sxsvar.sxlv.mode.errors_nb++, (*sxsvar.SXS_tables.recovery) (SXACTION, ");
+    put_edit_apnnl ("if (sxsvar.sxlv.mode.errors_nb++, (*sxsvar.SXS_tables.S_recovery) (SXACTION, ");
     put_edit_apnb (state_no);
     put_edit_apnnl (", &current_class");
 
@@ -603,7 +603,7 @@ goto_field:
 		    }
 		    
 		    put_edit_ap ("if (sxsvar.sxlv.mode.with_user_act)");
-		    put_edit_apnnl ("(*sxsvar.SXS_tables.scanact) (SXACTION, ");
+		    put_edit_apnnl ("(*sxsvar.SXS_tables.S_scanact) (SXACTION, ");
 		    put_edit_apnb (fe.action_or_prdct_no);
 		    put_edit_ap (");");
 		    put_edit_ap ("current_class = char_to_class (sxsrcmngr.current_char) /* for tricky cases */;");
@@ -718,7 +718,7 @@ static	void gen_prdct_seq (SXINT state_no, SXINT y)
 	    if (fe.param !=0)
 		put_edit_apnnl ("!");
 
-	    put_edit_apnnl ("(*sxsvar.SXS_tables.scanact) (SXPREDICATE, ");
+	    put_edit_apnnl ("(*sxsvar.SXS_tables.S_scanact) (SXPREDICATE, ");
 	    put_edit_apnb (fe.action_or_prdct_no);
 	    put_edit_apnnl (")) {");
 	    gen_body (state_no, is_empty, fe.stmt);
@@ -1504,7 +1504,7 @@ once_more:
 
 	put_edit_ap ("hash_reduce:");
 	put_edit_ap ("{SXINT look_ahead;");
-	put_edit_ap ("if ((look_ahead = (*sxsvar.SXS_tables.check_keyword) (sxsvar.sxlv_s.token_string, sxsvar.sxlv.ts_lgth)) != 0) {");
+	put_edit_ap ("if ((look_ahead = (*sxsvar.SXS_tables.S_check_keyword) (sxsvar.sxlv_s.token_string, sxsvar.sxlv.ts_lgth)) != 0) {");
 	put_edit_ap ("sxsvar.sxlv.terminal_token.lahead = look_ahead;");
 
 	if (is_post_action)
@@ -1578,7 +1578,7 @@ once_more:
 	put_edit_ap ("if (post_action_no >= 0) {");
 	put_edit_ap ("ts_null ();");
 	put_edit_ap ("if (sxsvar.sxlv.mode.with_user_act)");
-	put_edit_ap ("(*sxsvar.SXS_tables.scanact) (SXACTION, post_action_no);");
+	put_edit_ap ("(*sxsvar.SXS_tables.S_scanact) (SXACTION, post_action_no);");
 	put_edit_ap ("if (sxsvar.sxlv.terminal_token.lahead == 0) {");
 	put_edit_ap ("if (sxsvar.sxlv.terminal_token.string_table_entry == SXERROR_STE)");
 	put_edit_ap ("/* La post-action a decide' de retourner a l'appelant sans rien faire... */");
@@ -1661,7 +1661,7 @@ once_more:
     put_edit_ap ("/* end of language, local variables are freed */");
     put_edit_ap ("sxfree (sxsvar.sxlv_s.token_string);");
     put_edit_ap ("sxsvar.sxlv_s.token_string = NULL;");
-    put_edit_ap ("(*sxsvar.SXS_tables.recovery) (SXCLOSE);");
+    put_edit_ap ("(*sxsvar.SXS_tables.S_recovery) (SXCLOSE, (SXINT) 0 /* dummy */, NULL /* dummy */);");
     put_edit_ap ("break;");
     put_edit_nl (1);
     put_edit_ap ("default:");

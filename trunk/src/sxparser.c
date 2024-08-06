@@ -17,13 +17,13 @@
  *   can be found at, e.g., http://www.cecill.info
  *****************************************************************************/
 
-static char	ME [] = "PARSER";
-
 #include "sxversion.h"
 #include "sxunix.h"
 
+static char	ME [] = "PARSER";
+
 #ifndef VARIANT_32
-char WHAT_SXPARSER[] = "@(#)SYNTAX - $Id: sxparser.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_SXPARSER[] = "@(#)SYNTAX - $Id: sxparser.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
 #endif
 
 /*   V A R I A B L E S   */
@@ -157,11 +157,11 @@ static void	execute_actions (struct gstack *s1)
 
 	        if (is_semact) {
 		    if (sxplocals.mode.with_semact)
-		        (*sxplocals.SXP_tables.semact) (SXACTION, ared->action);
+		        (*sxplocals.SXP_tables.P_semact) (SXACTION, ared->action, NULL);
 	        }
                 else {
 		    if (sxplocals.mode.with_parsact)
-		        (*sxplocals.SXP_tables.parsact) (SXACTION, ared->action);
+		        (*sxplocals.SXP_tables.P_parsact) (SXACTION, ared->action);
 	        }
 
 	        sxpglobals.xps -= sxpglobals.pspl;
@@ -217,7 +217,7 @@ static SXINT undo_actions (struct gstack *s1, SXINT xs)
 			sxpglobals.xps--;
 		    }
 
-		    (*sxplocals.SXP_tables.parsact) (SXUNDO, ared->action);
+		    (*sxplocals.SXP_tables.P_parsact) (SXUNDO, ared->action);
 
 		    sxpglobals.xps = old_xps;
 		}
@@ -262,7 +262,7 @@ static void	sxpsature (SXINT nbt)
 SXP_SHORT	ARC_traversal (SXP_SHORT ref, SXINT latok_no)
 {
     SXP_SHORT	next;
-    SXP_SHORT		t_state;
+    SXINT	t_state;
 
     /* First scan in LookAhead */
     next = ref + sxplocals.SXP_tables.Mref /* next < 0 */;
@@ -281,8 +281,8 @@ SXP_SHORT	ARC_traversal (SXP_SHORT ref, SXINT latok_no)
 
 	    while (aprdct->prdct >= 0 /* User's predicate */  &&
 		   (!sxplocals.mode.with_parsprdct ||
-		    !(*sxplocals.SXP_tables.parsact) (SXPREDICATE, aprdct->prdct)))
-		/* returning False */ 
+		    !(*sxplocals.SXP_tables.P_parsact) (SXPREDICATE, aprdct->prdct)))
+		/* returning false */ 
 		aprdct++;
 
 	    ref = aprdct->action;
@@ -293,7 +293,7 @@ SXP_SHORT	ARC_traversal (SXP_SHORT ref, SXINT latok_no)
     /* LookAhead ends */
     if (ref == 0) {
 	/* Error in LookAhead */
-	(*sxplocals.SXP_tables.recovery) (SXERROR, &t_state, latok_no);
+	(*sxplocals.SXP_tables.P_recovery) (SXERROR, &t_state, latok_no);
 	ref = t_state;
     }
 
@@ -343,7 +343,7 @@ passee de &i, son execution au cours du rattrapage d'erreur et sa
 future execution apres rattrapage donnent le meme resultat.
 */
 
-static bool	sxparse_it (void)
+static void sxparse_it (void)
 {
     SXP_SHORT			ref;
     SXINT                       lahead;
@@ -402,7 +402,7 @@ static bool	sxparse_it (void)
     sxplocals.state = sxplocals.SXP_tables.init_state;
     state = (SXP_SHORT) sxplocals.state;
 
-/* (*(sxplocals.SXP_tables.semact)) (SXINIT, lgt1); */
+/* (*(sxplocals.SXP_tables.P_semact)) (SXINIT, lgt1); */
 
 restart:
     ref = sxP_access (sxplocals.SXP_tables.t_bases + (s2->state = state), lahead);
@@ -434,7 +434,7 @@ restart:
 	    n = ++sxplocals.ptok_no;
 
 	    while (n > sxplocals.Mtok_no)
-		(*(sxplocals.SXP_tables.scanit)) ();
+		(*(sxplocals.SXP_tables.P_scan_it)) ();
 
 	    lahead = SXGET_TOKEN (n).lahead;
 	    bscan = true;
@@ -463,13 +463,17 @@ restart:
 	}
 	else if (ref <= sxplocals.SXP_tables.Mred /* Reduce, Error or Halt */ ) {
 	    if (ref == 0 /* error recovery */ ) {
-	      if (sxplocals.mode.is_prefixe && state == (SXP_SHORT) sxplocals.SXP_tables.final_state)
-		    return true;
+		 if (sxplocals.mode.is_prefixe && state == (SXP_SHORT) sxplocals.SXP_tables.final_state) {
+		      sxplocals.mode.local_errors_nb++; /* Error+correction!! */
+		      return /* true */;
+		 }
 
-		sxplocals.mode.local_errors_nb++;
+	      // sxplocals.mode.local_errors_nb++; Déplacé dans sxp_rcvr.c
 
-		if (sxplocals.mode.kind == SXWITHOUT_ERROR)
-		    return false;
+	      if (sxplocals.mode.kind == SXWITHOUT_ERROR) {
+		   sxplocals.mode.global_errors_nb++; /* Error+pas de correction!! */
+		   return /* false */;
+	      }
 
 		if (sxplocals.mode.with_do_undo && sxplocals.mode.with_parsact)
 		{
@@ -491,7 +495,7 @@ restart:
 		
 		sxplocals.state = (SXINT) ((sxplocals.ptok_no == sxplocals.atok_no) ? labs ((SXINT) s2->state) : s1->state);
 
-		if ((*sxplocals.SXP_tables.recovery) (SXACTION)) {
+		if ((*sxplocals.SXP_tables.P_recovery) (SXACTION, NULL /* dummy */, (SXINT) 0 /* dummy */)) {
 		    /* Succes */
 		    SXINT	i;
 		    
@@ -509,7 +513,7 @@ restart:
 		}
 		
 		/* Failure */
-		return false;
+		return /* false */;
 	    }
 
 /* Reduce or Halt */
@@ -554,7 +558,7 @@ restart:
 			sxpglobals.xps--;
 		    }
 
-		    (*sxplocals.SXP_tables.parsact) (SXDO, ared->action);
+		    (*sxplocals.SXP_tables.P_parsact) (SXDO, ared->action);
 
 		    sxpglobals.xps = old_xps;
 		}
@@ -585,7 +589,7 @@ restart:
 
 	    while (aprdct->prdct >= 0 /* User's predicate */  &&
 		   (!sxplocals.mode.with_parsprdct ||
-		    !(*sxplocals.SXP_tables.parsact) (SXPREDICATE, aprdct->prdct)))
+		    !(*sxplocals.SXP_tables.P_parsact) (SXPREDICATE, aprdct->prdct)))
 		/* returning False */ 
 		aprdct++;
 
@@ -599,14 +603,13 @@ restart:
     }
 
     sxtkn_mngr (SXFINAL, 0);
-    return true;
+    return /* true */;
 }
 
 
-
-bool sxparser (SXINT	what_to_do, struct sxtables *arg)
+void sxparser (SXINT what, struct sxtables *arg)
 {
-    switch (what_to_do) {
+    switch (what) {
     case SXBEGIN:
 
 /* global initialization */
@@ -632,14 +635,17 @@ bool sxparser (SXINT	what_to_do, struct sxtables *arg)
 	/* of recursive invocation */
 
 	/* test arg->magic for consistency */
+#if BUG
+	fprintf (stdout, "\nsxparser: arg = %ld, magic tables) = %ld, magic (local) = %ld\n", (SXINT) arg, arg->magic, SXMAGIC_NUMBER);
+#endif
 	sxcheck_magic_number (arg->magic, SXMAGIC_NUMBER, ME);
 
-/* prepare new local variables */
+	/* prepare new local variables */
 
 	sxplocals.sxtables = arg;
 	sxplocals.SXP_tables = arg->SXP_tables;
 	sxtkn_mngr (SXOPEN, 2);
-	(*sxplocals.SXP_tables.recovery) (SXOPEN);
+	(*sxplocals.SXP_tables.P_recovery) (SXOPEN, NULL /* dummy */, (SXINT) 0 /* dummy */);
 	break;
 
     case SXINIT:
@@ -684,7 +690,6 @@ bool sxparser (SXINT	what_to_do, struct sxtables *arg)
 	    SXINT	reduce = sxpglobals.reduce;
 	    SXINT	pspl = sxpglobals.pspl;
 	    bool	old_bscan = bscan;
-	    bool	ret_val;
 
 	    if ((sxpglobals.stack_bot = sxpglobals.xps + 5) > lgt1)
 		sxpsature ((SXINT)1);
@@ -692,7 +697,7 @@ bool sxparser (SXINT	what_to_do, struct sxtables *arg)
 	    ga.bot = ga.top;
 	    gb.bot = gb.top;
 
-	    ret_val = sxparse_it ();
+	    sxparse_it ();
 
 	    sxpglobals.reduce = reduce;
 	    sxpglobals.pspl = pspl;
@@ -705,8 +710,8 @@ bool sxparser (SXINT	what_to_do, struct sxtables *arg)
 	    gb.bot = old_gb_bot;
 	    gb.top = old_gb_top;
 	    gb.state = old_gb_state;
-	    return ret_val;
 	}
+	break;
 
     case SXFINAL:
 	sxtkn_mngr (SXFINAL, 0);
@@ -715,7 +720,7 @@ bool sxparser (SXINT	what_to_do, struct sxtables *arg)
     case SXCLOSE:
 	/* end of language: free the local arrays */
 	sxtkn_mngr (SXCLOSE, 0);
-	(*sxplocals.SXP_tables.recovery) (SXCLOSE);
+	(*sxplocals.SXP_tables.P_recovery) (SXCLOSE, NULL /* dummy */, (SXINT) 0 /* dummy */);
 	break;
 
     case SXEND:
@@ -727,12 +732,10 @@ bool sxparser (SXINT	what_to_do, struct sxtables *arg)
 	break;
 
     default:
-	fprintf (sxstderr, "The function \"sxparser\" is out of date with respect to its specification because \"what_to_do\" has value %ld = 0x%lx\n", (SXINT) what_to_do, (SXINT) what_to_do);
+	fprintf (sxstderr, "The function \"sxparser\" is out of date with respect to its specification because \"what\" has value %ld (0x%lx)\n", (SXINT) what, (SXINT) what);
 	sxexit(1);
 	    /*NOTREACHED*/
     }
-
-    return true;
 }
 
 
@@ -743,7 +746,6 @@ bool sxparse_in_la (SXINT ep_la, SXINT Ttok_no, SXINT *Htok_no, struct sxparse_m
     /* Le token caracteristique du point d'entree est memorise en Ttok_no */
     /* L'indice du dernier token analyse par cet appel est range en Htok_no */
     SXINT		atok_no, ptok_no, old_left_border;
-    bool			ret_val;
     struct sxtoken		old_tt, *ptt;
     struct sxparse_mode		old_mode;
 
@@ -765,7 +767,8 @@ bool sxparse_in_la (SXINT ep_la, SXINT Ttok_no, SXINT *Htok_no, struct sxparse_m
     sxplocals.atok_no = sxplocals.ptok_no = Ttok_no - 1;
     
     /* appel recursif */
-    ret_val = (*(sxplocals.sxtables->analyzers.parser)) (SXACTION, sxplocals.sxtables);
+    /* On utilise les changements effectués sur la variable sxplocals.mode.global_errors_nb pour estimer le déroulement de l'analyse */
+    (*(sxplocals.sxtables->SX_parser)) (SXACTION, sxplocals.sxtables);
     
     /* dernier token lu par l'appel precedent. */
     *Htok_no = sxplocals.ptok_no;
@@ -781,5 +784,6 @@ bool sxparse_in_la (SXINT ep_la, SXINT Ttok_no, SXINT *Htok_no, struct sxparse_m
     sxplocals.mode = old_mode;
     sxplocals.left_border = old_left_border;
 
-    return ret_val;
+    /* On considère que la chaîne de look-ahead est valide s'il n'y a pas eu de rattrapage global d'erreur */
+    return mode_ptr->global_errors_nb == sxplocals.mode.global_errors_nb;
 }

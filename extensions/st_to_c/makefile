@@ -3,7 +3,7 @@ include $(SX)/etc/make/gccoptions
 
 LECL=$(SX)/../extensions/st_to_c
 
-LIB=$(LECL)/lib
+LIB=$(LECL)/lib.$(ARCH)
 
 CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 

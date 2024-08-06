@@ -2,14 +2,11 @@
 include $(SX)/etc/make/gccoptions
 
 CSYNT=$(SX)/csynt
-LIB=$(CSYNT)/lib
+LIB=$(CSYNT)/lib.$(ARCH)
 
 CC=$(COMPILER) -I$(CSYNT) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
 all: $(SXBIN)/csynt.out
-
-$(SXBIN)/csynt.out:	$(CSYNT)/csynt.out
-	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
 NEEDS=	$(LIB)/csynt.o			\
 	$(LIB)/LALR1.o			\
@@ -20,7 +17,7 @@ NEEDS=	$(LIB)/csynt.o			\
 	$(LIB)/xprdct_mngr.o		\
 	$(LIB)/OPTIM.o
 
-$(CSYNT)/csynt.out:	$(NEEDS)	$(SXBIBS)
+$(SXBIN)/csynt.out:	$(NEEDS)	$(SXBIBS)
 	@rm -f $@
 	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
@@ -80,4 +77,4 @@ $(LIB)/OPTIM.o:		csynt_optim.h		\
 	$(CC) -o $@ -c OPTIM.c
 
 clean:
-	/bin/rm -f $(LIB)/*.o $(CSYNT)/csynt.out
+	/bin/rm -f $(LIB)/*.o

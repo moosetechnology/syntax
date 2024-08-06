@@ -22,12 +22,12 @@
 
 static SXINT sx_stack_size;
 
-char WHAT_SEMC_DEF[] = "@(#)SYNTAX - $Id: def.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_SEMC_DEF[] = "@(#)SYNTAX - $Id: def.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
 
 #include "B_tables.h"
 #include "semc_vars.h"
-#include "sxcommon.h"   
-#include <strings.h>    
+#include "sxcommon.h"
+#include <strings.h>
 
 extern struct sxtables bnf_tables;
 
@@ -381,8 +381,9 @@ static bool is_error;
 #define pcomment(x) (SXSTACKtoken(x).comment)
 
 /* A C T I O N */
-void def_act(SXINT code, SXINT numact)
+void def_act(SXINT code, SXINT numact, struct sxtables *arg)
 {
+(void) arg;
 switch (code)
 {
 case SXOPEN:

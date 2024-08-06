@@ -2,16 +2,13 @@
 include $(SX)/etc/make/gccoptions
 
 RECOR=$(SX)/recor
-LIB=$(RECOR)/lib
+LIB=$(RECOR)/lib.$(ARCH)
 BOOT=$(RECOR)/boot
 
 CC=$(COMPILER) -I$(RECOR) -I$(BOOT) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
 all: $(SXBIN)/recor.out	\
      $(SXAUX)/print_rt.out
-
-$(SXBIN)/recor.out:	$(RECOR)/recor.out
-	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
 NEEDS=	$(LIB)/recor_t.o		\
 	$(LIB)/recor_main.o		\
@@ -20,8 +17,7 @@ NEEDS=	$(LIB)/recor_t.o		\
 
 PRINT=	$(LIB)/print_rt.o
 
-
-$(RECOR)/recor.out:	$(NEEDS)	$(SXBIBS)
+$(SXBIN)/recor.out:	$(NEEDS)	$(SXBIBS)
 	@rm -f $@
 	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
@@ -30,7 +26,7 @@ $(LIB)/recor_t.o: 	$(SXINCL)/sxunix.h		\
 	$(CC) -o $@ -c $(BOOT)/recor_t.c				\
 			-Dsxtables=recor_tables		\
 			-DSCANACT=recor_scan_act	\
-			-Dsempass=recor_smp
+			-DSEMPASS=recor_smp
 
 $(LIB)/recor_main.o:	$(SXINCL)/sxunix.h		\
 			recor_main.c
@@ -80,7 +76,7 @@ recor.rt: recor.bt recor.st recor.recor
 # fin de code produit par "make-makefile recor"
 
 clean:
-	/bin/rm -f $(LIB)/*.o $(RECOR)/recor.out $(SXAUX)/print_rt.out
+	/bin/rm -f $(LIB)/*.o $(SXAUX)/print_rt.out
 	/bin/rm -f recor.att recor.bt recor.pt recor.rt recor.st
 	/bin/rm -f recor.bn.l recor.lc.l recor.rc.l
 	/bin/rm -f recor.c.skeleton recor_t.c

@@ -12,35 +12,33 @@ main.o	: main.c
 	$(COMPILER) $(CFLAGS) -c -I$(SXINCL) main.c -o main.o
 
 $(TOOL)_s.o : $(TOOL)_s.c 
-	$(COMPILER) $(CFLAGS) -c \
-		-I$(SXINCL) $(TOOL)_s.c -o $(TOOL)_s.o
+	$(COMPILER) $(CFLAGS) -c -I$(SXINCL) $(TOOL)_s.c -o $(TOOL)_s.o
 
 $(TOOL)_s.c :	$(TOOL).semc
-	$(SXBIN)/semc  $(TOOL).semc > $@
+	$(SXCOM)/semc  $(TOOL).semc > $@
 
 $(TOOL)_t.o	: $(TOOL)_t.c 
-	$(COMPILER) $(CFLAGS) -c -DSEMACT=$(TOOL)_act \
-		-I$(SXINCL) $(TOOL)_t.c -o $(TOOL)_t.o
+	$(COMPILER) $(CFLAGS) -c -I$(SXINCL) $(TOOL)_t.c -o $(TOOL)_t.o
 
 $(TOOL)_t.c	: $(TOOL).bt $(TOOL).dt  $(TOOL).pt $(TOOL).rt $(TOOL).st 
-	$(SXBIN)/tables_c $(TOOL) > $(TOOL)_t.c
+	$(SXCOM)/tables_c $(TOOL) > $(TOOL)_t.c
 
 $(TOOL).bt	: $(TOOL)_s.o
 
 $(TOOL).dt	: $(TOOL).bt $(TOOL).prio
-	$(SXBIN)/prio $(TOOL).prio
+	$(SXCOM)/prio $(TOOL).prio
 	rm -f $(TOOL).pr.l
 
 $(TOOL).pt	: $(TOOL).dt $(TOOL).bt
-	$(SXBIN)/csynt $(TOOL)
+	$(SXCOM)/csynt $(TOOL)
 	rm -f $(TOOL).la.l
 
 $(TOOL).rt	: $(TOOL).bt $(TOOL).st $(TOOL).recor
-	$(SXBIN)/recor $(TOOL).recor
+	$(SXCOM)/recor $(TOOL).recor
 	rm -f $(TOOL).rc.l
 
 $(TOOL).st	: $(TOOL).bt $(TOOL).lecl
-	$(SXBIN)/lecl $(TOOL).lecl
+	$(SXCOM)/lecl $(TOOL).lecl
 	rm -f $(TOOL).lc.l
 
 clean	:

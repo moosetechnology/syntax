@@ -162,8 +162,8 @@ extern struct spf spf;
 #else /* SX_DFN_EXT_VAR2 */
 /* Cas de la definition et de l'initialisation de la structure externe spf
  a priori ds (earley|CYK)_parser.c */
-struct spf spf = {
-  /* struct inputG = */ {
+struct spf spf;
+struct inputG spf_inputG = {
 #ifdef bnf_modif_time
     bnf_modif_time,
 #else /* !bnf_modif_time */
@@ -218,13 +218,13 @@ struct spf spf = {
     NULL,
 #endif /* !def_semact */
 
-#if is_constraints
+#ifdef is_constraints
     constraints,
 #else /* !is_constraints */
     NULL,
 #endif /* !is_constraints */ 
 
-#if is_prdct
+#ifdef is_prdct
     prdct,
 #else /* !is_prdct */
     NULL,
@@ -260,19 +260,19 @@ struct spf spf = {
     NULL,
 #endif /* !def_tstring */
 
-#if is_epsilon
+#ifdef is_epsilon
     BVIDE,
 #else /* !is_epsilon */
     NULL,
 #endif /* !is_epsilon */
 
-#if is_cyclic
+#ifdef is_cyclic
     true,
 #else /* !is_cyclic */
     false,
 #endif /* !is_cyclic */
-  }
 };
+
 #endif /* SX_DFN_EXT_VAR2 */
 
 #ifndef no_sxspf_function_declarations

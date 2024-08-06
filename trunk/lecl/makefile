@@ -2,16 +2,13 @@
 include $(SX)/etc/make/gccoptions
 
 LECL=$(SX)/lecl
-LIB=$(LECL)/lib
+LIB=$(LECL)/lib.$(ARCH)
 BOOT=$(LECL)/boot
 
 CC=$(COMPILER) -I$(LECL) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
 all: $(SXBIN)/lecl.out				\
      $(SXAUX)/print_st.out
-
-$(SXBIN)/lecl.out:	$(LECL)/lecl.out
-	@rm -f $@; mv $? $@ && $(LNorCP) $@ $?
 
 NEEDS=		$(LIB)/gen_check_kw.o		\
 		$(LIB)/get_a_part.o		\
@@ -43,7 +40,7 @@ NEEDS=		$(LIB)/gen_check_kw.o		\
 
 PRINT=		$(LIB)/print_st.o
 
-$(LECL)/lecl.out:	$(NEEDS)	$(SXBIBS)
+$(SXBIN)/lecl.out:	$(NEEDS)	$(SXBIBS)
 	@rm -f $@
 	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
@@ -61,7 +58,7 @@ $(LIB)/lecl_t.o: 	$(SXINCL)/sxunix.h		\
 			-Dsxtables=lecl_tables		\
 			-DSCANACT=lecl_scan_act		\
 			-DPARSACT=lecl_pars_act		\
-			-Dsempass=lecl_smp
+			-DSEMPASS=lecl_smp
 
 $(LIB)/lecl_bsc.o:	$(SXINCL)/sxunix.h		\
 			lecl_bsc.c
@@ -241,7 +238,7 @@ lecl_td.h: lecl.bt lecl.tdef
 # fin de code produit par "make-makefile lecl"
 
 clean:
-	/bin/rm -f $(LIB)/*.o $(LECL)/lecl.out $(SXAUX)/print_st.out
+	/bin/rm -f $(LIB)/*.o $(SXAUX)/print_st.out
 	/bin/rm -f lecl.att lecl.bt lecl.pt lecl.rt lecl.st
 	/bin/rm -f lecl.bn.l lecl.lc.l lecl.rc.l lecl.td.l
 	/bin/rm -f lecl.c.skeleton lecl_t.c lecl_td.h
