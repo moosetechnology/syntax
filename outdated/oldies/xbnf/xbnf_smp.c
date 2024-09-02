@@ -20,7 +20,7 @@
 #include "sxunix.h"
 #include "B_tables.h"
 #include "xbnf_vars.h"
-char WHAT_XBNFSMP[] = "@(#)SYNTAX - $Id: xbnf_smp.c 3676 2024-02-05 18:17:45Z garavel $" WHAT_DEBUG;
+char WHAT_XBNFSMP[] = "@(#)SYNTAX - $Id: xbnf_smp.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 
 extern	void symbol_table_processing (SXNODE *);
@@ -29,7 +29,7 @@ extern	void follow_construction (void);
 
 
 void
-sxxbnfsmp (SXINT what, struct sxtables *sxtables_ptr)
+sxxbnfsmp (SXINT what, SXTABLES *sxtables_ptr)
 {
     switch (what) {
     case SXOPEN:

@@ -1301,7 +1301,7 @@ sxndlig_post_do_it ()
 
 bool sxndligpost (which, arg)
     int		which;
-    struct sxtables	*arg;
+    SXTABLES	*arg;
 {
   switch (which) {
   case SXOPEN:

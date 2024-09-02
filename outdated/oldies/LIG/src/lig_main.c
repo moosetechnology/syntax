@@ -50,7 +50,7 @@ char	by_mess [] = "the SYNTAX grammar processor LIG";
 FILE	*sxstdout, *sxstderr;
 FILE	*sxtty;
 
-extern struct sxtables	lig_tables;
+extern SXTABLES sxtables;
 
 /*---------------*/
 /*    options    */
@@ -189,7 +189,7 @@ lost:	    sxperror (pathname);
     }
 
     sxerr_mngr (SXBEGIN);
-    syntax (SXACTION, &lig_tables);
+    syntax (SXACTION, &sxtables);
     sxsrc_mngr (SXFINAL);
     sxerr_mngr (SXEND);
     fclose (infile);
@@ -277,8 +277,8 @@ run:
     }
 
     sxstr_mngr (SXBEGIN);
-    (*(lig_tables.SX_parser)) (SXBEGIN, NULL /* dummy */);
-    syntax (SXOPEN, &lig_tables);
+    (*(sxtables.SX_parser)) (SXBEGIN, NULL /* dummy */);
+    syntax (SXOPEN, &sxtables);
 
     if (options_set & OPTION (LANGUAGE_NAME)) {
 	lig_run (NULL);
@@ -293,8 +293,8 @@ run:
 	} while (argnum < argc);
     }
 
-    syntax (SXCLOSE, &lig_tables);
-    (*(lig_tables.SX_parser)) (SXEND, NULL /* dummy */);
+    syntax (SXCLOSE, &sxtables);
+    (*(sxtables.SX_parser)) (SXEND, NULL /* dummy */);
     sxstr_mngr (SXEND);
 
     {

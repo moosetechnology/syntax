@@ -2105,7 +2105,7 @@ bylev_init ()
 
 bool sxndligbylev (which, arg)
     int		which;
-    struct sxtables	*arg;
+    SXTABLES	*arg;
 {
     int act_no;
 

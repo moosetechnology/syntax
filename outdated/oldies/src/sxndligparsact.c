@@ -55,7 +55,7 @@ static char	ME [] = "sxndligparsact";
 # include 	"sxndlig_parsact.h"
 
 extern int      sxndlig_post_do_it ();
-extern int      sxndligpost (int which, struct sxtables *arg);
+extern int      sxndligpost (int which, SXTABLES *arg);
 
 
 #ifdef EBUG
@@ -1839,7 +1839,7 @@ sxndligparsact_post_do_it ()
 
 
 
-bool sxndligparsact (int which, struct sxtables	*arg)
+bool sxndligparsact (int which, SXTABLES	*arg)
 {
     int act_no;
 

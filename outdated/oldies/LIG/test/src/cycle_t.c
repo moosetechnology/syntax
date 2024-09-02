@@ -221,7 +221,7 @@ extern SXPARSER_FUNCTION sxndparser;
 extern int ESAMBIG();
 extern SXSEMACT_FUNCTION SEMACT;
 
-struct sxtables sxtables={
+SXTABLES sxtables={
 52113, /* magic */
 sxscanner,
 sxndparser,

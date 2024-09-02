@@ -22,13 +22,13 @@
 #include "sxunix.h"
 #include "sxversion.h"
 
-char WHAT_XBNF2LEXPRDCTMAIN[] = "@(#)SYNTAX - $Id: xbnf2lex_prdct_main.c 3678 2024-02-06 08:38:24Z garavel $" WHAT_DEBUG;
+char WHAT_XBNF2LEXPRDCTMAIN[] = "@(#)SYNTAX - $Id: xbnf2lex_prdct_main.c 4184 2024-08-27 08:33:02Z garavel $" WHAT_DEBUG;
 
 /* includes et variable pour la manipulation de la date pour bnf_modif_time */
 
 char	by_mess [] = "the SYNTAX grammar pre-processor xbnf2lex_prdct";
 
-extern struct sxtables	xbnf_tables;
+extern SXTABLES	sxtables;
 
 char	*prgentname, *processorname;
 SXINT	options_set;
@@ -143,7 +143,7 @@ static void	xbnf2lex_prdct_run (char *pathname)
 	}
 
 	rewind (infile);
-	syntax (SXBEGIN, &xbnf_tables, infile, "");
+	syntax (SXBEGIN, &sxtables, infile, "");
     }
     else if ((infile = sxfopen (pathname, "r")) == NULL) {
 	fprintf (sxstderr, "%s: Cannot open (read) ", ME);
@@ -157,11 +157,11 @@ static void	xbnf2lex_prdct_run (char *pathname)
 	}
 
 	extract_language_name (pathname);
-	syntax (SXBEGIN, &xbnf_tables, infile, pathname);
+	syntax (SXBEGIN, &sxtables, infile, pathname);
     }
 
-    syntax (SXACTION, &xbnf_tables);
-    syntax (SXEND, &xbnf_tables);
+    syntax (SXACTION, &sxtables);
+    syntax (SXEND, &sxtables);
     fclose (infile);
 
     if (prgentname != NULL)
@@ -272,7 +272,7 @@ run:
 	fprintf (sxtty, "%s\n", release_mess);
     }
 
-    syntax (SXINIT, &xbnf_tables, false /* no includes */);
+    syntax (SXINIT, &sxtables, false /* no includes */);
 
     if (options_set & OPTION (LANGUAGE_NAME)) {
 	xbnf2lex_prdct_run ((char*)NULL);
@@ -287,7 +287,7 @@ run:
 	} while (argnum < argc);
     }
 
-    syntax (SXFINAL, &xbnf_tables, true);
+    syntax (SXFINAL, &sxtables, true);
 
     sxexit (sxerr_max_severity ());
 

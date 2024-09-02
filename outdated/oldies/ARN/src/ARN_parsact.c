@@ -273,7 +273,7 @@ ARN_action_final ()
 
 
 
-bool ARN_parsact (int which, struct sxtables *arg)
+bool ARN_parsact (int which, SXTABLES *arg)
 {
     switch (which)
     {

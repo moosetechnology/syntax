@@ -61,7 +61,7 @@ static char	ME [] = "dag_scanner.c";
 #include "dag_scanner.h"
 #include "sxnd.h"
 
-char WHAT_DAG_SCANNER[] = "@(#)SYNTAX - $Id: dag_scanner.c 4042 2024-06-15 08:16:56Z garavel $" WHAT_DEBUG;
+char WHAT_DAG_SCANNER[] = "@(#)SYNTAX - $Id: dag_scanner.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 #if 0
 /* !! ce n'est pas vrai ds le cas HUGE ou le code des mots du source est recherche directement ds un dico */
@@ -91,7 +91,7 @@ SXBA            source_set, *glbl_source;
 #define TOK_NB ((sizeof (tok_str)/sizeof (tok_str [0])))
 static char *wstr;
 
-static struct sxtables *tables;
+static SXTABLES *tables;
 
 static SXINT eof;
 
@@ -1248,7 +1248,7 @@ raz_udag () {
 
 SXINT dag_scanner (what, arg)
     SXINT			what;
-    struct sxtables	*arg;
+    SXTABLES	*arg;
 {
   int severity = 0;
 

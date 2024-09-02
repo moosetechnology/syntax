@@ -1888,7 +1888,7 @@ mixt_init ()
 
 bool sxndligmixt (which, arg)
     int		which;
-    struct sxtables	*arg;
+    SXTABLES	*arg;
 {
     int act_no;
 

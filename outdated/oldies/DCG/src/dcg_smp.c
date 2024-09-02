@@ -2213,7 +2213,7 @@ process_ppp ()
 
 static void
 smpopen (sxtables_ptr)
-    struct sxtables *sxtables_ptr;
+    SXTABLES *sxtables_ptr;
 {
     sxatcvar.atc_lv.node_size = sizeof (struct dcg_node);
 }
@@ -2478,7 +2478,7 @@ smppass ()
 
 dcg_smp (what, sxtables_ptr)
     int what;
-    struct sxtables *sxtables_ptr;
+    SXTABLES *sxtables_ptr;
 {
     switch (what) {
     case SXOPEN:

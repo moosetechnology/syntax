@@ -76,7 +76,6 @@ $(LIB)/xbnf_symtab.o:	$(SXINCL)/sxunix.h	\
 $(LIB)/xbnf_t.o:	$(SXINCL)/sxunix.h 	\
 			xbnf_t.c
 	$(CC) -o $@ -c xbnf_t.c			\
-		-Dsxtables=xbnf_tables		\
 		-DSCANACT=xbnf_scan_act		\
 		-DSEMPASS=sxxbnfsmp
 
@@ -126,7 +125,6 @@ $(LIB)/xbnf2lex_prdct.o:	$(SXINCL)/sxunix.h	\
 $(LIB)/xbnf2lex_prdct_t.o:		$(SXINCL)/sxunix.h 	\
 			xbnf_t.c
 	$(CC) -o $@ -c xbnf_t.c	-o $(LIB)/xbnf2lex_prdct_t.o		\
-		-Dsxtables=xbnf_tables		\
 		-DSCANACT=xbnf_scan_act		\
 		-DSEMPASS=xbnf2lexprdct_smp
 

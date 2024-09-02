@@ -230,7 +230,7 @@ static struct sxligparsact sxligparsact = {
 };
 extern SXSEMACT_FUNCTION SEMACT;
 
-struct sxtables sxtables={
+SXTABLES sxtables={
 52113, /* magic */
 sxscanner,
 sxparser,

@@ -29,14 +29,14 @@
 #include <sys/stat.h>
 #include <sys/timeb.h>
 
-char WHAT_XBNFMAIN[] = "@(#)SYNTAX - $Id: xbnf_main.c 3678 2024-02-06 08:38:24Z garavel $" WHAT_DEBUG;
+char WHAT_XBNFMAIN[] = "@(#)SYNTAX - $Id: xbnf_main.c 4184 2024-08-27 08:33:02Z garavel $" WHAT_DEBUG;
 
 char	by_mess [] = "the SYNTAX grammar processor BNF";
 
 #include "sxversion.h"
 
 extern void	no_tables (void), bnf_lo (void);
-extern struct sxtables	xbnf_tables;
+extern SXTABLES	sxtables;
 
 /*---------------*/
 /*    options    */
@@ -144,7 +144,7 @@ static void	bnf_run (char *pathname)
 	}
 
 	rewind (infile);
-	syntax (SXBEGIN, &xbnf_tables, infile, "");
+	syntax (SXBEGIN, &sxtables, infile, "");
 	bnf_ag.bnf_modif_time = time (0) /* stdin => now */ ;
     }
     else if ((infile = sxfopen (pathname, "r")) == NULL) {
@@ -161,12 +161,12 @@ static void	bnf_run (char *pathname)
 	}
 
 	extract_language_name (pathname);
-	syntax (SXBEGIN, &xbnf_tables, infile, pathname);
+	syntax (SXBEGIN, &sxtables, infile, pathname);
 	stat (sxsrcmngr.source_coord.file_name, &buf);
 	bnf_ag.bnf_modif_time = buf.st_mtime;
     }
 
-    syntax (SXACTION, &xbnf_tables);
+    syntax (SXACTION, &sxtables);
 
     if (!is_proper || IS_ERROR)
 	no_tables ();
@@ -175,7 +175,7 @@ static void	bnf_run (char *pathname)
     }
 
     bnf_lo ();
-    syntax (SXEND, &xbnf_tables);
+    syntax (SXEND, &sxtables);
     fclose (infile);
     bnf_free (&bnf_ag);
 
@@ -287,7 +287,7 @@ run:
 	fprintf (sxtty, "%s\n", release_mess);
     }
 
-    syntax (SXINIT, &xbnf_tables, false /* no includes */);
+    syntax (SXINIT, &sxtables, false /* no includes */);
 
     if (options_set & OPTION (LANGUAGE_NAME)) {
 	bnf_run ((char*)NULL);
@@ -302,7 +302,7 @@ run:
 	} while (argnum < argc);
     }
 
-    syntax (SXFINAL, &xbnf_tables, true);
+    syntax (SXFINAL, &sxtables, true);
 
     sxexit (sxerr_max_severity ());
 

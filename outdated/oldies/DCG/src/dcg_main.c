@@ -44,7 +44,7 @@ char	by_mess [] = "the SYNTAX grammar processor DCG";
 FILE	*sxstdout = {NULL}, *sxstderr = {NULL};
 FILE	*sxtty;
 
-extern struct sxtables	dcg_tables;
+extern SXTABLES	sxtables;
 
 /*---------------*/
 /*    options    */
@@ -183,7 +183,7 @@ lost:	    sxperror (pathname);
     }
 
     sxerr_mngr (SXBEGIN);
-    syntax (SXACTION, &dcg_tables);
+    syntax (SXACTION, &sxtables);
     sxsrc_mngr (SXFINAL);
     sxerr_mngr (SXEND);
     fclose (infile);
@@ -275,8 +275,8 @@ run:
     }
 
     sxstr_mngr (SXBEGIN);
-    (*(dcg_tables.SX_parser)) (SXBEGIN, NULL /* dummy */);
-    syntax (SXOPEN, &dcg_tables);
+    (*(sxtables.SX_parser)) (SXBEGIN, NULL /* dummy */);
+    syntax (SXOPEN, &sxtables);
 
     if (options_set & OPTION (LANGUAGE_NAME)) {
 	dcg_run (NULL);
@@ -291,8 +291,8 @@ run:
 	} while (argnum < argc);
     }
 
-    syntax (SXCLOSE, &dcg_tables);
-    (*(dcg_tables.SX_parser)) (SXEND, NULL /* dummy */);
+    syntax (SXCLOSE, &sxtables);
+    (*(sxtables.SX_parser)) (SXEND, NULL /* dummy */);
     sxstr_mngr (SXEND);
 
     {

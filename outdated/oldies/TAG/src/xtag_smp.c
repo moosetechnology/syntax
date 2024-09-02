@@ -861,7 +861,7 @@ xtag_second_pass ()
 void
 xtag_smp (what, sxtables_ptr)
     int what;
-    struct sxtables *sxtables_ptr;
+    SXTABLES *sxtables_ptr;
 {
   int local_tree_nb;
 

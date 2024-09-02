@@ -1923,7 +1923,7 @@ SXT_node_info-1, T_ter_to_node_name, T_stack_schema-1, SEMPASS, T_node_name-1
 extern SXSEMACT_FUNCTION sxatc;
 static SXCHECK_KEYWORD_FUNCTION sxcheck_keyword;
 
-struct sxtables sxtables={
+SXTABLES sxtables={
 52113, /* magic */
 sxscanner,
 sxparser,

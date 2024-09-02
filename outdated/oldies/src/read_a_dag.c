@@ -26,7 +26,7 @@ static char ME [] = "read_a_dag";
 #include "dag_scanner.h"
 #include <stdarg.h>
 
-char WHAT_READADAG[] = "@(#)SYNTAX - $Id: read_a_dag.c 4139 2024-07-31 16:02:45Z garavel $" WHAT_DEBUG;
+char WHAT_READADAG[] = "@(#)SYNTAX - $Id: read_a_dag.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 struct dag_node {
   SXNODE_HEADER_S SXVOID_NAME;
@@ -386,7 +386,7 @@ static void smppass (void)
 }
 
 /* ARGSUSED1 */
-SXINT dag_smp (SXINT what, struct sxtables *sxtables_ptr)
+SXINT dag_smp (SXINT what, SXTABLES *sxtables_ptr)
 {
   sxuse(sxtables_ptr); /* pour faire taire gcc -Wunused */
   switch (what) {
@@ -453,7 +453,7 @@ extern SXINT sxivoid  (SXINT what, ...);
 extern SXINT is_print_time, n;
 
 SXINT
-sxparser_dag_tcut  (SXINT what_to_do, struct sxtables *arg)
+sxparser_dag_tcut  (SXINT what_to_do, SXTABLES *arg)
 {
   bool ret_val;
   SXINT     lahead, store_print_time;

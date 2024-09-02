@@ -54,7 +54,7 @@ SX_GLOBAL_VAR_XBNF SXINT	max_RHS;
 SX_GLOBAL_VAR_XBNF SXINT	EOF_ste, M_t, M_nt, indpro_size;
 SX_GLOBAL_VAR_XBNF char	*prgentname;
 SX_GLOBAL_VAR_XBNF SXINT	*proper [4];
-SX_GLOBAL_VAR_XBNF struct sxtables		*sxtab_ptr;
+SX_GLOBAL_VAR_XBNF SXTABLES		*sxtab_ptr;
 
 #define		ws_tbl_size	bnf_ag.WS_TBL_SIZE
 #define		ws_nbpro	bnf_ag.WS_NBPRO

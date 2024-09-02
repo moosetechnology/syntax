@@ -70,7 +70,7 @@ bool		sxverbosep = {true};
 
 /* On est dans un cas "mono-langage": */
 
-extern struct sxtables	sxtables;
+extern SXTABLES	sxtables;
 
 
 
