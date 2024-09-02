@@ -21,7 +21,13 @@
 * This grammar of FORTRAN 77 is based upon the ANSI standard syntax charts
 * Annex F of https://nvlpubs.nist.gov/nistpubs/Legacy/FIPS/fipspub69-1.pdf
 *
-* Il contains a few usual extensions, marked with the string [[EXTENSION]]
+* Il contains a few usual extensions, marked with the string [[EXTENSION]].
+* 
+* The semantic action @1 indicates that one has just detected two consecutive
+* arithmetic operators (e.g., X * - Y), which is an extension not allowed
+* in standard FORTRAN 77. This action will trigger a warning if f77 is not
+* invoked with the -X option.
+*
 
 *******************************************************************************
 
