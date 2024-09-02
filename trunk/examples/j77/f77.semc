@@ -5231,7 +5231,26 @@ $LIST( <76:arithmetic_expression>)
 $LIST( <76:arithmetic_expression>)
 {
   $LIST( <76:arithmetic_expression>) = $LIST(<76a:arithmetic_expression>);
-}   
+}
+
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<76:arithmetic_expression>
+		= <114:sign> <114:sign> @1 <76b:arithmetic_or_non_typed_expression> ;
+
+$LIST( <76:arithmetic_expression>)
+{
+  $LIST( <76:arithmetic_expression>) = ast_multiple_operator(
+  	LOCATION(0),
+  	NULL,
+  	$NAME(<114:sign>),
+  	$NAME(<114:sign>'),
+  	$LIST(<76b:arithmetic_or_non_typed_expression>)
+  );
+}		
 
 *******************************************************************************
 
@@ -5302,6 +5321,97 @@ $LIST( <76a:arithmetic_expression>)
     $LIST(<76b:arithmetic_or_non_typed_expression>')
   );
 }    
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<76a:arithmetic_expression>
+		= <76b:arithmetic_or_non_typed_expression> + <114:sign> @1 <76b:arithmetic_or_non_typed_expression> ;
+
+$LIST( <76a:arithmetic_expression>)
+{
+  $LIST( <76a:arithmetic_expression>) = ast_multiple_operator(
+  	LOCATION(0),
+    $LIST(<76b:arithmetic_or_non_typed_expression>),
+    "+",
+    $NAME(<114:sign>),
+    $LIST(<76b:arithmetic_or_non_typed_expression>')
+  );
+}
+
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<76a:arithmetic_expression>
+		= <76b:arithmetic_or_non_typed_expression> - <114:sign> @1 <76b:arithmetic_or_non_typed_expression> ;
+
+$LIST( <76a:arithmetic_expression>)
+{
+  $LIST( <76a:arithmetic_expression>) = ast_multiple_operator(
+  	LOCATION(0),
+    $LIST(<76b:arithmetic_or_non_typed_expression>),
+    "-",
+    $NAME(<114:sign>),
+    $LIST(<76b:arithmetic_or_non_typed_expression>')
+  );
+}		
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<76a:arithmetic_expression>
+		= <76b:arithmetic_or_non_typed_expression> * <114:sign> @1 <76b:arithmetic_or_non_typed_expression> ;
+
+$LIST( <76a:arithmetic_expression>)
+{
+  $LIST( <76a:arithmetic_expression>) = ast_multiple_operator(
+  	LOCATION(0),
+    $LIST(<76b:arithmetic_or_non_typed_expression>),
+    "*",
+    $NAME(<114:sign>),
+    $LIST(<76b:arithmetic_or_non_typed_expression>')
+  );
+}		
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<76a:arithmetic_expression>
+		= <76b:arithmetic_or_non_typed_expression> / <114:sign> @1 <76b:arithmetic_or_non_typed_expression> ;
+
+$LIST( <76a:arithmetic_expression>)
+{
+  $LIST( <76a:arithmetic_expression>) = ast_multiple_operator(
+  	LOCATION(0),
+    $LIST(<76b:arithmetic_or_non_typed_expression>),
+    "/",
+    $NAME(<114:sign>),
+    $LIST(<76b:arithmetic_or_non_typed_expression>')
+  );
+}		
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<76a:arithmetic_expression>
+		= <76b:arithmetic_or_non_typed_expression> ** <114:sign> @1 <76b:arithmetic_or_non_typed_expression> ;
+
+$LIST( <76a:arithmetic_expression>)
+{
+  $LIST( <76a:arithmetic_expression>) = ast_multiple_operator(
+  	LOCATION(0),
+    $LIST(<76b:arithmetic_or_non_typed_expression>),
+    "**",
+    $NAME(<114:sign>),
+    $LIST(<76b:arithmetic_or_non_typed_expression>')
+  );
+}
 
 *------------------------------------------------------------------------------
 
@@ -5580,6 +5690,24 @@ $LIST( <80:int_constant_expr>)
   $LIST( <80:int_constant_expr>) = $LIST( <80a:int_constant_expr>);
 }
 
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<80:int_constant_expr>
+		= <114:sign> <114:sign> @1 <80a:int_constant_expr> ;
+
+$LIST( <80:int_constant_expr>)
+{
+  $LIST( <80:int_constant_expr>) = ast_multiple_operator(
+  	LOCATION(0),
+        NULL,
+  	$NAME(<114:sign>),
+  	$NAME(<114:sign>'),
+  	$LIST(<80a:int_constant_expr>)
+  );
+}		
+
 *******************************************************************************
 
 <80a:int_constant_expr>
@@ -5643,6 +5771,96 @@ $LIST( <80a:int_constant_expr>)
     $LIST( <80a:int_constant_expr>' ),
     "**",
     $LIST( <80a:int_constant_expr>'') );
+}
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<80a:int_constant_expr>
+		= <80a:int_constant_expr> + <114:sign> @1 <80a:int_constant_expr> ;
+
+$LIST( <80a:int_constant_expr>)
+{
+  $LIST( <80a:int_constant_expr>) = ast_multiple_operator(
+    LOCATION(0),
+    $LIST(<80a:int_constant_expr>),
+    "+",
+    $NAME(<114:sign>),
+    $LIST(<80a:int_constant_expr>)
+  );
+}
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<80a:int_constant_expr>
+		= <80a:int_constant_expr> - <114:sign> @1 <80a:int_constant_expr> ;
+
+$LIST( <80a:int_constant_expr>)
+{
+  $LIST( <80a:int_constant_expr>) = ast_multiple_operator(
+    LOCATION(0),
+    $LIST(<80a:int_constant_expr>),
+    "-",
+    $NAME(<114:sign>),
+    $LIST(<80a:int_constant_expr>)
+  );
+}
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<80a:int_constant_expr>
+		= <80a:int_constant_expr> * <114:sign> @1 <80a:int_constant_expr> ;
+
+$LIST( <80a:int_constant_expr>)
+{
+  $LIST( <80a:int_constant_expr>) = ast_multiple_operator(
+    LOCATION(0),
+    $LIST(<80a:int_constant_expr>),
+    "*",
+    $NAME(<114:sign>),
+    $LIST(<80a:int_constant_expr>)
+  );
+}
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<80a:int_constant_expr>
+		= <80a:int_constant_expr> / <114:sign> @1 <80a:int_constant_expr> ;
+
+$LIST( <80a:int_constant_expr>)
+{
+  $LIST( <80a:int_constant_expr>) = ast_multiple_operator(
+    LOCATION(0),
+    $LIST(<80a:int_constant_expr>),
+    "/",
+    $NAME(<114:sign>),
+    $LIST(<80a:int_constant_expr>)
+  );
+}
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<80a:int_constant_expr>
+		= <80a:int_constant_expr> ** <114:sign> @1 <80a:int_constant_expr> ;
+
+$LIST( <80a:int_constant_expr>)
+{
+  $LIST( <80a:int_constant_expr>) = ast_multiple_operator(
+    LOCATION(0),
+    $LIST(<80a:int_constant_expr>),
+    "**",
+    $NAME(<114:sign>),
+    $LIST(<80a:int_constant_expr>)
+  );
 }
 
 *------------------------------------------------------------------------------
