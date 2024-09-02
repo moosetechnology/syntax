@@ -1784,3 +1784,93 @@ SXML_TYPE_LIST ast_multiple_operator(
     );
   }
 }
+
+
+/* ------------------------------------------------------------------------
+********************************** ESOPE **********************************
+------------------------------------------------------------------------ */
+
+SXML_TYPE_LIST ast_segment(
+              SXML_TYPE_LIST location,
+              SXML_TYPE_LIST name,
+              SXML_TYPE_LIST variables
+              ) {
+  return
+    SXML_LTLL(
+      ast_abstract_statement("segment", location),
+      ",\n",
+      JSON_KU_("name", name),
+      JSON_KU("variables", JSON_ARRAY(variables))
+  );
+}
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_pointeur_name(
+              SXML_TYPE_LIST pointeur_name,
+              SXML_TYPE_LIST segment_name
+              ) {
+  
+  return JSON_MAP(
+    SXML_LLL(
+      ast_tag_("pointeur"),
+      JSON_KU_("pointeur_name", pointeur_name),
+      JSON_KU("segment_name", segment_name)
+      )
+  );
+}
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_pointeur_declaration(
+              SXML_TYPE_LIST location,
+              SXML_TYPE_LIST declarators
+              ) {
+  
+  return JSON_MAP(
+    SXML_LTL(
+      ast_abstract_statement("pointeur_declaration", location),
+      ",\n",
+      JSON_KU("declarators", JSON_ARRAY(declarators))
+      )
+  );
+}
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_segment_operation(
+              SXML_TYPE_LIST location,
+              SXML_TYPE_LIST name,
+              SXML_TYPE_LIST declarators
+              ) {
+  
+  
+    return SXML_LTLL(
+      ast_abstract_statement("segment_operation", location),
+      ",\n",
+      JSON_KQ_("name", name->TEXT),
+      JSON_KU("declarators", JSON_ARRAY(declarators))
+    
+  );
+}
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_segment_operation_segina_segind(
+              SXML_TYPE_LIST location,
+              SXML_TYPE_LIST name,
+              SXML_TYPE_LIST copy_from,
+              SXML_TYPE_LIST copy_to,
+              SXML_TYPE_LIST type
+              ) {
+  
+    return SXML_LTLLL(
+      ast_abstract_statement(name->TEXT, location),
+      ",\n",
+      JSON_KU_("copy_from", copy_from),
+      JSON_KU_("copy_to", copy_to),
+      JSON_KU("type", type)
+    
+  );
+}
+
