@@ -36,7 +36,7 @@ static char     ME [] = "lfg_smp";
 #include "varstr.h"
 #include "sxunix.h"
 #include <ctype.h>
-char WHAT_LFGSMP[] = "@(#)SYNTAX - $Id: lfg_smp.c 3974 2024-05-24 17:18:48Z garavel $" WHAT_DEBUG;
+char WHAT_LFGSMP[] = "@(#)SYNTAX - $Id: lfg_smp.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
  /* definies ds le main */
 extern     FILE              *bnf_file, *vocabulary_file;
@@ -153,7 +153,7 @@ static SXINT                FIELDS_nb, RULES_nb, EQUATION_nb;
 
 #define IS_ERROR (sxerrmngr.nbmess[2]>0) /* nombre de messages d'erreurs */
 
-static struct sxtables *sxtab_ptr;
+static SXTABLES *sxtab_ptr;
 static sxword_header   field_names, atom_names, suffix_names, complete_names;
 static SXINT             *complete_name2ste;
 /* Si la valeur d'un champ atomique unbounded de nom "champ" (donc declare' par champ = {Aij, Pij ...})
@@ -4053,7 +4053,7 @@ static void smppass (void)
 }
 
 void
-lfg_smp (SXINT what, struct sxtables *sxtables_ptr)
+lfg_smp (SXINT what, SXTABLES *sxtables_ptr)
 {
   switch (what) {
   case SXOPEN:

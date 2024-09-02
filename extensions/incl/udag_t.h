@@ -289,7 +289,7 @@ static char *S_global_mess[]={0,
 extern SXSEMACT_FUNCTION SEMACT;
 #endif
 
-struct sxtables sxtables={
+SXTABLES sxtables={
 52113, /* magic */
 sxscanner,
 sxparser,

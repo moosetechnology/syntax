@@ -32,7 +32,7 @@
 /* These include files for date/time manipulation: */
 #include <sys/types.h>
 #include <sys/stat.h>
-char WHAT_YAXMAIN[] = "@(#)SYNTAX - $Id: yax_main.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_YAXMAIN[] = "@(#)SYNTAX - $Id: yax_main.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 char	by_mess [] = "the SYNTAX attribute processor YAX";
 
@@ -45,7 +45,7 @@ extern void	bnf_lo (void);
 extern bool	yax_sem (void);
 extern void	yax_lo (void);
 extern void	yax_free (void);
-extern struct sxtables	bnf_tables;
+extern SXTABLES	bnf_tables;
 
 /*---------------*/
 /*    options    */

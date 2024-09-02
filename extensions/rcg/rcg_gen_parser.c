@@ -33,6 +33,7 @@
 #include "sxunix.h"
 #include "sxba.h"
 #include "rcg.h"
+#include "rcg_td.h"
 #include "varstr.h"
 #include "sxword.h"
 #include "fsa.h"
@@ -41,7 +42,7 @@
 
 static char	ME [] = "rcg_gen_parser";
 
-char WHAT_RCGGENPARSER[] = "@(#)SYNTAX - $Id: rcg_gen_parser.c 4152 2024-08-02 11:46:01Z garavel $" WHAT_DEBUG;
+char WHAT_RCGGENPARSER[] = "@(#)SYNTAX - $Id: rcg_gen_parser.c 4191 2024-08-29 10:29:33Z garavel $" WHAT_DEBUG;
 
 
 extern SXINT		is_in_Tstar (SXINT, SXINT);

@@ -21,7 +21,6 @@ ${L}_scnr.c: ${L}.st
 
 $(LIB)/{L}_t.o:  $(SXINCL)/sxunix.h  $(SRC)/${L}_t.c
         $(CC) $(SRC)/${L}_t.c                     \
-                        -Dsxtables=${L}_tables    \
                         -Dsxscanner=${L}_scanner  \
                         -Dsxscan_it=${L}_scan_it  \
                         -DSEMACT=${L}_act         \

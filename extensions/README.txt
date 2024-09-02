@@ -32,10 +32,17 @@ csynt_lc:
 dico:
 	This directory contains a constructor to build dictionaries.
 	No documentation was found for this processor.
-
 doc:
 	This directory contains documentation files that have been moved
 	from trunk/doc to here.
+
+drcg:
+	This directory contains a processor drcg for Definite Range
+	Concatenation Grammars. This processor is a variant of the rcg
+	processor. According to Pierre Boullier, drcg was an attempt at
+	embedding PROLOG in Range Concatenation Grammars. Originally,
+	drcg was in the same directory as rcg, but was separated from it
+	in 2024 for clarity.
 
 dummy_csynt:
 	This directory contains a processor implementing a CSYNT-processor 
@@ -64,15 +71,18 @@ lecld:
 lfg:
 	See the README file in the lfg directory.
 
+lfg_lex:
+	An undocumented variant of lfg (originally in the same directory
+	as lfg, but separated from lfg in 2024, for clarity).
+
 make_a_dico:
 	This directory contains a constructor of compact dictionaries,
 	which was introduced in SYNTAX 6.0 (2008). No documentation was
 	found for this processor.
 
 rcg:
-	This directory contains processors (rcg and drcg) for (Definite)
-	Range Concatenation Grammars. No documentation was found for these
-	processors.
+	This directory contains a processor named rcg for Range Concatenation
+	Grammars.
 
 xcsynt:
 	This directory apparently contains a variant of CSYNT that can

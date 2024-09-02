@@ -41,7 +41,7 @@ static char	ME [] = "INDPARSER";
 # include "sxindparser.h"
 # include "B_tables.h"
 
-char WHAT_SXIND_PARSER[] = "@(#)SYNTAX - $Id: sxindparser.c 4098 2024-06-21 14:42:16Z garavel $" WHAT_DEBUG;
+char WHAT_SXIND_PARSER[] = "@(#)SYNTAX - $Id: sxindparser.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 
 struct rhs {
@@ -1234,7 +1234,7 @@ static bool sxparse_it ()
 
 bool sxindparser (what_to_do, arg)
     SXINT		what_to_do;
-    struct sxtables	*arg;
+    SXTABLES	*arg;
 {
     switch (what_to_do) {
     case SXBEGIN:

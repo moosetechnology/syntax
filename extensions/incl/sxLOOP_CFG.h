@@ -4273,7 +4273,7 @@ fill_inputG ()
 bool
 sxearley_parser (what_to_do, arg)
     SXINT			what_to_do;
-    struct sxtables	*arg;
+    SXTABLES	*arg;
 {
     switch (what_to_do) {
     case SXBEGIN:

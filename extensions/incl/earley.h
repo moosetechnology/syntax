@@ -52,9 +52,9 @@ SX_GLOBAL_VAR bool	      beam_value_is_set;
 SX_GLOBAL_VAR struct mem_signatures   parser_mem_signatures;
 
 /* repris de sxunix.h: */
-struct sxtables;
+typedef struct sxtables SXTABLES;
 typedef bool (SXPARSACT_FUNCTION) (SXINT what, SXINT action_no);
-typedef void (SXSEMACT_FUNCTION) (SXINT what, SXINT action_no, struct sxtables *arg);
+typedef void (SXSEMACT_FUNCTION) (SXINT what, SXINT action_no, SXTABLES *arg);
 
 #if defined(SXVERSION) && ( EBUG || LOG || LLOG )
 #define statistics	(stdout)

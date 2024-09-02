@@ -26,9 +26,9 @@
 #include "ysx_vars.h"
 #include "put_edit.h"
 
-char WHAT_YSXMAIN[] = "@(#)SYNTAX - $Id: ysx_main.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_YSXMAIN[] = "@(#)SYNTAX - $Id: ysx_main.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
-extern struct sxtables	ysx_tables;
+extern SXTABLES	ysx_tables;
 
 /*---------------*/
 /*    options    */

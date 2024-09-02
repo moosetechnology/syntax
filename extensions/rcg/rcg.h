@@ -47,7 +47,6 @@
 #endif /* #ifndef SX_GLOBAL_VAR_RCG */
 
 
-#include "rcg_td.h"
 #include "XH.h"
 #include "XxY.h"
 
@@ -69,7 +68,7 @@ SX_GLOBAL_VAR_RCG SXINT                 h_value;
 SX_GLOBAL_VAR_RCG char		        *prgentname, *suffixname, *lfsa_file_name, *rfsa_file_name, *shallow_file_name, *lbnf_file_name, *rbnf_file_name, *Lex_file_name, *lrprod_file_name, *tig_file_name, *terminal_file_name;
 SX_GLOBAL_VAR_RCG char	                *by_mess;
 SX_GLOBAL_VAR_RCG FILE		        *listing, *lfsa_file, *rfsa_file, *useless_clause_file, *shallow_file, *lbnf_file, *rbnf_file, *Lex_file, *lrprod_file, *tig_file, *terminal_file;
-SX_GLOBAL_VAR_RCG struct sxtables	*sxtab_ptr;
+SX_GLOBAL_VAR_RCG SXTABLES	*sxtab_ptr;
 
 #define IS_ERROR (sxerrmngr.nbmess[2]>0) /* nombre de messages d'erreurs */
 

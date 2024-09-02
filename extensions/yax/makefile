@@ -69,20 +69,20 @@ $(LIB)/def_act.o:	$(SXINCL)/sxunix.h		\
 
 $(LIB)/dec_t.o:		$(SXINCL)/sxunix.h		\
 			dec_t.c
-	$(CC) -o $@ -c dec_t.c	-Dsxtables=dec_tables \
+	$(CC) -o $@ -c dec_t.c \
 		-DSCANACT=dec_scanact	\
 		-DSEMACT=dec_semact
 
 $(LIB)/def_t.o:		$(SXINCL)/sxunix.h		\
 			def_t.c
-	$(CC) -o $@ -c def_t.c	-Dsxtables=def_tables \
+	$(CC) -o $@ -c def_t.c \
 		-DSCANACT=def_scanact	\
 		-DSEMACT=def_semact
 
 # debut de code produit par "make-makefile dec"
 
 dec_t.c: dec.bt dec.st dec.pt dec.rt 
-	tables_c dec > $@
+	tables_c -name dec_tables dec > $@
 
 dec.bt  : dec.bnf
 	semact dec.bnf 
@@ -101,7 +101,7 @@ dec.rt: dec.bt dec.st dec.recor
 # debut de code produit par "make-makefile def"
 
 def_t.c: def.bt def.st def.pt def.rt 
-	tables_c def > $@
+	tables_c -name def_tables def > $@
 
 def.bt  : def.bnf
 	semact def.bnf 

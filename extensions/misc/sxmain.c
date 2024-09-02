@@ -22,11 +22,11 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXMAIN[] = "@(#)SYNTAX - $Id: sxmain.c 3948 2024-05-02 07:51:23Z garavel $" WHAT_DEBUG;
+char WHAT_SXMAIN[] = "@(#)SYNTAX - $Id: sxmain.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 /* On est dans un cas "mono-langage": */
 
-extern struct sxtables	sxtables;
+extern SXTABLES	sxtables;
 
 int main(int argc, char *argv[])
 {

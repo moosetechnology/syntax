@@ -29,9 +29,9 @@ static char	ME [] = "NDPARSER";
 #include "sxnd.h"
 
 #ifndef VARIANT_32
-char WHAT_SXNDPARSER[] = "@(#)SYNTAX - $Id: sxndparser.c 4137 2024-07-30 09:09:00Z garavel $" WHAT_DEBUG;
+char WHAT_SXNDPARSER[] = "@(#)SYNTAX - $Id: sxndparser.c 4169 2024-08-20 08:18:27Z garavel $" WHAT_DEBUG;
 #else
-char WHAT_SXNDPARSER32[] = "@(#)SYNTAX - $Id: sxndparser.c 4137 2024-07-30 09:09:00Z garavel $ SXNDPARSER_32" WHAT_DEBUG;
+char WHAT_SXNDPARSER32[] = "@(#)SYNTAX - $Id: sxndparser.c 4169 2024-08-20 08:18:27Z garavel $ SXNDPARSER_32" WHAT_DEBUG;
 #endif
 #if EBUG
 #define stdout_or_NULL	stdout
@@ -3197,7 +3197,7 @@ static bool sxnddesambig_it (void)
 
 		if (parse_stack.start_symbol != 0
 		    && parse_stack.is_ambiguous
-		    && sxplocals.SXP_tables.P_desambig != (SXDESAMBIG_FUNCTION *) sxivoid_int) {
+		    && sxplocals.SXP_tables.P_desambig != (SXDESAMBIG_FUNCTION *) sxvoid_int) {
 		    (*sxplocals.SXP_tables.P_desambig) (SXOPEN);
 		    (*sxplocals.SXP_tables.P_desambig) (SXINIT);
 		    (*sxplocals.SXP_tables.P_desambig) (SXACTION);
@@ -3510,7 +3510,7 @@ sxndparse_pack_forest (void)
 
 
 
-bool sxndparser (SXINT what_to_do, struct sxtables *arg)
+bool sxndparser (SXINT what_to_do, SXTABLES *arg)
 {
     SXINT i;
     static SXINT	parsers_foreach [] = {0, 0, 0, 0, 0, 0};
@@ -3767,7 +3767,7 @@ bool sxndparser (SXINT what_to_do, struct sxtables *arg)
 
 
 
-bool sxnd2parser (SXINT what_to_do, struct sxtables *arg)
+bool sxnd2parser (SXINT what_to_do, SXTABLES *arg)
 {
     switch (what_to_do) {
     case SXBEGIN:

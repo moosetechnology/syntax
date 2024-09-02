@@ -23,7 +23,7 @@
 #include "sxunix.h"
 #include "sxdico.h"
 
-char WHAT_DICOMAIN[] = "@(#)SYNTAX - $Id: dico_main.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_DICOMAIN[] = "@(#)SYNTAX - $Id: dico_main.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 SXINT             optim_kind, process_kind, print_on_sxtty;
 char            *dico_name, *prgentname;
@@ -126,7 +126,7 @@ static char	*option_get_text (SXINT kind)
 
 /* On est dans un cas "mono-langage": */
 
-extern struct sxtables	sxtables;
+extern SXTABLES	sxtables;
 
 static void	extract_language_name (char *path_name)
 {

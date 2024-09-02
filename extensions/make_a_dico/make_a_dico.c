@@ -125,7 +125,7 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXMAIN[] = "@(#)SYNTAX - $Id: make_a_dico.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
+char WHAT_SXMAIN[] = "@(#)SYNTAX - $Id: make_a_dico.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 static char ME [] = "make_a_dico.c";
 
@@ -137,7 +137,7 @@ static char ME [] = "make_a_dico.c";
 #include "varstr.h"
 #include <ctype.h>
 
-extern struct sxtables  sxtables;
+extern SXTABLES  sxtables;
 
 static SXINT      word_nb, word_lgth;
 static bool    make_a_min_dag, with_id, with_word_tree, seek, with_sxword, from_right_to_left, with_comb, is_packed, output_in_C, is_static, is_probabilized, is_probabilized_forced;
@@ -1510,7 +1510,7 @@ final (void)
 }
 
 
-void make_a_dico_action (SXINT what, SXINT action_no, struct sxtables *arg)
+void make_a_dico_action (SXINT what, SXINT action_no, SXTABLES *arg)
 {
   (void) arg;
   switch (what) {

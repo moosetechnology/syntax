@@ -21,9 +21,9 @@
 #include "varstr.h"
 #include <ctype.h>
 
-char WHAT_RCGSACT[] = "@(#)SYNTAX - $Id: rcg_sact.c 4125 2024-07-29 10:59:13Z garavel $" WHAT_DEBUG;
+char WHAT_RCGSACT[] = "@(#)SYNTAX - $Id: rcg_sact.c 4198 2024-08-29 11:56:40Z garavel $" WHAT_DEBUG;
 
-extern struct sxtables	rcg_tables;
+extern SXTABLES	sxtables;
 
 static VARSTR	vstr;
 
@@ -74,7 +74,7 @@ bool rcg_scan_act (SXINT code, SXINT act_no)
 
 	case 1:
 	    /* On regarde si la version minuscule de token_string est un predicat predefini */
-	    if (!sxkeywordp (&rcg_tables, sxsvar.sxlv.terminal_token.lahead)) {
+	    if (!sxkeywordp (&sxtables, sxsvar.sxlv.terminal_token.lahead)) {
 		/* Ce n'est pas un predicat predefini ecrit en minuscule */
 		varstr_raz (vstr);
 

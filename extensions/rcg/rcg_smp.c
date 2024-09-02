@@ -40,13 +40,14 @@ static char	ME [] = "rcg_smp";
 #include "sxba.h"
 #include "put_edit.h"
 #include "rcg.h"
+#include "rcg_td.h"
 #include "varstr.h"
 #include "SS.h"
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
 
-char WHAT_RCGSMP[] = "@(#)SYNTAX - $Id: rcg_smp.c 4147 2024-08-02 10:32:28Z garavel $" WHAT_DEBUG;
+char WHAT_RCGSMP[] = "@(#)SYNTAX - $Id: rcg_smp.c 4191 2024-08-29 10:29:33Z garavel $" WHAT_DEBUG;
 
 SXINT       clause2lhs_nt (SXINT clause);
 extern void gen_clause_comment (FILE *parser_file, SXINT clause);
@@ -8658,7 +8659,7 @@ smppass (void)
 }
 
 void
-rcg_smp (SXINT what, struct sxtables *sxtables_ptr)
+rcg_smp (SXINT what, SXTABLES *sxtables_ptr)
 {
     switch (what) {
     case SXOPEN:

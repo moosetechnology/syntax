@@ -63,7 +63,7 @@ extern bool                 is_static;
 extern char                    *LANGUAGE_NAME;
 
 
-static struct sxtables         *sxtab_ptr;
+static SXTABLES         *sxtab_ptr;
 static SXINT                   rule_nb, lhs_id, rhs_id, ste_top;
 static SXINT                   *word_stack, *acc_name_stack;
 static SXNODE                    **lhs_id2first_visited;
@@ -273,7 +273,7 @@ amlgm_cmpd_pd (void)
 
 
 static void
-smpopen (struct sxtables *sxtables_ptr)
+smpopen (SXTABLES *sxtables_ptr)
 {
   sxuse ( sxtables_ptr );
   sxatcvar.atc_lv.node_size = sizeof (struct amlgm_cmpd_node);
@@ -541,7 +541,7 @@ smppass (void)
 }
 
 int
-amlgm_cmpd_smp (int what, struct sxtables *sxtables_ptr)
+amlgm_cmpd_smp (int what, SXTABLES *sxtables_ptr)
 {
   switch (what) {
   case SXOPEN:

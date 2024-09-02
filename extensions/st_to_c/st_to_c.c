@@ -29,7 +29,7 @@
 #include "S_tables.h"
 #include "put_edit.h"
 
-char WHAT_LECLSTTOC[] = "@(#)SYNTAX - $Id: st_to_c.c 4097 2024-06-21 14:36:16Z garavel $" WHAT_DEBUG;
+char WHAT_LECLSTTOC[] = "@(#)SYNTAX - $Id: st_to_c.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 extern SXINT	equality_sort (SXINT *t, SXINT bi, SXINT bs, bool (*less_equal) (SXINT, SXINT), bool (*equal) (SXINT, SXINT));
 extern void     lecl_free(struct lecl_tables_s *lecl_tables_ptr);
@@ -1603,7 +1603,7 @@ once_more:
     printf ("\n/**************************************************/\n");
     put_edit_ap ("void ");
     put_edit_apnnl (prgentname);
-    put_edit_ap ("_scanner (SXINT what_to_do, struct sxtables *arg)");
+    put_edit_ap ("_scanner (SXINT what_to_do, SXTABLES *arg)");
     put_edit_ap ("{ switch (what_to_do) {");
     put_edit_ap ("case SXOPEN:");
     put_edit_ap ("/* new language, new tables: prepare new local variables */");

@@ -305,7 +305,7 @@ SXT_node_info, T_ter_to_node_name, T_stack_schema, SEMPASS, T_node_name
 };
 extern SXSEMACT_FUNCTION sxatc;
 
-struct sxtables sxtables={
+SXTABLES sxtables={
 52113, /* magic */
 sxscanner,
 sxparser,

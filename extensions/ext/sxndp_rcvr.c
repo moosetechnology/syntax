@@ -26,9 +26,9 @@
 #include "sxcommon.h"
 
 #ifndef VARIANT_32
-char WHAT_SXNDP_RECOVERY[] = "@(#)SYNTAX - $Id: sxndp_rcvr.c 4105 2024-06-21 15:50:49Z garavel $" WHAT_DEBUG;
+char WHAT_SXNDP_RECOVERY[] = "@(#)SYNTAX - $Id: sxndp_rcvr.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 #else
-char WHAT_SXNDP_RECOVERY32[] = "@(#)SYNTAX - $Id: sxndp_rcvr.c 4105 2024-06-21 15:50:49Z garavel $ SXNDP_RCVR_32" WHAT_DEBUG;
+char WHAT_SXNDP_RECOVERY32[] = "@(#)SYNTAX - $Id: sxndp_rcvr.c 4166 2024-08-19 09:00:49Z garavel $ SXNDP_RCVR_32" WHAT_DEBUG;
 #endif
 
 #if EBUG
@@ -240,7 +240,7 @@ static char	*tok_text (SXINT tok_no)
 }
 
 
-static char	*ttext (struct sxtables *tables, SXINT tcode)
+static char	*ttext (SXTABLES *tables, SXINT tcode)
 {
     return (tcode == sxplocals.SXP_tables.P_tmax)
 	? sxplocals.SXP_tables.P_global_mess [sxplocals.SXP_tables.P_followers_number + 2]

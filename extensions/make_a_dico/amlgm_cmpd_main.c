@@ -20,11 +20,11 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXMAIN[] = "@(#)SYNTAX - $Id: amlgm_cmpd_main.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_SXMAIN[] = "@(#)SYNTAX - $Id: amlgm_cmpd_main.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 static char ME [] = "amlgm_cmpd.c";
 
-extern struct sxtables	sxtables;
+extern SXTABLES	sxtables;
 
 bool           is_static;
 char              *LANGUAGE_NAME;

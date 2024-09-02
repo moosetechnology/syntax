@@ -23,19 +23,16 @@ $(LIB)/dico_act.o:	$(SXINCL)/sxunix.h	\
 			$(SXINCL)/sxba.h	\
 			$(SXINCL)/sxdico.h	\
 			dico_act.c	
-	$(CC) -o $@ -c dico_act.c			\
-		-Dsxtables=dico_tables
+	$(CC) -o $@ -c dico_act.c
 
 $(LIB)/dico_main.o:	$(SXINCL)/sxunix.h	\
 			$(SXINCL)/sxdico.h	\
 			dico_main.c
-	$(CC) -o $@ -c dico_main.c		\
-		-Dsxtables=dico_tables
+	$(CC) -o $@ -c dico_main.c
 
 $(LIB)/dico_t.o:	$(SXINCL)/sxunix.h 	\
 			dico_t.c
 	$(CC) -o $@ -c dico_t.c			\
-		-Dsxtables=dico_tables		\
 		-DSCANACT=dico_scan_act		\
 		-DSEMACT=dico_sem_act
 

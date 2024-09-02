@@ -26,7 +26,7 @@ SX_GLOBAL_VAR jmp_buf environment_before_current_sentence;
 SX_GLOBAL_VAR void (*free_after_long_jmp) (void);
 
 #ifdef sxu2_h
-extern SXINT  dag_scanner             (SXINT what, struct sxtables *arg);
+extern SXINT  dag_scanner             (SXINT what, SXTABLES *arg);
 extern SXINT  put_repair_tok          (SXINT t, char *t_str, char *comment_str, struct sxsource_coord *psource_index);
 #endif /* sxu2_h */
 

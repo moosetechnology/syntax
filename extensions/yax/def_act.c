@@ -21,13 +21,13 @@
 #include "B_tables.h"
 #include "yax_vars.h"
 
-char WHAT_TAXDEFACT[] = "@(#)SYNTAX - $Id: def_act.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
+char WHAT_TAXDEFACT[] = "@(#)SYNTAX - $Id: def_act.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 static bool	has_defining_occurrence = false, has_semantics = false;
 static SXINT	attribute_needed = 0;
 static struct sxsource_coord	RULE_source_coord;
 static SXINT	xprod = 0;
-extern struct sxtables	bnf_tables;
+extern SXTABLES	bnf_tables;
 extern void    bnf_found_bad_beginning_of_rule (void);
 extern void    bnf_skip_rule (void);
 
@@ -322,7 +322,7 @@ bool def_scanact (SXINT code, SXINT numact)
 }
 
 
-void def_semact (SXINT code, SXINT numact, struct sxtables *arg)
+void def_semact (SXINT code, SXINT numact, SXTABLES *arg)
 {
     (void) arg;
     switch (code) {
