@@ -27,11 +27,11 @@
 #include "lecl_ag.h"
 #include "put_edit.h"
 
-char WHAT_LECLMAIN[] = "@(#)SYNTAX - $Id: lecl_main.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_LECLMAIN[] = "@(#)SYNTAX - $Id: lecl_main.c 4180 2024-08-26 15:26:45Z garavel $" WHAT_DEBUG;
 
 char	by_mess [] = "the SYNTAX lexical constructor LECL";
 
-extern struct sxtables	lecl_tables;
+extern SXTABLES	sxtables;
 
 /*---------------*/
 /*    options    */
@@ -167,7 +167,7 @@ static	void lecl_run (char *pathname)
 	}
 
 	rewind (infile);
-	syntax (SXBEGIN, &lecl_tables, infile, "");
+	syntax (SXBEGIN, &sxtables, infile, "");
     }
     else {
 	if ((infile = sxfopen (pathname, "r")) == NULL) {
@@ -182,12 +182,12 @@ static	void lecl_run (char *pathname)
 	    }
 
 	    extract_language_name (pathname);
-	    syntax (SXBEGIN, &lecl_tables, infile, pathname);
+	    syntax (SXBEGIN, &sxtables, infile, pathname);
 	}
     }
 
-    syntax (SXACTION, &lecl_tables);
-    syntax (SXEND, &lecl_tables);
+    syntax (SXACTION, &sxtables);
+    syntax (SXEND, &sxtables);
     fclose (infile);
 
     if (prgentname != NULL)
@@ -331,7 +331,7 @@ run:
 	fprintf (sxtty, "%s\n", release_mess);
     }
 
-    syntax (SXINIT, &lecl_tables, false /* no includes */);
+    syntax (SXINIT, &sxtables, false /* no includes */);
 
     if (options_set & OPTION (LANGUAGE_NAME)) {
 	lecl_run ((char*)NULL);
@@ -347,7 +347,7 @@ run:
 	} while (argnum < argc);
     }
 
-    syntax (SXFINAL, &lecl_tables, true);
+    syntax (SXFINAL, &sxtables, true);
 
     sxexit (sxerr_max_severity ());
 

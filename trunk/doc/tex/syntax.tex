@@ -4956,7 +4956,7 @@ static  action (action_no)
 
 L_action (entry, arg)
     int         entry;
-    struct sxtables     *arg;
+    SXTABLES     *arg;
 {
     switch (entry) {
     case SXOPEN:  /* appele avant l'analyse des textes source. On prepare
@@ -5143,7 +5143,7 @@ Z Z Z Z
 }
 
 static smpopen (sxtables_ptr)
-struct sxtables *sxtables_ptr;
+SXTABLES *sxtables_ptr;
 {
 sxatcvar.atc_lv.node_size = sizeof (struct bnf_node);
 }
@@ -5163,7 +5163,7 @@ sxsmp (sxatcvar.atc_lv.abstract_tree_root, bnf_pi, bnf_pd);
 }
 
 bnf_smp (what, sxtables_ptr)int what;
-struct sxtables *sxtables_ptr;
+SXTABLES *sxtables_ptr;
 {
 switch (what) {
 case SXOPEN:
@@ -5701,7 +5701,7 @@ Eof             = "}" ;
 \begin{verbatim}
 #include "sxunix.h"
 
-extern struct sxtables	hlev_tables;
+extern SXTABLES	hlev_tables;
 
 /* Structures used to store the local variables of a given scanner */
 static struct sxsvar	llev_svar, hlev_svar;

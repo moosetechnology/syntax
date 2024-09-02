@@ -5,12 +5,12 @@ $do(<axiome>,<attr_declarations>,<prologue>,<decl>,<open>,<close>,
 $
 decl=
 
-char WHAT_SEMC_DEC[] = "@(#)SYNTAX - $Id: dec.semc 3631 2023-12-20 17:16:41Z garavel $" WHAT_DEBUG;
+char WHAT_SEMC_DEC[] = "@(#)SYNTAX - $Id: dec.semc 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 #include "B_tables.h"
 #include "semc_vars.h"
 
-extern struct sxtables bnf_tables;
+extern SXTABLES bnf_tables;
 
 /* dans semc_put.c */
 extern void put_avant_decl (void);

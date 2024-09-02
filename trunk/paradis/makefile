@@ -9,7 +9,7 @@ LIB=$(PARADIS)/lib.$(ARCH)
 INCL=$(PARADIS)/incl
 BOOT=$(PARADIS)/boot
 
-CC=$(COMPILER) -I$(BOOT) -I$(BNF) -I$(SXINCL) -I$(SXINCL)/util -Dsxtables=paradis_tables $(CFLAGS)
+CC=$(COMPILER) -I$(BOOT) -I$(BNF) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
 all: $(SXBIN)/paradis.out $(SXAUX)/print_ppt.out
 
@@ -36,7 +36,6 @@ $(SXAUX)/print_ppt.out: print_ppt.c $(SXBIBS)
 
 $(LIB)/paradis_t.o: 	$(SXINCL)/sxunix.h $(BOOT)/paradis_t.c
 	$(CC) -o $@ -c $(BOOT)/paradis_t.c		\
-		-Dsxtables=paradis_tables	\
 		-DSCANACT=paradis_scan_act	\
 		-DSEMPASS=paradis_smp
 

@@ -21,7 +21,6 @@ $(SXBIN)/tdef.out:	$(NEEDS)	$(SXBIBS)
 $(LIB)/tdef_t.o: 	$(SXINCL)/sxunix.h		\
 			$(BOOT)/tdef_t.c
 	$(CC) -o $@ -c $(BOOT)/tdef_t.c		\
-			-Dsxtables=tdef_tables	\
 			-DSCANACT=tdef_scan_act	\
 			-DSEMACT=tdef_action
 

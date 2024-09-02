@@ -22,9 +22,9 @@
 #include "sxunix.h"
 #include "ppada_td.h"
 
-char WHAT_PPADAMAIN[] = "@(#)SYNTAX - $Id: ppada_main.c 4143 2024-08-02 08:50:12Z garavel $";
+char WHAT_PPADAMAIN[] = "@(#)SYNTAX - $Id: ppada_main.c 4166 2024-08-19 09:00:49Z garavel $";
 
-extern struct sxtables	ppada_args_tables, ppada_tables;
+extern SXTABLES	ppada_args_tables, ppada_tables;
 
 /*---------------*/
 /*    options    */
@@ -238,7 +238,7 @@ static void	ppada_run (SXINT in_ste, SXINT out_ste)
     sxsrc_mngr (SXFINAL);
 }
 
-void ppada_args_semact (SXINT what, SXINT action_no, struct sxtables *arg)
+void ppada_args_semact (SXINT what, SXINT action_no, SXTABLES *arg)
 {
     (void) arg;
     switch (what) {

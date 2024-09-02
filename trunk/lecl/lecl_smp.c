@@ -31,7 +31,7 @@
 #include "lecl_pcn.h"
 #include "S_tables.h" /* for struct lecl_tables_s */
 
-char WHAT_LECLSMP[] = "@(#)SYNTAX - $Id: lecl_smp.c 3631 2023-12-20 17:16:41Z garavel $" WHAT_DEBUG;
+char WHAT_LECLSMP[] = "@(#)SYNTAX - $Id: lecl_smp.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 extern SXINT	lecl_sature (SXINT nbt);
 extern void	lecl_css (struct lecl_node *visited);
@@ -46,7 +46,7 @@ extern void	lecl_ag_free (void);
 static time_t	bnf_modif_time;
 
 
-static void	smpopen (struct sxtables *sxtables_ptr)
+static void	smpopen (SXTABLES *sxtables_ptr)
 {
     err_titles = sxtables_ptr->err_titles;
     sxatcvar.atc_lv.node_size = sizeof (struct lecl_node);
@@ -311,7 +311,7 @@ no_automaton:
 
 
 
-void	lecl_smp (SXINT what, struct sxtables *sxtables_ptr)
+void	lecl_smp (SXINT what, SXTABLES *sxtables_ptr)
 {
     switch (what) {
     case SXOPEN:

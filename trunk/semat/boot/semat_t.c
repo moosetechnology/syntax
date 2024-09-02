@@ -164,7 +164,7 @@ extern SXSEMACT_FUNCTION SEMACT;
 #pragma GCC diagnostic pop
 #endif
 
-struct sxtables sxtables={
+SXTABLES sxtables={
 52113, /* magic */
 sxscanner,
 sxparser,

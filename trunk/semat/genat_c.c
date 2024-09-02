@@ -23,7 +23,7 @@
 #include "bnf_vars.h"
 #include "T_tables.h"
 
-char WHAT_SEMATGENAT[] = "@(#)SYNTAX - $Id: genat_c.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_SEMATGENAT[] = "@(#)SYNTAX - $Id: genat_c.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 extern SXINT      get_node_name_ref (SXINT i);
 extern SXINT      delta_to_lispro (SXINT x_prod, SXINT delta);
@@ -309,7 +309,7 @@ your attribute declarations...\n\
 
 /* tail generation */
 
-    puts ("\nstatic void smpopen (struct sxtables *sxtables_ptr)");
+    puts ("\nstatic void smpopen (SXTABLES *sxtables_ptr)");
     puts ("{");
     puts ("sxuse(sxtables_ptr);");
     printf ("sxatcvar.atc_lv.node_size = sizeof (struct %s_node);\n", prgentname);
@@ -323,7 +323,7 @@ your attribute declarations...\n\
     puts ("\n/*   F I N A L I S A T I O N S   */");
     puts ("/* ........... */\n");
     puts ("}");
-    printf ("\nint %s_smp (SXINT what, struct sxtables *sxtables_ptr)\n", prgentname);
+    printf ("\nint %s_smp (SXINT what, SXTABLES *sxtables_ptr)\n", prgentname);
     puts ("{");
     puts ("sxuse (sxtables_ptr);");
     puts ("switch (what) {");

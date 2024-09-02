@@ -20,8 +20,7 @@ $(BIN)/pptdef.out:	$(NEEDS)	$(SXBIBS)
 
 $(LIB)/pptdef_t.o: 	$(SXINCL)/sxunix.h		\
 			pptdef_t.c
-	$(CC) -o $@ pptdef_t.c		\
-			-Dsxtables=pptdef_tables
+	$(CC) -o $@ pptdef_t.c
 
 $(LIB)/pptdef_main.o:	$(SXINCL)/sxunix.h	\
 			pptdef_main.c

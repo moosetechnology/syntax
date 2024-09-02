@@ -66,7 +66,7 @@ struct inverse_mapping {
 
 extern SXINT re_reader (char *pathname_or_string, bool from_file, SXINT (*re_process)(void));
 #ifdef sxu2_h
-/* Sinon struct sxtables est inconnu */
+/* Sinon SXTABLES est inconnu */
 extern SXINT read_a_re (void (*prelude)(bool, SXINT, SXINT, SXINT, SXINT), 
 			void (*store)(SXINT, struct sxtoken **, struct sxtoken **, SXINT, SXINT), 
 			SXINT (*postlude)(SXINT), 

@@ -9,7 +9,7 @@ typedef bool ADT_BOOL;
 #define ADT_TRUE() true
 
 /* 'sxtables' _defined_ (and not declared) in sxu2.h */
-extern struct sxtables sxtables;
+extern SXTABLES sxtables;
 
 /* defined and initialized in simproc.semc */
 extern bool *SYNTAX_ERROR;

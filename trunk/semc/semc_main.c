@@ -30,7 +30,7 @@
 #include "semc_vars.h"
 #include "put_edit.h"
 
-char WHAT_SEMC_MAIN[] = "@(#)SYNTAX - $Id: semc_main.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_SEMC_MAIN[] = "@(#)SYNTAX - $Id: semc_main.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 /* These include files for date/time manipulation: */
 #include <sys/types.h>
@@ -45,7 +45,7 @@ extern void	bnf_lo (void);
 extern bool	tab_sem (void);
 extern void	semc_lo (void);
 extern void	semc_free (void);
-extern struct sxtables	bnf_tables;
+extern SXTABLES	bnf_tables;
 
 /*---------------*/
 /*    options    */

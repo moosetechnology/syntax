@@ -5,7 +5,7 @@ CX=$(SX)/examples/cx
 BIN=$(CX)/bin.$(ARCH)
 LIB=$(CX)/lib.$(ARCH)
 
-CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util -Dsxtables=cx_tables $(CFLAGS) -c
+CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS) -c
 
 all: $(BIN)/cx.out
 
@@ -19,8 +19,7 @@ $(BIN)/cx.out:	$(NEEDS)	$(SXBIBS)
 
 $(LIB)/cx_t.o: 	$(SXINCL)/sxunix.h		\
 		cx_t.c
-	$(CC) -o $@ cx_t.c		\
-			-Dsxtables=cx_tables	\
+	$(CC) -o $@ cx_t.c			\
 			-DSEMACT=cx_act		\
 			-DSEMPASS=sxvoid
 

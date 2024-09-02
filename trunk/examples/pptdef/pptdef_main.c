@@ -21,9 +21,9 @@
 
 #include "sxunix.h"
 
-char WHAT_TDEFPPTDEFMAIN[] = "@(#)SYNTAX - $Id: pptdef_main.c 3632 2023-12-20 17:58:08Z garavel $" WHAT_DEBUG;
+char WHAT_TDEFPPTDEFMAIN[] = "@(#)SYNTAX - $Id: pptdef_main.c 4173 2024-08-26 11:56:20Z garavel $" WHAT_DEBUG;
 
-extern struct sxtables	pptdef_tables;
+extern SXTABLES	sxtables;
 
 /*---------------*/
 /*    options    */
@@ -77,7 +77,7 @@ static void	pptdef_run (char *pathname)
 	}
 
 	infile = stdin;
-	syntax (SXBEGIN, &pptdef_tables, infile, "");
+	syntax (SXBEGIN, &sxtables, infile, "");
 	sxstdout = stdout; /* H. Garavel: this instruction seems useless */
     }
     else {
@@ -99,11 +99,11 @@ static void	pptdef_run (char *pathname)
 		fprintf (sxtty, "%s:\n", pathname);
 	    }
 
-	    syntax (SXBEGIN, &pptdef_tables, infile, pathname);
+	    syntax (SXBEGIN, &sxtables, infile, pathname);
 	}
     }
 
-    syntax (SXACTION, &pptdef_tables);
+    syntax (SXACTION, &sxtables);
 
     if (infile != stdin) {
 	fclose (sxstdout);
@@ -118,7 +118,7 @@ static void	pptdef_run (char *pathname)
 	}
     }
 
-    syntax (SXEND, &pptdef_tables);
+    syntax (SXEND, &sxtables);
 }
 
 
@@ -200,7 +200,7 @@ int main (int argc, char *argv[])
     setbuf (stdout, NULL);
   }
 
-  syntax (SXINIT, &pptdef_tables, false /* no include */);
+  syntax (SXINIT, &sxtables, false /* no include */);
 
   if (argnum == argc) {
     pptdef_run ((char*)NULL);
@@ -215,7 +215,7 @@ int main (int argc, char *argv[])
     } while (argnum < argc);
   }
 
-  syntax (SXFINAL, &pptdef_tables, true);
+  syntax (SXFINAL, &sxtables, true);
 
   sxexit (sxerr_max_severity ());
   return EXIT_SUCCESS; /* Jamais atteint !! pour les compilo susceptibles ... */

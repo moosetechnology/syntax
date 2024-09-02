@@ -31,7 +31,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-char WHAT_PARADISMAIN[] = "@(#)SYNTAX - $Id: paradis_main.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_PARADISMAIN[] = "@(#)SYNTAX - $Id: paradis_main.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 char	by_mess [] = "the SYNTAX grammar & pretty-printer processor PARADIS";
 
@@ -39,8 +39,8 @@ SXINT     (*more_scan_act) (SXINT code, SXINT act_no);
 
 extern void	no_tables (void), bnf_lo (void), paradis_lo (void);
 extern bool	paradis_sem (void);
-extern struct sxtables	bnf_tables;
-extern struct sxtables	paradis_tables;
+extern SXTABLES	bnf_tables;
+extern SXTABLES	paradis_tables;
 
 /*---------------*/
 /*    options    */

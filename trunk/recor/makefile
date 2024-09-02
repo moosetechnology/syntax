@@ -24,7 +24,6 @@ $(SXBIN)/recor.out:	$(NEEDS)	$(SXBIBS)
 $(LIB)/recor_t.o: 	$(SXINCL)/sxunix.h		\
 			$(BOOT)/recor_t.c
 	$(CC) -o $@ -c $(BOOT)/recor_t.c				\
-			-Dsxtables=recor_tables		\
 			-DSCANACT=recor_scan_act	\
 			-DSEMPASS=recor_smp
 

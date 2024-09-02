@@ -23,9 +23,9 @@
 
 #include "sxunix.h"
 
-char WHAT_PPLECLMAIN[] = "@(#)SYNTAX - $Id: pplecl_main.c 3632 2023-12-20 17:58:08Z garavel $" WHAT_DEBUG;
+char WHAT_PPLECLMAIN[] = "@(#)SYNTAX - $Id: pplecl_main.c 4173 2024-08-26 11:56:20Z garavel $" WHAT_DEBUG;
 
-extern struct sxtables	pp_lecl_tables;
+extern SXTABLES	sxtables;
 
 /*---------------*/
 /*    options    */
@@ -84,7 +84,7 @@ static void	pplecl_run (char *pathname)
 	}
 
 	infile = stdin;
-	syntax (SXBEGIN, &pp_lecl_tables, infile, "");
+	syntax (SXBEGIN, &sxtables, infile, "");
 	sxstdout = stdout;
     }
     else {
@@ -108,11 +108,11 @@ static void	pplecl_run (char *pathname)
 		fprintf (sxtty, "%s:\n", pathname);
 	    }
 
-	    syntax (SXBEGIN, &pp_lecl_tables, infile, pathname);
+	    syntax (SXBEGIN, &sxtables, infile, pathname);
 	}
     }
 
-    syntax (SXACTION, &pp_lecl_tables);
+    syntax (SXACTION, &sxtables);
 
     if (infile != stdin) {
 	fclose (sxstdout);
@@ -127,7 +127,7 @@ static void	pplecl_run (char *pathname)
 	}
     }
 
-    syntax (SXEND, &pp_lecl_tables);
+    syntax (SXEND, &sxtables);
 }
 
 
@@ -229,7 +229,7 @@ int main(int argc, char *argv[])
     setbuf (stdout, NULL);
   }
 
-  syntax (SXINIT, &pp_lecl_tables, false /* no includes */);
+  syntax (SXINIT, &sxtables, false /* no includes */);
 
   if (argnum == argc) {
     pplecl_run ((char*)NULL);
@@ -244,7 +244,7 @@ int main(int argc, char *argv[])
     } while (argnum < argc);
   }
 
-  syntax (SXFINAL, &pp_lecl_tables, true);
+  syntax (SXFINAL, &sxtables, true);
 
   sxexit (sxerr_max_severity ());
 

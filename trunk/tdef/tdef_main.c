@@ -21,11 +21,11 @@
 #include "sxunix.h"
 #include "put_edit.h"
 
-char WHAT_TDEFMAIN[] = "@(#)SYNTAX - $Id: tdef_main.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_TDEFMAIN[] = "@(#)SYNTAX - $Id: tdef_main.c 4181 2024-08-26 15:28:35Z garavel $" WHAT_DEBUG;
 
 char	by_mess [] = "the SYNTAX \"terminal symbol to #define\" translator TDEF";
 
-extern struct sxtables	tdef_tables;
+extern SXTABLES	sxtables;
 SXINT	options_set;
 bool		is_source, is_c;
 char	*prgentname;
@@ -132,7 +132,7 @@ static void	tdef_run (char *pathname)
 	}
 
 	rewind (infile);
-	syntax (SXBEGIN, &tdef_tables, infile, "");
+	syntax (SXBEGIN, &sxtables, infile, "");
     }
     else {
 	if ((infile = sxfopen (pathname, "r")) == NULL) {
@@ -147,12 +147,12 @@ static void	tdef_run (char *pathname)
 	    }
 
 	    extract_language_name (pathname);
-	    syntax (SXBEGIN, &tdef_tables, infile, pathname);
+	    syntax (SXBEGIN, &sxtables, infile, pathname);
 	}
     }
 
-    syntax (SXACTION, &tdef_tables);
-    syntax (SXEND, &tdef_tables);
+    syntax (SXACTION, &sxtables);
+    syntax (SXEND, &sxtables);
     fclose (infile);
 
     if (prgentname != NULL)
@@ -248,7 +248,7 @@ int main (int argc, char *argv[])
     fprintf (sxtty, "%s\n", release_mess);
   }
 
-  syntax (SXINIT, &tdef_tables, false /* no includes */);
+  syntax (SXINIT, &sxtables, false /* no includes */);
 
   if (options_set & OPTION (LANGUAGE_NAME)) {
     tdef_run ((char*)NULL);
@@ -264,7 +264,7 @@ int main (int argc, char *argv[])
     } while (argnum < argc);
   }
 
-  syntax (SXFINAL, &tdef_tables, true);
+  syntax (SXFINAL, &sxtables, true);
 
   sxexit (sxerr_max_severity ());
   return EXIT_SUCCESS; /* Jamais atteint !! pour les compilo susceptibles ... */

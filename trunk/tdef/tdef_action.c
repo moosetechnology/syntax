@@ -24,7 +24,7 @@
 #include "put_edit.h"
 #include "B_tables.h"
 
-char WHAT_TDEFACTION[] = "@(#)SYNTAX - $Id: tdef_action.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
+char WHAT_TDEFACTION[] = "@(#)SYNTAX - $Id: tdef_action.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 /*   E X T E R N S   */
 
@@ -219,7 +219,7 @@ static void	final (void)
 
 
 
-void tdef_action (SXINT what, SXINT action_no, struct sxtables *arg)
+void tdef_action (SXINT what, SXINT action_no, SXTABLES *arg)
 {
     switch (what) {
     case SXOPEN:

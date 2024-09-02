@@ -23,7 +23,7 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXSYNTAX[] = "@(#)SYNTAX - $Id: sxsyntax.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
+char WHAT_SXSYNTAX[] = "@(#)SYNTAX - $Id: sxsyntax.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 /*---------------------------------------------------------------------------*/
 
@@ -31,7 +31,7 @@ static bool sxuses_incl_mngr = false;
 
 /*---------------------------------------------------------------------------*/
 
-void	syntax (SXINT syntax_what, struct sxtables *tables, ...)
+void	syntax (SXINT syntax_what, SXTABLES *tables, ...)
 {
     va_list ap;
     FILE *file;

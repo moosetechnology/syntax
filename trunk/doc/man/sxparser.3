@@ -17,12 +17,12 @@ sxplocals
 .nf
 #include "sxunix.h"
 
-struct sxtables  sxtables\|;
+SXTABLES  sxtables\|;
 
 void sxparser (what, sxtables)
-.ta \w'SXVOI'u +\w'struct sxtables 'u
+.ta \w'SXVOI'u +\w'SXTABLES 'u
 	int	what\|;
-	struct sxtables	*sxtables\|;
+	SXTABLES	*sxtables\|;
 
 void sxpsature (nbt)
 .ta \w'SXVOI'u +\w'int  'u
@@ -135,10 +135,10 @@ it must not be used directly (see SXSTACKnewtop).
 is the bottom index of the parse stack for the current activation of the
 parser, it is automatically managed upon recursive call of the parser.
 .nf
-.ta \w'\fBstr\fP'u +\w'\fBstruct\fP sxtables 'u +\w'*toks_buf 'u +\w'/* look ahead token number for actions 'u
+.ta \w'\fBstr\fP'u +\w'\fBstruct\fP sxtoken 'u +\w'*toks_buf 'u +\w'/* look ahead token number for actions 'u
 \fBstruct\fP sxplocals {
 	\fBstruct\fP P_tables	 P_tables	/* parser tables	*/\|;
-	\fBstruct\fP sxtables	*sxtables	/* the whole tables	*/\|;
+	SXTABLES	*sxtables		/* the whole tables	*/\|;
 	\fBshort\fP	 state	/* internal use	*/\|;
 	\fBstruct\fP sxtoken	*toks_buf	/* look ahead tokens buffer	*/\|;
 	\fBint\fP	 atok_no	/* look ahead token number for actions	*/,

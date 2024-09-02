@@ -28,12 +28,14 @@ static char	ME [] = "tables_c";
 #include "out.h"
 #include "sxba.h"
 
-char WHAT_TABLESC[] = "@(#)SYNTAX - $Id: tables_c.c 4134 2024-07-30 08:59:37Z garavel $" WHAT_DEBUG;
+char WHAT_TABLESC[] = "@(#)SYNTAX - $Id: tables_c.c 4210 2024-09-02 07:56:38Z garavel $" WHAT_DEBUG;
 
 bool		is_lig;
 
 static bool is_dynamic_parser,
                is_dynamic_scanner;
+
+static char *tables_name = NULL; /* "sxtables" par defaut, sauf option -name */ 
 
 extern bool	lecl_read (struct lecl_tables_s *lecl_tables_ptr, char *langname);
 extern void	lecl_free (struct lecl_tables_s *lecl_tables_ptr);
@@ -133,7 +135,7 @@ static void	out_sxtables (void)
       puts ("#endif");
     }
 
-    puts ("\nstruct sxtables sxtables={");
+    printf ("\nSXTABLES sxtables={\n");
     printf ("%lu, /* magic */\n", SXMAGIC_NUMBER);
     printf ("sx%sscanner,\n", SC.S_is_non_deterministic ? "nd" : "");
     printf ("sx%sparser,\n", PC.nd_degree >= 0 ? "nd" : "");
@@ -413,7 +415,8 @@ static int	gripe (enum ERROR_IN num)
 
 static char	Usage [] = "\
 Usage:\t%s [options] language_name\n\
-options=\t-v, -verbose, -nv, -noverbose,\n\
+options=\t-v, -verbose, -nv, -noverbose\n\
+\t\t-name tables_name\n\
 \t\t-dp, -dynamic_parser\n\
 \t\t-ds, -dynamic_scanner\n";
 
@@ -426,16 +429,19 @@ options=\t-v, -verbose, -nv, -noverbose,\n\
 #define VERBOSE 		1
 #define DYNAMIC_PARSER		2
 #define DYNAMIC_SCANNER		3
-#define LAST_OPTION		DYNAMIC_SCANNER
-#define LANGUAGE_NAME 		LAST_OPTION+1
+#define NAME		        4
+#define LAST_OPTION		NAME
+#define LANGUAGE_NAME 		(LAST_OPTION+1)
 
 
 static char	*option_tbl [] = {"", "v", "verbose", "nv", "noverbose",
 				      "dp", "dynamic_parser",
-				      "ds", "dynamic_scanner",};
+				      "ds", "dynamic_scanner",
+                                      "name"};
 static SXINT	option_kind [] = {UNKNOWN_ARG, VERBOSE, VERBOSE, -VERBOSE, -VERBOSE,
 				      DYNAMIC_PARSER, DYNAMIC_PARSER,
-				      DYNAMIC_SCANNER, DYNAMIC_SCANNER,};
+				      DYNAMIC_SCANNER, DYNAMIC_SCANNER,
+                                      NAME};
 
 
 
@@ -501,6 +507,16 @@ int main (int argc, char *argv[])
       is_dynamic_scanner = false;
       break;
 
+    case NAME:
+	 ++ argnum;
+	 name = argv [argnum];
+	 if (option_get_kind (name) != LANGUAGE_NAME) {
+	      fprintf (sxstderr, "%s: a variable name is mandatory after the \"-name\" option\n", ME);
+	      sxexit (SXSEVERITIES);
+         }
+	 tables_name = name; /* ... = strdup (name) would be safer */
+	 break;
+
     case LANGUAGE_NAME:
       /* nom du langage */
       goto run;
@@ -543,6 +559,11 @@ int main (int argc, char *argv[])
 
   out_licence ();
   out_header (language_name);
+
+  if (tables_name != NULL) {
+    printf ("#define sxtables %s /* due to option \"-name\" of %s */\n", tables_name, ME);
+  }
+
   out_SXP_MAX (max_P_tables ());
 
   if (max_S_tables () >= 0x3ff)

@@ -31,7 +31,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-char WHAT_SEMACTMAIN[] = "@(#)SYNTAX - $Id: semact_main.c 4139 2024-07-31 16:02:45Z garavel $" WHAT_DEBUG;
+char WHAT_SEMACTMAIN[] = "@(#)SYNTAX - $Id: semact_main.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 char	by_mess [] = "the SYNTAX grammar & action processor SEMACT";
 
@@ -42,7 +42,7 @@ SXSCANACT_FUNCTION *more_scan_act = {semact_scan_act};
 extern void	no_tables (void), bnf_lo (void);
 extern bool  semact_sem (void);
 
-extern struct sxtables	bnf_tables;
+extern SXTABLES	bnf_tables;
 
 /*---------------*/
 /*    options    */

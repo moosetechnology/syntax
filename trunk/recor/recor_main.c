@@ -21,11 +21,11 @@
 #include "sxunix.h"
 #include "put_edit.h"
 
-char WHAT_RECORMAIN[] = "@(#)SYNTAX - $Id: recor_main.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_RECORMAIN[] = "@(#)SYNTAX - $Id: recor_main.c 4182 2024-08-26 16:48:18Z garavel $" WHAT_DEBUG;
 
 char	by_mess [] = "the SYNTAX error processor RECOR";
 
-extern struct sxtables	recor_tables;
+extern SXTABLES	sxtables;
 
 /*---------------*/
 /*    options    */
@@ -132,7 +132,7 @@ static	void recor_run (char *pathname)
 	}
 
 	rewind (infile);
-	syntax (SXBEGIN, &recor_tables, infile, "");
+	syntax (SXBEGIN, &sxtables, infile, "");
     }
     else {
 	if ((infile = sxfopen (pathname, "r")) == NULL) {
@@ -147,12 +147,12 @@ static	void recor_run (char *pathname)
 	    }
 
 	    extract_language_name (pathname);
-	    syntax (SXBEGIN, &recor_tables, infile, pathname);
+	    syntax (SXBEGIN, &sxtables, infile, pathname);
 	}
     }
 
-    syntax (SXACTION, &recor_tables);
-    syntax (SXEND, &recor_tables);
+    syntax (SXACTION, &sxtables);
+    syntax (SXEND, &sxtables);
     fclose (infile);
 
     if (prgentname != NULL)
@@ -245,7 +245,7 @@ int main (int argc, char *argv[])
     fprintf (sxtty, "%s\n", release_mess);
   }
 
-  syntax (SXINIT, &recor_tables, false /* no includes */);
+  syntax (SXINIT, &sxtables, false /* no includes */);
 
   if (options_set & OPTION (LANGUAGE_NAME)) {
     recor_run ((char*)NULL);
@@ -261,7 +261,7 @@ int main (int argc, char *argv[])
     } while (argnum < argc);
   }
 
-  syntax (SXFINAL, &recor_tables, true);
+  syntax (SXFINAL, &sxtables, true);
 
   sxexit (sxerr_max_severity ());
   return EXIT_SUCCESS; /* Jamais atteint !! pour les compilo susceptibles ... */

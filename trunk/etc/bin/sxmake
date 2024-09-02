@@ -481,6 +481,12 @@ HYPERGENESIS() {
 			ORIG=`echo $BOOT | sed -e 's+/boot$+/+'`
 			OLD_FILE=$BOOT/$FILE
 			NEW_FILE=$ORIG/$FILE
+			VERSIONED=`svn status $OLD_FILE 2> /dev/null | sed -e 's/^\(.\).*/\1/'`
+			if [ "$VERSIONED" = '?' ]
+			then
+				echo "$COMMAND: warning: ignoring unexpected file $OLD_FILE, which should be deleted"
+				continue
+			fi
 			set +e
 			cmp -s $OLD_FILE $NEW_FILE
 			if [ $? != 0 ]
@@ -699,6 +705,14 @@ case "$1" in
 				if [ $CHANGE = 0 ]
 				then
 					# aucun des fichiers *_t.c n'a ete modifie'
+					break
+				fi
+				if [ $N -gt 4 ]
+				then
+					# quelque chose se passe mal : le
+					# processus de bootstrap ne devrait
+					# jamais depasser la phase 4
+					echo "$COMMAND: error: bootstrap is diverging: halting bootstrap"
 					break
 				fi
 			done

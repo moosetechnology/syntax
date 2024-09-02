@@ -20,9 +20,9 @@
 /* paragrapheur de RECOR */
 
 #include "sxunix.h"
-char WHAT_PPRECOR_MAIN[] = "@(#)SYNTAX - $Id: pprecor_main.c 3632 2023-12-20 17:58:08Z garavel $" WHAT_DEBUG;
+char WHAT_PPRECOR_MAIN[] = "@(#)SYNTAX - $Id: pprecor_main.c 4173 2024-08-26 11:56:20Z garavel $" WHAT_DEBUG;
 
-extern struct sxtables	pp_recor_tables;
+extern SXTABLES	sxtables;
 
 /*---------------*/
 /*    options    */
@@ -82,7 +82,7 @@ static	void pprecor_run (char *pathname)
 	}
 
 	infile = stdin;
-	syntax (SXBEGIN, &pp_recor_tables, infile, "");
+	syntax (SXBEGIN, &sxtables, infile, "");
 	sxstdout = stdout;
     }
     else {
@@ -101,11 +101,11 @@ static	void pprecor_run (char *pathname)
 	    }
 
 	    if (sxverbosep) fprintf (sxtty, "%s:\n", pathname);
-	    syntax (SXBEGIN, &pp_recor_tables, infile, pathname);
+	    syntax (SXBEGIN, &sxtables, infile, pathname);
 	}
     }
 
-    syntax (SXACTION, &pp_recor_tables);
+    syntax (SXACTION, &sxtables);
 
     if (infile != stdin) {
 	fclose (sxstdout);
@@ -120,7 +120,7 @@ static	void pprecor_run (char *pathname)
 	}
     }
 
-    syntax (SXEND, &pp_recor_tables);
+    syntax (SXEND, &sxtables);
 }
 
 
@@ -222,7 +222,7 @@ int main (int argc, char *argv[])
     setbuf (stdout, NULL);
   }
 
-  syntax (SXINIT, &pp_recor_tables, false /* no includes */);
+  syntax (SXINIT, &sxtables, false /* no includes */);
 
   if (argnum == argc) {
     pprecor_run ((char*)NULL);
@@ -237,7 +237,7 @@ int main (int argc, char *argv[])
     } while (argnum < argc);
   }
 
-  syntax (SXFINAL, &pp_recor_tables, true);
+  syntax (SXFINAL, &sxtables, true);
 
   sxexit (sxerr_max_severity ());
   return EXIT_SUCCESS; /* Jamais atteint !! pour les compilo susceptibles ... */

@@ -19,13 +19,13 @@
 
 #include "sxunix.h"
 
-char WHAT_PPCSACT[] = "@(#)SYNTAX - $Id: ppc_sact.c 4125 2024-07-29 10:59:13Z garavel $";
+char WHAT_PPCSACT[] = "@(#)SYNTAX - $Id: ppc_sact.c 4166 2024-08-19 09:00:49Z garavel $";
 
-extern struct sxtables	ppc_args_tables, *ppc_tables;
+extern SXTABLES	ppc_args_tables, *ppc_tables;
 extern SXINT	ppc_TYPE;
 
 
-static void	gripe (struct sxtables *sxtables, SXINT act_no)
+static void	gripe (SXTABLES *sxtables, SXINT act_no)
 {
     sxuse (act_no);
     sxerror (sxsvar.sxlv.terminal_token.source_index,

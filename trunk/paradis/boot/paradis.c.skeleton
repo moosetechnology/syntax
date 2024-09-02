@@ -181,7 +181,7 @@ break;
 /* end paradis_pd */
 }
 
-static void smpopen (struct sxtables *sxtables_ptr)
+static void smpopen (SXTABLES *sxtables_ptr)
 {
 sxuse(sxtables_ptr);
 sxatcvar.atc_lv.node_size = sizeof (struct paradis_node);
@@ -201,7 +201,7 @@ sxsmp (sxatcvar.atc_lv.abstract_tree_root, paradis_pi, paradis_pd);
 
 }
 
-int paradis_smp (SXINT what, struct sxtables *sxtables_ptr)
+int paradis_smp (SXINT what, SXTABLES *sxtables_ptr)
 {
 sxuse (sxtables_ptr);
 switch (what) {

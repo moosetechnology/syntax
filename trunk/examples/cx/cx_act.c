@@ -23,7 +23,7 @@
 #include "sxunix.h"
 #include "put_edit.h"
 
-char WHAT_CXACT[] = "@(#)SYNTAX - $Id: cx_act.c 4143 2024-08-02 08:50:12Z garavel $";
+char WHAT_CXACT[] = "@(#)SYNTAX - $Id: cx_act.c 4166 2024-08-19 09:00:49Z garavel $";
 
 /*  E X T E R N A L   E N T R I E S  */
 
@@ -246,7 +246,7 @@ static void	close_act (void)
 }
 
 
-void cx_act (SXINT what, SXINT action_no, struct sxtables *arg)
+void cx_act (SXINT what, SXINT action_no, SXTABLES *arg)
 {
     (void) arg;
     switch (what) {
