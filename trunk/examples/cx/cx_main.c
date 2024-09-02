@@ -23,7 +23,7 @@
 			 _SXPE_* soient bien definies. Ces variables sont utilisees
 			 par le fichier cx_act.c */
 
-char WHAT_CXMAIN[] = "@(#)SYNTAX - $Id: cx_main.c 3632 2023-12-20 17:58:08Z garavel $";
+char WHAT_CXMAIN[] = "@(#)SYNTAX - $Id: cx_main.c 4173 2024-08-26 11:56:20Z garavel $";
 
 char	by_mess [] = "the SYNTAX cross referencer CX";
 
@@ -34,7 +34,7 @@ char	*prgentname;
 
 /* On est dans un cas "mono-langage": */
 
-extern struct sxtables	cx_tables;
+extern SXTABLES	sxtables;
 
 /*---------------*/
 /*    options    */
@@ -128,7 +128,7 @@ static void	cx_run (char *pathname)
 	}
 
 	rewind (infile);
-	syntax (SXBEGIN, &cx_tables, infile, "");
+	syntax (SXBEGIN, &sxtables, infile, "");
     }
     else {
 	if ((infile = sxfopen (pathname, "r")) == NULL) {
@@ -143,12 +143,12 @@ static void	cx_run (char *pathname)
 	    }
 
 	    language_name_cx (pathname);
-	    syntax (SXBEGIN, &cx_tables, infile, pathname);
+	    syntax (SXBEGIN, &sxtables, infile, pathname);
 	}
     }
 
-    syntax (SXACTION, &cx_tables);
-    syntax (SXEND, &cx_tables);
+    syntax (SXACTION, &sxtables);
+    syntax (SXEND, &sxtables);
     fclose (infile);
 
     if (prgentname != NULL)
@@ -200,7 +200,7 @@ run:
 	fprintf (sxtty, "%s\n", release_mess);
     }
 
-    syntax (SXINIT, &cx_tables, false /* no includes */);
+    syntax (SXINIT, &sxtables, false /* no includes */);
 
     if (argnum >= argc) {
 	cx_run (NULL);
@@ -216,7 +216,7 @@ run:
 	} while (argnum < argc);
     }
 
-    syntax (SXFINAL, &cx_tables, true);
+    syntax (SXFINAL, &sxtables, true);
 
     sxexit (sxerr_max_severity ());
     return 0;

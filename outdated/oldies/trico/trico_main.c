@@ -52,7 +52,7 @@ bool		sxverbosep = {true};
 
 /* On est dans un cas "mono-langage": */
 
-extern struct sxtables	trico_tables;
+extern SXTABLES	sxtables;
 
 /*---------------*/
 /*    options    */
@@ -202,7 +202,7 @@ trico_run (pathname)
   }
 
   sxerr_mngr (SXBEGIN);
-  syntax (SXACTION, &trico_tables);
+  syntax (SXACTION, &sxtables);
   sxerr_mngr (SXEND);
   fclose (infile);
   sxsrc_mngr (SXFINAL);
@@ -336,8 +336,8 @@ int main (int argc, char *argv[])
   }
 
   sxstr_mngr (SXBEGIN) /* Création de la table des chaines */ ;
-  (*(trico_tables.SX_parser)) (SXBEGIN, NULL /* dummy */) /* Allocation des variables globales du parser */ ;
-  syntax (SXOPEN, &trico_tables) /* Initialisation de SYNTAX (mono-langage) */ ;
+  (*(sxtables.SX_parser)) (SXBEGIN, NULL /* dummy */) /* Allocation des variables globales du parser */ ;
+  syntax (SXOPEN, &sxtables) /* Initialisation de SYNTAX (mono-langage) */ ;
 
   if (options_set & OPTION (LANGAGE)) {
     trico_run (NULL);
@@ -353,8 +353,8 @@ int main (int argc, char *argv[])
     } while (argnum < argc);
   }
 
-  syntax (SXCLOSE, &trico_tables);
-  (*(trico_tables.SX_parser)) (SXEND, NULL /* dummy */) /* Inutile puisque le process va etre termine */ ;
+  syntax (SXCLOSE, &sxtables);
+  (*(sxtables.SX_parser)) (SXEND, NULL /* dummy */) /* Inutile puisque le process va etre termine */ ;
   sxstr_mngr (SXEND) /* Inutile puisque le process va etre termine */ ;
 
   {

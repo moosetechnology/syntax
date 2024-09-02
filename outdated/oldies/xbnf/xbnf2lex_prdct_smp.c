@@ -18,16 +18,16 @@
  *****************************************************************************/
 
 #include "sxunix.h"
-char WHAT_XBNF2LEXPRDCTSMP[] = "@(#)SYNTAX - $Id: xbnf2lex_prdct_smp.c 3676 2024-02-05 18:17:45Z garavel $" WHAT_DEBUG;
+char WHAT_XBNF2LEXPRDCTSMP[] = "@(#)SYNTAX - $Id: xbnf2lex_prdct_smp.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 
 extern	void xbnf2lex_prdct (SXNODE *adam);
 
-struct sxtables *sxtab_ptr;
+SXTABLES *sxtab_ptr;
 
 
 void
-xbnf2lexprdct_smp (SXINT what, struct sxtables *sxtables_ptr)
+xbnf2lexprdct_smp (SXINT what, SXTABLES *sxtables_ptr)
 {
     switch (what) {
     case SXOPEN:

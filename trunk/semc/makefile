@@ -80,14 +80,14 @@ $(LIB)/def_sact.o:	\
 $(LIB)/dec_t.o:	\
 		$(BOOT)/dec_t.c	\
 		$(SXINCL)/sxunix.h
-	$(CC) -o $@ -c $(BOOT)/dec_t.c	-Dsxtables=dec_tables\
+	$(CC) -o $@ -c $(BOOT)/dec_t.c	\
 		-DSCANACT=def_scan_act	\
 		-DSEMACT=dec_act
 
 $(LIB)/def_t.o:		\
 		$(BOOT)/def_t.c		\
 		$(SXINCL)/sxunix.h
-	$(CC) -o $@ -c $(BOOT)/def_t.c	-Dsxtables=def_tables \
+	$(CC) -o $@ -c $(BOOT)/def_t.c	\
 		-DSCANACT=def_scan_act	\
 		-DSEMACT=def_act
 
@@ -96,10 +96,10 @@ $(LIB)/def_t.o:		\
 bootstrap: dec_t.c dec.c boostrap2
 
 dec_t.c: dec.bt dec.st dec.pt dec.rt 
-	tables_c dec > $@
+	tables_c -name dec_tables dec > $@
 
 dec.bt  dec.c: dec.semc
-	semc dec.semc  > dec.c
+	semc dec.semc > dec.c
 
 dec.st: dec.bt dec.lecl
 	lecl dec.lecl || [ $$? = 1 ]
@@ -117,10 +117,10 @@ dec.rt: dec.bt dec.st dec.recor
 boostrap2: def_t.c def.c 
 
 def_t.c: def.bt def.st def.pt def.rt 
-	tables_c def > $@
+	tables_c -name def_tables def > $@
 
 def.bt  def.c: def.semc
-	semc def.semc  > def.c
+	semc def.semc > def.c
 
 def.st: def.bt def.lecl
 	lecl def.lecl || [ $$? = 1 ]

@@ -17,11 +17,11 @@ $(BIN)/ppada.out:	$(NEEDS)	$(SXBIBS)
 
 $(LIB)/ppada_t.o:	ppada_t.c		\
 			$(SXINCL)/sxunix.h
-	$(CC) -o $@ -Dsxtables=ppada_tables -DSCANACT=ppada_scan_act ppada_t.c
+	$(CC) -o $@ -DSCANACT=ppada_scan_act ppada_t.c
 
 $(LIB)/ppada_args_t.o:	ppada_args_t.c		\
 			$(SXINCL)/sxunix.h
-	$(CC) -o $@ -Dsxtables=ppada_args_tables -DSCANACT=ppada_args_scan_act -DSEMACT=ppada_args_semact ppada_args_t.c
+	$(CC) -o $@ -DSCANACT=ppada_args_scan_act -DSEMACT=ppada_args_semact ppada_args_t.c
 
 $(LIB)/ppada_main.o:	ppada_main.c	\
 			ppada_td.h	\
@@ -36,7 +36,7 @@ $(LIB)/ppada_sact.o:	ppada_sact.c	\
 # debut de code produit par "make-makefile ppada"
 
 ppada_t.c: ppada.bt ppada.st ppada.pt ppada.rt ppada.ppt
-	tables_c ppada > $@
+	tables_c -name ppada_tables ppada > $@
 
 ppada.bt ppada.ppt : ppada.paradis
 	paradis ppada.paradis 
@@ -58,7 +58,7 @@ ppada_td.h: ppada.bt ppada.tdef
 # debut de code produit par "make-makefile ppada_args"
 
 ppada_args_t.c: ppada_args.bt ppada_args.st ppada_args.pt ppada_args.rt 
-	tables_c ppada_args > $@
+	tables_c -name ppada_args_tables ppada_args > $@
 
 ppada_args.bt  : ppada_args.bnf
 	semact ppada_args.bnf 

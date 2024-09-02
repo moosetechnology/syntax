@@ -25,7 +25,6 @@ $(LIB)/pplecl_main.o:	$(SXINCL)/sxunix.h		\
 $(LIB)/pplecl_t.o: 	$(SXINCL)/sxunix.h		\
 			pplecl_t.c
 	$(CC) -o $@ pplecl_t.c				\
-			-Dsxtables=pp_lecl_tables	\
 			-DPARSACT=lecl_pars_act		\
 			-DSCANACT=pp_lecl_scan_act
 

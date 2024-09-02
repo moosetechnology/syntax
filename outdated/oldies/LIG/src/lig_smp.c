@@ -1344,7 +1344,7 @@ lig_reduction ()
 
 static void
 smpopen (sxtables_ptr)
-    struct sxtables *sxtables_ptr;
+    SXTABLES *sxtables_ptr;
 {
     sxatcvar.atc_lv.node_size = sizeof (struct lig_node);
 }
@@ -1541,7 +1541,7 @@ smppass ()
 
 lig_smp (what, sxtables_ptr)
     int what;
-    struct sxtables *sxtables_ptr;
+    SXTABLES *sxtables_ptr;
 {
     switch (what) {
     case SXOPEN:

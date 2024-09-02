@@ -21,13 +21,13 @@
 #include "ppada_td.h"
 #include <ctype.h>
 
-char WHAT_PPADASACT[] = "@(#)SYNTAX - $Id: ppada_sact.c 4125 2024-07-29 10:59:13Z garavel $";
+char WHAT_PPADASACT[] = "@(#)SYNTAX - $Id: ppada_sact.c 4166 2024-08-19 09:00:49Z garavel $";
 
-extern struct sxtables	ppada_args_tables, ppada_tables;
+extern SXTABLES	ppada_args_tables, ppada_tables;
 
 
 
-static void	gripe (struct sxtables *sxtables, SXINT act_no)
+static void	gripe (SXTABLES *sxtables, SXINT act_no)
 {
     sxuse (act_no);
     sxerror (sxsvar.sxlv.terminal_token.source_index,

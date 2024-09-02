@@ -18,19 +18,19 @@ $(BIN)/ppc.out:	$(NEEDS)	$(SXBIBS)
 
 $(LIB)/ppc1_t.o:	ppc1_t.c		\
 			$(SXINCL)/sxunix.h
-	$(CC) -o $@ -Dsxtables=ppc1_tables -DSCANACT=ppc_scan_act ppc1_t.c
+	$(CC) -o $@ -DSCANACT=ppc_scan_act ppc1_t.c
 
 $(LIB)/ppc2_t.o:	ppc2_t.c		\
 			$(SXINCL)/sxunix.h
-	$(CC) -o $@ -Dsxtables=ppc2_tables -DSCANACT=ppc_scan_act ppc2_t.c
+	$(CC) -o $@ -DSCANACT=ppc_scan_act ppc2_t.c
 
 $(LIB)/ppc3_t.o:	ppc3_t.c		\
 			$(SXINCL)/sxunix.h
-	$(CC) -o $@ -Dsxtables=ppc3_tables -DSCANACT=ppc_scan_act ppc3_t.c
+	$(CC) -o $@ -DSCANACT=ppc_scan_act ppc3_t.c
 
 $(LIB)/ppc_args_t.o:	ppc_args_t.c	\
 			$(SXINCL)/sxunix.h
-	$(CC) -o $@ -Dsxtables=ppc_args_tables -DSCANACT=ppc_args_scan_act -DSEMACT=ppc_args_semact ppc_args_t.c
+	$(CC) -o $@ -DSCANACT=ppc_args_scan_act -DSEMACT=ppc_args_semact ppc_args_t.c
 
 $(LIB)/ppc_main.o:	ppc_main.c	\
 			ppc1_td.h	\
@@ -46,7 +46,7 @@ $(LIB)/ppc_sact.o:	ppc_sact.c	\
 # debut de code produit par "make-makefile ppc1"
 
 ppc1_t.c: ppc1.bt ppc1.st ppc1.pt ppc1.rt ppc1.ppt
-	tables_c ppc1 > $@
+	tables_c -name ppc1_tables ppc1 > $@
 
 ppc1.bt ppc1.ppt : ppc1.paradis
 	paradis ppc1.paradis 
@@ -71,7 +71,7 @@ ppc1_td.h: ppc1.bt ppc1.tdef
 # debut de code produit par "make-makefile ppc2"
 
 ppc2_t.c: ppc2.bt ppc2.st ppc2.pt ppc2.rt ppc2.ppt
-	tables_c ppc2 > $@
+	tables_c -name ppc2_tables ppc2 > $@
 
 ppc2.bt ppc2.ppt : ppc2.paradis
 	paradis ppc2.paradis 
@@ -96,7 +96,7 @@ ppc2_td.h: ppc2.bt ppc2.tdef
 # debut de code produit par "make-makefile ppc3"
 
 ppc3_t.c: ppc3.bt ppc3.st ppc3.pt ppc3.rt ppc3.ppt
-	tables_c ppc3 > $@
+	tables_c -name ppc3_tables ppc3 > $@
 
 ppc3.bt ppc3.ppt : ppc3.paradis
 	paradis ppc3.paradis 
@@ -121,7 +121,7 @@ ppc3_td.h: ppc3.bt ppc3.tdef
 # debut de code produit par "make-makefile ppc_args"
 
 ppc_args_t.c: ppc_args.bt ppc_args.st ppc_args.pt ppc_args.rt 
-	tables_c ppc_args > $@
+	tables_c -name ppc_args_tables ppc_args > $@
 
 ppc_args.bt  : ppc_args.bnf
 	semact ppc_args.bnf 

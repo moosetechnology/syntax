@@ -72,7 +72,7 @@ VARSTR cur_input_vstr; /* inutilisée, sauf si on se recompile le sxsrc_mngr avec
 			  redéfinir sxgetchar de façon à remplir cette variable (c'est le cas
 			  dans sxpipe/dag2dag (patterns_semact.c)) */
 
-char WHAT_UDAG_SCANNER[] = "@(#)SYNTAX - $Id: udag_scanner.c 4042 2024-06-15 08:16:56Z garavel $" WHAT_DEBUG;
+char WHAT_UDAG_SCANNER[] = "@(#)SYNTAX - $Id: udag_scanner.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 /* Ds le cas dag_kind==DAG_KIND */
 #include "fsa.h" /* Pour read_a_re () */
@@ -92,16 +92,16 @@ extern SXINT read_a_sdag (void (*store)(SXINT, SXINT, SXINT) /* store_sdag */,
 			  void (*fill)(void),
 			  SXINT (*check)(void), 
 			  void (*raz)(void) /* raz_sdag */, 
-			  SXINT (*parser)(SXINT what_to_do, struct sxtables *arg));
+			  SXINT (*parser)(SXINT what_to_do, SXTABLES *arg));
 extern SXINT *sdag_get_t_tok_no_stack (SXINT id);
 
 
 #define TOK_NB ((sizeof (tok_str)/sizeof (tok_str [0])))
 
 #ifdef dummy_tables
-extern struct sxtables dummy_tables;
+extern SXTABLES dummy_tables;
 #endif /* dummy_tables */
-static struct sxtables *tables;
+static SXTABLES *tables;
  
 /* Pour rendre udag_scanner independant de earley.h */
 extern SXUINT          maximum_input_size; /* ds earley_parser par exemple */
@@ -1950,7 +1950,7 @@ extern SXINT sxparser (); // celui de SYNTAX
 /* Le scanner est termine' sxplocals.Mtok_no reference le eof final */
 /* Parseur "manuel" des sources sous forme de chaine lineaire */
 static SXINT
-string_parser (SXINT what, struct sxtables *arg)
+string_parser (SXINT what, SXTABLES *arg)
 {
   SXINT tok_no;
 
@@ -2249,7 +2249,7 @@ postlude_re (SXINT fsa_kind)
    c,a permet au main d'appeler "dag_scanner ()", c'est le makefile de l'utilisateur qui a choisi
    entre dag_scanner.c ou udag_scanner.c */
 SXINT 
-dag_scanner (SXINT what, struct sxtables *arg /* reçoit toujours NULL*/)
+dag_scanner (SXINT what, SXTABLES *arg /* reçoit toujours NULL*/)
 {
   SXINT severity = 0;
 

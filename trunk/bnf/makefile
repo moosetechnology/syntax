@@ -93,7 +93,6 @@ $(LIB)/bnf_terminal.o:	$(SXINCL)/sxunix.h	\
 $(LIB)/bnf_t.o:		$(SXINCL)/sxunix.h 	\
 			$(BOOT)/bnf_t.c
 	$(CC) -o $@ -c $(BOOT)/bnf_t.c			\
-		-Dsxtables=bnf_tables		\
 		-DSCANACT=bnf_scan_act		\
 		-DSEMPASS=sxbnfsmp
 
@@ -135,10 +134,10 @@ $(LIB)/check_bnf.o:	$(SXINCL)/sxunix.h	\
 bootstrap: bnf_t.c bnf.c.skeleton 
 
 bnf_t.c: bnf.bt bnf.st bnf.pt bnf.rt bnf.att
-	tables_c bnf > $@
+	tables_c -name "bnf_tables" bnf > $@
 
 bnf.bt bnf.att bnf.c.skeleton: bnf.at
-	semat bnf.at  > bnf.c.skeleton
+	semat bnf.at > bnf.c.skeleton
 
 bnf.st: bnf.bt bnf.lecl
 	lecl bnf.lecl || [ $$? = 1 ]

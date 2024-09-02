@@ -2026,7 +2026,7 @@ SXLIG_sem_pass (S0n)
 
 
 #if is_initial_LIG==0
-int SXLIG_actions (SXINT what, SXINT action_no, struct sxtables *arg)
+int SXLIG_actions (SXINT what, SXINT action_no, SXTABLES *arg)
 {
     (void) action_no;
     (void) arg;

@@ -21,10 +21,10 @@
 
 #include "sxunix.h"
 
-char WHAT_PPCMAIN[] = "@(#)SYNTAX - $Id: ppc_main.c 4143 2024-08-02 08:50:12Z garavel $";
+char WHAT_PPCMAIN[] = "@(#)SYNTAX - $Id: ppc_main.c 4166 2024-08-19 09:00:49Z garavel $";
 
 /* Les tables engendrees par SYNTAX */
-extern struct sxtables	ppc_args_tables;
+extern SXTABLES	ppc_args_tables;
 
 extern bool ppc_scan_act (SXINT code, SXINT act_no);
 
@@ -32,13 +32,13 @@ extern bool ppc_scan_act (SXINT code, SXINT act_no);
 #include "ppc2_td.h"
 #include "ppc3_td.h"
 
-extern struct sxtables	ppc1_tables, ppc2_tables, ppc3_tables;
+extern SXTABLES	ppc1_tables, ppc2_tables, ppc3_tables;
 
 /*---------------*/
 /*    options    */
 /*---------------*/
 
-struct sxtables		*ppc_tables;
+SXTABLES		*ppc_tables;
 SXINT	ppc_TYPE;
 bool		ppc_verbose;
 static SXINT	ppc_file_argnum, ppc_output;
@@ -241,7 +241,7 @@ static void	user_args_error (char *message)
 
 
 
-void ppc_args_semact (SXINT what, SXINT action_no, struct sxtables *arg)
+void ppc_args_semact (SXINT what, SXINT action_no, SXTABLES *arg)
 {
     (void) arg;
     switch (what) {

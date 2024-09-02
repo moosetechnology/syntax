@@ -36,7 +36,7 @@ static char	ME [] = "make_tdef_main";
 #include "sxunix.h"
 #include "fsa.h"
 
-char WHAT_TDEFMAKETDEFMAIN[] = "@(#)SYNTAX - $Id: make_tdef_main.c 4161 2024-08-02 13:15:34Z garavel $" WHAT_DEBUG;
+char WHAT_TDEFMAKETDEFMAIN[] = "@(#)SYNTAX - $Id: make_tdef_main.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 #define SX_DFN_EXT_VAR2
 #include "udag_scanner.h"
@@ -63,7 +63,7 @@ par la commande
 #endif /* 0 */
 
 
-extern struct sxtables  sxtables;
+extern SXTABLES  sxtables;
 
 
 /*  S T A T I C     V A R I A B L E S   */
@@ -273,7 +273,7 @@ gen_header ()
 
 
 
-void make_tdef_semact (SXINT what, SXINT action_no, struct sxtables *arg)
+void make_tdef_semact (SXINT what, SXINT action_no, SXTABLES *arg)
 {
   switch (what) {
   case SXOPEN:

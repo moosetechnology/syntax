@@ -30,7 +30,7 @@ static char	ME [] = "DYNAM_PARSER";
 #include <sys/stat.h>
 #include <fcntl.h>
 
-char WHAT_SXDYNAM_PARSER[] = "@(#)SYNTAX - $Id: sxdynam_parser.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
+char WHAT_SXDYNAM_PARSER[] = "@(#)SYNTAX - $Id: sxdynam_parser.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 
 /* 
@@ -2128,7 +2128,7 @@ sxdp_G0 (void)
 
 
 SXINT
-sxdynam_parser (SXINT what_to_do, struct sxtables *arg)
+sxdynam_parser (SXINT what_to_do, SXTABLES *arg)
 {
     switch (what_to_do) {
     case SXBEGIN:

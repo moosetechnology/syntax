@@ -1,4 +1,18 @@
 
+Pierre Boullier - juillet 2024
+
+Question : pourquoi SYNTAX comporte-t-il des fonctions variadiques ("varargs") ?
+
+Reponse :
+
+La 2ème version de SYNTAX a été codée en PL/1 (Multics) et les fonctions PL/1 
+ont des 'entry points'. Si je me souviens bien le point d’entrée de la 
+fonction f s’appelle par f$e(...). On a donc une seule fonction et des entrées
+différentes, ce qui se code naturellement en C (SYNTAX version 3) par un 
+argument supplémentaire (souvent appelé "what") qui désigne le point d’entrée.
+
+------------------------------------------------------------------------------
+
 Pierre Boullier - sept 2023
 
 Ne pas appeler des fonctions comme sxcurrent_scanned_token_string() etc. 
@@ -477,7 +491,21 @@ regle. Celle-ci pourra utiliser la notation "prime" :
 
 ------------------------------------------------------------------------------
 
+Pierre Boullier - juillet 2024
 
+Question : quelle est la différence entre les types SXSEMPASS_FUNCTION et
+SXSEMACT_FUNCTION définis dans sxunix.h ? Pourrait-on les fusionner ?
+
+Réponse :
+
+Ces fonctins peuvent peut-être avoir le même profil, mais elles sont 
+différentes par essence : les semact sont appelées pendant l’analyse 
+syntaxique, alors que les sempass sont appelées après cette analyse, ce sont
+des post-semact. Par exemple si la sémantique est décrite par arbre abstrait 
+(par semat), les semact construisent cet arbre abstrait alors que les sempass 
+parcourent cet arbre afin d’y évaluer les attributs sémantiques (puis 
+éventuellement faire d’autres choses, génération de code, optimisations...). 
+Il faut donc conserver ces deux types.
 
 ------------------------------------------------------------------------------
 

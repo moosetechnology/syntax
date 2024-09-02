@@ -22,13 +22,13 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_F77MAIN[] = "@(#)SYNTAX - $Id: f77_main.c 3780 2024-02-29 15:19:53Z garavel $";
+char WHAT_F77MAIN[] = "@(#)SYNTAX - $Id: f77_main.c 4179 2024-08-26 12:53:35Z garavel $";
 
 bool is_ansi, is_json, is_indent, is_pretty_printer, is_input_free_fortran, is_extension;
 
 /* On est dans un cas "mono-langage": */
 
-extern struct sxtables	f77_tables;
+extern SXTABLES	sxtables;
 
 extern void f77_src_mngr (SXINT what, FILE *infile, char *file_name);
 
@@ -180,7 +180,7 @@ int main (int argc, char *argv[])
 			{ TABULATE(); print $0 }'";
     }
 
-    syntax (SXINIT, &f77_tables, false /* no includes */);
+    syntax (SXINIT, &sxtables, false /* no includes */);
 
     if (argnum == argc) {
 	/* Pas de fichier source, on lit sur stdin */
@@ -188,15 +188,15 @@ int main (int argc, char *argv[])
 	    fputs ("\"stdin\":\n", sxtty);
 	}
 
-	/* On devrait appeler syntax (SXBEGIN, &f77_tables...) ici, mais
+	/* On devrait appeler syntax (SXBEGIN, &sxtables...) ici, mais
 	 * c'est impossible car f77_src_mngr() remplace sxsrc_mngr()
 	 */ 
 	sxerr_mngr (SXBEGIN);
 	f77_src_mngr (SXINIT, stdin, "");
 
-	syntax (SXACTION, &f77_tables);
+	syntax (SXACTION, &sxtables);
 
-	/* On devrait appeler syntax (SXEND, &f77_tables) ici, mais c'est
+	/* On devrait appeler syntax (SXEND, &sxtables) ici, mais c'est
 	 * impossible car f77_src_mngr() remplace sxsrc_mngr()
 	 */
 	f77_src_mngr (SXFINAL, NULL, NULL);
@@ -211,16 +211,16 @@ int main (int argc, char *argv[])
 		    fputs ("\"stdin\":\n", sxtty);
 		}
 
-		/* On devrait appeler syntax (SXBEGIN, &f77_tables...) ici,
+		/* On devrait appeler syntax (SXBEGIN, &sxtables...) ici,
 		 * mais c'est impossible car f77_src_mngr() remplace
 		 * sxsrc_mngr()
 	 	 */
 		sxerr_mngr (SXBEGIN);
 		f77_src_mngr (SXINIT, stdin, "");
 
-		syntax (SXACTION, &f77_tables);
+		syntax (SXACTION, &sxtables);
 
-		/* On devrait appeler syntax (SXEND, &f77_tables) ici, mais
+		/* On devrait appeler syntax (SXEND, &sxtables) ici, mais
 		 * c'est impossible car f77_src_mngr() remplace sxsrc_mngr()
 	 	 */
 		f77_src_mngr (SXFINAL, NULL, NULL);
@@ -237,16 +237,16 @@ int main (int argc, char *argv[])
 			fprintf (sxtty, "%s:\n", argv [argnum]);
 		    }
 
-		    /* On devrait appeler syntax (SXBEGIN, &f77_tables...) ici,
+		    /* On devrait appeler syntax (SXBEGIN, &sxtables...) ici,
 		     * mais c'est impossible car f77_src_mngr() remplace
 		     * sxsrc_mngr()
 	 	     */
 		    sxerr_mngr (SXBEGIN);
 		    f77_src_mngr (SXINIT, infile, argv [argnum]);
 
-		    syntax (SXACTION, &f77_tables);
+		    syntax (SXACTION, &sxtables);
 
-		    /* On devrait appeler syntax (SXEND, &f77_tables) ici,
+		    /* On devrait appeler syntax (SXEND, &sxtables) ici,
 		     * mais c'est impossible car f77_src_mngr() remplace
 		     * sxsrc_mngr()
 	 	     */
@@ -259,7 +259,7 @@ int main (int argc, char *argv[])
 	}
     }
 
-    syntax (SXFINAL, &f77_tables, true);
+    syntax (SXFINAL, &sxtables, true);
 
     sxexit (sxerr_max_severity ());
     return 0;

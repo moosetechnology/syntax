@@ -39,7 +39,7 @@ extern void	sxdp_rule_activate (SXINT rule);
 extern void	sxdp_rule_deactivate (SXINT rule);
 extern void	sxdp_rule_delete (SXINT rule);
 extern void	sxdp_init_state (void);
-extern SXINT	sxdynam_parser (SXINT what_to_do, struct sxtables *arg);
+extern SXINT	sxdynam_parser (SXINT what_to_do, SXTABLES *arg);
 extern bool	sxdp_new_xt (SXINT t, SXINT prdct, SXINT *xt, SXINT prio, SXINT assoc);
 extern bool	sxdp_new_xnt (SXINT nt, SXINT prdct, SXINT *xnt);
 extern void	sxdp_delete_xt (SXINT xt);

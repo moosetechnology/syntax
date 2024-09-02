@@ -20,13 +20,13 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_LFGMAIN[] = "@(#)SYNTAX - $Id: lfg_main.c 3632 2023-12-20 17:58:08Z garavel $" WHAT_DEBUG;
+char WHAT_LFGMAIN[] = "@(#)SYNTAX - $Id: lfg_main.c 4202 2024-08-29 13:29:36Z garavel $" WHAT_DEBUG;
 
 FILE              *bnf_file, *vocabulary_file;
 char              *bnf_file_name, *vocabulary_file_name, *path_name, *prgent_name;
 SXUINT lfg_time;
 
-extern struct sxtables	lfg_tables;
+extern SXTABLES	sxtables;
 
 /*---------------*/
 /*    options    */
@@ -147,7 +147,7 @@ static void	lfg_run (char *pathname)
 	}
 
 	rewind (infile);
-	syntax (SXBEGIN, &lfg_tables, infile, "");
+	syntax (SXBEGIN, &sxtables, infile, "");
 	lfg_time = time (0) /* stdin => now */ ;
     }
     else if ((infile = sxfopen (pathname, "r")) == NULL) {
@@ -164,13 +164,13 @@ static void	lfg_run (char *pathname)
 	}
 
 	language_name = suffixname (pathname);
-	syntax (SXBEGIN, &lfg_tables, infile, pathname);
+	syntax (SXBEGIN, &sxtables, infile, pathname);
 	stat (sxsrcmngr.source_coord.file_name, &buf);
 	lfg_time = buf.st_mtime;
     }
 
-    syntax (SXACTION, &lfg_tables);
-    syntax (SXEND, &lfg_tables);
+    syntax (SXACTION, &sxtables);
+    syntax (SXEND, &sxtables);
     fclose (infile);
 
     if (prgent_name != NULL)
@@ -262,7 +262,7 @@ int main (int argc, char *argv[])
     fprintf (sxtty, "%s\n", release_mess);
   }
 
-  syntax (SXINIT, &lfg_tables, false /* no includes */);
+  syntax (SXINIT, &sxtables, false /* no includes */);
 
   if (argnum == argc /* stdin (sans -) */ ||
       strcmp (argv [argnum], "-") == 0) {
@@ -273,7 +273,7 @@ int main (int argc, char *argv[])
     lfg_run (path_name = argv [argnum]);
   }
 
-  syntax (SXFINAL, &lfg_tables, true);
+  syntax (SXFINAL, &sxtables, true);
 
   sxexit (sxerr_max_severity ());
   return EXIT_SUCCESS; /* Jamais atteint !! pour les compilo susceptibles ... */

@@ -25,7 +25,7 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXPPP[] = "@(#)SYNTAX - $Id: sxppp.c 3785 2024-03-06 12:51:21Z garavel $" WHAT_DEBUG;
+char WHAT_SXPPP[] = "@(#)SYNTAX - $Id: sxppp.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 #if BUG
 #define	BUG_CODE
@@ -1060,7 +1060,7 @@ end_sub_tree:
 
 
 
-static void	sxppopen (struct sxtables *sxtables)
+static void	sxppopen (SXTABLES *sxtables)
 {
     if (sxppvariables.line_length <= 1)
 	sxppvariables.line_length = 79;
@@ -1119,7 +1119,7 @@ static void	sxppclose (void)
     }
 }
 
-void	sxppp (SXINT sxppp_what, struct sxtables *sxtables)
+void	sxppp (SXINT sxppp_what, SXTABLES *sxtables)
 {
   switch (sxppp_what) {
   case SXOPEN:

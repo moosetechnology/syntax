@@ -841,7 +841,7 @@ break;
 /* end lecl_pd */
 }
 
-static void smpopen (struct sxtables *sxtables_ptr)
+static void smpopen (SXTABLES *sxtables_ptr)
 {
 sxuse(sxtables_ptr);
 sxatcvar.atc_lv.node_size = sizeof (struct lecl_node);
@@ -861,7 +861,7 @@ sxsmp (sxatcvar.atc_lv.abstract_tree_root, lecl_pi, lecl_pd);
 
 }
 
-int lecl_smp (SXINT what, struct sxtables *sxtables_ptr)
+int lecl_smp (SXINT what, SXTABLES *sxtables_ptr)
 {
 sxuse (sxtables_ptr);
 switch (what) {

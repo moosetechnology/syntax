@@ -29,7 +29,7 @@
 #include "sem_by.h"
 #include "varstr.h"
 
-char WHAT_PARADISSMP[] = "@(#)SYNTAX - $Id: paradis_smp.c 4124 2024-07-29 10:58:45Z garavel $" WHAT_DEBUG;
+char WHAT_PARADISSMP[] = "@(#)SYNTAX - $Id: paradis_smp.c 4183 2024-08-26 17:07:35Z garavel $" WHAT_DEBUG;
 
 
 extern void    bnf_get_rule_tail (SXUINT rule_no, SXUINT *tline, SXUINT *tcol);
@@ -87,7 +87,7 @@ static char	*codop_name [11] = {"", "SKIP", "PAGE", "SPACE", "TAB", "MARGIN", "C
 
 /* E X T E R N   */
 
-extern struct sxtables		paradis_tables;
+extern SXTABLES	sxtables;
 extern VARSTR	cat_t_string (VARSTR, SXINT);
 extern bool	is_check;
 
@@ -149,9 +149,9 @@ static void	gen_code (SXINT codop, SXINT move)
     if (is_inh) {
 	is_inh = false /* un seul message */;
 	sxerror (inh_source_index,
-		 paradis_tables.err_titles [2][0],
+		 sxtables.err_titles [2][0],
 		 "%sINH can only be the last specification of a rule.",
-		 paradis_tables.err_titles [2]+1);
+		 sxtables.err_titles [2]+1);
 	SUCCESS = false;
 	}
 
@@ -333,9 +333,9 @@ static void	smppass (struct paradis_node *visited)
 		    }
 
 		    sxerror (son->token.source_index,
-			     paradis_tables.err_titles [2][0],
+			     sxtables.err_titles [2][0],
 			     "%sA move specification must be a non zero integer less than 256.",
-			     paradis_tables.err_titles [2]+1);
+			     sxtables.err_titles [2]+1);
 		    SUCCESS = false;
 		    move_val = 1;
 		}
@@ -459,14 +459,14 @@ bool		paradis_sem (void)
 
 /* On reutilise la string table de bnf */
 
-    syntax (SXOPEN, &paradis_tables) /* Initialisation de SYNTAX */ ;
-    syntax (SXACTION, &paradis_tables);
+    syntax (SXOPEN, &sxtables) /* Initialisation de SYNTAX */ ;
+    syntax (SXACTION, &sxtables);
 
 /*   F I N A L I Z A T I O N   */
 
 /* The current tables are closed. */
 
-    syntax (SXCLOSE, &paradis_tables);
+    syntax (SXCLOSE, &sxtables);
 
 /* On restaure les variables des processeurs utilises par bnf */
 
@@ -488,7 +488,7 @@ bool		paradis_sem (void)
     }
     else {
 	SUCCESS = false;
-	sxtmsg (sxsrcmngr.source_coord.file_name, "%sTables are not generated.", paradis_tables.err_titles [2]+1);
+	sxtmsg (sxsrcmngr.source_coord.file_name, "%sTables are not generated.", sxtables.err_titles [2]+1);
     }
 
     sxfree (check);
@@ -645,7 +645,7 @@ void	paradis_lo (void)
 
 
 
-void	paradis_smp (SXINT what, struct sxtables *paradis_smp_paradis_tables)
+void	paradis_smp (SXINT what, SXTABLES *paradis_smp_paradis_tables)
 {
     sxuse(paradis_smp_paradis_tables); /* pour faire taire gcc -Wunused */
     switch (what) {

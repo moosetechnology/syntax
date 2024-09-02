@@ -33,7 +33,7 @@ static char	ME [] = "wcw3_parsact";
 
 static int	middle;
 
-bool wcw3_parsact (int which, struct sxtables	*arg)
+bool wcw3_parsact (int which, SXTABLES	*arg)
 {
     int act_no;
 

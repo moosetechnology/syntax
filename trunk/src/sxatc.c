@@ -27,7 +27,7 @@
 
 #include <memory.h>
 
-char WHAT_SXATC[] = "@(#)SYNTAX - $Id: sxatc.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
+char WHAT_SXATC[] = "@(#)SYNTAX - $Id: sxatc.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 struct sxatc_area {
     struct sxatc_area	*next;
@@ -282,7 +282,7 @@ static void	cons_comments (bool is_right_cons, SXNODE *node_ptr, SXINT low, SXIN
 
 
 static void	initialize (void)
-     /* struct sxtables	*tables; */
+     /* SXTABLES	*tables; */
 /* On traite un nouveau texte source */
 {
     sxatcvar.atc_lv.abstract_tree_root = NULL;
@@ -302,7 +302,7 @@ static void	initialize (void)
 
 
 static void	finalize (void)
-     /* struct sxtables	*tables; */
+     /* SXTABLES	*tables; */
 /* on a fini de traiter un texte source */
 {
     if (!sxatcvar.atc_lv.are_comments_erased) {
@@ -607,7 +607,7 @@ static void	c_leaf (void)
 
 
 
-static void	atc_open (struct sxtables *tables)
+static void	atc_open (SXTABLES *tables)
                    	        
 /* On traite un nouveau langage */
 {
@@ -700,7 +700,7 @@ static void	action (SXINT act)
 
 
 
-void sxatc (SXINT what, SXINT action_no, struct sxtables *arg)
+void sxatc (SXINT what, SXINT action_no, SXTABLES *arg)
     /* si what=SXACTION, action_no est un entier entre 0 et 6 ;  si what != SXACTION, arg est un pointeur vers des tables. */
 {
     SXINT l;

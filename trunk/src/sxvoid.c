@@ -20,7 +20,7 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXVOID[] = "@(#)SYNTAX - $Id: sxvoid.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
+char WHAT_SXVOID[] = "@(#)SYNTAX - $Id: sxvoid.c 4169 2024-08-20 08:18:27Z garavel $" WHAT_DEBUG;
 
 void sxvoid (void)
 /* procedure ne faisant rien */
@@ -39,6 +39,12 @@ SXINT sxivoid (void)
   return 0;
 }
 
+void sxvoid_int (SXINT i)
+/* procedure ne faisant rien */
+{
+  sxuse (i);
+}
+
 SXINT sxivoid_int (SXINT i)
 /* procedure ne faisant rien */
 {
@@ -54,14 +60,14 @@ bool sxjvoid (SXINT what, SXINT act_no)
   return 0;
 }
 
-void sxsvoid (SXINT what, struct sxtables *sxtables_ptr)
+void sxsvoid (SXINT what, SXTABLES *sxtables_ptr)
 /* procedure ne faisant rien */
 {
   sxuse (what);
   sxuse (sxtables_ptr);
 }
 
-void sxwvoid (SXINT what, SXINT action_no, struct sxtables *sxtables_ptr)
+void sxwvoid (SXINT what, SXINT action_no, SXTABLES *sxtables_ptr)
 /* procedure ne faisant rien */
 {
   sxuse (what);

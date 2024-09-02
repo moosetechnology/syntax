@@ -6,7 +6,7 @@
 FILE *source_file;
 char *source_file_name;
 
-extern SXINT  dag_scanner (SXINT what, struct sxtables *arg);
+extern SXINT  dag_scanner (SXINT what, SXTABLES *arg);
 /* dag_scanner (SXACTION, NULL); */
 /* dag_scanner (SXSEMPASS, NULL); */
 /* dag_scanner (SXCLOSE, NULL); */

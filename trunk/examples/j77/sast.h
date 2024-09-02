@@ -1741,3 +1741,46 @@ SXML_TYPE_LIST ast_end_if(
     );
   }
 }
+
+
+/* -------------------------------------------------------------------------
+ * returns a unary/binary multiple operator
+ * - Location of the statement
+ * - left operand (if binary)
+ * - right operand
+ * - first operator
+ * - second operator
+ */
+SXML_TYPE_LIST ast_multiple_operator(
+            SXML_TYPE_LIST location,
+            SXML_TYPE_LIST left,
+            SXML_TYPE_TEXT first_operator,
+            SXML_TYPE_TEXT second_operator,
+            SXML_TYPE_LIST right) {
+
+  if (left == NULL){
+    return JSON_MAP(
+      SXML_LLTLLL(
+        ast_tag_("unary_multiple_operator"),
+        location,
+        ",\n",
+        JSON_KQ_("first_operator", first_operator),
+        JSON_KQ_("second_operator", second_operator),
+        JSON_KU("operand", right)
+      )
+    );
+  }
+  else {
+    return JSON_MAP(
+      SXML_LLTLLLL(
+        ast_tag_("binary_multiple_operator"),
+        location,
+        ",\n",
+        JSON_KQ_("first_operator", first_operator),
+        JSON_KQ_("second_operator", second_operator),
+        JSON_KU_("left", left),
+        JSON_KU("right", right)
+      )
+    );
+  }
+}

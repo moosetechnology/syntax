@@ -19,7 +19,7 @@
 /* Beginning of sxtables for bnf [Thu Jun  9 11:32:55 1994] */
 #include "sxunix.h"
 #include "sxba.h"
-char WHAT_BNFSPECDST[] = "@(#)SYNTAX - $Id: bnf_dst.c 4099 2024-06-21 14:52:48Z garavel $" WHAT_DEBUG;
+char WHAT_BNFSPECDST[] = "@(#)SYNTAX - $Id: bnf_dst.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 static struct SXP_reductions reductions[]={
 {0, 3, 0, -15},
@@ -352,7 +352,7 @@ static char *S_global_mess[]={
 extern SXSCANACT_FUNCTION SCANACT;
 extern SXSEMACT_FUNCTION SEMACT;
 
-struct sxtables sxtables={
+SXTABLES sxtables={
 52113, /* magic */
 sxscanner,
 sxparser,

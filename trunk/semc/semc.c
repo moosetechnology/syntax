@@ -50,7 +50,7 @@
 #include "sxunix.h"
 #include "B_tables.h"
 
-char WHAT_SEMC[] = "@(#)SYNTAX - $Id: semc.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_SEMC[] = "@(#)SYNTAX - $Id: semc.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 #include "semc_vars.h"
 #include "put_edit.h"
@@ -60,7 +60,7 @@ FILE	*listing;
 static char	ME [] = "semc";
 static char	quotes [] = "''''''''''''''''''''''''''''''";
 static SXINT	size_ste_to, nb_tnt;
-extern struct sxtables	bnf_tables, dec_tables, def_tables;
+extern SXTABLES	bnf_tables, dec_tables, def_tables;
 extern void	put_copyright (void);
 extern void	put_identite (SXINT nat1, SXINT nat2, SXINT pos);
 

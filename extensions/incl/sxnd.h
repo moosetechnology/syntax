@@ -151,8 +151,8 @@
 typedef SXINT (*sxaction_new_top_t) (SXINT, SXINT, SXINT);
 
 extern bool	sxndparse_in_la (SXINT ep_la, SXINT Ttok_no, SXINT *Htok_no, struct sxparse_mode *mode_ptr);
-extern bool	sxnd2parser (SXINT what_to_do, struct sxtables *arg);
-extern bool	sxndparser (SXINT what_to_do, struct sxtables *arg);
+extern bool	sxnd2parser (SXINT what_to_do, SXTABLES *arg);
+extern bool	sxndparser (SXINT what_to_do, SXTABLES *arg);
 extern bool	sxndparse_clean_forest (void);
 extern void	sxndparse_pack_forest (void);
 extern void	sxndparse_erase_hook_item (SXINT item);
@@ -603,7 +603,7 @@ struct ndsrcvr {
 
 SX_GLOBAL_VAR_ND struct sxndsvar {
     struct SXS_tables	SXS_tables /*	les tables du scanner en local			*/ ;
-    struct sxtables	*sxtables /*	pointeur vers l'ensemble des tables		*/ ;
+    SXTABLES	*sxtables /*	pointeur vers l'ensemble des tables		*/ ;
     struct sxscan_mode	mode /* 	en global pour l'instant			*/ ;
     sxindex_header	index_header /* index dans ndlv					*/ ;
     SXINT			ndlv_size /* 	taille de ndlv					*/ ;

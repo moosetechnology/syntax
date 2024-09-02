@@ -45,7 +45,7 @@ bool			is_print_prod, is_print_time;
 
 struct sxndlig_common {
     struct sxligparsact	code;
-    struct sxtables	*sxtables;
+    SXTABLES	*sxtables;
 } sxndlig_common;
 
 
@@ -1307,7 +1307,7 @@ SXLIG_sem_pass (S0n)
     return true;
 }
 
-void SXLIG_actions (SXINT what, SXINT action_no, struct sxtables *arg)
+void SXLIG_actions (SXINT what, SXINT action_no, SXTABLES *arg)
 {
     (void) action_no;
     switch (what) {

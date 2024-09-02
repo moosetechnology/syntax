@@ -37,7 +37,6 @@ $(LIB)/semact_sact.o:	$(SXINCL)/sxunix.h $(SXINCL)/sem_by.h $(SXINCL)/util/B_tab
 
 $(LIB)/semact_t.o:	$(SXINCL)/sxunix.h $(BOOT)/semact_t.c
 	$(CC) -o $@ -c $(BOOT)/semact_t.c 		\
-		-Dsxtables=semact_tables	\
 		-DSEMACT=semact_semact
 
 # debut de code produit par "make-makefile semact"

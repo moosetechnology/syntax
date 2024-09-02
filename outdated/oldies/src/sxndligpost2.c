@@ -92,7 +92,7 @@ static char	ME [] = "sxndligpost2";
 #include 	"sxndlig_post2.h"
 
 extern int      sxndlig_post_do_it ();
-extern int      sxndligpost (int which, struct sxtables *arg);
+extern int      sxndligpost (int which, SXTABLES *arg);
 
 #ifdef EBUG
 # define stdout_or_NULL	stdout
@@ -828,7 +828,7 @@ sxndlig_post2_do_it ()
 
 
 
-bool sxndligpost2 (int which, struct sxtables *arg)
+bool sxndligpost2 (int which, SXTABLES *arg)
 {
   switch (which) {
   case SXOPEN:

@@ -27,7 +27,7 @@
 #include "bnf_vars.h"
 #include "put_edit.h"
 
-char WHAT_SEMATMAIN[] = "@(#)SYNTAX - $Id: semat_main.c 4139 2024-07-31 16:02:45Z garavel $" WHAT_DEBUG;
+char WHAT_SEMATMAIN[] = "@(#)SYNTAX - $Id: semat_main.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 /* These include files for date/time manipulation: */
 #include <sys/types.h>
@@ -42,7 +42,7 @@ SXSCANACT_FUNCTION *more_scan_act = {semat_scan_act};
 extern void	no_tables (void), bnf_lo (void);
 extern bool	semat_sem (void);
 extern void     semat_lo (void);
-extern struct sxtables	bnf_tables;
+extern SXTABLES	bnf_tables;
 
 /*---------------*/
 /*    options    */

@@ -26,7 +26,7 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_RCG_GUIDED[] = "@(#)SYNTAX - $Id: RCG_guided_main.c 4147 2024-08-02 10:32:28Z garavel $" WHAT_DEBUG;
+char WHAT_RCG_GUIDED[] = "@(#)SYNTAX - $Id: RCG_guided_main.c 4201 2024-08-29 12:46:22Z garavel $" WHAT_DEBUG;
 
 #include "rcg_sglbl.h"
 #include <stdlib.h>
@@ -37,8 +37,8 @@ char WHAT_RCG_GUIDED[] = "@(#)SYNTAX - $Id: RCG_guided_main.c 4147 2024-08-02 10
 
 FILE	*sxstdout, *sxstderr;
 FILE	*sxtty;
-extern struct sxtables	guide_tables;
-extern struct sxtables	RCG_tables;
+extern SXTABLES	guide_tables;
+extern SXTABLES	sxtables;
 
 /*---------------*/
 /*    options    */
@@ -214,7 +214,7 @@ lost:	    sxperror (tmp_pathname);
     sxsvar = RCG.sxsvar;
     sxplocals = RCG.sxplocals;
 
-    syntax (SXACTION, &RCG_tables);
+    syntax (SXACTION, &sxtables);
 
     RCG.sxsvar = sxsvar;
     RCG.sxplocals = sxplocals;
@@ -384,7 +384,7 @@ int main(int argc, char *argv[])
 	fprintf (sxtty, "%s\n", release_mess);
     }
 
-    syntax (SXOPEN, &RCG_tables) /* Initialisation de SYNTAX */ ;
+    syntax (SXOPEN, &sxtables) /* Initialisation de SYNTAX */ ;
     RCG.sxsvar = sxsvar;
     RCG.sxplocals = sxplocals;
 
@@ -415,7 +415,7 @@ int main(int argc, char *argv[])
     sxsvar = RCG.sxsvar;
     sxplocals = RCG.sxplocals;
 
-    syntax (SXCLOSE, &RCG_tables);
+    syntax (SXCLOSE, &sxtables);
 
     sxstr_mngr (SXEND);
 

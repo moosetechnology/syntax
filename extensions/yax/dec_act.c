@@ -22,9 +22,9 @@
 #include "B_tables.h"
 #include "yax_vars.h"
 
-char WHAT_YAXDECACT[] = "@(#)SYNTAX - $Id: dec_act.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
+char WHAT_YAXDECACT[] = "@(#)SYNTAX - $Id: dec_act.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
-extern struct sxtables	bnf_tables;
+extern SXTABLES	bnf_tables;
 
 
 extern void    bnf_found_bad_beginning_of_rule (void);
@@ -84,7 +84,7 @@ bool dec_scanact (SXINT code, SXINT numact)
 }
 
 
-void dec_semact (SXINT code, SXINT numact, struct sxtables *arg)
+void dec_semact (SXINT code, SXINT numact, SXTABLES *arg)
 {
     (void) arg;
     switch (code) {

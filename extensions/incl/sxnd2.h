@@ -478,7 +478,7 @@ struct ndsrcvr {
 
 struct sxndsvar {
     struct SXS_tables	SXS_tables /*	les tables du scanner en local			*/ ;
-    struct sxtables	*sxtables /*	pointeur vers l'ensemble des tables		*/ ;
+    SXTABLES	*sxtables /*	pointeur vers l'ensemble des tables		*/ ;
     struct sxscan_mode	mode /* 	en global pour l'instant			*/ ;
     sxindex_header	index_header /* index dans ndlv					*/ ;
     SXINT			ndlv_size /* 	taille de ndlv					*/ ;

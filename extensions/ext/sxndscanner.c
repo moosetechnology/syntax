@@ -21,9 +21,9 @@
 #include "sxcommon.h"
 
 #ifndef VARIANT_32
-char WHAT_SXNDSCANNER[] = "@(#)SYNTAX - $Id: sxndscanner.c 4079 2024-06-19 16:50:31Z garavel $" WHAT_DEBUG;
+char WHAT_SXNDSCANNER[] = "@(#)SYNTAX - $Id: sxndscanner.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 #else
-char WHAT_SXNDSCANNER32[] = "@(#)SYNTAX - $Id: sxndscanner.c 4079 2024-06-19 16:50:31Z garavel $ SXNDSCANNER_32" WHAT_DEBUG;
+char WHAT_SXNDSCANNER32[] = "@(#)SYNTAX - $Id: sxndscanner.c 4166 2024-08-19 09:00:49Z garavel $ SXNDSCANNER_32" WHAT_DEBUG;
 #endif
 
 /*
@@ -849,7 +849,7 @@ void	sxndscan_it (void)
 
 
 
-SXINT sxndscanner (SXINT what, struct sxtables *arg)
+SXINT sxndscanner (SXINT what, SXTABLES *arg)
 {
     SXINT i;
     

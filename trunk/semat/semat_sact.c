@@ -29,7 +29,7 @@ static char	ME [] = "semat";
 #include "T_tables.h"
 #include "varstr.h"
 
-char WHAT_SEMATSACT[] = "@(#)SYNTAX - $Id: semat_sact.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
+char WHAT_SEMATSACT[] = "@(#)SYNTAX - $Id: semat_sact.c 4182 2024-08-26 16:48:18Z garavel $" WHAT_DEBUG;
 
 #define NO_ACT 			0
 #define CREATE_FAMILY 		1
@@ -47,7 +47,7 @@ extern void     semat_free (struct T_ag_item *T_ag);
 
 /*   E X T E R N   */
 
-extern struct sxtables	semat_tables;
+extern SXTABLES	sxtables;
 extern bool		is_check, is_c;
 
 /*   S T A T I C   */
@@ -115,9 +115,9 @@ static SXINT	get_ate (char *get_ate_node_name, SXINT x_prod)
 
     if (!is_id)
 	sxerror (tok [x_prod].source_index,
-		 semat_tables.err_titles [2][0],
+		 sxtables.err_titles [2][0],
 		 "%sAt rule %ld: the node %s must be a C identifier.",
-		 semat_tables.err_titles [2]+1,
+		 sxtables.err_titles [2]+1,
 		 x_prod,
 		 get_ate_node_name);
 
@@ -162,9 +162,9 @@ static void	symbol_table (char *symbol_table_node_name,
 	    /* current action is forced to create_list */
 	else
 	    sxerror (tok [x_prod].source_index,
-		     semat_tables.err_titles [2][0],
+		     sxtables.err_titles [2][0],
 		     "%sThe node \"%s\" defined rule %ld has not the same arity as previously defined.",
-		     semat_tables.err_titles [2]+1,
+		     sxtables.err_titles [2]+1,
 		     symbol_table_node_name,
 		     x_prod);
     }
@@ -269,7 +269,7 @@ static void	gripe (void)
 }
 
 
-void semat_semact (SXINT code, SXINT numact, struct sxtables *arg)
+void semat_semact (SXINT code, SXINT numact, SXTABLES *arg)
 {
     (void) arg;
     switch (code) {
@@ -412,9 +412,9 @@ bool		semat_sem (void)
 
 		if (b_list && b_recur && nb_rhs != 2) {
 		    sxerror (tok [x_prod].source_index,
-			     semat_tables.err_titles [2][0],
+			     sxtables.err_titles [2][0],
 			     "%sAt rule %ld: only a single node can be added to a list at a time.",
-			     semat_tables.err_titles [2]+1,
+			     sxtables.err_titles [2]+1,
 			     x_prod);
 		}
 
@@ -426,9 +426,9 @@ bool		semat_sem (void)
 
 		    if (nb_rhs > 2 || (nb_rhs == 2 && (!b_list || !b_recur))) {
 			sxerror (tok [x_prod].source_index,
-				 semat_tables.err_titles [2][0],
+				 sxtables.err_titles [2][0],
 				 "%sAt rule %ld: a node name must be specified.",
-				 semat_tables.err_titles [2]+1,
+				 sxtables.err_titles [2]+1,
 				 x_prod);
 		    }
 		    else if (nb_rhs == 2)
@@ -506,9 +506,9 @@ bool		semat_sem (void)
 			if (b_list)
 			    if (b_recur)
 				sxerror (tok [x_prod].source_index,
-					 semat_tables.err_titles [2][0],
+					 sxtables.err_titles [2][0],
 					 "%sAt rule %ld: a node name can only be associated with the list initialization.",
-					 semat_tables.err_titles [2]+1,
+					 sxtables.err_titles [2]+1,
 					 x_prod);
 			    else {
 				action_no = CREATE_LIST;
@@ -742,7 +742,7 @@ bool semat_scan_act (SXINT code, SXINT act_no)
 	tok = (struct sxtoken*) sxalloc (tok_lgth = 128, sizeof (struct sxtoken));
 	bnf.sxsvar = sxsvar;
 	bnf.sxplocals = sxplocals;
-	syntax (SXOPEN, &semat_tables);
+	syntax (SXOPEN, &sxtables);
 	semat.sxsvar = sxsvar;
 	semat.sxplocals = sxplocals;
 	sxsvar = bnf.sxsvar;
@@ -754,7 +754,7 @@ bool semat_scan_act (SXINT code, SXINT act_no)
 	bnf.sxplocals = sxplocals;
 	sxsvar = semat.sxsvar;
 	sxplocals = semat.sxplocals;
-	syntax (SXCLOSE, &semat_tables);
+	syntax (SXCLOSE, &sxtables);
 	sxsvar = bnf.sxsvar;
 	sxplocals = bnf.sxplocals;
 	sxfree (tok);
@@ -782,7 +782,7 @@ bool semat_scan_act (SXINT code, SXINT act_no)
 /* Ca permet de commencer l'analyse des actions (apres le get_next_char() de la partie
    SXINIT du scanner) avec ";" comme previous char et le caractere suivant le ';' comme
    caractere courant. */
-	    sxsyntax (SXACTION, &semat_tables);
+	    sxsyntax (SXACTION, &sxtables);
 	    semat.sxsvar = sxsvar;
 	    semat.sxplocals = sxplocals;
 	    sxsvar = bnf.sxsvar;

@@ -12,3 +12,6 @@ The misc/ directory contains miscellaneous tests.
 Ths nist/ directory contains a test suite produced by NIST
 source: https://www.itl.nist.gov/div897/ctg/fortran_form.htm
 
+The esope/ directory contains tests with ESOPE extensions
+(this is not standard FORTRAN).
+

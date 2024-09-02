@@ -36,7 +36,7 @@ static char	ME [] = "PARSER";
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXDPARSER_NDT[] = "@(#)SYNTAX - $Id: sxdparser_ndt.c 4098 2024-06-21 14:42:16Z garavel $" WHAT_DEBUG;
+char WHAT_SXDPARSER_NDT[] = "@(#)SYNTAX - $Id: sxdparser_ndt.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 /*   V A R I A B L E S   */
 
@@ -500,7 +500,7 @@ error_message (void)
 }
 
 
-bool sxdparser_ndt (SXINT what_to_do, struct sxtables *arg)
+bool sxdparser_ndt (SXINT what_to_do, SXTABLES *arg)
 {
     switch (what_to_do) {
     case SXBEGIN:

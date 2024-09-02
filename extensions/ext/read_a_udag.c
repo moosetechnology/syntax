@@ -42,7 +42,7 @@ static char ME [] = "read_a_udag";
 #include "udag_scanner.h"
 #include "earley.h"
 
-char WHAT_READAUDAG[] = "@(#)SYNTAX - $Id: read_a_udag.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
+char WHAT_READAUDAG[] = "@(#)SYNTAX - $Id: read_a_udag.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 static bool is_error;
 
@@ -88,7 +88,7 @@ static void	action (SXINT action_no)
 }
 
 
-void udag_action (SXINT what, SXINT numarg, struct sxtables *arg)
+void udag_action (SXINT what, SXINT numarg, SXTABLES *arg)
 {
     (void) arg;
     switch (what) {
@@ -177,7 +177,7 @@ SXINT get_eodag_code (void)
   return eodag_code;
 }
 
-void sxparser_udag_tcut  (SXINT what, struct sxtables *arg)
+void sxparser_udag_tcut  (SXINT what, SXTABLES *arg)
 {
   SXINT   lahead = 0, store_print_time;
   struct  sxtoken *ptoken;

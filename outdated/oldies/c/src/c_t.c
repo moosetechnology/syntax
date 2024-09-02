@@ -1678,7 +1678,7 @@ extern int ESAMBIG();
 extern SXSEMACT_FUNCTION SEMACT;
 static SXCHECK_KEYWORD_FUNCTION sxcheck_keyword;
 
-struct sxtables sxtables={
+SXTABLES sxtables={
 52113, /* magic */
 sxscanner,
 sxndparser,

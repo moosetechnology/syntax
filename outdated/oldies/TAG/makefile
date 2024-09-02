@@ -41,7 +41,6 @@ $(LIB)/xtag_smp.o:	$(SXINCL)/sxunix.h	\
 $(LIB)/xtag_t.o:	$(SXINCL)/sxunix.h 	\
 			$(SRC)/xtag_t.c
 	$(CC) -o $@ -c $(SRC)/xtag_t.c		\
-		-Dsxtables=xtag_tables		\
 		-DSCANACT=xtag_scan_act		\
 		-DSEMACT=sxwvoid			\
 		-DSEMPASS=xtag_smp

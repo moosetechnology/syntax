@@ -46,14 +46,14 @@
 #include "yax_vars.h"
 #include "put_edit.h"
 
-char WHAT_YAX[] = "@(#)SYNTAX - $Id: yax.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_YAX[] = "@(#)SYNTAX - $Id: yax.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 static char	ME [] = "yax";
 static SXINT	nb_tnt;
 static SXINT	ste_max_attr;
-extern struct sxtables	bnf_tables;
-extern struct sxtables	dec_tables;
-extern struct sxtables	def_tables;
+extern SXTABLES	bnf_tables;
+extern SXTABLES	dec_tables;
+extern SXTABLES	def_tables;
 
 #include "sem_by.h"
 

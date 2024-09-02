@@ -23,7 +23,7 @@
 #include "B_tables.h"
 #include "bnf_vars.h"
 
-char WHAT_SEMACT_SACT[] = "@(#)SYNTAX - $Id: semact_sact.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
+char WHAT_SEMACT_SACT[] = "@(#)SYNTAX - $Id: semact_sact.c 4183 2024-08-26 17:07:35Z garavel $" WHAT_DEBUG;
 
 static SXINT	*user_actions;
 static SXINT	act_lgth, rule_no;
@@ -36,7 +36,7 @@ static void	gripe (void)
 }
 
 
-void semact_semact (SXINT code, SXINT numact, struct sxtables *arg)
+void semact_semact (SXINT code, SXINT numact, SXTABLES *arg)
 {
     (void) arg;
     switch (code) {
@@ -71,7 +71,7 @@ void semact_semact (SXINT code, SXINT numact, struct sxtables *arg)
 
 
 
-extern struct sxtables	semact_tables;
+extern SXTABLES	sxtables;
 
 
 
@@ -82,7 +82,7 @@ bool		semact_sem (void)
 
     if (W.nbpro != rule_no) {
 	sxtmsg (sxsrcmngr.source_coord.file_name, "%sInternal inconsistency %ld-%ld;\n\tactions will not be produced.\n",
-	     semact_tables.err_titles [2]+1, W.nbpro, rule_no);
+	     sxtables.err_titles [2]+1, W.nbpro, rule_no);
 	return false;
     }
 
@@ -111,7 +111,7 @@ bool semact_scan_act (SXINT code, SXINT act_no)
 	user_actions = (SXINT *) sxalloc (act_lgth = 128, sizeof (SXINT));
 	bnf.sxsvar = sxsvar;
 	bnf.sxplocals = sxplocals;
-	syntax (SXOPEN, &semact_tables);
+	syntax (SXOPEN, &sxtables);
 	semact.sxsvar = sxsvar;
 	semact.sxplocals = sxplocals;
 	sxsvar = bnf.sxsvar;
@@ -123,7 +123,7 @@ bool semact_scan_act (SXINT code, SXINT act_no)
 	bnf.sxplocals = sxplocals;
 	sxsvar = semact.sxsvar;
 	sxplocals = semact.sxplocals;
-	syntax (SXCLOSE, &semact_tables);
+	syntax (SXCLOSE, &sxtables);
 	sxsvar = bnf.sxsvar;
 	sxplocals = bnf.sxplocals;
 	sxfree (user_actions);
@@ -152,7 +152,7 @@ bool semact_scan_act (SXINT code, SXINT act_no)
 /* Ca permet de commencer l'analyse des actions (apres le get_next_char() de la partie
    SXINIT du scanner) avec ";" comme previous char et le caractere suivant le ';' comme
    caractere courant. */
-	    sxsyntax (SXACTION, &semact_tables);
+	    sxsyntax (SXACTION, &sxtables);
 	    semact.sxsvar = sxsvar;
 	    semact.sxplocals = sxplocals;
 	    sxsvar = bnf.sxsvar;

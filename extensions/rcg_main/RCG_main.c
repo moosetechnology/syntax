@@ -28,7 +28,7 @@
 #define SX_DFN_EXT_VAR2
 #include "udag_scanner.h"
 
-char WHAT_RCG_MAIN[] = "@(#)SYNTAX - $Id: RCG_main.c 3942 2024-05-01 13:37:54Z garavel $" WHAT_DEBUG;
+char WHAT_RCG_MAIN[] = "@(#)SYNTAX - $Id: RCG_main.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 #include "rcg_sglbl.h"
 
@@ -39,10 +39,10 @@ bool       tmp_file_for_stdin; /* Pour read_a_re */
 /* On utilise udag_scanner pour lire le source */
 #ifdef dummy_tables
 /* Il y a des tables SYNTAX ds le coup */
-extern struct sxtables	dummy_tables;
-static struct sxtables	*dummy_tables_ptr = {&dummy_tables};
+extern SXTABLES	dummy_tables;
+static SXTABLES	*dummy_tables_ptr = {&dummy_tables};
 #else /* dummy_tables */
-static struct sxtables	*dummy_tables_ptr = {NULL};
+static SXTABLES	*dummy_tables_ptr = {NULL};
 #endif /* dummy_tables */
 #endif /* !NO_SX */
 

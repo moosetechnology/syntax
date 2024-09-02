@@ -30,13 +30,14 @@ static char	ME [] = "rcg_1rcg_2var";
 #include "sxba.h"
 #include "XxYxZ.h"
 #include "rcg.h"
+#include "rcg_td.h"
 #include "varstr.h"
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
 #include "sxmatrix2vector.h"
 
-char WHAT_RCG1RCG2VAR[] = "@(#)SYNTAX - $Id: rcg_1rcg_2var.c 3900 2024-04-20 07:47:18Z garavel $" WHAT_DEBUG;
+char WHAT_RCG1RCG2VAR[] = "@(#)SYNTAX - $Id: rcg_1rcg_2var.c 4191 2024-08-29 10:29:33Z garavel $" WHAT_DEBUG;
 
 extern SXINT is_arg_in_Tstar (SXINT param);
 

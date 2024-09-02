@@ -30,7 +30,7 @@
 #include <sys/stat.h>
 #include <sys/timeb.h>
 
-char WHAT_BNFMAIN[] = "@(#)SYNTAX - $Id: bnf_main.c 4108 2024-07-17 10:22:21Z garavel $" WHAT_DEBUG;
+char WHAT_BNFMAIN[] = "@(#)SYNTAX - $Id: bnf_main.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 char	by_mess [] = "the SYNTAX grammar processor BNF";
 
@@ -40,7 +40,7 @@ SXINT	(*more_scan_act) (SXINT code, SXINT act_no);
 
 
 extern void	no_tables (void), bnf_lo (void);
-extern struct sxtables	bnf_tables;
+extern SXTABLES	bnf_tables;
 
 extern void bnf_huge (struct bnf_ag_item *B, char *langname);
 extern void bnf_terminal (struct bnf_ag_item *B, char *langname);

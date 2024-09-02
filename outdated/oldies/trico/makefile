@@ -21,19 +21,16 @@ $(BIN)/trico.out:	$(NEEDED)	$(SXBIBS)
 $(LIB)/trico_act.o:	$(SXINCL)/sxunix.h	\
 			trico_env.h	\
 			trico_act.c	
-	$(CC) -o $@ -c trico_act.c		\
-		-Dsxtables=trico_tables
+	$(CC) -o $@ -c trico_act.c
 
 $(LIB)/trico_main.o:	$(SXINCL)/sxunix.h	\
 			trico_env.h	\
 			trico_main.c
-	$(CC) -o $@ -c trico_main.c		\
-		-Dsxtables=trico_tables
+	$(CC) -o $@ -c trico_main.c
 
 $(LIB)/trico_t.o:	$(SXINCL)/sxunix.h 	\
 			trico_t.c
 	$(CC) -o $@ -c trico_t.c			\
-		-Dsxtables=trico_tables		\
 		-DSCANACT=trico_scan_act	\
 		-DSEMACT=trico_sem_act
 

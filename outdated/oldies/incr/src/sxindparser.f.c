@@ -2279,7 +2279,7 @@ static bool sxparse_it ()
 
 bool sxindparser (what_to_do, arg)
     int		what_to_do;
-    struct sxtables	*arg;
+    SXTABLES	*arg;
 {
   switch (what_to_do) {
   case SXBEGIN:

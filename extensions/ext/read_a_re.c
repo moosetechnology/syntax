@@ -46,7 +46,7 @@ static char ME [] = "read_a_re";
 #include "varstr.h"
 #include <setjmp.h>
 
-char WHAT_READARE[] = "@(#)SYNTAX - $Id: read_a_re.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
+char WHAT_READARE[] = "@(#)SYNTAX - $Id: read_a_re.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 extern VARSTR              cur_input_vstr;
 
@@ -1123,7 +1123,7 @@ DESCRIPTION
 /* *************************************************************************************************** */
 
 static void
-smpopen (struct sxtables *sxtables_ptr)
+smpopen (SXTABLES *sxtables_ptr)
 {
   sxuse (sxtables_ptr);
   sxatcvar.atc_lv.node_size = sizeof (struct re_node);
@@ -1215,7 +1215,7 @@ smppass (void)
   return severity;
 }
 
-void re_smp (SXINT what, struct sxtables *sxtables_ptr)
+void re_smp (SXINT what, SXTABLES *sxtables_ptr)
 {
   sxuse(sxtables_ptr); /* pour faire taire gcc -Wunused */
 
@@ -1292,7 +1292,7 @@ extern SXPARSER_FUNCTION sxparser;
 
 /* C'est le parseur de re_tables.SX_parser */
 
-void sxparser_re_tcut  (SXINT what, struct sxtables *arg)
+void sxparser_re_tcut  (SXINT what, SXTABLES *arg)
 {
   SXINT            lahead = 0, store_print_time;
   struct sxtoken   *ptoken;

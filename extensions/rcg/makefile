@@ -12,10 +12,9 @@ RCG_CFLAGS=
 
 CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util -I$(SX)/../extensions/incl $(RCG_CFLAGS) $(CFLAGS)
 
-all: $(BIN)/rcg.out \
-     $(BIN)/drcg.out
+all: $(BIN)/rcg.out
 
-NEEDS1=\
+NEEDS=\
 	$(LIB)/rcg_main.o		\
 	$(LIB)/rcg_sact.o		\
 	$(LIB)/rcg_smp.o    		\
@@ -24,9 +23,9 @@ NEEDS1=\
 	$(LIB)/rcg_gen_bnf.o   		\
 	$(LIB)/rcg_t.o
 
-$(BIN)/rcg.out:	$(NEEDS1)	$(SXEXTBIBS)
+$(BIN)/rcg.out:	$(NEEDS)	$(SXEXTBIBS)
 	@rm -f $@
-	$(COMPILER) -o $@ $(NEEDS1) $(RCG_CFLAGS) $(CFLAGS) $(LDFLAGS) $(SXEXTBIBS) || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(NEEDS) $(RCG_CFLAGS) $(CFLAGS) $(LDFLAGS) $(SXEXTBIBS) || (rm $@;exit 1)
 
 $(LIB)/rcg_main.o:	$(SXINCL)/sxunix.h	\
 			rcg_td.h	\
@@ -88,48 +87,8 @@ $(LIB)/rcg_gen_bnf.o:	$(SXINCL)/sxunix.h	\
 $(LIB)/rcg_t.o:		$(SXINCL)/sxunix.h 	\
 			rcg_t.c
 	$(CC) -o $@ -c rcg_t.c			\
-		-Dsxtables=rcg_tables		\
 		-DSCANACT=rcg_scan_act		\
 		-DSEMPASS=rcg_smp
-
-NEEDS2=\
-	$(LIB)/drcg_main.o		\
-	$(LIB)/rcg_sact.o		\
-	$(LIB)/rcg_smp.o    		\
-	$(LIB)/rcg_1rcg_2var.o 		\
-	$(LIB)/rcg_gen_parser.o		\
-	$(LIB)/rcg_gen_bnf.o   		\
-	$(LIB)/rcg_t.o			\
-	$(LIB)/drcg_smp.o    		\
-	$(LIB)/drcg_t.o
-
-$(BIN)/drcg.out:	$(NEEDS2)	$(SXEXTBIBS)
-	@rm -f $@
-	$(COMPILER) -o $@ $(NEEDS2) $(RCG_CFLAGS) $(CFLAGS) $(LDFLAGS) $(SXEXTBIBS) || (rm $@;exit 1)
-
-$(LIB)/drcg_main.o:	$(SXINCL)/sxunix.h	\
-			rcg_td.h	\
-			rcg.h			\
-			drcg_main.c
-	$(CC) -o $@ -c drcg_main.c
-
-$(LIB)/drcg_smp.o:	$(SXINCL)/sxunix.h	\
-			$(SXINCL)/sxba.h	\
-			$(SXINCL)/varstr.h	\
-			$(SXINCL)/XH.h		\
-			$(SXINCL)/XxY.h		\
-			rcg_td.h		\
-			rcg.h			\
-			$(SX)/../extensions/incl/dcg_cst.h	\
-			drcg_smp.c
-	$(CC) -o $@ -c drcg_smp.c
-
-$(LIB)/drcg_t.o:	$(SXINCL)/sxunix.h 	\
-			drcg_t.c	
-	$(CC) -o $@ -c drcg_t.c			\
-		-Dsxtables=drcg_tables		\
-		-DSCANACT=rcg_scan_act		\
-		-DSEMPASS=drcg_smp
 
 # debut de code produit par "make-makefile rcg"
 
@@ -153,29 +112,9 @@ rcg_td.h: rcg.bt rcg.tdef
 
 # fin de code produit par "make-makefile rcg"
 
-# debut de code produit par "make-makefile drcg"
-
-drcg_t.c: drcg.bt drcg.st drcg.pt drcg.rt drcg.att
-	tables_c drcg > $@
-
-drcg.bt drcg.att drcg_mix.c: drcg.at
-	semat drcg.at  > drcg_mix.c
-
-drcg.st: drcg.bt drcg.lecl
-	lecl drcg.lecl || [ $$? = 1 ]
-
-drcg.pt: drcg.bt
-	csynt drcg || [ $$? = 1 ]
-
-drcg.rt: drcg.bt drcg.st drcg.recor
-	recor drcg.recor
-
-# fin de code produit par "make-makefile drcg"
-
 clean:
-	/bin/rm -f $(LIB)/*.o $(BIN)/rcg.out $(BIN)/drcg.out
-	/bin/rm -f rcg.*.l drcg.*.l
+	/bin/rm -f $(LIB)/*.o $(BIN)/rcg.out
+	/bin/rm -f rcg.*.l
 	/bin/rm -f rcg.att rcg.bt rcg.pt rcg.rt rcg.st rcg_mix.c rcg_t.c rcg_td.h
-	/bin/rm -f drcg.att drcg.bt drcg.pt drcg.rt drcg.st drcg_mix.c drcg_t.c
 
 

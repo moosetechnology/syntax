@@ -17,7 +17,7 @@
  *   can be found at, e.g., http://www.cecill.info
  *****************************************************************************/
 
-char WHAT_LUSTRE[] = "@(#)SYNTAX - $Id: main.c 3632 2023-12-20 17:58:08Z garavel $";
+char WHAT_LUSTRE[] = "@(#)SYNTAX - $Id: main.c 4166 2024-08-19 09:00:49Z garavel $";
 
 /* Exemple simple d'utilisation de SYNTAX */
 
@@ -25,7 +25,7 @@ char WHAT_LUSTRE[] = "@(#)SYNTAX - $Id: main.c 3632 2023-12-20 17:58:08Z garavel
 
 /* On est dans un cas "mono-langage" */
 
-extern struct sxtables	sxtables;
+extern SXTABLES	sxtables;
 
 int main (int argc, char *argv[])
 {

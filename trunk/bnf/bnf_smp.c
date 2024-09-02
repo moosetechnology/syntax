@@ -22,7 +22,7 @@
 #include "B_tables.h"
 #include "bnf_vars.h"
 
-char WHAT_BNFSMP[] = "@(#)SYNTAX - $Id: bnf_smp.c 3621 2023-12-17 11:11:31Z garavel $" WHAT_DEBUG;
+char WHAT_BNFSMP[] = "@(#)SYNTAX - $Id: bnf_smp.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 extern void symbol_table_processing /* struct sxnode_header_s *adam */  (struct sxnode_header_s *adam);
 extern void property_test (void);
@@ -30,7 +30,7 @@ extern void follow_construction (void);
 
 
 void
-sxbnfsmp (SXINT what, struct sxtables *sxtables_ptr)
+sxbnfsmp (SXINT what, SXTABLES *sxtables_ptr)
 {
     switch (what) {
     case SXOPEN:

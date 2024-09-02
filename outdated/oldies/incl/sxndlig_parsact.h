@@ -18,7 +18,7 @@ struct for_postparsact {
 /* Structure "globale" partagee par tous les "ligparsact". */
 struct sxndlig_common {
     struct sxligparsact	code;
-    struct sxtables	*sxtables;
+    SXTABLES	*sxtables;
 };
 
 

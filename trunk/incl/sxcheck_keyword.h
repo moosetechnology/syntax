@@ -17,7 +17,7 @@
  *   can be found at, e.g., http://www.cecill.info
  *****************************************************************************/
 
-static char WHAT_SXCHECK_KEYWORD[] = "@(#)SYNTAX - $Id: sxcheck_keyword.h 3987 2024-06-01 11:07:47Z garavel $" WHAT_DEBUG;
+static char WHAT_SXCHECK_KEYWORD[] = "@(#)SYNTAX - $Id: sxcheck_keyword.h 4211 2024-09-02 08:18:40Z garavel $" WHAT_DEBUG;
 
 /**
  * CAUTION: This is not a standard include file, but a file that contains
@@ -38,7 +38,7 @@ static char WHAT_SXCHECK_KEYWORD[] = "@(#)SYNTAX - $Id: sxcheck_keyword.h 3987 2
  *	static unsigned char char2class [256]
 **/
 
-SXINT sxcheck_keyword (char *init_string, SXINT init_length)
+static SXINT sxcheck_keyword (char *init_string, SXINT init_length)
 {
     char	*string = init_string, *keyword;
     SXINT	length = init_length;

@@ -427,7 +427,7 @@ break;
 /* end recor_pd */
 }
 
-static void smpopen (struct sxtables *sxtables_ptr)
+static void smpopen (SXTABLES *sxtables_ptr)
 {
 sxuse(sxtables_ptr);
 sxatcvar.atc_lv.node_size = sizeof (struct recor_node);
@@ -447,7 +447,7 @@ sxsmp (sxatcvar.atc_lv.abstract_tree_root, recor_pi, recor_pd);
 
 }
 
-int recor_smp (SXINT what, struct sxtables *sxtables_ptr)
+int recor_smp (SXINT what, SXTABLES *sxtables_ptr)
 {
 sxuse (sxtables_ptr);
 switch (what) {

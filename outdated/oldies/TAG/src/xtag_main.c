@@ -51,7 +51,7 @@ extern void xtag_second_pass (void);
 FILE	*sxstdout, *sxstderr;
 FILE	*sxtty;
 
-extern struct sxtables	xtag_tables;
+extern SXTABLES	sxtables;
 
 /*---------------*/
 /*    options    */
@@ -194,7 +194,7 @@ lost:	    sxperror (pathname);
     }
 
     sxerr_mngr (SXBEGIN);
-    syntax (SXACTION, &xtag_tables);
+    syntax (SXACTION, &sxtables);
     sxsrc_mngr (SXFINAL);
     sxerr_mngr (SXEND);
     fclose (infile);
@@ -289,8 +289,8 @@ run:
     }
 
     sxstr_mngr (SXBEGIN);
-    (*(xtag_tables.SX_parser)) (SXBEGIN, NULL /* dummy */);
-    syntax (SXOPEN, &xtag_tables);
+    (*(sxtables.SX_parser)) (SXBEGIN, NULL /* dummy */);
+    syntax (SXOPEN, &sxtables);
 
     if (options_set & OPTION (LANGUAGE_NAME)) {
 	xtag_run (NULL);
@@ -304,14 +304,14 @@ run:
 
 	    if (argnum < argc)
 		  /* On libere l'arbre abstrait */
-	      sxatc (SXCLOSE, &xtag_tables);
+	      sxatc (SXCLOSE, &sxtables);
 
 	    sxerrmngr.nbmess [2] += severity;
 	} while (argnum < argc);
     }
 
-    syntax (SXCLOSE, &xtag_tables);
-    (*(xtag_tables.SX_parser)) (SXEND, NULL /* dummy */);
+    syntax (SXCLOSE, &sxtables);
+    (*(sxtables.SX_parser)) (SXEND, NULL /* dummy */);
 
     xtag_second_pass ();
 

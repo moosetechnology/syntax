@@ -45,7 +45,7 @@ struct level_trans2attr {
 };
 
 struct ARN {
-    struct sxtables	*sxtables;
+    SXTABLES	*sxtables;
 
 #if 0
     SXBA		symbol_set;

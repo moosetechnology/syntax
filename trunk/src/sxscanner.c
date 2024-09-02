@@ -37,7 +37,7 @@ extern short sxgetchar (void);
 #endif /* sxgetchar_is_redefined */
 
 #ifndef VARIANT_32
-char WHAT_SXSCANNER[] = "@(#)SYNTAX - $Id: sxscanner.c 4077 2024-06-19 16:33:12Z garavel $" WHAT_DEBUG;
+char WHAT_SXSCANNER[] = "@(#)SYNTAX - $Id: sxscanner.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 #endif
 
 static char	ME [] = "SCANNER";
@@ -529,7 +529,7 @@ read_la_transition:
 
 /* VARARGS1 */
 
-void sxscanner (SXINT what, struct sxtables *arg)
+void sxscanner (SXINT what, SXTABLES *arg)
 {
     SXINT i;
 

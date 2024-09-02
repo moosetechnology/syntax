@@ -22,7 +22,7 @@ static char	ME [] = "ATCPP";
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXATCPP[] = "@(#)SYNTAX - $Id: sxatcpp.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
+char WHAT_SXATCPP[] = "@(#)SYNTAX - $Id: sxatcpp.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 /* Gestion dans le tas : */
 
@@ -289,7 +289,7 @@ static void	error (void)
 
 
 
-void	sxatcpp (SXINT what, SXINT action_no, struct sxtables *arg)
+void	sxatcpp (SXINT what, SXINT action_no, SXTABLES *arg)
 {
     switch (what) {
     case SXOPEN:
@@ -328,10 +328,10 @@ void	sxatcpp (SXINT what, SXINT action_no, struct sxtables *arg)
 
 	/* dans le cas ou sxppp() est appelee avec un premier parametre valant
 	 * SXACTION, le deuxieme parametre, formellement declare avec le type
-	 * "(struct sxtables *)", doit etre de type "(struct sxnode_pp *)" en
+	 * "(SXTABLES *)", doit etre de type "(struct sxnode_pp *)" en
 	 * realite : l'interieur de la fonction sxppp() contient un cast dans
 	 * ce cas */
-	sxppp (SXACTION, (struct sxtables *) root_ptr);
+	sxppp (SXACTION, (SXTABLES *) root_ptr);
 	free_areas ();
 	break;
 

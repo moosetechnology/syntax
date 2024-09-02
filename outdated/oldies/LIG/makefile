@@ -42,7 +42,6 @@ $(LIB)/lig_smp.o:	$(SXINCL)/sxunix.h	\
 $(LIB)/lig_t.o:		$(SXINCL)/sxunix.h 	\
 			$(SRC)/lig_t.c
 	$(CC) -o $@ -c $(SRC)/lig_t.c		\
-		-Dsxtables=lig_tables		\
 		-DSCANACT=lig_scan_act		\
 		-DSEMPASS=lig_smp
 

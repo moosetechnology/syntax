@@ -29,7 +29,7 @@
 
 #include "recor_node.h"
 
-char WHAT_RECORSMP[] = "@(#)SYNTAX - $Id: recor_smp.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_RECORSMP[] = "@(#)SYNTAX - $Id: recor_smp.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 /*  N O D E   N A M E S  */
 #define ERROR_n 1
@@ -916,7 +916,7 @@ Z Z Z Z
 
 
 
-static void	smpopen (struct sxtables *sxtables_ptr)
+static void	smpopen (SXTABLES *sxtables_ptr)
 {
     err_titles = sxtables_ptr->err_titles;
     sxatcvar.atc_lv.node_size = sizeof (struct recor_node);
@@ -1008,7 +1008,7 @@ static void	smppass (void)
 
 
 
-void	recor_smp (SXINT what, struct sxtables *sxtables_ptr)
+void	recor_smp (SXINT what, SXTABLES *sxtables_ptr)
 {
     switch (what) {
     case SXOPEN:

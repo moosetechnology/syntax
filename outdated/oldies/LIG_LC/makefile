@@ -12,9 +12,9 @@ CFLAGS= -g -DEBUG_ALLOC -DEBUG
 
 DEF1= -Dis_parser=1 -Dis_rcvr=1 -Ddelta_n=10 -Dis_1LA=1 -DXpack=1
 DEF2= -Ddelta_n=0 -Dis_1LA=1
-DEF3= -Dsxtables=earley_tables -Dsxndparser=sxearley_parser -DSEMACT=SXLIG_actions		\
+DEF3= -Dsxndparser=sxearley_parser -DSEMACT=SXLIG_actions		\
       -Drecovery=sxp_rcvr_earley_lc -Dsxndprecovery=sxp_rcvr_earley_lc -DESAMBIG=sxvoid -DPARSACT_2=sxvoid
-DEF4= -Dsxtables=earley_tables -Dsxndparser=sxearley_parser -DSEMACT=SXLIG_actions		\
+DEF4= -Dsxndparser=sxearley_parser -DSEMACT=SXLIG_actions		\
       -Drecovery=sxbvoid -Dsxndprecovery=sxbvoid -DESAMBIG=sxvoid -DPARSACT_2=sxvoid
 DEF5= -Ddelta_n=0 -Dis_parser=1 -Dis_1LA=1
 
@@ -75,7 +75,7 @@ $(TEST)/wcw_lr.out:	$(WCW_LR)	$(SXBIBS)
 
 $(LIB)/wcw_lr_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/wcw_lr_t.c
-	$(CC) -o $@ -c $(SRC)/wcw_lr_t.c -Dsxtables=earley_tables -DESAMBIG=sxvoid -DPARSACT=sxvoid -DSEMACT=SXLIG_actions
+	$(CC) -o $@ -c $(SRC)/wcw_lr_t.c -DESAMBIG=sxvoid -DPARSACT=sxvoid -DSEMACT=SXLIG_actions
 
 $(LIB)/wcw_lr_ligt.o: 	$(SXINCL)/sxunix.h		\
 			$(SXINCL)/sxnd.h		\
@@ -121,7 +121,7 @@ $(TEST)/nnf_lr.out:	$(NNF_LR)	$(SXBIBS)
 
 $(LIB)/nnf_lr_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/nnf_lr_t.c
-	$(CC) -o $@ -c $(SRC)/nnf_lr_t.c -Dsxtables=earley_tables -DESAMBIG=sxvoid -DPARSACT=sxvoid -DSEMACT=SXLIG_actions
+	$(CC) -o $@ -c $(SRC)/nnf_lr_t.c -DESAMBIG=sxvoid -DPARSACT=sxvoid -DSEMACT=SXLIG_actions
 
 $(LIB)/nnf_lr_ligt.o: 	$(SXINCL)/sxunix.h		\
 			$(SXINCL)/sxnd.h		\
@@ -165,7 +165,7 @@ $(TEST)/cyc_lr.out:	$(CYC_LR)	$(SXBIBS)
 
 $(LIB)/cyc_lr_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/cyc_lr_t.c
-	$(CC) -o $@ -c $(SRC)/cyc_lr_t.c -Dsxtables=earley_tables -DESAMBIG=sxvoid -DPARSACT=sxvoid -DSEMACT=SXLIG_actions
+	$(CC) -o $@ -c $(SRC)/cyc_lr_t.c -DESAMBIG=sxvoid -DPARSACT=sxvoid -DSEMACT=SXLIG_actions
 
 $(LIB)/cyc_lr_ligt.o: 	$(SXINCL)/sxunix.h		\
 			$(SXINCL)/sxnd.h		\
@@ -209,7 +209,7 @@ $(TEST)/cyc2_lr.out:	$(CYC2_LR)	$(SXBIBS)
 
 $(LIB)/cyc2_lr_t.o: 	$(SXINCL)/sxunix.h		\
 			$(SRC)/cyc2_lr_t.c
-	$(CC) -o $@ -c $(SRC)/cyc2_lr_t.c -Dsxtables=earley_tables -DESAMBIG=sxvoid -DPARSACT=sxvoid -DSEMACT=SXLIG_actions
+	$(CC) -o $@ -c $(SRC)/cyc2_lr_t.c -DESAMBIG=sxvoid -DPARSACT=sxvoid -DSEMACT=SXLIG_actions
 
 $(LIB)/cyc2_lr_ligt.o: 	$(SXINCL)/sxunix.h		\
 			$(SXINCL)/sxnd.h		\
@@ -253,7 +253,7 @@ $(TEST)/anbmcndm_lr.out:	$(ANBM_LR)	$(SXBIBS)
 
 $(LIB)/anbmcndm_lr_t.o: 	$(SXINCL)/sxunix.h	\
 			$(SRC)/anbmcndm_lr_t.c
-	$(CC) -o $@ -c $(SRC)/anbmcndm_lr_t.c -Dsxtables=earley_tables -DESAMBIG=sxvoid -DPARSACT=sxvoid -DSEMACT=SXLIG_actions
+	$(CC) -o $@ -c $(SRC)/anbmcndm_lr_t.c -DESAMBIG=sxvoid -DPARSACT=sxvoid -DSEMACT=SXLIG_actions
 
 $(LIB)/anbmcndm_lr_ligt.o: 	$(SXINCL)/sxunix.h	\
 			$(SXINCL)/sxnd.h		\

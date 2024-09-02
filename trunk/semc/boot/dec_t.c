@@ -18,6 +18,7 @@
  *****************************************************************************/
 
 /* Beginning of sxtables for dec */
+#define sxtables dec_tables /* due to option "-name" of tables_c */
 #define SXP_MAX 53
 #include "sxunix.h"
 #include "sxba.h"
@@ -353,7 +354,7 @@ extern SXSEMACT_FUNCTION SEMACT;
 #pragma GCC diagnostic pop
 #endif
 
-struct sxtables sxtables={
+SXTABLES sxtables={
 52113, /* magic */
 sxscanner,
 sxparser,

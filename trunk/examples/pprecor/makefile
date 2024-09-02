@@ -24,7 +24,6 @@ $(LIB)/pprecor_main.o:	$(SXINCL)/sxunix.h	\
 $(LIB)/pprecor_t.o: 	$(SXINCL)/sxunix.h		\
 			pprecor_t.c
 	$(CC) -o $@ pprecor_t.c			\
-			-Dsxtables=pp_recor_tables	\
 			-DSCANACT=pp_recor_scan_act
 
 $(LIB)/pprecor_sact.o:	$(SXINCL)/sxunix.h		\

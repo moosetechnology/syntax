@@ -56,7 +56,6 @@ $(LIB)/semat_sact.o:	$(SXINCL)/sxunix.h	\
 
 $(LIB)/semat_t.o:	$(SXINCL)/sxunix.h $(BOOT)/semat_t.c
 	$(CC) -o $@ -c $(BOOT)/semat_t.c			\
-		-Dsxtables=semat_tables		\
 		-DSEMACT=semat_semact		\
 		-DSEMPASS=semat_sem
 

@@ -274,7 +274,11 @@ SX_GLOBAL_VAR bool sxverbosep SX_INIT_VAL (false) /* Should we animate the user'
 #define SXSTMI unsigned short
 #endif
 
+/*****************************************************************************/
+
 /* Structures des tables elles-memes */
+
+typedef struct sxtables SXTABLES; /* forward declaration */
 
 typedef bool (SXSCANACT_FUNCTION) (SXINT what, SXINT action_no);
 /* the type SXSCANACT_FUNCTION denotes a scanning function, which can be
@@ -309,8 +313,6 @@ struct SXS_tables {
     SXCHECK_KEYWORD_FUNCTION *S_check_keyword;
 };
 
-struct sxtables; /* forward declaration needed by struct SXT_tables */
-
 typedef void (SXSCANIT_FUNCTION) (void);
 /* the type SXSCANIT_FUNCTION denotes a scan function, which can be stored
    in SXP_tables.P_scan_it */
@@ -323,11 +325,11 @@ typedef bool (SXPARSACT_FUNCTION) (SXINT what, SXINT action_no);
 /* the type SXPARSACT_FUNCTION denotes a parse function which can be stored
    in SXP_tables.P_parsact */
 
-typedef SXINT (SXDESAMBIG_FUNCTION) (SXINT what);
+typedef void (SXDESAMBIG_FUNCTION) (SXINT what);
 /* the type SXDESAMBIG_FUNCTION denotes a desambiguation function, which can
    be stored in SXP_tables.P_desambig */
 
-typedef void (SXSEMACT_FUNCTION) (SXINT what, SXINT action_no, struct sxtables *arg);
+typedef void (SXSEMACT_FUNCTION) (SXINT what, SXINT action_no, SXTABLES *arg);
 /* the type SXSEMACT_FUNCTION denotes a semantic function which can be stored
    in SXP_tables.P_semact */
 
@@ -361,7 +363,7 @@ struct SXP_tables {
     SXSEMACT_FUNCTION		*P_semact;
 };
 
-typedef void (SXSEMPASS_FUNCTION) (SXINT what, struct sxtables *sxtables_ptr);
+typedef void (SXSEMPASS_FUNCTION) (SXINT what, SXTABLES *sxtables_ptr);
 /* the type SXSEMPASS_FUNCTION denotes a semantic-pass function, which can
    be stored in SXT_tables.T_sempass */
 
@@ -399,11 +401,11 @@ struct sxligparsact {
 
 /* ------------------------------ THE TABLES ------------------------------ */
 
-typedef void (SXSCANNER_FUNCTION) (SXINT what, struct sxtables *arg);
+typedef void (SXSCANNER_FUNCTION) (SXINT what, SXTABLES *arg);
 /* the type SXSCANNER_FUNCTION denotes a scanning function, which can be stored
    in sxtables.SX_scanner */
 
-typedef void (SXPARSER_FUNCTION) (SXINT what, struct sxtables *arg);
+typedef void (SXPARSER_FUNCTION) (SXINT what, SXTABLES *arg);
 /* the type SXPARSER_FUNCTION denotes a parsing function, which can be stored
    in sxtables.SX_parser */
 
@@ -575,7 +577,7 @@ SX_GLOBAL_VAR struct sxsvar {
     struct SXS_tables	SXS_tables /*	les tables					*/ ;
     struct sxlv_s	sxlv_s /*	variables locales				*/ ;
     struct sxlv		sxlv /*		variables locales a sauver pour include		*/ ;
-    struct sxtables	*sxtables;
+    SXTABLES		*sxtables;
 }	sxsvar;
 
 
@@ -655,7 +657,7 @@ struct sxcomment {
 
 SX_GLOBAL_VAR struct sxplocals {
     struct SXP_tables	SXP_tables;
-    struct sxtables	*sxtables;
+    SXTABLES		*sxtables;
     SXINT /* SXP_SHORT */   state;
     /* token manager */
     struct sxtoken	**toks_buf	/* Support Physique */ ;
@@ -676,7 +678,7 @@ SX_GLOBAL_VAR struct sxplocals {
 
 SX_GLOBAL_VAR struct sxliglocals {
     struct sxligparsact	code;
-    struct sxtables	*sxtables;
+    SXTABLES	*sxtables;
     /* Pile // a la pile d'analyse, contient des numeros de pile ou -1 */
     SXINT			*DO_stack;	/* Geree par SXDO */
     SXINT			DO_stack_size;
@@ -709,7 +711,7 @@ SX_GLOBAL_VAR struct sxliglocals {
 
 
 SX_GLOBAL_VAR struct sxppvariables {
-    struct sxtables	*sxtables;
+    SXTABLES	*sxtables;
     struct SXPP_schema	**PP_tables;
     SXPP_STRING_INFO	*terminal_string_info;
     SXPP_SAVED_INFO	*save_stack;
@@ -1056,7 +1058,7 @@ extern void sxexit (int sevlev)
 /* MISCELLANEOUS (see sxunix(3)) */
 /*********************************/
 
-extern void sxsyntax (SXINT syntax_what, struct sxtables *tables, ...);
+extern void sxsyntax (SXINT syntax_what, SXTABLES *tables, ...);
 
 #define syntax sxsyntax   /* pour compatibilite ascendante */
 
@@ -1074,6 +1076,7 @@ extern void  fermer (SXBA *R, SXBA_INDEX taille);
 extern void  fermer2 (SXBA *R, SXBA_INDEX taille);
 
 extern void		sxvoid (void);
+extern void		sxvoid_int (SXINT i);
 extern bool		sxbvoid (void);
 extern SXINT		sxivoid (void);
 extern SXINT		sxivoid_int (SXINT i);
@@ -1369,7 +1372,7 @@ extern SXNODE *sxson (/* struct sxnode_header_s */ void *visited, SXINT n),
 /* PRETTY-PRINTER OF PROGRAMS (see sxppp(3))    */
 /************************************************/
 
-extern void sxppp (SXINT sxppp_what, struct sxtables *);
+extern void sxppp (SXINT sxppp_what, SXTABLES *);
 
 /************************************************/
 /* OUTPUT SOURCE LISTING (see sxlistout(3))    */

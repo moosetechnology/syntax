@@ -22,7 +22,7 @@
 #include "SS.h"
 
 #ifndef VARIANT_32
-char WHAT_SXP_RECOVERY[] = "@(#)SYNTAX - $Id: sxp_rcvr.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
+char WHAT_SXP_RECOVERY[] = "@(#)SYNTAX - $Id: sxp_rcvr.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 #endif
 
 /*
@@ -87,7 +87,7 @@ static SXINT	lgt1;
 
 */
 
-static char	*ttext (struct sxtables *tables, SXINT tcode)
+static char	*ttext (SXTABLES *tables, SXINT tcode)
 {
     return (tcode == sxplocals.SXP_tables.P_tmax) ? sxplocals.SXP_tables.P_global_mess [sxplocals.SXP_tables.
 	 P_followers_number + 2] : sxttext (tables, tcode);

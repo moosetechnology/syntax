@@ -43,7 +43,7 @@ static char ME [] = "read_a_sdag";
 #include "earley.h"
 #include "sxstack.h"
 
-char WHAT_READASDAG[] = "@(#)SYNTAX - $Id: read_a_sdag.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
+char WHAT_READASDAG[] = "@(#)SYNTAX - $Id: read_a_sdag.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 extern void (*main_parser)(SXINT what);
 
@@ -91,7 +91,7 @@ static SXBA  ste_set;
 
 static SXINT cur_state;
 
-void sdag_action (SXINT code, SXINT numact, struct sxtables *arg)
+void sdag_action (SXINT code, SXINT numact, SXTABLES *arg)
 {
   SXINT        tok_no;
   static SXINT prev_ste;
@@ -248,7 +248,7 @@ sdag_get_t_tok_no_stack (SXINT id)
   return t_tok_no_stack+id;
 }
 
-void sxparser_sdag_tcut  (SXINT what, struct sxtables *arg)
+void sxparser_sdag_tcut  (SXINT what, SXTABLES *arg)
 {
   SXINT   lahead = 0, store_print_time;
   struct  sxtoken *ptoken;

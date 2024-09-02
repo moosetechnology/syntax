@@ -1,12 +1,15 @@
 #! /bin/sh
 
-# Hubert Garavel - August 2023
+# Hubert Garavel - August 2023
 
 COMMAND=`basename "$0"`
 
 SX=`dirname "$0"`/../..
 ARCH=`$SX/etc/bin/arch`
+
 F77=bin/f77
+F77OUT=bin.$ARCH/f77.out
+
 PPF77=bin/ppf77
 PPF77OUT=bin.$ARCH/ppf77.out
 
@@ -104,99 +107,103 @@ RUN() {
 
 #------------------------------------------------------------------------------
 
-echo "*** testing f77"
+if [ -x $F77OUT ]
+then
+	echo "*** testing f77"
 
-for FILE in `ls test/evref/*.FOR test/misc/*.f test/nist/*.FOR`
-do
-	echo ""
-	echo "f77" "$FILE" | sed -e 's+test/++'
+	for FILE in `ls test/evref/*.FOR test/misc/*.f test/nist/*.FOR`
+	do
+		echo ""
+		echo "f77" "$FILE" | sed -e 's+test/++'
 
-	case "$FILE" in
-		test/evref/extension-* )
-			# extended F77
-			RUN -X $FILE
-			;;
-		* )
-			# standard F77
-			# we can test with and without option -X
-			RUN $FILE
-			RUN -X $FILE
-			;;
-	esac
-done 
+		case "$FILE" in
+			test/evref/extension-* )
+				# extended F77
+				RUN -X $FILE
+				;;
+			* )
+				# standard F77
+				# we can test with and without option -X
+				RUN $FILE
+				RUN -X $FILE
+				;;
+		esac
+	done 
+fi
 
 #------------------------------------------------------------------------------
 
-if [ ! -x $PPF77OUT ]
+if [ -x $PPF77OUT ]
 then
-	exit 0
-fi
 
-echo ""
-echo "*** testing ppf77"
+	echo "*** testing ppf77"
 
-TMP1=`mktemp`
-TMP2=`mktemp`
+	TMP1=`mktemp`
+	TMP2=`mktemp`
 
-for FILE in `ls test/misc/*.f test/nist/*.FOR`
-do
-	echo ""
-	echo "ppf77" "$FILE" | sed -e 's+test/++'
-	cp $FILE $TMP1
-
-	case "$FILE" in
-		test/evref/extension-* )
-			OPTION="-X"
-			;;
-		* )
-			OPTION=""
-			;;
-	esac
-
-	if [ $VALGRIND_OPTION = 1 ]
-	then
+	for FILE in `ls test/misc/*.f test/nist/*.FOR`
+	do
 		echo ""
-		# on a positionne la variable globale $VALGRIND
+		echo "ppf77" "$FILE" | sed -e 's+test/++'
+		cp $FILE $TMP1
+
+		case "$FILE" in
+			test/evref/extension-* )
+				OPTION="-X"
+				;;
+			* )
+				OPTION=""
+				;;
+		esac
+
+		if [ $VALGRIND_OPTION = 1 ]
+		then
+			echo ""
+			# on a positionne la variable globale $VALGRIND
+			$PPF77 $OPTION $TMP1
+			continue
+		fi
+
+		$PPF77 $OPTION < $TMP1 > $TMP2
+
 		$PPF77 $OPTION $TMP1
-		continue
-	fi
+		# ici $TMP1 a ete modifie par ppf77
+		STATUS=$?
+		if [ $STATUS != 0 ]
+		then
+			echo "  exit status is $STATUS"
+		fi
 
-	$PPF77 $OPTION < $TMP1 > $TMP2
+		cmp -s $TMP1 $TMP2
+		if [ $? != 0 ]
+		then
+			echo "   pff77 $OPTION < FILE and pff77 FILE give different results"
+		fi
 
-	$PPF77 $OPTION $TMP1
-	# ici $TMP1 a ete modifie par ppf77
-	STATUS=$?
-	if [ $STATUS != 0 ]
-	then
-		echo "  exit status is $STATUS"
-	fi
+		# here, files $TMP1 and $TMP2 are identical
 
-	cmp -s $TMP1 $TMP2
-	if [ $? != 0 ]
-	then
-		echo "   pff77 $OPTION < FILE and pff77 FILE give different results"
-	fi
+		cat $TMP1 | FILTER > $TMP2
+		# here, $TMP2 is the pretty-printed output file (filtered by FILTER)
 
-	# here, files $TMP1 and $TMP2 are identical
+		cat $FILE | FILTER > $TMP1
+		# here, $TMP1 is the input FORTRAN file (filtered by FILTER)
 
-	cat $TMP1 | FILTER > $TMP2
-	# here, $TMP2 is the pretty-printed output file (filtered by FILTER)
-
-	cat $FILE | FILTER > $TMP1
-	# here, $TMP1 is the input FORTRAN file (filtered by FILTER)
-
-	# to compare $TMP1 and $TMP2, one must understand the changes made
-	# by ppf77 :
-	# - it preserves the comments
-	# - it removes fully empty lines
-	# - it removes the contents of columns 72-80 of each non-comment line
-	#   (if columns 1-71 are empty, the line is removed)
-	# - it turns identifiers from upper to lower case (e.g., ZVS -> zvs)
-	#   but preserves the case of keywords
-	# - it inserts a few spaces, e.g., WRITE(NUVI,41) -> WRITE (nuvi, 41)
-
-	diff -iw $TMP1 $TMP2 | more
+		# to compare $TMP1 and $TMP2, one must understand the changes
+		# made by ppf77 :
+		# - it preserves the comments
+		# - it removes fully empty lines
+		# - it removes columns 72-80 of each non-comment line (if
+		#   columns 1-71 are empty, the line is removed)
+		# - it turns identifiers from upper to lower case (e.g., ZVS
+		#   -> zvs)
+		#   but preserves the case of keywords
+		# - it inserts a few spaces, e.g., WRITE(NUVI,41) ->
+		#   WRITE (nuvi, 41)
+	
+		diff -iw $TMP1 $TMP2 | more
 done 
+
+fi
 
 #------------------------------------------------------------------------------
 
@@ -204,4 +211,3 @@ rm -f $SCRIPT $TMP1 $TMP2
 
 exit 0
 
- 

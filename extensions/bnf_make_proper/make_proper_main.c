@@ -31,7 +31,7 @@ static char	ME [] = "make_proper_main";
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_MAKE_PROPER_MAIN[] = "@(#)SYNTAX - $Id: make_proper_main.c 4160 2024-08-02 13:05:50Z garavel $" WHAT_DEBUG;
+char WHAT_MAKE_PROPER_MAIN[] = "@(#)SYNTAX - $Id: make_proper_main.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 /* On compile les tables "left_corner" ... */
 /* ... uniquement celles dont on va avoir besoin ds lexicalizer_mngr */
@@ -64,7 +64,7 @@ char WHAT_MAKE_PROPER_MAIN[] = "@(#)SYNTAX - $Id: make_proper_main.c 4160 2024-0
 SXINT n;
 bool is_print_time;
 
-extern struct sxtables  sxtables;
+extern SXTABLES  sxtables;
 extern SXBA            basic_item_set; 
 static VARSTR	       vstr;
 
@@ -340,7 +340,7 @@ output_prod (SXINT prod)
 extern bool lexicalizer2basic_item_set (bool, bool); // au cas ou...
 /* "Semantique" de make_proper */
 
-void make_proper_semact (SXINT what, struct sxtables *sxtables_ptr)
+void make_proper_semact (SXINT what, SXTABLES *sxtables_ptr)
 {
   static SXINT          word_pos;
   struct sxtoken	*tok;
@@ -694,4 +694,4 @@ bool make_proper_scanact (SXINT code, SXINT act_no)
 //SXINT   special_Tpq_name  (char *string, SXINT lgth) {return 0;}
 //VARSTR sub_dag_to_comment      (VARSTR vstr, SXINT p, SXINT q) {return NULL;}
 //void sxearley_open_for_semact (void) {};
-//SXINT  dag_scanner             (SXINT what, struct sxtables *arg) {return 1;};
+//SXINT  dag_scanner             (SXINT what, SXTABLES *arg) {return 1;};

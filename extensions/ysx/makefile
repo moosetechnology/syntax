@@ -33,19 +33,19 @@ $(LIB)/ysx_smp.o:	$(SXINCL)/sxunix.h	\
 
 $(LIB)/ysx_t.o:		$(SXINCL)/sxunix.h	\
 			ysx_t.c
-	$(CC) -o $@ -c ysx_t.c -DSEMPASS=ysx_smp -Dsxtables=ysx_tables
+	$(CC) -o $@ -c ysx_t.c -DSEMPASS=ysx_smp
 
 $(LIB)/yaction_t.o:	$(SXINCL)/sxunix.h	\
 			yaction_t.c
-	$(CC) -o $@ -c yaction_t.c -DSCANACT=yaction_scanact -DSEMACT=yaction_semact -Dsxtables=yaction_tables
+	$(CC) -o $@ -c yaction_t.c -DSCANACT=yaction_scanact -DSEMACT=yaction_semact
 
 # debut de code produit par "make-makefile ysx"
 
 ysx_t.c: ysx.bt ysx.st ysx.pt ysx.rt ysx.att
-	tables_c ysx > $@
+	tables_c -name ysx_tables ysx > $@
 
 ysx.bt ysx.att ysx_mix.c: ysx.at
-	semat ysx.at  > ysx_mix.c
+	semat ysx.at > ysx_mix.c
 
 ysx.st: ysx.bt ysx.lecl
 	lecl ysx.lecl || [ $$? = 1 ]
@@ -61,7 +61,7 @@ ysx.rt: ysx.bt ysx.st ysx.recor
 # debut de code produit par "make-makefile yaction"
 
 yaction_t.c: yaction.bt yaction.st yaction.pt yaction.rt 
-	tables_c yaction > $@
+	tables_c -name yaction_tables yaction > $@
 
 yaction.bt  : yaction.bnf
 	semact yaction.bnf 

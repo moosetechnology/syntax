@@ -71,7 +71,7 @@ static void tank_oflw (ptank, old_line_nb, old_size)
 }
 
 
-bool sxdligparsact (int	which, struct sxtables *arg)
+bool sxdligparsact (int	which, SXTABLES *arg)
 {
     int *p, *plim, i, code, *pc, stack_id, *cur_stack, *pclim, xs, si, newtop, top, act_no, pop_nb, push_nb, elem;
 

@@ -21,7 +21,6 @@ $(SXBIN)/prio.out:	$(NEEDS)	$(SXBIBS)
 $(LIB)/prio_t.o: 	$(SXINCL)/sxunix.h		\
 			$(BOOT)/prio_t.c
 	$(CC) -o $@ -c $(BOOT)/prio_t.c			\
-			-Dsxtables=prio_tables		\
 			-DSCANACT=prio_scan_act		\
 			-DSEMACT=prio_action
 

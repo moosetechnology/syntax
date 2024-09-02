@@ -30,16 +30,16 @@ static char	ME [] = "ysx_smp";
 #include "varstr.h"
 #include "ysx_vars.h"
 
-char WHAT_YSXSMP[] = "@(#)SYNTAX - $Id: ysx_smp.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
+char WHAT_YSXSMP[] = "@(#)SYNTAX - $Id: ysx_smp.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 struct ysx_node {
     SXNODE_HEADER_S	SXVOID_NAME;
 };
-extern struct sxtables	yaction_tables;
+extern SXTABLES	yaction_tables;
 
 /* STATIC VARIABLES */
 
-static struct sxtables	*ysxtables;
+static SXTABLES	*ysxtables;
 static FILE	*yax_file, *prio_file, *tdef_file;
 static bool	needs_prio, needs_tdef;
 
@@ -594,7 +594,7 @@ bool yaction_scanact (SXINT what, SXINT numact)
     }
 }
 
-void yaction_semact (SXINT what, SXINT act_no, struct sxtables *arg)
+void yaction_semact (SXINT what, SXINT act_no, SXTABLES *arg)
 {
     (void) act_no;
     (void) arg;
@@ -1049,7 +1049,7 @@ fault:	gripe ("ysx_pd");
 
 
 
-SXINLINE static void	smpopen (struct sxtables *sxtables_ptr)
+SXINLINE static void	smpopen (SXTABLES *sxtables_ptr)
 {
     sxatcvar.atc_lv.node_size = sizeof (struct ysx_node);
     ysxtables = sxtables_ptr;
@@ -1167,7 +1167,7 @@ SXINLINE static void	smppass (void)
 
 
 void
-ysx_smp (SXINT what, struct sxtables *sxtables_ptr)
+ysx_smp (SXINT what, SXTABLES *sxtables_ptr)
 {
     switch (what) {
     default:

@@ -28,7 +28,7 @@
 #include <float.h>
 #include <math.h>
 
-char WHAT_SXEARLEY_MAIN[] = "@(#)SYNTAX - $Id: sxearley_main.c 3938 2024-05-01 10:21:16Z garavel $" WHAT_DEBUG;
+char WHAT_SXEARLEY_MAIN[] = "@(#)SYNTAX - $Id: sxearley_main.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 static char	ME [] = "sxearley_main";
 
@@ -37,10 +37,10 @@ extern SXUINT          maximum_input_size; /* Pour udag_scanner definie ds earle
 #if 0
 #ifdef dummy_tables
 /* Il y a des tables SYNTAX ds le coup */
-extern struct sxtables	dummy_tables;
-static struct sxtables	*dummy_tables_ptr = {&dummy_tables};
+extern SXTABLES	dummy_tables;
+static SXTABLES	*dummy_tables_ptr = {&dummy_tables};
 #else /* dummy_tables */
-static struct sxtables	*dummy_tables_ptr = {NULL};
+static SXTABLES	*dummy_tables_ptr = {NULL};
 #endif /* dummy_tables */
 #endif /* 0 */
 

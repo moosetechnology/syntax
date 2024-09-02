@@ -26,7 +26,7 @@
 #include "D_tables.h"
 #include "varstr.h"
 
-char WHAT_PRIOACTION[] = "@(#)SYNTAX - $Id: prio_action.c 4143 2024-08-02 08:50:12Z garavel $" WHAT_DEBUG;
+char WHAT_PRIOACTION[] = "@(#)SYNTAX - $Id: prio_action.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 /*   E X T E R N S   */
 
@@ -528,7 +528,7 @@ static void	final (void)
 }
 
 
-void prio_action (SXINT what, SXINT action_no, struct sxtables *arg)
+void prio_action (SXINT what, SXINT action_no, SXTABLES *arg)
 {
     (void) arg;
     switch (what) {

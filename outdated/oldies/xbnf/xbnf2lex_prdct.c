@@ -35,7 +35,7 @@ static char	ME [] = "xbnf2lex_prdct.c";
 #include "XH.h"
 #include "varstr.h"
 
-char WHAT_XBNF2LEXPRDCT[] = "@(#)SYNTAX - $Id: xbnf2lex_prdct.c 3677 2024-02-05 18:31:33Z garavel $" WHAT_DEBUG;
+char WHAT_XBNF2LEXPRDCT[] = "@(#)SYNTAX - $Id: xbnf2lex_prdct.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
 
 
 /*
@@ -63,7 +63,7 @@ E N D   N O D E   N A M E S
 /* extern variables */
 /*------------------*/
 
-extern struct sxtables *sxtab_ptr;
+extern SXTABLES *sxtab_ptr;
 extern char	*prgentname, *processorname;
 extern bool is_predicate;
 

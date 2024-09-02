@@ -28,7 +28,7 @@
 SXINT		options_set;
 bool		is_normal_form;
 char		prgentname [32];
-struct sxtables	*sxtab_ptr;
+SXTABLES	*sxtab_ptr;
 
 #define IS_ERROR (sxerrmngr.nbmess[2]>0) /* nombre de messages d'erreurs */
 
