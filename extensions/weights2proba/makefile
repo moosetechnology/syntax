@@ -6,11 +6,9 @@ W2P=$(SX)/../extensions/weights2proba
 BIN=$(W2P)/bin.$(ARCH)
 LIB=$(W2P)/lib.$(ARCH)
 
-EXTINCL=$(SX)/../extensions/incl
-
 SXEXTBIBS=$(SXLIB)/libsxext.a $(SXBIBS)
 
-CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util -I$(EXTINCL) $(CFLAGS)
+CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util -I$(SXEXTINCL) $(CFLAGS)
 
 all: $(BIN)/weights2proba.out
 

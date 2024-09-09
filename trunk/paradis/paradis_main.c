@@ -31,16 +31,19 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-char WHAT_PARADISMAIN[] = "@(#)SYNTAX - $Id: paradis_main.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
+char WHAT_PARADISMAIN[] = "@(#)SYNTAX - $Id: paradis_main.c 4253 2024-09-06 08:04:52Z garavel $" WHAT_DEBUG;
 
 char	by_mess [] = "the SYNTAX grammar & pretty-printer processor PARADIS";
+
+extern SXTABLES	bnf_tables;
+extern SXTABLES	paradis_tables;
+
+extern SXSCANACT_FUNCTION bnf_scan_act; 
 
 SXINT     (*more_scan_act) (SXINT code, SXINT act_no);
 
 extern void	no_tables (void), bnf_lo (void), paradis_lo (void);
 extern bool	paradis_sem (void);
-extern SXTABLES	bnf_tables;
-extern SXTABLES	paradis_tables;
 
 /*---------------*/
 /*    options    */
@@ -194,15 +197,17 @@ static void	bnf_run (char *pathname)
 }
 
 
-
 /************************************************************************/
 /* main function */
 /************************************************************************/
+
 int main (int argc, char *argv[])
 {
   int argnum;
 
   sxopentty ();
+
+  sxset_scanner_action (bnf_tables, bnf_scan_act);
 
   if (argc == 1) {
     fprintf (sxstderr, Usage, ME);

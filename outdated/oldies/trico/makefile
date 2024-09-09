@@ -30,8 +30,7 @@ $(LIB)/trico_main.o:	$(SXINCL)/sxunix.h	\
 
 $(LIB)/trico_t.o:	$(SXINCL)/sxunix.h 	\
 			trico_t.c
-	$(CC) -o $@ -c trico_t.c			\
-		-DSCANACT=trico_scan_act	\
+	$(CC) -o $@ -c trico_t.c		\
 		-DSEMACT=trico_sem_act
 
 # debut de code produit par "make-makefile trico"

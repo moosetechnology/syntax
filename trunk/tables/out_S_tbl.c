@@ -27,7 +27,7 @@
 #include "out.h"
 #include "sxsstmt.h"
 
-char WHAT_TABLESOUTSTBL[] = "@(#)SYNTAX - $Id: out_S_tbl.c 4094 2024-06-21 13:27:46Z garavel $" WHAT_DEBUG;
+char WHAT_TABLESOUTSTBL[] = "@(#)SYNTAX - $Id: out_S_tbl.c 4257 2024-09-06 12:10:40Z garavel $" WHAT_DEBUG;
 
 
 static SXINT	max; /* Positionne par l'appel a max_S_tables() */
@@ -323,7 +323,7 @@ bool		out_S_tables (void)
 
     if (SC.S_is_user_action_or_prdct != 0) {
       puts ("#ifdef SCANACT");
-      puts ("extern SXSCANACT_FUNCTION SCANACT;");
+      puts ("#warning \"compiling with -DSCANACT is deprecated; define sxscanner_action() or invoke sxset_scanner_action()\"");
       puts ("#endif");
     }
 

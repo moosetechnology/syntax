@@ -21,11 +21,12 @@
 #include "ppada_td.h"
 #include <ctype.h>
 
-char WHAT_PPADASACT[] = "@(#)SYNTAX - $Id: ppada_sact.c 4166 2024-08-19 09:00:49Z garavel $";
+char WHAT_PPADASACT[] = "@(#)SYNTAX - $Id: ppada_sact.c 4247 2024-09-05 13:24:23Z garavel $";
 
 extern SXTABLES	ppada_args_tables, ppada_tables;
 
-
+/* forward */ SXSCANACT_FUNCTION ppada_scan_act;
+/* forward */ SXSCANACT_FUNCTION ppada_args_scan_act;
 
 static void	gripe (SXTABLES *sxtables, SXINT act_no)
 {

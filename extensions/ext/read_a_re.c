@@ -39,14 +39,14 @@ static char ME [] = "read_a_re";
 
 #include "sxversion.h"
 #include "sxcommon.h"
-#include "re_t.h"
+#include "re_t.c"
 #include "udag_scanner.h"
 #include "earley.h"
 #include "fsa.h"
 #include "varstr.h"
 #include <setjmp.h>
 
-char WHAT_READARE[] = "@(#)SYNTAX - $Id: read_a_re.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
+char WHAT_READARE[] = "@(#)SYNTAX - $Id: read_a_re.c 4280 2024-09-09 10:17:02Z garavel $" WHAT_DEBUG;
 
 extern VARSTR              cur_input_vstr;
 
@@ -1215,7 +1215,7 @@ smppass (void)
   return severity;
 }
 
-void re_smp (SXINT what, SXTABLES *sxtables_ptr)
+/* static */ void re_smp (SXINT what, SXTABLES *sxtables_ptr)
 {
   sxuse(sxtables_ptr); /* pour faire taire gcc -Wunused */
 
@@ -1292,7 +1292,7 @@ extern SXPARSER_FUNCTION sxparser;
 
 /* C'est le parseur de re_tables.SX_parser */
 
-void sxparser_re_tcut  (SXINT what, SXTABLES *arg)
+/* static */ void sxparser_re_tcut  (SXINT what, SXTABLES *arg)
 {
   SXINT            lahead = 0, store_print_time;
   struct sxtoken   *ptoken;

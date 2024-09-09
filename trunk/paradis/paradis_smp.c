@@ -29,7 +29,7 @@
 #include "sem_by.h"
 #include "varstr.h"
 
-char WHAT_PARADISSMP[] = "@(#)SYNTAX - $Id: paradis_smp.c 4183 2024-08-26 17:07:35Z garavel $" WHAT_DEBUG;
+char WHAT_PARADISSMP[] = "@(#)SYNTAX - $Id: paradis_smp.c 4224 2024-09-03 08:06:07Z garavel $" WHAT_DEBUG;
 
 
 extern void    bnf_get_rule_tail (SXUINT rule_no, SXUINT *tline, SXUINT *tcol);
@@ -673,7 +673,7 @@ void	paradis_smp (SXINT what, SXTABLES *paradis_smp_paradis_tables)
 }
 
 
-bool paradis_scan_act (SXINT code, SXINT act_no)
+bool sxscanner_action (SXINT code, SXINT act_no)
 {
     switch (code) {
     case SXOPEN:
@@ -743,7 +743,7 @@ bool paradis_scan_act (SXINT code, SXINT act_no)
 #endif
 
     default:
-	fputs ("\nThe function \"paradis_scan_act\" is out of date with respect to its specification.\n", sxstderr);
+	fputs ("\nThe function \"sxscanner_action\" for paradis is out of date with respect to its specification.\n", sxstderr);
 	sxexit(1);
     }
 }

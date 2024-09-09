@@ -4,6 +4,7 @@ include $(SX)/etc/make/gccoptions
 ND=$(SX)/../extensions
 
 NDCSYNT=$(ND)/xcsynt
+
 BIN=$(NDCSYNT)/bin.$(ARCH)
 NDLIB=$(NDCSYNT)/lib.$(ARCH)
 
@@ -11,7 +12,7 @@ CC=$(COMPILER) -I$(NDCSYNT) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
 CC2=$(COMPILER) -I$(ND)/incl -I$(ND)/incl/util $(CFLAGS)
 
-all: $(BIN)/xcsynt.out	\
+all: $(SXEXTBIN)/xcsynt.out	\
 	$(BIN)/lc.out
 #	$(BIN)/csyntd.out	\
 
@@ -44,7 +45,7 @@ NEEDS3=	$(NDLIB)/left_corner.o		\
 	$(NDLIB)/xprdct_mngr.o		\
 	$(NDLIB)/OPTIM.o
 
-$(BIN)/xcsynt.out:	$(NEEDS)	$(SXBIBS)
+$(SXEXTBIN)/xcsynt.out:	$(NEEDS)	$(SXBIBS)
 	@rm -f $@
 	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
 
@@ -285,5 +286,5 @@ $(NDLIB)/LC0.o:	csynt_optim.h			\
 	$(CC) -o $@ -c LC0.c
 
 clean:
-	/bin/rm -f $(NDLIB)/*.o $(BIN)/lc.out $(BIN)/xcsynt.out
+	/bin/rm -f $(NDLIB)/*.o $(BIN)/lc.out $(SXEXTBIN)/xcsynt.out
 

@@ -313,6 +313,8 @@ struct SXS_tables {
     SXCHECK_KEYWORD_FUNCTION *S_check_keyword;
 };
 
+#define sxset_scanner_action(tables,function) (tables).SXS_tables.S_scanact = &(function)
+
 typedef void (SXSCANIT_FUNCTION) (void);
 /* the type SXSCANIT_FUNCTION denotes a scan function, which can be stored
    in SXP_tables.P_scan_it */
@@ -1083,6 +1085,9 @@ extern SXINT		sxivoid_int (SXINT i);
 extern SXPARSACT_FUNCTION /* ou SXSCANACT_FUNCTION */ sxjvoid;
 extern SXSEMPASS_FUNCTION sxsvoid;
 extern SXSEMACT_FUNCTION sxwvoid;
+
+extern SXSCANACT_FUNCTION sxscanner_action;
+extern SXPARSACT_FUNCTION sxparser_action;
 
 /**************************************/
 /* STRING MANAGER (see sxstr_mngr(3)) */

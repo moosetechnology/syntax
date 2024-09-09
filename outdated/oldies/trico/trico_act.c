@@ -735,7 +735,7 @@ void trico_sem_act (int code, int numact)
 }
 
 
-bool trico_scan_act (int code, int act_no)
+bool sxscanner_action (SXINT code, SXINT act_no)
 {
   switch (code) {
   case SXOPEN:

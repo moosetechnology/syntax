@@ -107,16 +107,36 @@ RUN() {
 
 #------------------------------------------------------------------------------
 
+if [ ! -x $F77OUT -a ! -x $PPF77OUT ]
+then
+	echo "$COMMAND: no executable f77.out nor ppf77.out found; run sxmake to build them"
+	exit 1
+fi
+
+#------------------------------------------------------------------------------
+
 if [ -x $F77OUT ]
 then
 	echo "*** testing f77"
 
-	for FILE in `ls test/evref/*.FOR test/misc/*.f test/nist/*.FOR`
+	for FILE in `ls test/esope/*.FOR test/evref/*.FOR test/misc/*.f test/nist/*.FOR`
 	do
 		echo ""
 		echo "f77" "$FILE" | sed -e 's+test/++'
 
 		case "$FILE" in
+			test/esope/* )
+				# only for f77+ESOPE extensions
+				case `pwd` in
+					*esope* )
+						RUN -X $FILE
+						;;
+					* )
+						# on ignore le test
+						;;
+				esac
+				;;
+
 			test/evref/extension-* )
 				# extended F77
 				RUN -X $FILE

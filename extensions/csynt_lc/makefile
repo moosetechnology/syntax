@@ -2,20 +2,19 @@
 include $(SX)/etc/make/gccoptions
 
 LC=$(SX)/../extensions/csynt_lc
-BIN=$(LC)/bin.$(ARCH)
 LIB=$(LC)/lib.$(ARCH)
 
 SXEXTBIBS=$(SXLIB)/libsxext.a $(SXBIBS)
 
 CC=$(COMPILER) -I$(LC) -I$(SXINCL) -I$(SXINCL)/util -I$(SX)/../extensions/incl $(CFLAGS)
 
-# all: $(BIN)/csynt_lc.out
-all: $(BIN)/lc1.out
+# all: $(SXEXTBIN)/csynt_lc.out
+all: $(SXEXTBIN)/lc1.out
 
 NEEDS=	$(LIB)/lc_main.o		\
 	$(LIB)/LC1.o
 
-$(BIN)/lc1.out:	$(NEEDS)	$(SXEXTBIBS)
+$(SXEXTBIN)/lc1.out:	$(NEEDS)	$(SXEXTBIBS)
 	@rm -f $@
 	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXEXTBIBS) || (rm $@;exit 1)
 
@@ -37,5 +36,5 @@ $(LIB)/LC1.o:		lc.h			\
 	$(CC) -o $@ -c LC1.c
 
 clean:
-	/bin/rm -f $(LIB)/*.o $(BIN)/lc1.out
+	/bin/rm -f $(LIB)/*.o $(SXEXTBIN)/lc1.out
 

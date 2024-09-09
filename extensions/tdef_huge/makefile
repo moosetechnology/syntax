@@ -6,11 +6,9 @@ TDEF_HUGE=$(SX)/../extensions/tdef_huge
 BIN=$(TDEF_HUGE)/bin.$(ARCH)
 LIB=$(TDEF_HUGE)/lib.$(ARCH)
 
-EXTINCL=$(SX)/../extensions/incl
-
 SXEXTBIBS=$(SXLIB)/libsxext.a $(SXBIBS)
 
-CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util -I$(EXTINCL) $(CFLAGS)
+CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util -I$(SXEXTINCL) $(CFLAGS)
 
 all: $(BIN)/tdef_huge.out
 

@@ -5,10 +5,7 @@ SEMAT=$(SX)/semat
 LIB=$(SEMAT)/lib.$(ARCH)
 BOOT=$(SEMAT)/boot
 
-BNF=$(SX)/bnf
-BNFLIB=$(BNF)/lib.$(ARCH)
-
-CC=$(COMPILER) -I$(BNF) -I$(BOOT) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
+CC=$(COMPILER) -I$(BOOT) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
 all: $(SXBIN)/semat.out	\
      $(SXAUX)/print_att.out
@@ -16,38 +13,31 @@ all: $(SXBIN)/semat.out	\
 NEEDS=	$(LIB)/genat_c.o		\
 	$(LIB)/semat_main.o		\
 	$(LIB)/semat_sact.o		\
-	$(LIB)/semat_t.o		\
-	$(BNFLIB)/bnf_folcon.o		\
-	$(BNFLIB)/bnf_lo.o    		\
-	$(BNFLIB)/bnf_protest.o		\
-	$(BNFLIB)/bnf_sact.o   		\
-	$(BNFLIB)/bnf_smp.o    		\
-	$(BNFLIB)/bnf_symtab.o		\
-	$(BNFLIB)/bnf_t.o
+	$(LIB)/semat_t.o
 
 PRINT=	$(LIB)/print_att.o
 
-$(SXBIN)/semat.out:	$(NEEDS)	$(SXBIBS)
+$(SXBIN)/semat.out:	$(NEEDS) $(SXBIBS) $(SXLIB)/libsxbnf.a
 	@rm -f $@
-	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXLIB)/libsxbnf.a $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/semat_main.o:	$(SXINCL)/sxunix.h	\
 			$(SXINCL)/util/B_tables.h	\
-			$(BNF)/bnf_vars.h	\
+			$(SXINCL)/util/bnf_vars.h	\
 			semat_main.c
 	$(CC) -o $@ -c semat_main.c
 
 $(LIB)/genat_c.o:	$(SXINCL)/sxunix.h	\
 			$(SXINCL)/util/B_tables.h	\
 			$(SXINCL)/util/T_tables.h	\
-			$(BNF)/bnf_vars.h	\
+			$(SXINCL)/util/bnf_vars.h	\
 			genat_c.c
 	$(CC) -o $@ -c genat_c.c
 
 $(LIB)/semat_sact.o:	$(SXINCL)/sxunix.h	\
 			$(SXINCL)/sem_by.h	\
 			$(SXINCL)/util/B_tables.h	\
-			$(BNF)/bnf_vars.h 	\
+			$(SXINCL)/util/bnf_vars.h 	\
 			$(SXINCL)/util/T_tables.h	\
 			$(SXINCL)/put_edit.h	\
 			$(SXINCL)/varstr.h	\

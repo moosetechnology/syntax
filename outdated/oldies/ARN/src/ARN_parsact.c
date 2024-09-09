@@ -8,8 +8,6 @@
    ******************************************************** */
 
 
-
-
 /* ********************************************************
    *                                                      *
    *     Produit de l'equipe ChLoE.			  *
@@ -36,8 +34,9 @@ static char	ME [] = "ARN_parsact";
 
 static struct ARN	ARN;
 
-static  int
-ARN_symbols_oflw (old_size, new_size)
+extern SXTABLES sxtables;
+
+static int ARN_symbols_oflw (old_size, new_size)
     int		old_size, new_size;
 {
     ARN.symbol_set = sxba_resize (ARN.symbol_set, new_size + 1);
@@ -47,8 +46,7 @@ ARN_symbols_oflw (old_size, new_size)
     return 0;
 }
 
-static  int
-ARN_parsers_oflw (old_size, new_size)
+static int ARN_parsers_oflw (old_size, new_size)
     int		old_size, new_size;
 {
     ARN.parser2attr = (struct parser2attr*) sxrealloc (ARN.parser2attr,
@@ -57,8 +55,7 @@ ARN_parsers_oflw (old_size, new_size)
     return 0;
 }
 
-static  int
-ARN_sons_oflw (old_size, new_size)
+static int ARN_sons_oflw (old_size, new_size)
     int		old_size, new_size;
 {
     ARN.son2attr = (struct son2attr*) sxrealloc (ARN.son2attr,
@@ -67,8 +64,7 @@ ARN_sons_oflw (old_size, new_size)
     return 0;
 }
 
-static  void
-ARN_paths_oflw (old_size, new_size)
+static void ARN_paths_oflw (old_size, new_size)
     int		old_size, new_size;
 {
     ARN.path2attr = (struct path2attr*) sxrealloc (ARN.path2attr,
@@ -76,8 +72,7 @@ ARN_paths_oflw (old_size, new_size)
 						   sizeof (struct path2attr));
 }
 
-static  void
-ARN_local_trans_oflw (old_size, new_size)
+static void ARN_local_trans_oflw (old_size, new_size)
     int		old_size, new_size;
 {
     ARN.local_trans2attr = (struct local_trans2attr*) sxrealloc (ARN.local_trans2attr,
@@ -86,8 +81,7 @@ ARN_local_trans_oflw (old_size, new_size)
 }
 
 
-static int
-ARN_GC ()
+static int ARN_GC ()
 {
     /* sxndparser vient de faire un GC, on en profite... */
     /* Il est possible de l'appeler a n'importe quel moment. */
@@ -95,8 +89,7 @@ ARN_GC ()
 }
 
 
-static int
-ARN_action_pop (level, son, father)
+static int ARN_action_pop (level, son, father)
     int level, son, father;
 {
     /* On est au niveau level du depilage courant entre les parser son et father */
@@ -110,8 +103,7 @@ ARN_action_pop (level, son, father)
     return 0;
 }
 
-static int
-ARN_action_top (xtriple)
+static int ARN_action_top (xtriple)
     int	xtriple;
 {
     /* On est ds "reducer", on va lancer une reduction sur le triple xtriple. */
@@ -150,8 +142,7 @@ ARN_action_top (xtriple)
 }
 
 
-static void
-ARN_action ()
+static void ARN_action ()
 {
     int	value;
 
@@ -171,8 +162,7 @@ ARN_action ()
 }
 
 
-static void
-walk_paths (bot, level)
+static void walk_paths (bot, level)
     int bot, level;
 {
     int		path;
@@ -192,8 +182,7 @@ walk_paths (bot, level)
 }
 
 
-static int
-ARN_action_bot (bot)
+static int ARN_action_bot (bot)
     int bot;
 {
     /* On vient de terminer le depilage, on se contente de noter le parser atteint
@@ -205,8 +194,7 @@ ARN_action_bot (bot)
 
 
 
-static int
-ARN_action_new_top (bot, new_top, symbol)
+static int ARN_action_new_top (bot, new_top, symbol)
     int bot, new_top, symbol;
 {
     /* Si new_top == 0, echec syntaxique. */
@@ -241,8 +229,7 @@ ARN_action_new_top (bot, new_top, symbol)
 }
 
 
-static int
-ARN_action_final ()
+static int ARN_action_final ()
 {
     /* On a termine' l'e'valuation d'un niveau, On prepare le niveau suivant. */
     int		trans, symbol, symbXtrans;
@@ -273,12 +260,12 @@ ARN_action_final ()
 
 
 
-bool ARN_parsact (int which, SXTABLES *arg)
+bool sxparser_action (SXINT which, SXINT action_no)
 {
     switch (which)
     {
     case SXOPEN:
-	ARN.sxtables = arg;
+	ARN.sxtables = &sxtables;
 
 	ARN.symbol_set = sxba_calloc (XxY_size (parse_stack.symbols) + 1);
 	ARN.symbol_stack = SS_alloc (XxY_size (parse_stack.symbols) + 1);
@@ -364,6 +351,7 @@ bool ARN_parsact (int which, SXTABLES *arg)
 
     case SXACTION:
 	/* La memorisation se fait ds "PREDICATE:" */
+        sxuse (action_no);
 	return SXANY_BOOL;
 
     case SXDO:
@@ -374,7 +362,7 @@ bool ARN_parsact (int which, SXTABLES *arg)
 	return 0;
 
     default:
-	fputs ("The function \"ARN_parsact\" is out of date with respect to its specification.\n", sxstderr);
+	fputs ("The function \"sxparser_action\" for ARN is out of date with respect to its specification.\n", sxstderr);
 	abort ();
     }
 

@@ -19,11 +19,13 @@
 
 #include "sxunix.h"
 
-char WHAT_PPCSACT[] = "@(#)SYNTAX - $Id: ppc_sact.c 4166 2024-08-19 09:00:49Z garavel $";
+char WHAT_PPCSACT[] = "@(#)SYNTAX - $Id: ppc_sact.c 4244 2024-09-05 13:07:19Z garavel $";
 
 extern SXTABLES	ppc_args_tables, *ppc_tables;
 extern SXINT	ppc_TYPE;
 
+/* forward */ SXSCANACT_FUNCTION ppc_scan_act;
+/* forward */ SXSCANACT_FUNCTION ppc_args_scan_act;
 
 static void	gripe (SXTABLES *sxtables, SXINT act_no)
 {

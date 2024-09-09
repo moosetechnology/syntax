@@ -54,9 +54,7 @@ $(LIB)/get_col_nb.o: 	$(SXINCL)/sxunix.h		\
 
 $(LIB)/lecl_t.o: 	$(SXINCL)/sxunix.h		\
 			$(BOOT)/lecl_t.c
-	$(CC) -o $@ -c $(BOOT)/lecl_t.c				\
-			-DSCANACT=lecl_scan_act		\
-			-DPARSACT=lecl_pars_act		\
+	$(CC) -o $@ -c $(BOOT)/lecl_t.c			\
 			-DSEMPASS=lecl_smp
 
 $(LIB)/lecl_bsc.o:	$(SXINCL)/sxunix.h		\

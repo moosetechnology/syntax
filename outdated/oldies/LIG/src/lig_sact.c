@@ -125,7 +125,7 @@ void	lig_found_bad_beginning_of_rule ()
 
 static void	gripe ()
 {
-    fputs ("\nThe function \"lig_scan_act\" is out of date with respect to its specification.\n", sxstderr);
+    fputs ("\nThe function \"sxscanner_action\" for lig is out of date with respect to its specification.\n", sxstderr);
     abort ();
 }
 
@@ -135,7 +135,7 @@ void	(*more_scan_act) ();
 
 
 
-bool lig_scan_act (SXINT code, SXINT act_no)
+bool sxscanner_action (SXINT code, SXINT act_no)
 {
     switch (code) {
     case SXOPEN:

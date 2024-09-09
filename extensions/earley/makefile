@@ -6,11 +6,9 @@ EARLEY=$(SX)/../extensions/earley
 BIN=$(EARLEY)/bin.$(ARCH)
 LIB=$(EARLEY)/lib.$(ARCH)
 
-EXTINCL=$(SX)/../extensions/incl
-
 SXEXTBIBS=$(SXLIB)/libsxext.a $(SXBIBS)
 
-CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util -I$(EXTINCL) $(CFLAGS)
+CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util -I$(SXEXTINCL) $(CFLAGS)
 
 all: $(BIN)/earley.out
 

@@ -93,20 +93,6 @@ xcsynt:
 	compiler warnings from GCC and fatal error from SunCC (see file
 	xcsynt/README.txt).
 
-yax:
-	This directory contains a processor (yax) that accepts a BNF grammar
-	that contains semantic definitions "a la YACC" on top of syntactic
-	definitions "a la SYNTAX". This processor was introduced in version
-	2.0 of SYNTAX by Philippe Deschamp. It was seldom used and, in
-	practical applications, is often replaced by the TABC processor
-	(which is called SEMC at present).
-
-ysx:
-	This directory contains a conversion tool from YACC sources to SYNTAX
-	specifications. A manual page exists in extensions/doc/man/ysx.1.
-	This conversion tool has not been updated since 1987 and is probably
-	not up-to-date with respect to the current YACC format.
-
 To compile all or part of these components, move them back to the trunk/
 directory and uncomment them in trunk/src/makefile.
 

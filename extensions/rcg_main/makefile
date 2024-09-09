@@ -6,11 +6,9 @@ RCG=$(SX)/../extensions/rcg_main
 BIN=$(RCG)/bin.$(ARCH)
 LIB=$(RCG)/lib.$(ARCH)
 
-EXTINCL=$(SX)/../extensions/incl
-
 SXEXTBIBS=$(SXLIB)/libsxext.a $(SXBIBS)
 
-CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util -I$(EXTINCL) $(CFLAGS)
+CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util -I$(SXEXTINCL) $(CFLAGS)
 
 all: $(BIN)/RCG.out
 

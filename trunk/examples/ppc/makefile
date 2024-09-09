@@ -18,19 +18,19 @@ $(BIN)/ppc.out:	$(NEEDS)	$(SXBIBS)
 
 $(LIB)/ppc1_t.o:	ppc1_t.c		\
 			$(SXINCL)/sxunix.h
-	$(CC) -o $@ -DSCANACT=ppc_scan_act ppc1_t.c
+	$(CC) -o $@ ppc1_t.c
 
 $(LIB)/ppc2_t.o:	ppc2_t.c		\
 			$(SXINCL)/sxunix.h
-	$(CC) -o $@ -DSCANACT=ppc_scan_act ppc2_t.c
+	$(CC) -o $@ ppc2_t.c
 
 $(LIB)/ppc3_t.o:	ppc3_t.c		\
 			$(SXINCL)/sxunix.h
-	$(CC) -o $@ -DSCANACT=ppc_scan_act ppc3_t.c
+	$(CC) -o $@ ppc3_t.c
 
 $(LIB)/ppc_args_t.o:	ppc_args_t.c	\
 			$(SXINCL)/sxunix.h
-	$(CC) -o $@ -DSCANACT=ppc_args_scan_act -DSEMACT=ppc_args_semact ppc_args_t.c
+	$(CC) -o $@ -DSEMACT=ppc_args_semact ppc_args_t.c
 
 $(LIB)/ppc_main.o:	ppc_main.c	\
 			ppc1_td.h	\

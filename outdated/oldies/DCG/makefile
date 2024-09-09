@@ -48,7 +48,6 @@ $(LIB)/dcg_smp.o:	$(SXINCL)/sxunix.h	\
 $(LIB)/dcg_t.o:		$(SXINCL)/sxunix.h 	\
 			$(SRC)/dcg_t.c
 	$(CC) -o $@ -c $(SRC)/dcg_t.c		\
-		-DSCANACT=dcg_scan_act		\
 		-DSEMPASS=dcg_smp
 
 PARS=\
@@ -63,8 +62,7 @@ $(DCG)/dcg_pars.out:	$(PARS)	$(SXBIBS)
 $(LIB)/dcg_nosem_t.o:		$(SXINCL)/sxunix.h 	\
 			$(SRC)/dcg_t.c
 	$(CC) -o $@ -c $(SRC)/dcg_t.c		\
-		-DSCANACT=dcg_scan_act		\
-		-DSEMPASS=sxvoid -o dcg_nosem_t.o
+		-DSEMPASS=sxvoid
 
 clean:
 	rm -f $(ALL) $(NEEDS1) $(PARS)

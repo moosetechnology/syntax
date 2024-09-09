@@ -25,16 +25,15 @@ char WHAT[] = "@(#)xtag_sact.c\t- SYNTAX [unix] - Mer 28 Dec 1994 13:55:26";
 #include "xtag.h"
 
 
-static void
-gripe ()
+static void gripe ()
 {
-    fputs ("\nThe function \"xtag_scan_act\" is out of date with respect to its specification.\n", sxstderr);
+    fputs ("\nThe function \"sxscanner_action\" for TAG is out of date with respect to its specification.\n", sxstderr);
     abort ();
 }
 
 void	(*more_scan_act) ();
 
-bool xtag_scan_act (SXINT code, SXINT act_no)
+bool sxscanner_action (SXINT code, SXINT act_no)
 {
     switch (code) {
     case SXOPEN:

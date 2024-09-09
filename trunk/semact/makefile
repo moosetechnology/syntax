@@ -5,33 +5,23 @@ ACT=$(SX)/semact
 LIB=$(ACT)/lib.$(ARCH)
 BOOT=$(ACT)/boot
 
-BNF=$(SX)/bnf
-BNFLIB=$(BNF)/lib.$(ARCH)
-
-CC=$(COMPILER) -I$(BOOT) -I$(BNF) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
+CC=$(COMPILER) -I$(BOOT) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
 all: $(SXBIN)/semact.out
 
 NEEDS=	$(LIB)/semact_main.o		\
 	$(LIB)/semact_sact.o		\
-	$(LIB)/semact_t.o		\
-	$(BNFLIB)/bnf_folcon.o		\
-	$(BNFLIB)/bnf_lo.o    		\
-	$(BNFLIB)/bnf_protest.o		\
-	$(BNFLIB)/bnf_sact.o   		\
-	$(BNFLIB)/bnf_smp.o    		\
-	$(BNFLIB)/bnf_symtab.o		\
-	$(BNFLIB)/bnf_t.o
+	$(LIB)/semact_t.o
 
-$(SXBIN)/semact.out:	$(NEEDS)	$(SXBIBS)
+$(SXBIN)/semact.out:	$(NEEDS) $(SXBIBS) $(SXLIB)/libsxbnf.a
 	@rm -f $@
-	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@; exit 1)
+	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXLIB)/libsxbnf.a $(SXBIBS) || (rm $@; exit 1)
 
-$(LIB)/semact_main.o:	$(SXINCL)/sxunix.h $(SXINCL)/util/B_tables.h $(BNF)/bnf_vars.h \
+$(LIB)/semact_main.o:	$(SXINCL)/sxunix.h $(SXINCL)/util/B_tables.h $(SXINCL)/util/bnf_vars.h \
 			semact_main.c
 	$(CC) -o $@ -c semact_main.c
 
-$(LIB)/semact_sact.o:	$(SXINCL)/sxunix.h $(SXINCL)/sem_by.h $(SXINCL)/util/B_tables.h $(BNF)/bnf_vars.h \
+$(LIB)/semact_sact.o:	$(SXINCL)/sxunix.h $(SXINCL)/sem_by.h $(SXINCL)/util/B_tables.h $(SXINCL)/util/bnf_vars.h \
 			semact_sact.c
 	$(CC) -o $@ -c semact_sact.c
 
@@ -46,7 +36,7 @@ bootstrap: semact_t.c
 semact_t.c: semact.bt semact.st semact.pt semact.rt 
 	tables_c semact > $@
 
-semact.bt  : semact.bnf
+semact.bt: semact.bnf
 	semact semact.bnf 
 
 semact.st: semact.bt semact.lecl

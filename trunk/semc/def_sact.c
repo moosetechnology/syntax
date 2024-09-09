@@ -20,10 +20,12 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SEMC_DEFSACT[] = "@(#)SYNTAX - $Id: def_sact.c 4125 2024-07-29 10:59:13Z garavel $" WHAT_DEBUG;
+char WHAT_SEMC_DEFSACT[] = "@(#)SYNTAX - $Id: def_sact.c 4248 2024-09-05 15:54:05Z garavel $" WHAT_DEBUG;
 
 extern void    bnf_skip_rule (void);
 extern void    bnf_found_bad_beginning_of_rule (void);
+
+/* forward */ SXSCANACT_FUNCTION def_scan_act;
 
 bool def_scan_act (SXINT code, SXINT act_no)
 {

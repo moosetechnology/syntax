@@ -18,6 +18,12 @@ SXUTIL=$(SX)/util
 
 SXBIBS=$(SXLIB)/libsxutil.a $(SXLIB)/libsx.a
 
+SXEXTBIN=$(SX)/../extensions/bin.$(ARCH)
+
+SXEXTCOM=$(SX)/../extensions/bin
+
+SXEXTINCL=$(SX)/../extensions/incl
+
 # We inherit $GCC_WARNINGS from the environment (see sxmake)
 
 COMPILER=gcc $(GCC_WARNINGS) $(EXTRA_CFLAGS)

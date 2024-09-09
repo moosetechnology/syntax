@@ -5,9 +5,10 @@ BNF=$(SX)/bnf
 LIB=$(BNF)/lib.$(ARCH)
 BOOT=$(BNF)/boot
 
-CC=$(COMPILER) -I$(BOOT) -I$(SXINCL) -I$(SXINCL)/util -I$(BNF) $(CFLAGS)
+CC=$(COMPILER) -I$(BOOT) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
 all: $(SXBIN)/bnf.out \
+     $(SXLIB)/libsxbnf.a	\
      $(SXAUX)/print_bt.out	\
      $(SXAUX)/check_bnf.out
 
@@ -27,10 +28,21 @@ $(SXBIN)/bnf.out:	$(NEEDS1)	$(SXBIBS)
 	@rm -f $@
 	$(COMPILER) -o $@ $(NEEDS1) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@; exit 1)
 
+$(SXLIB)/libsxbnf.a:	$(NEEDS1)
+	@rm -f $@
+	ar rc $@ $(LIB)/bnf_folcon.o	\
+		  $(LIB)/bnf_lo.o		\
+		  $(LIB)/bnf_protest.o	\
+		  $(LIB)/bnf_sact.o		\
+		  $(LIB)/bnf_smp.o  		\
+		  $(LIB)/bnf_symtab.o	\
+		  $(LIB)/bnf_t.o
+	cd $(SXLIB) ; $(RANLIB) $@
+
 $(LIB)/bnf_folcon.o:	$(SXINCL)/sxunix.h	\
 			$(SXINCL)/sxba.h	\
 			$(SXINCL)/util/B_tables.h	\
-			$(BNF)/bnf_vars.h 	\
+			$(SXINCL)/util/bnf_vars.h 	\
 			bnf_folcon.c
 	$(CC) -o $@ -c bnf_folcon.c
 
@@ -39,13 +51,13 @@ $(LIB)/bnf_lo.o:	$(SXINCL)/sxunix.h	\
 			$(SXINCL)/put_edit.h	\
 			$(SXINCL)/varstr.h	\
 			$(SXINCL)/util/B_tables.h	\
-			$(BNF)/bnf_vars.h 	\
+			$(SXINCL)/util/bnf_vars.h 	\
 			bnf_lo.c
 	$(CC) -o $@ -c bnf_lo.c
 
 $(LIB)/bnf_main.o:	$(SXINCL)/sxunix.h	\
 			$(SXINCL)/util/B_tables.h	\
-			$(BNF)/bnf_vars.h 	\
+			$(SXINCL)/util/bnf_vars.h 	\
 			bnf_main.c
 	$(CC) -o $@ -c bnf_main.c
 
@@ -53,19 +65,19 @@ $(LIB)/bnf_protest.o:	$(SXINCL)/sxunix.h	\
 			$(SXINCL)/sxba.h	\
 			$(SXINCL)/varstr.h	\
 			$(SXINCL)/util/B_tables.h	\
-			$(BNF)/bnf_vars.h 	\
+			$(SXINCL)/util/bnf_vars.h 	\
 			bnf_protest.c
 	$(CC) -o $@ -c bnf_protest.c
 
 $(LIB)/bnf_sact.o:	$(SXINCL)/sxunix.h	\
 			$(SXINCL)/util/B_tables.h	\
-			$(BNF)/bnf_vars.h 	\
+			$(SXINCL)/util/bnf_vars.h 	\
 			bnf_sact.c
 	$(CC) -o $@ -c bnf_sact.c
 
 $(LIB)/bnf_smp.o:	$(SXINCL)/sxunix.h	\
 			$(SXINCL)/util/B_tables.h	\
-			$(BNF)/bnf_vars.h 	\
+			$(SXINCL)/util/bnf_vars.h 	\
 			bnf_smp.c
 	$(CC) -o $@ -c bnf_smp.c
 
@@ -73,7 +85,7 @@ $(LIB)/bnf_symtab.o:	$(SXINCL)/sxunix.h	\
 			$(SXINCL)/sxba.h	\
 			$(SXINCL)/varstr.h	\
 			$(SXINCL)/util/B_tables.h	\
-			$(BNF)/bnf_vars.h	\
+			$(SXINCL)/util/bnf_vars.h	\
 			$(SXINCL)/varstr.h	\
 			bnf_symtab.c
 	$(CC) -o $@ -c bnf_symtab.c
@@ -92,8 +104,7 @@ $(LIB)/bnf_terminal.o:	$(SXINCL)/sxunix.h	\
 
 $(LIB)/bnf_t.o:		$(SXINCL)/sxunix.h 	\
 			$(BOOT)/bnf_t.c
-	$(CC) -o $@ -c $(BOOT)/bnf_t.c			\
-		-DSCANACT=bnf_scan_act		\
+	$(CC) -o $@ -c $(BOOT)/bnf_t.c		\
 		-DSEMPASS=sxbnfsmp
 
 NEEDS2=\
@@ -106,13 +117,13 @@ $(SXAUX)/print_bt.out:	$(NEEDS2)	$(SXBIBS)
 
 $(LIB)/bnf_dump.o:	$(SXINCL)/sxunix.h	\
 			$(SXINCL)/util/B_tables.h	\
-			$(BNF)/bnf_vars.h 	\
+			$(SXINCL)/util/bnf_vars.h 	\
 			bnf_dump.c	
 	$(CC) -o $@ -c bnf_dump.c
 
 $(LIB)/print_bt.o:	$(SXINCL)/sxunix.h	\
 			$(SXINCL)/util/B_tables.h	\
-			$(BNF)/bnf_vars.h 	\
+			$(SXINCL)/util/bnf_vars.h 	\
 			print_bt.c	
 	$(CC) -o $@ -c print_bt.c
 
@@ -125,7 +136,7 @@ $(SXAUX)/check_bnf.out:	$(NEEDS3)	$(SXBIBS)
 
 $(LIB)/check_bnf.o:	$(SXINCL)/sxunix.h	\
 			$(SXINCL)/util/B_tables.h	\
-			$(BNF)/bnf_vars.h 	\
+			$(SXINCL)/util/bnf_vars.h 	\
 			check_bnf.c	
 	$(CC) -o $@ -c check_bnf.c
 

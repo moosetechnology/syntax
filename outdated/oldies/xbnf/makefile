@@ -76,7 +76,6 @@ $(LIB)/xbnf_symtab.o:	$(SXINCL)/sxunix.h	\
 $(LIB)/xbnf_t.o:	$(SXINCL)/sxunix.h 	\
 			xbnf_t.c
 	$(CC) -o $@ -c xbnf_t.c			\
-		-DSCANACT=xbnf_scan_act		\
 		-DSEMPASS=sxxbnfsmp
 
 NEEDS2= $(LIB)/xbnf_dump.o		\
@@ -125,7 +124,6 @@ $(LIB)/xbnf2lex_prdct.o:	$(SXINCL)/sxunix.h	\
 $(LIB)/xbnf2lex_prdct_t.o:		$(SXINCL)/sxunix.h 	\
 			xbnf_t.c
 	$(CC) -o $@ -c xbnf_t.c	-o $(LIB)/xbnf2lex_prdct_t.o		\
-		-DSCANACT=xbnf_scan_act		\
 		-DSEMPASS=xbnf2lexprdct_smp
 
 # debut de code produit par "make-makefile xbnf"

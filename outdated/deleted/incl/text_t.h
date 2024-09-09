@@ -17,8 +17,7 @@
  *   can be found at, e.g., http://www.cecill.info
  *****************************************************************************/
 
-
-/* Beginning of sxtables for text [Thu Dec 10 11:46:09 2009] */
+/* Beginning of sxtables for text */
 #define SXP_MAX 0
 #include "sxunix.h"
 #include "sxba.h"
@@ -102,7 +101,7 @@ static char *err_titles[SXSEVERITIES]={
 "\002Error:\t",
 };
 static char abstract []= "%ld warnings and %ld errors are reported.";
-extern SXBOOLEAN sxndprecovery(SXINT what_to_do);
+extern SXPRECOVERY_FUNCTION sxndprecovery;
 
 static unsigned char S_char_to_simple_class[]={
 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
@@ -188,22 +187,22 @@ static char *S_global_mess[]={0,
 "End Of File",
 "%sScanning stops on End Of File.",
 };
-extern SXINT sxscan_it(void);
-extern SXBOOLEAN sxsrecovery (SXINT sxsrecovery_what, SXINT state_no, unsigned char *class);
-extern SXINT sxscanner(SXINT what_to_do, struct sxtables *arg);
-extern SXINT sxndparser (SXINT what_to_do, struct sxtables *arg);
+extern SXPARSER_FUNCTION sxndparser;
 #ifdef ESAMBIG
 extern SXINT ESAMBIG(SXINT what);
 #endif /* ESAMBIG */
 #ifdef SEMACT
-#ifndef SCANACT_AND_SEMACT_ARE_IDENTICAL
-extern SXINT SEMACT(SXINT what, struct sxtables *arg);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wredundant-decls"
+extern SXSEMACT_FUNCTION SEMACT;
+#pragma GCC diagnostic pop
 #endif
-#endif /* SEMACT */
 
-struct sxtables sxtables={
+SXTABLES sxtables={
 52113, /* magic */
-{sxscanner,(SXPARSER_T) sxndparser}, {255, 3, 1, 3, 4, 9, 1, 8, 0, 0, 0, 
+sxscanner,
+sxndparser,
+{255, 3, 1, 3, 4, 9, 1, 8, 0, 0, 0, 
 S_is_a_keyword,S_is_a_generic_terminal,S_transition_matrix,
 SXS_action_or_prdct_code,
 S_adrp,
@@ -214,9 +213,9 @@ S_no_delete,
 S_no_insert,
 S_global_mess,
 S_lregle,
-NULL,
-(SXRECOVERY_T) sxsrecovery,
-NULL,
+(SXSCANACT_FUNCTION *) NULL,
+sxsrecovery,
+(SXCHECK_KEYWORD_FUNCTION *) NULL
 },
 {0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 11, 4, 7, 2, 5, 11, 2, 6,
 NULL,
@@ -232,22 +231,25 @@ P_right_ctxt_head,
 SXP_local_mess,
 P_no_delete,
 P_no_insert,
-P_global_mess,PER_tset,sxscan_it,(SXRECOVERY_T) sxndprecovery,
-NULL,
+P_global_mess,
+PER_tset,
+sxscan_it,
+sxndprecovery,
+(SXPARSACT_FUNCTION *) NULL,
 #ifdef ESAMBIG
 ESAMBIG,
 #else /* ESAMBIG */
-NULL,
+(SXDESAMBIG_FUNCTION *) NULL,
 #endif /* ESAMBIG */
 #ifdef SEMACT
-(SXSEMACT_T) SEMACT
-#else /* SEMACT */
-NULL,
-#endif /* SEMACT */
+SEMACT
+#else
+(SXSEMACT_FUNCTION *) NULL
+#endif
 },
 err_titles,
 abstract,
-(sxsem_tables*)NULL,
-NULL,
+(sxsem_tables *) NULL,
+NULL
 };
-/* End of sxtables for text [Thu Dec 10 11:46:09 2009] */
+/* End of sxtables for text */

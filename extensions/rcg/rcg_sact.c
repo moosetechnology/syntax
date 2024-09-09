@@ -21,7 +21,7 @@
 #include "varstr.h"
 #include <ctype.h>
 
-char WHAT_RCGSACT[] = "@(#)SYNTAX - $Id: rcg_sact.c 4198 2024-08-29 11:56:40Z garavel $" WHAT_DEBUG;
+char WHAT_RCGSACT[] = "@(#)SYNTAX - $Id: rcg_sact.c 4222 2024-09-03 08:02:15Z garavel $" WHAT_DEBUG;
 
 extern SXTABLES	sxtables;
 
@@ -29,18 +29,18 @@ static VARSTR	vstr;
 
 static _Noreturn void	gripe (void)
 {
-    fputs ("\nThe function \"rcg_scan_act\" is out of date with respect to its specification.\n", sxstderr);
+    fputs ("\nThe function \"sxscanner_action\" for rcg/drcg is out of date with respect to its specification.\n", sxstderr);
     sxexit(1);
 }
 
-/* ATTENTION : rcg_scan_act peut etre appele au cours de la passe rcg puis au cours de la passe drcg.
+/* ATTENTION : sxscanner_action peut etre appele au cours de la passe rcg puis au cours de la passe drcg.
    Dans ce cas on a la sequence
-   rcg_scan_act (SXOPEN) rcg ... rcg_scan_act (SXACTION) rcg ... rcg_scan_act (SXOPEN) drcg ...
-   rcg_scan_act (SXACTION) drcg ... rcg_scan_act (SXCLOSE) drcg ... rcg_scan_act (SXCLOSE) rcg ...
+   sxscanner_action (SXOPEN) rcg ... sxscanner_action (SXACTION) rcg ... sxscanner_action (SXOPEN) drcg ...
+   sxscanner_action (SXACTION) drcg ... sxscanner_action (SXCLOSE) drcg ... sxscanner_action (SXCLOSE) rcg ...
    et donc vstr est alloue 2 fois (pas trop grave) mais surtout on le libere 2 fois de suite...
    D'ou les tests a l'alloc et a la liberation */
 
-bool rcg_scan_act (SXINT code, SXINT act_no)
+bool sxscanner_action (SXINT code, SXINT act_no)
 {
     SXINT 	x, kw;
     char	c;

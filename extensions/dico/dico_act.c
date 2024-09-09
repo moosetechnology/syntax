@@ -20,7 +20,7 @@
 #include "sxunix.h"
 #include "sxdico.h"
 
-char WHAT_DICOACT[] = "@(#)SYNTAX - $Id: dico_act.c 4186 2024-08-27 10:31:13Z garavel $" WHAT_DEBUG;
+char WHAT_DICOACT[] = "@(#)SYNTAX - $Id: dico_act.c 4222 2024-09-03 08:02:15Z garavel $" WHAT_DEBUG;
 
 extern SXINT             optim_kind, process_kind, print_on_sxtty;
 extern char            *dico_name, *prgentname;
@@ -243,7 +243,7 @@ void dico_sem_act (SXINT code, SXINT numact, SXTABLES *arg)
 }
 
 
-bool dico_scan_act (SXINT code, SXINT act_no)
+bool sxscanner_action (SXINT code, SXINT act_no)
 {
     switch (code) {
     default:

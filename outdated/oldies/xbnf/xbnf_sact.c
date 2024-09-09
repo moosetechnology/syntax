@@ -22,7 +22,7 @@
 #include "B_tables.h"
 #include "xbnf_vars.h"
 
-char WHAT_XBNFSACT[] = "@(#)SYNTAX - $Id: xbnf_sact.c 4139 2024-07-31 16:02:45Z garavel $" WHAT_DEBUG;
+char WHAT_XBNFSACT[] = "@(#)SYNTAX - $Id: xbnf_sact.c 4223 2024-09-03 08:03:50Z garavel $" WHAT_DEBUG;
 
 #define rule_slice 100
 
@@ -96,7 +96,7 @@ void	bnf_found_bad_beginning_of_rule (void)
 
 static void	gripe (void)
 {
-    fputs ("\nThe function \"xbnf_scan_act\" is out of date with respect to its specification.\n", sxstderr);
+    fputs ("\nThe function \"sxscanner_action\" for xbnf is out of date with respect to its specification.\n", sxstderr);
     sxexit(1);
 }
 
@@ -105,7 +105,7 @@ static void	gripe (void)
 void	(*more_scan_act) (SXINT code, SXINT act_no);
 
 
-bool xbnf_scan_act (SXINT code, SXINT act_no)
+bool sxscanner_action (SXINT code, SXINT act_no)
 {
     switch (code) {
     case SXOPEN:

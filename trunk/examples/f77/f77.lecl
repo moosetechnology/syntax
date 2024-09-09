@@ -96,3 +96,4 @@ Tokens
 
    format_kw	= (UPPER&Is_Set(0) | LOWER&Is_Set(0) @6) ;
 
+   "."		= -"." &Is_set(0) ;

@@ -1,47 +1,36 @@
 
 include $(SX)/etc/make/gccoptions
 
-BNF=$(SX)/bnf
-BNFLIB=$(BNF)/lib.$(ARCH)
-
 PARADIS=$(SX)/paradis
 LIB=$(PARADIS)/lib.$(ARCH)
 INCL=$(PARADIS)/incl
 BOOT=$(PARADIS)/boot
 
-CC=$(COMPILER) -I$(BOOT) -I$(BNF) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
+CC=$(COMPILER) -I$(BOOT) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
 all: $(SXBIN)/paradis.out $(SXAUX)/print_ppt.out
 
-NEEDS=		$(BNFLIB)/bnf_sact.o	\
-		$(BNFLIB)/bnf_t.o    	\
-		$(BNFLIB)/bnf_smp.o    	\
-		$(BNFLIB)/bnf_folcon.o	\
-		$(BNFLIB)/bnf_protest.o	\
-		$(BNFLIB)/bnf_lo.o    	\
-		$(BNFLIB)/bnf_symtab.o	\
-		$(LIB)/paradis_t.o	\
+NEEDS=		$(LIB)/paradis_t.o	\
 		$(LIB)/paradis_main.o	\
 		$(LIB)/paradis_smp.o
 
 PRINT=		$(LIB)/print_ppt.o
 
-$(SXBIN)/paradis.out:	$(NEEDS)	$(SXBIBS)
+$(SXBIN)/paradis.out:	$(NEEDS) $(SXBIBS) $(SXLIB)/libsxbnf.a
 	@rm -f $@
-	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXLIB)/libsxbnf.a $(SXBIBS) || (rm $@;exit 1)
 
-$(SXAUX)/print_ppt.out: print_ppt.c $(SXBIBS)
+$(SXAUX)/print_ppt.out: print_ppt.c $(SXBIBS) $(SXLIB)/libsxbnf.a
 	@rm -f $@
-	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXLIB)/libsxbnf.a $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/paradis_t.o: 	$(SXINCL)/sxunix.h $(BOOT)/paradis_t.c
 	$(CC) -o $@ -c $(BOOT)/paradis_t.c		\
-		-DSCANACT=paradis_scan_act	\
 		-DSEMPASS=paradis_smp
 
 $(LIB)/paradis_main.o:	$(SXINCL)/sxunix.h	\
 			$(SXINCL)/util/B_tables.h 	\
-			$(BNF)/bnf_vars.h 	\
+			$(SXINCL)/util/bnf_vars.h 	\
 			paradis_main.c
 	$(CC) -o $@ -c paradis_main.c
 
@@ -49,7 +38,7 @@ $(LIB)/paradis_smp.o:	$(SXINCL)/sxunix.h	\
 			$(SXINCL)/sem_by.h	\
 			$(SXINCL)/util/PP_tables.h	\
 			$(SXINCL)/util/B_tables.h	\
-			$(BNF)/bnf_vars.h	\
+			$(SXINCL)/util/bnf_vars.h	\
 			$(SXINCL)/put_edit.h	\
 			$(SXINCL)/varstr.h	\
 			paradis_smp.c

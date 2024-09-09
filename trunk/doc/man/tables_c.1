@@ -1,0 +1,95 @@
+.\" @(#)tables_c.1	- SYNTAX [unix] - 31 aout 2024
+.TH TABLES_C 1 "SYNTAX\[rg]"
+.SH NAME
+tables_c \- terminal processor of SYNTAX
+.SH SYNOPSIS
+.B tables_c
+[ \fB\-v\fP ] [ \fB\-nv\fP ]
+[ \fB\-name\fP \fItables_name\fP ]
+[ \fIlanguage_name\fP ]
+.SH DESCRIPTION
+.I tables_c
+is the finalization processor of the
+\fBSYNTAX\fP\*R
+system. It must be invoked after the other processors of \fBSYNTAX\fP:
+.BR bnf(1),
+.BR lecl(1),
+.BR semact(1),
+.BR semat(1),
+.BR semc(1),
+.BR paradis(1),
+etc. have been invoked for a given language \fIlangage_name\fP.
+.LP
+.I tables_c
+reads the various files (\fIlanguage_name\fP\fB.bt\fP,
+\fIlanguage_name\fP\fB.pt\fP, \fIlanguage_name\fP\fB.rt\fP,
+\fIlanguage_name\fP\fB.st\fP, etc.) produced by these various
+processors and gathers their contents in a unique data structure
+of type \fISXTABLES\fP.
+.LP
+This data structure is described by a fragment of C code, which
+.I tables_c
+emits on its standard output. This fragment of C code should be stored in a
+file (preferably named \fIlanguage_name\fP\fB_t.c\fP), which should then be compiled 
+and linked with the SYNTAX libraries and the other C files written by the
+user for processing files written in the language \fIlanguage_name\fP.
+.LP
+If no argument is given,
+.I tables_c
+prints a short synopsis of its usage and exits with a non null status code.
+.SH OPTIONS
+.LP
+Options may appear in any order as long as they appear
+.B before
+the
+.IR filename .
+Only the
+.B last
+occurrence of a given option is taken into account.
+.br
+Default options are such that the command
+.br
+\fB     tables_c [filename]\fP
+.br
+is equivalent to
+.br
+\fB     tables_c -v [filename]\fP
+.TP
+\fB\-v\fP, \fB\-verbose\fP
+Animate the user's screen by displaying cryptic information about what is
+going on.
+(Default)
+.TP
+\fB\-nv\fP, \fB\-noverbose\fP
+Execute silently.
+.TP
+\fB\-name\fP \fItables_name\fP
+In the generated C code, the data structure is named "\fItables_name\fP",
+instead of "sxtables", which is the default name when option \fB-name\fP
+is not given on the command line.
+
+.SH FILES
+.ta \w'(standard output) 'u
+\fIlanguage_name\fP\fB.att\fP	data file (input)
+.br
+\fIlanguage_name\fP\fB.bt\fP	data file (input)
+.br
+\fIlanguage_name\fP\fB.pt\fP	data file (input)
+.br
+\fIlanguage_name\fP\fB.ppt\fP	data file (input)
+.br
+\fIlanguage_name\fP\fB.rt\fP	data file (input)
+.br
+\fIlanguage_name\fP\fB.st\fP	data file (input)
+.br
+\fI(standard ouput)\fP	generated C code, usually redirected and stored in file \fIlanguage_name\fP\fB_t.c\fP.
+.SH "SEE ALSO"
+bnf(1), lecl(1), semact(1), semat(1), paradis(1), semc(1) and the
+\fB"SYNTAX REFERENCE MANUAL"\fP.
+.SH DIAGNOSTICS
+When the grammar is not proper, an error message is issued and error
+diagnostics are gathered in the listing (if any).
+.br
+Exit status is 0 if everything is alright, 1 if only warnings are issued, 2
+if error messages are issued, 3 for command line syntax errors.
+

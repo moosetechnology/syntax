@@ -1053,7 +1053,7 @@ static char *S_global_mess[]={0,
 "%sScanning stops on End Of File.",
 };
 #ifdef SCANACT
-extern SXSCANACT_FUNCTION SCANACT;
+#warning "compiling with -DSCANACT is deprecated; define sxscanner_action() or invoke sxset_scanner_action()"
 #endif
 static SXCHECK_KEYWORD_FUNCTION sxcheck_keyword;
 static struct SXT_node_info SXT_node_info[]={{0,0},
@@ -1203,11 +1203,7 @@ S_no_delete,
 S_no_insert,
 S_global_mess,
 S_lregle,
-#ifdef SCANACT
-SCANACT,
-#else
-(SXSCANACT_FUNCTION *) NULL,
-#endif
+sxscanner_action,
 sxsrecovery,
 sxcheck_keyword
 },
@@ -1237,13 +1233,14 @@ P_right_ctxt_head,
 SXP_local_mess,
 P_no_delete,
 P_no_insert,
-P_global_mess,PER_tset,
+P_global_mess,
+PER_tset,
 sxscan_it,
 sxprecovery,
 #ifdef PARSACT
 PARSACT,
 #else
-(SXPARSACT_FUNCTION *) NULL,
+sxparser_action,
 #endif
 (SXDESAMBIG_FUNCTION *) NULL,
 sxatc

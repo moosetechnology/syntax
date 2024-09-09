@@ -8,8 +8,6 @@
    ******************************************************** */
 
 
-
-
 /* ********************************************************
    *                                                      *
    *     Produit de l'equipe ChLoE.			  *
@@ -36,8 +34,9 @@ static char	ME [] = "ARN_parsact";
 
 static struct ARN	ARN;
 
-static  int
-ARN_symbols_oflw (SXINT old_size, SXINT new_size)
+extern SXTABLES sxtables;
+
+static int ARN_symbols_oflw (SXINT old_size, SXINT new_size)
 {
     (void) old_size;
     (void) new_size;
@@ -50,8 +49,7 @@ ARN_symbols_oflw (SXINT old_size, SXINT new_size)
     return 0;
 }
 
-static  int
-ARN_parsers_oflw (SXINT old_size, SXINT new_size)
+static int ARN_parsers_oflw (SXINT old_size, SXINT new_size)
 {
     (void) old_size;
     (void) new_size;
@@ -67,8 +65,7 @@ ARN_parsers_oflw (SXINT old_size, SXINT new_size)
 }
 
 #if 0
-static  int
-ARN_sons_oflw (SXINT old_size, SXINT new_size)
+static int ARN_sons_oflw (SXINT old_size, SXINT new_size)
 {
     (void) old_size;
     (void) new_size;
@@ -78,8 +75,7 @@ ARN_sons_oflw (SXINT old_size, SXINT new_size)
     return 0;
 }
 
-static  void
-ARN_paths_oflw (SXINT old_size, SXINT new_size)
+static void ARN_paths_oflw (SXINT old_size, SXINT new_size)
 {
     (void) old_size;
     (void) new_size;
@@ -89,8 +85,7 @@ ARN_paths_oflw (SXINT old_size, SXINT new_size)
 }
 #endif
 
-static  void
-ARN_level_trans_oflw (SXINT old_size, SXINT new_size)
+static void ARN_level_trans_oflw (SXINT old_size, SXINT new_size)
 {
     (void) old_size;
     (void) new_size;
@@ -99,8 +94,7 @@ ARN_level_trans_oflw (SXINT old_size, SXINT new_size)
 								 sizeof (struct level_trans2attr));
 }
 
-static  void
-ARN_symbol_set_oflw (SXINT old_size, SXINT new_size)
+static void ARN_symbol_set_oflw (SXINT old_size, SXINT new_size)
 {
     (void) old_size;
     (void) new_size;
@@ -109,8 +103,7 @@ ARN_symbol_set_oflw (SXINT old_size, SXINT new_size)
 							       sizeof (struct symbol_set2attr));
 }
 
-static  void
-ARN_pXs_oflw (SXINT old_size, SXINT new_size)
+static void ARN_pXs_oflw (SXINT old_size, SXINT new_size)
 {
     (void) old_size;
     (void) new_size;
@@ -120,8 +113,7 @@ ARN_pXs_oflw (SXINT old_size, SXINT new_size)
 }
 
 
-static  void
-ARN_local_trans_oflw (SXINT old_size, SXINT new_size)
+static void ARN_local_trans_oflw (SXINT old_size, SXINT new_size)
 {
     (void) old_size;
     (void) new_size;
@@ -131,8 +123,7 @@ ARN_local_trans_oflw (SXINT old_size, SXINT new_size)
 }
 
 #if 0
-static int
-ARN_GC (void)
+static int ARN_GC (void)
 {
     /* sxndparser vient de faire un GC, on en profite... */
     /* Il est possible de l'appeler a n'importe quel moment. */
@@ -140,8 +131,7 @@ ARN_GC (void)
 }
 
 
-static int
-ARN_action_pop (int level, int son, int father)
+static int ARN_action_pop (int level, int son, int father)
 {
     /* On est au niveau level du depilage courant entre les parser son et father */
     SXINT				path;
@@ -155,8 +145,7 @@ ARN_action_pop (int level, int son, int father)
 }
 
 
-static int
-ARN_action_top (int xtriple)
+static int ARN_action_top (int xtriple)
 {
     /* On est ds "reducer", on va lancer une reduction sur le triple xtriple. */
     /* parse_stack.ared est positionne' */
@@ -194,8 +183,7 @@ ARN_action_top (int xtriple)
 }
 
 
-static void
-ARN_action (void)
+static void ARN_action (void)
 {
     int	value;
 
@@ -215,8 +203,7 @@ ARN_action (void)
 }
 
 
-static void
-walk_paths (int bot, int level)
+static void walk_paths (int bot, int level)
 {
     int		path;
     
@@ -235,8 +222,7 @@ walk_paths (int bot, int level)
 }
 
 
-static int
-ARN_action_bot (int bot)
+static int ARN_action_bot (int bot)
 {
     /* On vient de terminer le depilage, on se contente de noter le parser atteint
        La parsact sera effectuee avec le test du predicat. */
@@ -247,8 +233,7 @@ ARN_action_bot (int bot)
 #endif
 
 
-static int
-ARN_action_new_top (int bot, int new_top, int symbol)
+static int ARN_action_new_top (int bot, int new_top, int symbol)
 {
     /* Si new_top == 0, echec syntaxique. */
     /* Attention, il peut exister le meme "symbol" avec 2 "new_top" differents. */
@@ -301,8 +286,7 @@ ARN_action_new_top (int bot, int new_top, int symbol)
     return 0;
 }
 
-static void
-ARN_vanish_trans (int son, int father, int link)
+static void ARN_vanish_trans (int son, int father, int link)
 {
     /* On fait disparaitre la transition entre les parser son et father. */
     struct  parsers_attr	*pattr;
@@ -384,8 +368,7 @@ ARN_vanish_trans (int son, int father, int link)
 }
 
 
-static int
-ARN_forward_walk (int son)
+static int ARN_forward_walk (int son)
 {
     int	local_trans, father, symbol;
     // int x;
@@ -427,8 +410,7 @@ ARN_forward_walk (int son)
 
 
 
-static void
-ARN_build_a_rule (int parser, int rhs)
+static void ARN_build_a_rule (int parser, int rhs)
 {
     int lhs, x;
     
@@ -461,8 +443,7 @@ ARN_build_a_rule (int parser, int rhs)
     }
 }
 
-static void
-ARN_walk_backward (int p, bool is_in_set, int l)
+static void ARN_walk_backward (int p, bool is_in_set, int l)
 {
     int		x, son, father, first_son, major_son;
     SXINT       local_trans;
@@ -559,8 +540,7 @@ ARN_walk_backward (int p, bool is_in_set, int l)
 
 
 
-static void
-ARN_parse_forest (void)
+static void ARN_parse_forest (void)
 {
     /* The construction of the parse forest is not performed within the
        recognizer in order to avoid the multiple definition of the same
@@ -687,8 +667,7 @@ ARN_parse_forest (void)
     parse_stack.for_reducer.triples_hd [0] = 0; /* cas ref == 0 */
 }
 
-static void
-ARN_finalize_current_level (void)
+static void ARN_finalize_current_level (void)
 {
     /* On modifie la parse_stack en prenant en compte les transitions
        qui ont disparues. */
@@ -744,8 +723,7 @@ ARN_finalize_current_level (void)
     }
 }
 
-static int
-ARN_action_final (void)
+static int ARN_action_final (void)
 {
     /* On a termine' l'e'valuation d'un niveau, On prepare le niveau suivant. */
     int		x, bot, new_top, keep, perhaps, symbol, pXs;
@@ -843,12 +821,12 @@ ARN_action_final (void)
 
 
 
-bool ARN_parsact (int which, SXTABLES *arg)
+bool sxparser_action (SXINT which, SXINT action_no)
 {
     switch (which)
     {
     case SXOPEN:
-	ARN.sxtables = arg;
+	ARN.sxtables = &sxtables;
 
 	ARN.vanished_parser_set = sxba_calloc (XxYxZ_size (parse_stack.parsers) + 1);
 	ARN.vanished_parser_stack = SS_alloc (XxYxZ_size (parse_stack.parsers) + 1);
@@ -1001,17 +979,17 @@ bool ARN_parsact (int which, SXTABLES *arg)
 
     case SXACTION:
 	/* La memorisation se fait ds "PREDICATE:" */
+	sxuse (action_no);
 	return SXANY_BOOL;
 
     case SXDO:
 	return 0;
 
-
     case SXUNDO:
 	return 0;
 
     default:
-	fputs ("The function \"ARN_parsact\" is out of date with respect to its specification.\n", sxstderr);
+	fputs ("The function \"sxparser_action\" for ARN is out of date with respect to its specification.\n", sxstderr);
 	abort ();
     }
 

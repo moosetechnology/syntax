@@ -752,7 +752,7 @@ ACTION_2 (delete)
 static int (*semact)();
 int L_semact ();
 
-bool L_parsact (SXINT what, SXINT act_no)
+bool sxparser_action (SXINT what, SXINT act_no)
 {
     int			name, rule, x, bot, xt, tnt, lhs_case, prev_xname, prev_lhs_case,
                         prev_block, prdct_no, param_type_name;
@@ -1808,7 +1808,7 @@ bool L_parsact (SXINT what, SXINT act_no)
 	break;
     }
 
-    fputs ("The function \"L_parsact\" is out of date with respect to its specification.\n",
+    fputs ("The function \"sxparser_action\" for lazy is out of date with respect to its specification.\n",
 	   sxstderr);
     abort ();
 

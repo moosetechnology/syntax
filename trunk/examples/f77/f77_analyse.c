@@ -89,7 +89,7 @@ static char ME [] = "f77_analyse.c";
 #include "f77_td.h"
 #include <ctype.h>
 
-char WHAT_F77ANALYSE[] = "@(#)SYNTAX - $Id: f77_analyse.c 4130 2024-07-29 12:27:32Z garavel $";
+char WHAT_F77ANALYSE[] = "@(#)SYNTAX - $Id: f77_analyse.c 4221 2024-09-02 16:49:08Z garavel $";
 
 /* Il faudrait INTERDIRE l'insertion d'un EOL par le rattrapage d'erreur
    du scanner. Utiliser sxs_srcvr? */
@@ -3198,7 +3198,7 @@ this expression is erased.",
 	      /* Si ça se produit dans la vraie vie, ça veut dire que le token_manager a déjà eu besoin de ce
 		 caractère et que le token %EOL a déjà été fabriqué et que c'est donc lui qu'il faudrait changer
 		 en %EOF!! En fait il faudrait une détection plus fine (est-on bien dans le même buffer que DO?) */
-	      sxtrap (ME, "f77_scanact (before sxparse_in_la call for a DO stmt");
+	      sxtrap (ME, "sxscanner_action (before sxparse_in_la call for a DO stmt");
 	    }
     
 	    *last_buffer_ptr = EOF; /* caractère eof */
@@ -3296,7 +3296,7 @@ this expression is erased.",
 		/* On met cette instruction au cas où "do_parse_mode" sera changé */ &&
 		SXGET_TOKEN (tok_no).lahead != sxeof_code (sxsvar.sxtables) /* EOF_t */)
 	      /* Dans tous ces cas, erreur ou pas, l'analyse du sous-langage s'est poursuivie jusqu'au EOF bidon */
-	      sxtrap (ME, "f77_scanact (after sxparse_in_la call for DO)");
+	      sxtrap (ME, "sxscanner_action (after sxparse_in_la call for DO)");
 
 	    /* On remet en état */
 	    /* ... le mode du scanner */
@@ -3566,7 +3566,7 @@ or an INQUIRE by Unit.",
 }
 
 
-bool f77_parsact (SXINT code, SXINT act_no)
+bool sxparser_action (SXINT code, SXINT act_no)
 {
     SXINT lahead, tok_no;
 
@@ -3633,7 +3633,7 @@ associated with the type CHARACTER.",
     default:
         break;
     }
-    fputs ("The function \"f77_parsact\" is out of date with respect to its specification.\n", sxstderr);
+    fputs ("The function \"sxparser_action\" for f77 is out of date with respect to its specification.\n", sxstderr);
     abort ();
 }
 
@@ -3911,7 +3911,7 @@ static void unclosed_do_loop (SXINT tok_no) {
 }
 
 
-bool f77_scanact (SXINT code, SXINT act_no) {
+bool sxscanner_action (SXINT code, SXINT act_no) {
   SXINT prev_lahead;
 #if EBUG
   SXINT old_Mtok_no;
@@ -4270,7 +4270,7 @@ bool f77_scanact (SXINT code, SXINT act_no) {
 		/* Si ça se produit dans la vraie vie, ça veut dire que le token_manager a déjà eu besoin de ce
 		   caractère et que le token %EOL a déjà été fabriqué et que c'est donc lui qu'il faudrait changer
 		   en %EOF!! En fait il faudrait une détection plus fine (est-on bien dans le même buffer que FORMAT?) */
-		sxtrap (ME, "f77_scanact (before sxparse_in_la call for a FORMAT stmt");
+		sxtrap (ME, "sxscanner_action (before sxparse_in_la call for a FORMAT stmt");
 	      }
     
 	      *last_buffer_ptr = EOF; /* caractère eof */
@@ -4312,7 +4312,7 @@ bool f77_scanact (SXINT code, SXINT act_no) {
 
 	      if (SXGET_TOKEN (tok_no).lahead != sxeof_code (sxsvar.sxtables) /* EOF_t */)
 		/* Dans tous les cas, erreur ou pas, l'analyse du sous-langage s'est poursuivie jusqu'au EOF bidon */
-		sxtrap (ME, "f77_scanact (after sxparse_in_la call for FORMAT)");
+		sxtrap (ME, "sxscanner_action (after sxparse_in_la call for FORMAT)");
 
 	      /* On remet en état */
 	      /* ... le mode du scanner */
@@ -5096,7 +5096,7 @@ This one, and all others in the sequel, are converted into the corresponding upp
        break;
 
     default:
-      fprintf (sxstderr, "\"%ld\"is an illegal action number in \"f77_scanact\".\n", (SXINT) act_no);
+      fprintf (sxstderr, "\"%ld\"is an illegal action number in \"sxscanner_action\".\n", (SXINT) act_no);
       abort ();
     }
 	
@@ -5140,12 +5140,12 @@ This one, and all others in the sequel, are converted into the corresponding upp
     }
 
     default:
-      fprintf (sxstderr, "\"%ld\"is an illegal predicate number in \"f77_scanact\".\n", (SXINT) act_no);
+      fprintf (sxstderr, "\"%ld\"is an illegal predicate number in \"sxscanner_action\".\n", (SXINT) act_no);
       abort ();
     }
     
   default:
-    fputs ("The function \"f77_scanact\" is out of date with respect to its specification.\n", sxstderr);
+    fputs ("The function \"sxscanner_action\" for f77 is out of date with respect to its specification.\n", sxstderr);
     abort ();
   }
     

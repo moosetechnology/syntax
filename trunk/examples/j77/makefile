@@ -41,8 +41,6 @@ $(LIB)/f77_s.o: 	$(SXINCL)/sxunix.h		\
 $(LIB)/f77_t.o: 	$(SXINCL)/sxunix.h		\
 			f77_t.c
 	$(CC) -o $@ f77_t.c				\
-			-DSCANACT=f77_scanact		\
-			-DPARSACT=f77_parsact		\
 			-DSEMACT=f77_act
 
 $(LIB)/f77_main.o:	$(SXINCL)/sxunix.h		\

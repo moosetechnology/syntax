@@ -24,8 +24,7 @@ $(LIB)/ARN_no_parsact.o:	$(SXINCL)/sxunix.h 	\
 $(LIB)/ARN_t.o:		$(SXINCL)/sxunix.h 	\
 			$(SRC)/ARN_t.c
 	$(CC) -o $@ -c $(SRC)/ARN_t.c		\
-		-DPARSACT=ARN_parsact		\
-		-DSEMACT=sxwvoid			\
+		-DSEMACT=sxwvoid		\
 	        -DESAMBIG=sxvoid		\
 	        -DPARSACT_2=sxvoid
 

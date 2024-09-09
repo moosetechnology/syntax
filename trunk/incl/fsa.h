@@ -63,16 +63,6 @@ struct inverse_mapping {
 						        (unsigned char *) 1 \
 						    ) : NULL)
 
-
-extern SXINT re_reader (char *pathname_or_string, bool from_file, SXINT (*re_process)(void));
-#ifdef sxu2_h
-/* Sinon SXTABLES est inconnu */
-extern SXINT read_a_re (void (*prelude)(bool, SXINT, SXINT, SXINT, SXINT), 
-			void (*store)(SXINT, struct sxtoken **, struct sxtoken **, SXINT, SXINT), 
-			SXINT (*postlude)(SXINT), 
-			SXINT what_to_do);
-#endif /* sxu2_h */
-
 /* Utilise's ds fsa_mngr */
 /* Renumerotation "raisonnable" des e'tats d'un FSA (Si DAG on a p ->t q => p < q) */
 extern void fsa_normalize (SXINT init_state, 

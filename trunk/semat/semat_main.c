@@ -27,7 +27,7 @@
 #include "bnf_vars.h"
 #include "put_edit.h"
 
-char WHAT_SEMATMAIN[] = "@(#)SYNTAX - $Id: semat_main.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
+char WHAT_SEMATMAIN[] = "@(#)SYNTAX - $Id: semat_main.c 4253 2024-09-06 08:04:52Z garavel $" WHAT_DEBUG;
 
 /* These include files for date/time manipulation: */
 #include <sys/types.h>
@@ -35,6 +35,9 @@ char WHAT_SEMATMAIN[] = "@(#)SYNTAX - $Id: semat_main.c 4166 2024-08-19 09:00:49
 
 char	by_mess [] = "the SYNTAX grammar & abstract tree processor SEMAT";
 
+extern SXTABLES	bnf_tables;
+
+extern SXSCANACT_FUNCTION bnf_scan_act;
 extern SXSCANACT_FUNCTION semat_scan_act;
 
 SXSCANACT_FUNCTION *more_scan_act = {semat_scan_act};
@@ -42,7 +45,6 @@ SXSCANACT_FUNCTION *more_scan_act = {semat_scan_act};
 extern void	no_tables (void), bnf_lo (void);
 extern bool	semat_sem (void);
 extern void     semat_lo (void);
-extern SXTABLES	bnf_tables;
 
 /*---------------*/
 /*    options    */
@@ -215,6 +217,8 @@ int main (int argc, char *argv[])
   int	argnum;
 
   sxopentty ();
+
+  sxset_scanner_action (bnf_tables, bnf_scan_act);
 
   if (argc == 1) {
     fprintf (sxstderr, Usage, ME);

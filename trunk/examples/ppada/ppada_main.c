@@ -20,11 +20,16 @@
 /* paragrapheur de Ada */
 
 #include "sxunix.h"
+
+char WHAT_PPADAMAIN[] = "@(#)SYNTAX - $Id: ppada_main.c 4247 2024-09-05 13:24:23Z garavel $";
+
+extern SXTABLES	ppada_tables;
+extern SXTABLES	ppada_args_tables;
+
+extern SXSCANACT_FUNCTION ppada_scan_act; 
+extern SXSCANACT_FUNCTION ppada_args_scan_act; 
+
 #include "ppada_td.h"
-
-char WHAT_PPADAMAIN[] = "@(#)SYNTAX - $Id: ppada_main.c 4166 2024-08-19 09:00:49Z garavel $";
-
-extern SXTABLES	ppada_args_tables, ppada_tables;
 
 /*---------------*/
 /*    options    */
@@ -413,6 +418,10 @@ int main (int argc, char *argv[])
 {
     sxopentty ();
     default_options ();
+
+    sxset_scanner_action (ppada_tables, ppada_scan_act); 
+    sxset_scanner_action (ppada_args_tables, ppada_args_scan_act); 
+
     sxerr_mngr (SXBEGIN);
 
     /* INRIA/CONVECS: this example is quite complicated because Syntax is

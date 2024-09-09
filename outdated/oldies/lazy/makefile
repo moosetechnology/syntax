@@ -40,8 +40,7 @@ $(LIB)/SL_t.o:	$(SXINCL)/sxunix.h 		\
 			$(SRC)/SL_t.c
 	$(CC) -o $@ -c $(SRC)/SL_t.c		\
 		-Dsxparser=sxdynam_parser	\
-		-DSEMACT=sxwvoid			\
-		-DPARSACT=L_parsact
+		-DSEMACT=sxwvoid
 
 $(L)/DL.out:	$(DL_NEEDS)	$(SXBIBS)
 	cc -o $@ $(DL_NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@; exit 1)
@@ -51,7 +50,6 @@ $(LIB)/DL_t.o:	$(SXINCL)/sxunix.h 		\
 	$(CC) -o $@ -c $(SRC)/DL_t.c		\
 		-Dsxparser=sxdynam_parser	\
 		-DSEMACT=sxwvoid			\
-		-DPARSACT=L_parsact
 
 $(LIB)/L_act.o:	$(SXINCL)/sxunix.h 		\
 		$(SXINCL)/sxba.h 		\

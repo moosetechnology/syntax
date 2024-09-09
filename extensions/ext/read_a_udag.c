@@ -38,11 +38,11 @@ static char ME [] = "read_a_udag";
 #define SEMPASS  sxsvoid
 #include "sxversion.h"
 #include "sxcommon.h"
-#include "udag_t.h"
+#include "udag_t.c"
 #include "udag_scanner.h"
 #include "earley.h"
 
-char WHAT_READAUDAG[] = "@(#)SYNTAX - $Id: read_a_udag.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
+char WHAT_READAUDAG[] = "@(#)SYNTAX - $Id: read_a_udag.c 4277 2024-09-09 09:29:54Z garavel $" WHAT_DEBUG;
 
 static bool is_error;
 

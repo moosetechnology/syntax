@@ -179,6 +179,7 @@ FULL_CLEAN() {
 	then
 		(
 		cd ../extensions
+		rm -rf bin.$TARGET_ARCH lib.$TARGET_ARCH
 		for FILE in `ls */makefile`
 		do
 			( cd `dirname "$FILE"` ; $MAKE -s clean ; rm -rf bin bin.$TARGET_ARCH lib.$TARGET_ARCH )
@@ -409,6 +410,7 @@ LOCAL_COMPILE_EXTENSION() {
 		exit 1	
 	fi
 	PREPARE_DIRECTORIES $ARCH
+	PREPARE_DIRECTORIES $ARCH $EXTENSIONS
 	PREPARE_DIRECTORIES $ARCH $EXTENSIONS/$EXTENSION
 	( 
 		PATH="$SX/bin:$PATH"

@@ -125,7 +125,7 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXMAIN[] = "@(#)SYNTAX - $Id: make_a_dico.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
+char WHAT_SXMAIN[] = "@(#)SYNTAX - $Id: make_a_dico.c 4222 2024-09-03 08:02:15Z garavel $" WHAT_DEBUG;
 
 static char ME [] = "make_a_dico.c";
 
@@ -307,8 +307,7 @@ static SXBA                    inflected_form_ste_set;
 
 static VARSTR                  vstr, wvstr;
 
-static void
-gen_header (char *file_name)
+static void gen_header (char *file_name)
 {
   time_t	date_time;
   char          threshold_string [12];
@@ -356,8 +355,7 @@ gen_header (char *file_name)
 
 
 
-static void
-oflw (SXINT old_size, SXINT new_size)
+static void oflw (SXINT old_size, SXINT new_size)
 {
   sxuse (old_size);
   word_tree_oflw (cur_word_tree_ptr, old_size, new_size);
@@ -365,8 +363,7 @@ oflw (SXINT old_size, SXINT new_size)
 
 
 
-static void
-make_a_dico_run (char *pathname)
+static void make_a_dico_run (char *pathname)
 {
   int nb_tab;
   bool begin_count_tab, tabulation_met;
@@ -443,8 +440,7 @@ make_a_dico_run (char *pathname)
 
 
 
-int
-main (int argc, char *argv[])
+int main (int argc, char *argv[])
 {
     sxopentty ();
 
@@ -627,7 +623,7 @@ main (int argc, char *argv[])
     return EXIT_SUCCESS;
 }
 
-bool make_a_dico_scanact (SXINT entry, SXINT act_no)
+bool sxscanner_action (SXINT entry, SXINT act_no)
 {
   switch (entry) {
     case SXOPEN:
@@ -671,13 +667,12 @@ bool make_a_dico_scanact (SXINT entry, SXINT act_no)
       /* FALLTHROUGH */
 
     default :
-      fputs ("The function \"make_a_dico_scanact\" is out of date w.r.t. its specification.\n", sxstderr);
+      fputs ("The function \"sxscanner_action\" of make_a_dico is out of date w.r.t. its specification.\n", sxstderr);
       sxexit (3) /* panic */;
   }
 }
 
-static void
-init (void)
+static void init (void)
 {
   is_error = false;
   t_code = 0;

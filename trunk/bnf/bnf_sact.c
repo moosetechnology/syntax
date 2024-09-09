@@ -22,7 +22,7 @@
 #include "B_tables.h"
 #include "bnf_vars.h"
 
-char WHAT_BNFSACT[] = "@(#)SYNTAX - $Id: bnf_sact.c 4124 2024-07-29 10:58:45Z garavel $" WHAT_DEBUG;
+char WHAT_BNFSACT[] = "@(#)SYNTAX - $Id: bnf_sact.c 4249 2024-09-05 16:08:02Z garavel $" WHAT_DEBUG;
 
 #define rule_slice 100
 
@@ -107,6 +107,7 @@ static void	gripe (void)
 
 extern SXINT	(*more_scan_act) (SXINT code, SXINT act_no);
 
+/* forward */ SXSCANACT_FUNCTION bnf_scan_act;
 
 bool bnf_scan_act (SXINT code, SXINT act_no)
 {

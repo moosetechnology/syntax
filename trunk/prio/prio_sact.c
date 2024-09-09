@@ -20,9 +20,9 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_PRIOSACT[] = "@(#)SYNTAX - $Id: prio_sact.c 4124 2024-07-29 10:58:45Z garavel $" WHAT_DEBUG;
+char WHAT_PRIOSACT[] = "@(#)SYNTAX - $Id: prio_sact.c 4224 2024-09-03 08:06:07Z garavel $" WHAT_DEBUG;
 
-bool prio_scan_act (SXINT code, SXINT act_no)
+bool sxscanner_action (SXINT code, SXINT act_no)
 {
     switch (code) {
     case SXOPEN:
@@ -60,7 +60,7 @@ bool prio_scan_act (SXINT code, SXINT act_no)
 #endif
 
     default:
-	fputs ("The function \"prio_scan_act\" is out of date with respect to its specification.\n", sxstderr);
+	fputs ("The function \"sxscanner_action\" for prio is out of date with respect to its specification.\n", sxstderr);
 	sxexit(1);
     }
 }

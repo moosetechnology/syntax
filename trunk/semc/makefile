@@ -1,35 +1,29 @@
 
 include $(SX)/etc/make/gccoptions
 
-BNF=$(SX)/bnf
-BNL=$(BNF)/lib.$(ARCH)
-
 TAB=$(SX)/semc
 LIB=$(TAB)/lib.$(ARCH)
 BOOT=$(TAB)/boot
 
-CC=$(COMPILER) -I$(TAB) -I$(SXINCL) -I$(SXINCL)/util -I$(BNF) $(CFLAGS)
+CC=$(COMPILER) -I$(TAB) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
 all: $(SXBIN)/semc.out
 
 NEEDS= \
- $(BNL)/bnf_folcon.o	$(BNL)/bnf_lo.o		\
- $(BNL)/bnf_protest.o	$(BNL)/bnf_sact.o	$(BNL)/bnf_smp.o	\
- $(BNL)/bnf_symtab.o	$(BNL)/bnf_t.o	\
  $(LIB)/semc_put.o	$(LIB)/semc.o		$(LIB)/semc_main.o	\
  $(LIB)/dec.o		$(LIB)/def.o		$(LIB)/def_sact.o	\
  $(LIB)/dec_t.o		$(LIB)/def_t.o		$(LIB)/semc_lo.o
 
-$(SXBIN)/semc.out:	$(NEEDS)	$(SXBIBS)
+$(SXBIN)/semc.out:	$(NEEDS) $(SXBIBS) $(SXLIB)/libsxbnf.a
 	@rm -f $@
-	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXLIB)/libsxbnf.a $(SXBIBS) || (rm $@;exit 1)
 
 $(LIB)/semc_main.o:		\
 		semc_main.c 	\
 		$(SXINCL)/sxunix.h		\
 		$(SXINCL)/util/B_tables.h	\
 		semc_vars.h	\
-		$(BNF)/bnf_vars.h
+		$(SXINCL)/util/bnf_vars.h
 	$(CC) -o $@ -c semc_main.c
 
 $(LIB)/semc_lo.o:		\
@@ -37,7 +31,7 @@ $(LIB)/semc_lo.o:		\
 		$(SXINCL)/sxunix.h		\
 		$(SXINCL)/util/B_tables.h	\
 		semc_vars.h	\
-		$(BNF)/bnf_vars.h
+		$(SXINCL)/util/bnf_vars.h
 	$(CC) -o $@ -c semc_lo.c
 
 $(LIB)/semc.o: \
@@ -45,7 +39,7 @@ $(LIB)/semc.o: \
 		$(SXINCL)/sxunix.h		\
 		$(SXINCL)/util/B_tables.h	\
 		semc_vars.h	\
-		$(BNF)/bnf_vars.h
+		$(SXINCL)/util/bnf_vars.h
 	$(CC) -o $@ -c semc.c
 
 $(LIB)/semc_put.o:	\
@@ -53,7 +47,7 @@ $(LIB)/semc_put.o:	\
 		$(SXINCL)/sxunix.h		\
 		$(SXINCL)/util/B_tables.h	\
 		semc_vars.h	\
-		$(BNF)/bnf_vars.h
+		$(SXINCL)/util/bnf_vars.h
 	$(CC) -o $@ -c semc_put.c
 
 $(LIB)/dec.o:		\
@@ -61,7 +55,7 @@ $(LIB)/dec.o:		\
 		$(SXINCL)/sxunix.h		\
 		$(SXINCL)/util/B_tables.h	\
 		semc_vars.h	\
-		$(BNF)/bnf_vars.h
+		$(SXINCL)/util/bnf_vars.h
 	$(CC) -o $@ -c $(BOOT)/dec.c
 
 $(LIB)/def.o:		\
@@ -69,7 +63,7 @@ $(LIB)/def.o:		\
 		$(SXINCL)/sxunix.h		\
 		$(SXINCL)/util/B_tables.h	\
 		semc_vars.h	\
-		$(BNF)/bnf_vars.h
+		$(SXINCL)/util/bnf_vars.h
 	$(CC) -o $@ -c $(BOOT)/def.c
 
 $(LIB)/def_sact.o:	\
@@ -81,14 +75,12 @@ $(LIB)/dec_t.o:	\
 		$(BOOT)/dec_t.c	\
 		$(SXINCL)/sxunix.h
 	$(CC) -o $@ -c $(BOOT)/dec_t.c	\
-		-DSCANACT=def_scan_act	\
 		-DSEMACT=dec_act
 
 $(LIB)/def_t.o:		\
 		$(BOOT)/def_t.c		\
 		$(SXINCL)/sxunix.h
 	$(CC) -o $@ -c $(BOOT)/def_t.c	\
-		-DSCANACT=def_scan_act	\
 		-DSEMACT=def_act
 
 # debut de code produit par "make-makefile dec"

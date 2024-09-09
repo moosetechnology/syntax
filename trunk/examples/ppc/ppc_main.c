@@ -21,18 +21,20 @@
 
 #include "sxunix.h"
 
-char WHAT_PPCMAIN[] = "@(#)SYNTAX - $Id: ppc_main.c 4166 2024-08-19 09:00:49Z garavel $";
+char WHAT_PPCMAIN[] = "@(#)SYNTAX - $Id: ppc_main.c 4244 2024-09-05 13:07:19Z garavel $";
 
 /* Les tables engendrees par SYNTAX */
 extern SXTABLES	ppc_args_tables;
+extern SXTABLES	ppc1_tables;
+extern SXTABLES	ppc2_tables;
+extern SXTABLES	ppc3_tables;
 
-extern bool ppc_scan_act (SXINT code, SXINT act_no);
+extern SXSCANACT_FUNCTION ppc_scan_act; 
+extern SXSCANACT_FUNCTION ppc_args_scan_act;   
 
 #include "ppc1_td.h"
 #include "ppc2_td.h"
 #include "ppc3_td.h"
-
-extern SXTABLES	ppc1_tables, ppc2_tables, ppc3_tables;
 
 /*---------------*/
 /*    options    */
@@ -414,6 +416,12 @@ int main (int argc, char *argv[])
 {
     sxopentty ();
     default_options ();
+
+    sxset_scanner_action (ppc1_tables, ppc_scan_act); 
+    sxset_scanner_action (ppc2_tables, ppc_scan_act); 
+    sxset_scanner_action (ppc3_tables, ppc_scan_act); 
+    sxset_scanner_action (ppc_args_tables, ppc_args_scan_act); 
+
     sxerr_mngr (SXBEGIN);
 
     /* INRIA/CONVECS: this example is quite complicated because Syntax is

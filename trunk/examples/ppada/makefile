@@ -17,11 +17,11 @@ $(BIN)/ppada.out:	$(NEEDS)	$(SXBIBS)
 
 $(LIB)/ppada_t.o:	ppada_t.c		\
 			$(SXINCL)/sxunix.h
-	$(CC) -o $@ -DSCANACT=ppada_scan_act ppada_t.c
+	$(CC) -o $@ ppada_t.c
 
 $(LIB)/ppada_args_t.o:	ppada_args_t.c		\
 			$(SXINCL)/sxunix.h
-	$(CC) -o $@ -DSCANACT=ppada_args_scan_act -DSEMACT=ppada_args_semact ppada_args_t.c
+	$(CC) -o $@ -DSEMACT=ppada_args_semact ppada_args_t.c
 
 $(LIB)/ppada_main.o:	ppada_main.c	\
 			ppada_td.h	\

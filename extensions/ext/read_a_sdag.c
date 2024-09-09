@@ -38,12 +38,12 @@ static char ME [] = "read_a_sdag";
 #define SEMPASS  sxsvoid
 #include "sxversion.h"
 #include "sxcommon.h"
-#include "sdag_t.h"
+#include "sdag_t.c"
 #include "udag_scanner.h"
 #include "earley.h"
 #include "sxstack.h"
 
-char WHAT_READASDAG[] = "@(#)SYNTAX - $Id: read_a_sdag.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
+char WHAT_READASDAG[] = "@(#)SYNTAX - $Id: read_a_sdag.c 4278 2024-09-09 09:48:21Z garavel $" WHAT_DEBUG;
 
 extern void (*main_parser)(SXINT what);
 

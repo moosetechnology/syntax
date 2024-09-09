@@ -289,7 +289,7 @@ static char *S_global_mess[]={0,
 "%sScanning stops on End Of File.",
 };
 #ifdef SCANACT
-extern SXSCANACT_FUNCTION SCANACT;
+#warning "compiling with -DSCANACT is deprecated; define sxscanner_action() or invoke sxset_scanner_action()"
 #endif
 #ifdef SEMACT
 #pragma GCC diagnostic push
@@ -313,11 +313,7 @@ S_no_delete,
 S_no_insert,
 S_global_mess,
 S_lregle,
-#ifdef SCANACT
-SCANACT,
-#else
-(SXSCANACT_FUNCTION *) NULL,
-#endif
+sxscanner_action,
 sxsrecovery,
 (SXCHECK_KEYWORD_FUNCTION *) NULL
 },
@@ -341,7 +337,8 @@ P_right_ctxt_head,
 SXP_local_mess,
 P_no_delete,
 P_no_insert,
-P_global_mess,PER_tset,
+P_global_mess,
+PER_tset,
 sxscan_it,
 sxprecovery,
 (SXPARSACT_FUNCTION *) NULL,

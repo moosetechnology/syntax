@@ -20,18 +20,18 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_RECORSACT[] = "@(#)SYNTAX - $Id: recor_sact.c 4124 2024-07-29 10:58:45Z garavel $" WHAT_DEBUG;
+char WHAT_RECORSACT[] = "@(#)SYNTAX - $Id: recor_sact.c 4224 2024-09-03 08:06:07Z garavel $" WHAT_DEBUG;
 
 #ifdef __GNUC__
 __attribute__ ((noreturn))
 #endif
 static void	gripe (void)
 {
-    fputs ("\nThe function \"recor_scan_act\" is out of date with respect to its specification.\n", sxstderr);
+    fputs ("\nThe function \"sxscanner_action\" for recor is out of date with respect to its specification.\n", sxstderr);
     sxexit(1);
 }
 
-bool recor_scan_act (SXINT what, SXINT act_no)
+bool sxscanner_action (SXINT what, SXINT act_no)
 {
     switch (what) {
     case SXOPEN:

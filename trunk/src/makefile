@@ -68,9 +68,11 @@ SX_NEXT_PRIME=		$(BIB)(sxnext_prime.o)
 SX_PARAGRAPHEURS=	$(BIB)(sxppp.o)	\
 			$(BIB)(sxpptree.o)
 SX_PARSER=		$(BIB)(sxparser.o)	\
-			$(BIB)(sxparser32.o)
+			$(BIB)(sxparser32.o)	\
+			$(BIB)(sxparsact.o)
 SX_SCANNER=		$(BIB)(sxscanner.o)	\
-			$(BIB)(sxscanner32.o)
+			$(BIB)(sxscanner32.o)	\
+			$(BIB)(sxscanact.o)
 SX_SOURCE_MANAGER=	$(BIB)(sxsrc_mngr.o)	\
 			$(BIB)(sxincl_mngr.o)
 SX_STRINGS_MANAGER=	$(BIB)(sxstr_mngr.o)	\

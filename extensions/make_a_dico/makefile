@@ -6,32 +6,30 @@ MAKE_A_DICO=$(SX)/../extensions/make_a_dico
 BIN=$(MAKE_A_DICO)/bin.$(ARCH)
 LIB=$(MAKE_A_DICO)/lib.$(ARCH)
 
-EXTINCL=$(SX)/../extensions/incl
 SXEXTBIBS=$(SXLIB)/libsxext.a $(SXBIBS)
 
-CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util -I$(EXTINCL) $(CFLAGS)
+CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util -I$(SXEXTINCL) $(CFLAGS)
 
-all: $(BIN)/make_a_dico.out	\
+all: $(SXEXTBIN)/make_a_dico.out	\
      $(BIN)/amlgm_cmpd.out
 
 NEEDS=	$(LIB)/make_a_dico.o	\
 	$(LIB)/make_a_dico_t.o
 
-$(BIN)/make_a_dico.out:	$(NEEDS)	$(SXEXTBIBS)
+$(SXEXTBIN)/make_a_dico.out:	$(NEEDS)	$(SXEXTBIBS)
 	@rm -f $@
 	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXEXTBIBS) || (rm $@;exit 1)
 
 $(LIB)/make_a_dico.o:	$(SXINCL)/sxunix.h		\
 			$(SXINCL)/XxY.h			\
 			$(SXINCL)/fsa.h			\
-			$(EXTINCL)/sxword.h		\
+			$(SXEXTINCL)/sxword.h		\
 			make_a_dico.c
 	$(CC) -o $@ -c make_a_dico.c
 
 $(LIB)/make_a_dico_t.o:	$(SXINCL)/sxunix.h 	\
 			make_a_dico_t.c
 	$(CC) -o $@ -c make_a_dico_t.c		\
-		-DSCANACT=make_a_dico_scanact	\
 		-DSEMACT=make_a_dico_action
 
 NEEDS2=	$(LIB)/amlgm_cmpd_main.o	\
@@ -85,7 +83,7 @@ amlgm_cmpd_t.c: amlgm_cmpd.bt amlgm_cmpd.st amlgm_cmpd.pt amlgm_cmpd.rt amlgm_cm
 	tables_c amlgm_cmpd > $@
 
 amlgm_cmpd.bt amlgm_cmpd.att amlgm_cmpd_mix.c: amlgm_cmpd.at
-	semat amlgm_cmpd.at  > amlgm_cmpd_mix.c
+	semat amlgm_cmpd.at > amlgm_cmpd_mix.c
 
 amlgm_cmpd.st: amlgm_cmpd.bt amlgm_cmpd.lecl
 	lecl amlgm_cmpd.lecl || [ $$? = 1 ]
@@ -99,7 +97,7 @@ amlgm_cmpd.rt: amlgm_cmpd.bt amlgm_cmpd.st amlgm_cmpd.recor
 # fin de code produit par "make-makefile amlgm_cmpd"
 
 clean:
-	/bin/rm -f $(LIB)/*.o $(BIN)/make_a_dico.out $(BIN)/amlgm_cmpd.out
+	/bin/rm -f $(LIB)/*.o $(SXEXTBIN)/make_a_dico.out $(BIN)/amlgm_cmpd.out
 	/bin/rm -f $(MAKE_A_DICO)/make_a_dico.*.l $(MAKE_A_DICO)/amlgm_cmpd.*.l
 	/bin/rm -f $(MAKE_A_DICO)/make_a_dico.bt $(MAKE_A_DICO)/make_a_dico.pt
 	/bin/rm -f $(MAKE_A_DICO)/make_a_dico.rt $(MAKE_A_DICO)/make_a_dico.st

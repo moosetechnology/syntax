@@ -19,9 +19,9 @@
 
 #include "sxunix.h"
 
-char WHAT_PPRECORSACT[] = "@(#)SYNTAX - $Id: pprecor_sact.c 4125 2024-07-29 10:59:13Z garavel $" WHAT_DEBUG;
+char WHAT_PPRECORSACT[] = "@(#)SYNTAX - $Id: pprecor_sact.c 4224 2024-09-03 08:06:07Z garavel $" WHAT_DEBUG;
 
-bool pp_recor_scan_act (SXINT what, SXINT act_no)
+bool sxscanner_action (SXINT what, SXINT act_no)
 {
     switch (what) {
     case SXOPEN:
@@ -69,7 +69,7 @@ bool pp_recor_scan_act (SXINT what, SXINT act_no)
 #endif
 
     default:
-	fputs ("The function \"pp_recor_scan_act\" is out of date with respect to its specification.\n", sxstderr);
+	fputs ("The function \"sxscanner_action\" for pprecor is out of date with respect to its specification.\n", sxstderr);
 	sxexit(1);
     }
 }

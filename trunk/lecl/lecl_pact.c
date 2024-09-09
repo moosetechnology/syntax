@@ -21,11 +21,11 @@
 #include "sxunix.h"
 #include "lecl_td.h"
 
-char WHAT_LECLPACT[] = "@(#)SYNTAX - $Id: lecl_pact.c 4120 2024-07-25 16:22:46Z garavel $" WHAT_DEBUG;
+char WHAT_LECLPACT[] = "@(#)SYNTAX - $Id: lecl_pact.c 4227 2024-09-03 09:47:35Z garavel $" WHAT_DEBUG;
 
 static SXINT	NOT_ste, KEYWORD_ste;
 
-bool lecl_pars_act (SXINT entry, SXINT action_no)
+bool sxparser_action (SXINT entry, SXINT action_no)
 {
     switch (entry) {
     case SXOPEN:
@@ -58,7 +58,7 @@ bool lecl_pars_act (SXINT entry, SXINT action_no)
 	break;
     }
 
-    fputs ("The function \"lecl_pars_act\" is out of date \
+    fputs ("The function \"sxparser_action\" for lecl/pplecl is out of date \
 with respect to its specification.\n", sxstderr);
     sxexit(1);
     return SXANY_BOOL; /* pour faire taire gcc -Wreturn-type */

@@ -1,11 +1,9 @@
 
 include $(SX)/etc/make/gccoptions
 
-EXTINCL=$(SX)/../extensions/incl
-
 BIB=$(SXLIB)/libsxext.a
 
-CC=$(COMPILER) -I$(SXINCL) -I$(EXTINCL) $(CFLAGS)
+CC=$(COMPILER) -I$(SXINCL) -I$(SXEXTINCL) $(CFLAGS)
 
 FORCE=$(SXINCL)/sxunix.h
 
@@ -14,6 +12,7 @@ all: $(BIB)
 NBEST=                  $(BIB)(nbest_semact.o) \
                         $(BIB)(exact_nbest_semact.o)
 OUTPUT=                 $(BIB)(output_semact.o)
+READ_A_DAG=		$(BIB)(read_a_dag.o)
 READ_A_RE=		$(BIB)(read_a_re.o)
 READ_A_SDAG=		$(BIB)(read_a_sdag.o)
 READ_A_UDAG=		$(BIB)(read_a_udag.o)
@@ -48,6 +47,7 @@ SXWORD_MNGR=		$(BIB)(sxword_mngr.o)
 
 $(BIB):		$(NBEST)		\
 		$(OUTPUT)		\
+		$(READ_A_DAG)		\
 		$(READ_A_RE)		\
 		$(READ_A_SDAG)		\
 		$(READ_A_UDAG)		\
@@ -68,34 +68,35 @@ $(BIB):		$(NBEST)		\
 		$(SXWORD_MNGR)
 	$(RANLIB) $@
 
-$(NBEST)		: $(FORCE) $(EXTINCL)/earley.h	$(EXTINCL)/nbest.h
-$(OUTPUT)		: $(FORCE) $(EXTINCL)/earley.h
-$(READ_A_RE)		: $(FORCE) $(SXINCL)/fsa.h	$(EXTINCL)/re_t.h
-$(READ_A_SDAG)		: $(FORCE) $(EXTINCL)/sdag_t.h
-$(READ_A_UDAG)		: $(FORCE) $(EXTINCL)/udag_t.h
-$(SX_BAG)		: $(FORCE) $(EXTINCL)/bag.h
+$(NBEST)		: $(FORCE) $(SXEXTINCL)/earley.h $(SXEXTINCL)/nbest.h
+$(OUTPUT)		: $(FORCE) $(SXEXTINCL)/earley.h
+$(READ_A_DAG)		: $(FORCE) $(SX)/../extensions/dag/dag_t.c
+$(READ_A_RE)		: $(FORCE) $(SX)/../extensions/re/re_t.c $(SXINCL)/fsa.h
+$(READ_A_SDAG)		: $(FORCE) $(SX)/../extensions/sdag/sdag_t.c
+$(READ_A_UDAG)		: $(FORCE) $(SX)/../extensions/udag/udag_t.c
+$(SX_BAG)		: $(FORCE) $(SXEXTINCL)/bag.h
 $(SX_MATRIX)		: $(FORCE)
-$(SX_ND)		: $(FORCE) $(EXTINCL)/sxnd.h
-$(SX_PART)		: $(FORCE) $(EXTINCL)/sxpart.h
-$(SX_SPELL_MANAGER)	: $(FORCE) $(EXTINCL)/sxspell.h
-$(SX_SPF_MANAGER)	: $(FORCE) $(EXTINCL)/earley.h $(EXTINCL)/sxspf.h
+$(SX_ND)		: $(FORCE) $(SXEXTINCL)/sxnd.h
+$(SX_PART)		: $(FORCE) $(SXEXTINCL)/sxpart.h
+$(SX_SPELL_MANAGER)	: $(FORCE) $(SXEXTINCL)/sxspell.h
+$(SX_SPF_MANAGER)	: $(FORCE) $(SXEXTINCL)/earley.h $(SXEXTINCL)/sxspf.h
 $(SYMB_TBL_MNGR)	: $(FORCE)
-$(SX_DYNAM_PARSER)	: $(FORCE) $(EXTINCL)/sxdynam_parser.h
-$(SX_DYNAM_SCANNER)	: $(FORCE) $(EXTINCL)/sxdynam_scanner.h $(EXTINCL)/sxreg_exp_mngr.h
-$(SXLIST_MNGR)		: $(FORCE) $(EXTINCL)/sxlist.h \
-				$(EXTINCL)/XT.h	$(EXTINCL)/sxSL.h \
-				$(EXTINCL)/sxset.h
+$(SX_DYNAM_PARSER)	: $(FORCE) $(SXEXTINCL)/sxdynam_parser.h
+$(SX_DYNAM_SCANNER)	: $(FORCE) $(SXEXTINCL)/sxdynam_scanner.h $(SXEXTINCL)/sxreg_exp_mngr.h
+$(SXLIST_MNGR)		: $(FORCE) $(SXEXTINCL)/sxlist.h \
+				$(SXEXTINCL)/XT.h	$(SXEXTINCL)/sxSL.h \
+				$(SXEXTINCL)/sxset.h
 $(SXSEM_MNGR)		: $(FORCE) \
-				$(EXTINCL)/earley.h \
-				$(EXTINCL)/sxspf.h \
+				$(SXEXTINCL)/earley.h \
+				$(SXEXTINCL)/sxspf.h \
 				$(SXINCL)/varstr.h
 $(SXBA_BAG_MNGR)	: $(FORCE) \
-				$(EXTINCL)/sxpart.h
+				$(SXEXTINCL)/sxpart.h
 $(SXSUBSET_MNGR)	: $(FORCE) \
-				$(EXTINCL)/sxsubset.h
+				$(SXEXTINCL)/sxsubset.h
 $(SXVARS2)		: $(FORCE)
 $(SXWORD_MNGR)		: $(FORCE) \
-				$(EXTINCL)/sxword.h
+				$(SXEXTINCL)/sxword.h
 
 # ----------------------------------------------------------------------------
 

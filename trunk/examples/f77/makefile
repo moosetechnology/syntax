@@ -35,8 +35,6 @@ $(BIN)/f77.out:	$(NEEDS)	$(SXBIBS)
 $(LIB)/f77_t.o: 	$(SXINCL)/sxunix.h		\
 			f77_t.c
 	$(CC) -o $@ f77_t.c				\
-			-DSCANACT=f77_scanact		\
-			-DPARSACT=f77_parsact		\
 			-DSEMACT=sxwvoid
 
 $(LIB)/f77_main.o:	$(SXINCL)/sxunix.h		\

@@ -23,8 +23,7 @@ $(SXBIN)/recor.out:	$(NEEDS)	$(SXBIBS)
 
 $(LIB)/recor_t.o: 	$(SXINCL)/sxunix.h		\
 			$(BOOT)/recor_t.c
-	$(CC) -o $@ -c $(BOOT)/recor_t.c				\
-			-DSCANACT=recor_scan_act	\
+	$(CC) -o $@ -c $(BOOT)/recor_t.c		\
 			-DSEMPASS=recor_smp
 
 $(LIB)/recor_main.o:	$(SXINCL)/sxunix.h		\

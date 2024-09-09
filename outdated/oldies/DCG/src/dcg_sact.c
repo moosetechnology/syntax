@@ -1,7 +1,7 @@
 #include "sxunix.h"
 #include "dcg_td.h"
 
-bool dcg_scan_act (SXINT what, SXINT act_no)
+bool sxscanner_action (SXINT what, SXINT act_no)
 {
     int cur_lahead, c0, c1, c2;
 
@@ -122,7 +122,7 @@ bool dcg_scan_act (SXINT what, SXINT act_no)
 	}
 
     default:
-	fputs ("The function \"dcg_scan_act\" is out of date with respect to its specification.\n", sxstderr);
+	fputs ("The function \"sxscanner_action\" for dcg is out of date with respect to its specification.\n", sxstderr);
 	abort ();
     }
 }

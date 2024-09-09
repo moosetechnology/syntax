@@ -23,8 +23,7 @@ $(LIB)/pprecor_main.o:	$(SXINCL)/sxunix.h	\
 
 $(LIB)/pprecor_t.o: 	$(SXINCL)/sxunix.h		\
 			pprecor_t.c
-	$(CC) -o $@ pprecor_t.c			\
-			-DSCANACT=pp_recor_scan_act
+	$(CC) -o $@ pprecor_t.c
 
 $(LIB)/pprecor_sact.o:	$(SXINCL)/sxunix.h		\
 			pprecor_sact.c

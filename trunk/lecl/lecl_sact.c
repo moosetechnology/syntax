@@ -20,9 +20,9 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_LECLSACT[] = "@(#)SYNTAX - $Id: lecl_sact.c 4122 2024-07-27 14:30:36Z garavel $" WHAT_DEBUG;
+char WHAT_LECLSACT[] = "@(#)SYNTAX - $Id: lecl_sact.c 4226 2024-09-03 08:29:01Z garavel $" WHAT_DEBUG;
 
-bool lecl_scan_act (SXINT what, SXINT act_no)
+bool sxscanner_action (SXINT what, SXINT act_no)
 {
     switch (what) {
     case SXOPEN:
@@ -71,7 +71,7 @@ bool lecl_scan_act (SXINT what, SXINT act_no)
 #endif
 
     default:
-	fputs ("The function \"lecl_scan_act\" is out of date with respect to its specification.\n", sxstderr);
+	fputs ("The function \"sxscanner_action\" for lecl is out of date with respect to its specification.\n", sxstderr);
 	sxexit(1);
     }
 }

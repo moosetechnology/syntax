@@ -28,7 +28,7 @@ static char	ME [] = "tables_c";
 #include "out.h"
 #include "sxba.h"
 
-char WHAT_TABLESC[] = "@(#)SYNTAX - $Id: tables_c.c 4210 2024-09-02 07:56:38Z garavel $" WHAT_DEBUG;
+char WHAT_TABLESC[] = "@(#)SYNTAX - $Id: tables_c.c 4259 2024-09-07 07:19:53Z garavel $" WHAT_DEBUG;
 
 bool		is_lig;
 
@@ -154,12 +154,7 @@ static void	out_sxtables (void)
     puts ("S_global_mess,");
     puts (RC.S_nbcart == 0 ? P0 : "S_lregle,");
     if (SC.S_is_user_action_or_prdct) {
-      puts ("#ifdef SCANACT");
-      puts ("SCANACT,");
-      puts ("#else");
-      printf ("(SXSCANACT_FUNCTION *) ");
-      puts (P0);
-      puts ("#endif");
+      puts ("sxscanner_action,");
     }
     else {
       printf ("(SXSCANACT_FUNCTION *) ");
@@ -209,7 +204,8 @@ static void	out_sxtables (void)
     puts ("SXP_local_mess,");
     puts (RC.P_nbcart == 0 ? P0 : "P_no_delete,");
     puts (RC.P_nbcart == 0 ? P0 : "P_no_insert,");
-    printf ("P_global_mess,PER_tset,\n");
+    printf ("P_global_mess,\n");
+    printf ("PER_tset,\n");
     printf ("sx%sscan_it,\n", SC.S_is_non_deterministic ? "nd" : "");
     printf ("sx%sp%srecovery,\n", PC.nd_degree >= 0 ? "nd" : "", RC.P_nbcart == 0 ? "s" : "");
 
@@ -218,8 +214,7 @@ static void	out_sxtables (void)
       puts ("#ifdef PARSACT");
       puts ("PARSACT,");
       puts ("#else");
-      printf ("(SXPARSACT_FUNCTION *) ");
-      puts (P0);
+      puts ("sxparser_action,");
       puts ("#endif");
     }
     else {
