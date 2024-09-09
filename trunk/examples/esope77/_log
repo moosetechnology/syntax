@@ -1,0 +1,470 @@
+*** testing f77
+
+f77 esope/pointer.FOR
+
+      POINTEUR foo.bar
+		      |^
+test/esope/pointer.FOR, line 1: column 23: Warning:	The character "." is inserted before "End Of Line".
+
+      POINTEUR foo.bar
+		  |^
+test/esope/pointer.FOR, line 1: column 19: Error:	This unknown keyword is erased.
+
+      POINTEUR foo.bar
+		      |^
+test/esope/pointer.FOR, line 1: column 23: Error:	". %symbolic_name" is inserted before "%EOL".
+  exit status is 2
+
+f77 esope/pointer-in-segment.FOR
+
+f77 esope/pointer-out-of-segment.FOR
+
+       pointeur lib.PSTR
+		        |^
+test/esope/pointer-out-of-segment.FOR, line 8: column 25: Warning:	The character "." is inserted before "End Of Line".
+
+       pointeur lib.PSTR
+		   |^
+test/esope/pointer-out-of-segment.FOR, line 8: column 20: Error:	This unknown keyword is erased.
+
+       pointeur lib.PSTR
+		        |^
+test/esope/pointer-out-of-segment.FOR, line 8: column 25: Error:	". %symbolic_name" is inserted before "%EOL".
+
+       character *(*) title
+       |^
+test/esope/pointer-out-of-segment.FOR, line 10: column 8: Error:	This CHARACTER statement is out of sequence,
+it is changed into a CONTINUE statement.
+
+       external mypnt
+       |^
+test/esope/pointer-out-of-segment.FOR, line 13: column 8: Error:	This EXTERNAL statement is out of sequence,
+it is changed into a CONTINUE statement.
+
+       integer mypnt
+       |^
+test/esope/pointer-out-of-segment.FOR, line 14: column 8: Error:	This INTEGER statement is out of sequence,
+it is changed into a CONTINUE statement.
+
+       external findbk 
+       |^
+test/esope/pointer-out-of-segment.FOR, line 15: column 8: Error:	This EXTERNAL statement is out of sequence,
+it is changed into a CONTINUE statement.
+
+       integer findbk
+       |^
+test/esope/pointer-out-of-segment.FOR, line 16: column 8: Error:	This INTEGER statement is out of sequence,
+it is changed into a CONTINUE statement.
+
+       integer findbk
+       |^
+test/esope/pointer-out-of-segment.FOR, line 16: column 8: error: impossible recovery from syntax error
+f77.out: sxml2.h:136: SXML_PRINT: Assertion `LIST != NULL' failed.
+Aborted
+  exit status is 134
+
+f77 esope/segina.FOR
+
+f77 esope/segini.FOR
+
+f77 esope/segment-character.FOR
+
+f77 esope/segment-complex.FOR
+
+f77 esope/segment-doubleprecision.FOR
+
+f77 esope/segment-implied.FOR
+
+f77 esope/segment-integer.FOR
+
+f77 esope/segment-logical.FOR
+
+f77 esope/segment-real.FOR
+
+f77 evref/arithmetic_if_statement.FOR
+
+f77 evref/array-multidimension.FOR
+
+f77 evref/assign-label.FOR
+
+f77 evref/assignment-arith.FOR
+
+f77 evref/assignment-char.FOR
+
+f77 evref/assignment-logical.FOR
+
+f77 evref/backspace-parameters.FOR
+
+f77 evref/backspace-unit.FOR
+
+f77 evref/block-data-empty-name.FOR
+
+f77 evref/block-data.FOR
+
+f77 evref/call-empty-arg.FOR
+
+f77 evref/call-no-arg.FOR
+
+f77 evref/call-with-args.FOR
+
+f77 evref/character-variables.FOR
+
+f77 evref/character-with-len.FOR
+
+f77 evref/close-parameters.FOR
+
+f77 evref/common-both.FOR
+
+f77 evref/common-labeled.FOR
+
+f77 evref/common-unlabeled.FOR
+
+f77 evref/continue-statement.FOR
+
+f77 evref/data-array-implied-do.FOR
+
+f77 evref/data-int-char.FOR
+
+f77 evref/data-scalars.FOR
+
+f77 evref/dimension-adjustable-array.FOR
+
+f77 evref/dimension-adjustable-nonint-bounds.FOR
+
+f77 evref/dimension-arrays.FOR
+
+f77 evref/dimension-assumed-size.FOR
+
+f77 evref/dimension-bounds.FOR
+
+f77 evref/dimension-dummy-bounds.FOR
+
+f77 evref/dimension-nonint-bounds.FOR
+
+f77 evref/do-loop-4.FOR
+
+f77 evref/do-pure.FOR
+
+f77 evref/endfile-parameters.FOR
+
+f77 evref/endfile-unit.FOR
+
+f77 evref/entry-statement.FOR
+
+f77 evref/equivalence.FOR
+
+f77 evref/extension-1.1-underscore.FOR
+
+f77 evref/extension-1.2-underscored-id.FOR
+
+f77 evref/extension-1.3-dollar.FOR
+
+f77 evref/extension-2.1-quoted-var.FOR
+
+f77 evref/extension-2.2-sized-data-types.FOR
+
+f77 evref/extension-2.3-sized-logical.FOR
+
+f77 evref/extension-2.4-sized-types.FOR
+
+f77 evref/extension-2.5-sized-real.FOR
+
+f77 evref/extension-3.1-operations-successive.FOR
+
+f77 evref/extension-3.2-operations-successive.FOR
+
+f77 evref/extension-3.3-operations-successive.FOR
+
+f77 evref/extension-3.4-operations-successive.FOR
+
+f77 evref/extension-3.5-operations-successive.FOR
+
+f77 evref/extension-3.6-operations-successive-par.FOR
+
+f77 evref/extension-3.7-operations-successive-random.FOR
+
+f77 evref/extension-3.8-operations-successive.FOR
+
+f77 evref/extension-4-10.do.FOR
+
+f77 evref/extension-4-11-do.FOR
+
+f77 evref/extension-4-12-do.FOR
+
+f77 evref/extension-4-13-do.FOR
+
+f77 evref/extension-4-14-do.FOR
+
+f77 evref/extension-4.1-do.FOR
+
+f77 evref/extension-4.2-do-while.FOR
+
+f77 evref/extension-4.3-do-while-continue.FOR
+
+f77 evref/extension-4.4-implicit-none.FOR
+
+f77 evref/extension-4.5-implicit-az.FOR
+
+f77 evref/extension-4.6-do-while-nested.FOR
+
+f77 evref/extension-4.7-do-while-nested-continue.FOR
+
+f77 evref/extension-4.8-do-while-nested-inner.FOR
+
+f77 evref/extension-4.9-do.FOR
+
+f77 evref/external.FOR
+
+f77 evref/format-statement-r58-69.FOR
+
+f77 evref/function-statement-arith.FOR
+
+f77 evref/function-untyped.FOR
+
+f77 evref/function-with-parameters.FOR
+
+f77 evref/goto-assigned.FOR
+
+f77 evref/goto-computed.FOR
+
+f77 evref/goto-unconditional.FOR
+
+f77 evref/if-block-empty-then.FOR
+
+f77 evref/if-block-if-elseif-else.FOR
+
+f77 evref/if-block-if-then-else.FOR
+
+f77 evref/if-block-if-then-elseif.FOR
+
+f77 evref/if-block-labeled-if.FOR
+
+f77 evref/if-block-nested.FOR
+
+f77 evref/if-block-then.FOR
+
+f77 evref/implicit-r21c.FOR
+
+f77 evref/implicit-r21d.FOR
+
+f77 evref/inquire-file-exist.FOR
+
+f77 evref/inquire-unit-open.FOR
+
+f77 evref/inquire-unit-open-names.FOR
+
+f77 evref/integer-array.FOR
+
+f77 evref/integer-variable.FOR
+
+f77 evref/intrinsic.FOR
+
+f77 evref/labeled-statement.FOR
+
+f77 evref/logical-if-r35.FOR
+
+f77 evref/logical-variable.FOR
+
+f77 evref/open-implicit-unit.FOR
+
+f77 evref/open-parameters.FOR
+
+f77 evref/open-unit-file.FOR
+
+f77 evref/parameter-count.FOR
+
+f77 evref/parameter-real-char-log.FOR
+
+f77 evref/pause-character.FOR
+
+f77 evref/pause-empty.FOR
+
+f77 evref/print-format-iolist.FOR
+
+f77 evref/read-format-iolist.FOR
+
+f77 evref/read-namelist-iolist.FOR
+
+f77 evref/return-empty.FOR
+
+f77 evref/rewind-parameters.FOR
+
+f77 evref/rewind-unit.FOR
+
+f77 evref/save.FOR
+
+f77 evref/simple-function.FOR
+
+f77 evref/simple-main.FOR
+
+f77 evref/simple-subroutine.FOR
+
+f77 evref/stop-empty.FOR
+
+f77 evref/stop-int.FOR
+
+f77 evref/write-implicit-u-implicit-fmt-err-io.FOR
+
+f77 evref/write-star-star-iolist.FOR
+
+f77 misc/000.f
+
+f77 misc/001.f
+
+f77 misc/002.f
+
+f77 misc/003.f
+
+f77 misc/004.f
+
+f77 misc/005.f
+
+f77 misc/006.f
+
+f77 misc/007.f
+
+f77 misc/008.f
+
+f77 misc/hello.f
+
+f77 misc/npac001.f
+
+f77 misc/npac002.f
+
+f77 misc/npac003.f
+
+f77 nist/FM001.FOR
+
+f77 nist/FM002.FOR
+
+f77 nist/FM003.FOR
+
+f77 nist/FM004.FOR
+
+f77 nist/FM005.FOR
+
+f77 nist/FM006.FOR
+
+f77 nist/FM007.FOR
+
+f77 nist/FM008.FOR
+
+f77 nist/FM009.FOR
+
+f77 nist/FM010.FOR
+
+f77 nist/FM011.FOR
+
+f77 nist/FM012.FOR
+
+f77 nist/FM013.FOR
+
+f77 nist/FM014.FOR
+
+f77 nist/FM016.FOR
+
+f77 nist/FM017.FOR
+
+f77 nist/FM018.FOR
+
+f77 nist/FM019.FOR
+
+f77 nist/FM020.FOR
+
+f77 nist/FM021.FOR
+
+f77 nist/FM022.FOR
+
+f77 nist/FM023.FOR
+
+f77 nist/FM024.FOR
+
+f77 nist/FM025.FOR
+
+f77 nist/FM026.FOR
+
+f77 nist/FM028.FOR
+
+f77 nist/FM030.FOR
+
+f77 nist/FM031.FOR
+
+f77 nist/FM032.FOR
+
+f77 nist/FM033.FOR
+
+f77 nist/FM034.FOR
+
+f77 nist/FM035.FOR
+
+f77 nist/FM036.FOR
+
+f77 nist/FM037.FOR
+
+f77 nist/FM038.FOR
+
+f77 nist/FM039.FOR
+
+f77 nist/FM040.FOR
+
+f77 nist/FM041.FOR
+
+f77 nist/FM042.FOR
+
+f77 nist/FM043.FOR
+
+f77 nist/FM044.FOR
+
+f77 nist/FM045.FOR
+
+f77 nist/FM050.FOR
+
+f77 nist/FM056.FOR
+
+f77 nist/FM060.FOR
+
+f77 nist/FM061.FOR
+
+f77 nist/FM062.FOR
+
+f77 nist/FM080.FOR
+
+f77 nist/FM097.FOR
+
+f77 nist/FM098.FOR
+
+f77 nist/FM099.FOR
+
+f77 nist/FM100.FOR
+
+f77 nist/FM101.FOR
+
+f77 nist/FM102.FOR
+
+f77 nist/FM103.FOR
+
+f77 nist/FM104.FOR
+f77.out: sxml2.h:157: SXML_T: Assertion `T != NULL' failed.
+Aborted
+  exit status is 134
+f77.out: sxml2.h:157: SXML_T: Assertion `T != NULL' failed.
+Aborted
+  exit status is 134
+
+f77 nist/FM105.FOR
+
+f77 nist/FM106.FOR
+f77.out: sxml2.h:157: SXML_T: Assertion `T != NULL' failed.
+Aborted
+  exit status is 134
+f77.out: sxml2.h:157: SXML_T: Assertion `T != NULL' failed.
+Aborted
+  exit status is 134
+
+f77 nist/FM107.FOR
+
+f77 nist/FM108.FOR
+
+f77 nist/FM109.FOR
+
+f77 nist/FM110
