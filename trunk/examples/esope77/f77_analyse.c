@@ -3026,10 +3026,6 @@ a CONTINUE statement is gracefully inserted here.",
 
     case ENDSEGMENT_p: /* [[ESOPE]] */
 	/* On retourne la séquence de mots-clés END SEGMENT */
-	 /* On sort d'un SEGMENT, on ne peut donc plus trouver de '.' dans un POINTEUR */
-	 sxsvar.sxlv_s.counters [2] = 0; /* [[ESOPE]] Pour l'ER ci-dessous de lecl
-   "."		= -"." &is_set(2) -- On est dans un <122:pointeur_name> */
-	 
 	lahead = SEGMENT_t;
 	l = strlen ("END");
 	goto insert_a_token;
@@ -3096,8 +3092,6 @@ a CONTINUE statement is gracefully inserted here.",
 	 if (isalpha (c) || c == '_') {
 	      /* ici blabla est un id */
 	      if (kw == IMPLIED_p || kw == POINTEUR_p) {
-		   /* Remarque : si kw est POINTEUR, il serait trop tard pour positionner sxsvar.sxlv_s.counters [2] car le '.' dans
-		      le <122:pointeur_name> a déjà été scanné */
 		   PTOK->lahead = kw_codes [kw];
 		   PTOK->string_table_entry = SXEMPTY_STE;
 		   l = kw_lgth [kw];
@@ -4619,8 +4613,42 @@ bool sxscanner_action (SXINT code, SXINT act_no) {
 		    kw = (*sxsvar.SXS_tables.S_check_keyword) (sxstrget (ste), sxstrlen (ste));
 				    
 		    if (kw != 0) {
-		      SXGET_TOKEN (tok_no).lahead = lahead = kw;
-		      SXGET_TOKEN (tok_no).string_table_entry = SXEMPTY_STE;
+		      /* En fait, certains kw doivent rester des ids */
+		      switch (kw) {
+		      case BIN_t: /* [[ESOPE]] */
+		      case CHAINE_t: /* [[ESOPE]] */
+		      case XDR_t: /* [[ESOPE]] */
+		      case THEN_t:
+		      case A_t:
+		      case B_t:
+		      case D_t:
+		      case E_t:
+		      case F_t:
+		      case G_t:
+		      case I_t:
+		      case L_t:
+		      case N_t:
+		      case P_t:
+		      case R_t:
+		      case S_t:
+		      case T_t:
+		      case X_t:
+		      case Z_t:
+		      case DOUBLE_t:
+		      case IMPLICIT_t:
+		      case NONE_t:
+		      case PRECISION_t:
+		      case UNDEFINED_t:
+			/* Ce sont des ids */  
+			break;
+
+		      default:
+			/* Change en kw */
+			SXGET_TOKEN (tok_no).lahead = lahead = kw;
+			SXGET_TOKEN (tok_no).string_table_entry = SXEMPTY_STE;
+
+			break;
+		      }
 		    }
 		  }
 				
@@ -4633,10 +4661,7 @@ bool sxscanner_action (SXINT code, SXINT act_no) {
 		break;
 
 	      case SEGMENT_t:
-		   /* On entre dans la déclaration d'un SEGMENT, on simule @Set (2) afin de pouvoir reconnaître le '.' interne
-		      à un pointeur_name */
-		   sxsvar.sxlv_s.counters [2] = 1; /* [[ESOPE]] Pour l'ER ci-dessous de lecl
-   "."		= -"." &is_set(2) -- On est dans un <122:pointeur_name> */
+		   /* (plus) rien!! */
 		   break;
 			    
 	      case READ_t:
@@ -5248,6 +5273,65 @@ This one, and all others in the sequel, are converted into the corresponding upp
        }
 
        break;
+
+    case 10:
+	 /*
+							  
+		without_ending_dot :  "." id @10 ; -- @10 décompose "." id en "." %symbolic_name
+				Priority Shift > Reduce ;
+							  
+	 */
+    case 11:
+	 /*
+		ending_dot : "." id "."&True @11 ; -- Reconnait les mots-clefs logiques ou relationnels en premier
+				     	    	   -- (Ex : .EQ.)
+				     	    	   -- Sinon @11 décompose "." id "." en "." %symbolic_name et remet le '.'
+						   -- terminal dans le source
+	 */	
+#if EBUG
+	 print_toks_buf (sxplocals.Mtok_no, sxplocals.Mtok_no);
+	 print_sxsvar ();
+	 fputs ("\n", stdout);
+	 print_srcmngr_curchar ();
+#endif
+	 if (act_no == 10 || sxsvar.sxlv.terminal_token.lahead == DOT_t) {
+	      char *str;
+
+	      str = sxstrget (sxsvar.sxlv.terminal_token.string_table_entry) + 1; /* repère le id */
+	      sxsvar.sxlv.terminal_token.string_table_entry = SXEMPTY_STE;
+	      f77put_token(sxsvar.sxlv.terminal_token);
+
+	      if (act_no == 11) {
+		   /* str se termine par un '.' ... */
+		   SXINT len = strlen (str);
+
+		   /* ... on le repush dans le source... */
+		   sxsrcpush (str [len-2] /* previous char (ici dernier char de l'id) */,
+			      &(str [len-1]) /* ptr vers la string à pusher (ici le '.')... */,
+			      *get_source_index (&(sxsvar.sxlv.terminal_token.source_index), len) /* et le source_index du '.' */
+			);
+		   /* ... et on le supprime de str (donc du futur id) */
+		   str [len-1] = SXNUL;
+	      }
+
+	      /* On prépare le (futur) token ID_t */
+	      sxsvar.sxlv.terminal_token.lahead = ID_t;
+	      sxsvar.sxlv.terminal_token.string_table_entry = sxstrsave (str);
+	      sxsvar.sxlv.terminal_token.source_index =
+		   *get_source_index (&(sxsvar.sxlv.terminal_token.source_index), 1);
+
+	      break;
+
+	 }
+	 /* else
+	    mot_clé, on ne fait rien */
+	 
+#if EBUG
+	 print_toks_buf (sxplocals.Mtok_no, sxplocals.Mtok_no);
+#endif
+
+	 break;
+
 
     default:
       fprintf (sxstderr, "\"%ld\"is an illegal action number in \"sxscanner_action\".\n", (SXINT) act_no);

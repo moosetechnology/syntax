@@ -96,7 +96,7 @@ int main (int argc, char *argv[])
     is_pretty_printer = false; /* always false for f77 */
     sxverbosep = false;
     is_ansi = false;
-    is_extension = false;
+    is_extension = true;
     is_input_free_fortran = false;
 
     for (argnum = 1; argnum < argc; argnum++) {

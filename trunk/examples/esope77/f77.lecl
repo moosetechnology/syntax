@@ -8,7 +8,7 @@ Abbreviations
 
 Zombies
    -- these are "dummy" tokens", with no lexical specification, but useful
-   "!DO", %ENDDO, "!FORMAT", BACKSPACEkw, ENDFILEkw, REWINDkw, READkw;
+   "!DO", %ENDDO, "!FORMAT", BACKSPACEkw, ENDFILEkw, REWINDkw, READkw, "!DEAD_END";
 
 Tokens
    %label	= DIGIT &0    -- colonne entre 1 et 5?
@@ -71,9 +71,6 @@ Tokens
 		  	   -- @4 : traitement d'une zone Hollerith
 		  End ;
 
-   logical_or_relational_kw
-		= "." {UPPER | LOWER @6}+ "." ;
-
    "/"		= -"/" ;
 			Priority Shift > Reduce;
 
@@ -95,9 +92,19 @@ Tokens
 
    format_kw	= (UPPER&Is_Set(0) | LOWER&Is_Set(0) @6) ;
 
-   "."		= -"." &Is_set(0) -- On est dans un FORMAT
-   		  | -"." &Is_Set(2) -- [[ESOPE]] on est dans un <122:pointeur_name>
-   		  ;
+   "."		= Union
+			ending_dot : "." {UPPER | LOWER @6}+ "."&True ; @11 ;
+				     -- Reconnait les mots-clefs logiques ou relationnels en premier
+				     -- (Ex : .EQ.)
+				     -- Sinon @11 décompose "." id "." en "." %symbolic_name et remet le '.'
+				     -- terminal dans le source
+							  
+			without_ending_dot :  "." id ; @10 ;
+				     -- @10 décompose ". {LETTER}+" en "." %symbolic_name
+				Priority Shift > Reduce ;
+
+			in_a_format : -"." &Is_set(0) ;
+		  End;
 
 
    

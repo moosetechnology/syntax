@@ -64,7 +64,7 @@ $LIST(<common_body>, <,common_body>,
 	<26:save_statement>, <26a:save_statement_name_list>, <26b:save_statement_name>,
 	<27:data_statement>, <27a:data_statement_body_list>, <27b:data_statement_body>, <27c:data_statement_name_list>, <27d:data_statement_name>, <27e:data_statement_constant_list>, <27f:data_statement_constant>,
 	<28:data_imply_do_list>, <28a:data_imply_do_list_head_list>, <28b:data_imply_do_list_head>,
-	<29:assignment_statement>, <29a:left_hand_side>,
+	<29:assignment_statement>, <29a:left_hand_side>, <29b:left_hand_side>,
 	<30:goto_statement>,
 	<31:unconditional_goto>,
 	<32:computed_goto>,
@@ -101,7 +101,7 @@ $LIST(<common_body>, <,common_body>,
 	<70:statement_function_statement>,
 	<71:call_statement>, <71a:actual_argument_list>, <71b:actual_argument>,
 	<72:return_statement>,
-	<74:expression>, <74a:non_typed_expression>, <74b:expression_list>,
+	<74:expression>, <74a:non_typed_expression>, <74b:expression_list>, <74c:non_typed_expression>,
 	<75:constant_expr>, <75a:non_typed_const_expr>,
 	<76:arithmetic_expression>, <76a:arithmetic_expression>, <76b:arithmetic_or_non_typed_expression>,
 	<77:integer_expr>, <77a:integer_const_expr>, <77b:[integer_expr]>,
@@ -130,7 +130,7 @@ $LIST(<common_body>, <,common_body>,
 	<117:segment>,
 	<118a:segment_variables_list>, <118:segment_variable>,
 	<120:implied>,
-	<121:pointeur>,
+	<121:pointeur>, <121a:pointeurs_seq>,
 	<122:pointeur_name>, <122a:pointeur_name_list>,
 	<123:segment_operation>, <123a:segment_operation_name>, <123b:other_segment_operation_name>,
 	<124:segment_operation_type>) : SXML_TYPE_LIST ;
@@ -275,6 +275,25 @@ $LIST(<0:F77>)
   fprintf (stderr, "$LIST(<0:F77>) computed on zombie token !FORMAT\n");
   $LIST(<0:F77>) = SXML_T ("zombie token !FORMAT");
 }
+
+
+
+*------------------------------------------------------------------------------
+
+* Trick to force the first character of the terminal symbol derived from <0:next>
+* to be a valid follower of the token "." (see f77.lecl for the definition of ".")
+
+<0:F77>		= !DEAD_END . <0:next> ;
+<0:next>	= %EOL ;
+<0:next>	= ( ;
+<0:next>	= ) ;
+<0:next>	= * ;
+<0:next>	= / ;
+<0:next>	= + ;
+<0:next>	= - ;
+<0:next>	= , ;
+<0:next>	= : ;
+<0:next>	= = ;
 
 *******************************************************************************
 
@@ -2521,33 +2540,57 @@ $LIST( <29:assignment_statement>)
 
 *******************************************************************************
 
+* [[ESOPE]]
 <29a:left_hand_side>
+		= <29a:left_hand_side> . <29b:left_hand_side> ;
+
+$LIST( <29a:left_hand_side>)
+{
+  $LIST( <29a:left_hand_side>) = SXML_LL ($LIST(<29a:left_hand_side>'), $LIST(<29b:left_hand_side>)); // a reecrire completement
+* [[SEMC ADDED]]
+}
+
+*------------------------------------------------------------------------------
+
+
+<29a:left_hand_side>
+		= <29b:left_hand_side> ;
+
+$LIST( <29a:left_hand_side>)
+{
+  $LIST( <29a:left_hand_side>) = $LIST(<29a:left_hand_side>);
+* [[SEMC ADDED]]
+}
+
+*------------------------------------------------------------------------------
+
+<29b:left_hand_side>
 		= <99:symbolic_name> ;
 
-$LIST( <29a:left_hand_side>)
+$LIST( <29b:left_hand_side>)
 {
-  $LIST( <29a:left_hand_side>) = $LIST(<99:symbolic_name>);
+  $LIST( <29b:left_hand_side>) = $LIST(<99:symbolic_name>);
 }    
 
 *------------------------------------------------------------------------------
 
-<29a:left_hand_side>
+<29b:left_hand_side>
 		= <88:array_element_name> ;
 
-$LIST( <29a:left_hand_side>)
+$LIST( <29b:left_hand_side>)
 {
-  $LIST( <29a:left_hand_side>) = $LIST(<88:array_element_name>);
+  $LIST( <29b:left_hand_side>) = $LIST(<88:array_element_name>);
 }    
 
 *------------------------------------------------------------------------------
 
-<29a:left_hand_side>
+<29b:left_hand_side>
 		= <89:substring_name> ;
 
-$LIST( <29a:left_hand_side>)
+$LIST( <29b:left_hand_side>)
 {
-  $LIST( <29a:left_hand_side>) = $LIST(<89:substring_name>);
-}    
+  $LIST( <29b:left_hand_side>) = $LIST(<89:substring_name>);
+}        
 
 *******************************************************************************
 
@@ -5231,32 +5274,44 @@ $LIST( <74:expression>)
 
 *******************************************************************************
 
+* [[ESOPE]]
 <74a:non_typed_expression>
+		= <121a:pointeurs_seq> ;
+
+$LIST( <74a:non_typed_expression>)
+{
+  $LIST( <74a:non_typed_expression>) = $LIST(<121a:pointeurs_seq>);
+* [[SEMC ADDED]]
+}
+
+*------------------------------------------------------------------------------
+
+<74c:non_typed_expression>
 		= <99:symbolic_name> ;
 
-$LIST( <74a:non_typed_expression>)
+$LIST( <74c:non_typed_expression>)
 {
-  $LIST( <74a:non_typed_expression>) = $LIST(<99:symbolic_name>);
+  $LIST( <74c:non_typed_expression>) = $LIST(<99:symbolic_name>);
 }    
 
 *------------------------------------------------------------------------------
 
-<74a:non_typed_expression>
+<74c:non_typed_expression>
 		= <88b:function_reference_or_array_element_name> ;
 
-$LIST( <74a:non_typed_expression>)
+$LIST( <74c:non_typed_expression>)
 {
-  $LIST( <74a:non_typed_expression>) = $LIST(<88b:function_reference_or_array_element_name>);
+  $LIST( <74c:non_typed_expression>) = $LIST(<88b:function_reference_or_array_element_name>);
 }    
 
 *------------------------------------------------------------------------------
 
-<74a:non_typed_expression>
+<74c:non_typed_expression>
 		= ( <74a:non_typed_expression> ) ;
 
-$LIST( <74a:non_typed_expression>)
+$LIST( <74c:non_typed_expression>)
 {
-  $LIST( <74a:non_typed_expression>) = ast_parenthesis_expression($LIST(<74a:non_typed_expression>'));
+  $LIST( <74c:non_typed_expression>) = ast_parenthesis_expression($LIST(<74a:non_typed_expression>));
 }    
 
 *******************************************************************************
@@ -7354,6 +7409,28 @@ $LIST( <121:pointeur>)
   	LOCATION(0),
   	$LIST(<122a:pointeur_name_list>)
   );
+}
+
+*------------------------------------------------------------------------------
+
+<121a:pointeurs_seq>
+	= <121a:pointeurs_seq> . <74c:non_typed_expression> ;
+
+$LIST( <121a:pointeurs_seq>)
+{
+  $LIST( <121a:pointeurs_seq>) = SXML_LL ($LIST (<121a:pointeurs_seq>'), $LIST(<74c:non_typed_expression>)); // a revoir completement
+* [[SEMC ADDED]]
+}
+
+*------------------------------------------------------------------------------
+
+<121a:pointeurs_seq>
+	= <74c:non_typed_expression> ;
+
+$LIST( <121a:pointeurs_seq>)
+{
+  $LIST( <121a:pointeurs_seq>) = $LIST(<74c:non_typed_expression>);
+* [[SEMC ADDED]]
 }
 
 *------------------------------------------------------------------------------
