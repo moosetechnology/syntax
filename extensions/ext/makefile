@@ -100,6 +100,20 @@ $(SXWORD_MNGR)		: $(FORCE) \
 
 # ----------------------------------------------------------------------------
 
+$(SX)/../extensions/dag/dag_t.c:
+	( cd $(SX)/../extensions/dag ; make )
+
+$(SX)/../extensions/re/re_t.c:
+	( cd $(SX)/../extensions/re ; make )
+
+$(SX)/../extensions/sdag/sdag_t.c:
+	( cd $(SX)/../extensions/sdag ; make )
+
+$(SX)/../extensions/udag/udag_t.c:
+	( cd $(SX)/../extensions/udag ; make )
+
+# ----------------------------------------------------------------------------
+
 sxndp_rcvr32.c	:	sxndp_rcvr.c
 	(echo '#define SXP_MAX (SHRT_MAX+1)';echo '#define SXS_MAX (SHRT_MAX+1)';echo '#define VARIANT_32 1';echo '#include "sxndp_rcvr.c"') > $@
 

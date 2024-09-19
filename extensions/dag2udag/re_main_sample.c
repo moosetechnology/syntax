@@ -17,13 +17,12 @@
  *   can be found at, e.g., http://www.cecill.info
  *****************************************************************************/
 
-/*** THIS FILE IS NOT PART OF THE SYNTAX LIBRARY libsx.a ***/ 
-
 /* Exemple d'utilisation de read_a_re et fsa_mngr */
 
+#include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXMAIN[] = "@(#)SYNTAX - $Id: re_main_sample.c 4275 2024-09-09 08:37:51Z garavel $" WHAT_DEBUG;
+char WHAT_SXMAIN[] = "@(#)SYNTAX - $Id: re_main_sample.c 4344 2024-09-18 17:22:13Z garavel $" WHAT_DEBUG;
 
 static char ME[] = "re_main";
 
@@ -35,8 +34,6 @@ static char ME[] = "re_main";
 #include "read_a_re.h"
 
 /* On est dans un cas "mono-langage": */
-
-static char mess [128];
 
 static struct fa {
   SXINT          fsa_kind, init_state, final_state, sigma_card, eof_ste, transition_nb;
@@ -50,6 +47,14 @@ static XxY_header XxY_out_trans;
 static SXINT        *XxY_out_trans2next_state;
 static SXINT        fsa_trans_nb;
 
+/* Pierre Boullier ne sait plus a quoi servent les 4 definitions ci-dessous :
+sans doute des possibilites prevues, mais non utilisÃ©es */
+
+VARSTR cur_input_vstr; /* unused */
+SXINT SEMLEX_lahead; /* unused */
+void  (*main_parser)(void); /* NULL pas de earley ou autre */
+bool tmp_file_for_stdin;  /* unused */
+
 #define WHAT_TO_DO     (RE2NFA|RE2EFNFA|RE2DFA|RE_USE_COMMENTS|RE_INCREASE_ORDER)
 
 
@@ -62,13 +67,15 @@ static SXINT        fsa_trans_nb;
    - le nb de noeuds de cet arbre et 
    - le nb d'operande (dont eof + 1 bidon de fin) */
 /* Peut servir a faire des alloc + ciblees */
-static void
-prelude_re (SXINT is_OK, SXINT eof_ste, SXINT node_nb, SXINT operand_nb, SXINT fsa_kind)
+
+static void prelude_re (bool is_OK, SXINT eof_ste, SXINT node_nb, SXINT operand_nb, SXINT fsa_kind)
 {
   SXINT *fsa_foreach;
 #if EBUG
   char *name;
 #endif
+
+  (void) operand_nb;
 
   if (is_OK) {
 #if LOG
@@ -114,6 +121,11 @@ prelude_re (SXINT is_OK, SXINT eof_ste, SXINT node_nb, SXINT operand_nb, SXINT f
 	cur_fsa = &dfa;
       }
     break;
+
+    default:
+       fsa_foreach = NULL; /* pour faire taire clang */
+       sxtrap (ME, "unknown switch case #1");
+       /* NOTREACHED */
     }
 
     cur_fsa->fsa_kind = fsa_kind;
@@ -129,17 +141,21 @@ prelude_re (SXINT is_OK, SXINT eof_ste, SXINT node_nb, SXINT operand_nb, SXINT f
 }
 
 /* Cette procedure est appelee depuis read_a_re sur chaque transition de l'automate produit */
+/* Une procedure similaire store_re() existe aussi dans dag2udag_main.c */
 /* L'etat initial est 1 */
 /* l'etat final unique est atteint par transition sur le terminal bidon "<EOF>" de ste eof_ste et vaut -f */
 /* Tous les etats de 1 a f sont utilises */
 /* ptok_ptr contient {NULL, ptok1, ...ptokm, NULL} */
 /* ste est commun a tous les ptok de ptok_ptr */
 /* ptoki est un pointeur vers un token courant (dans le noeud de l'arbre abstrait) */
-static void
-store_re (SXINT state, struct sxtoken **ptok_ptr, SXINT ste, SXINT next_state)
+
+static void store_re (SXINT state, struct sxtoken **ptok_ptr, struct sxtoken **semlex_ptok_ptr, SXINT ste, SXINT next_state)
 {
   SXINT            triple;
 
+  sxuse (semlex_ptok_ptr);
+  /* Normalement, la fonction store_re() de re_main_sample.c sera appelee avec
+   * un arg NULL pour semlex_ptok_ptr */
   if (ptok_ptr == NULL && ste == 0) {
     /* Transition epsilon */
     cur_fsa->has_epsilon_trans = true;
@@ -162,8 +178,7 @@ store_re (SXINT state, struct sxtoken **ptok_ptr, SXINT ste, SXINT next_state)
 }
 
 
-static void
-raz_re ()
+static void raz_re ()
 {
   if (XxYxZ_is_allocated (cur_fsa->fsa_hd)) {
     XxYxZ_free (&(cur_fsa->fsa_hd));
@@ -172,8 +187,8 @@ raz_re ()
 
 
 /* On met ds next_nfa_state_set les etats atteint par transition vide depuis nfa_state */
-static bool
-nfa_empty_trans (SXINT nfa_state, SXBA next_nfa_state_set)
+
+static bool nfa_empty_trans (SXINT nfa_state, SXBA next_nfa_state_set)
 {
   SXINT     triple, next_nfa_state;
   bool ret_val = false;
@@ -189,8 +204,8 @@ nfa_empty_trans (SXINT nfa_state, SXBA next_nfa_state_set)
 
 
 /* appel f avec les transitions (t, next_state, t non vide) depuis nfa_state */
-static void
-nfa_extract_trans (SXINT nfa_state, void (*f)())
+
+static void nfa_extract_trans (SXINT nfa_state, void (*f)(SXINT, SXINT, SXINT))
 {
   SXINT triple, t, next_nfa_state;
 
@@ -204,10 +219,7 @@ nfa_extract_trans (SXINT nfa_state, void (*f)())
   }
 }
 
-static SXINT final_state, total_trans_nb;
-
-static void
-dfa_fill_trans (SXINT dfa_state, SXINT t, SXINT new_dfa_state, SXINT is_final)
+static void dfa_fill_trans (SXINT dfa_state, SXINT t, SXINT new_dfa_state, bool is_final)
 {
   SXINT id;
 
@@ -230,8 +242,7 @@ dfa_fill_trans (SXINT dfa_state, SXINT t, SXINT new_dfa_state, SXINT is_final)
     dfa_final_state = new_dfa_state;
 }
 
-static void
-dfa_extract_trans (SXINT dfa_state, void (*output_trans) ())
+static void dfa_extract_trans (SXINT dfa_state, void (*output_trans) (SXINT, SXINT, SXINT))
 {
   SXINT stateXt;
 
@@ -240,8 +251,7 @@ dfa_extract_trans (SXINT dfa_state, void (*output_trans) ())
 }
 
 
-static void
-DFA_extract_trans (SXINT dfa_state, void (*output_trans) ())
+static void DFA_extract_trans (SXINT dfa_state, void (*output_trans) (SXINT, SXINT, SXINT))
 {
   SXINT triple;
 
@@ -249,9 +259,9 @@ DFA_extract_trans (SXINT dfa_state, void (*output_trans) ())
     (*output_trans) (dfa_state, XxYxZ_Y (cur_fsa->fsa_hd, triple), XxYxZ_Z (cur_fsa->fsa_hd, triple));
 }
 
-static void
-XxY_out_trans_oflw (SXINT old_size, SXINT new_size)
+static void XxY_out_trans_oflw (SXINT old_size, SXINT new_size)
 {
+  (void) old_size;
   XxY_out_trans2next_state = (SXINT*) sxrealloc (XxY_out_trans2next_state, new_size+1, sizeof (SXINT));
 }
 
@@ -260,15 +270,13 @@ static SXINT          minDFA_foreach [] = {1 /* X pour minDFA_extract_trans */, 
 static SXINT          minDFA_final_state;
 static bool        is_a_dag;
 
-static void
-minDFA_alloc ()
+static void minDFA_alloc ()
 {
   is_a_dag = true; /* A priori */
   XxYxZ_alloc (&minDFA_hd, "minDFA_hd", fsa_trans_nb+1, 1, minDFA_foreach, NULL, NULL);
 }
 
-static void
-minDFA_fill_trans (SXINT dfa_state, SXINT t, SXINT next_dfa_state)
+static void minDFA_fill_trans (SXINT dfa_state, SXINT t, SXINT next_dfa_state)
 {
   SXINT triple;
 
@@ -298,8 +306,7 @@ minDFA_fill_trans (SXINT dfa_state, SXINT t, SXINT next_dfa_state)
 static VARSTR w_vstr;
 static char   *meta_symb [6] = {"(", ")*", "(", ")+", "(", ")?"}; /* Pour le nouveau fsa2re */
 
-static SXINT
-minDFA_edges (SXINT i, SXINT j, char **string)
+static SXINT minDFA_edges (SXINT i, SXINT j, char **string)
 {
   SXINT    triple, t, prev_t, ste;
 
@@ -336,8 +343,7 @@ minDFA_edges (SXINT i, SXINT j, char **string)
   return 0;
 }
 
-static void
-minDFA2RE ()
+static void minDFA2RE ()
 {
   SXINT          triple, state, next_state;
   SXBA         *minDFA_R, *minDFA_R_plus;
@@ -368,8 +374,7 @@ minDFA2RE ()
 }
 
 
-static void
-minDFA_extract_trans (SXINT dfa_state, void (*output_trans) ())
+static void minDFA_extract_trans (SXINT dfa_state, void (*output_trans) (SXINT, SXINT, SXINT))
 {
   SXINT triple;
 
@@ -377,17 +382,17 @@ minDFA_extract_trans (SXINT dfa_state, void (*output_trans) ())
     (*output_trans) (dfa_state, XxYxZ_Y (minDFA_hd, triple), XxYxZ_Z (minDFA_hd, triple));
 }
 
-static char*
-get_trans_name (SXINT t)
+static char *get_trans_name (SXINT t)
 {
   return sxstrget (t);
 }
 
 
-/* Cette fonction est appelee après les appels à store_[u]re(). */
+/* Cette fonction est appelee apres les appels a store_[u]re(). */
 /* Elle utilise l'automate lu */
-static void
-postlude_re (SXINT fsa_kind)
+/* Une fonction postlude_re() similaire existe dans dag2udag_main.c */
+
+static SXINT postlude_re (SXINT fsa_kind)
 {
   /* fsa_kind == RE2NFA || kind == RE2EFNFA || kind == RE2DFA */
 
@@ -411,8 +416,13 @@ postlude_re (SXINT fsa_kind)
     fputs ("NFA2DFA\n", stdout);
 #endif
 
-    nfa2dfa (cur_fsa->init_state, cur_fsa->final_state, cur_fsa->eof_ste, cur_fsa->has_epsilon_trans ? nfa_empty_trans : NULL, nfa_extract_trans,
+    /* on appelle nfa2dfa() en lui passant le parametre max_state == 0, car
+     * on est dans le cas d'une expression reguliere generale et non d'un DAG
+     * (voir le commentaire sur nfa2dfa() dans fsa_mngr.c)
+     */
+    nfa2dfa (cur_fsa->init_state, cur_fsa->final_state, 0,  cur_fsa->eof_ste, cur_fsa->has_epsilon_trans ? nfa_empty_trans : NULL, nfa_extract_trans,
 	     dfa_fill_trans, NULL /* pas de min */, false /* ... et donc to_be_normalized est sans objet */);
+
 #if LOG
     sprintf (mess, "NFA2DFA: state_nb = %i, total_trans_nb = %i", final_state, total_trans_nb);
     total_trans_nb = 0;
@@ -444,7 +454,7 @@ postlude_re (SXINT fsa_kind)
     fputs ("EFNFA2DFA\n", stdout);
 #endif
 
-    nfa2dfa (cur_fsa->init_state, cur_fsa->final_state, cur_fsa->eof_ste, NULL, nfa_extract_trans, dfa_fill_trans, NULL /* pas de min */, false /* ... et donc to_be_normalized est sans objet */);
+    nfa2dfa (cur_fsa->init_state, cur_fsa->final_state, 0, cur_fsa->eof_ste, NULL, nfa_extract_trans, dfa_fill_trans, NULL /* pas de min */, false /* ... et donc to_be_normalized est sans objet */);
 #if LOG
     sprintf (mess, "EFNFA2DFA: state_nb = %i, total_trans_nb = %i", final_state, total_trans_nb);
     total_trans_nb = 0;
@@ -457,6 +467,7 @@ postlude_re (SXINT fsa_kind)
     fsa_trans_nb = XxY_top (XxY_out_trans);
     minDFA_alloc ();
     dfa_minimize (1, dfa_final_state, cur_fsa->eof_ste, dfa_extract_trans, minDFA_fill_trans, true /* to_be_normalized */);
+
 #if LOG
     sprintf (mess, "EFDFA2min_DFA: state_nb = %i, total_trans_nb = %i", final_state, total_trans_nb);
     total_trans_nb = 0;
@@ -486,6 +497,9 @@ postlude_re (SXINT fsa_kind)
 #endif
 
     break;
+
+    default:
+       sxtrap (ME, "unknown switch case #2");
   }
 
   minDFA2RE ();
@@ -506,11 +520,12 @@ postlude_re (SXINT fsa_kind)
   }
   
   raz_re ();
+  return 0;
 }
 
 /* C'est la fonction qui appelle read_a_re. Le resultat de la lecture de la re est traite' par les fonctions prelude_re, store_re et postlude_re */
-static SXINT
-fsa_processor ()
+
+static SXINT fsa_processor ()
 {
   SXINT severity;
 
@@ -524,8 +539,7 @@ fsa_processor ()
 
 
 
-int
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
   sxopentty ();
 

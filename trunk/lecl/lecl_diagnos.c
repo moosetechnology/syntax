@@ -25,7 +25,7 @@
 #include "varstr.h"
 #include "lecl_ag.h"
 
-char WHAT_LECLDIAGNOS[] = "@(#)SYNTAX - $Id: lecl_diagnos.c 3633 2023-12-20 18:41:19Z garavel $" WHAT_DEBUG;
+char WHAT_LECLDIAGNOS[] = "@(#)SYNTAX - $Id: lecl_diagnos.c 4295 2024-09-14 14:28:48Z garavel $" WHAT_DEBUG;
 
 extern VARSTR	lecl_gen_ecc (SXBA *SC_TO_CHAR_SET, 
 			      SXBA esc_set, 
@@ -612,13 +612,13 @@ void	lecl_diagnoses_unbounded_output (struct conflict_record *u_head_ptr, struct
 /* On ne conserve que les transitions allant d'un etat mixte vers un etat en
    look_ahead en conservant les etats "PRDCT" intermediaires */
 
-    for (lecl_diagnoses_unbounded_output_i = 1; lecl_diagnoses_unbounded_output_i <= xfsa2; lecl_diagnoses_unbounded_output_i++) {
+    for (lecl_diagnoses_unbounded_output_i = 1; lecl_diagnoses_unbounded_output_i < xfsa2; lecl_diagnoses_unbounded_output_i++) {
 	if (fsa [lecl_diagnoses_unbounded_output_i].state_kind & (MIXTE + LA + PRDCT + NONDETER))
 	/* if (fsa [lecl_diagnoses_unbounded_output_i].state_kind & MIXTE) */
 	    has_la_trans (M, lecl_diagnoses_unbounded_output_i);
     }
 
-    for (lecl_diagnoses_unbounded_output_i = 1; lecl_diagnoses_unbounded_output_i <= xfsa2; lecl_diagnoses_unbounded_output_i++)
+    for (lecl_diagnoses_unbounded_output_i = 1; lecl_diagnoses_unbounded_output_i < xfsa2; lecl_diagnoses_unbounded_output_i++)
 	sxba_copy (M_plus [lecl_diagnoses_unbounded_output_i], M [lecl_diagnoses_unbounded_output_i]);
 
     fermer (M_plus, xfsa2 + 1);
@@ -710,3 +710,4 @@ void	lecl_diagnoses_one_la (struct lr_marker *current_state_ptr,
     immediate_or_one_la (varstr_catenate (lecl_gen_ecc (sc_to_char_set, esc_set, xprdct_to_ate, varstr_catenate (varstr_catenate (varstr_catenate (cat_conflict_name (varstr_catenate (varstr_alloc (2048), "1_look_ahead "), conflict_kind), " conflict in state "), s), " on ")), " between\n"),
 			 current_state_ptr, sra_set, /* detection_state, conflict_kind, */choice, true);
 }
+

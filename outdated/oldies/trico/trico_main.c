@@ -33,14 +33,14 @@
 /* 20000521 15:33 (phd):	Création à partir de sxmain.c et lecl	*/
 /************************************************************************/
 
-char WHAT[] = "@(#)trico.d.c	- SYNTAX [unix] - 18 mars 2002";
+char WHAT[] = "@(#)trico.d.c	- SYNTAX [unix] - 18 mars 2002";
 
 #include "sxunix.h"
 #include "trico_env.h"
 
 char	by_mess [] = "the SYNTAX automaton constructor TRICO";
 
-#include "release.h"
+#include "sxversion.h"
 
 
 /* On lit a priori sur stdin, et cetera */

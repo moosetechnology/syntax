@@ -2,12 +2,12 @@
 include $(SX)/etc/make/gccoptions
 
 YAX=$(SX)/../outdated/oldies/yax
-BIN=$(YAX)/bin.$(ARCH)
+
 LIB=$(YAX)/lib.$(ARCH)
 
 CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
-all: $(BIN)/yax.out
+all: $(YAX)/yax.out
 
 NEEDS=	$(LIB)/yax_put.o	\
 	$(LIB)/yax.o		\
@@ -17,9 +17,9 @@ NEEDS=	$(LIB)/yax_put.o	\
 	$(LIB)/def_act.o	\
 	$(LIB)/def_t.o
 
-$(BIN)/yax.out:		$(NEEDS) $(SXBIBS) $(SXLIB)/libsxbnf.a
+$(YAX)/yax.out:		$(NEEDS) $(SXBIBS) $(SXLIB)/libsxbnf.a
 	@rm -f $@
-	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXLIB)/libsxbnf.a $(SXBIBS) || (rm $@; exit 1)
+	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXLIB)/libsxbnf.a $(SXBIBS) || (rm -f $@; exit 1)
 
 $(LIB)/yax_main.o:	$(SXINCL)/sxunix.h		\
 	 		$(SXINCL)/util/B_tables.h	\
@@ -106,7 +106,7 @@ def.rt: def.bt def.st def.recor
 # fin de code produit par "make-makefile def"
 
 clean:
-	/bin/rm -f $(LIB)/*.o $(BIN)/yax.out
+	/bin/rm -f $(LIB)/*.o $(YAX)/yax.out
 	/bin/rm -f $(YAX)/dec.*.l $(YAX)/def.*.l
 	/bin/rm -f $(YAX)/dec.bt $(YAX)/dec.pt $(YAX)/dec.rt $(YAX)/dec.st
 	/bin/rm -f $(YAX)/dec_t.c

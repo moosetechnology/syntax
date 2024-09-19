@@ -61,7 +61,7 @@ static char	ME [] = "dag_scanner.c";
 #include "dag_scanner.h"
 #include "sxnd.h"
 
-char WHAT_DAG_SCANNER[] = "@(#)SYNTAX - $Id: dag_scanner.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
+char WHAT_DAG_SCANNER[] = "@(#)SYNTAX - $Id: dag_scanner.c 4341 2024-09-18 08:12:10Z garavel $" WHAT_DEBUG;
 
 #if 0
 /* !! ce n'est pas vrai ds le cas HUGE ou le code des mots du source est recherche directement ds un dico */
@@ -838,7 +838,7 @@ fill_dag_infos ()
       }
       else {
 	if (tables == NULL) {
-	  sxput_error (ptok->source_index,
+	  sxerror (ptok->source_index,
 		       "%sUnknown word \"%s\".",
 		       sxsvar.sxtables->err_titles [1],
 		       str);
@@ -905,7 +905,7 @@ fill_dag_infos ()
 	  SXBA_1_bit (source_set, id);
       
 	if (id == 0) {
-	  sxput_error (ptok->source_index,
+	  sxerror (ptok->source_index,
 		       "%sUnknown word.",
 		       sxsvar.sxtables->err_titles [1]);
 	  /* Le 03/05/04 Erreur est change' en Warning, les mots inconnus ne bloquent plus l'analyse */
@@ -928,7 +928,7 @@ fill_dag_infos ()
     (*(tables->SX_scanner)) (SXCLOSE, tables); /* Fin du scanneur de "tables" */
     sxtkn_mngr (SXCLOSE, 0); /* Soyons propres */
     sxsrc_mngr (SXFINAL); /* Celui de "tables" */
-    sxsrcmngr = save_sxsrcmngr; /* C,a permet a sxput_error de ressortir le source!! */
+    sxsrcmngr = save_sxsrcmngr; /* C,a permet a sxerror de ressortir le source!! */
   }
 
   top_dag_trans = XxYxZ_top (dag_hd);
@@ -1143,7 +1143,7 @@ after_last_trans ()
 
   SXBA_1_bit (source_set, eof);
 
-  source_top = source_set + NBLONGS (BASIZE (source_set)); /* pointe vers la derniere "tranche" */
+  source_top = source_set + NBLONGS (SXBASIZE (source_set)); /* pointe vers la derniere "tranche" */
 
   /* On alloue glbl_source, meme si on n'est pas ds le cas is_sdag, ca permet de faire du traitement
      d'erreur + facilement.  PB le cas !is_sdag doit-il etre traite comme is_sdag ? */

@@ -2,15 +2,13 @@
 include $(SX)/etc/make/gccoptions
 
 RLR=$(SX)/../outdated/oldies/rlr
-SRC=$(RLR)/src
-BIN=$(RLR)/bin.$(ARCH)
+
 LIB=$(RLR)/lib.$(ARCH)
-INCL=$(RLR)/incl
 
-CC=cc -I$(INCL) -I$(SXINCL) -I$(SXINCL)/util -I$(SX)/../outdated/oldies/incl $(CFLAGS)
+CC=cc -I$(SXINCL) -I$(SXINCL)/util -I$(SX)/../outdated/oldies/incl $(CFLAGS)
 
-ALL=$(BIN)/rlr.out			\
-     $(BIN)/primes_nb.out
+ALL=$(RLR)/rlr.out			\
+     $(RLR)/primes_nb.out
 
 all: $(ALL)
 
@@ -36,256 +34,255 @@ NEEDS2= $(LIB)/rlrd_main.o
 
 NEEDS3= $(LIB)/primes_nb.o
 
-$(BIN)/rlr.out:	$(NEEDS)	$(SXBIBS)
-	rm -f $@; cc -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@; exit 1)
+$(RLR)/rlr.out:	$(NEEDS)	$(SXBIBS)
+	rm -f $@; cc -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm -f $@; exit 1)
 
-$(BIN)/rlrd.out:	$(NEEDS2)	$(SXBIBS)
-	rm -f $@; cc -o $@ $(NEEDS2) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@; exit 1)
+$(RLR)/rlrd.out:	$(NEEDS2)	$(SXBIBS)
+	rm -f $@; cc -o $@ $(NEEDS2) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm -f $@; exit 1)
 
-$(BIN)/primes_nb.out:	$(NEEDS3)	$(SXBIBS)
-	rm -f $@; cc -o $@ $(NEEDS3) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@; exit 1)
+$(RLR)/primes_nb.out:	$(NEEDS3)	$(SXBIBS)
+	rm -f $@; cc -o $@ $(NEEDS3) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm -f $@; exit 1)
 
-$(LIB)/rlr_main.o:	$(INCL)/rlr_optim.h		\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
-			$(SX)/incl/put_edit.h		\
-			$(SX)/incl/varstr.h		\
+$(LIB)/rlr_main.o:	rlr_optim.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
+			$(SXINCL)/put_edit.h		\
+			$(SXINCL)/varstr.h		\
 			$(SXINCL)/util/bstr.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
-			$(SX)/../outdated/oldies/incl/release.h		\
-			$(SRC)/rlr_main.c
-	$(CC) -o $@ -c $(SRC)/rlr_main.c
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
+			rlr_main.c
+	$(CC) -o $@ -c rlr_main.c
 
-$(LIB)/LR0.o:		$(INCL)/rlr_optim.h		\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
-			$(SX)/incl/put_edit.h		\
-			$(SX)/incl/varstr.h		\
+$(LIB)/LR0.o:		rlr_optim.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
+			$(SXINCL)/put_edit.h		\
+			$(SXINCL)/varstr.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
-			$(SRC)/LR0.c
-	$(CC) -o $@ -c $(SRC)/LR0.c
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
+			LR0.c
+	$(CC) -o $@ -c LR0.c
 
-$(LIB)/LALR1.o:		$(INCL)/rlr_optim.h		\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
-			$(SX)/incl/put_edit.h		\
-			$(SX)/incl/varstr.h		\
+$(LIB)/LALR1.o:		rlr_optim.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
+			$(SXINCL)/put_edit.h		\
+			$(SXINCL)/varstr.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
 			$(SXINCL)/util/bstr.h		\
 			$(SXINCL)/util/D_tables.h	\
-			$(SRC)/LALR1.c
-	$(CC) -o $@ -c $(SRC)/LALR1.c
+			LALR1.c
+	$(CC) -o $@ -c LALR1.c
 
-$(LIB)/ambig.o:		$(INCL)/rlr_optim.h		\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
-			$(SX)/incl/put_edit.h		\
-			$(SX)/incl/varstr.h		\
+$(LIB)/ambig.o:		rlr_optim.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
+			$(SXINCL)/put_edit.h		\
+			$(SXINCL)/varstr.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
-			$(SX)/incl/SS.h			\
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
+			$(SXINCL)/SS.h			\
 			$(SXINCL)/util/bstr.h		\
-			$(INCL)/RLR.h			\
-			$(SRC)/ambig.c
-	$(CC) -o $@ -c $(SRC)/ambig.c
+			RLR.h			\
+			ambig.c
+	$(CC) -o $@ -c ambig.c
 
-$(LIB)/ARC.o:		$(INCL)/rlr_optim.h		\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
-			$(SX)/incl/put_edit.h		\
-			$(SX)/incl/varstr.h		\
+$(LIB)/ARC.o:		rlr_optim.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
+			$(SXINCL)/put_edit.h		\
+			$(SXINCL)/varstr.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
-			$(SX)/incl/SS.h			\
-			$(INCL)/RLR.h			\
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
+			$(SXINCL)/SS.h			\
+			RLR.h			\
 			$(SXINCL)/util/P_tables.h	\
-			$(SRC)/ARC.c
-	$(CC) -o $@ -c $(SRC)/ARC.c
+			ARC.c
+	$(CC) -o $@ -c ARC.c
 
-$(LIB)/XARC.o:		$(INCL)/rlr_optim.h		\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
-			$(SX)/incl/put_edit.h		\
-			$(SX)/incl/varstr.h		\
+$(LIB)/XARC.o:		rlr_optim.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
+			$(SXINCL)/put_edit.h		\
+			$(SXINCL)/varstr.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
-			$(SX)/incl/SS.h			\
-			$(INCL)/RLR.h			\
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
+			$(SXINCL)/SS.h			\
+			RLR.h			\
 			$(SXINCL)/util/P_tables.h	\
-			$(SRC)/XARC.c
-	$(CC) -o $@ -c $(SRC)/XARC.c
+			XARC.c
+	$(CC) -o $@ -c XARC.c
 
-$(LIB)/ARP.o:		$(INCL)/rlr_optim.h		\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
-			$(SX)/incl/put_edit.h		\
-			$(SX)/incl/varstr.h		\
+$(LIB)/ARP.o:		rlr_optim.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
+			$(SXINCL)/put_edit.h		\
+			$(SXINCL)/varstr.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
-			$(SX)/incl/SS.h			\
-			$(INCL)/RLR.h			\
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
+			$(SXINCL)/SS.h			\
+			RLR.h			\
 			$(SXINCL)/util/P_tables.h	\
-			$(SRC)/ARP.c
-	$(CC) -o $@ -c $(SRC)/ARP.c
+			ARP.c
+	$(CC) -o $@ -c ARP.c
 
-$(LIB)/RARP.o:		$(INCL)/rlr_optim.h		\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
-			$(SX)/incl/put_edit.h		\
-			$(SX)/incl/varstr.h		\
+$(LIB)/RARP.o:		rlr_optim.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
+			$(SXINCL)/put_edit.h		\
+			$(SXINCL)/varstr.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
-			$(SX)/incl/SS.h			\
-			$(INCL)/RLR.h			\
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
+			$(SXINCL)/SS.h			\
+			RLR.h			\
 			$(SXINCL)/util/P_tables.h	\
-			$(SRC)/RARP.c
-	$(CC) -o $@ -c $(SRC)/RARP.c
+			RARP.c
+	$(CC) -o $@ -c RARP.c
 
-$(LIB)/earley.o:	$(INCL)/rlr_optim.h		\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
-			$(SX)/incl/put_edit.h		\
-			$(SX)/incl/varstr.h		\
+$(LIB)/earley.o:	rlr_optim.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
+			$(SXINCL)/put_edit.h		\
+			$(SXINCL)/varstr.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
-			$(SX)/incl/SS.h			\
-			$(INCL)/RLR.h			\
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
+			$(SXINCL)/SS.h			\
+			RLR.h			\
 			$(SXINCL)/util/P_tables.h	\
-			$(SRC)/earley.c
-	$(CC) -o $@ -c $(SRC)/earley.c
+			earley.c
+	$(CC) -o $@ -c earley.c
 
-$(LIB)/first.o:		$(INCL)/rlr_optim.h		\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
+$(LIB)/first.o:		rlr_optim.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
-			$(SX)/incl/SS.h			\
-			$(INCL)/RLR.h			\
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
+			$(SXINCL)/SS.h			\
+			RLR.h			\
 			$(SXINCL)/util/P_tables.h	\
-			$(SRC)/first.c
-	$(CC) -o $@ -c $(SRC)/first.c
+			first.c
+	$(CC) -o $@ -c first.c
 
-$(LIB)/messages_mngr.o:	$(INCL)/rlr_optim.h		\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
-			$(SX)/incl/put_edit.h		\
-			$(SX)/incl/varstr.h		\
+$(LIB)/messages_mngr.o:	rlr_optim.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
+			$(SXINCL)/put_edit.h		\
+			$(SXINCL)/varstr.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
-			$(SX)/incl/SS.h			\
-			$(INCL)/RLR.h			\
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
+			$(SXINCL)/SS.h			\
+			RLR.h			\
 			$(SXINCL)/util/bstr.h		\
 			$(SXINCL)/util/P_tables.h	\
-			$(SRC)/messages_mngr.c
-	$(CC) -o $@ -c $(SRC)/messages_mngr.c
+			messages_mngr.c
+	$(CC) -o $@ -c messages_mngr.c
 
-$(LIB)/optim_lo.o:	$(INCL)/rlr_optim.h		\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
-			$(SX)/incl/put_edit.h		\
-			$(SX)/incl/varstr.h		\
+$(LIB)/optim_lo.o:	rlr_optim.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
+			$(SXINCL)/put_edit.h		\
+			$(SXINCL)/varstr.h		\
 			$(SXINCL)/util/bstr.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
 			$(SXINCL)/util/P_tables.h	\
-			$(SRC)/optim_lo.c
-	$(CC) -o $@ -c $(SRC)/optim_lo.c
+			optim_lo.c
+	$(CC) -o $@ -c optim_lo.c
 
-$(LIB)/xprdct_mngr.o:	$(INCL)/rlr_optim.h		\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
-			$(SX)/incl/put_edit.h		\
-			$(SX)/incl/varstr.h		\
+$(LIB)/xprdct_mngr.o:	rlr_optim.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
+			$(SXINCL)/put_edit.h		\
+			$(SXINCL)/varstr.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
 			$(SXINCL)/util/P_tables.h	\
-			$(SRC)/xprdct_mngr.c
-	$(CC) -o $@ -c $(SRC)/xprdct_mngr.c
+			xprdct_mngr.c
+	$(CC) -o $@ -c xprdct_mngr.c
 
-$(LIB)/super_FSA.o:	$(SX)/incl/XxY.h		\
-			$(SX)/incl/X.h			\
-			$(SX)/incl/sxba.h		\
-			$(SRC)/super_FSA.c
-	$(CC) -o $@ -c $(SRC)/super_FSA.c
+$(LIB)/super_FSA.o:	$(SXINCL)/XxY.h		\
+			$(SXINCL)/X.h			\
+			$(SXINCL)/sxba.h		\
+			super_FSA.c
+	$(CC) -o $@ -c super_FSA.c
 
-$(LIB)/single.o:	$(INCL)/rlr_optim.h		\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
-			$(SX)/incl/put_edit.h		\
-			$(SX)/incl/varstr.h		\
+$(LIB)/single.o:	rlr_optim.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
+			$(SXINCL)/put_edit.h		\
+			$(SXINCL)/varstr.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
 			$(SXINCL)/util/P_tables.h	\
-			$(SRC)/single.c
-	$(CC) -o $@ -c $(SRC)/single.c
+			single.c
+	$(CC) -o $@ -c single.c
 
-$(LIB)/algoV.o:		$(INCL)/rlr_optim.h		\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
-			$(SX)/incl/put_edit.h		\
-			$(SX)/incl/varstr.h		\
+$(LIB)/algoV.o:		rlr_optim.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
+			$(SXINCL)/put_edit.h		\
+			$(SXINCL)/varstr.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
 			$(SXINCL)/util/P_tables.h	\
-			$(SRC)/algoV.c
-	$(CC) -o $@ -c $(SRC)/algoV.c
+			algoV.c
+	$(CC) -o $@ -c algoV.c
 
-$(LIB)/OPTIM.o:		$(INCL)/rlr_optim.h		\
-			$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxba.h		\
-			$(SX)/incl/put_edit.h		\
-			$(SX)/incl/varstr.h		\
+$(LIB)/OPTIM.o:		rlr_optim.h		\
+			$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxba.h		\
+			$(SXINCL)/put_edit.h		\
+			$(SXINCL)/varstr.h		\
 			$(SXINCL)/util/B_tables.h	\
-			$(SX)/incl/XxY.h		\
-			$(SX)/incl/XH.h			\
-			$(SX)/incl/X.h			\
+			$(SXINCL)/XxY.h		\
+			$(SXINCL)/XH.h			\
+			$(SXINCL)/X.h			\
 			$(SXINCL)/util/P_tables.h	\
-			$(SRC)/OPTIM.c
-	$(CC) -o $@ -c $(SRC)/OPTIM.c
+			OPTIM.c
+	$(CC) -o $@ -c OPTIM.c
 
-$(LIB)/rlrd_main.o:	$(SX)/incl/sxunix.h		\
-			$(SX)/incl/sxdynam_parser.h	\
-			$(SRC)/rlrd_main.c
-	$(CC) -o $@ -c $(SRC)/rlrd_main.c
+$(LIB)/rlrd_main.o:	$(SXINCL)/sxunix.h		\
+			$(SXINCL)/sxdynam_parser.h	\
+			rlrd_main.c
+	$(CC) -o $@ -c rlrd_main.c
 
-$(LIB)/primes_nb.o:	$(SX)/incl/sxunix.h		\
-			$(SRC)/primes_nb.c
-	$(CC) -o $@ -c $(SRC)/primes_nb.c
+$(LIB)/primes_nb.o:	$(SXINCL)/sxunix.h		\
+			primes_nb.c
+	$(CC) -o $@ -c primes_nb.c
 
 clean:
 	rm -f $(ALL) $(NEEDS) $(NEEDS2) $(NEEDS3)
-	rm -f $(BIN)/rlrd.out
+	rm -f $(RLR)/rlrd.out
 

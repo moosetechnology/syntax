@@ -3,10 +3,12 @@
 ME=`realpath -s "$0" 2> /dev/null`
 if [ $? != 0 ]
 then
+	# here, we are likely on macOS
 	# the "realpath" command does not exist (macOS version < 13)
+	# or, when it exists, does not support the "-s" option
 	DIR=`dirname "$0"`
 	BASE=`basename "$0"`
-	ME=`( cd "$DIR" ; pwd -P )`/"$BASE"
+	ME=`( cd "$DIR" ; pwd -L )`/"$BASE"
 fi
 
 case "$ME" in

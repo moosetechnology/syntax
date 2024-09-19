@@ -100,10 +100,6 @@ SXML_TYPE_TEXT SXML_QUOTED (char C1, char *S, char C2)
 
 /* ------------------------------------------------------------------------- */
 
-#define SXML_Q(T) ((T) == NULL ? NULL : SXML_QUOTED ('\"', (T), '\"'))
-
-/* ------------------------------------------------------------------------- */
-
 typedef struct SXML_STRUCT_LIST {
    SXML_TYPE_TEXT TEXT;
    struct SXML_STRUCT_LIST *SUCC;
@@ -532,19 +528,6 @@ SXML_TYPE_LIST SXML_TTTTT (
 
 /* ------------------------------------------------------------------------- */
 
-SXML_TYPE_LIST SXML_LLTLLL (
-		SXML_TYPE_LIST L1,
-		SXML_TYPE_LIST L2,
-		SXML_TYPE_TEXT T3,
-		SXML_TYPE_LIST L4,
-		SXML_TYPE_LIST L5,
-		SXML_TYPE_LIST L6)
-{
-	return SXML_LL (SXML_LLT (L1, L2, T3), SXML_LLL (L4, L5, L6));
-}
-
-/* ------------------------------------------------------------------------- */
-
 SXML_TYPE_LIST SXML_LLTLTL (
 		SXML_TYPE_LIST L1,
 		SXML_TYPE_LIST L2,
@@ -594,20 +577,6 @@ SXML_TYPE_LIST SXML_LLLTLTL (
 		SXML_TYPE_LIST L7)
 {
 	return SXML_LLL (SXML_LLL (L1, L2, L3), SXML_TL (T4, L5), SXML_TL (T6, L7));
-}
-
-/* ------------------------------------------------------------------------- */
-
-SXML_TYPE_LIST SXML_LLTLLLL (
-		SXML_TYPE_LIST L1,
-		SXML_TYPE_LIST L2,
-		SXML_TYPE_TEXT T3,
-		SXML_TYPE_LIST L4,
-		SXML_TYPE_LIST L5,
-		SXML_TYPE_LIST L6,
-		SXML_TYPE_LIST L7)
-{
-	return SXML_LLL (SXML_LLT (L1, L2, T3), SXML_LL (L4, L5), SXML_LL (L6, L7));
 }
 
 /* ------------------------------------------------------------------------- */
@@ -689,10 +658,3 @@ SXML_TYPE_LIST SXML_TTTTTTTTTTT (
 
 /* ------------------------------------------------------------------------- */
 
-
-SXML_TYPE_LIST SXML_QUOTED_LIST (SXML_TYPE_LIST L)
-{
-	return SXML_TLT("\"", L, "\"");
-}
-
-/* ------------------------------------------------------------------------- */

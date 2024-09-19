@@ -1,13 +1,12 @@
 
 include $(SX)/etc/make/gccoptions
 
-TRICO=$(SX)/trico
-BIN=$(TRICO)/bin.$(ARCH)
+TRICO=$(SX)/../outdated/oldies/trico
 LIB=$(TRICO)/lib.$(ARCH)
 
 CC=cc -I$(SXINCL) -I$(SXINCL)/util $(CFLAGS)
 
-ALL=$(BIN)/trico.out	
+ALL=$(TRICO)/trico.out	
 
 all: $(ALL)
 
@@ -15,8 +14,8 @@ NEEDED=$(LIB)/trico_act.o	\
        $(LIB)/trico_main.o	\
        $(LIB)/trico_t.o
 
-$(BIN)/trico.out:	$(NEEDED)	$(SXBIBS)
-	rm -f $@; cc -o $@ `echo $(NEEDED) $(CFLAGS) $(LDFLAGS) $(SXBIBS)` || (rm $@;exit 1)
+$(TRICO)/trico.out:	$(NEEDED)	$(SXBIBS)
+	rm -f $@; cc -o $@ `echo $(NEEDED) $(CFLAGS) $(LDFLAGS) $(SXBIBS)` || (rm -f $@;exit 1)
 
 $(LIB)/trico_act.o:	$(SXINCL)/sxunix.h	\
 			trico_env.h	\

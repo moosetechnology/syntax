@@ -1020,7 +1020,7 @@ extern void sxexit (int sevlev)
 #ifdef WINNT
      extern FILE	*sxfopen (char *s, char *m);
 #else
-#define sxfopen(s,m)	fopen (s, m)
+#define sxfopen(s,m)	fopen ((s), (m))
 #endif
 #endif
 
@@ -1028,7 +1028,7 @@ extern void sxexit (int sevlev)
 #ifdef WINNT
      extern FILE	*sxfreopen (char *s, char *m, FILE *f);
 #else
-#define sxfreopen(s,m,f)	freopen (s, m, f)
+#define sxfreopen(s,m,f)	freopen ((s), (m), (f))
 #endif
 #endif
 
@@ -1040,7 +1040,7 @@ extern void sxexit (int sevlev)
 #ifdef WINNT
      extern FILE	*sxfdopen (SXINT d, char *m);
 #else
-#define sxfdopen(d,m)	fdopen (d, m)
+#define sxfdopen(d,m)	fdopen ((d), (m))
 #endif
 #endif
 

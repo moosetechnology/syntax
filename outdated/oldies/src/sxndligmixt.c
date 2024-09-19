@@ -843,7 +843,7 @@ sxndlig_action_new_top (bot, new_top, symbol)
 
     if (parse_stack.ared->action >= 10000 && new_top != 0)
     {
-	if (symbol >= BASIZE (sxndlig.symbol_set))
+	if (symbol >= SXBASIZE (sxndlig.symbol_set))
 	{
 	    sxndlig.symbol_set = sxba_resize (sxndlig.symbol_set, XxY_size (parse_stack.symbols) + 1);
 	    sxndlig.symb2attr = (struct symb2attr*) sxrealloc (sxndlig.symb2attr,

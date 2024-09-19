@@ -45,7 +45,7 @@ static char	ME [] = "lfg_semact";
 
 #include "dag_scanner.h"
 
-char WHAT_LFG_SEMACT[] = "@(#)SYNTAX - $Id: lfg_semact.c 3678 2024-02-06 08:38:24Z garavel $" WHAT_DEBUG;
+char WHAT_LFG_SEMACT[] = "@(#)SYNTAX - $Id: lfg_semact.c 4341 2024-09-18 08:12:10Z garavel $" WHAT_DEBUG;
 
 #ifdef lfg_h
 
@@ -13117,7 +13117,7 @@ tree_bu_walk (prod)
 	if (failure_set) {
 	  sxba_empty (failure_set);
 		    
-	  if (BASIZE (failure_set) < struct_nb)
+	  if (SXBASIZE (failure_set) < struct_nb)
 	    failure_set = sxba_resize (failure_set, struct_nb);
 	}
 

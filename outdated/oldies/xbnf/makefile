@@ -21,7 +21,7 @@ NEEDS1= $(LIB)/xbnf_folcon.o		\
 
 $(XBNF)/xbnf.out:	$(NEEDS1)	$(SXBIBS)
 	@rm -f $@
-	$(COMPILER) -o $@ $(NEEDS1) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(NEEDS1) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm -f $@;exit 1)
 
 $(LIB)/xbnf_folcon.o:	$(SXINCL)/sxunix.h	\
 			$(SXINCL)/sxba.h	\
@@ -83,7 +83,7 @@ NEEDS2= $(LIB)/xbnf_dump.o		\
 
 $(XBNF)/print_bt.out:	$(NEEDS2)	$(SXBIBS)
 	@rm -f $@
-	$(COMPILER) -o $@ $(NEEDS2) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(NEEDS2) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm -f $@;exit 1)
 
 $(LIB)/xbnf_dump.o:	$(SXINCL)/sxunix.h	\
 			$(SXINCL)/util/B_tables.h	\
@@ -105,7 +105,7 @@ NEEDS3= $(LIB)/xbnf2lex_prdct_main.o	\
 
 $(XBNF)/xbnf2lex_prdct.out:	$(NEEDS3)	$(SXBIBS)
 	@rm -f $@
-	$(COMPILER) -o $@ $(NEEDS3) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(NEEDS3) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm -f $@;exit 1)
 
 $(LIB)/xbnf2lex_prdct_main.o:	$(SXINCL)/sxunix.h	\
 			xbnf2lex_prdct_main.c

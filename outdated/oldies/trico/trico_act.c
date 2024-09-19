@@ -689,7 +689,7 @@ void trico_sem_act (int code, int numact)
       while (ste >= taille_ensemble) agrandir_ensemble ();
 
       if (sxba_bit_is_set (ensemble, ste))
-	sxput_error (SXSTACKtoken (SXSTACKtop ()).source_index,
+	sxerror (SXSTACKtoken (SXSTACKtop ()).source_index,
 		     "%sCe texte est déjà apparu plus haut : on l'ignore.",
 		     sxplocals.sxtables->err_titles [1] /* Warning */);
       else {

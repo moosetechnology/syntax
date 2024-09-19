@@ -20,10 +20,6 @@
 #ifndef dag_scanner_h
 #define dag_scanner_h
 
-/* Le DAG est lu ds le fichier source_file de nom source_file_name */
-extern FILE *source_file;
-extern char *source_file_name;
-
 extern SXINT  dag_scanner (SXINT what, SXTABLES *arg);
 /* dag_scanner (SXACTION, NULL); */
 /* dag_scanner (SXSEMPASS, NULL); */

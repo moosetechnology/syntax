@@ -6,7 +6,7 @@ LIB=$(LC)/lib.$(ARCH)
 
 SXEXTBIBS=$(SXLIB)/libsxext.a $(SXBIBS)
 
-CC=$(COMPILER) -I$(LC) -I$(SXINCL) -I$(SXINCL)/util -I$(SX)/../extensions/incl $(CFLAGS)
+CC=$(COMPILER) -I$(LC) -I$(SXINCL) -I$(SXINCL)/util -I$(SXEXTINCL) $(CFLAGS)
 
 # all: $(SXEXTBIN)/csynt_lc.out
 all: $(SXEXTBIN)/lc1.out

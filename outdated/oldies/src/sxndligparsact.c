@@ -234,17 +234,17 @@ sxndlig_GC ()
     if (sxndlig.GC_sigma_set == NULL) {
 	sxndlig.GC_sigma_set = sxba_calloc (XxY_size (sxndlig.sigma) + 1);
 	sxndlig.GC_pile_set = sxba_calloc (XxY_size (sxndlig.piles) + 1);
-	sxndlig.GC_to_be_processed = SS_alloc (BASIZE (sxndlig.GC_pile_set));
+	sxndlig.GC_to_be_processed = SS_alloc (SXBASIZE (sxndlig.GC_pile_set));
     }
     else {
 	sxba_empty (sxndlig.GC_sigma_set);
 	sxba_empty (sxndlig.GC_pile_set);
 
-	if (XxY_top (sxndlig.sigma) >= BASIZE (sxndlig.GC_sigma_set))
+	if (XxY_top (sxndlig.sigma) >= SXBASIZE (sxndlig.GC_sigma_set))
 	    sxndlig.GC_sigma_set = sxba_resize (sxndlig.GC_sigma_set,
 						XxY_size (sxndlig.sigma) + 1);
 
-	if (XxY_top (sxndlig.piles) >= BASIZE (sxndlig.GC_pile_set))
+	if (XxY_top (sxndlig.piles) >= SXBASIZE (sxndlig.GC_pile_set))
 	    sxndlig.GC_pile_set = sxba_resize (sxndlig.GC_pile_set,
 					       XxY_size (sxndlig.piles) + 1);
     }
@@ -1330,7 +1330,7 @@ sxndlig_action_new_top (bot, new_top, symbol)
       {
 	    /* On conserve les LHS des regles qui n'ont pas d'action sur les piles (et donc pas
 	       de predicat), afin de les valider en fin d'analyse. */
-	if (symbol >= BASIZE (sxndlig.symbol_set))
+	if (symbol >= SXBASIZE (sxndlig.symbol_set))
 	  sxndlig.symbol_set = sxba_resize (sxndlig.symbol_set, XxY_size (parse_stack.symbols) + 1);
 
 	SXBA_1_bit (sxndlig.symbol_set, symbol);

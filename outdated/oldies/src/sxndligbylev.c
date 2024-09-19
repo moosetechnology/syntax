@@ -610,7 +610,7 @@ sxndlig_action_new_top (bot, new_top, symbol)
 
     if (parse_stack.ared->action >= 10000 && new_top != 0)
     {
-	if (symbol >= BASIZE (sxndlig.symbol_set))
+	if (symbol >= SXBASIZE (sxndlig.symbol_set))
 	{
 	    sxndlig.symbol_set = sxba_resize (sxndlig.symbol_set, XxY_size (parse_stack.symbols) + 1);
 	    sxndlig.symb2attr = (struct symb2attr*) sxrealloc (sxndlig.symb2attr,
@@ -951,7 +951,7 @@ finalize_current_level ()
         son, father, parser, level_trans;
     int *pp, *pnfs;
 
-    if (XxYxZ_top (parse_stack.parsers) >= BASIZE (sxndlig.vanished_parser_set))
+    if (XxYxZ_top (parse_stack.parsers) >= SXBASIZE (sxndlig.vanished_parser_set))
 	sxndlig.vanished_parser_set = sxba_resize (sxndlig.vanished_parser_set,
 						   XxYxZ_size (parse_stack.parsers) + 1);
 
@@ -1083,7 +1083,7 @@ finalize_current_level ()
     int main_trans, son, father, parser, level_trans, x;
     int *pp, *pnfs;
 
-    if (XxYxZ_top (parse_stack.parsers) >= BASIZE (sxndlig.vanished_parser_set))
+    if (XxYxZ_top (parse_stack.parsers) >= SXBASIZE (sxndlig.vanished_parser_set))
 	sxndlig.vanished_parser_set = sxba_resize (sxndlig.vanished_parser_set,
 						   XxYxZ_size (parse_stack.parsers) + 1);
 

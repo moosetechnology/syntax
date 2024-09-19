@@ -10,7 +10,8 @@ SXEXTBIBS=$(SXLIB)/libsxext.a $(SXBIBS)
 
 CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util -I$(SXEXTINCL) $(CFLAGS)
 
-all: $(BIN)/dag2udag.out
+all: $(BIN)/dag2udag.out \
+     $(BIN)/re_main_sample.out 
 
 NEEDS=	$(LIB)/dag2udag_main.o
 
@@ -26,6 +27,15 @@ $(LIB)/dag2udag_main.o:	$(SXINCL)/sxunix.h		\
 			$(SXINCL)/XxY.h			\
 			dag2udag_main.c
 	$(CC) -o $@ -c dag2udag_main.c
+
+NEEDS2=	$(LIB)/re_main_simple.o
+
+$(BIN)/re_main_sample.out:	$(NEEDS2)	$(SXEXTBIBS)
+	@rm -f $@
+	$(COMPILER) -o $@ $(NEEDS2) $(CFLAGS) $(LDFLAGS) $(SXEXTBIBS) || (rm $@;exit 1)
+
+$(LIB)/re_main_simple.o: re_main_sample.c
+	$(CC) -o $@ -c re_main_sample.c
 
 clean:
 	/bin/rm -f $(LIB)/*.o $(BIN)/dag2udag.out

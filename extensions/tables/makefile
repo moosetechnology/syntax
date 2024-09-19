@@ -7,7 +7,7 @@ LIB=$(TABLES)/lib.$(ARCH)
 
 SXEXTBIBS=$(SXLIB)/libsxext.a $(SXBIBS)
 
-CC=$(COMPILER) -I$(SXINCL) -I$(TABLES) -I$(SXINCL)/util -I$(SX)/../extensions/incl -I$(SX)/../outdated/oldies/LIG/incl $(CFLAGS)
+CC=$(COMPILER) -I$(SXINCL) -I$(TABLES) -I$(SXINCL)/util -I$(SXEXTINCL) -I$(SX)/../outdated/oldies/LIG $(CFLAGS)
 
 all: $(BIN)/tables_c.out
 
@@ -82,19 +82,19 @@ $(LIB)/out_RCVR_tbl.o:	$(SXINCL)/sxunix.h	\
 	$(CC) -o $@ -c out_RCVR_tbl.c
 
 $(LIB)/out_DP_tbl.o:	$(SXINCL)/sxunix.h	\
-                        $(SX)/../extensions/incl/sxdynam_parser.h	\
+                        $(SXEXTINCL)/sxdynam_parser.h	\
 			out_DP_tbl.c
 	$(CC) -o $@ -c out_DP_tbl.c
 
 $(LIB)/out_DS_tbl.o:	$(SXINCL)/sxunix.h	\
-                        $(SX)/../extensions/incl/sxdynam_scanner.h	\
+                        $(SXEXTINCL)/sxdynam_scanner.h	\
 			out_DS_tbl.c
 	$(CC) -o $@ -c out_DS_tbl.c
 
 $(LIB)/out_lig_tbl.o:	$(SXINCL)/sxunix.h	\
 			tables.h	\
 			out.h		\
-			$(SX)/../outdated/oldies/LIG/incl/lig.h	\
+			$(SX)/../outdated/oldies/LIG/lig.h	\
 			out_lig_tbl.c
 	$(CC) -o $@ -c -I$(SXINCL)/util out_lig_tbl.c
 

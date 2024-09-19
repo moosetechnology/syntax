@@ -1,4 +1,4 @@
-Hubert Garavel - Fri Apr 19 09:43:46 CEST 2024
+Hubert Garavel - Tue Sep 17 11:59:35 CEST 2024
 
 The 'extensions' directory contains files that were originally in the
 'trunk' directory, but have been set apart in January 2023 because it
@@ -22,9 +22,15 @@ bnf:
 	calculations done by the "standard" BNF, which would be
 	too costly to do on large grammars.
 
-DAG:
-	This directory contains the 'dag' processor. No documentation
-	was found for this processor.
+dag:
+	This directory contains a grammar needed to build the file
+	extensions/ext/dag_t.c. 'dag' means 'directed acyclic graph'.
+	Here, dag denotes a restricted form of regular expression, in
+	which the repetition operators {...} and {...}+ are absent.
+
+dags2udag:
+	This directory contains a translator. No documentation was found
+	for this processor.
 
 csynt_lc:
 	See the README file in the csynt_lc directory.
@@ -80,9 +86,26 @@ make_a_dico:
 	which was introduced in SYNTAX 6.0 (2008). No documentation was
 	found for this processor.
 
+re:
+	This directory contains a grammar needed to build the file
+	extensions/ext/re_t.c ('re' means 'regular expression').
+
 rcg:
 	This directory contains a processor named rcg for Range Concatenation
 	Grammars.
+
+sdag:
+	This directory contains a grammar needed to build the file
+	extensions/ext/sdag_t.c. 'sdag' means 'simple directed acyclic
+	graph'. A sdag represent a particular case of dag: each terminal
+	of a 'normal' source string is a list of alternatives denoting
+	a simple type of ambiguities.
+
+udag:
+	This directory contains a grammar needed to build the file
+	extensions/ext/udag_t.c. 'udag' means 'unfolded directed acyclic
+	graph'. A udag represents a dag as a list of triples (index of
+	source state, transition, index of target state).
 
 xcsynt:
 	This directory apparently contains a variant of CSYNT that can

@@ -10,7 +10,7 @@ SXEXTBIBS=$(SXLIB)/libsxext.a $(SXBIBS)
 RCG_CFLAGS= 
 # RCG_CFLAGS= -g -DEBUG -DSTATS
 
-CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util -I$(SX)/../extensions/incl $(RCG_CFLAGS) $(CFLAGS)
+CC=$(COMPILER) -I$(SXINCL) -I$(SXINCL)/util -I$(SXEXTINCL) $(RCG_CFLAGS) $(CFLAGS)
 
 all: $(SXEXTBIN)/rcg.out
 
@@ -70,7 +70,7 @@ $(LIB)/rcg_gen_parser.o:			\
 			$(SXINCL)/XxY.h		\
 			rcg_td.h		\
 			rcg.h			\
-			$(SX)/../extensions/incl/rcg_sglbl.h	\
+			$(SXEXTINCL)/rcg_sglbl.h	\
 			rcg_gen_parser.c
 	$(CC) -o $@ -c rcg_gen_parser.c
 

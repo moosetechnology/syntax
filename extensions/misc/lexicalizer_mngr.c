@@ -22,7 +22,7 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_LEXICALIZER_MNGR[] = "@(#)SYNTAX - $Id: lexicalizer_mngr.c 4150 2024-08-02 11:38:58Z garavel $" WHAT_DEBUG;
+char WHAT_LEXICALIZER_MNGR[] = "@(#)SYNTAX - $Id: lexicalizer_mngr.c 4305 2024-09-16 16:27:23Z garavel $" WHAT_DEBUG;
 
 static char	ME [] = "lexicalizer_mngr";
 
@@ -346,8 +346,7 @@ static void LC_construction (struct insideG *insideG_ptr)
 }
 
 
-void
-RC_construction ()
+void RC_construction ()
 {
   SXINT 	  prod, item, bot_item, A, B, X, bot, top, lim, i;
   SXBA	  line, init_line, line_A;
@@ -424,8 +423,8 @@ RC_construction ()
 }
 
 /* remplit spf.insideG.is_cycle */
-void
-cycle_detection ()
+
+void cycle_detection ()
 {  
   SXINT  nbnt, nbv, nblr, A, bot, top, prod, bot_item, item, X;
   SXBA *cyclic, lr_recursive_set;
@@ -663,8 +662,8 @@ static void item2t_set_construction (SXBA *item2t_set, SXBA *FOLLOW, SXBA *FIRST
 
 /* La rcvr d'Earley appelera cette proc si besoin est */
 /* t2item_set [t] = {A -> \alpha . \beta | t \in First1(\beta Follow1(A))} */
-void
-fill_t2item_set ()
+
+void fill_t2item_set ()
 {
   SXINT  item, t;
   SXBA line;
@@ -814,8 +813,8 @@ static void call_fill_nt2min_gen_lgth ()
 
 /* La rcvr d'Earley appelera cette proc si besoin est */
 /* nt2min_gen_lgth [A] = l, l=min(x), A =>+ x et l=|x| */
-void
-fill_nt2min_gen_lgth ()
+
+void fill_nt2min_gen_lgth ()
 {
   if (spf.insideG.nt2min_gen_lgth == NULL) {
     /* Pas deja fait */
@@ -876,8 +875,7 @@ static void idag_t_stack_recode (SXINT *old_t2new_t)
     DFREE_STACK (source_t_stack);
 }
 
-void
-idag_t_stack_restore ()
+void idag_t_stack_restore ()
 {
   DFREE_STACK (idag.t_stack);
   idag.t_stack = idag.orig_t_stack, idag.orig_t_stack = NULL;
@@ -940,6 +938,8 @@ static bool check_multiple_anchor_occur_post (SXINT *multi_anchor_erased_prod_st
 }
 #  endif /* ifndef MULTI_ANCHOR */
 #endif /* ifndef MAKE_PROPER */
+
+
 
 
 #ifdef is_check_rhs_sequences
@@ -3307,6 +3307,7 @@ static void print_current_sub_grammar ()
 #endif /* LLOG */
 
 #if EBUG
+
 static void check_reduced_sub_grammar ()
 {
   /* On verifie que la grammaire est reduite */
@@ -3905,8 +3906,8 @@ static SXINT make_a_next_reduced_grammar ()
 
 #if MEASURES || LOG
 /* Appelee aussi depuis earley_parser */
-void
-output_G (char *header, SXBA basic_item_set, SXBA basic_prod_set)
+
+void output_G (char *header, SXBA basic_item_set, SXBA basic_prod_set)
 {
   SXINT  old_prod, t_nb = 0, nt_nb = 0, prod_nb = 0, item_nb = 0;
   SXINT  item, prod, item_or_prod, X;
@@ -3990,8 +3991,8 @@ output_G (char *header, SXBA basic_item_set, SXBA basic_prod_set)
 #endif /* LOG */
 }
 #else /* MEASURES || LOG */
-void
-output_G (char *header, SXBA basic_item_set, SXBA basic_prod_set)
+
+void output_G (char *header, SXBA basic_item_set, SXBA basic_prod_set)
 {
   fputs ("****** Entering and immediately leaving dummy output_G () ******\n", stdout);
 }
@@ -5689,7 +5690,6 @@ static bool unvalid_multiple_anchor_occur_prod_pre (SXINT prod)
 
   return unvalid;
 }
-
 #else /* !HUGE_CFG */
 
 static bool check_multiple_anchor_occur_pre_with_basic_item_set (SXINT **map_stack, SXINT **maep_stack)
@@ -6299,8 +6299,8 @@ static bool t_set2basic_item_set ()
 /* autrement dit, t peut suivre t1 (uniquement si la grammaire a des prod a terminaux multiples, sinon NULL) */
 /* mlstn2la_tset [i] = {t | \exists j s.t. i ->t j dans le dag} */
 /* mlstn2lex_la_tset [i] = {t | \exists j s.t. i ->t j dans le dag et t a ete retenu par la lexicalisation} */
-bool
-lexicalizer2basic_item_set (bool is_mlstn2lex_la_tset, bool is_mlstn2la_tset, bool is_smallest_insideG)
+
+bool lexicalizer2basic_item_set (bool is_mlstn2lex_la_tset, bool is_mlstn2la_tset, bool is_smallest_insideG)
 {
   SXINT     mlstn;
   bool ret_val;
@@ -6438,8 +6438,8 @@ static bool t_set2index_item_set (SXBA basic_item_set,
 /* mlstn2suffix_source_set [i]= { t | a_i=t ou x=a_1 ... a_i ... t ... a_n} */
 /* t2suffix_t_set [t1] = {t | existe un chemin du source de la forme "eof ... t1 ... t ... eof" */
 /* autrement dit, t peut suivre t1 (uniquement si la grammaire a des prod a terminaux multiples, sinon NULL) */
-bool
-lexicalizer2indexed_item_sets (bool is_mlstn2lex_la_tset,
+
+bool lexicalizer2indexed_item_sets (bool is_mlstn2lex_la_tset,
 			       bool is_mlstn2la_tset)
 {
   bool ret_val;
@@ -6584,7 +6584,8 @@ static SXBA           *active_sets, *control_sets, *rl_active_sets, *rl_control_
 /* Changement le 09/10/06 Si \beta == \varepsilon, on met item ds active_set sinon on le met ds closure_set
    il pourra comme c,a etre filtre'par la lexicalization */
 
-static void close_reduce (SXINT item)
+static void close_reduce (item)
+     SXINT item;
 {
   SXINT X, prod, bot, A;
 
@@ -6925,12 +6926,11 @@ static bool sa_rlscanner (SXINT mlstn)
 static bool lr_pass_succeeds;
 static SXBA    source2valid_item_set;
 
-
 /* Ici on est ds le cas is_dag ou !is_dag */
 /* Si l'appelant veut associer a chaque dag_state l'ensemble des terminaux selectionnes par le
    dynamic_set_automaton, il passe mlstn2lex_la_tset non vide qui sera rempli */
-bool
-dynamic_set_automaton (SXBA *i2supertagger_item_set,
+
+bool dynamic_set_automaton (SXBA *i2supertagger_item_set,
 		       bool is_mlstn2lex_la_tset,
 		       bool is_mlstn2la_tset)
 {
@@ -10558,7 +10558,8 @@ SXBA *i2lr_supertagger_item_set;
 
 /* On vient de reconnaitre U (item = A -> \alpha U . \beta) */
 
-static void set_automaton_parser_valid_prefix_item_set (SXINT item)
+static void set_automaton_parser_valid_prefix_item_set (item)
+     SXINT item;
 {
   SXINT X, prod, bot, A;
 

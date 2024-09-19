@@ -59,7 +59,7 @@ bool wcw3_parsact (int which, SXTABLES	*arg)
 	    new_token.lahead = c_code;
 	    sxtknmdf (&new_token, 1, sxplocals.atok_no, 0);
 
-	    sxput_error (new_token.source_index,
+	    sxerror (new_token.source_index,
 			 "%s\"c\" is inserted before \"%s\".",
 			 sxplocals.sxtables->err_titles [2],
 			 new_token.lahead == a_code ? "a" : "b");
@@ -70,7 +70,7 @@ bool wcw3_parsact (int which, SXTABLES	*arg)
 	/* Le milieu doit etre un 'c' */
 	if (SXGET_TOKEN (middle).lahead != c_code)
 	{
-	   sxput_error (SXGET_TOKEN (middle).source_index,
+	   sxerror (SXGET_TOKEN (middle).source_index,
 			 "%s\"%s\" is replaced by \"c\".",
 			 sxplocals.sxtables->err_titles [2],
 			 SXGET_TOKEN (middle).lahead == a_code ? "a" : "b"); 
