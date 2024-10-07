@@ -2546,7 +2546,10 @@ $LIST( <29:assignment_statement>)
 
 $LIST( <29a:left_hand_side>)
 {
-  $LIST( <29a:left_hand_side>) = SXML_LL ($LIST(<29a:left_hand_side>'), $LIST(<29b:left_hand_side>)); // a reecrire completement
+  $LIST( <29a:left_hand_side>) = ast_pointeur_variable(
+  	$LIST(<29a:left_hand_side>'), 
+  	$LIST(<29b:left_hand_side>)
+  ); 
 * [[SEMC ADDED]]
 }
 
@@ -7381,7 +7384,9 @@ $LIST( <118:segment_variable>)
 
 $LIST( <118:segment_variable>)
 {
-  $LIST( <118:segment_variable>) = $LIST(<121:pointeur>);
+  $LIST( <118:segment_variable>) = ast_pointeur_in_segment(
+  	$LIST(<121:pointeur>)
+  );
 }
 
 *******************************************************************************
