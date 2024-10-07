@@ -47,7 +47,7 @@
 /* 26-08-94 14:06 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-char WHAT[] = "@(#)sxndligparsact.c\t- SYNTAX [unix] - Mercredi 26 Avril 1995";
+char WHAT_SXNDLIGPARSACT[] = "@(#)sxndligparsact.c\t- SYNTAX [unix] - Mercredi 26 Avril 1995";
 
 static char	ME [] = "sxndligparsact";
 

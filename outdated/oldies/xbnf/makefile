@@ -109,7 +109,7 @@ $(XBNF)/xbnf2lex_prdct.out:	$(NEEDS3)	$(SXBIBS)
 
 $(LIB)/xbnf2lex_prdct_main.o:	$(SXINCL)/sxunix.h	\
 			xbnf2lex_prdct_main.c
-	$(CC)-o $@ -c  xbnf2lex_prdct_main.c
+	$(CC) -o $@ -c  xbnf2lex_prdct_main.c
 
 $(LIB)/xbnf2lex_prdct_smp.o:	$(SXINCL)/sxunix.h	\
 			xbnf2lex_prdct_smp.c

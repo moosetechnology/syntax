@@ -4,9 +4,7 @@ include $(SX)/etc/make/gccoptions
 LIG=$(SX)/../outdated/oldies/LIG
 LIB=$(LIG)/lib.$(ARCH)
 
-CFLAGS= -g -DEBUG_ALLOC -DEBUG
-
-CC=cc -I$(SXINCL) -I$(SXINCL)/util -I$(SX)/../outdated/oldies/incl $(CFLAGS)
+CC=cc -I$(SXINCL) -I$(SXINCL)/util -I$(SX)/../outdated/oldies/incl $(CFLAGS) -DEBUG
 
 ALL=$(LIG)/lig2bnf.out
 

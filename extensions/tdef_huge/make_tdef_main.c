@@ -36,7 +36,7 @@ static char	ME [] = "make_tdef_main";
 #include "sxunix.h"
 #include "fsa.h"
 
-char WHAT_TDEFMAKETDEFMAIN[] = "@(#)SYNTAX - $Id: make_tdef_main.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
+char WHAT_TDEFMAKETDEFMAIN[] = "@(#)SYNTAX - $Id: make_tdef_main.c 4349 2024-09-19 14:16:45Z garavel $" WHAT_DEBUG;
 
 #define SX_DFN_EXT_VAR2
 #include "udag_scanner.h"
@@ -63,7 +63,7 @@ par la commande
 #endif /* 0 */
 
 
-extern SXTABLES  sxtables;
+/* extern */ SXTABLES  sxtables;
 
 
 /*  S T A T I C     V A R I A B L E S   */
@@ -234,6 +234,9 @@ int main (int argc, char *argv[])
       fprintf (sxstderr, "%s: unknown option \"%s\".\n", ME, argv [argnum]);
       fprintf (sxstderr, Usage, ME);
       sxexit (3);
+ 
+    default:
+      sxtrap (ME, "unknown switch case #1");
     }
   }
 
@@ -396,9 +399,13 @@ bool make_tdef_scanact (SXINT code, SXINT act_no)
 	sxsvar.sxlv.ts_lgth = sxsvar.sxlv.mark.index + 1;
 	sxsvar.sxlv.mark.index = -1;
       }
-
       return SXANY_BOOL;
+
+    default:
+      sxtrap (ME, "unknown switch case #2");
+      /* NOTREACHED */
     }
+    /* FALLTHROUGH */
 
   default:
     fputs ("The function \"make_tdef_scanact\" is out of date with respect to its specification.\n", sxstderr);

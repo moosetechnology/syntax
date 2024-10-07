@@ -53,7 +53,7 @@ INCL = -I. -I$(LNTDIR)/incl -I$(SXINCL)
 
 $(LANGUAGE) : $(SYNTAX_OUTPUTS) $(TRAIAN_OUTPUTS) main.c
 	$(CC) -c $(CFLAGS) $(LOCAL_CFLAGS) $(INCL) $(LANGUAGE)_s.c
-	$(CC) -c $(CFLAGS) $(INCL) $(LANGUAGE)_t.c
+	$(CC) -c $(CFLAGS) $(INCL) -DSEMACT=$(LANGUAGE)_act $(LANGUAGE)_t.c
 	$(CC) $(CFLAGS) $(LOCAL_CFLAGS) $(INCL) main.c $(LANGUAGE)_s.o $(LANGUAGE)_t.o $(LNTDIR)/bin.$(ARCH)/lotosnt_exceptions.o -L$(SX)/lib.$(ARCH) -lsx -lm -o $@
 	@/bin/rm -f *.o
 

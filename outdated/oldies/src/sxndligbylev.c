@@ -55,7 +55,7 @@
 /* 27-01-95 13:22 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-char WHAT[] = "@(#)sxndligbylev.c\t- SYNTAX [unix] - Jeudi 20 Mars 2003";
+char WHAT_SXNDLIGBYLEV[] = "@(#)sxndligbylev.c\t- SYNTAX [unix] - Jeudi 20 Mars 2003";
 
 static char	ME [] = "sxndligbylev";
 

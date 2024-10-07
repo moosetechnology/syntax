@@ -26,7 +26,7 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_RCG_GUIDED[] = "@(#)SYNTAX - $Id: RCG_guided_main.c 4201 2024-08-29 12:46:22Z garavel $" WHAT_DEBUG;
+char WHAT_RCG_GUIDED[] = "@(#)SYNTAX - $Id: RCG_guided_main.c 4349 2024-09-19 14:16:45Z garavel $" WHAT_DEBUG;
 
 #include "rcg_sglbl.h"
 #include <stdlib.h>
@@ -35,10 +35,8 @@ char WHAT_RCG_GUIDED[] = "@(#)SYNTAX - $Id: RCG_guided_main.c 4201 2024-08-29 12
 
 /* On lit a priori sur stdin, et cetera */
 
-FILE	*sxstdout, *sxstderr;
-FILE	*sxtty;
-extern SXTABLES	guide_tables;
-extern SXTABLES	sxtables;
+/* extern */ SXTABLES	guide_tables;
+/* extern */ SXTABLES sxtables;
 
 /*---------------*/
 /*    options    */
@@ -372,6 +370,9 @@ int main(int argc, char *argv[])
 	case UNKNOWN_ARG:
 	    fprintf (sxstderr, "%s: unknown option \"%s\".\n", ME, argv [argnum]);
 	    sxexit (3);
+
+        default:
+            sxtrap(ME, "unknown switch case #1");
 	}
     }
 

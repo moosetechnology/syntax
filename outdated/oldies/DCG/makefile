@@ -4,7 +4,7 @@ include $(SX)/etc/make/gccoptions
 DCG=$(SX)/../outdated/oldies/DCG
 LIB=$(DCG)/lib.$(ARCH)
 
-CFLAGS= -g -DEBUG_ALLOC -DEBUG
+# CFLAGS= -g -DEBUG_ALLOC -DEBUG
 
 CC=cc -I$(SXINCL) -I$(SXINCL)/util -I$(SXEXTINCL) -I$(SX)/../outdated/oldies/incl $(CFLAGS)
 

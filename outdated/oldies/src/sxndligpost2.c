@@ -82,7 +82,7 @@
 /* 18-01-95 14:20 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-char WHAT[] = "@(#)sxndligpost2.c\t- SYNTAX [unix] -  7 mai 2003";
+char WHAT_SXNDLIGPOST2[] = "@(#)sxndligpost2.c\t- SYNTAX [unix] -  7 mai 2003";
 
 #if 0
 static char	ME [] = "sxndligpost2";

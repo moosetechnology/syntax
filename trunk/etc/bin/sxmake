@@ -558,7 +558,13 @@ HYPERGENESIS() {
 SUMMARIZE_ERRORS_WARNINGS () {
 	# summarize errors and warnings, if any, in long file(s)
 	set +e
-	BANNER "SUMMARY OF ERRORS AND WARNINGS"
+	if [ "$1" = "" ]
+	then
+		BANNER "SUMMARY OF ERRORS AND WARNINGS"
+	else
+		BANNER "SUMMARY OF ERRORS AND WARNINGS FOR $1"
+	fi
+	shift
 	NO_ERROR=1
 	for LOG_FILE in "$@"
 	do
@@ -608,7 +614,7 @@ then
 	then
 		# standard usage
 		( LOCAL_COMPILE_BASE 2>&1 ) | tee _.log
-		SUMMARIZE_ERRORS_WARNINGS _.log
+		SUMMARIZE_ERRORS_WARNINGS "" _.log
 	else
 		# CONVECS-specific usage
 		# compile the binaries for all the supported architectures
@@ -621,7 +627,7 @@ then
 			rm -f _.log
 		done
 		SET_PERMISSIONS
-		SUMMARIZE_ERRORS_WARNINGS _*.log
+		SUMMARIZE_ERRORS_WARNINGS "" _*.log
 	fi
 	exit 0
 fi
@@ -636,7 +642,7 @@ then
 	COMPUTE_FLAGS $ARCH
 	LOCAL_COMPILE_EXAMPLE "$1" 2>&1 | tee _.log
 	SET_PERMISSIONS
-	SUMMARIZE_ERRORS_WARNINGS _.log
+	SUMMARIZE_ERRORS_WARNINGS "EXAMPLE $1" _.log
 	exit 0
 fi
 
@@ -648,7 +654,7 @@ then
 	COMPUTE_FLAGS $ARCH
 	LOCAL_COMPILE_EXTENSION "$1" 2>&1 | tee _.log
 	SET_PERMISSIONS
-	SUMMARIZE_ERRORS_WARNINGS _.log
+	SUMMARIZE_ERRORS_WARNINGS "EXTENSION $1" _.log
 	exit 0
 fi
 
@@ -660,7 +666,7 @@ then
 	COMPUTE_FLAGS $ARCH
 	LOCAL_COMPILE_OLDIE "$1" 2>&1 | tee _.log
 	SET_PERMISSIONS
-	SUMMARIZE_ERRORS_WARNINGS _.log
+	SUMMARIZE_ERRORS_WARNINGS "OLDIE $1" _.log
 	exit 0
 fi
 
@@ -719,7 +725,7 @@ case "$1" in
 				fi
 			done
 		) 2>&1 | tee _.log
-		SUMMARIZE_ERRORS_WARNINGS _.log
+		SUMMARIZE_ERRORS_WARNINGS "BOOTSTRAP ON $ARCH" _.log
 		;;
 
 	scribble )
@@ -762,14 +768,14 @@ case "$1" in
 		done
 		) 2>&1 | tee _.log
 		SET_PERMISSIONS
-		SUMMARIZE_ERRORS_WARNINGS _.log
+		SUMMARIZE_ERRORS_WARNINGS "ALL EXAMPLES" _.log
 		;;
 
 	iX86 )
 		if [ $ARCH = iX86 -o $ARCH = x64 ]
 		then
 			LOCAL_COMPILE_BASE iX86 2>&1 | tee _.log
-			SUMMARIZE_ERRORS_WARNINGS _.log
+			SUMMARIZE_ERRORS_WARNINGS "$ARCH" _.log
 		else
 			echo "$COMMAND: no cross-compilation available on $ARCH for iX86"
 			exit 1
@@ -780,7 +786,7 @@ case "$1" in
 		if [ $ARCH = iX86 -o $ARCH = x64 ]
 		then
 			LOCAL_COMPILE_BASE x64 2>&1 | tee _.log
-			SUMMARIZE_ERRORS_WARNINGS _.log
+			SUMMARIZE_ERRORS_WARNINGS "$ARCH" _.log
 		else
 			echo "$COMMAND: no cross-compilation available on $ARCH for x64"
 			exit 1
@@ -791,7 +797,7 @@ case "$1" in
 		if [ $ARCH = sol86 -o $ARCH = sol64 ]
 		then
 			LOCAL_COMPILE_BASE sol64 2>&1 | tee _.log
-			SUMMARIZE_ERRORS_WARNINGS _.log
+			SUMMARIZE_ERRORS_WARNINGS "$ARCH" _.log
 		else
 			echo "$COMMAND: no cross-compilation available on $ARCH for sol64"
 			exit 1
@@ -803,7 +809,7 @@ case "$1" in
 		then
 			# local compilation (most likely using Xcode's cc)
 			LOCAL_COMPILE_BASE 2>&1 | tee _.log
-			SUMMARIZE_ERRORS_WARNINGS _.log
+			SUMMARIZE_ERRORS_WARNINGS "$ARCH" _.log
 		else
 			echo "$COMMAND: no cross-compilation available on $ARCH for arm64"
 			exit 1
@@ -814,7 +820,7 @@ case "$1" in
 		then
 			# local compilation (most likely using Xcode's cc)
 			LOCAL_COMPILE_BASE 2>&1 | tee _.log
-			SUMMARIZE_ERRORS_WARNINGS _.log
+			SUMMARIZE_ERRORS_WARNINGS "$ARCH" _.log
 		else
 			# cross-compilation for mac64, e.g., on x64
 			if [ "$CC_MAC64" != "" ]
@@ -896,7 +902,7 @@ case "$1" in
 				"AR=$CC_MAC64-ar" \
 				"RANLIB=$CC_MAC64-ranlib" 2>&1 | tee _.log 
 			SET_PERMISSIONS
-			SUMMARIZE_ERRORS_WARNINGS _.log
+			SUMMARIZE_ERRORS_WARNINGS "$ARCH" _.log
 		fi
 		;;
 
@@ -905,7 +911,7 @@ case "$1" in
 		then
 			# local compilation (most likely using Cygwin's gcc)
 			LOCAL_COMPILE_BASE win64 2>&1 | tee _.log
-			SUMMARIZE_ERRORS_WARNINGS _.log
+			SUMMARIZE_ERRORS_WARNINGS "$ARCH" _.log
 		else
 			# cross-compilation for win64, e.g., on x64
 			if [ "$CC_WIN64" != "" ]
@@ -948,7 +954,7 @@ case "$1" in
 				"AR=$CC_WIN64-ar" \
 				"RANLIB=$CC_WIN64-ranlib" 2>&1 | tee _.log
 			SET_PERMISSIONS
-			SUMMARIZE_ERRORS_WARNINGS _.log
+			SUMMARIZE_ERRORS_WARNINGS "$ARCH" _.log
 		fi
 		;;
 

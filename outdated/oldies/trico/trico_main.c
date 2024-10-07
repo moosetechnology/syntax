@@ -33,7 +33,7 @@
 /* 20000521 15:33 (phd):	Création à partir de sxmain.c et lecl	*/
 /************************************************************************/
 
-char WHAT[] = "@(#)trico.d.c	- SYNTAX [unix] - 18 mars 2002";
+char WHAT_TRICO_MAIN[] = "@(#)trico.d.c	- SYNTAX [unix] - 18 mars 2002";
 
 #include "sxunix.h"
 #include "trico_env.h"
@@ -42,13 +42,9 @@ char	by_mess [] = "the SYNTAX automaton constructor TRICO";
 
 #include "sxversion.h"
 
-
 /* On lit a priori sur stdin, et cetera */
 
 FILE	*sxstdout = {NULL}, *sxstderr = {NULL};
-
-FILE		*sxtty;
-bool		sxverbosep = {true};
 
 /* On est dans un cas "mono-langage": */
 
@@ -58,8 +54,9 @@ extern SXTABLES	sxtables;
 /*    options    */
 /*---------------*/
 
-bool		sxverbosep;
 static char	ME [] = "trico";
+
+#if 0
 static char	Usage [] = "\
 Utilisation :\t%s [options] [fichiers]\n\
 options=\t-sc, -source, -^sc, -^source,\n\
@@ -70,6 +67,7 @@ options=\t-sc, -source, -^sc, -^source,\n\
 \t\t-ot, -optimaliser, -^ot, -^optimaliser,\n\
 \t\t-ln nom, -langage nom\n\
 \tL'option \"-ln\" est obligatoire s'il n'y a pas de fichier d'entrée.\n";
+#endif
 
 #define OPTION(opt)	(1 << (opt - 1))
 #define noOPTION(opt)	(~OPTION (opt))
@@ -110,9 +108,7 @@ static int	option_kind [] = {
 
 
 
-static SXINLINE int
-option_get_kind (arg)
-    register char	*arg;
+static SXINLINE int option_get_kind (char *arg)
 {
   register char	**opt;
 
@@ -129,9 +125,7 @@ option_get_kind (arg)
 
 
 
-static SXINLINE char*
-option_get_text (kind)
-    register int	kind;
+static SXINLINE char *option_get_text (int kind)
 {
   register int	i;
 
@@ -145,9 +139,7 @@ option_get_text (kind)
 
 
 
-static SXINLINE void
-language_name (path_name)
-    char	*path_name;
+static SXINLINE void build_language_name (char *path_name)
 {
   register char	*p;
 
@@ -164,16 +156,15 @@ language_name (path_name)
 }
 
 
-static SXINLINE void
-trico_run (pathname)
-    register char	*pathname;
+static SXINLINE void trico_run (char *pathname)
 {
   register FILE	*infile;
 
   if (pathname == NULL) {
     register int	c;
 
-    sxverbosep && fputs ("\"stdin\":\n", sxtty);
+    if (sxverbosep)
+      fputs ("\"stdin\":\n", sxtty);
 
     if ((infile = sxtmpfile ()) == NULL) {
       fprintf (sxstderr, "%s: Impossible de créer ", ME);
@@ -196,8 +187,9 @@ trico_run (pathname)
     return;
   }
   else {
-    sxverbosep && fprintf (sxtty, "%s:\n", pathname);
-    language_name (pathname);
+    if (sxverbosep)
+      fprintf (sxtty, "%s:\n", pathname);
+    build_language_name (pathname);
     sxsrc_mngr (SXINIT, infile, pathname);
   }
 
@@ -214,8 +206,9 @@ trico_run (pathname)
 
 
 /************************************************************************/
-/* main function
+/* main function                                                        */
 /************************************************************************/
+
 int main (int argc, char *argv[])
 {
   int	argnum;
@@ -347,7 +340,7 @@ int main (int argc, char *argv[])
       register int	severity = sxerrmngr.nbmess [2];
 
       sxerrmngr.nbmess [2] = 0;
-      /* sxstr_mngr (SXBEGIN) /* remise a vide de la string table */ ;
+      /* sxstr_mngr (SXBEGIN) : remise a vide de la string table */ ;
       trico_run (argv [argnum++]);
       sxerrmngr.nbmess [2] += severity;
     } while (argnum < argc);
@@ -372,9 +365,7 @@ int main (int argc, char *argv[])
 
 
 
-char*
-options_text (line)
-    register char	*line;
+char* options_text (char *line)
 {
   register int	i;
   bool	is_first = true;

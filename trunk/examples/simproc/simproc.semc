@@ -394,7 +394,7 @@ $SEMC_ID (<BNF_ID>)
 			sxstrget (STRING_TABLE_ENTRY) : "SEMC-ERROR-TOKEN"),
  		/* sxstrlen (token)==0  <=>  error-token  */
 		/* field 'line' is unsigned long in SYNTAX sxu2.h */
-		/* vs LOTOS-NT 'nat' type is now unsigned int */
+		/* vs LNT 'nat' type is now unsigned int */
 		(unsigned int) SXSTACKtoken (SXSTACKtop ()).source_index.line);
 }
 

@@ -33,7 +33,7 @@
 /* 10-08-94 14:29 (pb):		Ajout de cette rubrique "modifications"	*/
 /************************************************************************/
 
-char WHAT[] = "@(#)sxdligparsact.c	- SYNTAX [unix] - Lundi 23 Janvier 1995";
+char WHAT_SXDLIGPARSACT[] = "@(#)sxdligparsact.c	- SYNTAX [unix] - Lundi 23 Janvier 1995";
 
 #if 0
 static char	ME [] = "sxdligparsact";

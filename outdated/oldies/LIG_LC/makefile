@@ -4,11 +4,6 @@ include $(SX)/etc/make/gccoptions
 TEST=$(SX)/../outdated/oldies/LIG_LC
 LIB=$(TEST)/lib.$(ARCH)
 
-#CFLAGS= -O2
-#CFLAGS= -g -DEBUG_ALLOC
-#CFLAGS= -g -DEBUG_ALLOC -p
-CFLAGS= -g -DEBUG_ALLOC -DEBUG
-
 DEF1= -Dis_parser=1 -Dis_rcvr=1 -Ddelta_n=10 -Dis_1LA=1 -DXpack=1
 DEF2= -Ddelta_n=0 -Dis_1LA=1
 DEF3= -Dsxndparser=sxearley_parser -DSEMACT=SXLIG_actions		\

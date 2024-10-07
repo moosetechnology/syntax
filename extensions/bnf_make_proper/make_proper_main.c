@@ -31,7 +31,7 @@ static char	ME [] = "make_proper_main";
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_MAKE_PROPER_MAIN[] = "@(#)SYNTAX - $Id: make_proper_main.c 4166 2024-08-19 09:00:49Z garavel $" WHAT_DEBUG;
+char WHAT_MAKE_PROPER_MAIN[] = "@(#)SYNTAX - $Id: make_proper_main.c 4349 2024-09-19 14:16:45Z garavel $" WHAT_DEBUG;
 
 /* On compile les tables "left_corner" ... */
 /* ... uniquement celles dont on va avoir besoin ds lexicalizer_mngr */
@@ -677,7 +677,7 @@ bool make_proper_scanact (SXINT code, SXINT act_no)
     default:
        break;
     }
-    /* FALLTHROUGH */;
+    /* FALLTHROUGH */
 
   default:
     fputs ("The function \"make_proper_scanact\" is out of date with respect to its specification.\n", sxstderr);

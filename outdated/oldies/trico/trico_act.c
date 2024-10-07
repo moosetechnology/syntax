@@ -25,7 +25,7 @@
 /* Dimanche 21 mai 2000 (phd) :	Création				*/
 /************************************************************************/
 
-char WHAT[] = "@(#)trico_act.c\t- SYNTAX [unix] - Dimanche 21 mai 2000";
+char WHAT_TRICO_ACT[] = "@(#)trico_act.c\t- SYNTAX [unix] - Dimanche 21 mai 2000";
 
 #include "sxunix.h"
 #include <time.h>
@@ -56,15 +56,13 @@ static FILE	*trico_file = {NULL};
 
 
 
-static SXINLINE void
-horodatage (int INIT_ou_ACTION)
+static SXINLINE void horodatage (int INIT_ou_ACTION)
 {
   sxtimestamp (INIT_ou_ACTION, "%ldms\n");
 }
 
 
-static SXINLINE int
-min (int a, int b)
+static SXINLINE int min (int a, int b)
 {
   return ((a)<=(b) ? (a) : (b));
 }
@@ -78,8 +76,7 @@ min (int a, int b)
  */
 
 
-static SXINLINE void
-vecswap2 (int *a, int *b, int n)
+static SXINLINE void vecswap2 (SXINT *a, SXINT *b, int n)
 {
   while (n-- > 0) {
     int t = *a;
@@ -88,22 +85,20 @@ vecswap2 (int *a, int *b, int n)
   }
 }
 
-static SXINLINE void
-swap2 (int *a, int *b)
+static SXINLINE void swap2 (SXINT *a, SXINT *b)
 {
-  int t = *(a); *(a) = *(b); *(b) = t;
+  SXINT t = *(a); *(a) = *(b); *(b) = t;
 }
 
-static SXINLINE int
-p2c (int *i, int d)
+
+static SXINLINE int p2c (SXINT *i, int d)
 {
   return ((*(sxstrget(*(i)) + d)) & 0xFF);
 }
 
 
 
-static SXINLINE int*
-med3 (int *a, int *b, int *c, int d)
+static SXINLINE SXINT *med3 (SXINT *a, SXINT *b, SXINT *c, int d)
 {
   int va, vb, vc;
 
@@ -119,13 +114,13 @@ med3 (int *a, int *b, int *c, int d)
 
 
 /* Cette fonction "inf_egal" ne sert que pour l'appel de "sort_by_tree" */
-static SXINLINE bool
-inf_egal (int a, int b)
+
+static SXINLINE bool inf_egal (SXINT a, SXINT b)
 {
   unsigned char *s, *t;
 
-  int ls = sxstrlen (a), lt = sxstrlen (b);
-  int len = min (ls, lt);
+  SXUINT ls = sxstrlen (a), lt = sxstrlen (b);
+  SXUINT len = min (ls, lt);
 
   for (s = (unsigned char *) sxstrget (a), t = (unsigned char *) sxstrget (b); *s==*t && --len>0; s++, t++)
     ;
@@ -135,13 +130,13 @@ inf_egal (int a, int b)
 
 
 /* Cette fonction "inf_egal_sup" ne sert que pour l'appel de "qsort" */
-static SXINLINE int
-inf_egal_sup (int *a, int *b)
+
+static SXINLINE int inf_egal_sup (const SXINT *a, const SXINT *b)
 {
   unsigned char *s, *t;
 
-  int ls = sxstrlen (*a), lt = sxstrlen (*b);
-  int len = min (ls, lt);
+  SXUINT ls = sxstrlen (*a), lt = sxstrlen (*b);
+  SXUINT len = min (ls, lt);
 
   for (s = (unsigned char *) sxstrget (*a), t = (unsigned char *) sxstrget (*b); *s==*t && --len>0; s++, t++)
     ;
@@ -150,10 +145,9 @@ inf_egal_sup (int *a, int *b)
 
 
 
-static SXINLINE void
-inssort (int *a, int n, int d)
+static SXINLINE void inssort (SXINT *a, int n, int d)
 {
-  int *pi, *pj;
+  SXINT *pi, *pj;
   unsigned char *s, *t;
 
   for (pi = a + 1; --n > 0; pi++) {
@@ -171,18 +165,19 @@ inssort (int *a, int n, int d)
   }
 }
 
-
-static SXINLINE void
-choose_median (int *a, int n, int d)
+static SXINLINE void choose_median (SXINT *a, int n, int d)
 {
-  int *pm;
+  SXINT *pm;
 
   if (n > 30) { /* On big arrays, near-median of 9 */
-    int r = (n-1)/8, sigma, delta_m, delta_x, *x, i;
+    int r = (n-1)/8, sigma, delta_m, delta_x, i;
+    SXINT *x;
     sigma = p2c (a, d) + p2c (a+r, d) + p2c (a+2*r, d) + p2c (a+3*r, d) + p2c (a+4*r, d) + p2c (a+5*r, d) + p2c (a+6*r, d) + p2c (a+7*r, d) + p2c (a+8*r, d);
     delta_m = sigma /* On peut difficilement faire pis */, pm = a /* garde-fou */ ;
     for (i = 0, x = a; i <= 8; i++, x += r) {
-      (delta_x = 9 * p2c (x, d) - sigma) >= 0 || (delta_x = -delta_x);
+      delta_x = 9 * p2c (x, d) - sigma;
+      if (delta_x < 0) 
+        delta_x = -delta_x;
       if (delta_x < delta_m) {
 	pm = x, delta_m = delta_x;
       }
@@ -195,8 +190,7 @@ choose_median (int *a, int n, int d)
 
 
 
-static SXINLINE void
-ssort2 (int *a, int n, int d)
+static SXINLINE void ssort2 (SXINT *a, int n, SXUINT d)
 {
   if (n < 10) {
     inssort (a, n, d);
@@ -205,7 +199,7 @@ ssort2 (int *a, int n, int d)
 
     {
       int r, partval;
-      int *pa, *pb, *pc, *pd, *pn = a + n;
+      SXINT *pa, *pb, *pc, *pd, *pn = a + n;
       partval = p2c (a, d);
       for (pa = pb = a+1, pc = pd = pn-1; ; pb++, pc--) {
 	while (pb <= pc && (r = p2c (pb, d) - partval) <= 0) {
@@ -231,8 +225,7 @@ ssort2 (int *a, int n, int d)
 
 
 
-static SXINLINE void
-multi_key_quick_sort (int *a, int n)
+static SXINLINE void multi_key_quick_sort (SXINT *a, int n)
 {
   ssort2 (a, n, 0);
 }
@@ -246,23 +239,20 @@ multi_key_quick_sort (int *a, int n)
  */
 
 
-static SXINLINE void
-swap_range (int *a, int *b, int n)
+static SXINLINE void swap_range (SXINT *a, SXINT *b, int n)
 {
   while (n-- > 0) {
-    int t = *a; *a++ = *b; *b++ = t;
+    SXINT t = *a; *a++ = *b; *b++ = t;
   }
 }
 
-static SXINLINE void
-swap (int *a, int *b)
+static SXINLINE void swap (SXINT *a, SXINT *b)
 {
-  int t = *a; *a = *b; *b = t;
+  SXINT t = *a; *a = *b; *b = t;
 }
 
 
-static SXINLINE int
-inf_egal_sup_depth (int *a, int *b, int d)
+static SXINLINE int inf_egal_sup_depth (SXINT *a, SXINT *b, int d)
 {
   unsigned char *s, *t;
 
@@ -277,8 +267,7 @@ inf_egal_sup_depth (int *a, int *b, int d)
 
 
 
-static SXINLINE void
-phd_sort (int *a, int n, int d)
+static SXINLINE void phd_sort (SXINT *a, int n, SXUINT d)
 {
   switch (n) {
   case 0:
@@ -293,15 +282,18 @@ phd_sort (int *a, int n, int d)
   default:
 	/* On big arrays, near-median of 9 */
   {
-    int *pm = a /* garde-fou */ ;
-    int r = (n-1)/8, sigma, delta_m, delta_x, *x, i;
-
+    SXINT *pm = a /* garde-fou */ ;
+    int r = (n-1)/8, sigma, delta_m, delta_x, i;
+    SXINT *x;
     sigma = p2c (a, d) + p2c (a+r, d) + p2c (a+2*r, d) + p2c (a+3*r, d) + p2c (a+4*r, d) + p2c (a+5*r, d) + p2c (a+6*r, d) + p2c (a+7*r, d) + p2c (a+8*r, d);
     delta_m = sigma /* On peut difficilement faire pis */ ;
     for (i = 0, x = a; i <= 8; i++, x += r) {
-      (delta_x = 9 * p2c (x, d) - sigma) >= 0 || (delta_x = -delta_x);
+      delta_x = 9 * p2c (x, d) - sigma;
+      if (delta_x < 0)
+        delta_x = -delta_x;
       if (delta_x < delta_m) {
-	pm = x, delta_m = delta_x;
+	pm = x;
+	delta_m = delta_x;
       }
     }
     if (pm != a) swap (a, pm);
@@ -312,8 +304,9 @@ phd_sort (int *a, int n, int d)
   case 10: case 11: case 12: case 13: case 14: case 15: case 16: case 17: case 18: case 19:
   case 20: case 21: case 22: case 23: case 24: case 25: case 26: case 27: case 28: case 29:
   {
-    int va, *b, vb, *c, vc;
-    int *pm =
+    int va, vb, vc;
+    SXINT *b, *c;
+    SXINT *pm =
       ((va = p2c (a, d)) == (vb = p2c ((b = a+(n/2)), d)))
       ? a
       : ((vc = p2c ((c = a+(n-1)), d)) == va || vc == vb)
@@ -332,7 +325,7 @@ phd_sort (int *a, int n, int d)
 
   {
     int r, partval;
-    int *pa, *pb, *pc, *pd, *pn = a + n;
+    SXINT *pa, *pb, *pc, *pd, *pn = a + n;
     partval = p2c (a, d);
     for (pa = pb = a+1, pc = pd = pn-1; ; pb++, pc--) {
       while (pb <= pc && (r = p2c (pb, d) - partval) <= 0) {
@@ -357,8 +350,7 @@ phd_sort (int *a, int n, int d)
 
 
 
-static SXINLINE void
-phd_multi_key_quick_sort (int *a, int n)
+static SXINLINE void phd_multi_key_quick_sort (SXINT *a, int n)
 {
   phd_sort (a, n, 0);
 }
@@ -374,28 +366,24 @@ phd_multi_key_quick_sort (int *a, int n)
  */
 
 
-static SXINLINE void
-sxmkswap_range (int *a, int *b, int n)
+static SXINLINE void sxmkswap_range (SXINT *a, SXINT *b, int n)
 {
   while (n-- > 0) {
-    int t = *a; *a++ = *b; *b++ = t;
+    SXINT t = *a; *a++ = *b; *b++ = t;
   }
 }
 
-static SXINLINE void
-sxmkswap (int *a, int *b)
+static SXINLINE void sxmkswap (SXINT *a, SXINT *b)
 {
-  int t = *a; *a = *b; *b = t;
+  SXINT t = *a; *a = *b; *b = t;
 }
 
-static SXINLINE int
-sxmkpd2c (int *i, int d)
+static SXINLINE int sxmkpd2c (SXINT *i, int d)
 {
   return ((*(sxstrget(*(i)) + d)) & 0xFF);
 }
 
-static SXINLINE int
-sxmkp2l (int *i)
+static SXINLINE int sxmkp2l (SXINT *i)
 {
   return sxstrlen (*(i));
 }
@@ -403,8 +391,7 @@ sxmkp2l (int *i)
 
 
 
-static SXINLINE void
-sxmksort_depth (int *a, int n, int d)
+static SXINLINE void sxmksort_depth (SXINT *a, int n, int d)
 {
   switch (n) {
   case 0:
@@ -427,15 +414,18 @@ sxmksort_depth (int *a, int n, int d)
 
   default:
   {	/* On big arrays, near-median of 9 */
-    int *pm = a /* garde-fou */ ;
-    int r = (n-1)/8, sigma, delta_m, delta_x, *x, i;
+    SXINT *x, *pm = a /* garde-fou */ ;
+    int r = (n-1)/8, sigma, delta_m, delta_x, i;
 
     sigma = sxmkpd2c (a, d) + sxmkpd2c (a+r, d) + sxmkpd2c (a+2*r, d) + sxmkpd2c (a+3*r, d) + sxmkpd2c (a+4*r, d) + sxmkpd2c (a+5*r, d) + sxmkpd2c (a+6*r, d) + sxmkpd2c (a+7*r, d) + sxmkpd2c (a+8*r, d);
     delta_m = sigma /* On peut difficilement faire pis */ ;
     for (i = 0, x = a; i <= 8; i++, x += r) {
-      (delta_x = 9 * sxmkpd2c (x, d) - sigma) >= 0 || (delta_x = -delta_x);
+      delta_x = 9 * sxmkpd2c (x, d) - sigma;
+      if (delta_x < 0)
+        delta_x = -delta_x;
       if (delta_x < delta_m) {
-	pm = x, delta_m = delta_x;
+	pm = x;
+	delta_m = delta_x;
       }
     }
     if (pm != a) sxmkswap (a, pm);
@@ -446,8 +436,9 @@ sxmksort_depth (int *a, int n, int d)
   case 10: case 11: case 12: case 13: case 14: case 15: case 16: case 17: case 18: case 19:
   case 20: case 21: case 22: case 23: case 24: case 25: case 26: case 27: case 28: case 29:
   {
-    int va, *b, vb, *c, vc;
-    int *pm =
+    int va, vb, vc;
+    SXINT *b, *c;
+    SXINT *pm =
       ((va = sxmkpd2c (a, d)) == (vb = sxmkpd2c ((b = a+(n/2)), d)))
       ? a
       : ((vc = sxmkpd2c ((c = a+(n-1)), d)) == va || vc == vb)
@@ -459,14 +450,13 @@ sxmksort_depth (int *a, int n, int d)
     if (pm != a) sxmkswap (a, pm);
     break;
   }
-
   case 3:
     break;
   }
 
   {
     int r, partval;
-    int *pa, *pb, *pc, *pd, *pn = a + n;
+    SXINT *pa, *pb, *pc, *pd, *pn = a + n;
     partval = sxmkpd2c (a, d);
     for (pa = pb = a+1, pc = pd = pn-1; ; pb++, pc--) {
       while (pb <= pc && (r = sxmkpd2c (pb, d) - partval) <= 0) {
@@ -491,8 +481,7 @@ sxmksort_depth (int *a, int n, int d)
 
 
 
-static SXINLINE void
-sxmksort (int *a, int n)
+static SXINLINE void sxmksort (SXINT *a, int n)
 {
   sxmksort_depth (a, n, 0);
 }
@@ -507,23 +496,20 @@ static int	*pste;
 static SXBA	ensemble;
 static int	taille_ensemble;
 
-static SXINLINE void
-agrandir_mots ()
+static SXINLINE void agrandir_mots ()
 {
   mots.ste = (int*) sxrealloc (mots.ste, (mots.taille *= 2), sizeof (int));
   pste = &(mots.ste [mots.nombre]);
 }
 
-static SXINLINE void
-agrandir_ensemble ()
+static SXINLINE void agrandir_ensemble ()
 {
   ensemble = sxba_resize (ensemble, (taille_ensemble *= 2));
 }
 
-static void
-gripe ()
+static void gripe ()
 {
-  fputs ("\nUne fonction de \"trico\" n'est pas à jour.\n", sxstderr);
+  fputs ("\nUne fonction de \"trico\" n'est pas a jour.\n", sxstderr);
   abort ();
 }
 
@@ -531,8 +517,7 @@ gripe ()
 
 
 #if 0
-static void
-gen_header ()
+static void gen_header ()
 {
   long		date_time = time (0);
 
@@ -551,16 +536,14 @@ gen_header ()
 
 
 
-static void
-gen_includes ()
+static void gen_includes ()
 {
   fputs ("\n/************** I N C L U D E S **********************/\n", trico_file);
   fputs ("#include \"sxtrico.h\"\n", trico_file);
 }
 
 
-static void
-gen_trico ()
+static void gen_trico ()
 {
   int 		i;
   unsigned char	class;
@@ -597,17 +580,20 @@ gen_trico ()
 }
 #endif
 
-static int *pointeurs_de_mots, *pointeurs_prefixe, *pointeurs_suffixe, *pointeurs_supplementaires, *pointeurs_rajoutes, *pointeurs_en_plus;
+static SXINT *pointeurs_de_mots, *pointeurs_prefixe, *pointeurs_supplementaires, *pointeurs_rajoutes, *pointeurs_en_plus;
+static SXINT *pointeurs_suffixe;
 
-
-static void
-trico_process ()
+static void trico_process ()
 {
   register int		 i;
-  register int		*p, *q, *r, *s, *t;
+  register SXINT	*p, *q, *r, *s, *t;
 
-  pointeurs_de_mots = (int*) sxalloc (5 * mots.nombre, sizeof (int));
-  pointeurs_prefixe = &(pointeurs_de_mots [0]), pointeurs_suffixe = &(pointeurs_de_mots [mots.nombre]), pointeurs_supplementaires = &(pointeurs_de_mots [2*mots.nombre]), pointeurs_rajoutes = &(pointeurs_de_mots [3*mots.nombre]), pointeurs_en_plus = &(pointeurs_de_mots [4*mots.nombre]);
+  pointeurs_de_mots = (SXINT *) sxalloc (5 * mots.nombre, sizeof (int));
+  pointeurs_prefixe = &(pointeurs_de_mots [0]);
+  pointeurs_suffixe = &(pointeurs_de_mots [mots.nombre]);
+  pointeurs_supplementaires = &(pointeurs_de_mots [2*mots.nombre]);
+  pointeurs_rajoutes = &(pointeurs_de_mots [3*mots.nombre]);
+  pointeurs_en_plus = &(pointeurs_de_mots [4*mots.nombre]);
 
   for (i = mots.nombre - 1, p = pointeurs_prefixe + i, q = pointeurs_suffixe + i, r = pointeurs_supplementaires + i, s = pointeurs_rajoutes + i, t = pointeurs_en_plus + i; i >= 0; i--) {
     *p-- = *q-- = *r-- = *s-- = *t-- = i;
@@ -630,11 +616,11 @@ trico_process ()
   fputs ("Tri SXMKS...", sxtty);
   sxmksort (pointeurs_en_plus, mots.nombre);
   horodatage (SXACTION);
-  fputs ("Vérifications...", sxtty);
+  fputs ("Verifications...", sxtty);
   for (i = mots.nombre - 1, p = pointeurs_prefixe + i, q = pointeurs_suffixe + i, r = pointeurs_supplementaires + i, s = pointeurs_rajoutes + i, t = pointeurs_en_plus + i; i >= 0; i--,p--,q--,r--,s--,t--) {
     if (*p != *q || *q != *r || *r != *s || *s != *t) {
       if (!((*p == 0 || *p == 1) && (*q == 0 || *q == 1) && (*r == 0 || *r == 1) && (*s == 0 || *s == 1) && (*t == 0 || *t == 1))) {
-	fprintf (sxstderr, "\nErreur de tri à l'indice %d : \"%s\" --- \"%s\" --- \"%s\" --- \"%s\" --- \"%s\".", i, sxstrget (*p), sxstrget (*q), sxstrget (*r), sxstrget (*s), sxstrget (*t));
+	fprintf (sxstderr, "\nErreur de tri a l'indice %d : \"%s\" --- \"%s\" --- \"%s\" --- \"%s\" --- \"%s\".", i, sxstrget (*p), sxstrget (*q), sxstrget (*r), sxstrget (*s), sxstrget (*t));
 	break;
       }
     }
@@ -681,6 +667,7 @@ void trico_sem_act (int code, int numact)
 	  /*	<mots>		= %MOT 				; 3	*/
       ensemble = sxba_calloc (taille_ensemble = 1020);
 	  /* On poursuit vers le cas 2 */
+          /* FALLTHROUGH */
 
     case 2:
 	  /*	<mots>		= <mots> %MOT	 		; 2	*/
@@ -690,8 +677,9 @@ void trico_sem_act (int code, int numact)
 
       if (sxba_bit_is_set (ensemble, ste))
 	sxerror (SXSTACKtoken (SXSTACKtop ()).source_index,
-		     "%sCe texte est déjà apparu plus haut : on l'ignore.",
-		     sxplocals.sxtables->err_titles [1] /* Warning */);
+		     sxplocals.sxtables->err_titles [1][0] /* Warning */,
+		     "%sCe texte est deja apparu plus haut : on l'ignore.",
+		     sxplocals.sxtables->err_titles [1]+1 /* Warning */);
       else {
 	sxba_1_bit (ensemble, ste);
 	if (mots.nombre >= mots.taille) agrandir_mots ();
@@ -722,12 +710,12 @@ void trico_sem_act (int code, int numact)
 	  sxtmsg ("%sIl y a trop d'entrées, l'automate ne peut être produit.\n", sxplocals.sxtables->err_titles [2] /* Error */);
 #endif
       }
-
       return;
 
     default:
-      break /* to gripe */ ;
+      break /* continue in sequence to execute gripe() */ ;
     }
+    /* FALLTHROUGH */
 
   default:
     gripe ();
@@ -765,8 +753,9 @@ bool sxscanner_action (SXINT code, SXINT act_no)
     return SXANY_BOOL;
 
     default:
-      break /* to gripe */ ;
+      break /* continue in sequence to execute gripe() */ ;
     }
+    /* FALLTHROUGH */
 
   default:
     gripe ();

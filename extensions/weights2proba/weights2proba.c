@@ -31,7 +31,7 @@ static char	ME [] = "weights2proba";
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_WEIGHTS2PROBA[] = "@(#)SYNTAX - $Id: weights2proba.c 4162 2024-08-02 13:23:46Z garavel $" WHAT_DEBUG;
+char WHAT_WEIGHTS2PROBA[] = "@(#)SYNTAX - $Id: weights2proba.c 4364 2024-10-02 12:59:56Z garavel $" WHAT_DEBUG;
 
 #ifdef LC_TABLES_H
 /* On compile les tables "left_corner" ... */
@@ -345,8 +345,14 @@ process_weights ()
 	    max_fs_signature_size = fs_signature_size;
 
 	  if (max_signature_depth) {
-	    cur_level_nb = prev_level_nb = 0;
+	    cur_level_nb = 0;
+	    prev_level_nb = 0;
 	    depth = max_signature_depth;
+	  } else {
+            /* pour faire taire gcc */
+	    cur_level_nb = 0; /* dummy value */
+	    prev_level_nb = 0; /* dummy value */
+	    depth = 0; /* dummy value */
 	  }
 
 	  for (x = 1; x <= fs_signature_size; x++) {

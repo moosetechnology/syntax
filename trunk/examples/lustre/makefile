@@ -18,7 +18,7 @@ $(TOOL)_s.c :	$(TOOL).semc
 	$(SXCOM)/semc  $(TOOL).semc > $@
 
 $(TOOL)_t.o	: $(TOOL)_t.c 
-	$(COMPILER) $(CFLAGS) -c -I$(SXINCL) $(TOOL)_t.c -o $(TOOL)_t.o
+	$(COMPILER) $(CFLAGS) -c -DSEMACT=$(TOOL)_act -I$(SXINCL) $(TOOL)_t.c -o $(TOOL)_t.o
 
 $(TOOL)_t.c	: $(TOOL).bt $(TOOL).dt  $(TOOL).pt $(TOOL).rt $(TOOL).st 
 	$(SXCOM)/tables_c $(TOOL) > $(TOOL)_t.c

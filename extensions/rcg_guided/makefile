@@ -16,7 +16,7 @@ NEEDS= $(LIB)/RCG_guided_main.o
 
 $(BIN)/rcg_guided.out:	$(NEEDS)	$(SXEXTBIBS)
 	@rm -f $@
-	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXEXTBIBS) || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXEXTBIBS) || (rm -f $@;exit 1)
 
 $(LIB)/RCG_guided_main.o:	$(SXINCL)/sxunix.h		\
 			RCG_guided_main.c

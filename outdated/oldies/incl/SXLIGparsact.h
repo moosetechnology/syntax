@@ -25,7 +25,6 @@
    derivent dans la chaine source.
 */
 
-
 /************************************************************************/
 /* Historique des modifications, en ordre chronologique inverse:	*/
 /************************************************************************/
@@ -34,9 +33,12 @@
 
 #include "XxY.h"
 
+#if 0
 #define Xpack	1
 /* Les Aij sont definis par un X_header */
 #include "semact.h"
+/* Hubert : le fichier semact.h n'existe nulle part */
+#endif
 
 static int		*_CTRLSTACK_T, _CTRLSTACK_SIZE;
 
@@ -54,16 +56,15 @@ static int		*_CTRLSTACK_T, _CTRLSTACK_SIZE;
 #define IS_EMPTY(s)		(TOP(s)==0)
 #define CTRLSTACK_CHECK(s,d)	(CTRLSTACK_IS_OFLW(s,d) ? CTRLSTACK_OFLW(s,d) : 0)
 #define CTRLSTACK_ALLOC(l)	(_CTRLSTACK_T = (int*) sxalloc (l+2, sizeof (int))+1, _CTRLSTACK_T[0]=0, _CTRLSTACK_T[-1]=l, _CTRLSTACK_T)
-#if statistics
-static void
-_CTRLSTACK_FREE(s,n)
-    int	*s;
-    char *n;
+
+
+
+#ifdef statistics
+static void _CTRLSTACK_FREE(int *s, char *n)
 {
     fprintf (sxtty, "name = %s, size = %i\n", n, s[-1]);
     sxfree (s-1);
 }
-
 #define CTRLSTACK_FREE(s,n) 	_CTRLSTACK_FREE(s,n), s=NULL
 #else
 #define CTRLSTACK_FREE(s,n) 	sxfree(s-1), s=NULL
@@ -90,7 +91,7 @@ static int		*LFprod, *LFprolon, *LFlispro, *LFprod2next;
 static int		*LFlhs;
 #endif
 static int		xLFprod_top, xLFprod, xLFlispro_top, xLFlispro;
-static bool		LFhas_cycles;
+
 
 static XxY_header	EQUAL1_hd, PUSH1_hd, POP1_hd, Axs_hd;
 static int		EQUAL1_top, POP1_top, PUSH1_top;
@@ -200,10 +201,8 @@ static int		_A, _B;
 #include "sxnd.h"
 #endif
 
-
-static int
-new_pa (new_act)
-    int	new_act;
+#if 0
+static int new_pa (int new_act)
 {
     int	*pnew_act, *pact, act, nb, i;
 
@@ -222,12 +221,11 @@ new_pa (new_act)
 		break;
 	}
     }
-
     return act;
 }
+#endif
 
-static void
-LFprod_oflw ()
+static void LFprod_oflw ()
 {
     xLFprod_top *= 2;
     LFprod = (int*) sxrealloc (LFprod, xLFprod_top+1, sizeof (int));
@@ -238,24 +236,21 @@ LFprod_oflw ()
     LFprod2next = (int*) sxrealloc (LFprod2next, xLFprod_top+1, sizeof (int));
 }
 
-static void
-LFlispro_oflw ()
+static void LFlispro_oflw ()
 {
     xLFlispro_top *= 2;
     LFlispro = (int*) sxrealloc (LFlispro, xLFlispro_top+1, sizeof (int));
 }
 
 #if SXLIGis_normal_form==0
-static void
-dumAij_oflw ()
+static void dumAij_oflw ()
 {
     dumAij_top *= 2;
     dumAij2attr = (struct dum_attr*) sxrealloc (dumAij2attr, dumAij_top+1, sizeof (struct dum_attr));
 }
 #endif
 
-static void
-RDGprod_oflw ()
+static void RDGprod_oflw ()
 {
     xRDGprod_top *= 2;
     RDGlhs = (int*) sxrealloc (RDGlhs, xRDGprod_top+1, sizeof (int));
@@ -264,25 +259,22 @@ RDGprod_oflw ()
     RDGprod2next = (int*) sxrealloc (RDGprod2next, xRDGprod_top+1, sizeof (int));
 }
 
-static void
-RDGlispro_oflw ()
+static void RDGlispro_oflw ()
 {
     xRDGlispro_top *= 2;
     RDGlispro = (int*) sxrealloc (RDGlispro, xRDGlispro_top+1, sizeof (int));
     RDGitem2prod = (int*) sxrealloc (RDGitem2prod, xRDGlispro_top+1, sizeof (int));
 }
 
-static void
-EQUAL1_oflw (old_size, new_size)
-    int		old_size, new_size;
+static void EQUAL1_oflw (SXINT old_size, SXINT new_size)
 {
+    (void) old_size;
     EQUAL12attr = (struct rel_attr*) sxrealloc (EQUAL12attr, new_size +1, sizeof (struct rel_attr));
 }
 
-static void
-EQUALn_oflw (old_size, new_size)
-    int		old_size, new_size;
+static void EQUALn_oflw (SXINT old_size, SXINT new_size)
 {
+    (void) old_size;
     EQUALn2kind = (char*) sxrealloc (EQUALn2kind, new_size+1, sizeof (char));
     CTRLSTACK_REALLOC (EQUALn_stack, EQUAL1_top+new_size);
     CTRLSTACK_REALLOC (PUSHPOPn_stack, new_size);
@@ -291,18 +283,16 @@ EQUALn_oflw (old_size, new_size)
 #endif    
 }
 
-static void
-PUSH1_oflw (old_size, new_size)
-    int		old_size, new_size;
+static void PUSH1_oflw (SXINT old_size, SXINT new_size)
 {
+    (void) old_size;
     PUSH12attr = (struct rel_attr*) sxrealloc (PUSH12attr, new_size +1, sizeof (struct rel_attr));
 }
 
 
-static void
-POP1_oflw (old_size, new_size)
-    int		old_size, new_size;
+static void POP1_oflw (SXINT old_size, SXINT new_size)
 {
+    (void) old_size;
     POP12attr = (struct rel_attr*) sxrealloc (POP12attr, new_size +1, sizeof (struct rel_attr));
 #if SXLIGis_normal_form==0
     POP1_is_local = sxba_resize (POP1_is_local, new_size+1);
@@ -310,19 +300,16 @@ POP1_oflw (old_size, new_size)
 }
 
 
-static void
-POPn_oflw (old_size, new_size)
-    int		old_size, new_size;
+static void POPn_oflw (SXINT old_size, SXINT new_size)
 {
+    (void) old_size;
     CTRLSTACK_REALLOC (POPn_stack, new_size);
 #if SXLIGis_normal_form==0
     POPn_is_local = sxba_resize (POPn_is_local, new_size+1);
 #endif    
 }
 
-static void
-SXLIGalloc (size)
-    int size;
+static void SXLIGalloc (int size)
 {
         
     RDGmax_rhs_lgth = inputG.maxrhsnt+3; /* []d r G2 G1 []g  ou |G2 G1| == inputG.maxrhsnt */
@@ -396,24 +383,20 @@ SXLIGalloc (size)
 }
 
 #if is_initial_LIG==0
-static void
-SXLIG_semact_init (size)
-    int size;
+static void SXLIG_semact_init (int size)
 {
     /* On alloue les structures contenant les relations de niveau 1 */
     SXLIGalloc (size);
 }
 #endif
 
-static int
-SXLIG_semact (i, j, prod_core, rhs_stack)
-    unsigned short	*prod_core;
-    int 	i, j, rhs_stack [];
+static int SXLIG_semact (int i, int j, unsigned short prod_core, int rhs_stack)
 {
     int		prod = prod_core [0];
-    int		A, B, AB, As, sB, AsB, Aij, secAij, Bkl, ssymb, X, keep;
-    int		act_no, prdct_no, atype, ptype, pop_nb, push_nb, item, spf_item, nbnt;
-    int		nb, Bpri, Bsec;
+    int		A, B, Aij, Bkl, ssymb, X, keep;
+    SXINT	AB, As, AsB, sB;
+    int		act_no, prdct_no, atype, ptype, pop_nb, push_nb, item, nbnt;
+    int		Bsec;
     int		*pca, *pcp;
 #if is_initial_LIG==0
 
@@ -640,11 +623,10 @@ SXLIG_semact (i, j, prod_core, rhs_stack)
 
 
 
-
-static void
-n_level_relations ()
+static void n_level_relations ()
 {
-    int 	A, B, C, D, AB, AC, BC, AsB, BsC, BsD, CsD, As, sC, sD, ssymb;
+    int 	A, B, C, D, AB, BC, AsB, BsC, CsD, As, sC, sD, ssymb;
+    SXINT 	AC, BsD;
     bool	is_new;
     char	*pkind;
 #if SXLIGis_leveln_complete==0
@@ -1138,11 +1120,9 @@ n_level_relations ()
 #endif
 }
 
-static void
-RDGprint_nt (AB)
-    int AB;
+static void RDGprint_nt (int AB)
 {
-    int 	A, B, sB, ssymb, Aij, Bkl, i, j, k, l, dum, nt_part;
+    int 	A, B, sB, ssymb, Aij, Bkl, dum;
     char	*op, *kind_str;
     char	*Aijstr, *Bklstr;
 
@@ -1336,8 +1316,7 @@ RDGgen_reduced ()
 #endif
 
 
-static void
-RDGprint ()
+static void RDGprint ()
 {
     int prod, lim, item, X;
 
@@ -1375,9 +1354,7 @@ RDGprint ()
     printf ("\n* Nombre de productions de la grammaire reduite des derivations droites : %i\n", RDGprod_nb);
 }
 
-static void
-RDGgen_rhs (lhs, pre_nt, lfprod, post_nt, kind)
-    int lhs, pre_nt, lfprod, post_nt, kind;
+static void RDGgen_rhs (int lhs, int pre_nt, int lfprod, int post_nt, int kind)
 {
     int nbnt = 0, lim, item, secCmn, prod, nb;
 
@@ -1475,10 +1452,7 @@ RDGgen_rhs (lhs, pre_nt, lfprod, post_nt, kind)
 }
 
 
-static void
-RDGgen_prod (lhs, pre_nt, rel_attr_ptr, post_nt, kind)
-    int 		lhs, pre_nt, post_nt, kind;
-    struct rel_attr	*rel_attr_ptr;
+static void RDGgen_prod (int lhs, int pre_nt, struct rel_attr *rel_attr_ptr, int post_nt, int kind)
 {
     int lfprod;
 
@@ -1501,8 +1475,7 @@ RDGgen_prod (lhs, pre_nt, rel_attr_ptr, post_nt, kind)
 
 
 
-static void
-RDGuseful_symbols ()
+static void RDGuseful_symbols ()
 {
     /* RDGnt_stack et RDGnt_set = {A | A -> w et w \in T*} */
     int	A, B, prod, item, X;
@@ -1548,9 +1521,7 @@ RDGuseful_symbols ()
     }
 }
 
-static void
-RDGextraction (S0n)
-    int S0n;
+static void RDGextraction (int S0n)
 {
     int			AB, ABn, AC, ACn, BC, BCn, AsB, AsC, AsCn, BsC, BsCn, As, sC, ssymb;
     int			Aij, secAij, Bkl, Bmn, Ckl;
@@ -2007,9 +1978,7 @@ RDGtest_cycles ()
 #endif
 
 
-static bool
-SXLIG_sem_pass (S0n)
-    int S0n;
+static bool SXLIG_sem_pass (int S0n)
 {
     EQUAL1_top = XxY_top (EQUAL1_hd);
     POP1_top = XxY_top (POP1_hd);
@@ -2174,8 +2143,7 @@ SXLIG_sem_pass (S0n)
     return true;
 }
 
-static void
-SXLIG_free2 ()
+static void SXLIG_free2 ()
 {
     /* inutilise ds les features */
     XxY_free (&Axs_hd);
@@ -2209,8 +2177,7 @@ SXLIG_free2 ()
 }
 
 
-static void
-SXLIG_free3 ()
+static void SXLIG_free3 ()
 {
 
     sxfree (RDGlhs_hd), RDGlhs_hd = NULL;
@@ -2332,9 +2299,7 @@ SXLIG_features (S0n)
 #endif
 
 
-static int
-SXLIG_semantics (S0n)
-    int	S0n;
+static int SXLIG_semantics (int S0n)
 {
     static void features_processing ();
 
@@ -2416,9 +2381,7 @@ static SXBA			RDGright_tree_is_valid;
 static int			*RDGprod2used_nb;
 static SXBA			LFprod_set, LFfixed_point_reached;
 
-static void
-RDGright_trees_oflw (old_size, new_size)
-    int		old_size, new_size;
+static void RDGright_trees_oflw (SXINT old_size, SXINT new_size)
 {
     RDGright_tree_is_valid = sxba_resize (RDGright_tree_is_valid, new_size+1);
 
@@ -2427,9 +2390,7 @@ RDGright_trees_oflw (old_size, new_size)
 }
 
 
-static void
-RDGprint_tree (root)
-    int	root;
+static void RDGprint_tree (int root)
 {
     int		*params;
     int		i, j, k, Aij, lfprod, prod, nbnt, nt_part;
@@ -2463,8 +2424,7 @@ RDGprint_tree (root)
 }
 
 
-static void
-RDGgen_right_trees ()
+static void RDGgen_right_trees ()
 {
     int		Y, X, prod, bot, top, lgth, ptop, stop, tree, new_tree, nbnt, lfprod;
     int		min, nb, next_min, ret_val;
@@ -2658,9 +2618,7 @@ RDGgen_right_trees ()
 }
 
 
-static void
-features_processing (S0n)
-    int S0n;
+static void features_processing (int S0n)
 {
     /* initialisation de for_features */
     features_action (SXACTION, &for_features);
@@ -2719,9 +2677,7 @@ features_processing (S0n)
 #ifdef is_sxndparser
 /* Le parser est sxndparser, il interprete donc un automate LR ou LC */
 
-static int
-SXLIG_ndsemact (rhs_stack)
-    int		*rhs_stack;
+static int SXLIG_ndsemact (int *rhs_stack)
 {
     /* rhs_stack est une SS_stack */
     /* Version ou l'on transforme les nt (p, i, j) (et les prod de la foret partagee) de sxndparser en
@@ -3257,8 +3213,7 @@ SXLIG_ndsemact (rhs_stack)
 }
 #endif
 
-static int
-SXLIG_post_td_init ()
+static int SXLIG_post_td_init ()
 {
     inputG.maxrhsnt = SXLIGmaxrhsnt;
     inputG.maxprod = sxplocals.SXP_tables.P_xnbpro;

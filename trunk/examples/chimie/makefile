@@ -15,7 +15,7 @@ main.o	: main.c
 $(TOOL).bt	: semat
 
 $(TOOL)_t.o	: $(TOOL)_t.c 
-	$(COMPILER) $(CFLAGS) -c -DSEMPASS=$(TOOL)_smp \
+	$(COMPILER) $(CFLAGS) -c -DSEMACT=$(TOOL)_act -DSEMPASS=$(TOOL)_smp \
 		-I$(SXINCL)    $(TOOL)_t.c -o $(TOOL)_t.o
 
 $(TOOL)_t.c	: $(TOOL).pt $(TOOL).rt $(TOOL).st $(TOOL).bt
