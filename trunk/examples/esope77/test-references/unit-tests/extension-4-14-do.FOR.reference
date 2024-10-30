@@ -1,0 +1,1091 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/extension-4-14-do.FOR",
+    "program_units": [
+        {
+            "tag": "subroutine",
+            "name": {
+                "tag": "symbolic_name",
+                "start_pos": {
+                    "line": "1",
+                    "column": "18"
+                },
+                "name": "SUB"
+            },
+            "prog_unit_parameters": [
+                {
+                    "tag": "variable",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "9"
+                    },
+                    "variable_name": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "2",
+                            "column": "9"
+                        },
+                        "name": "FILE"
+                    }
+                },
+                {
+                    "tag": "variable",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "15"
+                    },
+                    "variable_name": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "2",
+                            "column": "15"
+                        },
+                        "name": "DSND"
+                    }
+                },
+                {
+                    "tag": "variable",
+                    "start_pos": {
+                        "line": "3",
+                        "column": "13"
+                    },
+                    "variable_name": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "3",
+                            "column": "13"
+                        },
+                        "name": "NC"
+                    }
+                },
+                {
+                    "tag": "variable",
+                    "start_pos": {
+                        "line": "3",
+                        "column": "17"
+                    },
+                    "variable_name": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "3",
+                            "column": "17"
+                        },
+                        "name": "NV"
+                    }
+                },
+                {
+                    "tag": "variable",
+                    "start_pos": {
+                        "line": "4",
+                        "column": "9"
+                    },
+                    "variable_name": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "4",
+                            "column": "9"
+                        },
+                        "name": "VALUES"
+                    }
+                }
+            ],
+            "start_pos": {
+                "line": "1",
+                "column": "7"
+            },
+            "end_pos": {
+                "line": "30",
+                "column": "9"
+            },
+            "statement_list": [
+                {
+                    "tag": "variable_declaration_statement",
+                    "start_pos": {
+                        "line": "5",
+                        "column": "7"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "start_pos": {
+                            "line": "5",
+                            "column": "7"
+                        },
+                        "name": "INTEGER"
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "5",
+                                "column": "15"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "5",
+                                    "column": "15"
+                                },
+                                "name": "ND"
+                            },
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "5",
+                                "column": "18"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "5",
+                                    "column": "18"
+                                },
+                                "name": "NC"
+                            },
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "5",
+                                "column": "21"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "5",
+                                    "column": "21"
+                                },
+                                "name": "NV"
+                            },
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "variable_declaration_statement",
+                    "start_pos": {
+                        "line": "6",
+                        "column": "7"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "start_pos": {
+                            "line": "6",
+                            "column": "7"
+                        },
+                        "name": "CHARACTER",
+                        "len_specification": {
+                            "tag": "nonzero_unsigned_int_constant",
+                            "start_pos": {
+                                "line": "6",
+                                "column": "17"
+                            },
+                            "value": "256"
+                        }
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "6",
+                                "column": "17"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "6",
+                                    "column": "17"
+                                },
+                                "name": "FILE"
+                            },
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "variable_declaration_statement",
+                    "start_pos": {
+                        "line": "7",
+                        "column": "8"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "start_pos": {
+                            "line": "7",
+                            "column": "8"
+                        },
+                        "name": "INTEGER"
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "7",
+                                "column": "18"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "7",
+                                    "column": "18"
+                                },
+                                "name": "DS"
+                            },
+                            "dimension_declarators": [
+                                {
+                                    "tag": "dimension_declarator",
+                                    "start_pos": {
+                                        "line": "7",
+                                        "column": "21"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "variable_expression",
+                                        "variable_name": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "7",
+                                                "column": "21"
+                                            },
+                                            "name": "ND"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "tag": "variable_declaration_statement",
+                    "start_pos": {
+                        "line": "8",
+                        "column": "7"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "start_pos": {
+                            "line": "8",
+                            "column": "7"
+                        },
+                        "name": "REAL"
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "8",
+                                "column": "20"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "8",
+                                    "column": "20"
+                                },
+                                "name": "VR"
+                            },
+                            "dimension_declarators": [
+                                {
+                                    "tag": "dimension_declarator",
+                                    "start_pos": {
+                                        "line": "8",
+                                        "column": "23"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "variable_expression",
+                                        "variable_name": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "8",
+                                                "column": "23"
+                                            },
+                                            "name": "NV"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "tag": "variable_declaration_statement",
+                    "start_pos": {
+                        "line": "9",
+                        "column": "8"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "start_pos": {
+                            "line": "9",
+                            "column": "8"
+                        },
+                        "name": "INTEGER"
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "9",
+                                "column": "23"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "9",
+                                    "column": "23"
+                                },
+                                "name": "ID"
+                            },
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "9",
+                                "column": "26"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "9",
+                                    "column": "26"
+                                },
+                                "name": "IC"
+                            },
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "9",
+                                "column": "30"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "9",
+                                    "column": "30"
+                                },
+                                "name": "IV"
+                            },
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "9",
+                                "column": "33"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "9",
+                                    "column": "33"
+                                },
+                                "name": "GO"
+                            },
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "variable_declaration_statement",
+                    "start_pos": {
+                        "line": "10",
+                        "column": "8"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "start_pos": {
+                            "line": "10",
+                            "column": "8"
+                        },
+                        "name": "CHARACTER",
+                        "len_specification": {
+                            "tag": "nonzero_unsigned_int_constant",
+                            "start_pos": {
+                                "line": "10",
+                                "column": "18"
+                            },
+                            "value": "24"
+                        }
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "10",
+                                "column": "18"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "10",
+                                    "column": "18"
+                                },
+                                "name": "C"
+                            },
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "open_statement",
+                    "start_pos": {
+                        "line": "11",
+                        "column": "7"
+                    },
+                    "control_info_list": [
+                        {
+                            "tag": "unsigned_int_constant",
+                            "start_pos": {
+                                "line": "11",
+                                "column": "12"
+                            },
+                            "value": "15"
+                        },
+                        {
+                            "tag": "control_info_option",
+                            "start_pos": {
+                                "line": "11",
+                                "column": "15"
+                            },
+                            "control_option_name": "FILE",
+                            "control_option_value": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "11",
+                                    "column": "20"
+                                },
+                                "name": "FILE"
+                            }
+                        },
+                        {
+                            "tag": "control_info_option",
+                            "start_pos": {
+                                "line": "11",
+                                "column": "25"
+                            },
+                            "control_option_name": "IOSTAT",
+                            "control_option_value": {
+                                "tag": "scalar_variable",
+                                "start_pos": {
+                                    "line": "11",
+                                    "column": "32"
+                                },
+                                "variable_name": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "11",
+                                        "column": "32"
+                                    },
+                                    "name": "GO"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "tag": "read_statement",
+                    "start_pos": {
+                        "line": "12",
+                        "column": "7"
+                    },
+                    "control_info_list": [
+                        {
+                            "tag": "unsigned_int_constant",
+                            "start_pos": {
+                                "line": "12",
+                                "column": "12"
+                            },
+                            "value": "15"
+                        },
+                        {
+                            "tag": "asterisk",
+                            "start_pos": {
+                                "line": "12",
+                                "column": "15"
+                            }
+                        },
+                        {
+                            "tag": "control_info_option",
+                            "start_pos": {
+                                "line": "12",
+                                "column": "17"
+                            },
+                            "control_option_name": "IOSTAT",
+                            "control_option_value": {
+                                "tag": "scalar_variable",
+                                "start_pos": {
+                                    "line": "12",
+                                    "column": "24"
+                                },
+                                "variable_name": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "12",
+                                        "column": "24"
+                                    },
+                                    "name": "GO"
+                                }
+                            }
+                        }
+                    ],
+                    "io_list": [
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "12",
+                                "column": "27"
+                            },
+                            "name": "C"
+                        }
+                    ]
+                },
+                {
+                    "tag": "do_statement",
+                    "start_pos": {
+                        "line": "13",
+                        "column": "15"
+                    },
+                    "while_pos": {
+                        "line": "13",
+                        "column": "16"
+                    },
+                    "loop_control_expression": {
+                        "tag": "logical_factor",
+                        "negated": "false",
+                        "expression": {
+                            "tag": "logical_primary",
+                            "expression": {
+                                "tag": "binary_expression",
+                                "start_pos": {
+                                    "line": "13",
+                                    "column": "16"
+                                },
+                                "left": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "13",
+                                        "column": "16"
+                                    },
+                                    "name": "GO"
+                                },
+                                "operator": {
+                                    "tag": "relational_operator",
+                                    "start_pos": {
+                                        "line": "13",
+                                        "column": "18"
+                                    },
+                                    "operator_value": ".EQ."
+                                },
+                                "right": {
+                                    "tag": "unsigned_int_constant",
+                                    "start_pos": {
+                                        "line": "13",
+                                        "column": "22"
+                                    },
+                                    "value": "0"
+                                }
+                            }
+                        }
+                    },
+                    "statement_list": [
+                        {
+                            "tag": "do_statement",
+                            "start_pos": {
+                                "line": "14",
+                                "column": "9"
+                            },
+                            "loop_control": {
+                                "start_pos": {
+                                    "line": "14",
+                                    "column": "12"
+                                },
+                                "variable_name": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "14",
+                                        "column": "12"
+                                    },
+                                    "name": "IC"
+                                },
+                                "init": {
+                                    "tag": "unsigned_int_constant",
+                                    "start_pos": {
+                                        "line": "14",
+                                        "column": "15"
+                                    },
+                                    "value": "1"
+                                },
+                                "limit": {
+                                    "tag": "binary_expression",
+                                    "start_pos": {
+                                        "line": "14",
+                                        "column": "17"
+                                    },
+                                    "left": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "14",
+                                            "column": "17"
+                                        },
+                                        "name": "NC"
+                                    },
+                                    "operator": {
+                                        "tag": "arithmetic_operator",
+                                        "start_pos": {
+                                            "line": "14",
+                                            "column": "19"
+                                        },
+                                        "operator_value": "+"
+                                    },
+                                    "right": {
+                                        "tag": "unsigned_int_constant",
+                                        "start_pos": {
+                                            "line": "14",
+                                            "column": "20"
+                                        },
+                                        "value": "1"
+                                    }
+                                }
+                            },
+                            "statement_list": [
+                                {
+                                    "tag": "block_if_statement",
+                                    "start_pos": {
+                                        "line": "15",
+                                        "column": "11"
+                                    },
+                                    "then_start": {
+                                        "line": "15",
+                                        "column": "14"
+                                    },
+                                    "condition": {
+                                        "tag": "logical_expression",
+                                        "expression": {
+                                            "tag": "logical_factor",
+                                            "negated": "false",
+                                            "expression": {
+                                                "tag": "logical_primary",
+                                                "expression": {
+                                                    "tag": "binary_expression",
+                                                    "start_pos": {
+                                                        "line": "15",
+                                                        "column": "14"
+                                                    },
+                                                    "left": {
+                                                        "tag": "array_element_name",
+                                                        "start_pos": {
+                                                            "line": "15",
+                                                            "column": "14"
+                                                        },
+                                                        "name": {
+                                                            "tag": "symbolic_name",
+                                                            "start_pos": {
+                                                                "line": "15",
+                                                                "column": "14"
+                                                            },
+                                                            "name": "CS"
+                                                        },
+                                                        "qualifiers_list": [
+                                                            {
+                                                                "tag": "symbolic_name",
+                                                                "start_pos": {
+                                                                    "line": "15",
+                                                                    "column": "17"
+                                                                },
+                                                                "name": "IC"
+                                                            }
+                                                        ]
+                                                    },
+                                                    "operator": {
+                                                        "tag": "relational_operator",
+                                                        "start_pos": {
+                                                            "line": "15",
+                                                            "column": "20"
+                                                        },
+                                                        "operator_value": ".EQ."
+                                                    },
+                                                    "right": {
+                                                        "tag": "symbolic_name",
+                                                        "start_pos": {
+                                                            "line": "15",
+                                                            "column": "24"
+                                                        },
+                                                        "name": "C"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "then_statements": [
+                                        {
+                                            "tag": "unconditional_goto_statement",
+                                            "start_pos": {
+                                                "line": "16",
+                                                "column": "13"
+                                            },
+                                            "labels": [
+                                                {
+                                                    "tag": "label_reference",
+                                                    "start_pos": {
+                                                        "line": "16",
+                                                        "column": "18"
+                                                    },
+                                                    "label": "11"
+                                                }
+                                            ],
+                                            "var": []
+                                        }
+                                    ],
+                                    "else_block": {
+                                        "start_pos": {
+                                            "line": "17",
+                                            "column": "11"
+                                        },
+                                        "statement_list": [],
+                                        "end_if": {
+                                            "tag": "end_if",
+                                            "start_pos": {
+                                                "line": "17",
+                                                "column": "11"
+                                            }
+                                        }
+                                    }
+                                }
+                            ],
+                            "end_do": {
+                                "start_pos": {
+                                    "line": "18",
+                                    "column": "14"
+                                }
+                            }
+                        },
+                        {
+                            "label": "11",
+                            "label_pos": {
+                                "line": "19",
+                                "column": "1"
+                            },
+                            "tag": "continue_statement",
+                            "start_pos": {
+                                "line": "19",
+                                "column": "7"
+                            }
+                        },
+                        {
+                            "tag": "do_statement",
+                            "start_pos": {
+                                "line": "20",
+                                "column": "8"
+                            },
+                            "loop_control": {
+                                "start_pos": {
+                                    "line": "20",
+                                    "column": "11"
+                                },
+                                "variable_name": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "20",
+                                        "column": "11"
+                                    },
+                                    "name": "ID"
+                                },
+                                "init": {
+                                    "tag": "unsigned_int_constant",
+                                    "start_pos": {
+                                        "line": "20",
+                                        "column": "14"
+                                    },
+                                    "value": "1"
+                                },
+                                "limit": {
+                                    "tag": "binary_expression",
+                                    "start_pos": {
+                                        "line": "20",
+                                        "column": "16"
+                                    },
+                                    "left": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "20",
+                                            "column": "16"
+                                        },
+                                        "name": "ND"
+                                    },
+                                    "operator": {
+                                        "tag": "arithmetic_operator",
+                                        "start_pos": {
+                                            "line": "20",
+                                            "column": "18"
+                                        },
+                                        "operator_value": "+"
+                                    },
+                                    "right": {
+                                        "tag": "unsigned_int_constant",
+                                        "start_pos": {
+                                            "line": "20",
+                                            "column": "19"
+                                        },
+                                        "value": "1"
+                                    }
+                                }
+                            },
+                            "statement_list": [
+                                {
+                                    "tag": "block_if_statement",
+                                    "start_pos": {
+                                        "line": "21",
+                                        "column": "11"
+                                    },
+                                    "then_start": {
+                                        "line": "21",
+                                        "column": "14"
+                                    },
+                                    "condition": {
+                                        "tag": "logical_expression",
+                                        "expression": {
+                                            "tag": "logical_factor",
+                                            "negated": "false",
+                                            "expression": {
+                                                "tag": "logical_primary",
+                                                "expression": {
+                                                    "tag": "binary_expression",
+                                                    "start_pos": {
+                                                        "line": "21",
+                                                        "column": "14"
+                                                    },
+                                                    "left": {
+                                                        "tag": "array_element_name",
+                                                        "start_pos": {
+                                                            "line": "21",
+                                                            "column": "14"
+                                                        },
+                                                        "name": {
+                                                            "tag": "symbolic_name",
+                                                            "start_pos": {
+                                                                "line": "21",
+                                                                "column": "14"
+                                                            },
+                                                            "name": "DS"
+                                                        },
+                                                        "qualifiers_list": [
+                                                            {
+                                                                "tag": "symbolic_name",
+                                                                "start_pos": {
+                                                                    "line": "21",
+                                                                    "column": "17"
+                                                                },
+                                                                "name": "ID"
+                                                            }
+                                                        ]
+                                                    },
+                                                    "operator": {
+                                                        "tag": "relational_operator",
+                                                        "start_pos": {
+                                                            "line": "21",
+                                                            "column": "20"
+                                                        },
+                                                        "operator_value": ".EQ."
+                                                    },
+                                                    "right": {
+                                                        "tag": "symbolic_name",
+                                                        "start_pos": {
+                                                            "line": "21",
+                                                            "column": "24"
+                                                        },
+                                                        "name": "DET"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "then_statements": [
+                                        {
+                                            "tag": "unconditional_goto_statement",
+                                            "start_pos": {
+                                                "line": "22",
+                                                "column": "13"
+                                            },
+                                            "labels": [
+                                                {
+                                                    "tag": "label_reference",
+                                                    "start_pos": {
+                                                        "line": "22",
+                                                        "column": "18"
+                                                    },
+                                                    "label": "13"
+                                                }
+                                            ],
+                                            "var": []
+                                        }
+                                    ],
+                                    "else_block": {
+                                        "start_pos": {
+                                            "line": "23",
+                                            "column": "11"
+                                        },
+                                        "statement_list": [],
+                                        "end_if": {
+                                            "tag": "end_if",
+                                            "start_pos": {
+                                                "line": "23",
+                                                "column": "11"
+                                            }
+                                        }
+                                    }
+                                }
+                            ],
+                            "end_do": {
+                                "start_pos": {
+                                    "line": "24",
+                                    "column": "14"
+                                }
+                            }
+                        },
+                        {
+                            "label": "13",
+                            "label_pos": {
+                                "line": "25",
+                                "column": "1"
+                            },
+                            "tag": "continue_statement",
+                            "start_pos": {
+                                "line": "25",
+                                "column": "7"
+                            }
+                        },
+                        {
+                            "tag": "do_statement",
+                            "start_pos": {
+                                "line": "26",
+                                "column": "9"
+                            },
+                            "loop_control": {
+                                "start_pos": {
+                                    "line": "26",
+                                    "column": "12"
+                                },
+                                "variable_name": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "26",
+                                        "column": "12"
+                                    },
+                                    "name": "IV"
+                                },
+                                "init": {
+                                    "tag": "unsigned_int_constant",
+                                    "start_pos": {
+                                        "line": "26",
+                                        "column": "15"
+                                    },
+                                    "value": "1"
+                                },
+                                "limit": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "26",
+                                        "column": "17"
+                                    },
+                                    "name": "NV"
+                                }
+                            },
+                            "statement_list": [
+                                {
+                                    "tag": "assignment_statement",
+                                    "start_pos": {
+                                        "line": "27",
+                                        "column": "11"
+                                    },
+                                    "left": {
+                                        "tag": "array_element_name",
+                                        "start_pos": {
+                                            "line": "27",
+                                            "column": "11"
+                                        },
+                                        "name": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "27",
+                                                "column": "11"
+                                            },
+                                            "name": "VALUES"
+                                        },
+                                        "qualifiers_list": [
+                                            {
+                                                "tag": "symbolic_name",
+                                                "start_pos": {
+                                                    "line": "27",
+                                                    "column": "18"
+                                                },
+                                                "name": "IV"
+                                            },
+                                            {
+                                                "tag": "symbolic_name",
+                                                "start_pos": {
+                                                    "line": "27",
+                                                    "column": "21"
+                                                },
+                                                "name": "ID"
+                                            },
+                                            {
+                                                "tag": "symbolic_name",
+                                                "start_pos": {
+                                                    "line": "27",
+                                                    "column": "24"
+                                                },
+                                                "name": "IC"
+                                            }
+                                        ]
+                                    },
+                                    "right": {
+                                        "tag": "array_element_name",
+                                        "start_pos": {
+                                            "line": "27",
+                                            "column": "30"
+                                        },
+                                        "name": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "27",
+                                                "column": "30"
+                                            },
+                                            "name": "VR"
+                                        },
+                                        "qualifiers_list": [
+                                            {
+                                                "tag": "symbolic_name",
+                                                "start_pos": {
+                                                    "line": "27",
+                                                    "column": "33"
+                                                },
+                                                "name": "IV"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ],
+                            "end_do": {
+                                "start_pos": {
+                                    "line": "28",
+                                    "column": "14"
+                                }
+                            }
+                        }
+                    ],
+                    "end_do": {
+                        "start_pos": {
+                            "line": "29",
+                            "column": "12"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

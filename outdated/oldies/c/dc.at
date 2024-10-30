@@ -1,0 +1,547 @@
+* This grammar is a (direct) rephrasing of the
+* American National Standard X3.159-1989
+
+
+* The c.prio module solves the "if" "then" ["else"] ambiguity in giving priority
+* to shift over reduce (i.e. an else-part is grouped with the privious then-part)
+* Priorities and associativities of operators are also specified in the c.prio module
+* The ambiguities due to <type-name> in expressions i.e. sizeof "(" <type-name> ")"
+* and "(" <type-name> ")" <expression> may occur only when <type-name> is a single
+* typedef-name, this case is covered by <expression> and should be processed at
+* semantic analysis time.
+* Other problems may be solved in this grammar if the scanner is able to recognize
+* a "typedef-name".
+
+
+* &1 TRUE iff is a typedef-name
+
+* @1 set is_typedef
+* @2 reset is_typedef
+* @3 On "{" of a struct, union or enum : if (is-typedef) {reset is-typedef;
+*    set is_typedef [xps -delta]}     
+* @4 On "}" of a struct, union or enum : if (is_typedef [xps -delta]) {set is-typedef}
+* @5 On <d-identifier> fill-up the symbol-table
+* @6 block_level++
+* @7 block_level--
+* @8 symbol_table_close (block_level+1)
+* @9 = @3  + struct_level++
+* @10 = @4 + struct_level--
+* @11 = @7 + @8
+
+<ansi-c>		= <translation-unit_LIST> ;
+
+********************************************************************************************
+* 2.5 Literals
+
+<constant>		= %integer_constant ;
+<constant>		= %floating_constant ;
+<constant>		= %character_constant ;
+
+<string-literal>	= %string_literal ;
+
+********************************************************************************************
+** 3.3 EXPRESSIONS
+
+** 3.3.1 Primary expressions
+*<primary-expression>	= <identifier> ;
+*<primary-expression>	= <constant> ;
+*<primary-expression>	= <string-literal> ;
+*<primary-expression>	= "(" <expression> ")" ;
+
+<unary-expression>	= <identifier> ;
+<unary-expression>	= <constant> ;
+<unary-expression>	= <string-literal> ;
+<unary-expression>	= "(" <comma-expression_LIST> ")" ;
+
+
+** 3.3.2 Postfix operators
+*<postfix-expression>	= <primary-expression> ;
+*<postfix-expression>	= <postfix-expression> "[" <expression> "]" ;
+*<postfix-expression>	= <postfix-expression> "(" <[expression]> ")" ;
+*<postfix-expression>	= <postfix-expression> "." <identifier> ;
+*<postfix-expression>	= <postfix-expression> "->" <identifier> ;
+*<postfix-expression>	= <postfix-expression> "++" ;
+*<postfix-expression>	= <postfix-expression> "--" ;
+
+<unary-expression>	= <unary-expression> "[" <comma-expression_LIST> "]" ; "OPERATOR_INDEXING"
+<unary-expression>	= <unary-expression> "(" <[comma-expression]> ")" ; "OPERATOR_FUNCTION_CALL"
+<unary-expression>	= <unary-expression> "." <identifier> ; "OPERATOR_DOT"
+<unary-expression>	= <unary-expression> "->" <identifier> ; "OPERATOR_PTR"
+<unary-expression>	= <unary-expression> "++" ; "OPERATOR_POST_INCR"
+<unary-expression>	= <unary-expression> "--" ; "OPERATOR_POST_DECR"
+
+** 3.3.3 Unary operators
+*<unary-expression>	= <postfix-expression> ;
+*<unary-expression>	= "++" <unary-expression> ;
+*<unary-expression>	= "--" <unary-expression> ;
+*<unary-expression>	= <unary-operator> <cast-expression> ;
+*<unary-expression>	= sizeof <unary-expression> ;
+*<unary-expression>	= sizeof "(" <type-name> ")" ;
+
+<unary-expression>	= "++" <unary-expression> ; "OPERATOR_PRE_INCR"
+<unary-expression>	= "--" <unary-expression> ; "OPERATOR_PRE_DECR"
+<unary-expression>	= <unary-operator> <unary-expression> ; "OPERATOR_UNARY"
+<unary-expression>	= sizeof <unary-expression> ; "OPERATOR_SIZEOF_EXPR"
+<unary-expression>	= sizeof "(" <type-name> ")" ; "OPERATOR_SIZEOF_TYPE"
+
+<unary-operator>	= "&" ;
+<unary-operator>	= "*" ;
+<unary-operator>	= "+" ;
+<unary-operator>	= "-" ;
+<unary-operator>	= "~" ;
+<unary-operator>	= "!" ;
+
+**3.3.4 Cast operators
+*<cast-expression>	= <unary-expression> ;
+*<cast-expression>	= "(" <type-name> ")" <cast-expression>	;
+
+<expression>		= <unary-expression> ;
+<expression>		= "(" <type-name> ")" <expression> ; "OPERATOR_CAST"
+
+**3.3.5 Multiplicative operators
+*<multiplicative-expression>
+*			= <cast-expression> ;
+*<multiplicative-expression>
+*			= <multiplicative-expression> "*" <cast-expression> ;
+*<multiplicative-expression>
+*			= <multiplicative-expression> "/" <cast-expression> ;
+*<multiplicative-expression>
+*			= <multiplicative-expression> "%" <cast-expression> ;
+
+<expression>		= <expression> "*" <expression> ; "OPERATOR_MULTIPLICATIVE"
+<expression>		= <expression> "/" <expression> ; "OPERATOR_MULTIPLICATIVE"
+<expression>		= <expression> "%" <expression> ; "OPERATOR_MULTIPLICATIVE"
+
+**3.3.6 Additive operators
+*<additive-expression>	= <multiplicative-expression> ;
+*<additive-expression>	= <additive-expression> "+" <multiplicative-expression> ;
+*<additive-expression>	= <additive-expression> "-" <multiplicative-expression> ; 
+
+<expression>		= <expression> "+" <expression> ; "OPERATOR_ADDITIVE"
+<expression>		= <expression> "-" <expression> ; "OPERATOR_ADDITIVE"
+
+**3.3.7 Bitwise shift operators
+*<shift-expression>	= <additive-expression> ;
+*<shift-expression>	= <shift-expression> "<<" <additive-expression> ;
+*<shift-expression>	= <shift-expression> ">>" <additive-expression> ;
+
+<expression>		= <expression> "<<" <expression> ; "OPERATOR_SHIFT"
+<expression>		= <expression> ">>" <expression> ; "OPERATOR_SHIFT"
+
+**3.3.8 Relational operators
+*<relational-expression>	= <shift-expression> ;
+*<relational-expression>	= <relational-expression> "<" <shift-expression> ;
+*<relational-expression>	= <relational-expression> ">" <shift-expression> ;
+*<relational-expression>	= <relational-expression> "<=" <shift-expression> ;
+*<relational-expression>	= <relational-expression> ">=" <shift-expression> ;
+
+<expression>		= <expression> "<" <expression> ; "OPERATOR_RELATIONAL"
+<expression>		= <expression> ">" <expression> ; "OPERATOR_RELATIONAL"
+<expression>		= <expression> "<=" <expression> ; "OPERATOR_RELATIONAL" 
+<expression>		= <expression> ">=" <expression> ; "OPERATOR_RELATIONAL"
+
+**3.3.9 Equality operators
+*<equality-expression>	= <relational-expression> ;
+*<equality-expression>	= <equality-expression> "==" <relational-expression> ;
+*<equality-expression>	= <equality-expression> "!=" <relational-expression> ;
+
+<expression>		= <expression> "==" <expression> ; "OPERATOR_RELATIONAL"
+<expression>		= <expression> "!=" <expression> ; "OPERATOR_RELATIONAL"
+
+**3.3.10 Bitwise AND operator
+*<AND-expression>	= <equality-expression> ;
+*<AND-expression>	= <AND-expression> "&" <equality-expression> ;
+
+<expression>		= <expression> "&" <expression> ; "OPERATOR_BITWISE"
+
+**3.3.11 Bitwise exclusive OR operator
+*<exclusive-OR-expression>
+*			= <AND-expression> ;
+*<exclusive-OR-expression>
+*			= <exclusive-OR-expression> "^" <AND-expression> ;
+
+<expression>		= <expression> "^" <expression> ; "OPERATOR_BITWISE"
+
+**3.3.12 Bitwise inclusive OR operator
+*<inclusive-OR-expression>
+*			= <exclusive-OR-expression> ;
+*<inclusive-OR-expression>
+*			= <inclusive-OR-expression> "|" <exclusive-OR-expression> ;
+
+<expression>		= <expression> "|" <expression> ; "OPERATOR_BITWISE"
+
+
+**3.3.13 Logical AND operator
+*<logical-AND-expression>
+*			= <inclusive-OR-expression> ;
+*<logical-AND-expression>
+*			= <logical-AND-expression> "&&" <inclusive-OR-expression> ;
+
+<expression>		= <expression> "&&" <expression> ; "OPERATOR_LOGICAL"
+
+**3.3.14 Logical OR operator
+*<logical-OR-expression>	= <logical-AND-expression> ;
+*<logical-OR-expression>	= <logical-OR-expression> "||" <logical-AND-expression> ;
+
+<expression>		= <expression> "||" <expression> ; "OPERATOR_LOGICAL"
+
+**3.3.15 Conditional operator
+*<conditional-expression>
+*			= <logical-OR-expression> ;
+*<conditional-expression>
+*			= <logical-OR-expression> "?" <expression> ":" <conditional-expression> ;
+
+<expression>		= <expression> "?" <comma-expression_LIST> ":" <expression> ; "OPERATOR_CONDITIONAL"
+
+**3.3.16 Assignment operators
+*<assignment-expression>	= <conditional-expression> ;
+*<assignment-expression>	= <unary-expression> <assignment-operator> <assignment-expression> ;
+
+<expression>		= <unary-expression> <assignment-operator> <expression> ; "OPERATOR_ASSIGNMENT"
+
+<assignment-operator>	= "=" ;
+<assignment-operator>	= "*=" ;
+<assignment-operator>	= "/=" ;
+<assignment-operator>	= "%=" ;
+<assignment-operator>	= "+=" ;
+<assignment-operator>	= "-=" ;
+<assignment-operator>	= "<<=" ;
+<assignment-operator>	= ">>=" ;
+<assignment-operator>	= "&=" ;
+<assignment-operator>	= "^=" ;
+<assignment-operator>	= "|=" ;
+
+**3.3.17 Comma operator
+*<expression>		= <assignment-expression> ;
+*<expression>		= <expression> "," <assignment-expression> ;
+
+<comma-expression_LIST>	= <expression> ; "OPERATOR_COMMA"
+<comma-expression_LIST>	= <comma-expression_LIST> "," <expression> ;
+
+<[comma-expression]>	= ;
+<[comma-expression]>	= <comma-expression_LIST> ;
+
+*3.4 CONSTANT EXPRESSIONS
+<[constant-expression]>	= ;
+<[constant-expression]>	= <constant-expression> ;
+
+*<constant-expression>	= <conditional-expression> ;
+
+<constant-expression>	= <expression> ;
+
+********************************************************************************************
+* 3.5 DECLARATIONS
+*<declaration-specifiers>
+*			= <declaration-specifiers-0> ;
+*<declaration-specifiers>
+*			= <declaration-specifiers-1> ;
+
+<declaration-specifiers-0_LIST>
+			= <declaration-specifiers-0_LIST> <declaration-specifier-0> ;
+<declaration-specifiers-0_LIST>
+			= <declaration-specifiers-0_LIST> <storage-class-specifier> ;
+<declaration-specifiers-0_LIST>
+			= <declaration-specifier-0> ; "DECLARATION_SPECIFIERS_0"
+<declaration-specifiers-0_LIST>
+			= <storage-class-specifier> ; "DECLARATION_SPECIFIERS_0"
+
+<declaration-specifiers-1_LIST>
+			= <declaration-specifiers-0_LIST> <basic-type-specifier> ; "DECLARATION_SPECIFIERS_1"
+<declaration-specifiers-1_LIST>
+			= <declaration-specifiers-0_LIST> <typedef-name> ; "DECLARATION_SPECIFIERS_1"
+<declaration-specifiers-1_LIST>
+			= <declaration-specifiers-1_LIST> <declaration-specifier-0> ;
+<declaration-specifiers-1_LIST>
+			= <declaration-specifiers-1_LIST> <storage-class-specifier> ;
+<declaration-specifiers-1_LIST>
+			= <basic-type-specifier> ; "DECLARATION_SPECIFIERS_1"
+<declaration-specifiers-1_LIST>
+			= <typedef-name> ; "DECLARATION_SPECIFIERS_1"
+
+<declaration-specifier-0>
+			= <signedness> ;
+<declaration-specifier-0>
+			= <storage-length> ;
+<declaration-specifier-0>
+			= <type-qualifier> ;
+
+<init-declarator_LIST>	= <init-declarator> ; "DECLARATORS_INIT"
+<init-declarator_LIST>	= <init-declarator_LIST> "," <init-declarator> ;
+
+<init-declarator>	= <declarator> ;
+<init-declarator>	= <function-declarator> @8 ;
+<init-declarator>	= <declarator> "=" <initializer> ; "INITIALIZER"
+
+* 3.5.1 Storage-class specifiers
+<storage-class-specifier>
+			= @1 typedef ;
+<storage-class-specifier>
+			= extern ;
+<storage-class-specifier>
+			= static ;
+<storage-class-specifier>
+			= auto ;
+<storage-class-specifier>
+			= register ;
+
+* 3.5.2 Type specifiers
+<signedness>		= signed ;
+<signedness>		= unsigned ;
+
+<storage-length>	= short ;
+<storage-length>	= long ;
+
+<basic-type-specifier>	= void ;
+<basic-type-specifier>	= char ;
+<basic-type-specifier>	= int ;
+<basic-type-specifier>	= float ;
+<basic-type-specifier>	= double ;
+<basic-type-specifier>	= <struct-or-union-specifier> ;
+<basic-type-specifier>	= <enum-specifier> ;
+*<basic-type-specifier>	= <typedef-name> ;
+
+* 3.5.2.1 Structure and union specifiers
+<struct-or-union-specifier>
+			= <struct-or-union> <identifier> "{" @9 <struct-declaration_LIST> "}" @10 ; "SPECIFIER_NAMED_STRUCT"
+<struct-or-union-specifier>
+			= <struct-or-union> "{" @9 <struct-declaration_LIST> "}" @10 ; "SPECIFIER_STRUCT"
+<struct-or-union-specifier>
+			= <struct-or-union> <identifier> ; "TAG_NAME"
+
+<struct-or-union>	= struct ;
+<struct-or-union>	= union ;
+
+<struct-declaration_LIST>	= <struct-declaration> ; "DECLARATIONS_STRUCT"
+<struct-declaration_LIST>	= <struct-declaration_LIST> <struct-declaration> ;
+
+*<struct-declaration>	= <specifier-qualifier+> <struct-declarator+> ";" ;
+<struct-declaration>	= <specifier-qualifier-0_LIST> <struct-declarator_LIST> ";" @2 ; "DECLARATION_STRUCT"
+<struct-declaration>	= <specifier-qualifier-1_LIST> <struct-declarator_LIST> ";" @2 ; "DECLARATION_STRUCT"
+
+*<specifier-qualifier+>	= <specifier-qualifier+-0> ;
+*<specifier-qualifier+>	= <specifier-qualifier+-1> ;
+
+<specifier-qualifier-0_LIST>
+			= <specifier-qualifier-0_LIST> <declaration-specifier-0> ;
+<specifier-qualifier-0_LIST>
+			= <declaration-specifier-0> ; "SPECIFIER_QUALIFIERS_0"
+
+<specifier-qualifier-1_LIST>
+			= <specifier-qualifier-0_LIST> <basic-type-specifier> ; "SPECIFIER_QUALIFIERS_1"
+<specifier-qualifier-1_LIST>
+			= <specifier-qualifier-0_LIST> <typedef-name> ; "SPECIFIER_QUALIFIERS_1"
+<specifier-qualifier-1_LIST>
+			= <specifier-qualifier-1_LIST> <declaration-specifier-0> ;
+<specifier-qualifier-1_LIST>
+			= <basic-type-specifier> ; "SPECIFIER_QUALIFIERS_1"
+<specifier-qualifier-1_LIST>
+			= <typedef-name> ; "SPECIFIER_QUALIFIERS_1"
+
+<struct-declarator_LIST>
+			= <struct-declarator> ; "DECLARATORS_STRUCT"
+<struct-declarator_LIST>
+			= <struct-declarator_LIST> "," <struct-declarator> ;
+
+<struct-declarator>	= <declarator> ;
+<struct-declarator>	= <function-declarator> @8 ;
+<struct-declarator>	= <declarator> ":" <constant-expression> ; "FIELD"
+<struct-declarator>	= ":" <constant-expression> ;
+
+* 3.5.2.2 Enumeration specifiers
+<enum-specifier>	= enum <identifier> "{" @3 <enumerator_LIST> "}" @4 ; "SPECIFIER_NAMED_ENUM"
+<enum-specifier>	= enum "{" @3 <enumerator_LIST> "}" @4 ; "SPECIFIER_ENUM"
+<enum-specifier>	= enum <identifier> ; "ENUM_NAME"
+
+<enumerator_LIST>
+			= <enumerator> ; "ENUMERATORS"
+<enumerator_LIST>
+			= <enumerator_LIST> "," <enumerator> ;
+
+<enumerator>		= <enumeration-constant> ;
+<enumerator>		= <enumeration-constant> "=" <constant-expression> ; "ENUMERATOR"
+
+<enumeration-constant>	= <d-identifier> ;
+
+* 3.5.3 Type qualifiers
+<type-qualifier>	= const ;
+<type-qualifier>	= volatile ;
+
+* 3.5.4 Declarators
+<declarator>		= <[pointer]> <direct-declarator> ; "DECLARATOR"
+*<declarator>		= <direct-declarator> ;
+
+<direct-declarator>	= <d-identifier> ;
+<direct-declarator>	= "(" <declarator> ")" ;
+<direct-declarator>	= <direct-declarator> "[" <[constant-expression]> "]" ; "DECLARATOR_ARRAY"
+*covered by <function-declarator>
+*<direct-declarator>	= <direct-declarator> <parameters> ;
+
+<parameters>		= "(" ")" ;
+<parameters>		= "(" @6 <parameter-type> ")" @7 ;
+<parameters>		= "(" @6 <identifier_LIST> ")" @7 ;
+
+<[pointer]>		= ;
+<[pointer]>		= <pointer> ;
+
+*<pointer>		= "*" <type-qualifier_LIST> ;
+*<pointer>		= "*" ;
+<pointer>		= "*" <type-qualifier_LIST> <[pointer]> ; "POINTER"
+*<pointer>		= "*" <[pointer]> ;
+
+<type-qualifier_LIST>	= ; "TYPE_QUALIFIERS"
+<type-qualifier_LIST>	= <type-qualifier_LIST> <type-qualifier> ;
+
+<parameter-type>	= <parameter_LIST> ;
+<parameter-type>	= <parameter_LIST> "," "..." ;
+
+<parameter_LIST>	= <parameter-declaration> ; "PARAMETERS"
+<parameter_LIST>	= <parameter_LIST> "," <parameter-declaration> ;
+
+*<parameter-declaration>	= <declaration-specifiers> <declarator> ;
+<parameter-declaration>	= <declaration-specifiers-0_LIST> <declarator> ; "DECLARATION_PARAMETER"
+<parameter-declaration>	= <declaration-specifiers-1_LIST> <declarator> ; "DECLARATION_PARAMETER"
+*<parameter-declaration>	= <declaration-specifiers> <function-declarator> ;
+<parameter-declaration>	= <declaration-specifiers-0_LIST> <function-declarator> @8 ; "DECLARATION_PARAMETER"
+<parameter-declaration>	= <declaration-specifiers-1_LIST> <function-declarator> @8 ; "DECLARATION_PARAMETER"
+*<parameter-declaration>	= <declaration-specifiers> <[abstract-declarator]> ;
+<parameter-declaration>	= <declaration-specifiers-0_LIST> <[abstract-declarator]> ; "DECLARATION_PARAMETER"
+<parameter-declaration>	= <declaration-specifiers-1_LIST> <[abstract-declarator]> ; "DECLARATION_PARAMETER"
+
+<identifier_LIST>	= <d-identifier> ; "IDENTIFIERS"
+<identifier_LIST>	= <identifier_LIST> "," <d-identifier> ;
+
+* 3.5.5 Type names
+<type-name>		= <specifier-qualifier-0_LIST> <[abstract-declarator]> ; "TYPE_NAME"
+<type-name>		= <specifier-qualifier-1_LIST> <[abstract-declarator]> ; "TYPE_NAME"
+
+<[abstract-declarator]>	= ;
+<[abstract-declarator]>	= <abstract-declarator> ;
+
+<abstract-declarator>	= <pointer> ;
+<abstract-declarator>	= <[pointer]> <direct-abstract-declarator_LIST> ; "DECLARATOR_ABSTRACT"
+*<abstract-declarator>	= <direct-abstract-declarator_LIST> ;
+
+<direct-abstract-declarator_LIST>
+			= <direct-abstract-declarator> ; "DECLARATORS_DIRECT_ABSTRACT"
+<direct-abstract-declarator_LIST>
+			= <direct-abstract-declarator_LIST> <direct-abstract-declarator> ;
+
+<direct-abstract-declarator>
+			= "(" <abstract-declarator> ")" ;
+<direct-abstract-declarator>
+			= "[" <[constant-expression]> "]" ;
+<direct-abstract-declarator>
+			= "(" <parameter-type> ")" ;
+<direct-abstract-declarator>
+			= "(" ")" ;
+
+* 3.5.6 Type definitions
+*<typedef-name>		= %typedef-name ;
+<typedef-name>		= %identifier &1 ; "TYPEDEF_NAME"
+
+* 3.5.7 Initialization
+*<initializer>		= <assignment-expression> ;
+<initializer>		= <expression> ;
+<initializer>		=  "{" <initializer_LIST> "}" ;
+<initializer>		=  "{" <initializer_LIST> "," "}" ;
+
+<initializer_LIST>	= <initializer> ; "INITIALIZERS"
+<initializer_LIST>	= <initializer_LIST> "," <initializer> ;
+
+<identifier>		= %identifier ; "IDENTIFIER"
+<d-identifier>		= @5 %identifier ; "D_IDENTIFIER"
+
+********************************************************************************************
+* 3.6 STATEMENTS
+<statement>		= <labeled-statement> ; "STMT"
+<statement>		= @6 <compound-statement> @11 ;
+<statement>		= <expression-statement> ; "STMT"
+<statement>		= <selection-statement> ; "STMT"
+<statement>		= <iteration-statement> ; "STMT"
+<statement>		= <jump-statement> ; "STMT"
+
+* 3.6.1 Labeled statements
+<labeled-statement>	= <identifier> ":" <statement> ; "STMT_LABELED"
+<labeled-statement>	= case <constant-expression> ":" <statement> ; "STMT_CASE"
+<labeled-statement>	= default ":" <statement> ; "STMT_DEFAULT"
+
+* 3.6.2 Compound statement or block
+*<compound-statement>	= "{" <declaration*> <statement*> "}" ;
+<compound-statement>	= "{" <declaration*-and-statement_LIST> "}" ; "STMT"
+<compound-statement>	= "{" "}" ;
+
+<declaration_LIST>	= <internal-declaration> ; "DECLARATIONS"
+<declaration_LIST>	= <declaration_LIST> <internal-declaration> ;
+
+<internal-declaration_LIST>
+			= <internal-declaration> ; "STMT_COMPOUND"
+<internal-declaration_LIST>
+			= <internal-declaration_LIST> <internal-declaration> ;
+
+*<internal-declaration>	= <declaration-specifiers> <init-declarator+> ";" ;
+<internal-declaration>	= <declaration-specifiers-0_LIST> <init-declarator_LIST> ";" @2 ; "DECLARATION_INTERNAL"
+<internal-declaration>	= <declaration-specifiers-1_LIST> <init-declarator_LIST> ";" @2 ; "DECLARATION_INTERNAL"
+*<internal-declaration>	= <declaration-specifiers> ";" ;
+<internal-declaration>	= <declaration-specifiers-0_LIST> ";" @2 ;
+<internal-declaration>	= <declaration-specifiers-1_LIST> ";" @2 ;
+
+<declaration*-and-statement_LIST>
+			= <statement> ; "STMT_COMPOUND"
+<declaration*-and-statement_LIST>
+			= <internal-declaration_LIST> ;
+<declaration*-and-statement_LIST>
+			= <declaration*-and-statement_LIST> <statement> ;
+
+* 3.6.3 Expression and null statements
+<expression-statement>	= <comma-expression_LIST> ";" ;
+<expression-statement>	=  ";" ;
+
+* 3.6.4 Selection statements
+<selection-statement>	= if "(" <comma-expression_LIST> ")" <statement> ; "STMT_IF_THEN"
+<selection-statement>	= if "(" <comma-expression_LIST> ")" <statement> else <statement> ; "STMT_IF_THEN_ELSE"
+<selection-statement>	= switch "(" <comma-expression_LIST> ")" <statement> ; "STMT_SWITCH"
+
+* 3.6.5 Iteration statements
+<iteration-statement>	= while "(" <comma-expression_LIST> ")" <statement> ; "STMT_WHILE"
+<iteration-statement>	= do <statement> while "(" <comma-expression_LIST> ")" ";" ; "STMT_DO_WHILE"
+<iteration-statement>	= for "(" <[comma-expression]> ";" <[comma-expression]> ";" <[comma-expression]> ")"
+				<statement> ; "STMT_FOR"
+
+* 3.6.6 Jump statements
+<jump-statement>	= goto <identifier> ";" ; "STMT_GOTO"
+<jump-statement>	= continue ";" ; "STMT_CONTINUE"
+<jump-statement>	= break ";" ; "STMT_BREAK"
+<jump-statement>	= return <[comma-expression]> ";" ; "STMT_RETURN"
+
+
+********************************************************************************************
+* 3.7 EXTERNALS DEFINITIONS
+<translation-unit_LIST>	= <external-declaration> ; "TRANSLATION_UNITS"
+<translation-unit_LIST>	= <translation-unit_LIST> <external-declaration> ;
+
+<external-declaration>	= <function-definition> ; "EXTERNAL_DECLARATION"
+<external-declaration>	= <internal-declaration> ; "EXTERNAL_DECLARATION"
+<external-declaration>	= <init-declarator_LIST> ";" ; "EXTERNAL_DECLARATION"
+<external-declaration>	= ";" ;
+
+* 3.7.1 Function definitions
+<function-definition>	= <declaration-specifiers-0_LIST> <function-declarator> @6 <declaration_LIST> @7 <compound-statement> ; "DEFINITION_FUNCTION"
+<function-definition>	= <declaration-specifiers-1_LIST> <function-declarator> @6 <declaration_LIST> @7 <compound-statement> ; "DEFINITION_FUNCTION"
+<function-definition>	= <function-declarator> @6 <declaration_LIST> @7 <compound-statement> ; "DEFINITION_FUNCTION_NO_SPECIFIER"
+*<function-definition>	= <declaration-specifiers> <function-declarator> <compound-statement> ;
+<function-definition>	= <declaration-specifiers-0_LIST> <function-declarator> <compound-statement> ; "DEFINITION_FUNCTION_NO_DECLARATION"
+<function-definition>	= <declaration-specifiers-1_LIST> <function-declarator> <compound-statement> ; "DEFINITION_FUNCTION_NO_DECLARATION"
+<function-definition>	= <function-declarator> <compound-statement> ; "DEFINITION_FUNCTION_NO_SPECIFIER_NO_DECLARATION"
+
+
+<function-declarator>	= <[pointer]> <direct-function-declarator> ; "DECLARATOR_FUNCTION"
+
+<direct-function-declarator>
+			= "(" <function-declarator> ")" ;
+<direct-function-declarator>
+			= <direct-function-declarator> "[" <[constant-expression]> "]" ; "DECLARATOR_ARRAY"
+<direct-function-declarator>
+			= <direct-function-declarator> <parameters> ; "DECLARATOR_DIRECT_FUNCTION"
+<direct-function-declarator>
+			= <direct-declarator> <parameters> ; "DECLARATOR_DIRECT_FUNCTION"
+

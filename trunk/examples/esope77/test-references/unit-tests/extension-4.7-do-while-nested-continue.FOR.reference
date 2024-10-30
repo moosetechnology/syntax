@@ -1,0 +1,565 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/extension-4.7-do-while-nested-continue.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "prog_unit_parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "16",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "variable_declaration_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "8"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "start_pos": {
+                            "line": "1",
+                            "column": "8"
+                        },
+                        "name": "INTEGER"
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "16"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "16"
+                                },
+                                "name": "A"
+                            },
+                            "dimension_declarators": [
+                                {
+                                    "tag": "dimension_declarator",
+                                    "start_pos": {
+                                        "line": "1",
+                                        "column": "18"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "literal_expression",
+                                        "start_pos": {
+                                            "line": "1",
+                                            "column": "18"
+                                        },
+                                        "expression": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "1",
+                                                "column": "18"
+                                            },
+                                            "value": "4"
+                                        }
+                                    }
+                                },
+                                {
+                                    "tag": "dimension_declarator",
+                                    "start_pos": {
+                                        "line": "1",
+                                        "column": "20"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "literal_expression",
+                                        "start_pos": {
+                                            "line": "1",
+                                            "column": "20"
+                                        },
+                                        "expression": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "1",
+                                                "column": "20"
+                                            },
+                                            "value": "4"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "24"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "24"
+                                },
+                                "name": "C"
+                            },
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "27"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "27"
+                                },
+                                "name": "R"
+                            },
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "assignment_statement",
+                    "start_pos": {
+                        "line": "3",
+                        "column": "8"
+                    },
+                    "left": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "3",
+                            "column": "8"
+                        },
+                        "name": "C"
+                    },
+                    "right": {
+                        "tag": "arithmetic_expression",
+                        "expression": {
+                            "tag": "unsigned_int_constant",
+                            "start_pos": {
+                                "line": "3",
+                                "column": "12"
+                            },
+                            "value": "4"
+                        }
+                    }
+                },
+                {
+                    "tag": "assignment_statement",
+                    "start_pos": {
+                        "line": "4",
+                        "column": "8"
+                    },
+                    "left": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "4",
+                            "column": "8"
+                        },
+                        "name": "R"
+                    },
+                    "right": {
+                        "tag": "arithmetic_expression",
+                        "expression": {
+                            "tag": "unsigned_int_constant",
+                            "start_pos": {
+                                "line": "4",
+                                "column": "12"
+                            },
+                            "value": "1"
+                        }
+                    }
+                },
+                {
+                    "tag": "do_statement",
+                    "start_pos": {
+                        "line": "6",
+                        "column": "8"
+                    },
+                    "while_pos": {
+                        "line": "6",
+                        "column": "14"
+                    },
+                    "statement_number": {
+                        "tag": "label_reference",
+                        "start_pos": {
+                            "line": "6",
+                            "column": "11"
+                        },
+                        "label": "10"
+                    },
+                    "loop_control_expression": {
+                        "tag": "logical_factor",
+                        "negated": "false",
+                        "expression": {
+                            "tag": "logical_primary",
+                            "expression": {
+                                "tag": "binary_expression",
+                                "start_pos": {
+                                    "line": "6",
+                                    "column": "22"
+                                },
+                                "left": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "6",
+                                        "column": "22"
+                                    },
+                                    "name": "C"
+                                },
+                                "operator": {
+                                    "tag": "relational_operator",
+                                    "start_pos": {
+                                        "line": "6",
+                                        "column": "24"
+                                    },
+                                    "operator_value": ".NE."
+                                },
+                                "right": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "6",
+                                        "column": "29"
+                                    },
+                                    "name": "R"
+                                }
+                            }
+                        }
+                    },
+                    "statement_list": [
+                        {
+                            "tag": "assignment_statement",
+                            "start_pos": {
+                                "line": "7",
+                                "column": "10"
+                            },
+                            "left": {
+                                "tag": "array_element_name",
+                                "start_pos": {
+                                    "line": "7",
+                                    "column": "10"
+                                },
+                                "name": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "7",
+                                        "column": "10"
+                                    },
+                                    "name": "A"
+                                },
+                                "qualifiers_list": [
+                                    {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "7",
+                                            "column": "12"
+                                        },
+                                        "name": "C"
+                                    },
+                                    {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "7",
+                                            "column": "14"
+                                        },
+                                        "name": "R"
+                                    }
+                                ]
+                            },
+                            "right": {
+                                "tag": "arithmetic_expression",
+                                "expression": {
+                                    "tag": "binary_expression",
+                                    "start_pos": {
+                                        "line": "7",
+                                        "column": "19"
+                                    },
+                                    "left": {
+                                        "tag": "array_element_name",
+                                        "start_pos": {
+                                            "line": "7",
+                                            "column": "19"
+                                        },
+                                        "name": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "7",
+                                                "column": "19"
+                                            },
+                                            "name": "A"
+                                        },
+                                        "qualifiers_list": [
+                                            {
+                                                "tag": "symbolic_name",
+                                                "start_pos": {
+                                                    "line": "7",
+                                                    "column": "21"
+                                                },
+                                                "name": "C"
+                                            },
+                                            {
+                                                "tag": "symbolic_name",
+                                                "start_pos": {
+                                                    "line": "7",
+                                                    "column": "23"
+                                                },
+                                                "name": "R"
+                                            }
+                                        ]
+                                    },
+                                    "operator": {
+                                        "tag": "arithmetic_operator",
+                                        "start_pos": {
+                                            "line": "7",
+                                            "column": "26"
+                                        },
+                                        "operator_value": "+"
+                                    },
+                                    "right": {
+                                        "tag": "unsigned_int_constant",
+                                        "start_pos": {
+                                            "line": "7",
+                                            "column": "28"
+                                        },
+                                        "value": "1"
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "tag": "do_statement",
+                            "start_pos": {
+                                "line": "9",
+                                "column": "19"
+                            },
+                            "while_pos": {
+                                "line": "9",
+                                "column": "21"
+                            },
+                            "loop_control_expression": {
+                                "tag": "logical_factor",
+                                "negated": "false",
+                                "expression": {
+                                    "tag": "logical_primary",
+                                    "expression": {
+                                        "tag": "binary_expression",
+                                        "start_pos": {
+                                            "line": "9",
+                                            "column": "21"
+                                        },
+                                        "left": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "9",
+                                                "column": "21"
+                                            },
+                                            "name": "C"
+                                        },
+                                        "operator": {
+                                            "tag": "relational_operator",
+                                            "start_pos": {
+                                                "line": "9",
+                                                "column": "23"
+                                            },
+                                            "operator_value": ".GT."
+                                        },
+                                        "right": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "9",
+                                                "column": "28"
+                                            },
+                                            "name": "R"
+                                        }
+                                    }
+                                }
+                            },
+                            "statement_list": [
+                                {
+                                    "tag": "assignment_statement",
+                                    "start_pos": {
+                                        "line": "10",
+                                        "column": "12"
+                                    },
+                                    "left": {
+                                        "tag": "array_element_name",
+                                        "start_pos": {
+                                            "line": "10",
+                                            "column": "12"
+                                        },
+                                        "name": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "10",
+                                                "column": "12"
+                                            },
+                                            "name": "A"
+                                        },
+                                        "qualifiers_list": [
+                                            {
+                                                "tag": "symbolic_name",
+                                                "start_pos": {
+                                                    "line": "10",
+                                                    "column": "14"
+                                                },
+                                                "name": "C"
+                                            },
+                                            {
+                                                "tag": "symbolic_name",
+                                                "start_pos": {
+                                                    "line": "10",
+                                                    "column": "16"
+                                                },
+                                                "name": "R"
+                                            }
+                                        ]
+                                    },
+                                    "right": {
+                                        "tag": "arithmetic_expression",
+                                        "expression": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "10",
+                                                "column": "21"
+                                            },
+                                            "value": "1"
+                                        }
+                                    }
+                                },
+                                {
+                                    "tag": "assignment_statement",
+                                    "start_pos": {
+                                        "line": "11",
+                                        "column": "12"
+                                    },
+                                    "left": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "11",
+                                            "column": "12"
+                                        },
+                                        "name": "C"
+                                    },
+                                    "right": {
+                                        "tag": "arithmetic_expression",
+                                        "expression": {
+                                            "tag": "binary_expression",
+                                            "start_pos": {
+                                                "line": "11",
+                                                "column": "16"
+                                            },
+                                            "left": {
+                                                "tag": "symbolic_name",
+                                                "start_pos": {
+                                                    "line": "11",
+                                                    "column": "16"
+                                                },
+                                                "name": "C"
+                                            },
+                                            "operator": {
+                                                "tag": "arithmetic_operator",
+                                                "start_pos": {
+                                                    "line": "11",
+                                                    "column": "18"
+                                                },
+                                                "operator_value": "-"
+                                            },
+                                            "right": {
+                                                "tag": "unsigned_int_constant",
+                                                "start_pos": {
+                                                    "line": "11",
+                                                    "column": "20"
+                                                },
+                                                "value": "1"
+                                            }
+                                        }
+                                    }
+                                }
+                            ],
+                            "end_do": {
+                                "start_pos": {
+                                    "line": "12",
+                                    "column": "16"
+                                }
+                            }
+                        },
+                        {
+                            "tag": "assignment_statement",
+                            "start_pos": {
+                                "line": "14",
+                                "column": "8"
+                            },
+                            "left": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "14",
+                                    "column": "8"
+                                },
+                                "name": "C"
+                            },
+                            "right": {
+                                "tag": "arithmetic_expression",
+                                "expression": {
+                                    "tag": "binary_expression",
+                                    "start_pos": {
+                                        "line": "14",
+                                        "column": "12"
+                                    },
+                                    "left": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "14",
+                                            "column": "12"
+                                        },
+                                        "name": "C"
+                                    },
+                                    "operator": {
+                                        "tag": "arithmetic_operator",
+                                        "start_pos": {
+                                            "line": "14",
+                                            "column": "13"
+                                        },
+                                        "operator_value": "+"
+                                    },
+                                    "right": {
+                                        "tag": "unsigned_int_constant",
+                                        "start_pos": {
+                                            "line": "14",
+                                            "column": "14"
+                                        },
+                                        "value": "1"
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "label": "10",
+                            "label_pos": {
+                                "line": "15",
+                                "column": "1"
+                            },
+                            "tag": "continue_statement",
+                            "start_pos": {
+                                "line": "15",
+                                "column": "8"
+                            }
+                        }
+                    ],
+                    "end_do": {
+                        "start_pos": {
+                            "line": "15",
+                            "column": "16"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

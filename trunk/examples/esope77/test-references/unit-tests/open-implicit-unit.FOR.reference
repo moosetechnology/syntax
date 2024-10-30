@@ -1,0 +1,54 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/open-implicit-unit.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "prog_unit_parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "7"
+            },
+            "end_pos": {
+                "line": "2",
+                "column": "9"
+            },
+            "statement_list": [
+                {
+                    "tag": "open_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "7"
+                    },
+                    "control_info_list": [
+                        {
+                            "tag": "unsigned_int_constant",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "12"
+                            },
+                            "value": "8"
+                        },
+                        {
+                            "tag": "control_info_option",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "15"
+                            },
+                            "control_option_name": "FILE",
+                            "control_option_value": {
+                                "tag": "character_constant",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "20"
+                                },
+                                "value": "'projectA/data.test'"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

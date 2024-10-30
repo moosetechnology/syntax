@@ -1,0 +1,103 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/write-implicit-u-implicit-fmt-err-io.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "prog_unit_parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "2",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "write_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "8"
+                    },
+                    "control_info_list": [
+                        {
+                            "tag": "unsigned_int_constant",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "15"
+                            },
+                            "value": "1"
+                        },
+                        {
+                            "tag": "label_reference",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "18"
+                            },
+                            "label": "2"
+                        },
+                        {
+                            "tag": "control_info_option",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "21"
+                            },
+                            "control_option_name": "ERR",
+                            "control_option_value": {
+                                "tag": "label_reference",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "25"
+                                },
+                                "label": "8"
+                            }
+                        },
+                        {
+                            "tag": "control_info_option",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "28"
+                            },
+                            "control_option_name": "IOSTAT",
+                            "control_option_value": {
+                                "tag": "scalar_variable",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "35"
+                                },
+                                "variable_name": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "1",
+                                        "column": "35"
+                                    },
+                                    "name": "N"
+                                }
+                            }
+                        }
+                    ],
+                    "io_list": [
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "39"
+                            },
+                            "name": "X"
+                        },
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "42"
+                            },
+                            "name": "Y"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

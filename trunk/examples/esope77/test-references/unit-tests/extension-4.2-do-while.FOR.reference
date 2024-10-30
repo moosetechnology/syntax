@@ -1,0 +1,104 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/extension-4.2-do-while.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "prog_unit_parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "4",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "do_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "17"
+                    },
+                    "while_pos": {
+                        "line": "1",
+                        "column": "19"
+                    },
+                    "loop_control_expression": {
+                        "tag": "logical_factor",
+                        "negated": "false",
+                        "expression": {
+                            "tag": "logical_primary",
+                            "expression": {
+                                "tag": "binary_expression",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "19"
+                                },
+                                "left": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "1",
+                                        "column": "19"
+                                    },
+                                    "name": "C"
+                                },
+                                "operator": {
+                                    "tag": "relational_operator",
+                                    "start_pos": {
+                                        "line": "1",
+                                        "column": "21"
+                                    },
+                                    "operator_value": ".GT."
+                                },
+                                "right": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "1",
+                                        "column": "26"
+                                    },
+                                    "name": "R"
+                                }
+                            }
+                        }
+                    },
+                    "statement_list": [
+                        {
+                            "tag": "assignment_statement",
+                            "start_pos": {
+                                "line": "2",
+                                "column": "10"
+                            },
+                            "left": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "10"
+                                },
+                                "name": "X"
+                            },
+                            "right": {
+                                "tag": "arithmetic_expression",
+                                "expression": {
+                                    "tag": "unsigned_int_constant",
+                                    "start_pos": {
+                                        "line": "2",
+                                        "column": "14"
+                                    },
+                                    "value": "1"
+                                }
+                            }
+                        }
+                    ],
+                    "end_do": {
+                        "start_pos": {
+                            "line": "3",
+                            "column": "14"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

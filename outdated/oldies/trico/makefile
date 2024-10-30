@@ -18,12 +18,10 @@ $(TRICO)/trico.out:	$(NEEDED)	$(SXBIBS)
 	rm -f $@; cc -o $@ `echo $(NEEDED) $(CFLAGS) $(LDFLAGS) $(SXBIBS)` || (rm -f $@;exit 1)
 
 $(LIB)/trico_act.o:	$(SXINCL)/sxunix.h	\
-			trico_env.h	\
 			trico_act.c	
 	$(CC) -o $@ -c trico_act.c
 
 $(LIB)/trico_main.o:	$(SXINCL)/sxunix.h	\
-			trico_env.h	\
 			trico_main.c
 	$(CC) -o $@ -c trico_main.c
 
@@ -54,4 +52,5 @@ trico.rt: trico.bt trico.st trico.recor
 clean:
 	rm -f $(ALL) $(NEEDED)
 	rm -f trico_t.c trico.bt trico.st trico.pt trico.rt
+	rm -f trico.bn.l trico.lc.l trico.rc.l
 

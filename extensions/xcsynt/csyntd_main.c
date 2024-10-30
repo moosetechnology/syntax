@@ -21,12 +21,20 @@
 
 /* Constructeur syntaxique de SYNTAX */
 
-#define SX_DFN_EXT_VAR_XCSYNT 
+// #define SX_DFN_EXT_VAR_XCSYNT 
 
 #include "sxdynam_parser.h"
 #include "sxversion.h"
 
-char WHAT_XCSYNTCSYNTDMAIN[] = "@(#)SYNTAX - $Id: csyntd_main.c 3652 2023-12-24 09:43:15Z garavel $" WHAT_DEBUG;
+char WHAT_XCSYNTCSYNTDMAIN[] = "@(#)SYNTAX - $Id: csyntd_main.c 4451 2024-10-17 05:43:49Z garavel $" WHAT_DEBUG;
+
+extern bool	prio_read (SXINT t_priorities_size,
+                           SXINT r_priorities_size,
+                           struct priority **t_priorities,
+                           struct priority **r_priorities,
+                           char *langname);
+extern void	prio_free (struct priority **t_priorities,
+                           struct priority **r_priorities);
 
 /*---------------*/
 /*    options    */
@@ -37,7 +45,7 @@ static char	Usage [] = "\
 Usage:\t%s [options] language...\n\
 options=\t-v, -verbose, -nv, -noverbose,\n";
 static SXINT	csyntd_options_set;
-static char	*arg, c;
+static char	*arg;
 
 static SXINT	*state_stack;
 
@@ -59,20 +67,19 @@ static SXINT	option_kind [] = {UNKNOWN_ARG,
 				      VERBOSE, VERBOSE, -VERBOSE, -VERBOSE
 				  };
 
-#define is_digit(c)	c >= '0' && c <= '9'
+#define is_digit(c)	(((c) >= '0') && ((c) <= '9'))
 
 
 
-static SXINT	option_get_kind (arg)
-    char	*arg;
+static SXINT	option_get_kind (char *tmp_arg)
 {
     char	**opt;
 
-    if (*arg++ != '-')
+    if (*tmp_arg++ != '-')
 	return UNKNOWN_ARG;
 
     for (opt = &(option_tbl [OPT_NB]); opt > option_tbl; opt--) {
-	if (strcmp (*opt, arg) == 0 /* egalite */ )
+	if (strcmp (*opt, tmp_arg) == 0 /* egalite */ )
 	    break;
     }
 
@@ -85,7 +92,6 @@ static SXINT	csyntd_run ()
 {
     sxfiledesc_t	file_descr	/* file descriptor */ ;
     char	file_name [128];
-    bool	is_prio;
     SXINT		state, transition, next_state;
 
     sxdp_alloc (200 /* rule_nb */);
@@ -95,18 +101,16 @@ static SXINT	csyntd_run ()
 
       /* "lit" la grammaire initiale. */
       SXINT symbols [50];		/* TRES TRES LAID !!! */
-      SXINT	rule, i, item, symbol, new_rule, action_nb, nt, xnt, t, xt, prio, assoc;
+      SXINT	rule, i, symbol, new_rule, action_nb, nt, xnt, t, xt, prio, assoc;
+      SXINT	rhs, item, next_item;
 
 #include "B_tables.h"
-
-      extern bool	prio_read ();
-      extern void	prio_free ();
 
       struct bnf_ag_item	bnf_ag;
       struct priority	*t_priorities, *r_priorities;
 	
       if (!bnf_read (&bnf_ag, language_name))
-	sxexit ();
+	sxexit (SXSEVERITIES);  /* au pif */
 
       if (prio_read (bnf_ag.WS_TBL_SIZE.xtmax + 1,
 		     bnf_ag.WS_TBL_SIZE.xnbpro + 1,
@@ -166,8 +170,6 @@ static SXINT	csyntd_run ()
 
       /* Pour avoir les memes numeros que ds bnf! */
       {
-	SXINT	rhs, item, next_item;
-
 	SXDG.eof_code = bnf_ag.WS_TBL_SIZE.tmax;
 	SXDG.start_symbol = 1;
 	SXDG.super_start_symbol = 0;
@@ -267,10 +269,10 @@ static SXINT	csyntd_run ()
 }
 
 
+/************************************************************************/
+/* main function                                                        */
+/************************************************************************/
 
-/************************************************************************/
-/* main function
-/************************************************************************/
 int main (int argc, char *argv[])
 {
   int	                argnum;
@@ -319,7 +321,8 @@ int main (int argc, char *argv[])
   }
 
   do {
-    has_message [csyntd_run (language_name = argv [argnum++])] = true;
+    language_name = argv [argnum++];
+    has_message [csyntd_run ()] = true;
   } while (argnum < argc);
 
   {

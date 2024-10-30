@@ -1,0 +1,103 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/assign-label.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "prog_unit_parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "4",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "variable_declaration_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "8"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "start_pos": {
+                            "line": "1",
+                            "column": "8"
+                        },
+                        "name": "INTEGER"
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "16"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "16"
+                                },
+                                "name": "PHORMAT"
+                            },
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "label": "2",
+                    "label_pos": {
+                        "line": "2",
+                        "column": "1"
+                    },
+                    "tag": "format_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "8"
+                    },
+                    "format_specifiers": [
+                        {
+                            "tag": "format_specifier",
+                            "descriptor": {
+                                "tag": "repeatable_edit_descriptor",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "17"
+                                },
+                                "descriptor_purpose": "character_edit",
+                                "value": "A80"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "tag": "assignment_statement",
+                    "start_pos": {
+                        "line": "3",
+                        "column": "8"
+                    },
+                    "left": {
+                        "tag": "label_reference",
+                        "start_pos": {
+                            "line": "3",
+                            "column": "15"
+                        },
+                        "label": "2"
+                    },
+                    "right": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "3",
+                            "column": "20"
+                        },
+                        "name": "PHORMAT"
+                    }
+                }
+            ]
+        }
+    ]
+}

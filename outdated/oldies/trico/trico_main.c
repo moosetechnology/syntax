@@ -1,7 +1,7 @@
 /* ********************************************************
    *							  *
    *							  *
-   * Copyright (©) 1985 by Institut National de Recherche *
+   * Copyright (c) 1985 by Institut National de Recherche *
    *                    en Informatique et en Automatique *
    *							  *
    *							  *
@@ -12,7 +12,7 @@
 
 /* ********************************************************
    *							  *
-   *  Produit de l'équipe Langages et Traducteurs.  (phd) *
+   *  Produit de l'equipe Langages et Traducteurs.  (phd) *
    *							  *
    ******************************************************** */
 
@@ -20,7 +20,7 @@
 
 
 
-/* Constructeur d'automates d'états finis de SYNTAX® */
+/* Constructeur d'automates d'etats finis de SYNTAX */
 
 
 /************************************************************************/
@@ -30,21 +30,25 @@
 /************************************************************************/
 /* 20000623 17:07 (phd&pb):	Initialisation dynamique de sxstd???	*/
 /************************************************************************/
-/* 20000521 15:33 (phd):	Création à partir de sxmain.c et lecl	*/
+/* 20000521 15:33 (phd):	Creation a partir de sxmain.c et lecl	*/
 /************************************************************************/
 
 char WHAT_TRICO_MAIN[] = "@(#)trico.d.c	- SYNTAX [unix] - 18 mars 2002";
 
 #include "sxunix.h"
-#include "trico_env.h"
 
 char	by_mess [] = "the SYNTAX automaton constructor TRICO";
 
 #include "sxversion.h"
 
-/* On lit a priori sur stdin, et cetera */
-
-FILE	*sxstdout = {NULL}, *sxstderr = {NULL};
+static char	*prgentname;
+static long	options_set;
+static bool is_list,
+        is_object,
+        is_optimize,
+        is_source,
+        is_table,
+        sxttycol1p;
 
 /* On est dans un cas "mono-langage": */
 
@@ -66,7 +70,7 @@ options=\t-sc, -source, -^sc, -^source,\n\
 \t\t-ls, -liste, -^ls, -^liste,\n\
 \t\t-ot, -optimaliser, -^ot, -^optimaliser,\n\
 \t\t-ln nom, -langage nom\n\
-\tL'option \"-ln\" est obligatoire s'il n'y a pas de fichier d'entrée.\n";
+\tL'option \"-ln\" est obligatoire s'il n'y a pas de fichier d'entree.\n";
 #endif
 
 #define OPTION(opt)	(1 << (opt - 1))
@@ -167,7 +171,7 @@ static SXINLINE void trico_run (char *pathname)
       fputs ("\"stdin\":\n", sxtty);
 
     if ((infile = sxtmpfile ()) == NULL) {
-      fprintf (sxstderr, "%s: Impossible de créer ", ME);
+      fprintf (sxstderr, "%s: Impossible de creer ", ME);
       sxperror ("le fichier temporaire ");
       sxerrmngr.nbmess [2]++;
       return;
@@ -291,7 +295,7 @@ int main (int argc, char *argv[])
 
     case LANGAGE:
       if (++argnum >= argc) {
-	fprintf (sxstderr, "%s: il faut un nom après l'option \"%s\" ;\n\ton choisit ''.\n", ME, option_get_text (LANGAGE));
+	fprintf (sxstderr, "%s: il faut un nom apres l'option \"%s\" ;\n\ton choisit ''.\n", ME, option_get_text (LANGAGE));
 	prgentname = (char*) sxalloc (1, sizeof (char));
 	prgentname [0] = SXNUL;
       }
@@ -305,20 +309,20 @@ int main (int argc, char *argv[])
 
     case UNKNOWN_ARG:
       if (options_set & OPTION (LANGAGE)) {
-	fprintf (sxstderr, "%s: on ne peut utiliser l'option \"%s\" pour désigner des fichiers.\n", ME, option_get_text (LANGAGE));
+	fprintf (sxstderr, "%s: on ne peut utiliser l'option \"%s\" pour designer des fichiers.\n", ME, option_get_text (LANGAGE));
 	options_set &= noOPTION (LANGAGE);
       }
 
       goto run;
 
     default:
-      fprintf (sxstderr, "%s: erreur interne %d lors du décodage des options.\n", ME, option_get_kind (argv [argnum]));
+      fprintf (sxstderr, "%s: erreur interne %d lors du decodage des options.\n", ME, option_get_kind (argv [argnum]));
       break;
     }
   }
 
   if (!(options_set & OPTION (LANGAGE))) {
-    fprintf (sxstderr, "%s: L'option \"-%s\" est obligatoire s'il n'y a pas de fichier d'entrée ;\n\ton choisit ''\n", ME, option_get_text (LANGAGE));
+    fprintf (sxstderr, "%s: L'option \"-%s\" est obligatoire s'il n'y a pas de fichier d'entree ;\n\ton choisit ''\n", ME, option_get_text (LANGAGE));
     prgentname = (char*) sxalloc (1, sizeof (char));
     prgentname [0] = SXNUL;
   }
@@ -328,7 +332,7 @@ int main (int argc, char *argv[])
     fprintf (sxtty, "%s\n", release_mess);
   }
 
-  sxstr_mngr (SXBEGIN) /* Création de la table des chaines */ ;
+  sxstr_mngr (SXBEGIN) /* Creation de la table des chaines */ ;
   (*(sxtables.SX_parser)) (SXBEGIN, NULL /* dummy */) /* Allocation des variables globales du parser */ ;
   syntax (SXOPEN, &sxtables) /* Initialisation de SYNTAX (mono-langage) */ ;
 
@@ -385,10 +389,3 @@ char* options_text (char *line)
   return line;
 }
 
-
-
-void
-sxvoid ()
-/* Procédure ne faisant rien, mais le faisant bien ! */
-{
-}

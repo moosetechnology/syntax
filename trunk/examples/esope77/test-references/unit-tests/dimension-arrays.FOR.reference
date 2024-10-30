@@ -1,0 +1,130 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/dimension-arrays.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "prog_unit_parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "2",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "dimension_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "8"
+                    },
+                    "array_declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "18"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "18"
+                                },
+                                "name": "M"
+                            },
+                            "dimension_declarators": [
+                                {
+                                    "tag": "dimension_declarator",
+                                    "start_pos": {
+                                        "line": "1",
+                                        "column": "20"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "literal_expression",
+                                        "start_pos": {
+                                            "line": "1",
+                                            "column": "20"
+                                        },
+                                        "expression": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "1",
+                                                "column": "20"
+                                            },
+                                            "value": "4"
+                                        }
+                                    }
+                                },
+                                {
+                                    "tag": "dimension_declarator",
+                                    "start_pos": {
+                                        "line": "1",
+                                        "column": "22"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "literal_expression",
+                                        "start_pos": {
+                                            "line": "1",
+                                            "column": "22"
+                                        },
+                                        "expression": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "1",
+                                                "column": "22"
+                                            },
+                                            "value": "4"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "26"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "26"
+                                },
+                                "name": "V"
+                            },
+                            "dimension_declarators": [
+                                {
+                                    "tag": "dimension_declarator",
+                                    "start_pos": {
+                                        "line": "1",
+                                        "column": "28"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "literal_expression",
+                                        "start_pos": {
+                                            "line": "1",
+                                            "column": "28"
+                                        },
+                                        "expression": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "1",
+                                                "column": "28"
+                                            },
+                                            "value": "1000"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

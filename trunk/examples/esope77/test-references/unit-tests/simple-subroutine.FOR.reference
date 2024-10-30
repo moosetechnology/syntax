@@ -1,0 +1,59 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/simple-subroutine.FOR",
+    "program_units": [
+        {
+            "tag": "subroutine",
+            "name": {
+                "tag": "symbolic_name",
+                "start_pos": {
+                    "line": "1",
+                    "column": "18"
+                },
+                "name": "SIMPLESUBROUTINE"
+            },
+            "prog_unit_parameters": [
+                {
+                    "tag": "variable",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "36"
+                    },
+                    "variable_name": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "1",
+                            "column": "36"
+                        },
+                        "name": "A"
+                    }
+                },
+                {
+                    "tag": "variable",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "39"
+                    },
+                    "variable_name": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "1",
+                            "column": "39"
+                        },
+                        "name": "B"
+                    }
+                }
+            ],
+            "start_pos": {
+                "line": "1",
+                "column": "7"
+            },
+            "end_pos": {
+                "line": "2",
+                "column": "9"
+            },
+            "statement_list": []
+        }
+    ]
+}

@@ -1,0 +1,122 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/dimension-adjustable-array.FOR",
+    "program_units": [
+        {
+            "tag": "subroutine",
+            "name": {
+                "tag": "symbolic_name",
+                "start_pos": {
+                    "line": "1",
+                    "column": "19"
+                },
+                "name": "INV"
+            },
+            "prog_unit_parameters": [
+                {
+                    "tag": "variable",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "24"
+                    },
+                    "variable_name": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "1",
+                            "column": "24"
+                        },
+                        "name": "M"
+                    }
+                },
+                {
+                    "tag": "variable",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "27"
+                    },
+                    "variable_name": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "1",
+                            "column": "27"
+                        },
+                        "name": "N"
+                    }
+                }
+            ],
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "3",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "dimension_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "8"
+                    },
+                    "array_declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "2",
+                                "column": "18"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "18"
+                                },
+                                "name": "M"
+                            },
+                            "dimension_declarators": [
+                                {
+                                    "tag": "dimension_declarator",
+                                    "start_pos": {
+                                        "line": "2",
+                                        "column": "21"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "variable_expression",
+                                        "variable_name": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "2",
+                                                "column": "21"
+                                            },
+                                            "name": "N"
+                                        }
+                                    }
+                                },
+                                {
+                                    "tag": "dimension_declarator",
+                                    "start_pos": {
+                                        "line": "2",
+                                        "column": "24"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "variable_expression",
+                                        "variable_name": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "2",
+                                                "column": "24"
+                                            },
+                                            "name": "N"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -142,14 +142,14 @@ static void move (header, x, y, lgth)
 	  : ((l = (h).free) != -1						\
             ? (h).free = (h).display [l].X					\
 	    : (sxSL_GC (&(h))							\
-	      ? NULL								\
+	      ? 0								\
               : ((h).display = (struct sxSL_display*)				\
 				 sxrealloc ((h).display,			\
 					    (h).display_size *= 2,		\
 					    sizeof (struct sxSL_display)),	\
 	       (((h).oflw != NULL)						\
-	         ? (*(h).oflw) ((h).display_size)				\
-                 : NULL),							\
+	         ? (*(h).oflw) (&(h), (h).display_size)				\
+                 : (SXINT) 0),							\
 	      l = (h).display_top++)))),					\
          (h).display [(h).sorted_top++].sorted = l,				\
 	 (h).display [l].X = (h).elems_top,					\

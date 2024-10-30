@@ -1,0 +1,119 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/read-namelist-iolist.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "prog_unit_parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "7"
+            },
+            "end_pos": {
+                "line": "2",
+                "column": "9"
+            },
+            "statement_list": [
+                {
+                    "tag": "read_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "7"
+                    },
+                    "control_info_list": [
+                        {
+                            "tag": "unsigned_int_constant",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "13"
+                            },
+                            "value": "1"
+                        },
+                        {
+                            "tag": "label_reference",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "16"
+                            },
+                            "label": "2"
+                        },
+                        {
+                            "tag": "control_info_option",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "19"
+                            },
+                            "control_option_name": "ERR",
+                            "control_option_value": {
+                                "tag": "label_reference",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "23"
+                                },
+                                "label": "8"
+                            }
+                        },
+                        {
+                            "tag": "control_info_option",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "26"
+                            },
+                            "control_option_name": "END",
+                            "control_option_value": {
+                                "tag": "label_reference",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "30"
+                                },
+                                "label": "9"
+                            }
+                        },
+                        {
+                            "tag": "control_info_option",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "33"
+                            },
+                            "control_option_name": "IOSTAT",
+                            "control_option_value": {
+                                "tag": "scalar_variable",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "40"
+                                },
+                                "variable_name": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "1",
+                                        "column": "40"
+                                    },
+                                    "name": "N"
+                                }
+                            }
+                        }
+                    ],
+                    "io_list": [
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "44"
+                            },
+                            "name": "X"
+                        },
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "47"
+                            },
+                            "name": "Y"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

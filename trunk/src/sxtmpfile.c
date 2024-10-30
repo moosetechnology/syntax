@@ -20,13 +20,13 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXTMPFILE[] = "@(#)SYNTAX - $Id: sxtmpfile.c 2428 2023-01-18 12:54:10Z garavel $" WHAT_DEBUG;
+char WHAT_SXTMPFILE[] = "@(#)SYNTAX - $Id: sxtmpfile.c 4478 2024-10-24 17:53:14Z garavel $" WHAT_DEBUG;
 
 #ifndef sxnewfile
 #ifdef WINNT /* No mkstemp */
 FILE	*sxnewfile (char *name)
 {
-
+    /* warning: mktemp() is insecure and deprecated */
     return sxfopen (mktemp (name), "w+");
 }
 #else  /* #if WINNT *//* No mkstemp */

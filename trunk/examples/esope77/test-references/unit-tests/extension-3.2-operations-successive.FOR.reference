@@ -1,0 +1,237 @@
+{
+    "tag": "fortran_file",
+    "comments": {
+        "2": "C     Hubert Garavel et Pierre Boullier\n"
+    },
+    "file": "test/unit-tests/extension-3.2-operations-successive.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": {
+                "tag": "symbolic_name",
+                "start_pos": {
+                    "line": "1",
+                    "column": "15"
+                },
+                "name": "MAIN"
+            },
+            "start_pos": {
+                "line": "1",
+                "column": "7"
+            },
+            "end_pos": {
+                "line": "6",
+                "column": "9"
+            },
+            "statement_list": [
+                {
+                    "tag": "variable_declaration_statement",
+                    "start_pos": {
+                        "line": "3",
+                        "column": "7"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "start_pos": {
+                            "line": "3",
+                            "column": "7"
+                        },
+                        "name": "REAL"
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "3",
+                                "column": "12"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "3",
+                                    "column": "12"
+                                },
+                                "name": "R"
+                            },
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "assignment_statement",
+                    "start_pos": {
+                        "line": "4",
+                        "column": "7"
+                    },
+                    "left": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "4",
+                            "column": "7"
+                        },
+                        "name": "R"
+                    },
+                    "right": {
+                        "tag": "arithmetic_expression",
+                        "expression": {
+                            "tag": "unary_multiple_operator",
+                            "start_pos": {
+                                "line": "4",
+                                "column": "11"
+                            },
+                            "first_operator": {
+                                "start_pos": {
+                                    "line": "4",
+                                    "column": "11"
+                                },
+                                "sign_value": "+"
+                            },
+                            "second_operator": {
+                                "start_pos": {
+                                    "line": "4",
+                                    "column": "12"
+                                },
+                                "sign_value": "-"
+                            },
+                            "operand": {
+                                "tag": "binary_multiple_operator",
+                                "start_pos": {
+                                    "line": "4",
+                                    "column": "13"
+                                },
+                                "first_operator": {
+                                    "tag": "arithmetic_operator",
+                                    "start_pos": {
+                                        "line": "4",
+                                        "column": "21"
+                                    },
+                                    "operator_value": "-"
+                                },
+                                "second_operator": {
+                                    "start_pos": {
+                                        "line": "4",
+                                        "column": "22"
+                                    },
+                                    "sign_value": "+"
+                                },
+                                "left": {
+                                    "tag": "binary_multiple_operator",
+                                    "start_pos": {
+                                        "line": "4",
+                                        "column": "13"
+                                    },
+                                    "first_operator": {
+                                        "tag": "arithmetic_operator",
+                                        "start_pos": {
+                                            "line": "4",
+                                            "column": "18"
+                                        },
+                                        "operator_value": "*"
+                                    },
+                                    "second_operator": {
+                                        "start_pos": {
+                                            "line": "4",
+                                            "column": "19"
+                                        },
+                                        "sign_value": "-"
+                                    },
+                                    "left": {
+                                        "tag": "binary_multiple_operator",
+                                        "start_pos": {
+                                            "line": "4",
+                                            "column": "13"
+                                        },
+                                        "first_operator": {
+                                            "tag": "arithmetic_operator",
+                                            "start_pos": {
+                                                "line": "4",
+                                                "column": "14"
+                                            },
+                                            "operator_value": "**"
+                                        },
+                                        "second_operator": {
+                                            "start_pos": {
+                                                "line": "4",
+                                                "column": "16"
+                                            },
+                                            "sign_value": "-"
+                                        },
+                                        "left": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "4",
+                                                "column": "13"
+                                            },
+                                            "value": "2"
+                                        },
+                                        "right": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "4",
+                                                "column": "17"
+                                            },
+                                            "value": "1"
+                                        }
+                                    },
+                                    "right": {
+                                        "tag": "unsigned_int_constant",
+                                        "start_pos": {
+                                            "line": "4",
+                                            "column": "20"
+                                        },
+                                        "value": "2"
+                                    }
+                                },
+                                "right": {
+                                    "tag": "unsigned_int_constant",
+                                    "start_pos": {
+                                        "line": "4",
+                                        "column": "23"
+                                    },
+                                    "value": "3"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "tag": "print_statement",
+                    "start_pos": {
+                        "line": "5",
+                        "column": "7"
+                    },
+                    "format": [
+                        {
+                            "tag": "asterisk",
+                            "start_pos": {
+                                "line": "5",
+                                "column": "13"
+                            }
+                        }
+                    ],
+                    "io_list": [
+                        {
+                            "tag": "character_expression",
+                            "expression": {
+                                "tag": "character_constant",
+                                "start_pos": {
+                                    "line": "5",
+                                    "column": "16"
+                                },
+                                "value": "'RESULT = '"
+                            }
+                        },
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "5",
+                                "column": "29"
+                            },
+                            "name": "R"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

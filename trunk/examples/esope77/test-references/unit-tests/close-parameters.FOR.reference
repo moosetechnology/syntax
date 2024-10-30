@@ -1,0 +1,93 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/close-parameters.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "prog_unit_parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "7"
+            },
+            "end_pos": {
+                "line": "2",
+                "column": "9"
+            },
+            "statement_list": [
+                {
+                    "tag": "close_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "7"
+                    },
+                    "control_info_list": [
+                        {
+                            "tag": "unsigned_int_constant",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "15"
+                            },
+                            "value": "2"
+                        },
+                        {
+                            "tag": "control_info_option",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "18"
+                            },
+                            "control_option_name": "STATUS",
+                            "control_option_value": {
+                                "tag": "character_constant",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "25"
+                                },
+                                "value": "'DELETE'"
+                            }
+                        },
+                        {
+                            "tag": "control_info_option",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "35"
+                            },
+                            "control_option_name": "IOSTAT",
+                            "control_option_value": {
+                                "tag": "scalar_variable",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "42"
+                                },
+                                "variable_name": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "1",
+                                        "column": "42"
+                                    },
+                                    "name": "I"
+                                }
+                            }
+                        },
+                        {
+                            "tag": "control_info_option",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "45"
+                            },
+                            "control_option_name": "ERR",
+                            "control_option_value": {
+                                "tag": "label_reference",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "49"
+                                },
+                                "label": "99"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

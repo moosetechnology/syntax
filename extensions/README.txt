@@ -101,6 +101,10 @@ sdag:
 	of a 'normal' source string is a list of alternatives denoting
 	a simple type of ambiguities.
 
+test:
+	This directory contains some programs whose sole purpose seems
+	to exercise the SYNTAX libraries.
+
 udag:
 	This directory contains a grammar needed to build the file
 	extensions/ext/udag_t.c. 'udag' means 'unfolded directed acyclic

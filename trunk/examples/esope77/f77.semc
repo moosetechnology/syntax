@@ -2630,7 +2630,6 @@ $LIST( <29a:left_hand_side>)
   	$LIST(<29a:left_hand_side>'), 
   	$LIST(<29b:left_hand_side>)
   ); 
-* [[SEMC ADDED]]
 }
 
 *------------------------------------------------------------------------------
@@ -2642,7 +2641,6 @@ $LIST( <29a:left_hand_side>)
 $LIST( <29a:left_hand_side>)
 {
   $LIST( <29a:left_hand_side>) = $LIST(<29a:left_hand_side>);
-* [[SEMC ADDED]]
 }
 
 *------------------------------------------------------------------------------
@@ -3068,7 +3066,7 @@ $LIST(<39:end_if_statement>)
 * lab0              CONTINUE
 *       ...
 *
-* apres la reconnaissance lexicale de lab0 en position etiquette, la 
+* apres la reconnaissance lexicale de lab0 en position etiquette, la
 * post-action lexicale @3 va generer n+1 tokens de type %ENDDO, qui vont donc
 * fermer les n+1 DO ouverts.
 *
@@ -5594,7 +5592,6 @@ $LIST( <74:expression>)
 $LIST( <74a:non_typed_expression>)
 {
   $LIST( <74a:non_typed_expression>) = $LIST(<121a:pointeurs_seq>);
-* [[SEMC ADDED]]
 }
 
 *------------------------------------------------------------------------------
@@ -7053,6 +7050,22 @@ $LIST( <87:rel_op>)
 
 *------------------------------------------------------------------------------
 
+* [[EXTENSION]]
+
+<87:rel_op>	= "<" @2 ;
+
+* [[SEMC_ADDED]]
+$LIST( <87:rel_op>)
+{
+  $LIST( <87:rel_op>) = ast_operator(
+  	LOCATION(0),
+  	"relational_operator",
+  	"<"
+  );
+}
+
+*------------------------------------------------------------------------------
+
 <87:rel_op>	= .LE. ;
 
 $LIST( <87:rel_op>)
@@ -7061,6 +7074,22 @@ $LIST( <87:rel_op>)
   	LOCATION(0),
   	"relational_operator",
   	".LE."
+  );
+}
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<87:rel_op>	= "<=" @2 ;
+
+* [[SEMC_ADDED]]
+$LIST( <87:rel_op>)
+{
+  $LIST( <87:rel_op>) = ast_operator(
+  	LOCATION(0),
+  	"relational_operator",
+  	"<="
   );
 }
 
@@ -7079,6 +7108,22 @@ $LIST( <87:rel_op>)
 
 *------------------------------------------------------------------------------
 
+* [[EXTENSION]]
+
+<87:rel_op>	= "==" @2 ;
+
+* [[SEMC_ADDED]]
+$LIST( <87:rel_op>)
+{
+  $LIST( <87:rel_op>) = ast_operator(
+  	LOCATION(0),
+  	"relational_operator",
+  	"=="
+  );
+}
+
+*------------------------------------------------------------------------------
+
 <87:rel_op>	= .NE. ;
 
 $LIST( <87:rel_op>)
@@ -7087,6 +7132,22 @@ $LIST( <87:rel_op>)
   	LOCATION(0),
   	"relational_operator",
   	".NE."
+  );
+}
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<87:rel_op>	= "/=" @2 ;
+
+* [[SEMC_ADDED]]
+$LIST( <87:rel_op>)
+{
+  $LIST( <87:rel_op>) = ast_operator(
+  	LOCATION(0),
+  	"relational_operator",
+  	"/="
   );
 }
 
@@ -7105,6 +7166,22 @@ $LIST( <87:rel_op>)
 
 *------------------------------------------------------------------------------
 
+* [[EXTENSION]]
+
+<87:rel_op>	= ">" @2 ;
+
+* [[SEMC_ADDED]]
+$LIST( <87:rel_op>)
+{
+  $LIST( <87:rel_op>) = ast_operator(
+  	LOCATION(0),
+  	"relational_operator",
+  	">"
+  );
+}
+
+*------------------------------------------------------------------------------
+
 <87:rel_op>	= .GE. ;
 
 $LIST( <87:rel_op>)
@@ -7113,6 +7190,22 @@ $LIST( <87:rel_op>)
   	LOCATION(0),
   	"relational_operator",
   	".GE."
+  );
+}
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<87:rel_op>	= ">=" @2 ;
+
+* [[SEMC_ADDED]]
+$LIST( <87:rel_op>)
+{
+  $LIST( <87:rel_op>) = ast_operator(
+  	LOCATION(0),
+  	"relational_operator",
+  	">="
   );
 }
 
@@ -7818,8 +7911,7 @@ $LIST( <121:pointeur>)
 
 $LIST( <121a:pointeurs_seq>)
 {
-  $LIST( <121a:pointeurs_seq>) = SXML_LL ($LIST (<121a:pointeurs_seq>'), $LIST(<74c:non_typed_expression>)); // a revoir completement
-* [[SEMC ADDED]]
+  $LIST( <121a:pointeurs_seq>) = ast_list ($LIST (<121a:pointeurs_seq>'), $LIST(<74c:non_typed_expression>));
 }
 
 *------------------------------------------------------------------------------
@@ -7830,7 +7922,6 @@ $LIST( <121a:pointeurs_seq>)
 $LIST( <121a:pointeurs_seq>)
 {
   $LIST( <121a:pointeurs_seq>) = $LIST(<74c:non_typed_expression>);
-* [[SEMC ADDED]]
 }
 
 *------------------------------------------------------------------------------

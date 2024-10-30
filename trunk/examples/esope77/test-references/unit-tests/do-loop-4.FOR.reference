@@ -1,0 +1,119 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/do-loop-4.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": {
+                "tag": "symbolic_name",
+                "start_pos": {
+                    "line": "1",
+                    "column": "15"
+                },
+                "name": "SIMPLEMAIN"
+            },
+            "start_pos": {
+                "line": "1",
+                "column": "7"
+            },
+            "end_pos": {
+                "line": "5",
+                "column": "9"
+            },
+            "statement_list": [
+                {
+                    "tag": "assignment_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "8"
+                    },
+                    "left": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "2",
+                            "column": "8"
+                        },
+                        "name": "N"
+                    },
+                    "right": {
+                        "tag": "arithmetic_expression",
+                        "expression": {
+                            "tag": "unsigned_int_constant",
+                            "start_pos": {
+                                "line": "2",
+                                "column": "12"
+                            },
+                            "value": "0"
+                        }
+                    }
+                },
+                {
+                    "tag": "do_statement",
+                    "start_pos": {
+                        "line": "3",
+                        "column": "8"
+                    },
+                    "statement_number": {
+                        "tag": "label_reference",
+                        "start_pos": {
+                            "line": "3",
+                            "column": "11"
+                        },
+                        "label": "210"
+                    },
+                    "loop_control": {
+                        "start_pos": {
+                            "line": "3",
+                            "column": "15"
+                        },
+                        "variable_name": {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "3",
+                                "column": "15"
+                            },
+                            "name": "I"
+                        },
+                        "init": {
+                            "tag": "unsigned_int_constant",
+                            "start_pos": {
+                                "line": "3",
+                                "column": "19"
+                            },
+                            "value": "1"
+                        },
+                        "limit": {
+                            "tag": "unsigned_int_constant",
+                            "start_pos": {
+                                "line": "3",
+                                "column": "22"
+                            },
+                            "value": "10"
+                        }
+                    },
+                    "statement_list": [
+                        {
+                            "label": "210",
+                            "label_pos": {
+                                "line": "4",
+                                "column": "1"
+                            },
+                            "tag": "continue_statement",
+                            "start_pos": {
+                                "line": "4",
+                                "column": "8"
+                            }
+                        }
+                    ],
+                    "end_do": {
+                        "start_pos": {
+                            "line": "4",
+                            "column": "17"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

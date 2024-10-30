@@ -21,7 +21,7 @@ $(LIB)/cx_t.o: 	$(SXINCL)/sxunix.h		\
 		cx_t.c
 	$(CC) -o $@ cx_t.c			\
 			-DSEMACT=cx_act		\
-			-DSEMPASS=sxvoid
+			-DSEMPASS=sxsvoid
 
 $(LIB)/cx_main.o:	$(SXINCL)/sxunix.h	\
 			cx_main.c

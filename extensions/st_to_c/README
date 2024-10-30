@@ -24,7 +24,7 @@ $(LIB)/{L}_t.o:  $(SXINCL)/sxunix.h  $(SRC)/${L}_t.c
                         -Dsxscanner=${L}_scanner  \
                         -Dsxscan_it=${L}_scan_it  \
                         -DSEMACT=${L}_act         \
-                        -DSEMPASS=sxvoid
+                        -DSEMPASS=sxsvoid
 
 The -Dsxscanner and -Dsxscan_it seem specific to the use of st_to_c and
 are usually not necessary when using "standard" LECL.

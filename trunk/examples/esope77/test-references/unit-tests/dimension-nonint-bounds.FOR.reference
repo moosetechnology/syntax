@@ -1,0 +1,206 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/dimension-nonint-bounds.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "prog_unit_parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "3",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "parameter_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "8"
+                    },
+                    "constant_declarations": [
+                        {
+                            "start_pos": {
+                                "line": "1",
+                                "column": "20"
+                            },
+                            "symbolic_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "20"
+                                },
+                                "name": "LO"
+                            },
+                            "expression": {
+                                "tag": "arithmetic_const_expr",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "25"
+                                },
+                                "expression": {
+                                    "tag": "unsigned_int_constant",
+                                    "start_pos": {
+                                        "line": "1",
+                                        "column": "25"
+                                    },
+                                    "value": "1"
+                                }
+                            }
+                        },
+                        {
+                            "start_pos": {
+                                "line": "1",
+                                "column": "28"
+                            },
+                            "symbolic_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "28"
+                                },
+                                "name": "HI"
+                            },
+                            "expression": {
+                                "tag": "arithmetic_const_expr",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "33"
+                                },
+                                "expression": {
+                                    "tag": "unsigned_real_constant",
+                                    "start_pos": {
+                                        "line": "1",
+                                        "column": "33"
+                                    },
+                                    "value": "9.3"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "tag": "dimension_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "8"
+                    },
+                    "array_declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "2",
+                                "column": "18"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "18"
+                                },
+                                "name": "A"
+                            },
+                            "dimension_declarators": [
+                                {
+                                    "tag": "dimension_declarator",
+                                    "start_pos": {
+                                        "line": "2",
+                                        "column": "20"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "variable_expression",
+                                        "variable_name": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "2",
+                                                "column": "20"
+                                            },
+                                            "name": "HI"
+                                        }
+                                    }
+                                },
+                                {
+                                    "tag": "dimension_declarator",
+                                    "start_pos": {
+                                        "line": "2",
+                                        "column": "24"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "binary_expression",
+                                        "start_pos": {
+                                            "line": "2",
+                                            "column": "24"
+                                        },
+                                        "left": {
+                                            "tag": "binary_expression",
+                                            "start_pos": {
+                                                "line": "2",
+                                                "column": "24"
+                                            },
+                                            "left": {
+                                                "tag": "variable_expression",
+                                                "variable_name": {
+                                                    "tag": "symbolic_name",
+                                                    "start_pos": {
+                                                        "line": "2",
+                                                        "column": "24"
+                                                    },
+                                                    "name": "HI"
+                                                }
+                                            },
+                                            "operator": {
+                                                "tag": "arithmetic_operator",
+                                                "start_pos": {
+                                                    "line": "2",
+                                                    "column": "26"
+                                                },
+                                                "operator_value": "*"
+                                            },
+                                            "right": {
+                                                "tag": "literal_expression",
+                                                "start_pos": {
+                                                    "line": "2",
+                                                    "column": "27"
+                                                },
+                                                "expression": {
+                                                    "tag": "unsigned_int_constant",
+                                                    "start_pos": {
+                                                        "line": "2",
+                                                        "column": "27"
+                                                    },
+                                                    "value": "3"
+                                                }
+                                            }
+                                        },
+                                        "operator": {
+                                            "tag": "arithmetic_operator",
+                                            "start_pos": {
+                                                "line": "2",
+                                                "column": "29"
+                                            },
+                                            "operator_value": "+"
+                                        },
+                                        "right": {
+                                            "tag": "variable_expression",
+                                            "variable_name": {
+                                                "tag": "symbolic_name",
+                                                "start_pos": {
+                                                    "line": "2",
+                                                    "column": "31"
+                                                },
+                                                "name": "LO"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

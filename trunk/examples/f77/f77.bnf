@@ -22,7 +22,7 @@
 * Annex F of https://nvlpubs.nist.gov/nistpubs/Legacy/FIPS/fipspub69-1.pdf
 *
 * Il contains a few usual extensions, marked with the string [[EXTENSION]].
-* 
+*
 * The semantic action @1 indicates that one has just detected two consecutive
 * arithmetic operators (e.g., X * - Y), which is an extension not allowed
 * in standard FORTRAN 77. This action will trigger a warning if f77 is not
@@ -684,7 +684,7 @@
 *------------------------------------------------------------------------------
 
 * Voir ci-dessous le commentaire de la regle <60f:/:>. La situation est
-* similaire ici. On a mis '//' à la place de '/'  '/' car on peut ne pas 
+* similaire ici. On a mis '//' a la place de '/'  '/' car on peut ne pas 
 * avoir de <99:symbolic_name>.
 
 <19b:common_part>
@@ -1209,8 +1209,8 @@
 * un corps <2c:statement_list> et une fin de bloc %ENDDO.
 * Ce %ENDDO est un dummy terminal zombie (voir f77.lecl) generique (il 
 * commence par un "%"). Zombie signifie qu'il a un code (comme n'importe quel 
-* terminal) mais qu'aucune sous-chaine d'un programme source ne pourra être
-* reconnue comme étant %ENDDO. Les %ENDDO sont injectes dans la chaine de
+* terminal) mais qu'aucune sous-chaine d'un programme source ne pourra etre
+* reconnue comme etant %ENDDO. Les %ENDDO sont injectes dans la chaine de
 * tokens, non par le scanner, mais par une post-action lexicale (@0) associee
 * a la reconnaissance de %label.
 *
@@ -1224,12 +1224,12 @@
 * lab0              CONTINUE
 *       ...
 *
-* après la reconnaissance lexicale de lab0 en position etiquette, la 
+* apres la reconnaissance lexicale de lab0 en position etiquette, la
 * post-action lexicale @3 va generer n+1 tokens de type %ENDDO, qui vont donc
 * fermer les n+1 DO ouverts.
 *
 * Cette description permet d'exclure syntaxiquement la presence de blocs 
-* imbriques. L'indentation du programme par le paragrapheur ppf77 va être
+* imbriques. L'indentation du programme par le paragrapheur ppf77 va etre
 * correcte et revenir a la position occupee avant le premier DO.
 *
 * De plus, si, ayant associe' au terminal generique %ENDDO un texte vide 
@@ -2020,7 +2020,7 @@
 
 * En Fortran, il y a deux terminaux '/' et '//'.  Malheureusement, dans le cas 
 * <19b:common_part>, un source peut comporter une sequence '/' '/' ou meme,
-* dans le cas <60b:fmt_spec_list_/:>, une séquence de '/' ... '/' de longueur 
+* dans le cas <60b:fmt_spec_list_/:>, une sequence de '/' ... '/' de longueur 
 * indeterminee. Comme les blancs ne jouent aucun role, le scanner peut se
 * retrouver avec des sequences de slashs de longueur quelconque. 
 * L'interpretation choisie assure qu'un slash rend '/', que deux slashs
@@ -2884,7 +2884,19 @@
 
 *------------------------------------------------------------------------------
 
+* [[EXTENSION]]
+
+<87:rel_op>	= "<" @2 ;
+
+*------------------------------------------------------------------------------
+
 <87:rel_op>	= .LE. ;
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<87:rel_op>	= "<=" @2 ;
 
 *------------------------------------------------------------------------------
 
@@ -2892,7 +2904,19 @@
 
 *------------------------------------------------------------------------------
 
+* [[EXTENSION]]
+
+<87:rel_op>	= "==" @2 ;
+
+*------------------------------------------------------------------------------
+
 <87:rel_op>	= .NE. ;
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<87:rel_op>	= "/=" @2 ;
 
 *------------------------------------------------------------------------------
 
@@ -2900,7 +2924,19 @@
 
 *------------------------------------------------------------------------------
 
+* [[EXTENSION]]
+
+<87:rel_op>	= ">" @2 ;
+
+*------------------------------------------------------------------------------
+
 <87:rel_op>	= .GE. ;
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+<87:rel_op>	= ">=" @2 ;
 
 *******************************************************************************
 

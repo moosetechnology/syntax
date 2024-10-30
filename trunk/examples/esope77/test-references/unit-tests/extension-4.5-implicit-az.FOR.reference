@@ -1,0 +1,56 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/extension-4.5-implicit-az.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "prog_unit_parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "7"
+            },
+            "end_pos": {
+                "line": "2",
+                "column": "9"
+            },
+            "statement_list": [
+                {
+                    "tag": "implicit_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "7"
+                    },
+                    "implicit_parameters": [
+                        {
+                            "tag": "implicit_type_rule",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "16"
+                            },
+                            "type": {
+                                "tag": "type_reference",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "16"
+                                },
+                                "name": "UNDEFINED"
+                            },
+                            "implicit_elements": [
+                                {
+                                    "tag": "implicit_range",
+                                    "start_pos": {
+                                        "line": "1",
+                                        "column": "26"
+                                    },
+                                    "implicit_range_lower": "A",
+                                    "implicit_range_upper": "Z"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

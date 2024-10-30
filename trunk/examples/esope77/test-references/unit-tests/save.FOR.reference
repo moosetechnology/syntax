@@ -1,0 +1,62 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/save.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "prog_unit_parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "2",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "save_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "8"
+                    },
+                    "save_statement_namelist": [
+                        {
+                            "tag": "save_statement_namelist_element",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "13"
+                            },
+                            "guarded": "false",
+                            "element_value": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "13"
+                                },
+                                "name": "A"
+                            }
+                        },
+                        {
+                            "tag": "save_statement_namelist_element",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "16"
+                            },
+                            "guarded": "true",
+                            "element_value": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "17"
+                                },
+                                "name": "B"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

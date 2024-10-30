@@ -1,0 +1,106 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/parameter-count.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": {
+                "tag": "symbolic_name",
+                "start_pos": {
+                    "line": "1",
+                    "column": "16"
+                },
+                "name": "MAIN"
+            },
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "4",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "variable_declaration_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "8"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "start_pos": {
+                            "line": "2",
+                            "column": "8"
+                        },
+                        "name": "CHARACTER"
+                    },
+                    "declarators": [
+                        {
+                            "len_specifier": {
+                                "tag": "asterisk",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "27"
+                                }
+                            },
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "2",
+                                "column": "18"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "18"
+                                },
+                                "name": "HEADING"
+                            },
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "parameter_statement",
+                    "start_pos": {
+                        "line": "3",
+                        "column": "8"
+                    },
+                    "constant_declarations": [
+                        {
+                            "start_pos": {
+                                "line": "3",
+                                "column": "19"
+                            },
+                            "symbolic_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "3",
+                                    "column": "19"
+                                },
+                                "name": "HEADING"
+                            },
+                            "expression": {
+                                "tag": "character_const_expr",
+                                "start_pos": {
+                                    "line": "3",
+                                    "column": "27"
+                                },
+                                "expression": {
+                                    "tag": "character_constant",
+                                    "start_pos": {
+                                        "line": "3",
+                                        "column": "27"
+                                    },
+                                    "value": "'I/O Error Number'"
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

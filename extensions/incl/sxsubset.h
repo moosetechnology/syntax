@@ -77,9 +77,6 @@ typedef struct {
     FILE		*stat_file;
 } sxsubset_header;
 
-sxsubset_header		*_sxsubset_header; /* Pour oflw */
-
-
 extern void			sxsubset_alloc (sxsubset_header *h,
 						SXINT subset_nb,
 						SXINT cardinal,

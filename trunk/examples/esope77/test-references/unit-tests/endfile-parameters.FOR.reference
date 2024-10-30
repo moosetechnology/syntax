@@ -1,0 +1,85 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/endfile-parameters.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "prog_unit_parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "2",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "endfile_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "8"
+                    },
+                    "control_info_list": [
+                        {
+                            "tag": "control_info_option",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "19"
+                            },
+                            "control_option_name": "UNIT",
+                            "control_option_value": {
+                                "tag": "unsigned_int_constant",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "24"
+                                },
+                                "value": "2"
+                            }
+                        },
+                        {
+                            "tag": "control_info_option",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "27"
+                            },
+                            "control_option_name": "IOSTAT",
+                            "control_option_value": {
+                                "tag": "scalar_variable",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "34"
+                                },
+                                "variable_name": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "1",
+                                        "column": "34"
+                                    },
+                                    "name": "KODE"
+                                }
+                            }
+                        },
+                        {
+                            "tag": "control_info_option",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "40"
+                            },
+                            "control_option_name": "ERR",
+                            "control_option_value": {
+                                "tag": "label_reference",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "44"
+                                },
+                                "label": "9"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

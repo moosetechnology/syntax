@@ -5,9 +5,9 @@ Titles
 
 Scanner
 	Local
-		1 2 3 4	      ; "On supprime le caractère \"" $0 "\", invalide.";
-		X 1 2 3 4     ; "On remplace le caractère \"" $0 "\", invalide, par \"" %0 "\".";
-		X 0 1 2 3     ; "On insère un caractère \"" %0 "\" devant \"" $0 "\".";
+		1 2 3 4	      ; "On supprime le caractere \"" $0 "\", invalide.";
+		X 1 2 3 4     ; "On remplace le caractere \"" $0 "\", invalide, par \"" %0 "\".";
+		X 0 1 2 3     ; "On insere un caractere \"" %0 "\" devant \"" $0 "\".";
 
 		Dont_Delete = {};
 		Dont_Insert = {};
@@ -19,17 +19,17 @@ Scanner
 		Eol	      : "Fin de ligne";
 		Eof	      : "Fin de fichier";
 		-- The "character"
-		Halt	      : "L'analyse lexicale s'arrête en Fin de fichier.";
+		Halt	      : "L'analyse lexicale s'arrete en Fin de fichier.";
 
 Parser
 	Local
-		0 S 2	      ; "On considère \"" $1 "\" comme une faute d'orthographe du mot-clef \"" %1 "\".";
-		S 1	      ; "On considère \"" $0 "\" devant \"" $1 "\" comme une faute d'orthographe du mot-clef \"" %0 "\".";
-		0 X 1 2 3     ; "On insère \"" %1 "\" devant \"" $1 "\".";
+		0 S 2	      ; "On considere \"" $1 "\" comme une faute d'orthographe du mot-clef \"" %1 "\".";
+		S 1	      ; "On considere \"" $0 "\" devant \"" $1 "\" comme une faute d'orthographe du mot-clef \"" %0 "\".";
+		0 X 1 2 3     ; "On insere \"" %1 "\" devant \"" $1 "\".";
 		0 X 2 3 4     ; "On remplace \"" $1 "\" par \"" %1 "\".";
 		0 2 3 4	      ; "On supprime \"" $1 "\".";
-		0 X X 1 2 3 4 ; "On insère \"" %1 " " %2 "\" devant \"" $1 "\".";
-		X 0 1 2 3     ; "On insère \"" %0 "\" devant \"" $0 " " $1 "\".";
+		0 X X 1 2 3 4 ; "On insere \"" %1 " " %2 "\" devant \"" $1 "\".";
+		X 0 1 2 3     ; "On insere \"" %0 "\" devant \"" $0 " " $1 "\".";
 		X 1 2 3 4     ; "On remplace \"" $0 "\" devant \"" $1 "\" par \"" %0 "\".";
 		1 2 3 4	      ; "On supprime \"" $0 "\" devant \"" $1 "\".";
 		X 2 3 4	      ; "On remplace \"" $0 " " $1 "\" par \"" %0 "\".";
@@ -49,11 +49,11 @@ Parser
 		-- parameters: array (1:Followers_Number) of valid followers at detection point
 		Detection     : "Rattrapage global.";
 		-- parameters: none
-		Restarting    : "L'analyse syntaxique reprend à partir de \"%s\"";
+		Restarting    : "L'analyse syntaxique reprend a partir de \"%s\"";
 		-- parameters: array (1:Validation_Length) of valid followers at restarting point
 		Eof	      : "Fin de fichier";
 		-- The "token"
-		Halt	      : "L'analyse syntaxique s'arrête en Fin de fichier.";
+		Halt	      : "L'analyse syntaxique s'arrete en Fin de fichier.";
 		-- parameters: none
 
 Abstract

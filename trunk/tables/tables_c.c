@@ -28,7 +28,7 @@ static char	ME [] = "tables_c";
 #include "out.h"
 #include "sxba.h"
 
-char WHAT_TABLESC[] = "@(#)SYNTAX - $Id: tables_c.c 4259 2024-09-07 07:19:53Z garavel $" WHAT_DEBUG;
+char WHAT_TABLESC[] = "@(#)SYNTAX - $Id: tables_c.c 4395 2024-10-07 16:38:31Z garavel $" WHAT_DEBUG;
 
 bool		is_lig;
 
@@ -111,8 +111,8 @@ static void	out_sxtables (void)
 
     if (PC.nd_degree >= 0) {
       puts ("#ifdef ESAMBIG");
-      out_extern_int ("ESAMBIG(SXINT what)");
-      puts ("#endif /* ESAMBIG */");
+      puts ("extern SXDESAMBIG_FUNCTION ESAMBIG;");
+      puts ("#endif");
     }
 
     switch (PC.sem_kind) {

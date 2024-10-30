@@ -240,7 +240,7 @@ static struct sxligparsact sxligparsact = {
 };
 /********************* end of LIG tables ********************/
 extern SXPARSER_FUNCTION sxndparser;
-extern int ESAMBIG();
+extern SXDESAMBIG_FUNCTION ESAMBIG;
 extern SXSEMACT_FUNCTION SEMACT;
 
 SXTABLES sxtables={

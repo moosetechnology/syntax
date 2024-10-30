@@ -43,7 +43,7 @@ static char	ME [] = "lfg_semact";
 
 #include "dag_scanner.h"
 
-char WHAT_LFG_SEMACT[] = "@(#)SYNTAX - $Id: lfg_semact.c 4388 2024-10-07 08:31:42Z garavel $" WHAT_DEBUG;
+char WHAT_LFG_SEMACT[] = "@(#)SYNTAX - $Id: lfg_semact.c 4477 2024-10-24 17:51:41Z garavel $" WHAT_DEBUG;
 
 #ifdef lfg_h
 
@@ -170,7 +170,7 @@ int            sentence_id; /* nbest peut en avoir besoin */
 
 #ifdef EASY
 /* Les codes des terminaux coo_code, sbound_code ponctw_code, poncts_code et np_code sont connus */
-/* #include "easy_td.h" (BS) est donné dans les options de cc */
+/* #include "easy_td.h" (BS) est donne' dans les options de cc */
 #include td_h
 
 
@@ -2105,13 +2105,13 @@ fs_is_set (fs_id, field_id, ret_val)
    incoherence_locale est uniquement positionne a true (si c'est le cas)
    incoherence_locale n'est significatif que si la fonction retourne true
 
-   BS: suspect... je dirais plutôt:
-     - le return indique la cohérence (return true) ou l'incohérence (return false) de la structure fs_id
-     - incoherence_locale est positionné à true ssi fs_id est incohérente (return false) et de plus "localement" incohérente
-         (le pred de fs_id est incohérent avec la liste de ses fils)
-   Dans la mémoïsation:
-     - cohérence -> on stocke 2 (3 n'a de sens que si pas de pred: cohérence malgré incohérence locale)
-     - incohérence -> on stocke 0 ou 1: 1 si incohérence locale, 0 sinon
+   BS: suspect... je dirais plutot:
+     - le return indique la coherence (return true) ou l'incoherence (return false) de la structure fs_id
+     - incoherence_locale est positionne' a true ssi fs_id est incoherente (return false) et de plus "localement" incoherente
+         (le pred de fs_id est incoherent avec la liste de ses fils)
+   Dans la memoisation:
+     - coherence -> on stocke 2 (3 n'a de sens que si pas de pred: coherence malgre' incoherence locale)
+     - incoherence -> on stocke 0 ou 1: 1 si incoherence locale, 0 sinon
  */
 static bool
 check_fs_id_coherence (fs_id, incoherence_locale)
@@ -2145,7 +2145,7 @@ check_fs_id_coherence (fs_id, incoherence_locale)
   if (bot == top) {
     /* vide et donc pas de PRED */
     ////    fs_id_coherence2attr [ref] = 0;
-    fs_id_coherence2attr [ref] = 1; /* incohérente + incohérence locale */
+    fs_id_coherence2attr [ref] = 1; /* incoherente + incoherence locale */
     *incoherence_locale = true; //// BS
     return false;
   }
@@ -2175,7 +2175,7 @@ check_fs_id_coherence (fs_id, incoherence_locale)
 	  if (val & CONSTRAINT_VAL) {
 	    /* Le 28/05/04 S'il y a incoherence sur la racine, on se contente de le signaler */
 	    ////	  fs_id_coherence2attr [ref] = 0;
-	    fs_id_coherence2attr [ref] = 1; /* incohérente + incohérence locale */
+	    fs_id_coherence2attr [ref] = 1; /* incoherente + incoherence locale */
 	    *incoherence_locale = true; //// BS
 	    return false;
 	  }
@@ -2193,7 +2193,7 @@ check_fs_id_coherence (fs_id, incoherence_locale)
 		incoherence_du_fils_courant = false;
 		if (!check_fs_id_coherence (val, &incoherence_du_fils_courant)) {
 		  if (incoherence_du_fils_courant) {
-		    /* màj de incohérence locale */
+		    /* maj de incoherence locale */
 		    fs_id_coherence2attr [ref] = 1;
 		    *incoherence_locale = true;
 		  } else
@@ -2213,7 +2213,7 @@ check_fs_id_coherence (fs_id, incoherence_locale)
 		while (cur2 < top2) {
 		  if (!check_fs_id_coherence (XH_list_elem (XH_ufs_hd, cur2), &incoherence_du_fils_courant)) {
 		    if (incoherence_du_fils_courant) {
-		      /* màj de incohérence locale */
+		      /* maj de incoherence locale */
 		      fs_id_coherence2attr [ref] = 1;
 		      *incoherence_locale = true;
 		    } else
@@ -2325,7 +2325,7 @@ check_fs_id_coherence (fs_id, incoherence_locale)
 	  while (++cur < top) {
 	    val = XH_list_elem (XH_fs_hd, cur);
 
-	    if ((val & OPTIONAL_VAL) == 0) { /* BS: cf mon précédent commentaire */
+	    if ((val & OPTIONAL_VAL) == 0) { /* BS: cf mon precedent commentaire */
 	      field_id = val & FIELD_AND;
 	      
 	      if (SXBA_bit_is_set (argument_set, field_id)) {
@@ -2954,8 +2954,8 @@ coherence (Xpq, is_root)
 	sxba_copy (warg_set, field_set);
 	sxba_and (warg_set, argument_set);
 
-	/* begin BS : on ne vérifie pas si un attribut de type "=?" est bien dans le pred, 
-	   car il sera viré plus tard si jamais transformé en "=" */
+	/* begin BS : on ne verifie pas si un attribut de type "=?" est bien dans le pred, 
+	   car il sera vire' plus tard si jamais transforme' en "=" */
 	field_id = 0;
 	while ((field_id = sxba_scan (warg_set, field_id)) >= 0) {
 	  val = attr_ptr0 [field_id];
@@ -4714,7 +4714,7 @@ from_wfs_id_to_fs_id (int x, int *fs_id)
 	/* nouveau */
 	fs_id2dynweight [*fs_id] = fs_id2dynweight [fs_id_orig];
 	fs_id2localdynweight [*fs_id] = fs_id2localdynweight [fs_id_orig];
-	/* la structure fs_id_orig reçoit un nouveau nom, fs_id, mais ne change pas: on prend son dynweight sans le regarder */
+	/* la structure fs_id_orig recoit un nouveau nom, fs_id, mais ne change pas: on prend son dynweight sans le regarder */
       }
     }
     else
@@ -4835,12 +4835,12 @@ from_wfs_id_to_fs_id (int x, int *fs_id)
       /* nouveau */
       fs_id2localdynweight [*fs_id] = wfs_id2localdynweight [x];
       fs_id2dynweight [*fs_id] = 0;
-      /* structure complètement nouvelle */
+      /* structure completement nouvelle */
     } /* else {
-	 La fs_id courante existait déjà, ella donc déjà son local dynweight */
-    /* en toute rigueur elle pourrait dépendre du mode de calcul, mais l'attribution d'un fs_id à une structure ignore ce fait,
-       et on peut donc l'ignorer aussi ici. C'est grossier, mais ça évite l'augmentation sans fin du dynweight des structures
-       cycliques à chaque fois qu'on le calcule
+	 La fs_id courante existait deja, ella donc deja son local dynweight */
+    /* en toute rigueur elle pourrait dependre du mode de calcul, mais l'attribution d'un fs_id a une structure ignore ce fait,
+       et on peut donc l'ignorer aussi ici. C'est grossier, mais ca evite l'augmentation sans fin du dynweight des structures
+       cycliques a chaque fois qu'on le calcule
        }  */
 
 #if EBUG
@@ -4871,7 +4871,7 @@ from_wfs_id_to_fs_id (int x, int *fs_id)
       while ((id = sxba_scan_reset (wfs_id_pred_set, id)) > 0) {
 	sxba_or (wfs_id2sons_set [id], wfs_id_sons_set);
 	sxba_or (wfs_id2fathers_set [id], wfs_id_fathers_set);
-	/* fathers_set = les pères des fils stricts (soi-même exclu) !!! */
+	/* fathers_set = les peres des fils stricts (soi-meme exclu) !!! */
 
 	if (--wfs_id2son_nb [id] == 0) {
 	  /* entierement calculee */
@@ -5094,7 +5094,7 @@ process_cyclic_wfs ()
 #endif /* EBUG */
 		  }
 		  else {
-		    /* fs_id déjà connu */
+		    /* fs_id deja connu */
 		  }
 
 		  cyclic_wfs_id2fs_id [x] = 0;
@@ -5353,7 +5353,7 @@ fill_heads (Aij, fs_id)
   return head;
 }
 
-/* get_priority (fs_id) est remplacé par get_dynweight */
+/* get_priority (fs_id) est remplace' par get_dynweight */
 #if 0
 /* Pour l'instant la priorite' d'une f_structure est le max des priorites de ses sous-structures */
 /* On ne note pas les prio des fs_id deja vus, on les recalcule */
@@ -5499,8 +5499,8 @@ priority_id2priority (int priority_id)
 }
 
 /* Calcul du dynweight d'une fs: il s'agit de la somme:
- 1. du localdynweight qui est la contribution de la tête de la structure
- 2. des dynweights des arguments (bounded ou non, présents ou non dans l'éventuel pred) */
+ 1. du localdynweight qui est la contribution de la tete de la structure
+ 2. des dynweights des arguments (bounded ou non, presents ou non dans l'eventuel pred) */
 static int
 compute_dynweight (fs_id)
      int fs_id;
@@ -5513,21 +5513,21 @@ compute_dynweight (fs_id)
     return 0;
 
   if (!SXBA_bit_is_reset_set (visited_fs_id_set, fs_id))
-    /* déjà pris en compte */
+    /* deja pris en compte */
     return 0; /* element neutre */
 
   PUSH (visited_fs_id_stack, fs_id);
 
-  /* on vérifie si on a déjà calculé, i.e. si fs_id2dynweight est déjà rempli à >0 pour fs_id */
+  /* on verifie si on a deja calcule, i.e. si fs_id2dynweight est deja rempli a >0 pour fs_id */
   dynweight = fs_id2dynweight [fs_id];
-  if (dynweight > 0) /* déjà calculé... */
+  if (dynweight > 0) /* deja calcule... */
     return dynweight;
 
   if (!SXBA_bit_is_reset_set (fs_id_set, fs_id))
     /* cyclique */
     return 0; /* element neutre */
 
-  /* seule la contrib de la tête est connue */
+  /* seule la contrib de la tete est connue */
   dynweight = fs_id2localdynweight [fs_id];
   /*
   if (dynweight == 0) {
@@ -7147,7 +7147,7 @@ eval (result_ptr)
 		 field_id2string [field_id]);
 #endif /* EBUG || LOG */
 
-	return -1; /* si la valeur atomique obtenue est non trouvée, on échoue l'unification */
+	return -1; /* si la valeur atomique obtenue est non trouvee, on echoue l'unification */
       }
 
       SXBA_0_bit (left_local_atom_id_set, local_atom_id);
@@ -7201,7 +7201,7 @@ eval (result_ptr)
 	do {
 	  atom_id = X_X (atom_id2local_atom_id_hd, local_atom_id);
 	  
-	  if (val = XxY_is_set (&datom_pairs, atom_id, string_id)) { /* sinon, on a construit une partie gauche de l'opérateur OPERATOR_ATOM_MINUS qui n'est
+	  if (val = XxY_is_set (&datom_pairs, atom_id, string_id)) { /* sinon, on a construit une partie gauche de l'operateur OPERATOR_ATOM_MINUS qui n'est
 									pas une valeur connue statiquement pour le champ correspondant */
 	    if (complex_atom_id = datom_pairs2atom_id [val]) {/* sinon, on a construit une valeur atomique inconnue, qui est donc non prise en compte */
 	      X_set (&atom_id2local_atom_id_hd, complex_atom_id, &local_complex_atom_id);
@@ -7212,7 +7212,7 @@ eval (result_ptr)
 	} while ((local_atom_id = sxba_scan_reset (left_local_atom_id_set, local_atom_id)) > 0);
 
 	if (local_complex_atom_id == 0) {
-	  /* aucune valeur acceptable trouvée par concaténation */
+	  /* aucune valeur acceptable trouvee par concatenation */
 #if EBUG || LOG
 	  fprintf (sxstderr,
 		   "No possible complex atomic value found\n");
@@ -7383,14 +7383,14 @@ eval (result_ptr)
 
       }
       
-      while (val--) { /* on rajoute les bit arrays représentant les valeurs complexes du champ atomique dans right_local_atom_id_set */
+      while (val--) { /* on rajoute les bit arrays representant les valeurs complexes du champ atomique dans right_local_atom_id_set */
 	dum_lresult.ptr = &val2;
 	
 	if ((ret_val = eval (&dum_lresult)) <= 0)
 	  return ret_val;
       }
       
-      /* tout le monde est là, on peut fabriquer le résultat */
+      /* tout le monde est la, on peut fabriquer le resultat */
       local_complex_atom_id = 0;
 
       while ((local_complex_atom_id = sxba_scan_reset (right_local_atom_id_set, local_complex_atom_id)) > 0) {
@@ -7723,7 +7723,7 @@ eval_examine (result_ptr)
 	  return ret_val;
       }
 #if 0
-      /* TODO : à écrire correctement */
+      /* TODO : a ecrire correctement */
       pcs++; /* Pour reexaminer OPERATOR_COMPLEX_ATOM ds eval */
       dum_lresult.ptr = &ref;
 
@@ -8227,7 +8227,7 @@ instantiate_fs_id (fs_id, right_dol, field_id_path)
       path2wfs_id [field_id_path].wfs_id = new_wfs_id = dol_fs_id2wfs_id [dol_fs_id] = get_a_new_wfs_id ();
       wfs2attr [AREA_PAGE (new_wfs_id)] [AREA_DELTA (new_wfs_id)] [0] = field_id_path;
       
-      /* si on est à la racine, on veut que l'instantiation soit récursive */
+      /* si on est a la racine, on veut que l'instantiation soit recursive */
       if (is_fill_fs_on_start_symbol)
 	instantiate_wfs_id (new_wfs_id);
     }
@@ -8236,7 +8236,7 @@ instantiate_fs_id (fs_id, right_dol, field_id_path)
     path2wfs_id [field_id_path].wfs_id = new_wfs_id = get_a_new_wfs_id ();
     wfs2attr [AREA_PAGE (new_wfs_id)] [AREA_DELTA (new_wfs_id)] [0] = field_id_path;
 
-    /* si on est à la racine, on veut que l'instantiation soit récursive */
+    /* si on est a la racine, on veut que l'instantiation soit recursive */
     if (is_fill_fs_on_start_symbol)
       instantiate_wfs_id (new_wfs_id);
   }
@@ -8459,7 +8459,7 @@ instantiate_wfs_id (father_wfs_id)
   fs_id = fs_id_dol >> MAXRHS_SHIFT;
   right_dol = fs_id_dol & MAXRHS_AND;
   
-  /* la copie locale de fs_id récupère son dynweight */
+  /* la copie locale de fs_id recupere son dynweight */
   wfs_id2localdynweight[father_wfs_id] = fs_id2localdynweight[fs_id];
 
   /* Non sensible aux reallocations de wfs_field_set !! */
@@ -8487,7 +8487,7 @@ instantiate_wfs_id (father_wfs_id)
       continue;
 
     if (is_fill_fs_on_start_symbol && (cur_val & OPTIONAL_VAL)) {
-      /* Quand on traite des (sous-)structures associées à l'axiome, on élimine les =? */
+      /* Quand on traite des (sous-)structures associees a l'axiome, on elimine les =? */
       SXBA_0_bit (field_set, field_id);
       continue;
     }
@@ -8506,7 +8506,7 @@ instantiate_wfs_id (father_wfs_id)
 	if (son_wfs_id == 0) {
 	  /* C'est la 1ere fois qu'on utilise ce chemin de champs */
 	  son_wfs_id = instantiate_fs_id (son_fs_id, right_dol, son_field_id_path);
-	  /* si on est à la racine, cette instantiation sera récursive */	  
+	  /* si on est a la racine, cette instantiation sera recursive */	  
 	}
       }
       else {
@@ -8514,7 +8514,7 @@ instantiate_wfs_id (father_wfs_id)
 	/* C'est un index ds field_val2adjunct_id */
 	if (son_wfs_id == 0) {
 	  son_wfs_id = instantiate_ufs_id (field_id, son_field_id_path/*, father_wfs_id */, &access_kind);
-	  /* si on est à la racine, cette instantiation sera récursive */
+	  /* si on est a la racine, cette instantiation sera recursive */
 
 	}
       }
@@ -8926,7 +8926,7 @@ unbounded_structure_unification (left_result, right_result)
 	 On peut faire l'unification uniquement si (au moins) l'un des pred est contraint
 	 l'unification reussit si les 2 lexemes sont identiques et si l'intersection des sous_cat
 	 est non vide.  Exception si une sous-cat est vide, elle herite de l'autre.
-	 A FAIRE (peut e^tre) prévoir l'extension pred = "lexeme <>" qui ne pourrait s'unifier
+	 A FAIRE (peut e^tre) prevoir l'extension pred = "lexeme <>" qui ne pourrait s'unifier
 	 qu'avec une sous-cat vide et qui serait donc differente de pred = "lexeme" qui pourrait
 	 s'unifier avec une sous-cat qqc */
 #ifdef ESSAI
@@ -9181,10 +9181,10 @@ structure_unification (left_result, right_result)
   right_field_set = wfs_field_set [right_page_nb] [right_delta_nb];
 
   if (*right_attr_ptr0 > 0) {
-    /* non instancié: on instancie */
+    /* non instancie: on instancie */
     instantiate_wfs_id (right_wfs_id);
 
-    /* on donne à la structure locale de p.g. le dynweight du représentant de la classe d'équiv de celle de p.d. */
+    /* on donne a la structure locale de p.g. le dynweight du representant de la classe d'equiv de celle de p.d. */
     wfs_id2localdynweight[left_wfs_id] += wfs_id2localdynweight[get_equiv(right_wfs_id)];
   }
   
@@ -9267,24 +9267,24 @@ structure_unification (left_result, right_result)
 	break;
 
       /* on est dans structure_unification: pas de is_constrained_unification possible ;
-	 on doit ne laisser =c que ssi il y a =c des deux côtés */
+	 on doit ne laisser =c que ssi il y a =c des deux cotes */
       if ((*left_attr_ptr & CONSTRAINT_VAL) && (*right_attr_ptr & CONSTRAINT_VAL))
 	;
       else {
 	*left_attr_ptr &= ~CONSTRAINT_VAL;
-	*right_attr_ptr &= ~CONSTRAINT_VAL;  // peut-être facultatif car on n'y touche pê plus jamais... ne peut pas faire de mal
+	*right_attr_ptr &= ~CONSTRAINT_VAL;  // peut-etre facultatif car on n'y touche pe plus jamais... ne peut pas faire de mal
       }
 
       /* on est dans structure_unification: pas de is_optional_unification possible ;
-	 on doit ne laisser =c que ssi il y a =c des deux côtés */
+	 on doit ne laisser =c que ssi il y a =c des deux cotes */
       if ((*left_attr_ptr & OPTIONAL_VAL) && (*right_attr_ptr & OPTIONAL_VAL))
 	;
       else {
 	*left_attr_ptr &= ~OPTIONAL_VAL;
-	*right_attr_ptr &= ~OPTIONAL_VAL;  // peut-être facultatif car on n'y touche pê plus jamais... ne peut pas faire de mal
+	*right_attr_ptr &= ~OPTIONAL_VAL;  // peut-etre facultatif car on n'y touche pe plus jamais... ne peut pas faire de mal
       }
 
-#if 0 // ancien passage à la place de ce qui précède: mauvais
+#if 0 // ancien passage a la place de ce qui precede: mauvais
       if (is_constrained_unification) {
 	bool is_left_c, is_right_c;
 
@@ -10834,7 +10834,7 @@ unhook (bot)
 /* PB Y'a des trucs qu'on ne sait pas faire : ($$ . (X|Y)* X = $$ . (X|Y)* Y) ;  !! */
 /* On traite le "niveau" cur_post */
 /* Nelle version qui utilise les "marques" */
-/* rend false ssi aucune f-structure n'a pu être construite (échecs d'unification) ; s'il y a des struct, rend true qu'il y ait ou non des struct cohérentes */
+/* rend false ssi aucune f-structure n'a pu etre construite (echecs d'unification) ; s'il y a des struct, rend true qu'il y ait ou non des struct coherentes */
 static bool
 post_evaluate (Aij, cur_post)
      int    Aij, cur_post;
@@ -12139,7 +12139,7 @@ seek_Aij (A, Pij)
   return 0;
 }
 
-/* Calcul du poids (nb de couples (attr présent et non égal à "-", terminal) de fs_id (et de ses sous structures) */
+/* Calcul du poids (nb de couples (attr present et non egal a "-", terminal) de fs_id (et de ses sous structures) */
 static int
 get_att_cat (fs_id, local_att_id, local_cat_id)
      int fs_id, local_att_id, local_cat_id;
@@ -12321,11 +12321,11 @@ get_adv_weight
 seek_Easy_NVij_weight
 get_max_aij_weight
 get_max_Easy_NV_weight
-get_det_nc (génériquisé en get_att_cat ci-dessus, et défini dans easy.disamb pour get_det_nc)
+get_det_nc (generiquise en get_att_cat ci-dessus, et defini dans easy.disamb pour get_det_nc)
 get_nc_adjunct_nc
 */
 
-/* call_inside_ranking est maintenant généré */
+/* call_inside_ranking est maintenant genere' */
 #define include_ranking_functions 1
 #ifdef lfg_disamb_h
 #include lfg_disamb_h
@@ -12431,14 +12431,14 @@ perform_inside_ranking (Aij)
   ranking = (is_ranking) ? RANKS (A) : NULL; /* L'option "-no_ranking" peut inhiber le ranking */
   x = Xpq2disp [Aij];
       
-  use_default_ranking = false; /* par défaut, pas de default_ranking */
+  use_default_ranking = false; /* par defaut, pas de default_ranking */
 
   if (x) {
     base_ptr = fs_id_dstack + x;
     d = *base_ptr++;
 
     if (ranking == NULL && max_fs_nb > 0 && d > max_fs_nb) {
-      ranking = ranks [0]; /* ranking de __default__ appelé qd il y trop de fs, sur option -mfsnb max_fs_nb */
+      ranking = ranks [0]; /* ranking de __default__ appele' qd il y trop de fs, sur option -mfsnb max_fs_nb */
       if (ranking) {
 	use_default_ranking = true;
 #if LOG
@@ -13101,10 +13101,10 @@ tree_bu_walk (prod)
 #endif /* LOG */
 	}
 
-	/* On est dans le cas particulier où l'on n'a pas de sémantique (eq. fonctionnelle) associée à la règle.
+	/* On est dans le cas particulier ou` l'on n'a pas de semantique (eq. fonctionnelle) associee a la regle.
 	 on  met ret_val = true:
-	1. parce que dans ce cas il n'y a jamais d'échec à proprement paler
-	2. pour que Xpq2disp[Aij] (qui contient la structure vide) soit cohérente avec Pij2disp[prod] */
+	1. parce que dans ce cas il n'y a jamais d'echec a proprement parler
+	2. pour que Xpq2disp[Aij] (qui contient la structure vide) soit coherente avec Pij2disp[prod] */
 	DPUSH (fs_id_Pij_dstack, 2);
 	DPUSH (fs_id_Pij_dstack, head);
 	DPUSH (fs_id_Pij_dstack, -1);
@@ -13268,7 +13268,7 @@ tree_bu_walk (prod)
 
 	  /* raz de wfs_id2localdynweight */
 	  for (x = MAIN_WFS_ID; x <= wfs_id; x++)
-	    wfs_id2localdynweight[x] = 0; /* ré-initialisation pour la prochaine fois... */
+	    wfs_id2localdynweight[x] = 0; /* re-initialisation pour la prochaine fois... */
 
 #if LOG
 	  printf ("  Occur #%i/%i: (%s)\n", doldol+1, struct_nb, (head != 0) ? "success" : "failure");

@@ -1,0 +1,369 @@
+{
+    "tag": "fortran_file",
+    "comments": {
+        "2": "c\nc\n",
+        "16": "C\n"
+    },
+    "file": "test/unit-tests/extension-2.3-sized-logical.FOR",
+    "program_units": [
+        {
+            "tag": "subroutine",
+            "name": {
+                "tag": "symbolic_name",
+                "start_pos": {
+                    "line": "1",
+                    "column": "18"
+                },
+                "name": "LIBUNIT"
+            },
+            "prog_unit_parameters": [
+                {
+                    "tag": "variable",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "26"
+                    },
+                    "variable_name": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "1",
+                            "column": "26"
+                        },
+                        "name": "NI"
+                    }
+                }
+            ],
+            "start_pos": {
+                "line": "1",
+                "column": "7"
+            },
+            "end_pos": {
+                "line": "18",
+                "column": "9"
+            },
+            "statement_list": [
+                {
+                    "tag": "variable_declaration_statement",
+                    "start_pos": {
+                        "line": "4",
+                        "column": "7"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "start_pos": {
+                            "line": "4",
+                            "column": "7"
+                        },
+                        "name": "LOGICAL",
+                        "len_specification": {
+                            "tag": "nonzero_unsigned_int_constant",
+                            "start_pos": {
+                                "line": "4",
+                                "column": "15"
+                            },
+                            "value": "4"
+                        }
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "4",
+                                "column": "15"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "4",
+                                    "column": "15"
+                                },
+                                "name": "LOGA"
+                            },
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "variable_declaration_statement",
+                    "start_pos": {
+                        "line": "5",
+                        "column": "7"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "start_pos": {
+                            "line": "5",
+                            "column": "7"
+                        },
+                        "name": "INTEGER"
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "5",
+                                "column": "17"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "5",
+                                    "column": "17"
+                                },
+                                "name": "NI"
+                            },
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "do_statement",
+                    "start_pos": {
+                        "line": "7",
+                        "column": "7"
+                    },
+                    "loop_control": {
+                        "start_pos": {
+                            "line": "7",
+                            "column": "10"
+                        },
+                        "variable_name": {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "7",
+                                "column": "10"
+                            },
+                            "name": "I"
+                        },
+                        "init": {
+                            "tag": "unsigned_int_constant",
+                            "start_pos": {
+                                "line": "7",
+                                "column": "12"
+                            },
+                            "value": "7"
+                        },
+                        "limit": {
+                            "tag": "unsigned_int_constant",
+                            "start_pos": {
+                                "line": "7",
+                                "column": "14"
+                            },
+                            "value": "70"
+                        }
+                    },
+                    "statement_list": [
+                        {
+                            "tag": "assignment_statement",
+                            "start_pos": {
+                                "line": "8",
+                                "column": "9"
+                            },
+                            "left": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "8",
+                                    "column": "9"
+                                },
+                                "name": "NI"
+                            },
+                            "right": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "8",
+                                    "column": "12"
+                                },
+                                "name": "I"
+                            }
+                        },
+                        {
+                            "tag": "inquire_statement",
+                            "start_pos": {
+                                "line": "9",
+                                "column": "9"
+                            },
+                            "control_info_list": [
+                                {
+                                    "tag": "control_info_option",
+                                    "start_pos": {
+                                        "line": "9",
+                                        "column": "17"
+                                    },
+                                    "control_option_name": "UNIT",
+                                    "control_option_value": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "9",
+                                            "column": "22"
+                                        },
+                                        "name": "I"
+                                    }
+                                },
+                                {
+                                    "tag": "control_info_option",
+                                    "start_pos": {
+                                        "line": "9",
+                                        "column": "24"
+                                    },
+                                    "control_option_name": "OPENED",
+                                    "control_option_value": {
+                                        "tag": "scalar_variable",
+                                        "start_pos": {
+                                            "line": "9",
+                                            "column": "31"
+                                        },
+                                        "variable_name": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "9",
+                                                "column": "31"
+                                            },
+                                            "name": "LOGA"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "logical_if_statement",
+                            "start_pos": {
+                                "line": "10",
+                                "column": "9"
+                            },
+                            "expression": {
+                                "tag": "logical_expression",
+                                "expression": {
+                                    "tag": "logical_factor",
+                                    "negated": "true",
+                                    "expression": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "10",
+                                            "column": "18"
+                                        },
+                                        "name": "LOGA"
+                                    }
+                                }
+                            },
+                            "statement": {
+                                "tag": "unconditional_goto_statement",
+                                "start_pos": {
+                                    "line": "10",
+                                    "column": "24"
+                                },
+                                "labels": [
+                                    {
+                                        "tag": "label_reference",
+                                        "start_pos": {
+                                            "line": "10",
+                                            "column": "29"
+                                        },
+                                        "label": "100"
+                                    }
+                                ],
+                                "var": []
+                            }
+                        }
+                    ],
+                    "end_do": {
+                        "start_pos": {
+                            "line": "11",
+                            "column": "12"
+                        }
+                    }
+                },
+                {
+                    "tag": "write_statement",
+                    "start_pos": {
+                        "line": "12",
+                        "column": "7"
+                    },
+                    "control_info_list": [
+                        {
+                            "tag": "unsigned_int_constant",
+                            "start_pos": {
+                                "line": "12",
+                                "column": "13"
+                            },
+                            "value": "6"
+                        },
+                        {
+                            "tag": "asterisk",
+                            "start_pos": {
+                                "line": "12",
+                                "column": "15"
+                            }
+                        }
+                    ],
+                    "io_list": [
+                        {
+                            "tag": "character_expression",
+                            "expression": {
+                                "tag": "character_constant",
+                                "start_pos": {
+                                    "line": "12",
+                                    "column": "17"
+                                },
+                                "value": "' PAS D''UNITE LOGIQUE LIBRE'"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "tag": "call_statement",
+                    "start_pos": {
+                        "line": "13",
+                        "column": "7"
+                    },
+                    "name": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "13",
+                            "column": "12"
+                        },
+                        "name": "EXIT"
+                    },
+                    "arguments": [
+                        {
+                            "tag": "arithmetic_expression",
+                            "expression": {
+                                "tag": "unsigned_int_constant",
+                                "start_pos": {
+                                    "line": "13",
+                                    "column": "18"
+                                },
+                                "value": "1"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "tag": "stop_statement",
+                    "start_pos": {
+                        "line": "14",
+                        "column": "7"
+                    }
+                },
+                {
+                    "label": "100",
+                    "label_pos": {
+                        "line": "15",
+                        "column": "3"
+                    },
+                    "tag": "continue_statement",
+                    "start_pos": {
+                        "line": "15",
+                        "column": "7"
+                    }
+                },
+                {
+                    "tag": "return_statement",
+                    "start_pos": {
+                        "line": "17",
+                        "column": "7"
+                    }
+                }
+            ]
+        }
+    ]
+}

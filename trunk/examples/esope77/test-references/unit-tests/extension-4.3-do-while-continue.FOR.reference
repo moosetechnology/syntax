@@ -1,0 +1,147 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/extension-4.3-do-while-continue.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "prog_unit_parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "4",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "do_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "8"
+                    },
+                    "while_pos": {
+                        "line": "1",
+                        "column": "14"
+                    },
+                    "statement_number": {
+                        "tag": "label_reference",
+                        "start_pos": {
+                            "line": "1",
+                            "column": "11"
+                        },
+                        "label": "10"
+                    },
+                    "loop_control_expression": {
+                        "tag": "logical_factor",
+                        "negated": "false",
+                        "expression": {
+                            "tag": "logical_primary",
+                            "expression": {
+                                "tag": "binary_expression",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "22"
+                                },
+                                "left": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "1",
+                                        "column": "22"
+                                    },
+                                    "name": "C"
+                                },
+                                "operator": {
+                                    "tag": "relational_operator",
+                                    "start_pos": {
+                                        "line": "1",
+                                        "column": "24"
+                                    },
+                                    "operator_value": ".NE."
+                                },
+                                "right": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "1",
+                                        "column": "29"
+                                    },
+                                    "name": "R"
+                                }
+                            }
+                        }
+                    },
+                    "statement_list": [
+                        {
+                            "tag": "assignment_statement",
+                            "start_pos": {
+                                "line": "2",
+                                "column": "10"
+                            },
+                            "left": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "10"
+                                },
+                                "name": "C"
+                            },
+                            "right": {
+                                "tag": "arithmetic_expression",
+                                "expression": {
+                                    "tag": "binary_expression",
+                                    "start_pos": {
+                                        "line": "2",
+                                        "column": "14"
+                                    },
+                                    "left": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "2",
+                                            "column": "14"
+                                        },
+                                        "name": "C"
+                                    },
+                                    "operator": {
+                                        "tag": "arithmetic_operator",
+                                        "start_pos": {
+                                            "line": "2",
+                                            "column": "15"
+                                        },
+                                        "operator_value": "+"
+                                    },
+                                    "right": {
+                                        "tag": "unsigned_int_constant",
+                                        "start_pos": {
+                                            "line": "2",
+                                            "column": "16"
+                                        },
+                                        "value": "1"
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "label": "10",
+                            "label_pos": {
+                                "line": "3",
+                                "column": "1"
+                            },
+                            "tag": "continue_statement",
+                            "start_pos": {
+                                "line": "3",
+                                "column": "8"
+                            }
+                        }
+                    ],
+                    "end_do": {
+                        "start_pos": {
+                            "line": "3",
+                            "column": "16"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

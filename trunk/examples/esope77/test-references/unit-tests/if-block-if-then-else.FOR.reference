@@ -1,0 +1,195 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/if-block-if-then-else.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": {
+                "tag": "symbolic_name",
+                "start_pos": {
+                    "line": "1",
+                    "column": "15"
+                },
+                "name": "MAIN"
+            },
+            "start_pos": {
+                "line": "1",
+                "column": "7"
+            },
+            "end_pos": {
+                "line": "9",
+                "column": "9"
+            },
+            "statement_list": [
+                {
+                    "tag": "block_if_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "8"
+                    },
+                    "then_start": {
+                        "line": "2",
+                        "column": "13"
+                    },
+                    "condition": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "2",
+                            "column": "13"
+                        },
+                        "name": "L"
+                    },
+                    "then_statements": [
+                        {
+                            "tag": "assignment_statement",
+                            "start_pos": {
+                                "line": "3",
+                                "column": "15"
+                            },
+                            "left": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "3",
+                                    "column": "15"
+                                },
+                                "name": "N"
+                            },
+                            "right": {
+                                "tag": "arithmetic_expression",
+                                "expression": {
+                                    "tag": "binary_expression",
+                                    "start_pos": {
+                                        "line": "3",
+                                        "column": "17"
+                                    },
+                                    "left": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "3",
+                                            "column": "17"
+                                        },
+                                        "name": "N"
+                                    },
+                                    "operator": {
+                                        "tag": "arithmetic_operator",
+                                        "start_pos": {
+                                            "line": "3",
+                                            "column": "18"
+                                        },
+                                        "operator_value": "+"
+                                    },
+                                    "right": {
+                                        "tag": "unsigned_int_constant",
+                                        "start_pos": {
+                                            "line": "3",
+                                            "column": "19"
+                                        },
+                                        "value": "1"
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "tag": "call_statement",
+                            "start_pos": {
+                                "line": "4",
+                                "column": "15"
+                            },
+                            "name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "4",
+                                    "column": "20"
+                                },
+                                "name": "CALC"
+                            },
+                            "arguments": []
+                        }
+                    ],
+                    "else_block": {
+                        "start_pos": {
+                            "line": "5",
+                            "column": "8"
+                        },
+                        "tag": "else",
+                        "statement_list": [
+                            {
+                                "tag": "assignment_statement",
+                                "start_pos": {
+                                    "line": "6",
+                                    "column": "15"
+                                },
+                                "left": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "6",
+                                        "column": "15"
+                                    },
+                                    "name": "K"
+                                },
+                                "right": {
+                                    "tag": "arithmetic_expression",
+                                    "expression": {
+                                        "tag": "binary_expression",
+                                        "start_pos": {
+                                            "line": "6",
+                                            "column": "17"
+                                        },
+                                        "left": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "6",
+                                                "column": "17"
+                                            },
+                                            "name": "K"
+                                        },
+                                        "operator": {
+                                            "tag": "arithmetic_operator",
+                                            "start_pos": {
+                                                "line": "6",
+                                                "column": "18"
+                                            },
+                                            "operator_value": "+"
+                                        },
+                                        "right": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "6",
+                                                "column": "19"
+                                            },
+                                            "value": "1"
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "tag": "call_statement",
+                                "start_pos": {
+                                    "line": "7",
+                                    "column": "15"
+                                },
+                                "name": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "7",
+                                        "column": "20"
+                                    },
+                                    "name": "DISP"
+                                },
+                                "arguments": []
+                            }
+                        ],
+                        "end_if": {
+                            "tag": "end_if",
+                            "start_pos": {
+                                "line": "8",
+                                "column": "8"
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

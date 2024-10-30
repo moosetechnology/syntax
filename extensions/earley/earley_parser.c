@@ -105,7 +105,7 @@ static char	ME [] = "earley_parser";
 #include "sxba_bag.h"
 #include <math.h>
 
-char WHAT_EARLEY_PARSER[] = "@(#)SYNTAX - $Id: earley_parser.c 4148 2024-08-02 10:43:56Z garavel $" WHAT_DEBUG;
+char WHAT_EARLEY_PARSER[] = "@(#)SYNTAX - $Id: earley_parser.c 4473 2024-10-24 08:33:47Z garavel $" WHAT_DEBUG;
 
 SXUINT          maximum_input_size; /* Pour udag_scanner */
 bool       tmp_file_for_stdin; /* Pour read_a_re */
@@ -1688,9 +1688,9 @@ AND3 (SXBA lhs_bits_array, SXBA op1_bits_array, SXBA op2_bits_array)
 #if EBUG
   sxbassert (*lhs_bits_array >= *op1_bits_array, "AND3 (|X|<|Y|)");
   sxbassert (*op1_bits_array >= *op2_bits_array, "AND3 (|Y|<|Z|)");
-  sxbassert ((*(lhs_bits_array+SXNBLONGS (SXBASIZE (lhs_bits_array))) & ((~((SXBA_ELT)0)) << 1 << MOD (SXBASIZE (lhs_bits_array) - 1))) == ((SXUINT) 0), "AND3");
-  sxbassert ((*(op1_bits_array+SXNBLONGS (SXBASIZE (op1_bits_array))) & ((~((SXBA_ELT)0)) << 1 << MOD (SXBASIZE (op1_bits_array) - 1))) == ((SXUINT) 0), "AND3");
-  sxbassert ((*(op2_bits_array+SXNBLONGS (SXBASIZE (op2_bits_array))) & ((~((SXBA_ELT)0)) << 1 << MOD (SXBASIZE (op2_bits_array) - 1))) == ((SXUINT) 0), "AND3");
+  sxbassert ((*(lhs_bits_array+SXNBLONGS (SXBASIZE (lhs_bits_array))) & ((~((SXBA_ELT)0)) << 1 << SXMOD (SXBASIZE (lhs_bits_array) - 1))) == ((SXUINT) 0), "AND3");
+  sxbassert ((*(op1_bits_array+SXNBLONGS (SXBASIZE (op1_bits_array))) & ((~((SXBA_ELT)0)) << 1 << SXMOD (SXBASIZE (op1_bits_array) - 1))) == ((SXUINT) 0), "AND3");
+  sxbassert ((*(op2_bits_array+SXNBLONGS (SXBASIZE (op2_bits_array))) & ((~((SXBA_ELT)0)) << 1 << SXMOD (SXBASIZE (op2_bits_array) - 1))) == ((SXUINT) 0), "AND3");
   for (x = SXNBLONGS (SXBASIZE (lhs_bits_array)); x > slices_number; x--)
     sxbassert (lhs_bits_array [x] == ((SXUINT) 0), "AND3 (X has a non empty suffix)");
 #endif
@@ -1959,8 +1959,8 @@ IS_AND (SXBA lhs_bits_array, SXBA rhs_bits_array)
   SXINT	        lhs_slices_number = SXNBLONGS (SXBASIZE (lhs_bits_array));
 
 #if EBUG
-  sxbassert ((*(lhs_bits_array+lhs_slices_number) & ((~((SXBA_ELT)0)) << 1 << MOD (SXBASIZE (lhs_bits_array) - 1))) == 0, "IS_AND");
-  sxbassert ((*(rhs_bits_array+slices_number) & ((~((SXBA_ELT)0)) << 1 << MOD (SXBASIZE (rhs_bits_array) - 1))) == 0, "IS_AND");
+  sxbassert ((*(lhs_bits_array+lhs_slices_number) & ((~((SXBA_ELT)0)) << 1 << SXMOD (SXBASIZE (lhs_bits_array) - 1))) == 0, "IS_AND");
+  sxbassert ((*(rhs_bits_array+slices_number) & ((~((SXBA_ELT)0)) << 1 << SXMOD (SXBASIZE (rhs_bits_array) - 1))) == 0, "IS_AND");
 #endif
 
   if (lhs_slices_number < slices_number)
@@ -1992,9 +1992,9 @@ OR_AND (SXBA bits_array1, SXBA bits_array2, SXBA bits_array3)
 #if EBUG
   sxbassert (*bits_array1 >= *bits_array2, "OR_AND (|X|<|Y|)");
   sxbassert (*bits_array2 <= *bits_array3, "OR_AND (|Y|>|Z|)");
-  sxbassert ((*(bits_array1+SXNBLONGS (SXBASIZE (bits_array1))) & ((~((SXBA_ELT)0)) << 1 << MOD (SXBASIZE (bits_array1) - 1))) == 0, "OR_AND");
-  sxbassert ((*(bits_array2+slices_number) & ((~((SXBA_ELT)0)) << 1 << MOD (SXBASIZE (bits_array2) - 1))) == 0, "OR_AND");
-  sxbassert ((*(bits_array3+SXNBLONGS (SXBASIZE (bits_array3))) & ((~((SXBA_ELT)0)) << 1 << MOD (SXBASIZE (bits_array3) - 1))) == 0, "OR_AND");
+  sxbassert ((*(bits_array1+SXNBLONGS (SXBASIZE (bits_array1))) & ((~((SXBA_ELT)0)) << 1 << SXMOD (SXBASIZE (bits_array1) - 1))) == 0, "OR_AND");
+  sxbassert ((*(bits_array2+slices_number) & ((~((SXBA_ELT)0)) << 1 << SXMOD (SXBASIZE (bits_array2) - 1))) == 0, "OR_AND");
+  sxbassert ((*(bits_array3+SXNBLONGS (SXBASIZE (bits_array3))) & ((~((SXBA_ELT)0)) << 1 << SXMOD (SXBASIZE (bits_array3) - 1))) == 0, "OR_AND");
 #endif
 
   bits_ptr1 = bits_array1 + slices_number, bits_ptr2 = bits_array2 + slices_number, bits_ptr3 = bits_array3 + slices_number;
@@ -2031,9 +2031,9 @@ OR_AND_MINUS (SXBA bits_array1, SXBA bits_array2, SXBA bits_array3, SXBA bits_ar
 #if EBUG
   sxbassert (*bits_array1 >= *bits_array2, "OR_AND_MINUS (|X|<|Y|)");
   sxbassert (*bits_array3 >= *bits_array2, "OR_AND_MINUS (|Z|<|Y|)");
-  sxbassert ((*(bits_array1+SXNBLONGS (SXBASIZE (bits_array1))) & ((~((SXBA_ELT)0)) << 1 << MOD (SXBASIZE (bits_array1) - 1))) == 0, "OR_AND_MINUS");
-  sxbassert ((*(bits_array2+slices_number) & ((~((SXBA_ELT)0)) << 1 << MOD (SXBASIZE (bits_array2) - 1))) == 0, "OR_AND_MINUS");
-  sxbassert ((*(bits_array3+SXNBLONGS (SXBASIZE (bits_array3))) & ((~((SXBA_ELT)0)) << 1 << MOD (SXBASIZE (bits_array3) - 1))) == 0, "OR_AND_MINUS");
+  sxbassert ((*(bits_array1+SXNBLONGS (SXBASIZE (bits_array1))) & ((~((SXBA_ELT)0)) << 1 << SXMOD (SXBASIZE (bits_array1) - 1))) == 0, "OR_AND_MINUS");
+  sxbassert ((*(bits_array2+slices_number) & ((~((SXBA_ELT)0)) << 1 << SXMOD (SXBASIZE (bits_array2) - 1))) == 0, "OR_AND_MINUS");
+  sxbassert ((*(bits_array3+SXNBLONGS (SXBASIZE (bits_array3))) & ((~((SXBA_ELT)0)) << 1 << SXMOD (SXBASIZE (bits_array3) - 1))) == 0, "OR_AND_MINUS");
   /* Pas de verif sur bits_array4 qui sert d'ensemble de travail */
 #endif
 
@@ -2069,8 +2069,8 @@ COPY (SXBA lhs_bits_array, SXBA rhs_bits_array)
 
 #if EBUG
   sxbassert (*lhs_bits_array >= *rhs_bits_array, "COPY (|X|<|Y|)");
-  sxbassert ((*lhs_bits_ptr & ((~((SXBA_ELT)0)) << 1 << MOD (SXBASIZE (lhs_bits_array) - 1))) == 0, "COPY");
-  sxbassert ((*rhs_bits_ptr & ((~((SXBA_ELT)0)) << 1 << MOD (SXBASIZE (rhs_bits_array) - 1))) == 0, "COPY");
+  sxbassert ((*lhs_bits_ptr & ((~((SXBA_ELT)0)) << 1 << SXMOD (SXBASIZE (lhs_bits_array) - 1))) == 0, "COPY");
+  sxbassert ((*rhs_bits_ptr & ((~((SXBA_ELT)0)) << 1 << SXMOD (SXBASIZE (rhs_bits_array) - 1))) == 0, "COPY");
 #endif
 
   lhs_slices_number -= rhs_slices_number;
@@ -2106,8 +2106,8 @@ OR (SXBA lhs_bits_array, SXBA rhs_bits_array)
 
 #if EBUG
   sxbassert (*lhs_bits_array >= *rhs_bits_array, "OR (|X|<|Y|)");
-  sxbassert ((*(lhs_bits_array+SXNBLONGS (SXBASIZE (lhs_bits_array))) & ((~((SXBA_ELT)0)) << 1 << MOD (SXBASIZE (lhs_bits_array) - 1))) == 0, "OR");
-  sxbassert ((*rhs_bits_ptr & ((~((SXBA_ELT)0)) << 1 << MOD (SXBASIZE (rhs_bits_array) - 1))) == 0, "OR");
+  sxbassert ((*(lhs_bits_array+SXNBLONGS (SXBASIZE (lhs_bits_array))) & ((~((SXBA_ELT)0)) << 1 << SXMOD (SXBASIZE (lhs_bits_array) - 1))) == 0, "OR");
+  sxbassert ((*rhs_bits_ptr & ((~((SXBA_ELT)0)) << 1 << SXMOD (SXBASIZE (rhs_bits_array) - 1))) == 0, "OR");
 #endif
 
   while (slices_number-- > 0) {
@@ -5115,8 +5115,8 @@ scan_reduce (SXINT p, SXINT q)
   SXINT	      j, indice, order, A;
   bool     has_reduce;
 
-  filtre = ((SXBA_ELT)1) << MOD (p);
-  indice = DIV (p) + 1;
+  filtre = ((SXBA_ELT)1) << SXMOD (p);
+  indice = SXDIV (p) + 1;
 
   j = p;
 
@@ -5181,7 +5181,7 @@ scan_reduce (SXINT p, SXINT q)
       if (j < 0)
 	break;
 
-      filtre = ((SXBA_ELT)1) << MOD (j);
+      filtre = ((SXBA_ELT)1) << SXMOD (j);
       indice--;
     }
   }

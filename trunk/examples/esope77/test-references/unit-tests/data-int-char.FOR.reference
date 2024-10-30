@@ -1,0 +1,253 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/data-int-char.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": {
+                "tag": "symbolic_name",
+                "start_pos": {
+                    "line": "1",
+                    "column": "16"
+                },
+                "name": "MAIN"
+            },
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "5",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "variable_declaration_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "8"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "start_pos": {
+                            "line": "2",
+                            "column": "8"
+                        },
+                        "name": "CHARACTER"
+                    },
+                    "declarators": [
+                        {
+                            "len_specifier": {
+                                "tag": "nonzero_unsigned_int_constant",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "21"
+                                },
+                                "value": "1"
+                            },
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "2",
+                                "column": "18"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "18"
+                                },
+                                "name": "CR"
+                            },
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "variable_declaration_statement",
+                    "start_pos": {
+                        "line": "3",
+                        "column": "8"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "start_pos": {
+                            "line": "3",
+                            "column": "8"
+                        },
+                        "name": "INTEGER"
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "3",
+                                "column": "16"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "3",
+                                    "column": "16"
+                                },
+                                "name": "I"
+                            },
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "3",
+                                "column": "19"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "3",
+                                    "column": "19"
+                                },
+                                "name": "N"
+                            },
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "data_statement",
+                    "start_pos": {
+                        "line": "4",
+                        "column": "8"
+                    },
+                    "data_groups": [
+                        {
+                            "tag": "data_group",
+                            "start_pos": {
+                                "line": "4",
+                                "column": "13"
+                            },
+                            "data_group_variables_list": [
+                                {
+                                    "tag": "variable",
+                                    "start_pos": {
+                                        "line": "4",
+                                        "column": "13"
+                                    },
+                                    "variable_name": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "4",
+                                            "column": "13"
+                                        },
+                                        "name": "I"
+                                    }
+                                }
+                            ],
+                            "data_group_constants_list": [
+                                {
+                                    "tag": "data_group_constant",
+                                    "start_pos": {
+                                        "line": "4",
+                                        "column": "16"
+                                    },
+                                    "occurence": {},
+                                    "constant": {
+                                        "tag": "character_constant",
+                                        "start_pos": {
+                                            "line": "4",
+                                            "column": "16"
+                                        },
+                                        "value": "'00'"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "data_group",
+                            "start_pos": {
+                                "line": "4",
+                                "column": "22"
+                            },
+                            "data_group_variables_list": [
+                                {
+                                    "tag": "variable",
+                                    "start_pos": {
+                                        "line": "4",
+                                        "column": "22"
+                                    },
+                                    "variable_name": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "4",
+                                            "column": "22"
+                                        },
+                                        "name": "N"
+                                    }
+                                }
+                            ],
+                            "data_group_constants_list": [
+                                {
+                                    "tag": "data_group_constant",
+                                    "start_pos": {
+                                        "line": "4",
+                                        "column": "24"
+                                    },
+                                    "occurence": {},
+                                    "constant": {
+                                        "tag": "character_constant",
+                                        "start_pos": {
+                                            "line": "4",
+                                            "column": "24"
+                                        },
+                                        "value": "'s12t'"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "data_group",
+                            "start_pos": {
+                                "line": "4",
+                                "column": "32"
+                            },
+                            "data_group_variables_list": [
+                                {
+                                    "tag": "variable",
+                                    "start_pos": {
+                                        "line": "4",
+                                        "column": "32"
+                                    },
+                                    "variable_name": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "4",
+                                            "column": "32"
+                                        },
+                                        "name": "CR"
+                                    }
+                                }
+                            ],
+                            "data_group_constants_list": [
+                                {
+                                    "tag": "data_group_constant",
+                                    "start_pos": {
+                                        "line": "4",
+                                        "column": "35"
+                                    },
+                                    "occurence": {},
+                                    "constant": {
+                                        "tag": "unsigned_int_constant",
+                                        "start_pos": {
+                                            "line": "4",
+                                            "column": "35"
+                                        },
+                                        "value": "13"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,166 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/block-data-empty-name.FOR",
+    "program_units": [
+        {
+            "tag": "block_data",
+            "prog_unit_parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "4",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "common_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "8"
+                    },
+                    "common_body": [
+                        {
+                            "tag": "common_group",
+                            "start_pos": {
+                                "line": "2",
+                                "column": "15"
+                            },
+                            "common_block_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "16"
+                                },
+                                "name": "RANGE"
+                            },
+                            "common_element_name": {
+                                "tag": "variable_declarator",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "23"
+                                },
+                                "variable_name": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "2",
+                                        "column": "23"
+                                    },
+                                    "name": "X0"
+                                },
+                                "dimension_declarators": []
+                            }
+                        },
+                        {
+                            "tag": "common_group",
+                            "start_pos": {
+                                "line": "2",
+                                "column": "27"
+                            },
+                            "common_element_name": {
+                                "tag": "variable_declarator",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "27"
+                                },
+                                "variable_name": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "2",
+                                        "column": "27"
+                                    },
+                                    "name": "X1"
+                                },
+                                "dimension_declarators": []
+                            }
+                        }
+                    ]
+                },
+                {
+                    "tag": "data_statement",
+                    "start_pos": {
+                        "line": "3",
+                        "column": "8"
+                    },
+                    "data_groups": [
+                        {
+                            "tag": "data_group",
+                            "start_pos": {
+                                "line": "3",
+                                "column": "13"
+                            },
+                            "data_group_variables_list": [
+                                {
+                                    "tag": "variable",
+                                    "start_pos": {
+                                        "line": "3",
+                                        "column": "13"
+                                    },
+                                    "variable_name": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "3",
+                                            "column": "13"
+                                        },
+                                        "name": "X0"
+                                    }
+                                },
+                                {
+                                    "tag": "variable",
+                                    "start_pos": {
+                                        "line": "3",
+                                        "column": "17"
+                                    },
+                                    "variable_name": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "3",
+                                            "column": "17"
+                                        },
+                                        "name": "X1"
+                                    }
+                                }
+                            ],
+                            "data_group_constants_list": [
+                                {
+                                    "tag": "data_group_constant",
+                                    "start_pos": {
+                                        "line": "3",
+                                        "column": "22"
+                                    },
+                                    "occurence": {},
+                                    "constant": {
+                                        "tag": "unsigned_real_constant",
+                                        "start_pos": {
+                                            "line": "3",
+                                            "column": "22"
+                                        },
+                                        "value": "2.0"
+                                    }
+                                },
+                                {
+                                    "tag": "data_group_constant",
+                                    "start_pos": {
+                                        "line": "3",
+                                        "column": "27"
+                                    },
+                                    "occurence": {},
+                                    "constant": {
+                                        "tag": "unsigned_real_constant",
+                                        "start_pos": {
+                                            "line": "3",
+                                            "column": "27"
+                                        },
+                                        "value": "6.0"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

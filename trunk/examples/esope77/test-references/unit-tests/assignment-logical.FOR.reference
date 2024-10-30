@@ -1,0 +1,126 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/assignment-logical.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "prog_unit_parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "4",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "variable_declaration_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "8"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "start_pos": {
+                            "line": "1",
+                            "column": "8"
+                        },
+                        "name": "LOGICAL"
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "16"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "16"
+                                },
+                                "name": "L1"
+                            },
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "20"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "20"
+                                },
+                                "name": "L2"
+                            },
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "assignment_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "8"
+                    },
+                    "left": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "2",
+                            "column": "8"
+                        },
+                        "name": "L2"
+                    },
+                    "right": {
+                        "tag": "logical_expression",
+                        "expression": {
+                            "tag": "logical_factor",
+                            "negated": "false",
+                            "expression": {
+                                "tag": "logical_primary",
+                                "expression": {
+                                    "tag": "logical_constant",
+                                    "start_pos": {
+                                        "line": "2",
+                                        "column": "13"
+                                    },
+                                    "value": ".TRUE."
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "tag": "assignment_statement",
+                    "start_pos": {
+                        "line": "3",
+                        "column": "8"
+                    },
+                    "left": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "3",
+                            "column": "8"
+                        },
+                        "name": "L1"
+                    },
+                    "right": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "3",
+                            "column": "13"
+                        },
+                        "name": "L2"
+                    }
+                }
+            ]
+        }
+    ]
+}

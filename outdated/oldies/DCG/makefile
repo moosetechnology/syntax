@@ -60,8 +60,33 @@ $(DCG)/dcg_pars.out:	$(PARS)	$(SXBIBS)
 $(LIB)/dcg_nosem_t.o:		$(SXINCL)/sxunix.h 	\
 			dcg_t.c
 	$(CC) -o $@ -c dcg_t.c		\
-		-DSEMPASS=sxvoid
+		-DSEMPASS=sxsvoid
+
+# debut de code produit par "make-makefile dcg"
+
+dcg_t.c: dcg.bt dcg.st dcg.pt dcg.rt dcg.att
+	tables_c dcg > $@
+
+dcg.bt dcg.att dcg_mix.c: dcg.at
+	semat dcg.at  > dcg_mix.c
+
+dcg.st: dcg.bt dcg.lecl
+	lecl dcg.lecl || [ $$? = 1 ]
+
+dcg.pt: dcg.bt
+	csynt dcg || [ $$? = 1 ]
+
+dcg.rt: dcg.bt dcg.st dcg.recor
+	recor dcg.recor
+
+dcg_td.h: dcg.bt dcg.tdef
+	tdef dcg.tdef > $@
+
+# fin de code produit par "make-makefile dcg"
 
 clean:
 	rm -f $(ALL) $(NEEDS1) $(PARS)
+	/bin/rm -f dcg.*.l
+	/bin/rm -f dcg.att dcg.bt dcg.pt dcg.rt dcg.st
+	/bin/rm -f dcg_mix.c dcg_t.c
 

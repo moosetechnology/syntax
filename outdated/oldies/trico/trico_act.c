@@ -1,7 +1,7 @@
 /* ********************************************************
    *                                                      *
    *                                                      *
-   * Copyright (©) 2000 by Institut National de Recherche *
+   * Copyright (c) 2000 by Institut National de Recherche *
    *                    en Informatique et en Automatique *
    *                                                      *
    *                                                      *
@@ -12,7 +12,7 @@
 
 /* ********************************************************
    *                                                      *
-   *  Produit de l'équipe ATOLL.			  *
+   *  Produit de l'equipe ATOLL.			  *
    *                                                      *
    ******************************************************** */
 
@@ -20,16 +20,15 @@
 /************************************************************************/
 /* Historique des modifications, en ordre chronologique inverse:	*/
 /************************************************************************/
-/* 20000905 18:14 (phd):	Adaptation à MINGW			*/
+/* 20000905 18:14 (phd):	Adaptation a MINGW			*/
 /************************************************************************/
-/* Dimanche 21 mai 2000 (phd) :	Création				*/
+/* Dimanche 21 mai 2000 (phd) :	Creation				*/
 /************************************************************************/
 
 char WHAT_TRICO_ACT[] = "@(#)trico_act.c\t- SYNTAX [unix] - Dimanche 21 mai 2000";
 
 #include "sxunix.h"
 #include <time.h>
-#include "trico_env.h"
 
 
 struct trico {
@@ -140,7 +139,7 @@ static SXINLINE int inf_egal_sup (const SXINT *a, const SXINT *b)
 
   for (s = (unsigned char *) sxstrget (*a), t = (unsigned char *) sxstrget (*b); *s==*t && --len>0; s++, t++)
     ;
-  return ((len > 0) ? (*s - *t) : (ls - lt));
+  return ((len > 0) ? (*s - *t) : (int) (ls - lt));
 }
 
 
@@ -524,11 +523,11 @@ static void gen_header ()
   fprintf (trico_file,
 	   "\n\
 /*********************************************************************\n\
-\tCet automate pour les mots \"%s\" a été produit\n\
+\tCet automate pour les mots \"%s\" a ete produit\n\
 \tle %s\
-\tpar le constructeur TRICO de SYNTAX(®)\n\
+\tpar le constructeur TRICO de SYNTAX(r)\n\
 ********************************************************************\n\
-\t(®) SYNTAX est une marque déposée de l'INRIA.\n\
+\t(c) SYNTAX est une marque deposee de l'INRIA.\n\
 *********************************************************************/\n\n\n",
 	   prgentname, ctime (&date_time));
 
@@ -608,7 +607,7 @@ static void trico_process ()
   sort_by_tree (pointeurs_suffixe, 0, mots.nombre - 1, inf_egal);
   horodatage (SXACTION);
   fputs ("Tri QS...", sxtty);
-  qsort (pointeurs_supplementaires, mots.nombre, sizeof (*pointeurs_supplementaires), inf_egal_sup);
+  qsort (pointeurs_supplementaires, mots.nombre, sizeof (*pointeurs_supplementaires), (int (*)(const void *, const void *)) inf_egal_sup);
   horodatage (SXACTION);
   fputs ("Tri PhDMKQS...", sxtty);
   phd_multi_key_quick_sort (pointeurs_rajoutes, mots.nombre);
@@ -700,14 +699,14 @@ void trico_sem_act (int code, int numact)
 	horodatage (SXACTION);
 #if 0
 	if ((((unsigned int)(~0))>>trico.base_shift) >= trico.max) {
-	  fputs ("Écriture de l'automate... ", sxtty);
+	  fputs ("ecriture de l'automate... ", sxtty);
 	  gen_header ();
 	  gen_includes ();
 	  gen_trico ();
 	  horodatage (SXACTION);
 	}
 	else
-	  sxtmsg ("%sIl y a trop d'entrées, l'automate ne peut être produit.\n", sxplocals.sxtables->err_titles [2] /* Error */);
+	  sxtmsg ("%sIl y a trop d'entrees, l'automate ne peut etre produit.\n", sxplocals.sxtables->err_titles [2] /* Error */);
 #endif
       }
       return;

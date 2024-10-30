@@ -16,6 +16,9 @@ PPF77OUT=bin.$ARCH/ppf77.out
 SPLIT_OPTION=0
 VALGRIND_OPTION=0
 
+WD=`pwd`
+WD=`basename "$WD"`
+
 while true
 do
 	case "$1" in
@@ -89,6 +92,12 @@ FILTER() {
 #------------------------------------------------------------------------------
 
 RUN() {
+	echo ""
+	case "$1" in
+		-X ) echo "----------- $WD:f77 -X" "$2" | sed -e 's+test/++' ;;
+		* )  echo "----------- $WD:f77" "$1" | sed -e 's+test/++' ;;
+	esac
+
 	if [ $VALGRIND_OPTION = 1 ]
 	then
 		echo ""
@@ -117,30 +126,33 @@ fi
 
 if [ -x $F77OUT ]
 then
-	echo "*** testing f77"
+	echo "*** testing $WD:f77 executable"
 
-	for FILE in `ls test/esope/*.FOR test/evref/*.FOR test/misc/*.f test/nist/*.FOR`
+	for FILE in `ls test/esope/*.E test/evref/*.FOR test/misc/*.f test/nist/*.FOR`
 	do
-		echo ""
-		echo "f77" "$FILE" | sed -e 's+test/++'
-
 		case "$FILE" in
 			test/esope/* )
 				# only for f77+ESOPE extensions
 				case `pwd` in
 					*esope* )
-						RUN -X $FILE
+						# one does not need to call RUN
+						# with option -X since this
+						# option is automatically set
+						# in the esope77 binary
+						RUN $FILE
 						;;
 					* )
-						# on ignore le test
+						# on ignore le test
 						;;
 				esac
 				;;
 
-			test/evref/extension-* )
-				# extended F77
+			test/evref/extension-* | test/misc/*x.f )
+				# this test contains F77 extensions and only
+				# succeeds when f77 is called with option -X
 				RUN -X $FILE
 				;;
+
 			* )
 				# standard F77
 				# we can test with and without option -X
@@ -155,8 +167,7 @@ fi
 
 if [ -x $PPF77OUT ]
 then
-
-	echo "*** testing ppf77"
+	echo "*** testing $WD:ppf77 executable"
 
 	TMP1=`mktemp`
 	TMP2=`mktemp`

@@ -1,6 +1,8 @@
 
 include $(SX)/etc/make/gccoptions
 
+SXEXTBIBS=$(SXLIB)/libsxext.a $(SXBIBS)
+
 # LECL=$(SX)/lecl
 LECL=$(SX)/../outdated/oldies/reg_exp
 LECLSRC=$(LECL)/src
@@ -19,7 +21,7 @@ all: $(ALL)
 NEEDS=		$(RELIB)/reg_exp_main.o
 
 $(RE)/reg_exp.out:	$(NEEDS)	$(SXBIBS)
-	cc -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm -f $@; exit 1)
+	cc -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXEXTBIBS) || (rm -f $@; exit 1)
 
 $(RELIB)/reg_exp_main.o: $(SXINCL)/sxunix.h				\
 			$(SX)/lecl/lecl_ag.h			\

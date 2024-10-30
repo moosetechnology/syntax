@@ -37,7 +37,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-char WHAT_SXPPTREE[] = "@(#)SYNTAX - $Id: sxpptree.c 3917 2024-04-23 08:33:57Z garavel $" WHAT_DEBUG;
+char WHAT_SXPPTREE[] = "@(#)SYNTAX - $Id: sxpptree.c 4496 2024-10-30 11:38:46Z garavel $" WHAT_DEBUG;
 
 #define USER_PTR	void*		/* Any pointer */
 
@@ -274,16 +274,20 @@ static void	*allocate (SXUINT size)
 
 static void	deallocate_areas (void)
 {
-    struct line_area	*line_area;
-    struct node_area	*node_area;
+    struct line_area	*line_area, *line_next;
+    struct node_area	*node_area, *node_next;
 
-    for (line_area = first_line_area; line_area != NULL; line_area = line_area->next)
+    for (line_area = first_line_area; line_area != NULL; line_area = line_next) {
+	line_next = line_area->next;
 	free (line_area);
+    }
 
     first_line_area = NULL;
 
-    for (node_area = first_node_area; node_area != NULL; node_area = node_area->next)
+    for (node_area = first_node_area; node_area != NULL; node_area = node_next) {
+        node_next = node_area->next;
 	free (node_area);
+    }
 
     first_node_area = NULL;
 }

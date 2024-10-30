@@ -42,6 +42,29 @@ $(LIB)/xtag_t.o:	$(SXINCL)/sxunix.h 	\
 		-DSEMACT=sxwvoid			\
 		-DSEMPASS=xtag_smp
 
+# debut de code produit par "make-makefile xtag"
+
+xtag_t.c: xtag.bt xtag.st xtag.pt xtag.rt xtag.att
+	tables_c xtag > $@
+
+xtag.bt xtag.att xtag_mix.c: xtag.at
+	semat xtag.at  > xtag_mix.c
+
+xtag.st: xtag.bt xtag.lecl
+	lecl xtag.lecl || [ $$? = 1 ]
+
+xtag.pt: xtag.bt
+	csynt xtag || [ $$? = 1 ]
+
+xtag.rt: xtag.bt xtag.st xtag.recor
+	recor xtag.recor
+
+# fin de code produit par "make-makefile dag"
+
 clean:
 	rm -f $(ALL) $(NEEDS1)
+	/bin/rm -f xtag.*.l
+	/bin/rm -f xtag.att xtag.bt xtag.pt xtag.rt xtag.st
+	/bin/rm -f xtag_mix.c xtag_t.c
+
 

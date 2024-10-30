@@ -60,7 +60,9 @@
 #include <unistd.h>
 #include <string.h>
 
-char WHAT_SXSUBSET_MNGR[] = "@(#)SYNTAX - $Id: sxsubset_mngr.c 3917 2024-04-23 08:33:57Z garavel $" WHAT_DEBUG;
+char WHAT_SXSUBSET_MNGR[] = "@(#)SYNTAX - $Id: sxsubset_mngr.c 4488 2024-10-26 08:32:33Z garavel $" WHAT_DEBUG;
+
+static sxsubset_header *_sxsubset_header; /* Pour oflw */
 
 extern SXINT sxnext_prime (SXINT germe);
 

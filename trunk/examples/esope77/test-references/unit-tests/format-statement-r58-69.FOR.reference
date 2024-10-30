@@ -1,0 +1,78 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/format-statement-r58-69.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": {
+                "tag": "symbolic_name",
+                "start_pos": {
+                    "line": "1",
+                    "column": "15"
+                },
+                "name": "SIMPLEMAIN"
+            },
+            "start_pos": {
+                "line": "1",
+                "column": "7"
+            },
+            "end_pos": {
+                "line": "3",
+                "column": "9"
+            },
+            "statement_list": [
+                {
+                    "label": "1",
+                    "label_pos": {
+                        "line": "2",
+                        "column": "1"
+                    },
+                    "tag": "format_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "7"
+                    },
+                    "format_specifiers": [
+                        {
+                            "tag": "format_specifier",
+                            "descriptor": {
+                                "tag": "repeatable_edit_descriptor",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "15"
+                                },
+                                "descriptor_purpose": "character_edit",
+                                "value": "A8"
+                            }
+                        },
+                        {
+                            "tag": "format_specifier",
+                            "descriptor": {
+                                "tag": "nonrepeatable_edit_descriptor",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "19"
+                                },
+                                "descriptor_purpose": "position_control",
+                                "value": "2X"
+                            }
+                        },
+                        {
+                            "tag": "format_specifier",
+                            "descriptor": {
+                                "tag": "repeatable_edit_descriptor",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "23"
+                                },
+                                "descriptor_purpose": "integer_edit",
+                                "value": "I4"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

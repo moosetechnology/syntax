@@ -159,6 +159,9 @@ extern void	sxndparse_erase_hook_item (SXINT item);
 extern void     sxndtkn_put (SXBA set);
 extern void     sxndtkn_mngr (SXINT sxndtkn_mngr_what, SXINT size);
 
+extern bool new_symbol (SXINT reduce, SXINT k, SXINT i, SXINT j, SXINT *symbol);
+extern void set_rule (SXINT lhs, SXINT rhs);
+extern void set_start_symbol (SXINT symbol);
 
 /*      C T R L - S T A C K   M A N A G E R      	*/
 

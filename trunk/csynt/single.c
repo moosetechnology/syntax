@@ -22,7 +22,7 @@
 #include "P_tables.h"
 #include "csynt_optim.h"
 
-char WHAT_SINGLE[] = "@(#)SYNTAX - $Id: single.c 3650 2023-12-23 07:32:10Z garavel $" WHAT_DEBUG;
+char WHAT_SINGLE[] = "@(#)SYNTAX - $Id: single.c 4497 2024-10-30 12:50:02Z garavel $" WHAT_DEBUG;
 
 static SXINT	xnt_trans, nt_trans_size, max_lhs;
 
@@ -42,7 +42,7 @@ static SXINT	set_an_xnt (SXINT nt, SXINT prdct)
 {
     SXINT	x, y, hash;
     bool	is_new_xnt = nt > bnf_ag.WS_TBL_SIZE.xntmax;
-    char	s [12];
+    char	s [24];
 
     for (y = 0, x = xnt_hash [hash = (2 * nt + prdct) % HASH_SIZE]; x != 0; x = xnt_lnk [(y = x) - Delta]) {
 	if (bnf_ag.XNT_TO_NT_PRDCT [x - bnf_ag.WS_TBL_SIZE.ntmax].v_code == nt && bnf_ag.XNT_TO_NT_PRDCT [x - bnf_ag.WS_TBL_SIZE.ntmax].prdct_no == prdct)

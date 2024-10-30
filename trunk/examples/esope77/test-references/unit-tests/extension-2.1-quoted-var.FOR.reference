@@ -1,0 +1,47 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/extension-2.1-quoted-var.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "prog_unit_parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "2",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "assignment_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "8"
+                    },
+                    "left": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "1",
+                            "column": "8"
+                        },
+                        "name": "X"
+                    },
+                    "right": {
+                        "tag": "character_expression",
+                        "expression": {
+                            "tag": "character_constant",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "12"
+                            },
+                            "value": "\"abc\""
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

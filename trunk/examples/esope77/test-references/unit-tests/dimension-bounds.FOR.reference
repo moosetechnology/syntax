@@ -1,0 +1,157 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/dimension-bounds.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "prog_unit_parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "2",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "dimension_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "8"
+                    },
+                    "array_declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "18"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "18"
+                                },
+                                "name": "HELIO"
+                            },
+                            "dimension_declarators": [
+                                {
+                                    "tag": "dimension_declarator",
+                                    "start_pos": {
+                                        "line": "1",
+                                        "column": "25"
+                                    },
+                                    "lower_bound": {
+                                        "tag": "constant_signed",
+                                        "start_pos": {
+                                            "line": "1",
+                                            "column": "25"
+                                        },
+                                        "sign": {
+                                            "start_pos": {
+                                                "line": "1",
+                                                "column": "25"
+                                            },
+                                            "sign_value": "-"
+                                        },
+                                        "constant": {
+                                            "tag": "literal_expression",
+                                            "start_pos": {
+                                                "line": "1",
+                                                "column": "26"
+                                            },
+                                            "expression": {
+                                                "tag": "unsigned_int_constant",
+                                                "start_pos": {
+                                                    "line": "1",
+                                                    "column": "26"
+                                                },
+                                                "value": "3"
+                                            }
+                                        }
+                                    },
+                                    "upper_bound": {
+                                        "tag": "literal_expression",
+                                        "start_pos": {
+                                            "line": "1",
+                                            "column": "28"
+                                        },
+                                        "expression": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "1",
+                                                "column": "28"
+                                            },
+                                            "value": "3"
+                                        }
+                                    }
+                                },
+                                {
+                                    "tag": "dimension_declarator",
+                                    "start_pos": {
+                                        "line": "1",
+                                        "column": "31"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "literal_expression",
+                                        "start_pos": {
+                                            "line": "1",
+                                            "column": "31"
+                                        },
+                                        "expression": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "1",
+                                                "column": "31"
+                                            },
+                                            "value": "4"
+                                        }
+                                    }
+                                },
+                                {
+                                    "tag": "dimension_declarator",
+                                    "start_pos": {
+                                        "line": "1",
+                                        "column": "34"
+                                    },
+                                    "lower_bound": {
+                                        "tag": "literal_expression",
+                                        "start_pos": {
+                                            "line": "1",
+                                            "column": "34"
+                                        },
+                                        "expression": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "1",
+                                                "column": "34"
+                                            },
+                                            "value": "3"
+                                        }
+                                    },
+                                    "upper_bound": {
+                                        "tag": "literal_expression",
+                                        "start_pos": {
+                                            "line": "1",
+                                            "column": "36"
+                                        },
+                                        "expression": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "1",
+                                                "column": "36"
+                                            },
+                                            "value": "9"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

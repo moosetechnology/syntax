@@ -1,0 +1,51 @@
+Classes
+	BLANC		= SP + HT + VT + FF + EOL ;
+	HEXA		= DIGIT + A + B + C + D + E + F ;
+	OCTAL		= "0".."7" ;
+
+Abbreviations
+	NOMBRE		= {DIGIT}+ ;
+	ZERO		= "0"&True ;
+	EXPOSANT	= E ["+-"] NOMBRE ;
+	BACKSLASH	= "\\"&True ;
+	IGNORE		= BACKSLASH EOL ;
+	NUL_IN_COMMENT	= @Put("\\") @Put ("0") -NUL&True ;
+	CPP		= "#"&Is_First_Col {^EOL | NUL_IN_COMMENT | BACKSLASH Any} EOL ;
+	COMMENT		= "/" "*"&True {Any | NUL_IN_COMMENT} "*" "/"&True ;
+
+Tokens
+	Comments	= -({BLANC}+ | CPP | COMMENT) ;
+			  Priority Shift > Reduce;
+
+	%string_literal	= ["L"] QUOTE {^EOL | BACKSLASH Any} QUOTE&True ;
+
+	%integer_constant
+			= (ZERO {OCTAL} | ZERO X {HEXA}+ | NOMBRE) [U [L] | L [U]] ;
+			  Context All But "." ;
+
+	%floating_constant
+			= ((NOMBRE | ZERO [NOMBRE]) (EXPOSANT |
+                                                     "." [NOMBRE] [EXPOSANT]) |
+                           "." NOMBRE [EXPOSANT]) [F | L] ;
+
+	%character_constant
+			= ["L"] "'" {IGNORE} (^EOL |
+					    BACKSLASH (^EOL |
+						       OCTAL&True [OCTAL [OCTAL]] |
+						       "x"&True {HEXA}+
+						      )
+					   )
+				  {IGNORE} "'" ;
+
+	%identifier		=
+	   Union
+	      ID	: {LOWER} (UPPER | "_" | LOWER DIGIT) {LETTER | DIGIT | "_"} ;
+			  Context All But %identifier ;
+	      MOT_CLE	: {LOWER}+ ;
+			  Context All But %identifier, %integer_constant, %floating_constant,
+					  %string_literal, %character_constant ;
+	   End ;
+
+	"&&"		= -("&" "&"&True) ;
+	"++"		= -("+" "+"&True) ;
+	"--"		= -("-" "-"&True) ;

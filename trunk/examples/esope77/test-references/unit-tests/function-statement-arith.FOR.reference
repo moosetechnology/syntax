@@ -1,0 +1,188 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/function-statement-arith.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": {
+                "tag": "symbolic_name",
+                "start_pos": {
+                    "line": "1",
+                    "column": "16"
+                },
+                "name": "MAIN"
+            },
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "4",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "parameter_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "8"
+                    },
+                    "constant_declarations": [
+                        {
+                            "start_pos": {
+                                "line": "2",
+                                "column": "20"
+                            },
+                            "symbolic_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "20"
+                                },
+                                "name": "PI"
+                            },
+                            "expression": {
+                                "tag": "arithmetic_const_expr",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "23"
+                                },
+                                "expression": {
+                                    "tag": "unsigned_real_constant",
+                                    "start_pos": {
+                                        "line": "2",
+                                        "column": "23"
+                                    },
+                                    "value": "3.14159"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "tag": "function_statement",
+                    "start_pos": {
+                        "line": "3",
+                        "column": "8"
+                    },
+                    "name": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "3",
+                            "column": "8"
+                        },
+                        "name": "SPHERE"
+                    },
+                    "prog_unit_parameters": [],
+                    "expression": {
+                        "tag": "arithmetic_expression",
+                        "expression": {
+                            "tag": "binary_expression",
+                            "start_pos": {
+                                "line": "3",
+                                "column": "21"
+                            },
+                            "left": {
+                                "tag": "binary_expression",
+                                "start_pos": {
+                                    "line": "3",
+                                    "column": "21"
+                                },
+                                "left": {
+                                    "tag": "binary_expression",
+                                    "start_pos": {
+                                        "line": "3",
+                                        "column": "21"
+                                    },
+                                    "left": {
+                                        "tag": "unsigned_real_constant",
+                                        "start_pos": {
+                                            "line": "3",
+                                            "column": "21"
+                                        },
+                                        "value": "4.0"
+                                    },
+                                    "operator": {
+                                        "tag": "arithmetic_operator",
+                                        "start_pos": {
+                                            "line": "3",
+                                            "column": "25"
+                                        },
+                                        "operator_value": "*"
+                                    },
+                                    "right": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "3",
+                                            "column": "27"
+                                        },
+                                        "name": "PI"
+                                    }
+                                },
+                                "operator": {
+                                    "tag": "arithmetic_operator",
+                                    "start_pos": {
+                                        "line": "3",
+                                        "column": "30"
+                                    },
+                                    "operator_value": "*"
+                                },
+                                "right": {
+                                    "tag": "parenthesis_expression",
+                                    "expression": {
+                                        "tag": "binary_expression",
+                                        "start_pos": {
+                                            "line": "3",
+                                            "column": "33"
+                                        },
+                                        "left": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "3",
+                                                "column": "33"
+                                            },
+                                            "value": "1"
+                                        },
+                                        "operator": {
+                                            "tag": "arithmetic_operator",
+                                            "start_pos": {
+                                                "line": "3",
+                                                "column": "34"
+                                            },
+                                            "operator_value": "**"
+                                        },
+                                        "right": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "3",
+                                                "column": "36"
+                                            },
+                                            "value": "3"
+                                        }
+                                    }
+                                }
+                            },
+                            "operator": {
+                                "tag": "arithmetic_operator",
+                                "start_pos": {
+                                    "line": "3",
+                                    "column": "39"
+                                },
+                                "operator_value": "/"
+                            },
+                            "right": {
+                                "tag": "unsigned_real_constant",
+                                "start_pos": {
+                                    "line": "3",
+                                    "column": "41"
+                                },
+                                "value": "3.0"
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,119 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/goto-assigned.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "prog_unit_parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "5",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "assignment_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "8"
+                    },
+                    "left": {
+                        "tag": "label_reference",
+                        "start_pos": {
+                            "line": "1",
+                            "column": "15"
+                        },
+                        "label": "10"
+                    },
+                    "right": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "1",
+                            "column": "21"
+                        },
+                        "name": "N"
+                    }
+                },
+                {
+                    "tag": "assigned_goto_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "8"
+                    },
+                    "labels": [
+                        {
+                            "tag": "label_reference",
+                            "start_pos": {
+                                "line": "2",
+                                "column": "18"
+                            },
+                            "label": "10"
+                        },
+                        {
+                            "tag": "label_reference",
+                            "start_pos": {
+                                "line": "2",
+                                "column": "22"
+                            },
+                            "label": "20"
+                        },
+                        {
+                            "tag": "label_reference",
+                            "start_pos": {
+                                "line": "2",
+                                "column": "26"
+                            },
+                            "label": "30"
+                        },
+                        {
+                            "tag": "label_reference",
+                            "start_pos": {
+                                "line": "2",
+                                "column": "30"
+                            },
+                            "label": "40"
+                        }
+                    ],
+                    "var": [
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "2",
+                                "column": "14"
+                            },
+                            "name": "N"
+                        }
+                    ]
+                },
+                {
+                    "label": "10",
+                    "label_pos": {
+                        "line": "3",
+                        "column": "1"
+                    },
+                    "tag": "continue_statement",
+                    "start_pos": {
+                        "line": "3",
+                        "column": "8"
+                    }
+                },
+                {
+                    "label": "40",
+                    "label_pos": {
+                        "line": "4",
+                        "column": "1"
+                    },
+                    "tag": "stop_statement",
+                    "start_pos": {
+                        "line": "4",
+                        "column": "8"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -12,10 +12,10 @@ all: $(YAX)/yax.out
 NEEDS=	$(LIB)/yax_put.o	\
 	$(LIB)/yax.o		\
 	$(LIB)/yax_main.o	\
-	$(LIB)/dec_act.o	\
-	$(LIB)/dec_t.o		\
-	$(LIB)/def_act.o	\
-	$(LIB)/def_t.o
+	$(LIB)/ydec_act.o	\
+	$(LIB)/ydec_t.o		\
+	$(LIB)/ydef_act.o	\
+	$(LIB)/ydef_t.o
 
 $(YAX)/yax.out:		$(NEEDS) $(SXBIBS) $(SXLIB)/libsxbnf.a
 	@rm -f $@
@@ -43,73 +43,73 @@ $(LIB)/yax_put.o:	$(SXINCL)/sxunix.h		\
 			yax_put.c
 	$(CC) -o $@ -c yax_put.c
 
-$(LIB)/dec_act.o:	$(SXINCL)/sxunix.h		\
+$(LIB)/ydec_act.o:	$(SXINCL)/sxunix.h		\
 	 		$(SXINCL)/util/B_tables.h	\
 			yax_vars.h	\
 			$(SXINCL)/util/bnf_vars.h	\
-			dec_act.c
-	$(CC) -o $@ -c dec_act.c
+			ydec_act.c
+	$(CC) -o $@ -c ydec_act.c
 
-$(LIB)/def_act.o:	$(SXINCL)/sxunix.h		\
+$(LIB)/ydef_act.o:	$(SXINCL)/sxunix.h		\
 			$(SXINCL)/util/B_tables.h	\
 			yax_vars.h	\
 			$(SXINCL)/util/bnf_vars.h	\
-			def_act.c
-	$(CC) -o $@ -c def_act.c
+			ydef_act.c
+	$(CC) -o $@ -c ydef_act.c
 
-$(LIB)/dec_t.o:		$(SXINCL)/sxunix.h		\
-			dec_t.c
-	$(CC) -o $@ -c dec_t.c \
+$(LIB)/ydec_t.o:		$(SXINCL)/sxunix.h		\
+			ydec_t.c
+	$(CC) -o $@ -c ydec_t.c \
 		-DSEMACT=dec_semact
 
-$(LIB)/def_t.o:		$(SXINCL)/sxunix.h		\
-			def_t.c
-	$(CC) -o $@ -c def_t.c \
+$(LIB)/ydef_t.o:		$(SXINCL)/sxunix.h		\
+			ydef_t.c
+	$(CC) -o $@ -c ydef_t.c \
 		-DSEMACT=def_semact
 
-# debut de code produit par "make-makefile dec"
+# debut de code produit par "make-makefile ydec"
 
-dec_t.c: dec.bt dec.st dec.pt dec.rt 
-	tables_c -name dec_tables dec > $@
+ydec_t.c: ydec.bt ydec.st ydec.pt ydec.rt 
+	tables_c -name dec_tables ydec > $@
 
-dec.bt  : dec.bnf
-	semact dec.bnf 
+ydec.bt  : ydec.bnf
+	semact ydec.bnf 
 
-dec.st: dec.bt dec.lecl
-	lecl dec.lecl || [ $$? = 1 ]
+ydec.st: ydec.bt ydec.lecl
+	lecl ydec.lecl || [ $$? = 1 ]
 
-dec.pt: dec.bt
-	csynt dec || [ $$? = 1 ]
+ydec.pt: ydec.bt
+	csynt ydec || [ $$? = 1 ]
 
-dec.rt: dec.bt dec.st dec.recor
-	recor dec.recor
+ydec.rt: ydec.bt ydec.st ydec.recor
+	recor ydec.recor
 
-# fin de code produit par "make-makefile dec"
+# fin de code produit par "make-makefile ydec"
 
-# debut de code produit par "make-makefile def"
+# debut de code produit par "make-makefile ydef"
 
-def_t.c: def.bt def.st def.pt def.rt 
-	tables_c -name def_tables def > $@
+ydef_t.c: ydef.bt ydef.st ydef.pt ydef.rt 
+	tables_c -name def_tables ydef > $@
 
-def.bt  : def.bnf
-	semact def.bnf 
+ydef.bt  : ydef.bnf
+	semact ydef.bnf 
 
-def.st: def.bt def.lecl
-	lecl def.lecl || [ $$? = 1 ]
+ydef.st: ydef.bt ydef.lecl
+	lecl ydef.lecl || [ $$? = 1 ]
 
-def.pt: def.bt
-	csynt def || [ $$? = 1 ]
+ydef.pt: ydef.bt
+	csynt ydef || [ $$? = 1 ]
 
-def.rt: def.bt def.st def.recor
-	recor def.recor
+ydef.rt: ydef.bt ydef.st ydef.recor
+	recor ydef.recor
 
-# fin de code produit par "make-makefile def"
+# fin de code produit par "make-makefile ydef"
 
 clean:
 	/bin/rm -f $(LIB)/*.o $(YAX)/yax.out
-	/bin/rm -f $(YAX)/dec.*.l $(YAX)/def.*.l
-	/bin/rm -f $(YAX)/dec.bt $(YAX)/dec.pt $(YAX)/dec.rt $(YAX)/dec.st
-	/bin/rm -f $(YAX)/dec_t.c
-	/bin/rm -f $(YAX)/def.bt $(YAX)/def.pt $(YAX)/def.rt $(YAX)/def.st
-	/bin/rm -f $(YAX)/def_t.c
+	/bin/rm -f $(YAX)/ydec.*.l $(YAX)/ydef.*.l
+	/bin/rm -f $(YAX)/ydec.bt $(YAX)/ydec.pt $(YAX)/ydec.rt $(YAX)/ydec.st
+	/bin/rm -f $(YAX)/ydec_t.c
+	/bin/rm -f $(YAX)/ydef.bt $(YAX)/ydef.pt $(YAX)/ydef.rt $(YAX)/ydef.st
+	/bin/rm -f $(YAX)/ydef_t.c
 

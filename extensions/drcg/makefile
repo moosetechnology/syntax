@@ -77,5 +77,6 @@ drcg_td.h: drcg.bt drcg.tdef
 clean:
 	/bin/rm -f $(LIB)/*.o $(SXEXTBIN)/drcg.out
 	/bin/rm -f drcg.*.l
-	/bin/rm -f drcg.att drcg.bt drcg.pt drcg.rt drcg.st drcg_mix.c drcg_t.c
+	/bin/rm -f drcg.att drcg.bt drcg.pt drcg.rt drcg.st
+	/bin/rm -f drcg_mix.c drcg_t.c drcg_td.h
 

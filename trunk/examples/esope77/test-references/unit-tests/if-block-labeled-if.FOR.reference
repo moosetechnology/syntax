@@ -1,0 +1,150 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/if-block-labeled-if.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "name": {
+                "tag": "symbolic_name",
+                "start_pos": {
+                    "line": "1",
+                    "column": "15"
+                },
+                "name": "MAIN"
+            },
+            "start_pos": {
+                "line": "1",
+                "column": "7"
+            },
+            "end_pos": {
+                "line": "5",
+                "column": "9"
+            },
+            "statement_list": [
+                {
+                    "label": "9",
+                    "label_pos": {
+                        "line": "2",
+                        "column": "1"
+                    },
+                    "tag": "block_if_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "8"
+                    },
+                    "then_start": {
+                        "line": "2",
+                        "column": "13"
+                    },
+                    "condition": {
+                        "tag": "logical_expression",
+                        "expression": {
+                            "tag": "logical_factor",
+                            "negated": "false",
+                            "expression": {
+                                "tag": "logical_primary",
+                                "expression": {
+                                    "tag": "binary_expression",
+                                    "start_pos": {
+                                        "line": "2",
+                                        "column": "13"
+                                    },
+                                    "left": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "2",
+                                            "column": "13"
+                                        },
+                                        "name": "Y"
+                                    },
+                                    "operator": {
+                                        "tag": "relational_operator",
+                                        "start_pos": {
+                                            "line": "2",
+                                            "column": "15"
+                                        },
+                                        "operator_value": ".LT."
+                                    },
+                                    "right": {
+                                        "tag": "unsigned_real_constant",
+                                        "start_pos": {
+                                            "line": "2",
+                                            "column": "20"
+                                        },
+                                        "value": "0.0"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "then_statements": [
+                        {
+                            "tag": "assignment_statement",
+                            "start_pos": {
+                                "line": "3",
+                                "column": "15"
+                            },
+                            "left": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "3",
+                                    "column": "15"
+                                },
+                                "name": "MIN"
+                            },
+                            "right": {
+                                "tag": "arithmetic_expression",
+                                "expression": {
+                                    "tag": "binary_expression",
+                                    "start_pos": {
+                                        "line": "3",
+                                        "column": "21"
+                                    },
+                                    "left": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "3",
+                                            "column": "21"
+                                        },
+                                        "name": "NODE"
+                                    },
+                                    "operator": {
+                                        "tag": "arithmetic_operator",
+                                        "start_pos": {
+                                            "line": "3",
+                                            "column": "26"
+                                        },
+                                        "operator_value": "-"
+                                    },
+                                    "right": {
+                                        "tag": "unsigned_int_constant",
+                                        "start_pos": {
+                                            "line": "3",
+                                            "column": "28"
+                                        },
+                                        "value": "1"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "else_block": {
+                        "start_pos": {
+                            "line": "4",
+                            "column": "8"
+                        },
+                        "statement_list": [],
+                        "end_if": {
+                            "tag": "end_if",
+                            "start_pos": {
+                                "line": "4",
+                                "column": "8"
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

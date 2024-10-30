@@ -1,0 +1,124 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/common-unlabeled.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "prog_unit_parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "3",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "dimension_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "8"
+                    },
+                    "array_declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "18"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "1",
+                                    "column": "18"
+                                },
+                                "name": "V"
+                            },
+                            "dimension_declarators": [
+                                {
+                                    "tag": "dimension_declarator",
+                                    "start_pos": {
+                                        "line": "1",
+                                        "column": "20"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "literal_expression",
+                                        "start_pos": {
+                                            "line": "1",
+                                            "column": "20"
+                                        },
+                                        "expression": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "1",
+                                                "column": "20"
+                                            },
+                                            "value": "100"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "tag": "common_statement",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "8"
+                    },
+                    "common_body": [
+                        {
+                            "tag": "common_group",
+                            "start_pos": {
+                                "line": "2",
+                                "column": "15"
+                            },
+                            "common_element_name": {
+                                "tag": "variable_declarator",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "15"
+                                },
+                                "variable_name": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "2",
+                                        "column": "15"
+                                    },
+                                    "name": "V"
+                                },
+                                "dimension_declarators": []
+                            }
+                        },
+                        {
+                            "tag": "common_group",
+                            "start_pos": {
+                                "line": "2",
+                                "column": "18"
+                            },
+                            "common_element_name": {
+                                "tag": "variable_declarator",
+                                "start_pos": {
+                                    "line": "2",
+                                    "column": "18"
+                                },
+                                "variable_name": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "2",
+                                        "column": "18"
+                                    },
+                                    "name": "M"
+                                },
+                                "dimension_declarators": []
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

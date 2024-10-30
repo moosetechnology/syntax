@@ -1,0 +1,12 @@
+#! /bin/sh
+
+set -e
+
+for FILE in `ls test/*.chimie`
+do
+	BASE=`basename "$FILE" .chimie`
+	echo "*** testing $BASE.chimie"
+	./chimie test/$BASE.chimie
+	echo ""
+done
+

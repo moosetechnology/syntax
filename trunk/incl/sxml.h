@@ -17,7 +17,7 @@
  *   can be found at, e.g., http://www.cecill.info
  *****************************************************************************/
 
-char WHAT_XMLBUILD[] = "@(#)SYNTAX - $Id: sxml.h 3718 2024-02-10 08:23:15Z garavel $";
+char WHAT_SXML[] = "@(#)SYNTAX - $Id: sxml.h 4419 2024-10-09 07:40:43Z garavel $";
 
 #include <stdio.h>
 #include <assert.h>
@@ -30,7 +30,7 @@ char WHAT_XMLBUILD[] = "@(#)SYNTAX - $Id: sxml.h 3718 2024-02-10 08:23:15Z garav
 #define SXML_OOM_ERROR(OOM_MESSAGE) { \
 	fprintf (sxstderr, "%s\n", OOM_MESSAGE); \
 	sxexit (sxerr_max_severity ()); \
-	return NULL; \
+	return NULL; /* never reached */ \
 	}
 
 /* ------------------------------------------------------------------------- */
@@ -137,6 +137,8 @@ void SXML_PRINT (FILE *OUTPUT, SXML_TYPE_LIST LIST)
 }
 
 /* ------------------------------------------------------------------------- */
+/* list-building primitives with 1 argument                                  */
+/* ------------------------------------------------------------------------- */
 
 SXML_TYPE_LIST SXML_L (SXML_TYPE_LIST L)
 {
@@ -162,6 +164,8 @@ SXML_TYPE_LIST SXML_T (SXML_TYPE_TEXT T)
 	return L;
 }
 
+/* ------------------------------------------------------------------------- */
+/* list-building primitives with 2 arguments                                 */
 /* ------------------------------------------------------------------------- */
 
 SXML_TYPE_LIST SXML_LL (
@@ -206,6 +210,8 @@ SXML_TYPE_LIST SXML_TT (
 	return SXML_LL (SXML_T (T1), SXML_T (T2));
 }
 
+/* ------------------------------------------------------------------------- */
+/* list-building primitives with 3 arguments                                 */
 /* ------------------------------------------------------------------------- */
 
 SXML_TYPE_LIST SXML_LLL (
@@ -286,6 +292,8 @@ SXML_TYPE_LIST SXML_TTT (
 	return SXML_LLL (SXML_T (T1), SXML_T (T2), SXML_T (T3));
 }
 
+/* ------------------------------------------------------------------------- */
+/* list-building primitives with 4 arguments                                 */
 /* ------------------------------------------------------------------------- */
 
 SXML_TYPE_LIST SXML_LLLL (
@@ -419,6 +427,8 @@ SXML_TYPE_LIST SXML_TTTT (
 }
 
 /* ------------------------------------------------------------------------- */
+/* list-building primitives with 5 arguments                                 */
+/* ------------------------------------------------------------------------- */
 
 SXML_TYPE_LIST SXML_LLLLL (
 		SXML_TYPE_LIST L1,
@@ -527,6 +537,21 @@ SXML_TYPE_LIST SXML_TTTTT (
 }
 
 /* ------------------------------------------------------------------------- */
+/* list-building primitives with 6 arguments                                 */
+/* ------------------------------------------------------------------------- */
+
+SXML_TYPE_LIST SXML_LLTLLL (
+		SXML_TYPE_LIST L1,
+		SXML_TYPE_LIST L2,
+		SXML_TYPE_TEXT T3,
+		SXML_TYPE_LIST L4,
+		SXML_TYPE_LIST L5,
+		SXML_TYPE_LIST L6)
+{
+	return SXML_LL (SXML_LLT (L1, L2, T3), SXML_LLL (L4, L5, L6));
+}
+
+/* ------------------------------------------------------------------------- */
 
 SXML_TYPE_LIST SXML_LLTLTL (
 		SXML_TYPE_LIST L1,
@@ -554,6 +579,19 @@ SXML_TYPE_LIST SXML_LTLLLL (
 
 /* ------------------------------------------------------------------------- */
 
+SXML_TYPE_LIST SXML_LTLTLL (
+		SXML_TYPE_LIST L1,
+		SXML_TYPE_TEXT T2,
+		SXML_TYPE_LIST L3,
+		SXML_TYPE_TEXT T4,
+		SXML_TYPE_LIST L5,
+		SXML_TYPE_LIST L6)
+{
+	return SXML_LL (SXML_LTL (L1, T2, L3), SXML_TLL (T4, L5, L6));
+}
+
+/* ------------------------------------------------------------------------- */
+
 SXML_TYPE_LIST SXML_TTTTTT (
 		SXML_TYPE_TEXT T1,
 		SXML_TYPE_TEXT T2,
@@ -566,6 +604,8 @@ SXML_TYPE_LIST SXML_TTTTTT (
 }
 
 /* ------------------------------------------------------------------------- */
+/* list-building primitives with 7 arguments                                 */
+/* ------------------------------------------------------------------------- */
 
 SXML_TYPE_LIST SXML_LLLTLTL (
 		SXML_TYPE_LIST L1,
@@ -577,6 +617,20 @@ SXML_TYPE_LIST SXML_LLLTLTL (
 		SXML_TYPE_LIST L7)
 {
 	return SXML_LLL (SXML_LLL (L1, L2, L3), SXML_TL (T4, L5), SXML_TL (T6, L7));
+}
+
+/* ------------------------------------------------------------------------- */
+
+SXML_TYPE_LIST SXML_LLTLLLL (
+		SXML_TYPE_LIST L1,
+		SXML_TYPE_LIST L2,
+		SXML_TYPE_TEXT T3,
+		SXML_TYPE_LIST L4,
+		SXML_TYPE_LIST L5,
+		SXML_TYPE_LIST L6,
+		SXML_TYPE_LIST L7)
+{
+	return SXML_LLL (SXML_LLT (L1, L2, T3), SXML_LL (L4, L5), SXML_LL (L6, L7));
 }
 
 /* ------------------------------------------------------------------------- */
@@ -608,6 +662,8 @@ SXML_TYPE_LIST SXML_TTTTTTT (
 }
 
 /* ------------------------------------------------------------------------- */
+/* list-building primitives with 8 arguments                                 */
+/* ------------------------------------------------------------------------- */
 
 SXML_TYPE_LIST SXML_TTTTTTTT (
 		SXML_TYPE_TEXT T1,
@@ -622,6 +678,8 @@ SXML_TYPE_LIST SXML_TTTTTTTT (
 	return SXML_LL (SXML_TTTT (T1, T2, T3, T4), SXML_TTTT (T5, T6, T7, T8));
 }
 
+/* ------------------------------------------------------------------------- */
+/* list-building primitives with 9 arguments                                 */
 /* ------------------------------------------------------------------------- */
 
 SXML_TYPE_LIST SXML_TTTTTTTTT (
@@ -638,6 +696,8 @@ SXML_TYPE_LIST SXML_TTTTTTTTT (
 	return SXML_LL (SXML_TTTT (T1, T2, T3, T4), SXML_TTTTT (T5, T6, T7, T8, T9));
 }
 
+/* ------------------------------------------------------------------------- */
+/* list-building primitives with 11 arguments                                */
 /* ------------------------------------------------------------------------- */
 
 SXML_TYPE_LIST SXML_TTTTTTTTTTT (

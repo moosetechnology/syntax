@@ -1,0 +1,56 @@
+{
+    "tag": "fortran_file",
+    "comments": {},
+    "file": "test/unit-tests/print-format-iolist.FOR",
+    "program_units": [
+        {
+            "tag": "main",
+            "prog_unit_parameters": [],
+            "start_pos": {
+                "line": "1",
+                "column": "8"
+            },
+            "end_pos": {
+                "line": "2",
+                "column": "10"
+            },
+            "statement_list": [
+                {
+                    "tag": "print_statement",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "8"
+                    },
+                    "format": [
+                        {
+                            "tag": "label_reference",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "14"
+                            },
+                            "label": "1"
+                        }
+                    ],
+                    "io_list": [
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "17"
+                            },
+                            "name": "NODE"
+                        },
+                        {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "1",
+                                "column": "23"
+                            },
+                            "name": "TEXT"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -42,7 +42,6 @@ $(LIB)/sxearley_main.o: $(SXINCL)/sxunix.h		\
 	$(CC) -o $@ -c $(SX)/csynt_lc/test/sxearley_main.c
 
 $(LIB)/wcw_pt.o:	wcw_pt.c	\
-		$(SXEXTINCL)/sxp_rcvr_earley_lc.h \
 		sxparser_earley_lc.c
 #  $(SXINCL)/semact.h
 	$(CC) -o $@ -c wcw_pt.c $(DEF1)
@@ -89,7 +88,6 @@ $(TEST)/nnf.out:	$(NNF)	$(SXBIBS)
 	cc -o $@ $(NNF) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm -f $@; exit 1)
 
 $(LIB)/nnf_pt.o:	nnf_pt.c	\
-		$(SXINCL)/sxp_rcvr_earley_lc.h \
 		sxparser_earley_lc.c
 #  $(SXINCL)/semact.h
 	$(CC) -o $@ -c nnf_pt.c $(DEF1)
@@ -134,7 +132,6 @@ $(TEST)/cyc.out:	$(CYC)	$(SXBIBS)
 	cc -o $@ $(CYC) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm -f $@; exit 1)
 
 $(LIB)/cyc_pt.o:	cyc_pt.c	\
-		$(SXINCL)/sxp_rcvr_earley_lc.h \
 		sxparser_earley_lc.c
 #  $(SXINCL)/semact.h
 	$(CC) -o $@ -c cyc_pt.c $(DEF1)
@@ -178,7 +175,6 @@ $(TEST)/cyc2.out:	$(CYC2)	$(SXBIBS)
 	cc -o $@ $(CYC2) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm -f $@; exit 1)
 
 $(LIB)/cyc2_pt.o:	cyc2_pt.c	\
-		$(SXINCL)/sxp_rcvr_earley_lc.h \
 		sxparser_earley_lc.c
 #  $(SXINCL)/semact.h
 	$(CC) -o $@ -c cyc2_pt.c	$(DEF1)
@@ -222,7 +218,6 @@ $(TEST)/anbmcndm.out:	$(ANBM)	$(SXBIBS)
 	cc -o $@ $(ANBM) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm -f $@; exit 1)
 
 $(LIB)/anbmcndm_pt.o:	anbmcndm_pt.c	\
-		$(SXINCL)/sxp_rcvr_earley_lc.h \
 		sxparser_earley_lc.c
 #  $(SXINCL)/semact.h
 	$(CC) -o $@ -c anbmcndm_pt.c $(DEF1)
@@ -266,7 +261,6 @@ $(TEST)/anbncn.out:	$(ANBNCN)	$(SXBIBS)
 	cc -o $@ $(ANBNCN) $(CFLAGS) $(LDFLAGS) $(SXBIBS) || (rm -f $@; exit 1)
 
 $(LIB)/anbncn_pt.o:	anbncn_pt.c	\
-		$(SXINCL)/sxp_rcvr_earley_lc.h \
 		sxparser_earley_lc.c
 #  $(SXINCL)/semact.h
 	$(CC) -o $@ -c anbncn_pt.c $(DEF1)

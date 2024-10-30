@@ -40,6 +40,28 @@ $(LIB)/lig_t.o:		$(SXINCL)/sxunix.h 	\
 	$(CC) -o $@ -c lig_t.c		\
 		-DSEMPASS=lig_smp
 
+# debut de code produit par "make-makefile lig"
+
+lig_t.c: lig.bt lig.st lig.pt lig.rt lig.att
+	tables_c lig > $@
+
+lig.bt lig.att lig_mix.c: lig.at
+	semat lig.at  > lig_mix.c
+
+lig.st: lig.bt lig.lecl
+	lecl lig.lecl || [ $$? = 1 ]
+
+lig.pt: lig.bt
+	csynt lig || [ $$? = 1 ]
+
+lig.rt: lig.bt lig.st lig.recor
+	recor lig.recor
+
+# fin de code produit par "make-makefile lig"
+
 clean:
 	rm -f $(ALL) $(NEEDS1)
+	/bin/rm -f lig.*.l
+	/bin/rm -f lig.att lig.bt lig.pt lig.rt lig.st
+	/bin/rm -f lig_mix.c lig_t.c
 

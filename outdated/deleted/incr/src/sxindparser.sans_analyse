@@ -1,0 +1,927 @@
+/* ********************************************************                   
+   *                                                      *                   
+   *                                                      *                   
+   * Copyright (c) 1985 by Institut National de Recherche *                   
+   *                    en Informatique et en Automatique *                   
+   *                                                      *                   
+   *                                                      *                   
+   ******************************************************** */               
+
+
+
+/* ********************************************************
+   *                                                      *
+   *              Produit de l'equipe ChLoE.		  *
+   *                	     (PB & FT)			  *
+   *                                                      *
+   ******************************************************** */
+
+
+
+/************************************************************************/
+/* Historique des modifications, en ordre chronologique inverse:	*/
+/************************************************************************/
+/* 09-07-92 10:07 (pb):		Ajout de cette rubrique "modifications"	*/
+/************************************************************************/
+
+
+#ifndef lint
+static char	what [] = "@(#)sxindparser.c\t- SYNTAX [unix] - 31 Juillet 1992";
+#endif
+
+static char	ME [] = "INDPARSER";
+
+
+
+/************************************************************************/
+/* It is the incremental nondeterministic version of the SYNTAX parser	*/
+/* This algorithm is borrowed from Jan Rekers' thesis			*/
+/************************************************************************/
+
+/*
+  The parse_stack is a directed graph whose nodes are called parse_stack_elem
+  Each parse_stack_elem is a couple (state, token_nb) where state is an element
+  of the underlying PDA and token_nb the indexes of the current_token at the
+  moment where this parse_stack_elem was built.
+  The active_parsers are a set of parse_stack_elem.
+  The parse_stack is a set of couples (parse_stack_elem, parse_stack_elem).
+*/
+
+# include <stdio.h>
+# include "sxindparser.h"
+
+
+extern bool	bnf_read ();
+extern void	bnf_free ();
+
+
+struct rhs {
+    int		symbol, next;
+};
+
+struct  parse_stack_elem {
+    int		state, red_ref, shift_ref, son, level, symbol;
+};
+
+struct G {
+    int		N, T, P, G;
+};
+
+struct red_parsers {
+    int parser, lnk;
+};
+
+
+static struct parse_stack {
+    struct parse_stack_elem	*graph;
+
+    struct red_parsers		*red_parsers_list;
+
+    XxY_header			sons,
+                                suffixes,
+                                ranges,
+                                symbols;
+
+    XH_header			output_grammar;
+
+    SXBA			*parsers_set;
+
+    int	                        *parsers_rhs0,
+    	                        *parsers_rhs1;
+
+    SXBA			current_links,
+                                used_links,
+                                free_parsers_set,
+                                erasable_sons;
+
+    int				*active_states,
+                                *active_parsers,
+                                *GC_area,
+                                *red_stack,
+                                *red_parsers_hd,
+                                *for_shifter,
+                                *for_scanner,
+                                *for_actor;
+
+    int				start_symbol,
+                                graph_size,
+	                        graph_top,
+	                        rhs_size,
+	                        rhs_top,
+	                        red_parsers_list_top,
+	                        red_parsers_list_size,
+	                        free_parser,
+	                        current_level,
+                                current_token;
+
+    int			        *transitions,
+	                        red_no,
+	                        current_symbol;
+
+    struct rhs			*rhs;
+
+    struct G			G;
+
+    bool			is_new_links;
+} parse_stack;
+
+
+static  void sons_oflw (old_size, new_size)
+    int		old_size, new_size;
+{
+    parse_stack.erasable_sons = sxba_resize (parse_stack.erasable_sons, new_size + 1);
+    parse_stack.current_links = sxba_resize (parse_stack.current_links, new_size + 1);
+    parse_stack.used_links = sxba_resize (parse_stack.used_links, new_size + 1);
+    parse_stack.transitions = (int*) sxrealloc (parse_stack.transitions, new_size + 1, sizeof (int));
+}
+
+
+static void GC (p)
+    int p;
+{
+    register int	x, father, son, lim;
+    register SXBA	free_parsers_set, erasable_sons;
+    bool		is_in_sons = false;
+
+    sxba_fill (erasable_sons = parse_stack.erasable_sons);
+    sxba_fill (free_parsers_set = parse_stack.free_parsers_set);
+
+    SS_push (parse_stack.GC_area, p);
+    SXBA_0_bit (free_parsers_set, p);
+    
+    for (lim = SS_top (parse_stack.for_scanner), x = SS_bot (parse_stack.for_scanner);
+	 x < lim;
+	 x++) {
+	father = SS_get (parse_stack.for_scanner, x);
+
+	if (SXBA_bit_is_set_reset (free_parsers_set, father))
+	    SS_push (parse_stack.GC_area, father);
+    }
+
+/* Not usefull, for_actor is always a subset of active_states. 
+    for (lim = SS_top (parse_stack.for_actor), x = SS_bot (parse_stack.for_actor);
+	 x < lim;
+	 x++) {
+	father = SS_get (parse_stack.for_actor, x);
+
+	if (SXBA_bit_is_set_reset (free_parsers_set, father))
+	    SS_push (parse_stack.GC_area, father);
+    }
+*/
+
+    x = 0;
+
+    while ((x = parse_stack.for_shifter [x]) > 0) {
+	father = parse_stack.active_parsers [x];
+
+	if (SXBA_bit_is_set_reset (free_parsers_set, father))
+	    SS_push (parse_stack.GC_area, father);
+    }
+
+    x = 0;
+
+    while ((x = parse_stack.active_states [x]) > 0) {
+	father = parse_stack.active_parsers [x];
+
+	if (SXBA_bit_is_set_reset (free_parsers_set, father))
+	    SS_push (parse_stack.GC_area, father);
+    }
+
+    do {
+	son = SS_pop (parse_stack.GC_area);
+
+	while ((son = parse_stack.graph [father = son].son) > 0) {
+	    if (!SXBA_bit_is_set_reset (free_parsers_set, son))
+		break;
+	}
+
+	if (son < 0) {
+	    is_in_sons = true;
+	    son = -son;
+	    
+	    if (SXBA_bit_is_set_reset (free_parsers_set, son))
+		SS_push (parse_stack.GC_area, son);
+
+	    XxY_Xforeach (parse_stack.sons, father, x) {
+		SXBA_0_bit (erasable_sons, x);
+		son = XxY_Y (parse_stack.sons, x);
+
+		if (SXBA_bit_is_set_reset (free_parsers_set, son))
+		    SS_push (parse_stack.GC_area, son);
+	    }
+	}
+    } while (!SS_is_empty (parse_stack.GC_area));
+
+    if (is_in_sons) {
+	x = XxY_top (parse_stack.sons) + 1;
+
+	while ((x = sxba_1_rlscan (erasable_sons, x)) > 0)
+	    XxY_erase (parse_stack.sons, x);
+    }
+
+    parse_stack.free_parser =
+	parse_stack.graph_top =
+	    ((x = sxba_0_rlscan (free_parsers_set, parse_stack.graph_size + 1)) < 0) ? 0 : x;
+}
+
+
+
+
+
+static int add_active_parser (son, state, symbol)
+    int			son, state, symbol;
+{
+    /* Create a parser named "father" whose state is "state"
+     and link it to "son". */
+    /* The transition from "son" to "father" is performed on "symbol".
+       "symbol" is a pointer to a 4-tuple (p, k, i, j) s.t.
+          - p>0 is an input grammar rule number
+	    p<0 is the opposite of the code of aterminal symbol
+	  - k is non negative integer. The couple (p,k) designate an item
+	    if p = A -> X0 X1   Xk  Xl, (p,k) is the item A -> X0 X1   .Xk  Xl
+	  - i and j are positive integers which are token numbers s.t.
+	    i <= j and Xk...Xl =>* ai+1 ... aj */
+
+
+    register int			x, father, ref;
+    int					link, t_state, lim, red_no;
+    register struct SXP_prdct		*aprdct;
+    register struct parse_stack_elem	*agraph;
+
+    /* Already known as an active parser or as a for_shifter? */
+    if (parse_stack.active_states [state] != 0  ||
+	parse_stack.for_shifter [state] != 0) {
+	agraph = &(parse_stack.graph [father = parse_stack.active_parsers [state]]);
+
+	/* Add a link from father to son if it does not already exists. */
+	if ((x = agraph->son) == son || -x == son) {
+
+	    return 0;
+	}
+
+	if (x > 0)
+	    agraph->son = -x;
+		
+	if (XxY_set (&parse_stack.sons, father, son, &link)) {
+
+	    return 0;
+	}
+	    
+	parse_stack.transitions [link] = symbol;
+	return parse_stack.active_states [state] != 0 ? link : 0;
+    }
+
+    /* create a stack node father with state "state" */
+
+    /* Seeking a new parse graph elem whose id is father. */
+    if (parse_stack.graph_top < parse_stack.graph_size)
+	father = ++parse_stack.graph_top;
+    else    
+	if (parse_stack.free_parser > 0 &&
+	    (parse_stack.free_parser = sxba_1_rlscan (parse_stack.free_parsers_set, parse_stack.free_parser)) > 0)
+	    father =  parse_stack.free_parser;
+    else {
+	GC (son);
+
+	if (parse_stack.graph_top < parse_stack.graph_size)
+	    father = ++parse_stack.graph_top;
+	else    
+	    if (parse_stack.free_parser > 0 &&
+		(parse_stack.free_parser = sxba_1_rlscan (parse_stack.free_parsers_set, parse_stack.free_parser)) > 0)
+		father =  parse_stack.free_parser;
+	    else {
+		parse_stack.graph = (struct parse_stack_elem*)
+		    sxrealloc (parse_stack.graph,
+			       (parse_stack.graph_size *= 2) + 1,
+			       sizeof (struct parse_stack_elem));
+
+		parse_stack.free_parsers_set = sxba_resize (parse_stack.free_parsers_set,
+						    parse_stack.graph_size + 1);
+		parse_stack.parsers_set = sxbm_resize (parse_stack.parsers_set,
+						       4,
+						       4,
+						       parse_stack.graph_size + 1);
+		parse_stack.parsers_rhs0 = (int*) sxrealloc (parse_stack.parsers_rhs0,
+							     parse_stack.graph_size + 1,
+							     sizeof (int));
+		parse_stack.parsers_rhs1 = (int*) sxrealloc (parse_stack.parsers_rhs1,
+							     parse_stack.graph_size + 1,
+							     sizeof (int));
+		father =  ++parse_stack.graph_top;
+	    }
+    }
+
+    agraph = &(parse_stack.graph [father]);
+    agraph->state = state;
+    agraph->red_ref = 0;
+    agraph->shift_ref = 0;
+    /* add a link from father to son */
+    agraph->son = son;
+    agraph->level = parse_stack.current_level;
+    agraph->symbol = symbol;
+    
+    if (state > lr0_automaton_state_nb) {
+	state -= lr0_automaton_state_nb;
+	PUSH (parse_stack.active_states, state);
+	parse_stack.active_parsers [state] = father;
+	SS_push (parse_stack.for_actor, father);
+    }
+    else {
+	register struct Q0	*aQ0 = Q0 + state;
+
+	if (aQ0->t_trans_nb != 0 &&
+	    (ref = XxY_is_set (&Q0xV_hd, state, -parse_stack.current_token)) > 0) {
+	    if (parse_stack.current_token == sxplocals.SXP_tables.P_tmax) {
+		/* Halt */
+	    }
+	    else {
+		agraph->shift_ref = Q0xV_to_Q0 [ref];
+		PUSH (parse_stack.for_shifter, state);
+		parse_stack.active_parsers [state] = father;
+	    }
+	}
+    
+	if ((lim = aQ0->red_trans_nb) != 0) {
+	    ref = aQ0->bot + aQ0->t_trans_nb + aQ0->nt_trans_nb;
+	    red_no = bnf_ag.WS_INDPRO [-Q0xV_to_Q0 [ref]].prolis;
+	    PUSH (parse_stack.active_states, state);
+	    parse_stack.active_parsers [state] = father;
+	    SS_push (parse_stack.for_actor, father);
+
+	    if (lim == 1)
+		agraph->red_ref = red_no;
+	    else
+		agraph->red_ref = -state;
+	}
+    }
+
+    return 0;
+}
+    
+
+static void do_reductions (son, is_in_set)
+    int		son;
+    bool	is_in_set;
+{
+    /* We want to perform a  reduce_action A -> alpha on p. */
+    /* l = length(alpha). */
+    /* p is a parse_stack_elem and link an index in parse_stack.sons
+       which is characteristic of a given transition. */
+    /* FORALL q for which a path of length l from p to q through
+       link exists DO
+          REDUCER (q, GOTO (state (q), A)). */
+    int					symb, link, next; 
+    struct parse_stack_elem		*agraph;
+    bool				is_first_time;
+
+    is_first_time = true;
+
+    do {
+	agraph = &(parse_stack.graph [son]);
+
+	/* in-lining of reducer () */
+	if ((next = Q0xV_to_Q0 [XxY_is_set (&Q0xV_hd, agraph->state, bnf_ag.WS_NBPRO [parse_stack.red_no].reduc)]) < 0) {
+	    /* Shift and Reduce */
+	    next = lr0_automaton_state_nb + bnf_ag.WS_INDPRO [-next].prolis;
+	}
+
+	/* We create an active parser even when next designates a
+	   shift (on the LHS non-terminal) and reduce
+	   (i.e next > lr0_automaton_state_nb.) */
+	/* If exists q in active_parsers with state(q)==state then */
+	if ((link = add_active_parser (son, next, symb)) > 0) {
+	    /* if there is no direct link from father to son yet then */
+	    /* add a link from father to son */
+	    /* forall r in (active_parsers - for_actor) do */
+	    parse_stack.is_new_links = true;
+	    SXBA_1_bit (parse_stack.current_links, link);
+	}
+	
+	if (is_first_time) {
+	    if (!is_in_set)
+		break;
+
+	    is_first_time = false;
+	    son = 0;
+	}
+    } while ((son = sxba_scan_reset (parse_stack.parsers_set [0], son)) > 0);
+}
+
+
+
+static void do_pops (p, l)
+    int		p, l;
+{
+    /* We want to perform a  reduce_action A -> alpha on p. */
+    /* l = length(alpha). */
+    /* p is a parse_stack_elem. */
+    /* FORALL q for which a path of length l from p to q DO
+          REDUCER (q, GOTO (state (q), A)). */
+    int			x, son, father, next_son, first_son;
+    SXBA		fathers_set, sons_set;
+    bool		is_in_set;
+
+    is_in_set = false;
+    son = p;
+
+    while (l-- > 0) {
+	father = son;
+
+	if (!is_in_set) {
+	    if ((son = parse_stack.graph [father].son) < 0) {
+		sons_set = (l & 01) ?
+		    parse_stack.parsers_set [1] : parse_stack.parsers_set [0];
+
+		XxY_Xforeach (parse_stack.sons, father, x) {
+		    next_son = XxY_Y (parse_stack.sons, x);
+		    SXBA_1_bit (sons_set, next_son);
+		}
+
+		son = -son;
+		is_in_set = true;
+	    }
+	}
+	else {
+	    is_in_set = false;
+
+	    if (l & 01) {
+		fathers_set = parse_stack.parsers_set [0];
+		sons_set = parse_stack.parsers_set [1];
+	    }
+	    else {
+		fathers_set = parse_stack.parsers_set [1];
+		sons_set = parse_stack.parsers_set [0];
+	    }
+
+	    if ((son = parse_stack.graph [father].son) < 0) {
+		is_in_set = true;
+		son = -son;
+
+		XxY_Xforeach (parse_stack.sons, father, x) {
+		    next_son = XxY_Y (parse_stack.sons, x);
+		    SXBA_1_bit (sons_set, next_son);
+		}
+	    }
+
+	    father = 0;
+	    
+	    while ((father = sxba_scan_reset (fathers_set, father)) > 0) {
+		if ((first_son = parse_stack.graph [father].son) < 0) {
+		    is_in_set = true;
+		    first_son = -first_son;
+		    
+		    XxY_Xforeach (parse_stack.sons, father, x) {
+			if ((next_son = XxY_Y (parse_stack.sons, x)) != son)
+			    SXBA_1_bit (sons_set, next_son);
+		    }
+		}
+
+		if (first_son != son) {
+		    SXBA_1_bit (sons_set, first_son);
+		    is_in_set = true;
+		}
+	    }
+	}
+    }
+
+    do_reductions (son, is_in_set);
+}
+
+
+
+static void do_limited_reductions (p, l)
+    int p, l;
+{
+    /* We want to perform a  reduce_action A -> alpha on p  */
+    /* l = length(alpha). */
+    /* p is a parse_stack_elem*/
+    /* FORALL q for which a path of length l from p to q DO
+       REDUCER (q, GOTO (state (q), A)). */
+    /* called with l > 0 */
+    register int	x, father, son, first_father;
+    bool		is_no_link, is_sons;
+    register SXBA	fathers_set, sons_set, fathers_no_link_set, sons_no_link_set;
+    SXBA		s;
+
+    x = l & 01;
+    fathers_set = parse_stack.parsers_set [x];
+    fathers_no_link_set = parse_stack.parsers_set [x+2];
+    x = (x + 1) & 01;
+    sons_set = parse_stack.parsers_set [x];
+    sons_no_link_set = parse_stack.parsers_set [x+2];
+    SXBA_1_bit (fathers_set, p);
+    SXBA_1_bit (fathers_no_link_set, p);
+
+    for (;;) {
+	father = 0;
+	
+	while ((father = sxba_scan_reset (fathers_set, father)) > 0) {
+	    is_no_link = SXBA_bit_is_set_reset (fathers_no_link_set, father);
+	    
+	    if ((is_sons = (son = parse_stack.graph [father].son) < 0))
+		son = -son;
+	    
+	    SXBA_1_bit (sons_set, son);
+
+	    if (is_no_link)
+		SXBA_1_bit (sons_no_link_set, son);
+	    
+	    if (is_sons) {
+		XxY_Xforeach (parse_stack.sons, father, x) {
+		    son = XxY_Y (parse_stack.sons, x);
+		    SXBA_1_bit (sons_set, son);
+
+		    if (is_no_link && !SXBA_bit_is_set (parse_stack.used_links, x))
+			SXBA_1_bit (sons_no_link_set, son);
+		}
+	    }
+	}
+
+	if (--l == 0)
+	    break;
+
+	s = fathers_set, fathers_set = sons_set, sons_set = s;
+	s = fathers_no_link_set, fathers_no_link_set = sons_no_link_set, sons_no_link_set = s;
+    }
+	
+    sxba_minus (sons_set, sons_no_link_set);
+
+    if ((son = sxba_scan_reset (sons_set, 0)) > 0) {
+	do_reductions (son, sxba_scan (sons_set, son) > 0);
+    }
+}
+
+
+static void parse_forest ()
+{
+    /* The construction of the parse forest is not performed within the
+       recognizer in order to avoid the multiple definition of the same
+       sub-string with different productions. This may arise when a new
+       link is added between previous parsers, triggering a future call
+       to do_limited_reductions and adds a path such that a node with a
+       single father becomes multi_fathered and hence produces an inter
+       mediate non-terminal which describes a path which has already be
+       en processed previously. One solution is to have a two step proc
+       ess: first, the recognizer which set all the pathes and the non-
+       terminals which are the names of the transitions and second, the
+       creation of the parse forest (ie the grammar rules) which uses
+       the previous transitions and pathes. */
+    int			p, ref, x;
+
+    while (parse_stack.active_states [0] > 0) {
+	POP (parse_stack.active_states, p);
+	p = parse_stack.active_parsers [p];
+
+	if ((ref = parse_stack.graph [p].red_ref) == 0) {
+	    /* Shift and reduce parser */
+	    /* Always a one to one mapping between parsers and ref. */
+	    parse_stack.red_no = bnf_ag.WS_INDPRO [parse_stack.graph [p].state].prolis;
+	    seek_paths (p, 0, false, LGPROD (parse_stack.red_no));
+
+	}
+	else  {
+	    parse_stack.graph [p].red_ref = 0;
+	}
+    }
+
+    while (parse_stack.red_stack [0] > 0) {
+	POP (parse_stack.red_stack, ref);
+	
+	if ((x = parse_stack.red_parsers_hd [ref]) < 0) {
+	    parse_stack.red_no = ref;
+	    seek_paths (-x, 0, false, LGPROD (parse_stack.red_no));
+	}
+	else {
+	    do {
+		p = parse_stack.red_parsers_list [x].parser;
+		
+		if ((x = parse_stack.red_parsers_list [x].lnk) != 0)
+		    SXBA_1_bit (parse_stack.parsers_set [1], p);
+	    } while (x != 0);
+	    
+	    parse_stack.red_no = ref;
+	    seek_paths (p, 0, true, LGPROD (parse_stack.red_no));
+	}
+    }
+    
+    parse_stack.red_parsers_list_top = 0;
+}
+
+
+static bool shifter ()
+{
+    int		p, q, ref, n, son, lgth;
+
+    /* active_parsers == phi */
+    /* for_actor == phi */
+
+    if (parse_stack.for_shifter [0] < 0)
+	return false;
+
+    do {
+	POP (parse_stack.for_shifter, p);
+	SS_push (parse_stack.for_scanner, parse_stack.active_parsers [p]);
+    } while (parse_stack.for_shifter [0] > 0);
+
+    parse_stack.current_level = sxplocals.ptok_no;
+
+    /* read next token */
+    n = ++sxplocals.ptok_no;
+
+    while (n > sxplocals.Mtok_no)
+	(*(sxplocals.SXP_tables.P_scan_it)) ();
+
+    parse_stack.current_token = SXGET_TOKEN (n).lahead;
+    /* for_scanner = for_shifter */
+    /* for_shifter = phi */
+
+    do {
+	p = SS_pop (parse_stack.for_scanner);
+	ref = parse_stack.graph [p].shift_ref;
+	parse_stack.graph [p].shift_ref = 0;
+
+	if (ref < 0 /* scan and reduce */) {
+	    /* in-lining */
+	    do_pops (p,
+		     lgth = -ref - bnf_ag.WS_NBPRO [parse_stack.red_no = bnf_ag.WS_INDPRO [-ref].prolis].prolon);
+	}
+	else
+	    add_active_parser (p, ref, parse_stack.current_symbol);
+    } while (!SS_is_empty (parse_stack.for_scanner));
+    
+    return true;
+}
+
+
+
+static bool sxparse_it ()
+{
+    int				y, p, ref, lgth, lim;
+    struct parse_stack_elem	*agraph;
+    struct SXP_prdct		*aprdct;
+    
+    parse_stack.start_symbol = 0;
+    parse_stack.current_token = sxplocals.SXP_tables.P_tmax;
+
+    /* create a stack node p with state START_STATE(grammar) */
+    p = parse_stack.graph_top = 1;
+    agraph = &(parse_stack.graph [p]);
+    agraph->state = 1; /* why not! */
+    agraph->red_ref = 0;
+    agraph->shift_ref = 1;
+
+    /* no son */
+    agraph->son = 0;
+    agraph->level = 0;
+    /* agraph->symbol = ... */
+    PUSH (parse_stack.for_shifter, agraph->state);
+    parse_stack.active_parsers [agraph->state] = p;
+    parse_stack.rhs_top = 0;
+    shifter ();
+
+    /* in_lining of parseword () */
+    do {
+	/* for_actor == active_parsers */
+	/* for_shifter == phi */
+	if (!SS_is_empty (parse_stack.for_actor)) {
+	    /* while for_actor <> phi  do */
+	    do {
+		/* remove a parser p from for_actor */
+		p = SS_pop (parse_stack.for_actor);
+
+		if ((ref = parse_stack.graph [p].red_ref) == 0) {
+		    /* Shift and reduce parser */
+		    ref = parse_stack.graph [p].state - lr0_automaton_state_nb;
+		}
+
+		if (ref > 0) {
+		    parse_stack.red_no = ref;
+		    do_pops (p, LGPROD (parse_stack.red_no));
+		}
+		else {
+		    register struct Q0	*aQ0 = Q0 - ref;
+
+		    lim = aQ0->red_trans_nb + (ref = aQ0->bot + aQ0->t_trans_nb + aQ0->nt_trans_nb);
+
+		    do {
+			parse_stack.red_no = bnf_ag.WS_INDPRO [-Q0xV_to_Q0 [ref]].prolis;
+			do_pops (p, LGPROD (parse_stack.red_no));
+		    } while (++ref < lim);
+		}
+	    } while (!SS_is_empty (parse_stack.for_actor));
+
+	    while (parse_stack.is_new_links) {
+		parse_stack.is_new_links = false;
+		sxba_copy (parse_stack.used_links, parse_stack.current_links);
+		sxba_empty (parse_stack.current_links);
+
+		/* for_actor == active_parsers */
+		p = 0;
+
+		while ((p = parse_stack.active_states [p]) > 0)
+		    SS_push (parse_stack.for_actor, parse_stack.active_parsers [p]);
+
+		do {
+		    /* remove a parser p from for_actor */
+		    p = SS_pop (parse_stack.for_actor);
+		
+		    if ((ref = parse_stack.graph [p].red_ref) == 0) {
+			/* Shift and reduce parser */
+			ref = parse_stack.graph [p].state - lr0_automaton_state_nb;;
+		    }
+		    
+		    if (ref > 0) {
+			if ((lgth = LGPROD (ref)) > 0) {
+			    parse_stack.red_no = ref;
+			    do_limited_reductions (p, lgth);
+			}
+		    }
+		    else {
+			register struct Q0	*aQ0 = Q0 - ref;
+
+			lim = aQ0->red_trans_nb + (ref = aQ0->bot + aQ0->t_trans_nb + aQ0->nt_trans_nb);
+
+			do {
+			    parse_stack.red_no = bnf_ag.WS_INDPRO [-Q0xV_to_Q0 [ref]].prolis;
+
+			    if ((lgth = LGPROD (parse_stack.red_no)) > 0)
+				do_limited_reductions (p, lgth);
+			} while (++ref < lim);
+		    }
+		} while (!SS_is_empty (parse_stack.for_actor));
+	    }
+
+	    parse_forest ();
+	}
+    } while (shifter ());
+
+    if (parse_stack.start_symbol == 0)
+	sxerror (SXGET_TOKEN (sxplocals.ptok_no).source_index,
+		     "%sSyntax error.",
+		     sxplocals.sxtables->err_titles [2]);
+
+    return parse_stack.start_symbol > 0;
+}
+
+
+
+bool sxindparser (what_to_do, arg)
+    int		what_to_do;
+    SXTABLES	*arg;
+{
+    switch (what_to_do) {
+    case SXBEGIN:
+	return true;
+
+    case SXOPEN:
+	/* new language: new tables, new local parser variables */
+	/* the global variable "sxplocals" must have been saved in case */
+	/* of recursive invocation */
+
+	/* test arg->magic for consistency */
+	sxcheck_magic_number (arg->magic, SXMAGIC_NUMBER, ME);
+
+	/* internal grammar form reading. */
+	/* Assume that the name of the language has been given in the "record" spec!! */
+	if (!bnf_read (&bnf_ag, arg->err_titles [0] + 1))
+	    sxexit (2);
+
+	/* LR (0) automaton construction. */
+	LR0 ();
+	XH_lock (&nucleus_hd);
+
+	lr0_automaton_state_nb = xac2 - 1;
+
+	parse_stack.graph = (struct parse_stack_elem*) sxalloc ((parse_stack.graph_size = 128) + 1,
+							sizeof (struct parse_stack_elem));
+	parse_stack.graph_top = 0;
+	parse_stack.free_parsers_set = sxba_calloc (parse_stack.graph_size + 1);
+	sxba_fill (parse_stack.free_parsers_set);
+	parse_stack.free_parser = 0;
+	parse_stack.parsers_set = sxbm_calloc (4, parse_stack.graph_size + 1);
+	parse_stack.parsers_rhs0 = (int*) sxalloc (parse_stack.graph_size + 1, sizeof (int));
+	parse_stack.parsers_rhs1 = (int*) sxalloc (parse_stack.graph_size + 1, sizeof (int));
+
+        {
+	    register int SIZE = lr0_automaton_state_nb + bnf_ag.WS_TBL_SIZE.xnbpro + 1;
+
+	    parse_stack.active_states = (int*) sxcalloc (SIZE, sizeof (int));
+	    parse_stack.active_states [0] = -1;
+	    parse_stack.for_shifter = (int*) sxcalloc (SIZE, sizeof (int));
+	    parse_stack.for_shifter [0] = -1;
+	    parse_stack.active_parsers = (int*) sxalloc (SIZE, sizeof (int));
+	}
+
+        {
+	    register int SIZE = arg->SXP_tables.Mred + 1;
+
+	    parse_stack.red_stack = (int*) sxcalloc (SIZE, sizeof (int));
+	    parse_stack.red_stack [0] = -1;
+	    parse_stack.red_parsers_hd = (int*) sxalloc (SIZE, sizeof (int));
+	    parse_stack.red_parsers_list = (struct red_parsers*) sxalloc (parse_stack.red_parsers_list_size = SIZE, sizeof (struct red_parsers));
+	    parse_stack.red_parsers_list_top = 0;
+	}
+
+	parse_stack.for_actor = SS_alloc (20);
+	parse_stack.for_scanner = SS_alloc (20);
+	parse_stack.GC_area = SS_alloc (20);
+
+	XxY_alloc (&parse_stack.sons, "sons", 128, 1, 1, 0, sons_oflw, NULL);
+	
+	parse_stack.erasable_sons = sxba_calloc (XxY_size (parse_stack.sons) + 1);
+	parse_stack.current_links = sxba_calloc (XxY_size (parse_stack.sons) + 1);
+	parse_stack.used_links = sxba_calloc (XxY_size (parse_stack.sons) + 1);
+	parse_stack.transitions = (int*) sxalloc (XxY_size (parse_stack.sons) + 1, sizeof (int));
+
+
+	XxY_alloc (&parse_stack.suffixes, "suffixes", 128, 1, 0, 0, NULL, NULL);
+	XxY_alloc (&parse_stack.ranges, "ranges", 128, 1, 0, 0, NULL, NULL);
+	XxY_alloc (&parse_stack.symbols, "symbols", 128, 1, 0, 0, NULL, NULL);
+
+	XH_alloc (&parse_stack.output_grammar, "output_grammar", 128, 1, 4, NULL, NULL);
+
+	parse_stack.rhs = (struct rhs*) sxalloc ((parse_stack.rhs_size = 50) + 1, sizeof (struct rhs));
+
+/* prepare new local variables */
+
+	sxplocals.sxtables = arg;
+	sxplocals.SXP_tables = arg->SXP_tables;
+	sxtkn_mngr (SXOPEN, NULL, sxplocals.SXP_tables.P_sizofpts * 8);
+	(*sxplocals.SXP_tables.P_recovery) (SXOPEN, NULL /* dummy */, (SXINT) 0 /* dummy */);
+	return true;
+
+    case SXINIT:
+	/* on initialise toks_buf avec "EOF" */
+
+    {
+	struct sxtoken tok;
+
+	/* terminal_token EOF */
+	tok.lahead = sxplocals.SXP_tables.P_tmax;
+	tok.string_table_entry = SXEMPTY_STE;
+	tok.source_index = sxsrcmngr.source_coord;
+	tok.comment = NULL;
+	sxtkn_mngr (SXINIT, &tok, 0);
+    }
+    
+	/* analyse normale */
+	/* valeurs par defaut qui peut etre changee ds les
+	   scan_act ou pars_act. */
+	sxplocals.mode.look_back = 1; 
+	sxplocals.mode.kind = SXWITH_RECOVERY;
+	sxplocals.mode.errors_nb = 0;
+	sxplocals.mode.is_prefixe = false;
+	sxplocals.mode.is_silent = false;
+	sxplocals.mode.with_semact = true;
+	sxplocals.mode.with_parsact = true;
+	sxplocals.mode.with_parsprdct = true;
+	return true;
+
+    case SXACTION:
+	return sxparse_it ();
+
+    case SXFINAL:
+	sxtkn_mngr (SXFINAL, NULL, 0);
+	return true;
+
+    case SXCLOSE:
+	/* end of language: free the local arrays */
+	sxfree (parse_stack.graph);
+	sxfree (parse_stack.free_parsers_set);
+	sxfree (parse_stack.parsers_set);
+ 	sxfree (parse_stack.active_states);
+	sxfree (parse_stack.for_shifter);
+	sxfree (parse_stack.active_parsers);
+ 	SS_free (parse_stack.for_actor);
+	SS_free (parse_stack.for_scanner);
+	SS_free (parse_stack.GC_area);
+	sxfree (parse_stack.red_stack);
+	sxfree (parse_stack.red_parsers_hd);
+	sxfree (parse_stack.red_parsers_list);
+	sxfree (parse_stack.transitions);
+	XxY_free (&parse_stack.sons);
+	XxY_free (&parse_stack.suffixes);
+	XxY_free (&parse_stack.ranges);
+	XxY_free (&parse_stack.symbols);
+	XH_free (&parse_stack.output_grammar);
+	sxfree (parse_stack.erasable_sons);
+	sxfree (parse_stack.current_links);
+	sxfree (parse_stack.used_links);
+	sxfree (parse_stack.rhs);
+	sxfree (parse_stack.parsers_rhs0);
+	sxfree (parse_stack.parsers_rhs1);
+
+	sxtkn_mngr (SXCLOSE, NULL, 0);
+	bnf_free (&bnf_ag);
+	return true;
+
+    case SXEND:
+	(*sxplocals.SXP_tables.P_recovery) (SXCLOSE, NULL /* dummy */, (SXINT) 0 /* dummy */);
+	return true;
+
+    default:
+	fprintf (sxstderr, "The function \"sxindparser\" is out of date with respect to its specification.\n");
+	abort ();
+    }
+}
+

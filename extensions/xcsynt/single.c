@@ -25,7 +25,7 @@ static char	ME [] = "SINGLE";
 
 #include "csynt_optim.h"
 
-char WHAT_XCSYNTSINGLE[] = "@(#)SYNTAX - $Id: single.c 4146 2024-08-02 10:21:59Z garavel $" WHAT_DEBUG;
+char WHAT_XCSYNTSINGLE[] = "@(#)SYNTAX - $Id: single.c 4498 2024-10-30 12:53:54Z garavel $" WHAT_DEBUG;
 
 static SXINT	xnt_trans, nt_trans_size, max_lhs;
 static struct nt_trans {
@@ -43,7 +43,7 @@ static SXINT	set_an_xnt (SXINT nt, SXINT prdct)
 {
     SXINT	x, y, hash;
     bool	is_new_xnt = nt > bnf_ag.WS_TBL_SIZE.xntmax;
-    char	s [12];
+    char	s [24];
 
     for (y = 0, x = xnt_hash [hash = (2 * nt + prdct) % HASH_SIZE]; x != 0; x = xnt_lnk [(y = x) - Delta]) {
 	if (bnf_ag.XNT_TO_NT_PRDCT [x - bnf_ag.WS_TBL_SIZE.ntmax].v_code == nt && bnf_ag.XNT_TO_NT_PRDCT [x - bnf_ag.WS_TBL_SIZE.ntmax].prdct_no == prdct)

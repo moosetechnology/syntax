@@ -19,7 +19,7 @@ Documentation
 
 More information can be found on SYNTAX home page:
 
-<http://sourcesup.renater.fr/projects/syntax>
+http://sourcesup.renater.fr/projects/syntax
 
 
 Availability
@@ -28,13 +28,13 @@ Availability
 You can visit SYNTAX GForge project page to browse the Subversion
 repository, download releases or submit a bug...
 
-<http://sourcesup.renater.fr/projects/syntax>
+http://sourcesup.renater.fr/projects/syntax
 
 
 Copyright
 =========
 
-	INRIA 1988-2023
+	INRIA 1988-2024
 
 
 Authors

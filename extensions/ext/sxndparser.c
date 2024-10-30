@@ -29,9 +29,9 @@ static char	ME [] = "NDPARSER";
 #include "sxnd.h"
 
 #ifndef VARIANT_32
-char WHAT_SXNDPARSER[] = "@(#)SYNTAX - $Id: sxndparser.c 4169 2024-08-20 08:18:27Z garavel $" WHAT_DEBUG;
+char WHAT_SXNDPARSER[] = "@(#)SYNTAX - $Id: sxndparser.c 4394 2024-10-07 16:08:13Z garavel $" WHAT_DEBUG;
 #else
-char WHAT_SXNDPARSER32[] = "@(#)SYNTAX - $Id: sxndparser.c 4169 2024-08-20 08:18:27Z garavel $ SXNDPARSER_32" WHAT_DEBUG;
+char WHAT_SXNDPARSER32[] = "@(#)SYNTAX - $Id: sxndparser.c 4394 2024-10-07 16:08:13Z garavel $ SXNDPARSER_32" WHAT_DEBUG;
 #endif
 #if EBUG
 #define stdout_or_NULL	stdout
@@ -382,8 +382,7 @@ SXINT NDP_access (struct SXP_bases *abase, SXINT j)
 
 
 
-/* static */ bool
-new_symbol (SXINT reduce, SXINT k, SXINT i, SXINT j, SXINT *symbol)
+/* static */ bool new_symbol (SXINT reduce, SXINT k, SXINT i, SXINT j, SXINT *symbol)
 {
     SXINT		kind, range;
 
@@ -424,8 +423,7 @@ static SXINT  set_unit_rule (lhs, rhs_symb)
 }  
 #endif
 
-/* static */ void
-set_rule (SXINT lhs, SXINT rhs)
+/* static */ void set_rule (SXINT lhs, SXINT rhs)
 {
     SXINT		rule_no;
 
@@ -482,8 +480,7 @@ static SXINT build_a_rule (SXINT parser, SXINT build_a_rule_index, SXINT rhs)
 }
 
 
-/* static */ void
-set_start_symbol (SXINT symbol)
+/* static */ void set_start_symbol (SXINT symbol)
 {
     SXINT		symb, rhs, rule_no;
     /* Halt */
@@ -1772,8 +1769,7 @@ static void parse_forest ()
 #endif
 
 
-static void
-single_reduce (SXINT xtriple, bool is_limited)
+static void single_reduce (SXINT xtriple, bool is_limited)
 {
     struct triple	*ptriple;
     SXINT		parser, ref, lgth;
@@ -1927,8 +1923,7 @@ static void grammar_put (SXINT symbol)
 
 
 
-static void
-push_new_nt (SXINT symbol)
+static void push_new_nt (SXINT symbol)
 {
     /* symbol != 0 */
 
@@ -2073,8 +2068,7 @@ static void hook_construction (SXINT symbol)
 }
 
 #if 0
-static void hook_construction (symbol)
-    SXINT symbol;
+static void hook_construction (SXINT symbol)
 {
     SXINT 		rule, lhs, rhs, tnt, old_rule_top, old_grammar_top;
     struct grammar	*aelem, *lim;

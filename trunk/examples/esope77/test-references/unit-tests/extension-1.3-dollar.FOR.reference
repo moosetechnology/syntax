@@ -1,0 +1,3322 @@
+{
+    "tag": "fortran_file",
+    "comments": {
+        "15": "C--------+---------+---------+---------+---------+---------+---------+-|\n",
+        "101": "C     end subroutine gng\n"
+    },
+    "file": "test/unit-tests/extension-1.3-dollar.FOR",
+    "program_units": [
+        {
+            "tag": "subroutine",
+            "name": {
+                "tag": "symbolic_name",
+                "start_pos": {
+                    "line": "1",
+                    "column": "18"
+                },
+                "name": "GNG"
+            },
+            "prog_unit_parameters": [
+                {
+                    "tag": "variable",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "24"
+                    },
+                    "variable_name": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "1",
+                            "column": "24"
+                        },
+                        "name": "TOTGRP"
+                    }
+                },
+                {
+                    "tag": "variable",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "33"
+                    },
+                    "variable_name": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "1",
+                            "column": "33"
+                        },
+                        "name": "NRECGR"
+                    }
+                },
+                {
+                    "tag": "variable",
+                    "start_pos": {
+                        "line": "1",
+                        "column": "41"
+                    },
+                    "variable_name": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "1",
+                            "column": "41"
+                        },
+                        "name": "COURSE"
+                    }
+                },
+                {
+                    "tag": "variable",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "26"
+                    },
+                    "variable_name": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "2",
+                            "column": "26"
+                        },
+                        "name": "COURSM"
+                    }
+                },
+                {
+                    "tag": "variable",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "35"
+                    },
+                    "variable_name": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "2",
+                            "column": "35"
+                        },
+                        "name": "RECGRP"
+                    }
+                },
+                {
+                    "tag": "variable",
+                    "start_pos": {
+                        "line": "2",
+                        "column": "43"
+                    },
+                    "variable_name": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "2",
+                            "column": "43"
+                        },
+                        "name": "IGREC"
+                    }
+                },
+                {
+                    "tag": "variable",
+                    "start_pos": {
+                        "line": "3",
+                        "column": "26"
+                    },
+                    "variable_name": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "3",
+                            "column": "26"
+                        },
+                        "name": "NGRP"
+                    }
+                },
+                {
+                    "tag": "variable",
+                    "start_pos": {
+                        "line": "3",
+                        "column": "35"
+                    },
+                    "variable_name": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "3",
+                            "column": "35"
+                        },
+                        "name": "POSGRP"
+                    }
+                },
+                {
+                    "tag": "variable",
+                    "start_pos": {
+                        "line": "3",
+                        "column": "43"
+                    },
+                    "variable_name": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "3",
+                            "column": "43"
+                        },
+                        "name": "GRPENM"
+                    }
+                },
+                {
+                    "tag": "variable",
+                    "start_pos": {
+                        "line": "4",
+                        "column": "26"
+                    },
+                    "variable_name": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "4",
+                            "column": "26"
+                        },
+                        "name": "NMGRP_H"
+                    }
+                },
+                {
+                    "tag": "variable",
+                    "start_pos": {
+                        "line": "4",
+                        "column": "35"
+                    },
+                    "variable_name": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "4",
+                            "column": "35"
+                        },
+                        "name": "TRANS"
+                    }
+                },
+                {
+                    "tag": "variable",
+                    "start_pos": {
+                        "line": "4",
+                        "column": "43"
+                    },
+                    "variable_name": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "4",
+                            "column": "43"
+                        },
+                        "name": "MODPIL"
+                    }
+                },
+                {
+                    "tag": "variable",
+                    "start_pos": {
+                        "line": "5",
+                        "column": "26"
+                    },
+                    "variable_name": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "5",
+                            "column": "26"
+                        },
+                        "name": "SNGRP"
+                    }
+                },
+                {
+                    "tag": "variable",
+                    "start_pos": {
+                        "line": "5",
+                        "column": "35"
+                    },
+                    "variable_name": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "5",
+                            "column": "35"
+                        },
+                        "name": "NGRPS"
+                    }
+                }
+            ],
+            "start_pos": {
+                "line": "1",
+                "column": "7"
+            },
+            "end_pos": {
+                "line": "100",
+                "column": "9"
+            },
+            "statement_list": [
+                {
+                    "tag": "variable_declaration_statement",
+                    "start_pos": {
+                        "line": "7",
+                        "column": "7"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "start_pos": {
+                            "line": "7",
+                            "column": "7"
+                        },
+                        "name": "CHARACTER",
+                        "len_specification": {
+                            "tag": "nonzero_unsigned_int_constant",
+                            "start_pos": {
+                                "line": "7",
+                                "column": "17"
+                            },
+                            "value": "8"
+                        }
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "7",
+                                "column": "17"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "7",
+                                    "column": "17"
+                                },
+                                "name": "MODPIL"
+                            },
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "7",
+                                "column": "30"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "7",
+                                    "column": "30"
+                                },
+                                "name": "GRPENM"
+                            },
+                            "dimension_declarators": [
+                                {
+                                    "tag": "dimension_declarator",
+                                    "start_pos": {
+                                        "line": "7",
+                                        "column": "37"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "variable_expression",
+                                        "variable_name": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "7",
+                                                "column": "37"
+                                            },
+                                            "name": "NGRP"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "7",
+                                "column": "44"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "7",
+                                    "column": "44"
+                                },
+                                "name": "NMGRP_H"
+                            },
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "8",
+                                "column": "34"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "8",
+                                    "column": "34"
+                                },
+                                "name": "SNGRP"
+                            },
+                            "dimension_declarators": [
+                                {
+                                    "tag": "dimension_declarator",
+                                    "start_pos": {
+                                        "line": "8",
+                                        "column": "40"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "variable_expression",
+                                        "variable_name": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "8",
+                                                "column": "40"
+                                            },
+                                            "name": "NGRPS"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "tag": "variable_declaration_statement",
+                    "start_pos": {
+                        "line": "9",
+                        "column": "7"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "start_pos": {
+                            "line": "9",
+                            "column": "7"
+                        },
+                        "name": "INTEGER"
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "9",
+                                "column": "17"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "9",
+                                    "column": "17"
+                                },
+                                "name": "NGRP"
+                            },
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "9",
+                                "column": "23"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "9",
+                                    "column": "23"
+                                },
+                                "name": "NRECGR"
+                            },
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "9",
+                                "column": "31"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "9",
+                                    "column": "31"
+                                },
+                                "name": "NGRPS"
+                            },
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "variable_declaration_statement",
+                    "start_pos": {
+                        "line": "10",
+                        "column": "7"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "start_pos": {
+                            "line": "10",
+                            "column": "7"
+                        },
+                        "name": "INTEGER"
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "10",
+                                "column": "17"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "10",
+                                    "column": "17"
+                                },
+                                "name": "IGREC"
+                            },
+                            "dimension_declarators": [
+                                {
+                                    "tag": "dimension_declarator",
+                                    "start_pos": {
+                                        "line": "10",
+                                        "column": "23"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "variable_expression",
+                                        "variable_name": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "10",
+                                                "column": "23"
+                                            },
+                                            "name": "NRECGR"
+                                        }
+                                    }
+                                },
+                                {
+                                    "tag": "dimension_declarator",
+                                    "start_pos": {
+                                        "line": "10",
+                                        "column": "30"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "literal_expression",
+                                        "start_pos": {
+                                            "line": "10",
+                                            "column": "30"
+                                        },
+                                        "expression": {
+                                            "tag": "unsigned_int_constant",
+                                            "start_pos": {
+                                                "line": "10",
+                                                "column": "30"
+                                            },
+                                            "value": "2"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "tag": "variable_declaration_statement",
+                    "start_pos": {
+                        "line": "11",
+                        "column": "7"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "start_pos": {
+                            "line": "11",
+                            "column": "7"
+                        },
+                        "name": "REAL"
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "11",
+                                "column": "17"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "11",
+                                    "column": "17"
+                                },
+                                "name": "RECGRP"
+                            },
+                            "dimension_declarators": [
+                                {
+                                    "tag": "dimension_declarator",
+                                    "start_pos": {
+                                        "line": "11",
+                                        "column": "24"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "variable_expression",
+                                        "variable_name": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "11",
+                                                "column": "24"
+                                            },
+                                            "name": "NRECGR"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "11",
+                                "column": "33"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "11",
+                                    "column": "33"
+                                },
+                                "name": "COURSE"
+                            },
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "11",
+                                "column": "41"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "11",
+                                    "column": "41"
+                                },
+                                "name": "COURSM"
+                            },
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "variable_declaration_statement",
+                    "start_pos": {
+                        "line": "12",
+                        "column": "7"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "start_pos": {
+                            "line": "12",
+                            "column": "7"
+                        },
+                        "name": "REAL"
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "12",
+                                "column": "17"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "12",
+                                    "column": "17"
+                                },
+                                "name": "TOTGRP"
+                            },
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "variable_declaration_statement",
+                    "start_pos": {
+                        "line": "13",
+                        "column": "7"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "start_pos": {
+                            "line": "13",
+                            "column": "7"
+                        },
+                        "name": "REAL"
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "13",
+                                "column": "17"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "13",
+                                    "column": "17"
+                                },
+                                "name": "POSGRP"
+                            },
+                            "dimension_declarators": [
+                                {
+                                    "tag": "dimension_declarator",
+                                    "start_pos": {
+                                        "line": "13",
+                                        "column": "24"
+                                    },
+                                    "upper_bound": {
+                                        "tag": "variable_expression",
+                                        "variable_name": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "13",
+                                                "column": "24"
+                                            },
+                                            "name": "NGRP"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "tag": "variable_declaration_statement",
+                    "start_pos": {
+                        "line": "14",
+                        "column": "7"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "start_pos": {
+                            "line": "14",
+                            "column": "7"
+                        },
+                        "name": "REAL"
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "14",
+                                "column": "17"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "14",
+                                    "column": "17"
+                                },
+                                "name": "TRANS"
+                            },
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "variable_declaration_statement",
+                    "start_pos": {
+                        "line": "16",
+                        "column": "7"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "start_pos": {
+                            "line": "16",
+                            "column": "7"
+                        },
+                        "name": "CHARACTER",
+                        "len_specification": {
+                            "tag": "nonzero_unsigned_int_constant",
+                            "start_pos": {
+                                "line": "16",
+                                "column": "17"
+                            },
+                            "value": "8"
+                        }
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "16",
+                                "column": "17"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "16",
+                                    "column": "17"
+                                },
+                                "name": "GROUP_NAME"
+                            },
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "16",
+                                "column": "31"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "16",
+                                    "column": "31"
+                                },
+                                "name": "GROUP_NAME_FORMAT"
+                            },
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "variable_declaration_statement",
+                    "start_pos": {
+                        "line": "17",
+                        "column": "7"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "start_pos": {
+                            "line": "17",
+                            "column": "7"
+                        },
+                        "name": "LOGICAL"
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "17",
+                                "column": "19"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "17",
+                                    "column": "19"
+                                },
+                                "name": "LG_H$COMPLEX"
+                            },
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "17",
+                                "column": "33"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "17",
+                                    "column": "33"
+                                },
+                                "name": "LG$T_MODE"
+                            },
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "18",
+                                "column": "19"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "18",
+                                    "column": "19"
+                                },
+                                "name": "LG_PI$OVER"
+                            },
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "variable_declaration_statement",
+                    "start_pos": {
+                        "line": "19",
+                        "column": "7"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "start_pos": {
+                            "line": "19",
+                            "column": "7"
+                        },
+                        "name": "INTEGER"
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "19",
+                                "column": "19"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "19",
+                                    "column": "19"
+                                },
+                                "name": "I"
+                            },
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "19",
+                                "column": "22"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "19",
+                                    "column": "22"
+                                },
+                                "name": "I_GROUP"
+                            },
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "19",
+                                "column": "31"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "19",
+                                    "column": "31"
+                                },
+                                "name": "N_CHAR"
+                            },
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "19",
+                                "column": "39"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "19",
+                                    "column": "39"
+                                },
+                                "name": "ERTMOD"
+                            },
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "variable_declaration_statement",
+                    "start_pos": {
+                        "line": "20",
+                        "column": "7"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "start_pos": {
+                            "line": "20",
+                            "column": "7"
+                        },
+                        "name": "REAL"
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "20",
+                                "column": "19"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "20",
+                                    "column": "19"
+                                },
+                                "name": "TOTAL"
+                            },
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "20",
+                                "column": "26"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "20",
+                                    "column": "26"
+                                },
+                                "name": "COURSN"
+                            },
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "20",
+                                "column": "34"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "20",
+                                    "column": "34"
+                                },
+                                "name": "RECGRPW"
+                            },
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "variable_declaration_statement",
+                    "start_pos": {
+                        "line": "21",
+                        "column": "7"
+                    },
+                    "type": {
+                        "tag": "type_reference",
+                        "start_pos": {
+                            "line": "21",
+                            "column": "7"
+                        },
+                        "name": "CHARACTER",
+                        "len_specification": {
+                            "tag": "nonzero_unsigned_int_constant",
+                            "start_pos": {
+                                "line": "21",
+                                "column": "17"
+                            },
+                            "value": "256"
+                        }
+                    },
+                    "declarators": [
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "21",
+                                "column": "17"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "21",
+                                    "column": "17"
+                                },
+                                "name": "MSG$FR"
+                            },
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "21",
+                                "column": "29"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "21",
+                                    "column": "29"
+                                },
+                                "name": "MSG$EN"
+                            },
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "21",
+                                "column": "37"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "21",
+                                    "column": "37"
+                                },
+                                "name": "ERR$FR"
+                            },
+                            "dimension_declarators": []
+                        },
+                        {
+                            "tag": "variable_declarator",
+                            "start_pos": {
+                                "line": "21",
+                                "column": "45"
+                            },
+                            "variable_name": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "21",
+                                    "column": "45"
+                                },
+                                "name": "ERR$EN"
+                            },
+                            "dimension_declarators": []
+                        }
+                    ]
+                },
+                {
+                    "tag": "assignment_statement",
+                    "start_pos": {
+                        "line": "23",
+                        "column": "7"
+                    },
+                    "left": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "23",
+                            "column": "7"
+                        },
+                        "name": "TOTAL"
+                    },
+                    "right": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "23",
+                            "column": "16"
+                        },
+                        "name": "TOTGRP"
+                    }
+                },
+                {
+                    "tag": "assignment_statement",
+                    "start_pos": {
+                        "line": "24",
+                        "column": "7"
+                    },
+                    "left": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "24",
+                            "column": "7"
+                        },
+                        "name": "COURSN"
+                    },
+                    "right": {
+                        "tag": "arithmetic_expression",
+                        "expression": {
+                            "tag": "binary_expression",
+                            "start_pos": {
+                                "line": "24",
+                                "column": "16"
+                            },
+                            "left": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "24",
+                                    "column": "16"
+                                },
+                                "name": "COURSE"
+                            },
+                            "operator": {
+                                "tag": "arithmetic_operator",
+                                "start_pos": {
+                                    "line": "24",
+                                    "column": "23"
+                                },
+                                "operator_value": "-"
+                            },
+                            "right": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "24",
+                                    "column": "25"
+                                },
+                                "name": "COURSM"
+                            }
+                        }
+                    }
+                },
+                {
+                    "tag": "block_if_statement",
+                    "start_pos": {
+                        "line": "26",
+                        "column": "7"
+                    },
+                    "then_start": {
+                        "line": "26",
+                        "column": "12"
+                    },
+                    "condition": {
+                        "tag": "logical_expression",
+                        "expression": {
+                            "tag": "logical_factor",
+                            "negated": "false",
+                            "expression": {
+                                "tag": "logical_primary",
+                                "expression": {
+                                    "tag": "binary_expression",
+                                    "start_pos": {
+                                        "line": "26",
+                                        "column": "12"
+                                    },
+                                    "left": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "26",
+                                            "column": "12"
+                                        },
+                                        "name": "MODPIL"
+                                    },
+                                    "operator": {
+                                        "tag": "relational_operator",
+                                        "start_pos": {
+                                            "line": "26",
+                                            "column": "19"
+                                        },
+                                        "operator_value": ".EQ."
+                                    },
+                                    "right": {
+                                        "tag": "character_constant",
+                                        "start_pos": {
+                                            "line": "26",
+                                            "column": "24"
+                                        },
+                                        "value": "'T'"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "then_statements": [
+                        {
+                            "tag": "assignment_statement",
+                            "start_pos": {
+                                "line": "27",
+                                "column": "9"
+                            },
+                            "left": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "27",
+                                    "column": "9"
+                                },
+                                "name": "LG$T_MODE"
+                            },
+                            "right": {
+                                "tag": "logical_expression",
+                                "expression": {
+                                    "tag": "logical_factor",
+                                    "negated": "false",
+                                    "expression": {
+                                        "tag": "logical_primary",
+                                        "expression": {
+                                            "tag": "logical_constant",
+                                            "start_pos": {
+                                                "line": "27",
+                                                "column": "21"
+                                            },
+                                            "value": ".TRUE."
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "tag": "assignment_statement",
+                            "start_pos": {
+                                "line": "28",
+                                "column": "9"
+                            },
+                            "left": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "28",
+                                    "column": "9"
+                                },
+                                "name": "ERTMOD"
+                            },
+                            "right": {
+                                "tag": "arithmetic_expression",
+                                "expression": {
+                                    "tag": "unsigned_int_constant",
+                                    "start_pos": {
+                                        "line": "28",
+                                        "column": "18"
+                                    },
+                                    "value": "0"
+                                }
+                            }
+                        }
+                    ],
+                    "else_block": {
+                        "start_pos": {
+                            "line": "29",
+                            "column": "7"
+                        },
+                        "tag": "else",
+                        "statement_list": [
+                            {
+                                "tag": "assignment_statement",
+                                "start_pos": {
+                                    "line": "30",
+                                    "column": "9"
+                                },
+                                "left": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "30",
+                                        "column": "9"
+                                    },
+                                    "name": "LG$T_MODE"
+                                },
+                                "right": {
+                                    "tag": "logical_expression",
+                                    "expression": {
+                                        "tag": "logical_factor",
+                                        "negated": "false",
+                                        "expression": {
+                                            "tag": "logical_primary",
+                                            "expression": {
+                                                "tag": "logical_constant",
+                                                "start_pos": {
+                                                    "line": "30",
+                                                    "column": "21"
+                                                },
+                                                "value": ".FALSE."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        "end_if": {
+                            "tag": "end_if",
+                            "start_pos": {
+                                "line": "31",
+                                "column": "7"
+                            }
+                        }
+                    }
+                },
+                {
+                    "tag": "block_if_statement",
+                    "start_pos": {
+                        "line": "33",
+                        "column": "7"
+                    },
+                    "then_start": {
+                        "line": "33",
+                        "column": "11"
+                    },
+                    "condition": {
+                        "tag": "symbolic_name",
+                        "start_pos": {
+                            "line": "33",
+                            "column": "11"
+                        },
+                        "name": "LG$T_MODE"
+                    },
+                    "then_statements": [
+                        {
+                            "tag": "assignment_statement",
+                            "start_pos": {
+                                "line": "34",
+                                "column": "9"
+                            },
+                            "left": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "34",
+                                    "column": "9"
+                                },
+                                "name": "LG_H$COMPLEX"
+                            },
+                            "right": {
+                                "tag": "logical_expression",
+                                "expression": {
+                                    "tag": "logical_factor",
+                                    "negated": "false",
+                                    "expression": {
+                                        "tag": "logical_primary",
+                                        "expression": {
+                                            "tag": "logical_constant",
+                                            "start_pos": {
+                                                "line": "34",
+                                                "column": "24"
+                                            },
+                                            "value": ".FALSE."
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "tag": "do_statement",
+                            "start_pos": {
+                                "line": "35",
+                                "column": "9"
+                            },
+                            "loop_control": {
+                                "start_pos": {
+                                    "line": "35",
+                                    "column": "12"
+                                },
+                                "variable_name": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "35",
+                                        "column": "12"
+                                    },
+                                    "name": "I"
+                                },
+                                "init": {
+                                    "tag": "unsigned_int_constant",
+                                    "start_pos": {
+                                        "line": "35",
+                                        "column": "16"
+                                    },
+                                    "value": "1"
+                                },
+                                "limit": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "35",
+                                        "column": "19"
+                                    },
+                                    "name": "NRECGR"
+                                }
+                            },
+                            "statement_list": [
+                                {
+                                    "tag": "block_if_statement",
+                                    "start_pos": {
+                                        "line": "36",
+                                        "column": "11"
+                                    },
+                                    "then_start": {
+                                        "line": "36",
+                                        "column": "15"
+                                    },
+                                    "condition": {
+                                        "tag": "logical_expression",
+                                        "expression": {
+                                            "tag": "logical_factor",
+                                            "negated": "false",
+                                            "expression": {
+                                                "tag": "logical_primary",
+                                                "expression": {
+                                                    "tag": "binary_expression",
+                                                    "start_pos": {
+                                                        "line": "36",
+                                                        "column": "15"
+                                                    },
+                                                    "left": {
+                                                        "tag": "array_element_name",
+                                                        "start_pos": {
+                                                            "line": "36",
+                                                            "column": "15"
+                                                        },
+                                                        "name": {
+                                                            "tag": "symbolic_name",
+                                                            "start_pos": {
+                                                                "line": "36",
+                                                                "column": "15"
+                                                            },
+                                                            "name": "GRPENM"
+                                                        },
+                                                        "qualifiers_list": [
+                                                            {
+                                                                "tag": "array_element_name",
+                                                                "start_pos": {
+                                                                    "line": "36",
+                                                                    "column": "22"
+                                                                },
+                                                                "name": {
+                                                                    "tag": "symbolic_name",
+                                                                    "start_pos": {
+                                                                        "line": "36",
+                                                                        "column": "22"
+                                                                    },
+                                                                    "name": "IGREC"
+                                                                },
+                                                                "qualifiers_list": [
+                                                                    {
+                                                                        "tag": "symbolic_name",
+                                                                        "start_pos": {
+                                                                            "line": "36",
+                                                                            "column": "28"
+                                                                        },
+                                                                        "name": "I"
+                                                                    },
+                                                                    {
+                                                                        "tag": "arithmetic_expression",
+                                                                        "expression": {
+                                                                            "tag": "unsigned_int_constant",
+                                                                            "start_pos": {
+                                                                                "line": "36",
+                                                                                "column": "30"
+                                                                            },
+                                                                            "value": "1"
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    },
+                                                    "operator": {
+                                                        "tag": "relational_operator",
+                                                        "start_pos": {
+                                                            "line": "36",
+                                                            "column": "34"
+                                                        },
+                                                        "operator_value": ".EQ."
+                                                    },
+                                                    "right": {
+                                                        "tag": "symbolic_name",
+                                                        "start_pos": {
+                                                            "line": "36",
+                                                            "column": "39"
+                                                        },
+                                                        "name": "NMGRP_H"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "then_statements": [
+                                        {
+                                            "tag": "assignment_statement",
+                                            "start_pos": {
+                                                "line": "37",
+                                                "column": "13"
+                                            },
+                                            "left": {
+                                                "tag": "symbolic_name",
+                                                "start_pos": {
+                                                    "line": "37",
+                                                    "column": "13"
+                                                },
+                                                "name": "LG_H$COMPLEX"
+                                            },
+                                            "right": {
+                                                "tag": "logical_expression",
+                                                "expression": {
+                                                    "tag": "logical_factor",
+                                                    "negated": "false",
+                                                    "expression": {
+                                                        "tag": "logical_primary",
+                                                        "expression": {
+                                                            "tag": "logical_constant",
+                                                            "start_pos": {
+                                                                "line": "37",
+                                                                "column": "28"
+                                                            },
+                                                            "value": ".TRUE."
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "else_block": {
+                                        "start_pos": {
+                                            "line": "38",
+                                            "column": "11"
+                                        },
+                                        "statement_list": [],
+                                        "end_if": {
+                                            "tag": "end_if",
+                                            "start_pos": {
+                                                "line": "38",
+                                                "column": "11"
+                                            }
+                                        }
+                                    }
+                                }
+                            ],
+                            "end_do": {
+                                "start_pos": {
+                                    "line": "39",
+                                    "column": "14"
+                                }
+                            }
+                        },
+                        {
+                            "tag": "block_if_statement",
+                            "start_pos": {
+                                "line": "41",
+                                "column": "9"
+                            },
+                            "then_start": {
+                                "line": "41",
+                                "column": "13"
+                            },
+                            "condition": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "41",
+                                    "column": "13"
+                                },
+                                "name": "LG_H$COMPLEX"
+                            },
+                            "then_statements": [
+                                {
+                                    "tag": "assignment_statement",
+                                    "start_pos": {
+                                        "line": "42",
+                                        "column": "11"
+                                    },
+                                    "left": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "42",
+                                            "column": "11"
+                                        },
+                                        "name": "LG$T_MODE"
+                                    },
+                                    "right": {
+                                        "tag": "logical_expression",
+                                        "expression": {
+                                            "tag": "logical_factor",
+                                            "negated": "false",
+                                            "expression": {
+                                                "tag": "logical_primary",
+                                                "expression": {
+                                                    "tag": "logical_constant",
+                                                    "start_pos": {
+                                                        "line": "42",
+                                                        "column": "23"
+                                                    },
+                                                    "value": ".FALSE."
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            ],
+                            "else_block": {
+                                "start_pos": {
+                                    "line": "43",
+                                    "column": "9"
+                                },
+                                "tag": "else",
+                                "statement_list": [
+                                    {
+                                        "tag": "assignment_statement",
+                                        "start_pos": {
+                                            "line": "44",
+                                            "column": "11"
+                                        },
+                                        "left": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "44",
+                                                "column": "11"
+                                            },
+                                            "name": "ERTMOD"
+                                        },
+                                        "right": {
+                                            "tag": "arithmetic_expression",
+                                            "expression": {
+                                                "tag": "unsigned_int_constant",
+                                                "start_pos": {
+                                                    "line": "44",
+                                                    "column": "20"
+                                                },
+                                                "value": "1"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "tag": "do_statement",
+                                        "start_pos": {
+                                            "line": "45",
+                                            "column": "11"
+                                        },
+                                        "loop_control": {
+                                            "start_pos": {
+                                                "line": "45",
+                                                "column": "14"
+                                            },
+                                            "variable_name": {
+                                                "tag": "symbolic_name",
+                                                "start_pos": {
+                                                    "line": "45",
+                                                    "column": "14"
+                                                },
+                                                "name": "I_GROUP"
+                                            },
+                                            "init": {
+                                                "tag": "unsigned_int_constant",
+                                                "start_pos": {
+                                                    "line": "45",
+                                                    "column": "24"
+                                                },
+                                                "value": "1"
+                                            },
+                                            "limit": {
+                                                "tag": "symbolic_name",
+                                                "start_pos": {
+                                                    "line": "45",
+                                                    "column": "27"
+                                                },
+                                                "name": "NGRP"
+                                            }
+                                        },
+                                        "statement_list": [
+                                            {
+                                                "tag": "assignment_statement",
+                                                "start_pos": {
+                                                    "line": "46",
+                                                    "column": "13"
+                                                },
+                                                "left": {
+                                                    "tag": "symbolic_name",
+                                                    "start_pos": {
+                                                        "line": "46",
+                                                        "column": "13"
+                                                    },
+                                                    "name": "LG_PI$OVER"
+                                                },
+                                                "right": {
+                                                    "tag": "logical_expression",
+                                                    "expression": {
+                                                        "tag": "logical_factor",
+                                                        "negated": "false",
+                                                        "expression": {
+                                                            "tag": "logical_primary",
+                                                            "expression": {
+                                                                "tag": "logical_constant",
+                                                                "start_pos": {
+                                                                    "line": "46",
+                                                                    "column": "26"
+                                                                },
+                                                                "value": ".FALSE."
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "tag": "do_statement",
+                                                "start_pos": {
+                                                    "line": "47",
+                                                    "column": "13"
+                                                },
+                                                "loop_control": {
+                                                    "start_pos": {
+                                                        "line": "47",
+                                                        "column": "16"
+                                                    },
+                                                    "variable_name": {
+                                                        "tag": "symbolic_name",
+                                                        "start_pos": {
+                                                            "line": "47",
+                                                            "column": "16"
+                                                        },
+                                                        "name": "I"
+                                                    },
+                                                    "init": {
+                                                        "tag": "unsigned_int_constant",
+                                                        "start_pos": {
+                                                            "line": "47",
+                                                            "column": "20"
+                                                        },
+                                                        "value": "1"
+                                                    },
+                                                    "limit": {
+                                                        "tag": "symbolic_name",
+                                                        "start_pos": {
+                                                            "line": "47",
+                                                            "column": "23"
+                                                        },
+                                                        "name": "NGRPS"
+                                                    }
+                                                },
+                                                "statement_list": [
+                                                    {
+                                                        "tag": "block_if_statement",
+                                                        "start_pos": {
+                                                            "line": "48",
+                                                            "column": "15"
+                                                        },
+                                                        "then_start": {
+                                                            "line": "48",
+                                                            "column": "20"
+                                                        },
+                                                        "condition": {
+                                                            "tag": "logical_expression",
+                                                            "expression": {
+                                                                "tag": "logical_factor",
+                                                                "negated": "false",
+                                                                "expression": {
+                                                                    "tag": "logical_primary",
+                                                                    "expression": {
+                                                                        "tag": "binary_expression",
+                                                                        "start_pos": {
+                                                                            "line": "48",
+                                                                            "column": "20"
+                                                                        },
+                                                                        "left": {
+                                                                            "tag": "array_element_name",
+                                                                            "start_pos": {
+                                                                                "line": "48",
+                                                                                "column": "20"
+                                                                            },
+                                                                            "name": {
+                                                                                "tag": "symbolic_name",
+                                                                                "start_pos": {
+                                                                                    "line": "48",
+                                                                                    "column": "20"
+                                                                                },
+                                                                                "name": "GRPENM"
+                                                                            },
+                                                                            "qualifiers_list": [
+                                                                                {
+                                                                                    "tag": "symbolic_name",
+                                                                                    "start_pos": {
+                                                                                        "line": "48",
+                                                                                        "column": "27"
+                                                                                    },
+                                                                                    "name": "I_GROUP"
+                                                                                }
+                                                                            ]
+                                                                        },
+                                                                        "operator": {
+                                                                            "tag": "relational_operator",
+                                                                            "start_pos": {
+                                                                                "line": "48",
+                                                                                "column": "36"
+                                                                            },
+                                                                            "operator_value": ".EQ."
+                                                                        },
+                                                                        "right": {
+                                                                            "tag": "array_element_name",
+                                                                            "start_pos": {
+                                                                                "line": "48",
+                                                                                "column": "41"
+                                                                            },
+                                                                            "name": {
+                                                                                "tag": "symbolic_name",
+                                                                                "start_pos": {
+                                                                                    "line": "48",
+                                                                                    "column": "41"
+                                                                                },
+                                                                                "name": "SNGRP"
+                                                                            },
+                                                                            "qualifiers_list": [
+                                                                                {
+                                                                                    "tag": "symbolic_name",
+                                                                                    "start_pos": {
+                                                                                        "line": "48",
+                                                                                        "column": "47"
+                                                                                    },
+                                                                                    "name": "I"
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
+                                                        "then_statements": [
+                                                            {
+                                                                "tag": "assignment_statement",
+                                                                "start_pos": {
+                                                                    "line": "49",
+                                                                    "column": "17"
+                                                                },
+                                                                "left": {
+                                                                    "tag": "symbolic_name",
+                                                                    "start_pos": {
+                                                                        "line": "49",
+                                                                        "column": "17"
+                                                                    },
+                                                                    "name": "LG_PI$OVER"
+                                                                },
+                                                                "right": {
+                                                                    "tag": "logical_expression",
+                                                                    "expression": {
+                                                                        "tag": "logical_factor",
+                                                                        "negated": "false",
+                                                                        "expression": {
+                                                                            "tag": "logical_primary",
+                                                                            "expression": {
+                                                                                "tag": "logical_constant",
+                                                                                "start_pos": {
+                                                                                    "line": "49",
+                                                                                    "column": "30"
+                                                                                },
+                                                                                "value": ".TRUE."
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        ],
+                                                        "else_block": {
+                                                            "start_pos": {
+                                                                "line": "50",
+                                                                "column": "15"
+                                                            },
+                                                            "statement_list": [],
+                                                            "end_if": {
+                                                                "tag": "end_if",
+                                                                "start_pos": {
+                                                                    "line": "50",
+                                                                    "column": "15"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                ],
+                                                "end_do": {
+                                                    "start_pos": {
+                                                        "line": "51",
+                                                        "column": "18"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "tag": "block_if_statement",
+                                                "start_pos": {
+                                                    "line": "52",
+                                                    "column": "13"
+                                                },
+                                                "then_start": {
+                                                    "line": "52",
+                                                    "column": "17"
+                                                },
+                                                "condition": {
+                                                    "tag": "logical_expression",
+                                                    "expression": {
+                                                        "tag": "binary_expression",
+                                                        "start_pos": {
+                                                            "line": "52",
+                                                            "column": "17"
+                                                        },
+                                                        "left": {
+                                                            "tag": "symbolic_name",
+                                                            "start_pos": {
+                                                                "line": "52",
+                                                                "column": "17"
+                                                            },
+                                                            "name": "LG_PI$OVER"
+                                                        },
+                                                        "operator": {
+                                                            "tag": "logical_operator",
+                                                            "start_pos": {
+                                                                "line": "52",
+                                                                "column": "28"
+                                                            },
+                                                            "operator_value": ".AND."
+                                                        },
+                                                        "right": {
+                                                            "tag": "logical_factor",
+                                                            "negated": "false",
+                                                            "expression": {
+                                                                "tag": "logical_primary",
+                                                                "expression": {
+                                                                    "tag": "logical_factor",
+                                                                    "negated": "false",
+                                                                    "expression": {
+                                                                        "tag": "logical_primary",
+                                                                        "expression": {
+                                                                            "tag": "binary_expression",
+                                                                            "start_pos": {
+                                                                                "line": "53",
+                                                                                "column": "16"
+                                                                            },
+                                                                            "left": {
+                                                                                "tag": "array_element_name",
+                                                                                "start_pos": {
+                                                                                    "line": "53",
+                                                                                    "column": "16"
+                                                                                },
+                                                                                "name": {
+                                                                                    "tag": "symbolic_name",
+                                                                                    "start_pos": {
+                                                                                        "line": "53",
+                                                                                        "column": "16"
+                                                                                    },
+                                                                                    "name": "GRPENM"
+                                                                                },
+                                                                                "qualifiers_list": [
+                                                                                    {
+                                                                                        "tag": "symbolic_name",
+                                                                                        "start_pos": {
+                                                                                            "line": "53",
+                                                                                            "column": "23"
+                                                                                        },
+                                                                                        "name": "I_GROUP"
+                                                                                    }
+                                                                                ]
+                                                                            },
+                                                                            "operator": {
+                                                                                "tag": "relational_operator",
+                                                                                "start_pos": {
+                                                                                    "line": "53",
+                                                                                    "column": "31"
+                                                                                },
+                                                                                "operator_value": ".NE."
+                                                                            },
+                                                                            "right": {
+                                                                                "tag": "symbolic_name",
+                                                                                "start_pos": {
+                                                                                    "line": "53",
+                                                                                    "column": "35"
+                                                                                },
+                                                                                "name": "NMGRP_H"
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "then_statements": [
+                                                    {
+                                                        "tag": "assignment_statement",
+                                                        "start_pos": {
+                                                            "line": "54",
+                                                            "column": "15"
+                                                        },
+                                                        "left": {
+                                                            "tag": "symbolic_name",
+                                                            "start_pos": {
+                                                                "line": "54",
+                                                                "column": "15"
+                                                            },
+                                                            "name": "LG_PI$OVER"
+                                                        },
+                                                        "right": {
+                                                            "tag": "logical_expression",
+                                                            "expression": {
+                                                                "tag": "logical_factor",
+                                                                "negated": "false",
+                                                                "expression": {
+                                                                    "tag": "logical_primary",
+                                                                    "expression": {
+                                                                        "tag": "logical_constant",
+                                                                        "start_pos": {
+                                                                            "line": "54",
+                                                                            "column": "28"
+                                                                        },
+                                                                        "value": ".FALSE."
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "tag": "do_statement",
+                                                        "start_pos": {
+                                                            "line": "55",
+                                                            "column": "15"
+                                                        },
+                                                        "loop_control": {
+                                                            "start_pos": {
+                                                                "line": "55",
+                                                                "column": "18"
+                                                            },
+                                                            "variable_name": {
+                                                                "tag": "symbolic_name",
+                                                                "start_pos": {
+                                                                    "line": "55",
+                                                                    "column": "18"
+                                                                },
+                                                                "name": "I"
+                                                            },
+                                                            "init": {
+                                                                "tag": "unsigned_int_constant",
+                                                                "start_pos": {
+                                                                    "line": "55",
+                                                                    "column": "22"
+                                                                },
+                                                                "value": "1"
+                                                            },
+                                                            "limit": {
+                                                                "tag": "symbolic_name",
+                                                                "start_pos": {
+                                                                    "line": "55",
+                                                                    "column": "25"
+                                                                },
+                                                                "name": "NRECGR"
+                                                            }
+                                                        },
+                                                        "statement_list": [
+                                                            {
+                                                                "tag": "block_if_statement",
+                                                                "start_pos": {
+                                                                    "line": "56",
+                                                                    "column": "17"
+                                                                },
+                                                                "then_start": {
+                                                                    "line": "56",
+                                                                    "column": "21"
+                                                                },
+                                                                "condition": {
+                                                                    "tag": "logical_expression",
+                                                                    "expression": {
+                                                                        "tag": "logical_factor",
+                                                                        "negated": "false",
+                                                                        "expression": {
+                                                                            "tag": "logical_primary",
+                                                                            "expression": {
+                                                                                "tag": "binary_expression",
+                                                                                "start_pos": {
+                                                                                    "line": "56",
+                                                                                    "column": "21"
+                                                                                },
+                                                                                "left": {
+                                                                                    "tag": "array_element_name",
+                                                                                    "start_pos": {
+                                                                                        "line": "56",
+                                                                                        "column": "21"
+                                                                                    },
+                                                                                    "name": {
+                                                                                        "tag": "symbolic_name",
+                                                                                        "start_pos": {
+                                                                                            "line": "56",
+                                                                                            "column": "21"
+                                                                                        },
+                                                                                        "name": "GRPENM"
+                                                                                    },
+                                                                                    "qualifiers_list": [
+                                                                                        {
+                                                                                            "tag": "symbolic_name",
+                                                                                            "start_pos": {
+                                                                                                "line": "56",
+                                                                                                "column": "28"
+                                                                                            },
+                                                                                            "name": "I_GROUP"
+                                                                                        }
+                                                                                    ]
+                                                                                },
+                                                                                "operator": {
+                                                                                    "tag": "relational_operator",
+                                                                                    "start_pos": {
+                                                                                        "line": "56",
+                                                                                        "column": "37"
+                                                                                    },
+                                                                                    "operator_value": ".EQ."
+                                                                                },
+                                                                                "right": {
+                                                                                    "tag": "array_element_name",
+                                                                                    "start_pos": {
+                                                                                        "line": "56",
+                                                                                        "column": "42"
+                                                                                    },
+                                                                                    "name": {
+                                                                                        "tag": "symbolic_name",
+                                                                                        "start_pos": {
+                                                                                            "line": "56",
+                                                                                            "column": "42"
+                                                                                        },
+                                                                                        "name": "GRPENM"
+                                                                                    },
+                                                                                    "qualifiers_list": [
+                                                                                        {
+                                                                                            "tag": "array_element_name",
+                                                                                            "start_pos": {
+                                                                                                "line": "56",
+                                                                                                "column": "49"
+                                                                                            },
+                                                                                            "name": {
+                                                                                                "tag": "symbolic_name",
+                                                                                                "start_pos": {
+                                                                                                    "line": "56",
+                                                                                                    "column": "49"
+                                                                                                },
+                                                                                                "name": "IGREC"
+                                                                                            },
+                                                                                            "qualifiers_list": [
+                                                                                                {
+                                                                                                    "tag": "symbolic_name",
+                                                                                                    "start_pos": {
+                                                                                                        "line": "56",
+                                                                                                        "column": "55"
+                                                                                                    },
+                                                                                                    "name": "I"
+                                                                                                },
+                                                                                                {
+                                                                                                    "tag": "arithmetic_expression",
+                                                                                                    "expression": {
+                                                                                                        "tag": "unsigned_int_constant",
+                                                                                                        "start_pos": {
+                                                                                                            "line": "56",
+                                                                                                            "column": "57"
+                                                                                                        },
+                                                                                                        "value": "1"
+                                                                                                    }
+                                                                                                }
+                                                                                            ]
+                                                                                        }
+                                                                                    ]
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                },
+                                                                "then_statements": [
+                                                                    {
+                                                                        "tag": "assignment_statement",
+                                                                        "start_pos": {
+                                                                            "line": "57",
+                                                                            "column": "19"
+                                                                        },
+                                                                        "left": {
+                                                                            "tag": "symbolic_name",
+                                                                            "start_pos": {
+                                                                                "line": "57",
+                                                                                "column": "19"
+                                                                            },
+                                                                            "name": "LG_PI$OVER"
+                                                                        },
+                                                                        "right": {
+                                                                            "tag": "logical_expression",
+                                                                            "expression": {
+                                                                                "tag": "logical_factor",
+                                                                                "negated": "false",
+                                                                                "expression": {
+                                                                                    "tag": "logical_primary",
+                                                                                    "expression": {
+                                                                                        "tag": "logical_constant",
+                                                                                        "start_pos": {
+                                                                                            "line": "57",
+                                                                                            "column": "32"
+                                                                                        },
+                                                                                        "value": ".TRUE."
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                ],
+                                                                "else_block": {
+                                                                    "start_pos": {
+                                                                        "line": "58",
+                                                                        "column": "17"
+                                                                    },
+                                                                    "statement_list": [],
+                                                                    "end_if": {
+                                                                        "tag": "end_if",
+                                                                        "start_pos": {
+                                                                            "line": "58",
+                                                                            "column": "17"
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        ],
+                                                        "end_do": {
+                                                            "start_pos": {
+                                                                "line": "59",
+                                                                "column": "20"
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "tag": "block_if_statement",
+                                                        "start_pos": {
+                                                            "line": "60",
+                                                            "column": "15"
+                                                        },
+                                                        "then_start": {
+                                                            "line": "60",
+                                                            "column": "19"
+                                                        },
+                                                        "condition": {
+                                                            "tag": "logical_expression",
+                                                            "expression": {
+                                                                "tag": "logical_factor",
+                                                                "negated": "false",
+                                                                "expression": {
+                                                                    "tag": "logical_primary",
+                                                                    "expression": {
+                                                                        "tag": "binary_expression",
+                                                                        "start_pos": {
+                                                                            "line": "60",
+                                                                            "column": "19"
+                                                                        },
+                                                                        "left": {
+                                                                            "tag": "array_element_name",
+                                                                            "start_pos": {
+                                                                                "line": "60",
+                                                                                "column": "19"
+                                                                            },
+                                                                            "name": {
+                                                                                "tag": "symbolic_name",
+                                                                                "start_pos": {
+                                                                                    "line": "60",
+                                                                                    "column": "19"
+                                                                                },
+                                                                                "name": "GRPENM"
+                                                                            },
+                                                                            "qualifiers_list": [
+                                                                                {
+                                                                                    "tag": "symbolic_name",
+                                                                                    "start_pos": {
+                                                                                        "line": "60",
+                                                                                        "column": "26"
+                                                                                    },
+                                                                                    "name": "I_GROUP"
+                                                                                }
+                                                                            ]
+                                                                        },
+                                                                        "operator": {
+                                                                            "tag": "relational_operator",
+                                                                            "start_pos": {
+                                                                                "line": "60",
+                                                                                "column": "35"
+                                                                            },
+                                                                            "operator_value": ".EQ."
+                                                                        },
+                                                                        "right": {
+                                                                            "tag": "array_element_name",
+                                                                            "start_pos": {
+                                                                                "line": "60",
+                                                                                "column": "40"
+                                                                            },
+                                                                            "name": {
+                                                                                "tag": "symbolic_name",
+                                                                                "start_pos": {
+                                                                                    "line": "60",
+                                                                                    "column": "40"
+                                                                                },
+                                                                                "name": "GRPENM"
+                                                                            },
+                                                                            "qualifiers_list": [
+                                                                                {
+                                                                                    "tag": "array_element_name",
+                                                                                    "start_pos": {
+                                                                                        "line": "60",
+                                                                                        "column": "47"
+                                                                                    },
+                                                                                    "name": {
+                                                                                        "tag": "symbolic_name",
+                                                                                        "start_pos": {
+                                                                                            "line": "60",
+                                                                                            "column": "47"
+                                                                                        },
+                                                                                        "name": "IGREC"
+                                                                                    },
+                                                                                    "qualifiers_list": [
+                                                                                        {
+                                                                                            "tag": "symbolic_name",
+                                                                                            "start_pos": {
+                                                                                                "line": "60",
+                                                                                                "column": "53"
+                                                                                            },
+                                                                                            "name": "NRECGR"
+                                                                                        },
+                                                                                        {
+                                                                                            "tag": "arithmetic_expression",
+                                                                                            "expression": {
+                                                                                                "tag": "unsigned_int_constant",
+                                                                                                "start_pos": {
+                                                                                                    "line": "60",
+                                                                                                    "column": "60"
+                                                                                                },
+                                                                                                "value": "2"
+                                                                                            }
+                                                                                        }
+                                                                                    ]
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
+                                                        "then_statements": [
+                                                            {
+                                                                "tag": "assignment_statement",
+                                                                "start_pos": {
+                                                                    "line": "61",
+                                                                    "column": "17"
+                                                                },
+                                                                "left": {
+                                                                    "tag": "symbolic_name",
+                                                                    "start_pos": {
+                                                                        "line": "61",
+                                                                        "column": "17"
+                                                                    },
+                                                                    "name": "LG_PI$OVER"
+                                                                },
+                                                                "right": {
+                                                                    "tag": "logical_expression",
+                                                                    "expression": {
+                                                                        "tag": "logical_factor",
+                                                                        "negated": "false",
+                                                                        "expression": {
+                                                                            "tag": "logical_primary",
+                                                                            "expression": {
+                                                                                "tag": "logical_constant",
+                                                                                "start_pos": {
+                                                                                    "line": "61",
+                                                                                    "column": "30"
+                                                                                },
+                                                                                "value": ".TRUE."
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        ],
+                                                        "else_block": {
+                                                            "start_pos": {
+                                                                "line": "62",
+                                                                "column": "15"
+                                                            },
+                                                            "statement_list": [],
+                                                            "end_if": {
+                                                                "tag": "end_if",
+                                                                "start_pos": {
+                                                                    "line": "62",
+                                                                    "column": "15"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                ],
+                                                "else_block": {
+                                                    "start_pos": {
+                                                        "line": "63",
+                                                        "column": "13"
+                                                    },
+                                                    "tag": "else",
+                                                    "statement_list": [
+                                                        {
+                                                            "tag": "assignment_statement",
+                                                            "start_pos": {
+                                                                "line": "64",
+                                                                "column": "15"
+                                                            },
+                                                            "left": {
+                                                                "tag": "symbolic_name",
+                                                                "start_pos": {
+                                                                    "line": "64",
+                                                                    "column": "15"
+                                                                },
+                                                                "name": "LG_PI$OVER"
+                                                            },
+                                                            "right": {
+                                                                "tag": "logical_expression",
+                                                                "expression": {
+                                                                    "tag": "logical_factor",
+                                                                    "negated": "false",
+                                                                    "expression": {
+                                                                        "tag": "logical_primary",
+                                                                        "expression": {
+                                                                            "tag": "logical_constant",
+                                                                            "start_pos": {
+                                                                                "line": "64",
+                                                                                "column": "28"
+                                                                            },
+                                                                            "value": ".TRUE."
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    ],
+                                                    "end_if": {
+                                                        "tag": "end_if",
+                                                        "start_pos": {
+                                                            "line": "65",
+                                                            "column": "13"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "tag": "block_if_statement",
+                                                "start_pos": {
+                                                    "line": "66",
+                                                    "column": "13"
+                                                },
+                                                "then_start": {
+                                                    "line": "66",
+                                                    "column": "17"
+                                                },
+                                                "condition": {
+                                                    "tag": "logical_expression",
+                                                    "expression": {
+                                                        "tag": "logical_factor",
+                                                        "negated": "true",
+                                                        "expression": {
+                                                            "tag": "symbolic_name",
+                                                            "start_pos": {
+                                                                "line": "66",
+                                                                "column": "22"
+                                                            },
+                                                            "name": "LG_PI$OVER"
+                                                        }
+                                                    }
+                                                },
+                                                "then_statements": [
+                                                    {
+                                                        "tag": "assignment_statement",
+                                                        "start_pos": {
+                                                            "line": "67",
+                                                            "column": "15"
+                                                        },
+                                                        "left": {
+                                                            "tag": "symbolic_name",
+                                                            "start_pos": {
+                                                                "line": "67",
+                                                                "column": "15"
+                                                            },
+                                                            "name": "LG$T_MODE"
+                                                        },
+                                                        "right": {
+                                                            "tag": "logical_expression",
+                                                            "expression": {
+                                                                "tag": "logical_factor",
+                                                                "negated": "false",
+                                                                "expression": {
+                                                                    "tag": "logical_primary",
+                                                                    "expression": {
+                                                                        "tag": "logical_constant",
+                                                                        "start_pos": {
+                                                                            "line": "67",
+                                                                            "column": "27"
+                                                                        },
+                                                                        "value": ".FALSE."
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                ],
+                                                "else_block": {
+                                                    "start_pos": {
+                                                        "line": "68",
+                                                        "column": "13"
+                                                    },
+                                                    "statement_list": [],
+                                                    "end_if": {
+                                                        "tag": "end_if",
+                                                        "start_pos": {
+                                                            "line": "68",
+                                                            "column": "13"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        ],
+                                        "end_do": {
+                                            "start_pos": {
+                                                "line": "69",
+                                                "column": "16"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "tag": "assignment_statement",
+                                        "start_pos": {
+                                            "line": "70",
+                                            "column": "11"
+                                        },
+                                        "left": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "70",
+                                                "column": "11"
+                                            },
+                                            "name": "I_GROUP"
+                                        },
+                                        "right": {
+                                            "tag": "arithmetic_expression",
+                                            "expression": {
+                                                "tag": "unsigned_int_constant",
+                                                "start_pos": {
+                                                    "line": "70",
+                                                    "column": "21"
+                                                },
+                                                "value": "2"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "tag": "assignment_statement",
+                                        "start_pos": {
+                                            "line": "71",
+                                            "column": "11"
+                                        },
+                                        "left": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "71",
+                                                "column": "11"
+                                            },
+                                            "name": "N_CHAR"
+                                        },
+                                        "right": {
+                                            "tag": "arithmetic_expression",
+                                            "expression": {
+                                                "tag": "unsigned_int_constant",
+                                                "start_pos": {
+                                                    "line": "71",
+                                                    "column": "21"
+                                                },
+                                                "value": "1"
+                                            }
+                                        }
+                                    }
+                                ],
+                                "end_if": {
+                                    "tag": "end_if",
+                                    "start_pos": {
+                                        "line": "72",
+                                        "column": "9"
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "tag": "block_if_statement",
+                            "start_pos": {
+                                "line": "74",
+                                "column": "9"
+                            },
+                            "then_start": {
+                                "line": "74",
+                                "column": "13"
+                            },
+                            "condition": {
+                                "tag": "logical_expression",
+                                "expression": {
+                                    "tag": "logical_factor",
+                                    "negated": "false",
+                                    "expression": {
+                                        "tag": "logical_primary",
+                                        "expression": {
+                                            "tag": "binary_expression",
+                                            "start_pos": {
+                                                "line": "74",
+                                                "column": "13"
+                                            },
+                                            "left": {
+                                                "tag": "symbolic_name",
+                                                "start_pos": {
+                                                    "line": "74",
+                                                    "column": "13"
+                                                },
+                                                "name": "MODPIL"
+                                            },
+                                            "operator": {
+                                                "tag": "relational_operator",
+                                                "start_pos": {
+                                                    "line": "74",
+                                                    "column": "20"
+                                                },
+                                                "operator_value": ".EQ."
+                                            },
+                                            "right": {
+                                                "tag": "character_constant",
+                                                "start_pos": {
+                                                    "line": "74",
+                                                    "column": "25"
+                                                },
+                                                "value": "'T'"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "then_statements": [
+                                {
+                                    "tag": "block_if_statement",
+                                    "start_pos": {
+                                        "line": "75",
+                                        "column": "11"
+                                    },
+                                    "then_start": {
+                                        "line": "75",
+                                        "column": "15"
+                                    },
+                                    "condition": {
+                                        "tag": "logical_expression",
+                                        "expression": {
+                                            "tag": "logical_factor",
+                                            "negated": "false",
+                                            "expression": {
+                                                "tag": "logical_primary",
+                                                "expression": {
+                                                    "tag": "binary_expression",
+                                                    "start_pos": {
+                                                        "line": "75",
+                                                        "column": "15"
+                                                    },
+                                                    "left": {
+                                                        "tag": "symbolic_name",
+                                                        "start_pos": {
+                                                            "line": "75",
+                                                            "column": "15"
+                                                        },
+                                                        "name": "ERTMOD"
+                                                    },
+                                                    "operator": {
+                                                        "tag": "relational_operator",
+                                                        "start_pos": {
+                                                            "line": "75",
+                                                            "column": "22"
+                                                        },
+                                                        "operator_value": ".GT."
+                                                    },
+                                                    "right": {
+                                                        "tag": "unsigned_int_constant",
+                                                        "start_pos": {
+                                                            "line": "75",
+                                                            "column": "27"
+                                                        },
+                                                        "value": "0"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "then_statements": [
+                                        {
+                                            "tag": "call_statement",
+                                            "start_pos": {
+                                                "line": "76",
+                                                "column": "13"
+                                            },
+                                            "name": {
+                                                "tag": "symbolic_name",
+                                                "start_pos": {
+                                                    "line": "76",
+                                                    "column": "18"
+                                                },
+                                                "name": "EDWARN"
+                                            },
+                                            "arguments": [
+                                                {
+                                                    "tag": "symbolic_name",
+                                                    "start_pos": {
+                                                        "line": "76",
+                                                        "column": "25"
+                                                    },
+                                                    "name": "MSG$FR"
+                                                },
+                                                {
+                                                    "tag": "symbolic_name",
+                                                    "start_pos": {
+                                                        "line": "76",
+                                                        "column": "32"
+                                                    },
+                                                    "name": "MSG$EN"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "tag": "call_statement",
+                                            "start_pos": {
+                                                "line": "77",
+                                                "column": "13"
+                                            },
+                                            "name": {
+                                                "tag": "symbolic_name",
+                                                "start_pos": {
+                                                    "line": "77",
+                                                    "column": "18"
+                                                },
+                                                "name": "EDWARN"
+                                            },
+                                            "arguments": [
+                                                {
+                                                    "tag": "symbolic_name",
+                                                    "start_pos": {
+                                                        "line": "77",
+                                                        "column": "25"
+                                                    },
+                                                    "name": "ERR$FR"
+                                                },
+                                                {
+                                                    "tag": "symbolic_name",
+                                                    "start_pos": {
+                                                        "line": "77",
+                                                        "column": "32"
+                                                    },
+                                                    "name": "ERR$EN"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "else_block": {
+                                        "start_pos": {
+                                            "line": "78",
+                                            "column": "11"
+                                        },
+                                        "statement_list": [],
+                                        "end_if": {
+                                            "tag": "end_if",
+                                            "start_pos": {
+                                                "line": "78",
+                                                "column": "11"
+                                            }
+                                        }
+                                    }
+                                }
+                            ],
+                            "else_block": {
+                                "start_pos": {
+                                    "line": "79",
+                                    "column": "9"
+                                },
+                                "statement_list": [],
+                                "end_if": {
+                                    "tag": "end_if",
+                                    "start_pos": {
+                                        "line": "79",
+                                        "column": "9"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "else_block": {
+                        "start_pos": {
+                            "line": "80",
+                            "column": "7"
+                        },
+                        "statement_list": [],
+                        "end_if": {
+                            "tag": "end_if",
+                            "start_pos": {
+                                "line": "80",
+                                "column": "7"
+                            }
+                        }
+                    }
+                },
+                {
+                    "tag": "block_if_statement",
+                    "start_pos": {
+                        "line": "82",
+                        "column": "7"
+                    },
+                    "then_start": {
+                        "line": "82",
+                        "column": "11"
+                    },
+                    "condition": {
+                        "tag": "logical_expression",
+                        "expression": {
+                            "tag": "logical_factor",
+                            "negated": "true",
+                            "expression": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "82",
+                                    "column": "16"
+                                },
+                                "name": "LG$T_MODE"
+                            }
+                        }
+                    },
+                    "then_statements": [
+                        {
+                            "tag": "assignment_statement",
+                            "start_pos": {
+                                "line": "83",
+                                "column": "9"
+                            },
+                            "left": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "83",
+                                    "column": "9"
+                                },
+                                "name": "TRANS"
+                            },
+                            "right": {
+                                "tag": "arithmetic_expression",
+                                "expression": {
+                                    "tag": "unsigned_real_constant",
+                                    "start_pos": {
+                                        "line": "83",
+                                        "column": "17"
+                                    },
+                                    "value": "0."
+                                }
+                            }
+                        }
+                    ],
+                    "else_block": {
+                        "start_pos": {
+                            "line": "84",
+                            "column": "7"
+                        },
+                        "tag": "else",
+                        "statement_list": [
+                            {
+                                "tag": "block_if_statement",
+                                "start_pos": {
+                                    "line": "85",
+                                    "column": "9"
+                                },
+                                "then_start": {
+                                    "line": "85",
+                                    "column": "13"
+                                },
+                                "condition": {
+                                    "tag": "logical_expression",
+                                    "expression": {
+                                        "tag": "logical_factor",
+                                        "negated": "false",
+                                        "expression": {
+                                            "tag": "logical_primary",
+                                            "expression": {
+                                                "tag": "binary_expression",
+                                                "start_pos": {
+                                                    "line": "85",
+                                                    "column": "13"
+                                                },
+                                                "left": {
+                                                    "tag": "symbolic_name",
+                                                    "start_pos": {
+                                                        "line": "85",
+                                                        "column": "13"
+                                                    },
+                                                    "name": "TOTAL"
+                                                },
+                                                "operator": {
+                                                    "tag": "relational_operator",
+                                                    "start_pos": {
+                                                        "line": "85",
+                                                        "column": "19"
+                                                    },
+                                                    "operator_value": ".LT."
+                                                },
+                                                "right": {
+                                                    "tag": "symbolic_name",
+                                                    "start_pos": {
+                                                        "line": "85",
+                                                        "column": "24"
+                                                    },
+                                                    "name": "TRANS"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "then_statements": [
+                                    {
+                                        "tag": "assignment_statement",
+                                        "start_pos": {
+                                            "line": "86",
+                                            "column": "11"
+                                        },
+                                        "left": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "86",
+                                                "column": "11"
+                                            },
+                                            "name": "TOTAL"
+                                        },
+                                        "right": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "86",
+                                                "column": "19"
+                                            },
+                                            "name": "TRANS"
+                                        }
+                                    }
+                                ],
+                                "else_block": {
+                                    "start_pos": {
+                                        "line": "87",
+                                        "column": "9"
+                                    },
+                                    "statement_list": [],
+                                    "end_if": {
+                                        "tag": "end_if",
+                                        "start_pos": {
+                                            "line": "87",
+                                            "column": "9"
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        "end_if": {
+                            "tag": "end_if",
+                            "start_pos": {
+                                "line": "88",
+                                "column": "7"
+                            }
+                        }
+                    }
+                },
+                {
+                    "tag": "do_statement",
+                    "start_pos": {
+                        "line": "90",
+                        "column": "7"
+                    },
+                    "loop_control": {
+                        "start_pos": {
+                            "line": "90",
+                            "column": "10"
+                        },
+                        "variable_name": {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "90",
+                                "column": "10"
+                            },
+                            "name": "I"
+                        },
+                        "init": {
+                            "tag": "unsigned_int_constant",
+                            "start_pos": {
+                                "line": "90",
+                                "column": "14"
+                            },
+                            "value": "1"
+                        },
+                        "limit": {
+                            "tag": "symbolic_name",
+                            "start_pos": {
+                                "line": "90",
+                                "column": "17"
+                            },
+                            "name": "NRECGR"
+                        }
+                    },
+                    "statement_list": [
+                        {
+                            "tag": "block_if_statement",
+                            "start_pos": {
+                                "line": "91",
+                                "column": "9"
+                            },
+                            "then_start": {
+                                "line": "91",
+                                "column": "14"
+                            },
+                            "condition": {
+                                "tag": "logical_expression",
+                                "expression": {
+                                    "tag": "logical_factor",
+                                    "negated": "false",
+                                    "expression": {
+                                        "tag": "logical_primary",
+                                        "expression": {
+                                            "tag": "binary_expression",
+                                            "start_pos": {
+                                                "line": "91",
+                                                "column": "14"
+                                            },
+                                            "left": {
+                                                "tag": "symbolic_name",
+                                                "start_pos": {
+                                                    "line": "91",
+                                                    "column": "14"
+                                                },
+                                                "name": "MODPIL"
+                                            },
+                                            "operator": {
+                                                "tag": "relational_operator",
+                                                "start_pos": {
+                                                    "line": "91",
+                                                    "column": "21"
+                                                },
+                                                "operator_value": ".NE."
+                                            },
+                                            "right": {
+                                                "tag": "character_constant",
+                                                "start_pos": {
+                                                    "line": "91",
+                                                    "column": "26"
+                                                },
+                                                "value": "'T'"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "then_statements": [
+                                {
+                                    "tag": "assignment_statement",
+                                    "start_pos": {
+                                        "line": "92",
+                                        "column": "11"
+                                    },
+                                    "left": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "92",
+                                            "column": "11"
+                                        },
+                                        "name": "RECGRPW"
+                                    },
+                                    "right": {
+                                        "tag": "array_element_name",
+                                        "start_pos": {
+                                            "line": "92",
+                                            "column": "21"
+                                        },
+                                        "name": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "92",
+                                                "column": "21"
+                                            },
+                                            "name": "RECGRP"
+                                        },
+                                        "qualifiers_list": [
+                                            {
+                                                "tag": "symbolic_name",
+                                                "start_pos": {
+                                                    "line": "92",
+                                                    "column": "28"
+                                                },
+                                                "name": "I"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ],
+                            "else_block": {
+                                "start_pos": {
+                                    "line": "93",
+                                    "column": "9"
+                                },
+                                "tag": "else",
+                                "statement_list": [
+                                    {
+                                        "tag": "assignment_statement",
+                                        "start_pos": {
+                                            "line": "94",
+                                            "column": "11"
+                                        },
+                                        "left": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "94",
+                                                "column": "11"
+                                            },
+                                            "name": "RECGRPW"
+                                        },
+                                        "right": {
+                                            "tag": "arithmetic_expression",
+                                            "expression": {
+                                                "tag": "binary_expression",
+                                                "start_pos": {
+                                                    "line": "94",
+                                                    "column": "21"
+                                                },
+                                                "left": {
+                                                    "tag": "symbolic_name",
+                                                    "start_pos": {
+                                                        "line": "94",
+                                                        "column": "21"
+                                                    },
+                                                    "name": "COURSN"
+                                                },
+                                                "operator": {
+                                                    "tag": "arithmetic_operator",
+                                                    "start_pos": {
+                                                        "line": "94",
+                                                        "column": "28"
+                                                    },
+                                                    "operator_value": "-"
+                                                },
+                                                "right": {
+                                                    "tag": "array_element_name",
+                                                    "start_pos": {
+                                                        "line": "94",
+                                                        "column": "30"
+                                                    },
+                                                    "name": {
+                                                        "tag": "symbolic_name",
+                                                        "start_pos": {
+                                                            "line": "94",
+                                                            "column": "30"
+                                                        },
+                                                        "name": "RECGRP"
+                                                    },
+                                                    "qualifiers_list": [
+                                                        {
+                                                            "tag": "symbolic_name",
+                                                            "start_pos": {
+                                                                "line": "94",
+                                                                "column": "37"
+                                                            },
+                                                            "name": "I"
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    }
+                                ],
+                                "end_if": {
+                                    "tag": "end_if",
+                                    "start_pos": {
+                                        "line": "95",
+                                        "column": "9"
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "tag": "assignment_statement",
+                            "start_pos": {
+                                "line": "96",
+                                "column": "9"
+                            },
+                            "left": {
+                                "tag": "array_element_name",
+                                "start_pos": {
+                                    "line": "96",
+                                    "column": "9"
+                                },
+                                "name": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "96",
+                                        "column": "9"
+                                    },
+                                    "name": "POSGRP"
+                                },
+                                "qualifiers_list": [
+                                    {
+                                        "tag": "array_element_name",
+                                        "start_pos": {
+                                            "line": "96",
+                                            "column": "16"
+                                        },
+                                        "name": {
+                                            "tag": "symbolic_name",
+                                            "start_pos": {
+                                                "line": "96",
+                                                "column": "16"
+                                            },
+                                            "name": "IGREC"
+                                        },
+                                        "qualifiers_list": [
+                                            {
+                                                "tag": "symbolic_name",
+                                                "start_pos": {
+                                                    "line": "96",
+                                                    "column": "22"
+                                                },
+                                                "name": "I"
+                                            },
+                                            {
+                                                "tag": "arithmetic_expression",
+                                                "expression": {
+                                                    "tag": "unsigned_int_constant",
+                                                    "start_pos": {
+                                                        "line": "96",
+                                                        "column": "24"
+                                                    },
+                                                    "value": "1"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            "right": {
+                                "tag": "array_element_name",
+                                "start_pos": {
+                                    "line": "96",
+                                    "column": "30"
+                                },
+                                "name": {
+                                    "tag": "symbolic_name",
+                                    "start_pos": {
+                                        "line": "96",
+                                        "column": "30"
+                                    },
+                                    "name": "AMIN1"
+                                },
+                                "qualifiers_list": [
+                                    {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "96",
+                                            "column": "38"
+                                        },
+                                        "name": "TOTAL"
+                                    },
+                                    {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "96",
+                                            "column": "45"
+                                        },
+                                        "name": "COURSN"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "tag": "assignment_statement",
+                            "start_pos": {
+                                "line": "97",
+                                "column": "9"
+                            },
+                            "left": {
+                                "tag": "symbolic_name",
+                                "start_pos": {
+                                    "line": "97",
+                                    "column": "9"
+                                },
+                                "name": "TOTAL"
+                            },
+                            "right": {
+                                "tag": "arithmetic_expression",
+                                "expression": {
+                                    "tag": "binary_expression",
+                                    "start_pos": {
+                                        "line": "97",
+                                        "column": "17"
+                                    },
+                                    "left": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "97",
+                                            "column": "17"
+                                        },
+                                        "name": "TOTAL"
+                                    },
+                                    "operator": {
+                                        "tag": "arithmetic_operator",
+                                        "start_pos": {
+                                            "line": "97",
+                                            "column": "23"
+                                        },
+                                        "operator_value": "-"
+                                    },
+                                    "right": {
+                                        "tag": "symbolic_name",
+                                        "start_pos": {
+                                            "line": "97",
+                                            "column": "25"
+                                        },
+                                        "name": "RECGRPW"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "end_do": {
+                        "start_pos": {
+                            "line": "98",
+                            "column": "12"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
