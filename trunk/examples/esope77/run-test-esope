@@ -1,0 +1,149 @@
+#! /bin/sh
+
+# Hubert Garavel - August 2023
+
+COMMAND=`basename "$0"`
+
+SX=`dirname "$0"`/../..
+ARCH=`$SX/etc/bin/arch`
+
+F77=bin/f77
+F77OUT=bin.$ARCH/f77.out
+
+PPF77=bin/ppf77
+PPF77OUT=bin.$ARCH/ppf77.out
+
+SPLIT_OPTION=0
+VALGRIND_OPTION=0
+
+WD=`pwd`
+WD=`basename "$WD"`
+
+while true
+do
+	case "$1" in
+		-split )
+			# do not concatenate continuation lines
+			SPLIT_OPTION=1
+			shift
+			;;
+		-valgrind )
+			# only run valgrind
+			VALGRIND_OPTION=1
+			shift
+			;;
+		-* )
+			echo "$COMMAND: unknown option $1"
+			exit 1
+			;;
+		* )
+			break
+	esac
+done
+
+#------------------------------------------------------------------------------
+
+if [ $SPLIT_OPTION = 0 ]
+then
+	SCRIPT=`mktemp`
+	cat > $SCRIPT << \EOF
+# display comment lines
+/^C/ { printf "\n%s", $0 ; next }
+
+# non-continuation line with a zero in column 6: remove the zero
+/^[ 0-9][ 0-9][ 0-9][ 0-9][ 0-9]0/ { printf "\n      %s", substr ($0, 7) ; next }
+
+# continuation line without '0' nor ' ' in column 6
+/^[ ][ ][ ][ ][ ][^0 ]/ { printf " %s", substr ($0, 7) ; next }
+
+# non-continuation line without a zero in column 6
+{ printf "\n%s", $0 }
+
+END {
+	printf "\n"
+}
+EOF
+fi
+
+#------------------------------------------------------------------------------
+
+if [ $VALGRIND_OPTION = 1 ]
+then
+	VALGRIND="valgrind --quiet --track-origins=yes"
+	export VALGRIND
+fi
+
+#------------------------------------------------------------------------------
+
+FILTER() {
+	# remove columns 72-80 of all lines not starting with a "C"
+	awk '/^C/ { print ; next } { print substr ($0, 1, 72) }' |
+	# remove empty lines
+	grep -v '^[ ]*$' |
+	# concatenate continuation lines
+	if [ $SPLIT_OPTION = 0 ]
+	then
+		awk -f $SCRIPT -
+	else
+		cat
+	fi
+}
+
+#------------------------------------------------------------------------------
+
+RUN() {
+	echo ""
+	case "$1" in
+		-X ) echo "----------- $WD:f77 -X" "$2" | sed -e 's+test/++' ;;
+		* )  echo "----------- $WD:f77" "$1" | sed -e 's+test/++' ;;
+	esac
+
+	if [ $VALGRIND_OPTION = 1 ]
+	then
+		echo ""
+		# on a positionne la variable globale $VALGRIND
+		$F77 $*
+		return
+	fi
+
+	$F77 $*
+	STATUS=$?
+	if [ $STATUS != 0 ]
+	then
+		echo "  exit status is $STATUS"
+	fi
+}
+
+#------------------------------------------------------------------------------
+
+if [ ! -x $F77OUT -a ! -x $PPF77OUT ]
+then
+	echo "$COMMAND: no executable f77.out nor ppf77.out found; run sxmake to build them"
+	exit 1
+fi
+
+#------------------------------------------------------------------------------
+
+if [ -x $F77OUT ]
+then
+	echo "*** testing esope executable"
+
+	for FILE in `ls /users1/epd/ah426979/syntax-experiment/saphtool/*.e /users1/epd/ah426979/syntax-experiment/saphtool/*.ec`
+	do
+		RUN $FILE
+	done 
+
+	echo "*** testing fortran"
+
+		for FILE in `ls /users1/epd/ah426979/syntax-experiment/saphtool/*.f /users1/epd/ah426979/syntax-experiment/saphtool/*.fc`
+	do
+		RUN $FILE
+	done
+fi
+
+#------------------------------------------------------------------------------
+
+rm -f $SCRIPT $TMP1 $TMP2
+
+exit 0
+
