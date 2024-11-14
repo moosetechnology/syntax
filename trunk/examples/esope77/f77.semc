@@ -114,7 +114,7 @@ $LIST(<common_body>, <,common_body>,
 	<85:logical_const_expr>, <85b:logical_or_non_typed_const_expr>, <85c:logical_const_fact>, <85d:logical_const_prim>, <85e:logical_or_non_typed_const_prim>,
 	<86:relational_expression>, <86a:relational_const_expr>, <86b:arithmetic_or_character_expression>, <86c:arithmetic_or_character_const_expr>, <87:rel_op>,
 	<88:array_element_name>, <88a:variable_or_array_element_name>, <88b:function_reference_or_array_element_name>,
-	<89:substring_name>,
+	<89:substring_name>, <89a:substring_name>,
 	<99:symbolic_name>, <99a:symbolic_name_list>,
 	<100:constant>,
 	<101:unsigned_arithmetic_constant>,
@@ -126,12 +126,12 @@ $LIST(<common_body>, <,common_body>,
 	<108:logical_constant>,
 	<109:character_constant>,
 	<110a:label_ref_list>, <110b:label_ref>, <114:sign>, 
-	<117:segment>,
+	<117:segment>, <117b:segment_pointer>,
 	<118a:segment_variables_list>, <118:segment_variable>,
 	<120:implied>,
-	<121:pointeur>, <121a:pointeurs_seq>,
+	<121:pointeur>, <121a:pointeurs_seq>, <121c:array_size>,
 	<122:pointeur_name>, <122a:pointeur_name_list>,
-	<123:segment_operation>, <123a:segment_operation_name>, <123b:other_segment_operation_name>,
+	<123:segment_operation>, <123a:segment_operation_name>, <123b:other_segment_operation_name>, <123c:segini_args>, <123d:segini_arg>, <123e:segact_args>, <123f:segact_arg>, <123g:segdes_args>, <123h:segdes_arg>, <123i:modes>, <123j:mode>,
 	<124:segment_operation_type>) : SXML_TYPE_LIST ;
 
 $NAME(<52c:inquire_info_key>,
@@ -276,24 +276,37 @@ $LIST(<0:F77>)
   $LIST(<0:F77>) = SXML_T ("zombie token !FORMAT");
 }
 
-
-
 *------------------------------------------------------------------------------
 
 * Trick to force the first character of the terminal symbol derived from <0:next>
 * to be a valid follower of the token "." (see f77.lecl for the definition of ".")
 
 <0:F77>		= !DEAD_END . <0:next> ;
+
+*******************************************************************************
+
 <0:next>	= %EOL ;
+
 <0:next>	= ( ;
+
 <0:next>	= ) ;
+
 <0:next>	= * ;
+
 <0:next>	= / ;
+
 <0:next>	= + ;
+
 <0:next>	= - ;
+
 <0:next>	= , ;
+
 <0:next>	= : ;
+
 <0:next>	= = ;
+
+* EOF is allowed
+<0:next>	= ;
 
 *******************************************************************************
 
@@ -359,7 +372,6 @@ $LIST(<1a:executable_program_list>)
   );
 }
 
-
 *------------------------------------------------------------------------------
 
 <1a:executable_program_list>
@@ -388,7 +400,6 @@ $LIST(<2:main_program>)
     NULL );
 }
 
-
 *------------------------------------------------------------------------------
 
 <2:main_program>
@@ -403,7 +414,6 @@ $LIST(<2:main_program>)
     $LIST( <2a:end_statement>),
     NULL );
 }
-
 
 *------------------------------------------------------------------------------
 
@@ -422,7 +432,6 @@ $LIST(<2:main_program>)
     $LIST(<2c:statement_list>) );
 }
 
-
 *------------------------------------------------------------------------------
 
 <2:main_program>
@@ -439,7 +448,6 @@ $LIST(<2:main_program>)
     $LIST(<2c:statement_list>) );
 }
 
-
 *******************************************************************************
 
 * An END statement is also an executable statement and must appear as the
@@ -454,7 +462,6 @@ $LIST(<2a:end_statement>)
   $LIST(<2a:end_statement>) = ENDING_LOCATION (0, "END");
 }
 
-
 *------------------------------------------------------------------------------
 
 <2a:end_statement>
@@ -466,6 +473,24 @@ $LIST(<2a:end_statement>)
   $LIST(<2a:end_statement>) = ENDING_LOCATION (0, "END");
 }
 
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]]
+
+* When needed, the lexical post-action @7 generates upon EOF this 
+* dummy <2a:end_statement>
+
+<2a:end_statement>
+		= !END ;
+
+$LIST(<2a:end_statement>)
+
+{
+  /* We generate the neutral element of AST composition (an empty sub-tree) */
+  $LIST(<2a:end_statement>) = SXML_T ("");
+}
+
+* [[SEMC_ADDED]] [[RULE_MODIFIED]]
 
 *******************************************************************************
 
@@ -1400,7 +1425,6 @@ $LIST( <16a:array_declarator_list>)
 *******************************************************************************
 
 * The maximum number of dimensions is seven.
-*** Why the order is inversed here ?
 
 <16b:dimension_declarator_list>
 		= <16c:dimension_declarator> ,  <16b:dimension_declarator_list> ;
@@ -2096,7 +2120,7 @@ $LIST( <22:len_specification>)
 
 $LIST( <22:len_specification>)
 {
-  /* ce bloc dinstructions ne doit jamais etre execute */
+  /* ce bloc d'instructions ne doit jamais etre execute */
   assert (false);
   // $LIST( <22:len_specification>) = SXML_T($ptext ("%int_id"));
 }
@@ -2620,30 +2644,32 @@ $LIST( <29:assignment_statement>)
 
 *******************************************************************************
 
-* [[ESOPE]]
-<29a:left_hand_side>
-		= <29a:left_hand_side> . <29b:left_hand_side> ;
-
-$LIST( <29a:left_hand_side>)
-{
-  $LIST( <29a:left_hand_side>) = ast_pointeur_variable(
-  	$LIST(<29a:left_hand_side>'), 
-  	$LIST(<29b:left_hand_side>)
-  ); 
-}
-
-*------------------------------------------------------------------------------
-
-
 <29a:left_hand_side>
 		= <29b:left_hand_side> ;
 
 $LIST( <29a:left_hand_side>)
 {
-  $LIST( <29a:left_hand_side>) = $LIST(<29a:left_hand_side>);
+  $LIST( <29a:left_hand_side>) = $LIST(<29b:left_hand_side>);
 }
 
+* HUBERT: NOTE: THE COMPUTATION OF $LIST(...) HERE WAS INCORRECT IN esope77d
+
 *------------------------------------------------------------------------------
+
+* [[ESOPE]]
+
+<29a:left_hand_side>
+		= <29b:left_hand_side> . <29a:left_hand_side> ;
+
+$LIST( <29a:left_hand_side>)
+{
+  $LIST( <29a:left_hand_side>) = ast_pointeur_variable(
+  	$LIST(<29b:left_hand_side>),
+  	$LIST(<29a:left_hand_side>')
+  ); 
+}
+
+*******************************************************************************
 
 <29b:left_hand_side>
 		= <99:symbolic_name> ;
@@ -2666,11 +2692,11 @@ $LIST( <29b:left_hand_side>)
 *------------------------------------------------------------------------------
 
 <29b:left_hand_side>
-		= <89:substring_name> ;
+		= <89a:substring_name> ;
 
 $LIST( <29b:left_hand_side>)
 {
-  $LIST( <29b:left_hand_side>) = $LIST(<89:substring_name>);
+  $LIST( <29b:left_hand_side>) = $LIST(<89a:substring_name>);
 }        
 
 *******************************************************************************
@@ -5586,6 +5612,7 @@ $LIST( <74:expression>)
 *******************************************************************************
 
 * [[ESOPE]]
+
 <74a:non_typed_expression>
 		= <121a:pointeurs_seq> ;
 
@@ -5595,6 +5622,18 @@ $LIST( <74a:non_typed_expression>)
 }
 
 *------------------------------------------------------------------------------
+
+<74a:non_typed_expression>
+		= <74c:non_typed_expression> ;
+
+$LIST( <74a:non_typed_expression>)
+{
+  $LIST( <74a:non_typed_expression>) = $LIST(<74c:non_typed_expression>);
+}
+
+* [[SEMC_ADDED]]
+
+*******************************************************************************
 
 <74c:non_typed_expression>
 		= <99:symbolic_name> ;
@@ -5751,7 +5790,6 @@ $LIST( <76:arithmetic_expression>)
   $LIST( <76:arithmetic_expression>) = $LIST(<76a:arithmetic_expression>);
 }   
 
-
 *------------------------------------------------------------------------------
 
 * [[EXTENSION]]
@@ -5862,7 +5900,6 @@ $LIST( <76a:arithmetic_expression>)
     $LIST(<76b:arithmetic_or_non_typed_expression>')
   );
 }
-
 
 *------------------------------------------------------------------------------
 
@@ -7054,7 +7091,6 @@ $LIST( <87:rel_op>)
 
 <87:rel_op>	= "<" @2 ;
 
-* [[SEMC_ADDED]]
 $LIST( <87:rel_op>)
 {
   $LIST( <87:rel_op>) = ast_operator(
@@ -7083,7 +7119,6 @@ $LIST( <87:rel_op>)
 
 <87:rel_op>	= "<=" @2 ;
 
-* [[SEMC_ADDED]]
 $LIST( <87:rel_op>)
 {
   $LIST( <87:rel_op>) = ast_operator(
@@ -7112,7 +7147,6 @@ $LIST( <87:rel_op>)
 
 <87:rel_op>	= "==" @2 ;
 
-* [[SEMC_ADDED]]
 $LIST( <87:rel_op>)
 {
   $LIST( <87:rel_op>) = ast_operator(
@@ -7141,7 +7175,6 @@ $LIST( <87:rel_op>)
 
 <87:rel_op>	= "/=" @2 ;
 
-* [[SEMC_ADDED]]
 $LIST( <87:rel_op>)
 {
   $LIST( <87:rel_op>) = ast_operator(
@@ -7170,7 +7203,6 @@ $LIST( <87:rel_op>)
 
 <87:rel_op>	= ">" @2 ;
 
-* [[SEMC_ADDED]]
 $LIST( <87:rel_op>)
 {
   $LIST( <87:rel_op>) = ast_operator(
@@ -7199,7 +7231,6 @@ $LIST( <87:rel_op>)
 
 <87:rel_op>	= ">=" @2 ;
 
-* [[SEMC_ADDED]]
 $LIST( <87:rel_op>)
 {
   $LIST( <87:rel_op>) = ast_operator(
@@ -7273,14 +7304,40 @@ $LIST( <88a:variable_or_array_element_name>)
 
 *******************************************************************************
 
-* The lower bound <77b:[integer_expr]> is covered by <74:expression>
+<89:substring_name>
+		= <88a:variable_or_array_element_name> . <89:substring_name> ;
+
+$LIST(<89:substring_name>)
+{
+  $LIST(<89:substring_name>) = SXML_LL (
+	$LIST(<88a:variable_or_array_element_name>),
+        $LIST(<89:substring_name>));
+}  
+
+* [[SEMC_ADDED]] [[RULE_MODIFIED]]
+
+*------------------------------------------------------------------------------
 
 <89:substring_name>
+		= <89a:substring_name> ;
+
+$LIST(<89:substring_name>)
+{
+  $LIST(<89:substring_name>) = $LIST(<89a:substring_name>);
+}        
+
+* [[SEMC_ADDED]] [[RULE_MODIFIED]]
+
+*******************************************************************************
+
+* The lower bound <77b:[integer_expr]> is covered by <74:expression>
+
+<89a:substring_name>
 		= <99:symbolic_name>  ( <74:expression>  :  <77b:[integer_expr]> ) ;
 
-$LIST( <89:substring_name>)
+$LIST( <89a:substring_name>)
 {
-  $LIST( <89:substring_name>) = ast_substring(
+  $LIST( <89a:substring_name>) = ast_substring(
   	LOCATION(0),
     $LIST(<99:symbolic_name>),
     NULL,
@@ -7291,12 +7348,12 @@ $LIST( <89:substring_name>)
 
 *------------------------------------------------------------------------------
 
-<89:substring_name>
+<89a:substring_name>
 		= <99:symbolic_name>  ( :  <77b:[integer_expr]> ) ;
 
-$LIST( <89:substring_name>)
+$LIST( <89a:substring_name>)
 {
-  $LIST( <89:substring_name>) = ast_substring(
+  $LIST( <89a:substring_name>) = ast_substring(
   	LOCATION(0),
     $LIST(<99:symbolic_name>),
     NULL,
@@ -7307,19 +7364,42 @@ $LIST( <89:substring_name>)
 
 *------------------------------------------------------------------------------
 
-<89:substring_name>
-		= <88b:function_reference_or_array_element_name>  ( <77b:[integer_expr]>  :  <77b:[integer_expr]> ) ;
+<89a:substring_name>
+		= <88:array_element_name>  ( <77b:[integer_expr]>  :  <77b:[integer_expr]> ) ;
 
-$LIST( <89:substring_name>)
+$LIST( <89a:substring_name>)
 {
-  $LIST( <89:substring_name>) = ast_substring(
-  	LOCATION(0),
-    NULL,
-    $LIST(<88b:function_reference_or_array_element_name>),
+  $LIST( <89a:substring_name>) = SXML_LLL(
+    $LIST(<88:array_element_name>),
     $LIST(<77b:[integer_expr]>),
     $LIST(<77b:[integer_expr]>')
   );
 }    
+
+* [[SEMC_ADDED]] [[RULE_MODIFIED]]
+
+* HUBERT: C'EST CE CALCUL DE $LIST QUI CREE LE PROBLEME SXML_LL() -> NULL
+* SI ON LA REMPLACE LE CALCUL PAR :
+*      $LIST( <89a:substring_name>) = SXML_T ("fr");
+* LE PROBLEME DISPARAIT
+
+*------------------------------------------------------------------------------
+
+<89a:substring_name>
+		= <99:symbolic_name>  ( ) ( <77b:[integer_expr]>  :  <77b:[integer_expr]> ) ;
+
+$LIST( <89a:substring_name>)
+{
+  $LIST( <89a:substring_name>) = ast_substring(
+  	LOCATION(0),
+    NULL,
+    $LIST(<99:symbolic_name>),
+    $LIST(<77b:[integer_expr]>),
+    $LIST(<77b:[integer_expr]>')
+  );
+}    
+
+* [[RULE_MODIFIED]]
 
 *******************************************************************************
 
@@ -7468,6 +7548,20 @@ $LIST( <101:unsigned_arithmetic_constant>)
 {
   $LIST( <101:unsigned_arithmetic_constant>) = $LIST(<107:complex_constant>);
 }    
+
+*------------------------------------------------------------------------------
+
+* [[ESOPE]]
+
+<101:unsigned_arithmetic_constant>
+		= <121c:array_size> ;
+
+$LIST( <101:unsigned_arithmetic_constant>)
+{
+  $LIST( <101:unsigned_arithmetic_constant>) = $LIST(<121c:array_size>);
+}    
+
+* [[SEMC_ADDED]] 
 
 *******************************************************************************
 
@@ -7826,6 +7920,30 @@ $LIST( <117:segment>)
 
 *******************************************************************************
 
+<117b:segment_pointer>
+	= <88a:variable_or_array_element_name> ;
+
+$LIST(<117b:segment_pointer>)
+{
+  $LIST(<117b:segment_pointer>) = $LIST(<88a:variable_or_array_element_name>);
+}
+
+* [[SEMC_ADDED]]
+
+*------------------------------------------------------------------------------
+
+<117b:segment_pointer>
+	= <121a:pointeurs_seq> ;
+
+$LIST(<117b:segment_pointer>)
+{
+  $LIST(<117b:segment_pointer>) = $LIST(<121a:pointeurs_seq>);
+}
+
+* [[SEMC_ADDED]]
+
+*******************************************************************************
+
 <118a:segment_variables_list> = <118a:segment_variables_list> %EOL
                                 <118:segment_variable> ; 
 
@@ -7904,29 +8022,67 @@ $LIST( <121:pointeur>)
   );
 }
 
-*------------------------------------------------------------------------------
+*******************************************************************************
 
 <121a:pointeurs_seq>
-	= <121a:pointeurs_seq> . <74c:non_typed_expression> ;
+		= <88a:variable_or_array_element_name> . <121a:pointeurs_seq> ;
 
 $LIST( <121a:pointeurs_seq>)
 {
-  $LIST( <121a:pointeurs_seq>) = ast_list ($LIST (<121a:pointeurs_seq>'), $LIST(<74c:non_typed_expression>));
+  $LIST( <121a:pointeurs_seq>) = ast_list (
+     $LIST (<88a:variable_or_array_element_name>),
+     $LIST (<121a:pointeurs_seq>'));
 }
+
+* [[SEMC_ADDED]] [[RULE_MODIFIED]]
 
 *------------------------------------------------------------------------------
 
 <121a:pointeurs_seq>
-	= <74c:non_typed_expression> ;
+		= <88a:variable_or_array_element_name> . <88a:variable_or_array_element_name> ;
 
 $LIST( <121a:pointeurs_seq>)
 {
-  $LIST( <121a:pointeurs_seq>) = $LIST(<74c:non_typed_expression>);
+  $LIST( <121a:pointeurs_seq>) = SXML_LL(
+     $LIST (<88a:variable_or_array_element_name>),
+     $LIST (<88a:variable_or_array_element_name>'));
 }
+
+* [[SEMC_ADDED]] [[RULE_MODIFIED]]
+
+*******************************************************************************
+
+<121c:array_size>
+		= <99:symbolic_name>  ( / %unsigned_int_constant ) ;
+
+$LIST( <121c:array_size>)
+{
+  $LIST( <121c:array_size>) = SXML_LTT(
+     $LIST (<99:symbolic_name>),
+     "/unsigned_int_constant",
+     $ptext( "%unsigned_int_constant"));
+}
+
+* [[SEMC_ADDED]]
 
 *------------------------------------------------------------------------------
 
-<122a:pointeur_name_list> = <122a:pointeur_name_list> ,  <122:pointeur_name> ;
+<121c:array_size>
+		= <88a:variable_or_array_element_name> . <121c:array_size> ;
+
+$LIST( <121c:array_size>)
+{
+  $LIST( <121c:array_size>) = SXML_LL(
+     $LIST (<88a:variable_or_array_element_name>),
+     $LIST (<121c:array_size>'));
+}
+
+* [[SEMC_ADDED]]
+
+*******************************************************************************
+
+<122a:pointeur_name_list>
+		= <122a:pointeur_name_list> ,  <122:pointeur_name> ;
 
 $LIST( <122a:pointeur_name_list>)
 {
@@ -7939,16 +8095,18 @@ $LIST( <122a:pointeur_name_list>)
 
 *------------------------------------------------------------------------------
 
-<122a:pointeur_name_list> = <122:pointeur_name> ;
+<122a:pointeur_name_list>
+		= <122:pointeur_name> ;
 
 $LIST( <122a:pointeur_name_list>)
 {
   $LIST( <122a:pointeur_name_list>) = $LIST(<122:pointeur_name>);
 }
 
-*------------------------------------------------------------------------------
+*******************************************************************************
 
-<122:pointeur_name> = <20b:scalar_name> . <99:symbolic_name> ;
+<122:pointeur_name>
+		= <20b:scalar_name> . <99:symbolic_name> ;
 
 $LIST( <122:pointeur_name>)
 {
@@ -7959,6 +8117,45 @@ $LIST( <122:pointeur_name>)
 }
 
 *******************************************************************************
+
+<123:segment_operation> = SEGINI ,  <123c:segini_args> ;
+
+$LIST(<123:segment_operation>)
+{
+  $LIST(<123:segment_operation>) = SXML_TL(
+       "SEGINI",
+       $LIST(<123c:segini_args>));
+}
+
+* [[SEMC_ADDED]]
+
+*------------------------------------------------------------------------------
+
+<123:segment_operation> = SEGACT ,  <123e:segact_args> ;
+
+$LIST(<123:segment_operation>)
+{
+  $LIST(<123:segment_operation>) = SXML_TL(
+       "SEGACT",
+       $LIST(<123e:segact_args>));
+}
+
+* [[SEMC_ADDED]]
+
+*------------------------------------------------------------------------------
+
+<123:segment_operation> = SEGDES ,  <123g:segdes_args> ;
+
+$LIST(<123:segment_operation>)
+{
+  $LIST(<123:segment_operation>) = SXML_TL(
+       "SEGDES",
+       $LIST(<123g:segdes_args>));
+}
+
+* [[SEMC_ADDED]]
+
+*------------------------------------------------------------------------------
 
 <123:segment_operation> = <123a:segment_operation_name> ,  <20a:scalar_name_list> ;
 
@@ -7988,33 +8185,6 @@ $LIST(<123:segment_operation>)
 
 *******************************************************************************
 
-<123a:segment_operation_name> = SEGINI ;
-
-$LIST(<123a:segment_operation_name>)
-{
-  $LIST(<123a:segment_operation_name>) = SXML_T("SEGINI");
-}
-
-*------------------------------------------------------------------------------
-
-<123a:segment_operation_name> = SEGDES ;
-
-$LIST(<123a:segment_operation_name>)
-{
-  $LIST(<123a:segment_operation_name>) = SXML_T("SEGDES");
-}
-
-*------------------------------------------------------------------------------
-
-<123a:segment_operation_name> = SEGACT ;
-
-$LIST(<123a:segment_operation_name>)
-{
-  $LIST(<123a:segment_operation_name>) = SXML_T("SEGACT");
-}
-
-*------------------------------------------------------------------------------
-
 <123a:segment_operation_name> = SEGSUP ;
 
 $LIST(<123a:segment_operation_name>)
@@ -8039,6 +8209,228 @@ $LIST(<123a:segment_operation_name>)
 {
   $LIST(<123a:segment_operation_name>) = SXML_T("SEGPRT");
 }
+
+*******************************************************************************
+
+<123b:other_segment_operation_name> = SEGINA ;
+
+$LIST(<123b:other_segment_operation_name>)
+{
+  $LIST(<123b:other_segment_operation_name>) = SXML_T("SEGINA");
+}
+
+*------------------------------------------------------------------------------
+
+<123b:other_segment_operation_name> = SEGIND ;
+
+$LIST(<123b:other_segment_operation_name>)
+{
+  $LIST(<123b:other_segment_operation_name>) = SXML_T("SEGIND");
+}
+
+*******************************************************************************
+
+<123c:segini_args>	= <123c:segini_args> ,  <123d:segini_arg> ;
+
+$LIST(<123c:segini_args>)
+{
+   $LIST(<123c:segini_args>) = SXML_LL (
+         $LIST(<123c:segini_args>'),
+         $LIST(<123d:segini_arg>));
+}
+
+* [[SEMC_ADDED]]
+
+*------------------------------------------------------------------------------
+
+<123c:segini_args>	= <123d:segini_arg> ;
+
+$LIST(<123c:segini_args>)
+{
+   $LIST(<123c:segini_args>) = $LIST(<123d:segini_arg>);
+}
+
+* [[SEMC_ADDED]]
+
+*******************************************************************************
+
+<123d:segini_arg>	= <88a:variable_or_array_element_name> ;
+
+$LIST(<123d:segini_arg>)
+{
+   $LIST(<123d:segini_arg>) = $LIST(<88a:variable_or_array_element_name>);
+}
+
+* [[SEMC_ADDED]]
+
+*------------------------------------------------------------------------------
+
+<123d:segini_arg>	= <88a:variable_or_array_element_name>  =  <117b:segment_pointer> ;
+
+$LIST(<123d:segini_arg>)
+{
+   $LIST(<123d:segini_arg>) = SXML_LL (
+         $LIST(<88a:variable_or_array_element_name>),
+         $LIST(<117b:segment_pointer>));
+}
+
+* [[SEMC_ADDED]]
+
+*******************************************************************************
+
+<123e:segact_args>	= <123e:segact_args> ,  <123f:segact_arg> ;
+
+$LIST(<123e:segact_args>)
+{
+   $LIST(<123e:segact_args>) = SXML_LL(
+       $LIST(<123e:segact_args>'),
+       $LIST(<123f:segact_arg>));
+}
+
+* [[SEMC_ADDED]]
+
+*------------------------------------------------------------------------------
+
+<123e:segact_args>	= <123f:segact_arg> ;
+
+$LIST(<123e:segact_args>)
+{
+   $LIST(<123e:segact_args>) = $LIST(<123f:segact_arg>);
+}
+
+* [[SEMC_ADDED]]
+
+*******************************************************************************
+
+<123f:segact_arg>	= <123d:segini_arg> ;
+
+$LIST(<123f:segact_arg>)
+{
+   $LIST(<123f:segact_arg>) = $LIST(<123d:segini_arg>);
+}
+
+* [[SEMC_ADDED]]
+
+*******************************************************************************
+
+<123g:segdes_args>	= <123g:segdes_args> ,  <123h:segdes_arg> ;
+
+$LIST(<123g:segdes_args>)
+{
+   $LIST(<123g:segdes_args>) = SXML_LL(
+       $LIST(<123g:segdes_args>'),
+       $LIST(<123h:segdes_arg>));
+}
+
+* [[SEMC_ADDED]]
+
+*------------------------------------------------------------------------------
+
+<123g:segdes_args>	= <123h:segdes_arg> ;
+
+$LIST(<123g:segdes_args>)
+{
+   $LIST(<123g:segdes_args>) = $LIST(<123h:segdes_arg>);
+}
+
+* [[SEMC_ADDED]]
+
+*******************************************************************************
+
+<123h:segdes_arg>	= <88a:variable_or_array_element_name> ;
+
+$LIST(<123h:segdes_arg>)
+{
+   $LIST(<123h:segdes_arg>) = $LIST(<88a:variable_or_array_element_name>);
+}
+
+* [[SEMC_ADDED]]
+
+*------------------------------------------------------------------------------
+
+<123h:segdes_arg>	= <88a:variable_or_array_element_name> * <123j:mode> ;
+
+$LIST(<123h:segdes_arg>)
+{
+   $LIST(<123h:segdes_arg>) = SXML_LTL (
+       $LIST(<88a:variable_or_array_element_name>),
+       "*",
+       $LIST(<123j:mode>));
+}
+
+* [[SEMC_ADDED]]
+
+*------------------------------------------------------------------------------
+
+<123h:segdes_arg>	= <88a:variable_or_array_element_name> * ( <123j:mode> ,  <123i:modes> ) ;
+
+$LIST(<123h:segdes_arg>)
+{
+   $LIST(<123h:segdes_arg>) = SXML_LTLL (
+       $LIST(<88a:variable_or_array_element_name>),
+       "*()",
+       $LIST(<123j:mode>),
+       $LIST(<123i:modes>));
+}
+
+* [[SEMC_ADDED]]
+
+*******************************************************************************
+
+<123i:modes>		= <123j:mode> ,  <123i:modes> ;
+
+$LIST(<123i:modes>)
+{
+  $LIST(<123i:modes>) = SXML_LL(
+	$LIST(<123j:mode>),
+        $LIST(<123i:modes>'));
+}
+
+* [[SEMC_ADDED]]
+
+*------------------------------------------------------------------------------
+
+<123i:modes>		= <123j:mode> ;
+
+$LIST(<123i:modes>)
+{
+  $LIST(<123i:modes>) = $LIST(<123j:mode>);
+}
+
+* [[SEMC_ADDED]]
+
+*******************************************************************************
+
+<123j:mode>		= MOD ;
+
+$LIST(<123j:mode>)
+{
+  $LIST(<123j:mode>) = SXML_T("MOD");
+}
+
+* [[SEMC_ADDED]]
+
+*------------------------------------------------------------------------------
+
+<123j:mode>		= NOMOD ;
+
+$LIST(<123j:mode>)
+{
+  $LIST(<123j:mode>) = SXML_T("NOMOD");
+}
+
+* [[SEMC_ADDED]]
+
+*------------------------------------------------------------------------------
+
+<123j:mode>		= MRU ;
+
+$LIST(<123j:mode>)
+{
+  $LIST(<123j:mode>) = SXML_T("MRU");
+}
+
+* [[SEMC_ADDED]]
 
 *******************************************************************************
 
@@ -8069,20 +8461,3 @@ $LIST(<124:segment_operation_type>)
 
 *******************************************************************************
 
-<123b:other_segment_operation_name> = SEGINA ;
-
-$LIST(<123b:other_segment_operation_name>)
-{
-  $LIST(<123b:other_segment_operation_name>) = SXML_T("SEGINA");
-}
-
-*------------------------------------------------------------------------------
-
-<123b:other_segment_operation_name> = SEGIND ;
-
-$LIST(<123b:other_segment_operation_name>)
-{
-  $LIST(<123b:other_segment_operation_name>) = SXML_T("SEGIND");
-}
-
-*******************************************************************************

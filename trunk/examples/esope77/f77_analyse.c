@@ -223,6 +223,7 @@ static struct source_line	*source_line;
 static struct source_line	source_lines [SOURCE_BUF_SIZE];
 static SXINT			source_line_head, source_line_tail;
 
+static SXINT                    star_flag_mode_tok_no;
 
 static bool is_tab_already_met, is_hollerith_already_met, is_quoted_string_already_met,
   is_lower_to_upper_already_met, is_implicit_extension_already_met;
@@ -327,13 +328,13 @@ static void comments_free (void) {
 
 static void tab_hit (struct sxsource_coord source_index)
 {
-    if (!is_tab_already_met) {
+    if (!is_extension && !is_tab_already_met) {
 	is_tab_already_met = true;
 		
 	sxerror (source_index,
 		 sxsvar.sxtables->err_titles [1][0] /* warning */,
 		 "%sA tabulation character is illegal outside comments or character constants.\n\
-In this executable program, each such tabulation character is changed into one space.",
+In this program, each such tabulation character is replaced by spaces.",
 		 sxsvar.sxtables->err_titles [1]+1 /* warning */);
     }
 }
@@ -467,7 +468,7 @@ static void fill_comments_and_stmts (void)
 
 	  c = f77getc (sxsrcmngr.infile);
 	} while (is_a_comment_flag (c));
-
+	
         if (is_json) {
           fprintf (json_pipe, "\"");
         } 
@@ -518,8 +519,6 @@ static void fill_comments_and_stmts (void)
 
 	  break;
 	}
-
-
 	else {
 	  sxerror (source_item.source_index,
 		   sxsvar.sxtables->err_titles [2][0] /* error */,
@@ -875,7 +874,7 @@ static SXINT	*stmt_kind;
 static SXINT	main_program_nb;
 static bool	is_function_stmt, is_iokw_allowed, is_implicit_statement;
 static SXINT	program_unit_kind;
-static bool        we_are_in_parse_in_la;
+static bool     we_are_in_parse_in_la;
 
 static struct sxtoken	*PTOK;
 static SXINT		TOK_i;
@@ -1945,11 +1944,11 @@ static char *extension_mess [] =
   };
 
 static SXINT head_tok_no; /* On se souvient du tok_no du 1er token d'une ligne */
-
 static bool  after_logical_if;
 static struct {
      SXUINT tok_no, line_no;
 } eol_flag;
+
 
 void	f77_src_mngr (SXINT what, FILE *infile, char *file_name)
 {
@@ -1984,8 +1983,6 @@ void	f77_src_mngr (SXINT what, FILE *infile, char *file_name)
 
     for (i = Xlast_kind; i > 0; i--)
       extension_already_seen [i] = false;
-
-    head_tok_no = 0;
 
     /* Initialisation */
     varstr_catchar (stmts.string, SXNEWLINE); /* On suppose que toute nouvelle carte est précédée d'un EOL */
@@ -2307,7 +2304,6 @@ static bool is_well_balanced (SXINT binf_tok_no, SXINT bsup_tok_no) {
      return count == 0;
 }
 
-
 static bool check_balanced (SXINT *tok_no)
 {
     /* tok_no designe un token (ident ou mot_cle) ou une "*".
@@ -2477,6 +2473,7 @@ static SXINT seek_kw (char *string)
 	PTOK->string_table_entry = sxstrsave (name)
 	    
 
+
 static bool check_for_a_lhs (SXINT tok_no)
 {
     /* tok_no designe le token (ident ou mot_cle) qui se trouve en debut d'une
@@ -2547,8 +2544,27 @@ static bool check_for_a_lhs (SXINT tok_no)
 	      lahead = sxget_token (++tok_no)->lahead;
 	 }
 
-	 ret_val = (lahead == EGAL_t);
-	 break;
+	 if (lahead == EGAL_t) {
+	      /* "id ... =" : lhs */
+	      ret_val = true;
+	      break;
+	 }
+
+	 if (lahead != DOT_t) {
+	      ret_val = false;
+	      break;
+	 }
+
+	 /* Ici on est dans un pointeur ESOPE ... */
+	 lahead = sxget_token (++tok_no)->lahead;
+	 /* ... derrière un '.', donc lahead et tok_no doivent repérer un id */
+
+	 if (lahead != ID_t) {
+	      ret_val = false; /* On laisse le traitement des erreurs se débrouiller avec ça ... */
+	      break;
+	 }
+
+	 lahead = sxget_token (tok_no + 1)->lahead;
     }
 
 #if EBUG
@@ -3685,7 +3701,7 @@ static void check_iokw (SXINT head, SXINT tail)
 #if 0
     CLEAR (t_stack);
 #endif
-
+    
     if (iokw_stack [1] != head + 2) {
 	f77PUSH (t_stack, UNIT_t);
     }
@@ -3923,7 +3939,7 @@ static bool check_stmt_sequence (SXINT lahead, SXINT tok_no
 	      case implicit_k :
 		   break; /* Le 16/04/2023 à la place de ...
 				   break; */
-
+	    
 	      default:
 #if EBUG
 		   sxtrap ("f77_analyse", "unknown switch case #4");
@@ -4200,7 +4216,6 @@ static void check_eol_flag (void) {
      }
 }
 
-
 bool sxscanner_action (SXINT code, SXINT act_no) {
   SXINT prev_lahead;
 #if 0
@@ -4246,6 +4261,7 @@ bool sxscanner_action (SXINT code, SXINT act_no) {
     stmt_kind [GO_t] = executable_k;
     stmt_kind [IF_t] = executable_k;
     stmt_kind [IMPLICIT_t] = implicit_k;
+    stmt_kind [IMPLIED_t] = other_specification_k; // [[ESOPE]]
     stmt_kind [INQUIRE_t] = executable_k;
     stmt_kind [INTEGER_t] = other_specification_k;
     stmt_kind [INTRINSIC_t] = other_specification_k;
@@ -4253,6 +4269,7 @@ bool sxscanner_action (SXINT code, SXINT act_no) {
     stmt_kind [OPEN_t] = executable_k;
     stmt_kind [PARAMETER_t] = parameter_k;
     stmt_kind [PAUSE_t] = executable_k;
+    stmt_kind [POINTEUR_t] = other_specification_k; // [[ESOPE]]
     stmt_kind [PRINT_t] = executable_k;
     stmt_kind [READ_t] = executable_k;
     stmt_kind [READ_KW_t] = executable_k;
@@ -4277,6 +4294,7 @@ bool sxscanner_action (SXINT code, SXINT act_no) {
 
     ETAT = ETAT_0;
     
+    star_flag_mode_tok_no = -1; /* Never seen */
     head_tok_no = 0;
     after_logical_if = false;
     eol_flag.tok_no = 0;
@@ -4327,7 +4345,7 @@ bool sxscanner_action (SXINT code, SXINT act_no) {
 	       (SXINT) sxplocals.Mtok_no);
     }
 #endif
-
+    
     if (act_no != 6) {
       /* On ne regarde que les post-actions */
       check_eol_flag ();
@@ -4447,6 +4465,22 @@ bool sxscanner_action (SXINT code, SXINT act_no) {
 
 	     goto change2id;
 
+	case MOD_t: /* [[ESOPE]] */
+	case MRU_t: /* [[ESOPE]] */
+	case NOMOD_t: /* [[ESOPE]] */
+	     /* En général ce sont des ids...
+		sauf si on est derrière le flag '*' de :
+		SEGDES , <88a:variable_or_array_element_name> * [ <123c:mode> | ( <123c:mode> , <123c:mode> { , <123c:mode> } ) ]
+		avec <123c:mode> = MOD_t | MRU_t | NOMOD_t
+		Voir case 12:
+	     */
+	     if (SXGET_TOKEN (head_tok_no).lahead == SEGDES_t &&
+		 star_flag_mode_tok_no > head_tok_no /* On a rencontré le flag '*' du SEGDES courant */)
+		  /* on laisse au scanner le soin de ranger ce kw */
+		  goto leaving_f77_scan_act_1;
+
+	     goto change2id;
+
 	case THEN_t:
 	     /* En général THEN est un id sauf si le début de la ligne est un [ELSE] IF
 		et THEN est en fin de ligne */
@@ -4488,7 +4522,7 @@ bool sxscanner_action (SXINT code, SXINT act_no) {
 
 	leaving_f77_scan_act_1:
 	     must_return = true;
-             break;
+	     break;
 #if EBUG
 	     print_sxsvar ();
 	     fputs ("\n", stdout);
@@ -4565,7 +4599,9 @@ bool sxscanner_action (SXINT code, SXINT act_no) {
 
 		if (lahead == END_t && (next_lahead == IF_t || next_lahead == DO_t || next_lahead == SEGMENT_t))
 		  /* On ne veut pas repasser dans ETAT_0 */
-		  lahead = IF_t; /* pourquoi pas? */
+		     lahead = (next_lahead == SEGMENT_t)
+			  ? INTEGER_t /* END SEGMENT : on reste dans une déclaration */
+			  : IF_t; /* pourquoi pas? */
 	      }
 
 	      if (program_unit_kind == BLOCK_DATA_SUBPROGRAM) {
@@ -4767,7 +4803,7 @@ bool sxscanner_action (SXINT code, SXINT act_no) {
 	      case OPEN_t:
 	      case WRITE_t:
 		tok_no = Mtok_no;
-
+			    
 		if (check_balanced (&tok_no))
 		  check_iokw (Mtok_no, tok_no);
 		else {
@@ -4775,6 +4811,7 @@ bool sxscanner_action (SXINT code, SXINT act_no) {
 		  change_tok (Mtok_no, ID_t, sxttext (sxsvar.sxtables, cur_lahead));
 		  check_id (&(SXGET_TOKEN (Mtok_no)));
 		}
+
 		break;
 
 
@@ -4843,8 +4880,8 @@ bool sxscanner_action (SXINT code, SXINT act_no) {
 	      case ID_t:
 		process_initial_id (Mtok_no);
 		break;
-	
-#if 0		    
+
+#if 0
 	      case IF_t:
 		/* Instructions IF. */
 		/* Si on est dans un IF logique, l'instruction qui suit doit etre
@@ -4945,8 +4982,16 @@ bool sxscanner_action (SXINT code, SXINT act_no) {
 		    check_iokw (Mtok_no, tok_no);
 		}
 		else {
-		  /* Assume format_identifier */
-		  change_tok (Mtok_no, READ_KW_t, "READ");
+		  lahead = sxget_token (Mtok_no + 1)->lahead;
+				
+		  if (lahead == DOT_t) {
+		       /* On en fait un %id. */
+		       change_tok (Mtok_no, ID_t, sxttext (sxsvar.sxtables, cur_lahead));
+		       check_id (&(SXGET_TOKEN (Mtok_no)));
+		     }
+		  else
+		    /* Assume format_identifier */
+		    change_tok (Mtok_no, READ_KW_t, "READ");
 		}
 			    
 		break;
@@ -4985,7 +5030,6 @@ this expression is erased.",
 	  /* On sort du scanner sans retourner aucun token */
 	  sxsvar.sxlv.terminal_token.lahead = 0;
 	  sxsvar.sxlv.terminal_token.string_table_entry = SXERROR_STE;
-
 	}
 	else 
 	  /* Ident ou mot-cle en milieu d'instruction. */
@@ -5030,7 +5074,6 @@ this expression is erased.",
 	    else {
 	      /* On en fait un %id. */
 	      change_tok (Mtok_no, ID_t, sxttext (sxsvar.sxtables, cur_lahead));
-
 	      check_id (&(SXGET_TOKEN (Mtok_no)));
 	    }
 
@@ -5200,7 +5243,7 @@ this expression is erased.",
 
 	    break;
 	  }
-
+	
 #if EBUG
 	fprintf (stdout, "****** @1 ******\n");
 	print_toks_buf (Mtok_no-1, sxplocals.Mtok_no);
@@ -5507,8 +5550,8 @@ This one, and all others in the sequel, are converted into the corresponding upp
 	if (SXGET_TOKEN (sxplocals.Mtok_no).lahead != EOL_t ||
 	    SXGET_TOKEN (sxplocals.Mtok_no-1).lahead != END_t) {
 	  if (is_extension) {
-	       /* on insère END %EOL devant EOF... */
-	       sxsvar.sxlv.terminal_token.lahead = END_t;
+	       /* on insère !END (le zombie de END) %EOL devant EOF... */
+	       sxsvar.sxlv.terminal_token.lahead = END_EP_t;
 	       f77put_token (sxsvar.sxlv.terminal_token);
 	       sxsvar.sxlv.terminal_token.lahead = EOL_t;
 	       f77put_token (sxsvar.sxlv.terminal_token);
@@ -5563,18 +5606,19 @@ This one, and all others in the sequel, are converted into the corresponding upp
        break;
 
     case 10:
-	 /*
-							  
-		without_ending_dot :  "." id @10 ; -- @10 décompose "." id en "." %symbolic_name
+	 /* 
+			without_ending_dot :  "." id ; @10 ;
+				     -- @10 décompose ". {LETTER}+" en "." %symbolic_name
 				Priority Shift > Reduce ;
-							  
+					  
 	 */
     case 11:
 	 /*
-		ending_dot : "." id "."&True @11 ; -- Reconnait les mots-clefs logiques ou relationnels en premier
-				     	    	   -- (Ex : .EQ.)
-				     	    	   -- Sinon @11 décompose "." id "." en "." %symbolic_name et remet le '.'
-						   -- terminal dans le source
+			ending_dot : "." id "."&True ; @11 ;
+				     -- Reconnait les mots-clefs logiques ou relationnels en premier
+				     -- (Ex : .EQ.)
+				     -- Sinon @11 décompose "." id "." en "." %symbolic_name et remet le '.'
+				     -- terminal dans le source
 	 */	
 #if EBUG
 	 print_toks_buf (sxplocals.Mtok_no, sxplocals.Mtok_no);
@@ -5615,9 +5659,30 @@ This one, and all others in the sequel, are converted into the corresponding upp
 	    mot_clé, on ne fait rien */
 	 
 #if EBUG
+	 fprintf (stdout, "****** @%ld ******\n", act_no);
 	 print_toks_buf (sxplocals.Mtok_no, sxplocals.Mtok_no);
 #endif
 
+	 break;
+
+    case 12:
+	 /* On est sur un "*", on regarde si c'est le flag de l'instruction [[ESOPE]] :
+	    SEGDES , <88a:variable_or_array_element_name> * [ <123c:mode> | ( <123c:mode> , <123c:mode> { , <123c:mode> } ) ]
+	    avec <123c:mode> = MOD_t | MRU_t | NOMOD_t., dans ce cas, on note le tok_no de ce flag dans
+	    star_flag_mode_tok_no.
+	    Si ce mot-clé est dans une carte SEGDES et si son tok_no est compris dans ]head_tok_no : star_flag_mode_tok_no[
+	    alors c'est un id, sinon c'est le mot clé */
+	 if (SXGET_TOKEN (head_tok_no).lahead == SEGDES_t &&
+	     (sxplocals.Mtok_no == head_tok_no+2 /* <88a:variable_or_array_element_name> =>+ id */ ||
+	      (SXGET_TOKEN (sxplocals.Mtok_no).lahead == RIGHTP_t &&
+	       SXGET_TOKEN (head_tok_no+3).lahead == LEFTP_t /* Cas SEGDES , array_name (...) * */ &&
+	       is_well_balanced (head_tok_no+3, sxplocals.Mtok_no)))) {
+	      star_flag_mode_tok_no = sxplocals.Mtok_no+1;
+#if EBUG
+	      fprintf (stdout, "++++++++++++++ @12 : \"*\" is a star_flag_mode_tok_no at %ld ++++++++++++++\n", star_flag_mode_tok_no);
+#endif
+	 }
+	 
 	 break;
 
 

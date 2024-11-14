@@ -31,6 +31,7 @@ E_t			= E ;
 EGAL_t			= "=" ;
 ELSE_t 			= ELSE ;
 END_t			= END ;
+END_EP_t		= !END ;
 ENDDO_t 		= %ENDDO ;
 ENDFILE_t		= ENDFILE ;
 ENDFILE_KW_t		= ENDFILEkw ;
@@ -73,11 +74,14 @@ LETTER_t 		= %letter ;
 LOGICAL_t		= LOGICAL ;
 
 MINUS_t			= "-" ;
+MOD_t			= MOD ;
+MRU_t			= MRU ;
 
 N_t			= N ;
 NAME_t			= NAME ;
 NAMED_t			= NAMED ;
 NEXTREC_t		= NEXTREC ;
+NOMOD_t			= NOMOD ;
 NONE_t			= NONE ;
 NUMBER_t		= NUMBER ;
 

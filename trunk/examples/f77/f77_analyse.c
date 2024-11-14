@@ -89,7 +89,7 @@ static char ME [] = "f77_analyse.c";
 #include "f77_td.h"
 #include <ctype.h>
 
-char WHAT_F77ANALYSE[] = "@(#)SYNTAX - $Id: f77_analyse.c 4494 2024-10-28 10:00:28Z garavel $";
+char WHAT_F77ANALYSE[] = "@(#)SYNTAX - $Id: f77_analyse.c 4506 2024-11-01 22:40:46Z garavel $";
 
 /* Il faudrait INTERDIRE l'insertion d'un EOL par le rattrapage d'erreur
    du scanner. Utiliser sxs_srcvr? */
@@ -318,13 +318,13 @@ static void comments_free (void) {
 
 static void tab_hit (struct sxsource_coord source_index)
 {
-    if (!is_tab_already_met) {
+    if (!is_extension && !is_tab_already_met) {
 	is_tab_already_met = true;
 		
 	sxerror (source_index,
 		 sxsvar.sxtables->err_titles [1][0] /* warning */,
 		 "%sA tabulation character is illegal outside comments or character constants.\n\
-In this executable program, each such tabulation character is changed into one space.",
+In this program, each such tabulation character is replaced by spaces.",
 		 sxsvar.sxtables->err_titles [1]+1 /* warning */);
     }
 }

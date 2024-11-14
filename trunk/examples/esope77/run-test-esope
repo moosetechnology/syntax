@@ -124,21 +124,41 @@ fi
 
 #------------------------------------------------------------------------------
 
+RESULT_FILE="error_report.txt"
+> "$RESULT_FILE"  
+
 if [ -x $F77OUT ]
 then
-	echo "*** testing esope executable"
 
-	for FILE in `ls /users1/epd/ah426979/syntax-experiment/saphtool/*.e /users1/epd/ah426979/syntax-experiment/saphtool/*.ec`
+	for FILE in `ls test/esope/*.E`
 	do
-		RUN $FILE
+		ERR_OUTPUT=$(RUN "$FILE" 2>&1)
+
+    	
+    	if [[ -n "$ERR_OUTPUT" ]]; 
+    	then
+        
+        	echo "----------- Errors in: $FILE -----------" >> "$RESULT_FILE"
+      	
+        	while IFS= read -r line; 
+        	do
+            	if [[ "$line" =~ ^([^\ ]+),\ line\ ([0-9]+): ]]; 
+            	then
+                	LINE_NUM=${BASH_REMATCH[2]}  # Extract the line number               
+                	echo "$line" >> "$RESULT_FILE"
+                	START=$((LINE_NUM - 1))
+                	END=$((LINE_NUM + 1))
+                	sed -n "${START},${END}p" "$FILE" >> "$RESULT_FILE"
+                	echo "" >> "$RESULT_FILE"  # Separate errors with a newline
+            	else
+                	echo "$line" >> "$RESULT_FILE"
+            	fi
+        	done <<< "$ERR_OUTPUT"
+        
+        	echo "" >> "$RESULT_FILE" 
+    	fi
+
 	done 
-
-	echo "*** testing fortran"
-
-		for FILE in `ls /users1/epd/ah426979/syntax-experiment/saphtool/*.f /users1/epd/ah426979/syntax-experiment/saphtool/*.fc`
-	do
-		RUN $FILE
-	done
 fi
 
 #------------------------------------------------------------------------------
@@ -146,4 +166,3 @@ fi
 rm -f $SCRIPT $TMP1 $TMP2
 
 exit 0
-

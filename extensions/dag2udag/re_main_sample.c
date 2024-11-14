@@ -22,7 +22,7 @@
 #include "sxversion.h"
 #include "sxunix.h"
 
-char WHAT_SXMAIN[] = "@(#)SYNTAX - $Id: re_main_sample.c 4344 2024-09-18 17:22:13Z garavel $" WHAT_DEBUG;
+char WHAT_SXMAIN[] = "@(#)SYNTAX - $Id: re_main_sample.c 4502 2024-10-30 17:03:31Z garavel $" WHAT_DEBUG;
 
 static char ME[] = "re_main";
 
@@ -71,6 +71,9 @@ bool tmp_file_for_stdin;  /* unused */
 static void prelude_re (bool is_OK, SXINT eof_ste, SXINT node_nb, SXINT operand_nb, SXINT fsa_kind)
 {
   SXINT *fsa_foreach;
+  SXINT foreach_nfa [6]  = {1, 0, 0, 1, 0, 0};
+  SXINT foreach_efna [6] = {1, 0, 0, 0, 0, 0};
+  SXINT foreach_dfa [6]  = {1, 0, 0, 0, 0, 0};
 #if EBUG
   char *name;
 #endif
@@ -88,11 +91,10 @@ static void prelude_re (bool is_OK, SXINT eof_ste, SXINT node_nb, SXINT operand_
     case RE2NFA :
       /* L'automate ds nfsa_hd est non-deterministe avec des transitions vides */
       {
-	SXINT foreach [6] = {1, 0, 0, 1, 0, 0};
 #if EBUG
 	name = "RE2NFA";
 #endif
-	fsa_foreach = foreach;
+	fsa_foreach = foreach_nfa;
 	cur_fsa = &nfa;
       }
       break;
@@ -100,11 +102,10 @@ static void prelude_re (bool is_OK, SXINT eof_ste, SXINT node_nb, SXINT operand_
     case RE2EFNFA :
       /* L'automate ds nfsa_hd est non-deterministe sans transitions vides */
       {
-	SXINT foreach [6] = {1, 0, 0, 0, 0, 0};
 #if EBUG
 	name = "RE2EFNFA";
 #endif
-	fsa_foreach = foreach;
+	fsa_foreach = foreach_efna;
 	cur_fsa = &efnfa;
       }
       break;
@@ -113,11 +114,10 @@ static void prelude_re (bool is_OK, SXINT eof_ste, SXINT node_nb, SXINT operand_
       /* L'automate ds nfsa_hd est deterministe (mais non minimal) ... */
       /* ... sauf ds le cas d'un DAG */
       {
-	SXINT foreach [6] = {1, 0, 0, 0, 0, 0};
 #if EBUG
 	name = "RE2DFA";
 #endif
-	fsa_foreach = foreach;
+	fsa_foreach = foreach_dfa;
 	cur_fsa = &dfa;
       }
     break;

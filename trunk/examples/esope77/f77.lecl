@@ -3,12 +3,14 @@ Abbreviations
    id		= (UPPER | LOWER @6 | "_") {UPPER | LOWER @6 | DIGIT | "$" | "_"} ;
         -- "$" + "_" : extension
 	-- @6 : @Lower_To_Upper + test is_ansi
-   R_exp	= ("E" | "e" @6) ["+-"] int ;	
-   DP_exp	= ("D" | "d" @6) ["+-"] int ;	
+   R_exp	= ("E" | "e" @6) ["+-"] DIGIT&TRUE {DIGIT} ;
+   DP_exp	= ("D" | "d" @6) ["+-"] DIGIT&TRUE {DIGIT} ;
+   R_exp_id	= ("E" | "e" @6) ["+-"] {DIGIT}+ ;
+   DP_exp_id	= ("D" | "d" @6) ["+-"] {DIGIT}+ ;	
 
 Zombies
    -- these are "dummy" tokens", with no lexical specification, but useful
-   "!DO", %ENDDO, "!FORMAT", BACKSPACEkw, ENDFILEkw, REWINDkw, READkw, "!DEAD_END";
+   "!DO", %ENDDO, "!FORMAT", BACKSPACEkw, ENDFILEkw, REWINDkw, READkw, "!DEAD_END", "!END";
 
 Tokens
    %label	= DIGIT &0    -- colonne entre 1 et 5?
@@ -42,7 +44,7 @@ Tokens
 
    %unsigned_real_constant
 		= Union
-			without_dot : int R_exp ; @5 ;
+			without_dot : int R_exp_id ; @5 ;
 		  	-- @5 redecoupage en int id si precede de CHARACTER *
 				Priority Reduce > Reduce ;
 
@@ -53,7 +55,7 @@ Tokens
 
    %unsigned_dp_constant
 		= Union
-			without_dot : int DP_exp ; @5 ;
+			without_dot : int DP_exp_id ; @5 ;
 		  	-- @5 redecoupage en int id si precede de CHARACTER *
 				Priority Reduce > Reduce ;
 
@@ -93,7 +95,7 @@ Tokens
    format_kw	= (UPPER&Is_Set(0) | LOWER&Is_Set(0) @6) ;
 
    "."		= Union
-			ending_dot : "." {UPPER | LOWER @6}+ "."&True ; @11 ;
+			ending_dot : "." id "."&True ; @11 ;
 				     -- Reconnait les mots-clefs logiques ou relationnels en premier
 				     -- (Ex : .EQ.)
 				     -- Sinon @11 décompose "." id "." en "." %symbolic_name et remet le '.'
@@ -105,7 +107,9 @@ Tokens
 
 			in_a_format : -"." &Is_set(0) ;
 		  End;
-
-
    
+   "*"		= -"*" ; @12 ; -- Si le "*" est le flag de l'instruction
+   		       	       -- SEGDES , <88a:variable_or_array_element_name> *
+			       -- [ <123c:mode> | ( <123c:mode> , <123c:mode> { , <123c:mode> } ) ]
+			       -- On positionne star_flag_mode_tok_no
 

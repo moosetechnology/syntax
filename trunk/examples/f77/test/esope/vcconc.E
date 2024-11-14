@@ -81,7 +81,7 @@ c     -- Agrandissement du vecteur ov
       nvcent = nvcent + nvcent1
       nvclog = nvclog + nvclog1
       nvccha = nvccha + nvccha1
-      segadj pv
+      segadj,pv
 
 c     -- Copie des donnees de ov1 dans ov
       do i=1, nvcflo1

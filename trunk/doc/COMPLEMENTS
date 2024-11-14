@@ -547,6 +547,18 @@ l'intérieur d'un $xxx (...), BNF pourrait savoir que ce n'était pas une règle
 
 ------------------------------------------------------------------------------
 
+Pierre Boullier - novembre 2024
+
+En general, j'ecris plutot avec des recursivites a gauche qui necessitent
+moins de place dans la parse stack.
+
+Mais dans certains cas, il vaut mieux utiliser des recursivites a droite.
+C'est un grand classique de la resolution de conflits LALR(1) : il est
+possible que les problemes qui se posent en recursivite gauche disparaissent
+en recursivite droite. L'idee est de differer au maximum la prise de decision.
+
+------------------------------------------------------------------------------
+
 
 
 

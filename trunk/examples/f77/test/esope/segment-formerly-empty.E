@@ -2,6 +2,7 @@
       implicit none
       
       segment, node
+       INTEGER II
       endsegment
      
       pointeur empty.node

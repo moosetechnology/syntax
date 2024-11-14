@@ -42,7 +42,7 @@
 
 static char	ME [] = "rcg_gen_parser";
 
-char WHAT_RCGGENPARSER[] = "@(#)SYNTAX - $Id: rcg_gen_parser.c 4191 2024-08-29 10:29:33Z garavel $" WHAT_DEBUG;
+char WHAT_RCGGENPARSER[] = "@(#)SYNTAX - $Id: rcg_gen_parser.c 4503 2024-10-30 17:05:27Z garavel $" WHAT_DEBUG;
 
 
 extern SXINT		is_in_Tstar (SXINT, SXINT);
@@ -3400,7 +3400,7 @@ fill_param_pos (SXINT clause)
   SXINT         counter, counter_nb;
   char	kind;
   SXBA	wmadr_set, equiv_adr_set;
-  char	lstring [25], ustring [25], string [32];
+  char	lstring [25], ustring [25], string [64];
   VARSTR	vstr;
     
   sxinitialise(rcur3) /* Pour un compilateur croisé pour l'architecture itanium64 qui est gcc version 3.4.5

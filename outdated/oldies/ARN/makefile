@@ -10,11 +10,16 @@ CC=cc -I$(SXINCL) -I$(SX)/incl/util -I$(SXEXTINCL) $(CFLAGS) -DEBUG
 
 all:	$(ARN)/ARN.out
 
-NEEDS=  $(LIB)/ARN_no_parsact.o		\
+NEEDS=  $(LIB)/ARN_main.o		\
+	$(LIB)/ARN_no_parsact.o		\
 	$(LIB)/ARN_t.o
 
 all $(ARN)/ARN.out:	$(NEEDS)	$(SXEXTBIBS)
 	cc -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXEXTBIBS) || (rm -f $@;exit 1)
+
+$(LIB)/ARN_main.o:	$(SXINCL)/sxunix.h 	\
+			ARN_main.c
+	$(CC) -o $@ -c ARN_main.c
 
 $(LIB)/ARN_no_parsact.o:	$(SXINCL)/sxunix.h 	\
 			ARN_parsact.h 	\

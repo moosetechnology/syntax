@@ -144,7 +144,7 @@ static SXINT pass_inherited ()
 	    lhs_item = sxndtw_symb_to_lhsitem (father_rule);
 
 	    for (i = 1; i < NDVISITED_POSITION; i++) {
-		sxndtw_node_to_son (NDFATHER, lhs_item + i, son);
+		(void) sxndtw_node_to_son (NDFATHER, lhs_item + i, son);
 		
 		if (!sxndtw_is_node_erased (son)) {
 		    i = 0;

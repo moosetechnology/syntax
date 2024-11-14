@@ -16,7 +16,7 @@ NEEDS=	$(LIB)/sxearley_main.o
 
 $(BIN)/earley.out:	$(NEEDS)	$(SXEXTBIBS)
 	@rm -f $@
-	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXEXTBIBS) || (rm $@;exit 1)
+	$(COMPILER) -o $@ $(NEEDS) $(CFLAGS) $(LDFLAGS) $(SXEXTBIBS) -lm || (rm $@;exit 1)
 
 $(LIB)/sxearley_main.o:	$(SXINCL)/sxunix.h		\
 			sxearley_main.c
