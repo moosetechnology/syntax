@@ -1,0 +1,2 @@
+      CALL TCHCOP(ITYPE (1:LCAR),CHAIN1.ICTEXT(1:))
+      END

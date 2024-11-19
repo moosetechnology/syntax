@@ -7309,7 +7309,7 @@ $LIST( <88a:variable_or_array_element_name>)
 
 $LIST(<89:substring_name>)
 {
-  $LIST(<89:substring_name>) = SXML_LL (
+  $LIST(<89:substring_name>) = ast_pointeur_variable (
 	$LIST(<88a:variable_or_array_element_name>),
         $LIST(<89:substring_name>));
 }  
@@ -7369,7 +7369,9 @@ $LIST( <89a:substring_name>)
 
 $LIST( <89a:substring_name>)
 {
-  $LIST( <89a:substring_name>) = SXML_LLL(
+  $LIST( <89a:substring_name>) = ast_substring(
+  	LOCATION(0),
+  	NULL,
     $LIST(<88:array_element_name>),
     $LIST(<77b:[integer_expr]>),
     $LIST(<77b:[integer_expr]>')
@@ -8057,10 +8059,11 @@ $LIST( <121a:pointeurs_seq>)
 
 $LIST( <121c:array_size>)
 {
-  $LIST( <121c:array_size>) = SXML_LTT(
+  $LIST( <121c:array_size>) = ast_segment_array_length(
+  	 LOCATION(0),
      $LIST (<99:symbolic_name>),
-     "/unsigned_int_constant",
-     $ptext( "%unsigned_int_constant"));
+     $ptext( "%unsigned_int_constant")
+  );
 }
 
 * [[SEMC_ADDED]]
@@ -8072,9 +8075,11 @@ $LIST( <121c:array_size>)
 
 $LIST( <121c:array_size>)
 {
-  $LIST( <121c:array_size>) = SXML_LL(
+  $LIST( <121c:array_size>) = ast_pointer_to_segment_array_length(
+  	 LOCATION(0),
      $LIST (<88a:variable_or_array_element_name>),
-     $LIST (<121c:array_size>'));
+     $LIST (<121c:array_size>')
+  );
 }
 
 * [[SEMC_ADDED]]
@@ -8122,7 +8127,8 @@ $LIST( <122:pointeur_name>)
 
 $LIST(<123:segment_operation>)
 {
-  $LIST(<123:segment_operation>) = SXML_TL(
+  $LIST(<123:segment_operation>) = ast_segment_operation_segini_segact_segdes(
+  		 LOCATION(0),
        "SEGINI",
        $LIST(<123c:segini_args>));
 }
@@ -8135,7 +8141,8 @@ $LIST(<123:segment_operation>)
 
 $LIST(<123:segment_operation>)
 {
-  $LIST(<123:segment_operation>) = SXML_TL(
+  $LIST(<123:segment_operation>) = ast_segment_operation_segini_segact_segdes(
+  		 LOCATION(0),
        "SEGACT",
        $LIST(<123e:segact_args>));
 }
@@ -8148,7 +8155,8 @@ $LIST(<123:segment_operation>)
 
 $LIST(<123:segment_operation>)
 {
-  $LIST(<123:segment_operation>) = SXML_TL(
+  $LIST(<123:segment_operation>) = ast_segment_operation_segini_segact_segdes(
+  		 LOCATION(0),
        "SEGDES",
        $LIST(<123g:segdes_args>));
 }
@@ -8161,7 +8169,7 @@ $LIST(<123:segment_operation>)
 
 $LIST(<123:segment_operation>)
 {
-  $LIST(<123:segment_operation>) = ast_segment_operation(
+  $LIST(<123:segment_operation>) = ast_segment_operation_segsup_segadj_segprt(
   	LOCATION(0),
   	$LIST(<123a:segment_operation_name>),
   	$LIST(<20a:scalar_name_list>)
@@ -8234,7 +8242,7 @@ $LIST(<123b:other_segment_operation_name>)
 
 $LIST(<123c:segini_args>)
 {
-   $LIST(<123c:segini_args>) = SXML_LL (
+   $LIST(<123c:segini_args>) = ast_list (
          $LIST(<123c:segini_args>'),
          $LIST(<123d:segini_arg>));
 }
@@ -8269,7 +8277,8 @@ $LIST(<123d:segini_arg>)
 
 $LIST(<123d:segini_arg>)
 {
-   $LIST(<123d:segini_arg>) = SXML_LL (
+   $LIST(<123d:segini_arg>) = ast_segment_duplication (
+   			 LOCATION(0),
          $LIST(<88a:variable_or_array_element_name>),
          $LIST(<117b:segment_pointer>));
 }
@@ -8282,7 +8291,7 @@ $LIST(<123d:segini_arg>)
 
 $LIST(<123e:segact_args>)
 {
-   $LIST(<123e:segact_args>) = SXML_LL(
+   $LIST(<123e:segact_args>) = ast_list(
        $LIST(<123e:segact_args>'),
        $LIST(<123f:segact_arg>));
 }
@@ -8317,7 +8326,7 @@ $LIST(<123f:segact_arg>)
 
 $LIST(<123g:segdes_args>)
 {
-   $LIST(<123g:segdes_args>) = SXML_LL(
+   $LIST(<123g:segdes_args>) = ast_list(
        $LIST(<123g:segdes_args>'),
        $LIST(<123h:segdes_arg>));
 }
@@ -8352,9 +8361,9 @@ $LIST(<123h:segdes_arg>)
 
 $LIST(<123h:segdes_arg>)
 {
-   $LIST(<123h:segdes_arg>) = SXML_LTL (
+   $LIST(<123h:segdes_arg>) = ast_segdes_argument_parametrized(
+   		 LOCATION(0),
        $LIST(<88a:variable_or_array_element_name>),
-       "*",
        $LIST(<123j:mode>));
 }
 
@@ -8366,11 +8375,13 @@ $LIST(<123h:segdes_arg>)
 
 $LIST(<123h:segdes_arg>)
 {
-   $LIST(<123h:segdes_arg>) = SXML_LTLL (
+   $LIST(<123h:segdes_arg>) = ast_segdes_argument_parametrized(
+   		 LOCATION(0),
        $LIST(<88a:variable_or_array_element_name>),
-       "*()",
-       $LIST(<123j:mode>),
-       $LIST(<123i:modes>));
+       SXML_LL(
+       	$LIST(<123j:mode>),
+       	$LIST(<123i:modes>)
+      ));
 }
 
 * [[SEMC_ADDED]]
@@ -8381,7 +8392,7 @@ $LIST(<123h:segdes_arg>)
 
 $LIST(<123i:modes>)
 {
-  $LIST(<123i:modes>) = SXML_LL(
+  $LIST(<123i:modes>) = ast_list(
 	$LIST(<123j:mode>),
         $LIST(<123i:modes>'));
 }
@@ -8405,7 +8416,9 @@ $LIST(<123i:modes>)
 
 $LIST(<123j:mode>)
 {
-  $LIST(<123j:mode>) = SXML_T("MOD");
+  $LIST(<123j:mode>) = ast_segment_operation_mode(
+  	LOCATION(0),
+  	"MOD");
 }
 
 * [[SEMC_ADDED]]
@@ -8416,7 +8429,9 @@ $LIST(<123j:mode>)
 
 $LIST(<123j:mode>)
 {
-  $LIST(<123j:mode>) = SXML_T("NOMOD");
+  $LIST(<123j:mode>) = ast_segment_operation_mode(
+  	LOCATION(0),
+  	"NOMOD");
 }
 
 * [[SEMC_ADDED]]
@@ -8427,7 +8442,9 @@ $LIST(<123j:mode>)
 
 $LIST(<123j:mode>)
 {
-  $LIST(<123j:mode>) = SXML_T("MRU");
+  $LIST(<123j:mode>) = ast_segment_operation_mode(
+  	LOCATION(0),
+  	"MRU");
 }
 
 * [[SEMC_ADDED]]

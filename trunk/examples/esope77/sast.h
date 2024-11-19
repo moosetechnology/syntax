@@ -1586,10 +1586,10 @@ SXML_TYPE_LIST ast_substring(SXML_TYPE_LIST location,
   SXML_TYPE_LIST lower_bound_safe = lower_bound;
 
   if (array == NULL) {
-    variable_or_array = JSON_KU_("variable_name", variable);
+    variable_or_array = JSON_KU_("variable", variable);
   } 
   else 
-    variable_or_array = JSON_KU_("array", array);
+    variable_or_array = JSON_KU_("array_element", array);
 
   if (upper_bound == NULL) {
     upper_bound_safe = SXML_T("\"\"");
@@ -1598,7 +1598,6 @@ SXML_TYPE_LIST ast_substring(SXML_TYPE_LIST location,
   if (lower_bound == NULL) {
     lower_bound_safe = SXML_T("\"\"");
   }  
-
 
   return JSON_MAP(
     SXML_LLTLLL(
@@ -2142,7 +2141,6 @@ SXML_TYPE_LIST ast_sign(
 }
 
 /* -------------------------------------------------------------------------
- * expression sign
  */
 SXML_TYPE_LIST ast_list(
         SXML_TYPE_LIST tail,
@@ -2261,7 +2259,26 @@ SXML_TYPE_LIST ast_pointeur_variable(
 
 /* -------------------------------------------------------------------------
  */
-SXML_TYPE_LIST ast_segment_operation(
+SXML_TYPE_LIST ast_segment_operation_segini_segact_segdes(
+              SXML_TYPE_LIST location,
+              SXML_TYPE_TEXT name,
+              SXML_TYPE_LIST arguments
+              ) {
+  
+  
+    return SXML_LTLL(
+      ast_abstract_statement("segment_operation", location),
+      ",\n",
+      JSON_KQ_("name", name),
+      JSON_KU("arguments", JSON_ARRAY(arguments))
+    
+  );
+}
+
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_segment_operation_segsup_segadj_segprt(
               SXML_TYPE_LIST location,
               SXML_TYPE_LIST name,
               SXML_TYPE_LIST declarators
@@ -2298,3 +2315,95 @@ SXML_TYPE_LIST ast_segment_operation_segina_segind(
   );
 }
 
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_segment_array_length(
+              SXML_TYPE_LIST location,
+              SXML_TYPE_LIST name,
+              SXML_TYPE_TEXT dimension
+              ) {
+  
+    return JSON_MAP(
+      SXML_LTLL(
+        ast_abstract_statement("segment_array_length", location),
+        ",\n", 
+        JSON_KU_("name", name),
+        JSON_KQ("dimension", dimension)
+      )
+  );
+}
+
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_pointer_to_segment_array_length(
+              SXML_TYPE_LIST location,
+              SXML_TYPE_LIST pointer,
+              SXML_TYPE_LIST length
+              ) {
+  
+    return JSON_MAP(
+      SXML_LTLL(
+        ast_abstract_statement("pointer_to_segment_array_length", location),
+        ",\n", 
+        JSON_KU_("pointer", pointer),
+        JSON_KU("length", length)
+      )
+  );
+}
+
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_segment_duplication(
+              SXML_TYPE_LIST location,
+              SXML_TYPE_LIST right,
+              SXML_TYPE_LIST left
+              ) {
+  
+    return JSON_MAP(
+      SXML_LTLL(
+        ast_abstract_statement("segment_duplication", location),
+        ",\n", 
+        JSON_KU_("right", right),
+        JSON_KU("left", left)
+      )
+  );
+}
+
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_segment_operation_mode(
+              SXML_TYPE_LIST location,
+              SXML_TYPE_TEXT name
+              ) {
+  
+    return JSON_MAP(
+      SXML_LTL(
+        ast_abstract_statement("segment_operation_mode", location),
+        ",\n", 
+        JSON_KQ("name", name)
+      )
+  );
+}
+
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_segdes_argument_parametrized(
+              SXML_TYPE_LIST location,
+              SXML_TYPE_LIST segment_name,
+              SXML_TYPE_LIST parameters
+              ) {
+  
+    return JSON_MAP(
+      SXML_LTLL(
+        ast_abstract_statement("segdes_argument_parametrized", location),
+        ",\n", 
+        JSON_KU_("segment_name", segment_name),
+        JSON_KU("parameters", JSON_ARRAY(parameters))
+      )
+  );
+}

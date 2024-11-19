@@ -1,0 +1,2 @@
+      SEGINI , PSTR = PSTRA
+      END
