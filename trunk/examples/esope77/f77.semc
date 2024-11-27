@@ -490,8 +490,6 @@ $LIST(<2a:end_statement>)
   $LIST(<2a:end_statement>) = SXML_T ("");
 }
 
-* [[SEMC_ADDED]] [[RULE_MODIFIED]]
-
 *******************************************************************************
 
 <2c:statement_list>
@@ -5631,8 +5629,6 @@ $LIST( <74a:non_typed_expression>)
   $LIST( <74a:non_typed_expression>) = $LIST(<74c:non_typed_expression>);
 }
 
-* [[SEMC_ADDED]]
-
 *******************************************************************************
 
 <74c:non_typed_expression>
@@ -7314,8 +7310,6 @@ $LIST(<89:substring_name>)
         $LIST(<89:substring_name>));
 }  
 
-* [[SEMC_ADDED]] [[RULE_MODIFIED]]
-
 *------------------------------------------------------------------------------
 
 <89:substring_name>
@@ -7325,8 +7319,6 @@ $LIST(<89:substring_name>)
 {
   $LIST(<89:substring_name>) = $LIST(<89a:substring_name>);
 }        
-
-* [[SEMC_ADDED]] [[RULE_MODIFIED]]
 
 *******************************************************************************
 
@@ -7377,13 +7369,6 @@ $LIST( <89a:substring_name>)
     $LIST(<77b:[integer_expr]>')
   );
 }    
-
-* [[SEMC_ADDED]] [[RULE_MODIFIED]]
-
-* HUBERT: C'EST CE CALCUL DE $LIST QUI CREE LE PROBLEME SXML_LL() -> NULL
-* SI ON LA REMPLACE LE CALCUL PAR :
-*      $LIST( <89a:substring_name>) = SXML_T ("fr");
-* LE PROBLEME DISPARAIT
 
 *------------------------------------------------------------------------------
 
@@ -7562,8 +7547,6 @@ $LIST( <101:unsigned_arithmetic_constant>)
 {
   $LIST( <101:unsigned_arithmetic_constant>) = $LIST(<121c:array_size>);
 }    
-
-* [[SEMC_ADDED]] 
 
 *******************************************************************************
 
@@ -7930,8 +7913,6 @@ $LIST(<117b:segment_pointer>)
   $LIST(<117b:segment_pointer>) = $LIST(<88a:variable_or_array_element_name>);
 }
 
-* [[SEMC_ADDED]]
-
 *------------------------------------------------------------------------------
 
 <117b:segment_pointer>
@@ -7941,8 +7922,6 @@ $LIST(<117b:segment_pointer>)
 {
   $LIST(<117b:segment_pointer>) = $LIST(<121a:pointeurs_seq>);
 }
-
-* [[SEMC_ADDED]]
 
 *******************************************************************************
 
@@ -8036,8 +8015,6 @@ $LIST( <121a:pointeurs_seq>)
      $LIST (<121a:pointeurs_seq>'));
 }
 
-* [[SEMC_ADDED]] [[RULE_MODIFIED]]
-
 *------------------------------------------------------------------------------
 
 <121a:pointeurs_seq>
@@ -8045,12 +8022,10 @@ $LIST( <121a:pointeurs_seq>)
 
 $LIST( <121a:pointeurs_seq>)
 {
-  $LIST( <121a:pointeurs_seq>) = SXML_LL(
+  $LIST( <121a:pointeurs_seq>) = ast_list (
      $LIST (<88a:variable_or_array_element_name>),
      $LIST (<88a:variable_or_array_element_name>'));
 }
-
-* [[SEMC_ADDED]] [[RULE_MODIFIED]]
 
 *******************************************************************************
 
@@ -8066,8 +8041,6 @@ $LIST( <121c:array_size>)
   );
 }
 
-* [[SEMC_ADDED]]
-
 *------------------------------------------------------------------------------
 
 <121c:array_size>
@@ -8081,8 +8054,6 @@ $LIST( <121c:array_size>)
      $LIST (<121c:array_size>')
   );
 }
-
-* [[SEMC_ADDED]]
 
 *******************************************************************************
 
@@ -8133,8 +8104,6 @@ $LIST(<123:segment_operation>)
        $LIST(<123c:segini_args>));
 }
 
-* [[SEMC_ADDED]]
-
 *------------------------------------------------------------------------------
 
 <123:segment_operation> = SEGACT ,  <123e:segact_args> ;
@@ -8147,8 +8116,6 @@ $LIST(<123:segment_operation>)
        $LIST(<123e:segact_args>));
 }
 
-* [[SEMC_ADDED]]
-
 *------------------------------------------------------------------------------
 
 <123:segment_operation> = SEGDES ,  <123g:segdes_args> ;
@@ -8160,8 +8127,6 @@ $LIST(<123:segment_operation>)
        "SEGDES",
        $LIST(<123g:segdes_args>));
 }
-
-* [[SEMC_ADDED]]
 
 *------------------------------------------------------------------------------
 
@@ -8247,8 +8212,6 @@ $LIST(<123c:segini_args>)
          $LIST(<123d:segini_arg>));
 }
 
-* [[SEMC_ADDED]]
-
 *------------------------------------------------------------------------------
 
 <123c:segini_args>	= <123d:segini_arg> ;
@@ -8258,8 +8221,6 @@ $LIST(<123c:segini_args>)
    $LIST(<123c:segini_args>) = $LIST(<123d:segini_arg>);
 }
 
-* [[SEMC_ADDED]]
-
 *******************************************************************************
 
 <123d:segini_arg>	= <88a:variable_or_array_element_name> ;
@@ -8268,8 +8229,6 @@ $LIST(<123d:segini_arg>)
 {
    $LIST(<123d:segini_arg>) = $LIST(<88a:variable_or_array_element_name>);
 }
-
-* [[SEMC_ADDED]]
 
 *------------------------------------------------------------------------------
 
@@ -8283,8 +8242,6 @@ $LIST(<123d:segini_arg>)
          $LIST(<117b:segment_pointer>));
 }
 
-* [[SEMC_ADDED]]
-
 *******************************************************************************
 
 <123e:segact_args>	= <123e:segact_args> ,  <123f:segact_arg> ;
@@ -8296,8 +8253,6 @@ $LIST(<123e:segact_args>)
        $LIST(<123f:segact_arg>));
 }
 
-* [[SEMC_ADDED]]
-
 *------------------------------------------------------------------------------
 
 <123e:segact_args>	= <123f:segact_arg> ;
@@ -8307,8 +8262,6 @@ $LIST(<123e:segact_args>)
    $LIST(<123e:segact_args>) = $LIST(<123f:segact_arg>);
 }
 
-* [[SEMC_ADDED]]
-
 *******************************************************************************
 
 <123f:segact_arg>	= <123d:segini_arg> ;
@@ -8317,8 +8270,6 @@ $LIST(<123f:segact_arg>)
 {
    $LIST(<123f:segact_arg>) = $LIST(<123d:segini_arg>);
 }
-
-* [[SEMC_ADDED]]
 
 *******************************************************************************
 
@@ -8331,8 +8282,6 @@ $LIST(<123g:segdes_args>)
        $LIST(<123h:segdes_arg>));
 }
 
-* [[SEMC_ADDED]]
-
 *------------------------------------------------------------------------------
 
 <123g:segdes_args>	= <123h:segdes_arg> ;
@@ -8342,8 +8291,6 @@ $LIST(<123g:segdes_args>)
    $LIST(<123g:segdes_args>) = $LIST(<123h:segdes_arg>);
 }
 
-* [[SEMC_ADDED]]
-
 *******************************************************************************
 
 <123h:segdes_arg>	= <88a:variable_or_array_element_name> ;
@@ -8352,8 +8299,6 @@ $LIST(<123h:segdes_arg>)
 {
    $LIST(<123h:segdes_arg>) = $LIST(<88a:variable_or_array_element_name>);
 }
-
-* [[SEMC_ADDED]]
 
 *------------------------------------------------------------------------------
 
@@ -8366,8 +8311,6 @@ $LIST(<123h:segdes_arg>)
        $LIST(<88a:variable_or_array_element_name>),
        $LIST(<123j:mode>));
 }
-
-* [[SEMC_ADDED]]
 
 *------------------------------------------------------------------------------
 
@@ -8384,8 +8327,6 @@ $LIST(<123h:segdes_arg>)
       ));
 }
 
-* [[SEMC_ADDED]]
-
 *******************************************************************************
 
 <123i:modes>		= <123j:mode> ,  <123i:modes> ;
@@ -8397,8 +8338,6 @@ $LIST(<123i:modes>)
         $LIST(<123i:modes>'));
 }
 
-* [[SEMC_ADDED]]
-
 *------------------------------------------------------------------------------
 
 <123i:modes>		= <123j:mode> ;
@@ -8407,8 +8346,6 @@ $LIST(<123i:modes>)
 {
   $LIST(<123i:modes>) = $LIST(<123j:mode>);
 }
-
-* [[SEMC_ADDED]]
 
 *******************************************************************************
 
@@ -8421,8 +8358,6 @@ $LIST(<123j:mode>)
   	"MOD");
 }
 
-* [[SEMC_ADDED]]
-
 *------------------------------------------------------------------------------
 
 <123j:mode>		= NOMOD ;
@@ -8434,8 +8369,6 @@ $LIST(<123j:mode>)
   	"NOMOD");
 }
 
-* [[SEMC_ADDED]]
-
 *------------------------------------------------------------------------------
 
 <123j:mode>		= MRU ;
@@ -8446,8 +8379,6 @@ $LIST(<123j:mode>)
   	LOCATION(0),
   	"MRU");
 }
-
-* [[SEMC_ADDED]]
 
 *******************************************************************************
 

@@ -40,9 +40,8 @@
 
 * ENTRY POINT USED BY THE LOOK-AHEAD MECANISM
 
-*<0:F77>	= !DO  =  <78:int_real_dp_expr> , ;
-* (pb) : changed by
-<0:F77>		= !DO  <110b:label_ref>  <99:symbolic_name>  =  <40b:do_parameters> ;
+* %EOL is added after <40b:do_parameters> not to change its right-context (EOF is not valid)
+<0:F77>		= !DO  <110b:label_ref>  <99:symbolic_name>  =  <40b:do_parameters> %EOL ;
 
 *------------------------------------------------------------------------------
 
@@ -50,7 +49,7 @@
 
 * [[EXTENSION]] (loop without label)
 
-<0:F77>		= !DO  <99:symbolic_name>  =  <40b:do_parameters> ;
+<0:F77>		= !DO  <99:symbolic_name>  =  <40b:do_parameters> %EOL ;
 
 *------------------------------------------------------------------------------
 
@@ -133,6 +132,13 @@
 <2a:end_statement>
 		= END
 		  ~COL(1)~ ;
+
+*------------------------------------------------------------------------------
+
+* [[EXTENSION]] When needed, the lexical post-action @7 generates upon EOF this dummy <2a:end_statement>
+
+<2a:end_statement>
+		= !END ;
 
 *******************************************************************************
 

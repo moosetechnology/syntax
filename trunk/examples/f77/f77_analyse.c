@@ -89,7 +89,7 @@ static char ME [] = "f77_analyse.c";
 #include "f77_td.h"
 #include <ctype.h>
 
-char WHAT_F77ANALYSE[] = "@(#)SYNTAX - $Id: f77_analyse.c 4506 2024-11-01 22:40:46Z garavel $";
+char WHAT_F77ANALYSE[] = "@(#)SYNTAX - $Id: f77_analyse.c 4514 2024-11-21 15:19:11Z garavel $";
 
 /* Il faudrait INTERDIRE l'insertion d'un EOL par le rattrapage d'erreur
    du scanner. Utiliser sxs_srcvr? */
@@ -3276,7 +3276,6 @@ this expression is erased.",
 	    /* Si OK on rend "do [%SXINT] %id". */
 	    /* On ne change rien dans le mode du scanner. */
 	    SXINT		      head;
-	    short                     *last_buffer_ptr;
 	    struct sxsrcmngr	      prev_sxsrcmngr;
 	    struct sxscan_mode        old_scan_mode;
 	    struct sxtoken	      TOK, TOK1;
@@ -3293,19 +3292,21 @@ this expression is erased.",
 	    /* Le "mode" actuel du scanner */
 	    old_scan_mode = sxsvar.sxlv.mode;
 	    sxsvar.sxlv.mode = scan_mode_withmess;
-	    /*  on change le eol de fin de buffer en eof pour restreindre parse_in_la
+
+	    /*  on ajoute après le eol de fin de buffer un eof pour restreindre parse_in_la
 		à rester sur la ligne logique courante */
-	    last_buffer_ptr = sxsrcmngr.buffer + sxsrcmngr.bufused;
-		
-	    if (*last_buffer_ptr != SXNEWLINE) {
+	    if (sxsrcmngr.buffer [sxsrcmngr.bufused] != SXNEWLINE) {
 	      /* Si ça se produit dans la vraie vie, ça veut dire que le token_manager a déjà eu besoin de ce
 		 caractère et que le token %EOL a déjà été fabriqué et que c'est donc lui qu'il faudrait changer
 		 en %EOF!! En fait il faudrait une détection plus fine (est-on bien dans le même buffer que DO?) */
 	      sxtrap (ME, "sxscanner_action (before sxparse_in_la call for a DO stmt");
 	    }
     
-	    *last_buffer_ptr = EOF; /* caractère eof */
-	      
+	    /* On met un EOF après le %EOL (il y a toujours la place) */
+	    /* ... car on ne veut pas que EOF soit (syntaxiquement) un suivant valide du dernier token d'un
+	       do-statement. */
+	    sxsrcmngr.bufcoords [sxsrcmngr.bufused+1] = sxsrcmngr.bufcoords [sxsrcmngr.bufused];
+	    sxsrcmngr.buffer [++sxsrcmngr.bufused] = EOF; /* caractère eof */ /* f77_next_char () doit pouvoir l'atteindre */	      
 	    /* On découpe le token *PTOK : str = "DO[int]id" en DO [ENTIER_t] et ID_t. */
 	    /* On se souvient du token */
 	    tt [0] = *PTOK;
@@ -3404,20 +3405,22 @@ this expression is erased.",
 	    /* On remet en état */
 	    /* ... le mode du scanner */
 	    sxsvar.sxlv.mode = old_scan_mode;
-	    /* sxsrcmngr.current_char contient le caractère eof, on y remet EOL pour être propre (dans tous les cas) */
-	    *last_buffer_ptr = SXNEWLINE;
 
 	    if (is_do_stmt) {
 	      /* C'est un do_stmt (sans correction) */
 	      /* Dans ce cas (pas d'erreur) on recommence toute
 		 l'analyse car ce coup-ci, il faut exécuter les parsact/semact. */
 	      /* En revanche, on conserve les tokens lus (donc aucune erreur
-		 ne sera détectée dans cette partie). Il faut cependant rechanger le token bidon EOF en EOL. */
-	      SXGET_TOKEN (tok_no).lahead = EOL_t;
+		 ne sera détectée dans cette partie). */
+	      /* Il faut cependant supprimer le token bidon EOF. */
+	      sxplocals.Mtok_no = tok_no-1; /* Le dernier token devient le %EOL */
 	      /* prudence, il se peut qu'il y ait eu plusieurs tokens EOF de fabriqués, on les supprime (ils seront écrasés) */
-	      sxplocals.Mtok_no = tok_no;
-	      sxsrcmngr.current_char = SXNEWLINE;
-	      /* On lit le 1er caractère de la ligne suivante car le eof ne l'a pas fait!! */
+	      /* On ne relit pas le source, pas d'appel à restore_sxsrcmngr () */
+	      /* ... globalement sxsrcmngr est bon, excepté qu'on a lu eof qui n'existe pas dans la vraie vie!! */
+	      sxsrcmngr.current_char = SXNEWLINE; /* On doit avoir sxsrcmngr.previous_char == SXNEWLINE */
+	      sxsrcmngr.bufindex--; /* ... et on simule que la denière lecture est celle du EOL */
+	      sxsrcmngr.bufused--; /* On rend le EOF inaccessible */
+	      /* On lit (manuellement) le 1er caractère de la ligne suivante (à la place du eof bidon lu!!) */
 	      f77_next_char ();
 
 	      if (str1 == str /* pas de label => DO-LOOP (cas 3) */)
@@ -3432,7 +3435,7 @@ this expression is erased.",
 	      *PTOK = TOK;
 	      *PTOK1 = TOK1;
 	      sxplocals.Mtok_no = Mtok_no+1;
-	      /* On remet le source "en place" */
+	      /* On remet le source "en place", on va tout relire */
 	      source_line_head = head;
 	      sxsrcmngr = prev_sxsrcmngr;
 	      /* ... et on laisse l'analyse normale relire les tokens suivants */
@@ -5329,8 +5332,8 @@ This one, and all others in the sequel, are converted into the corresponding upp
 	if (SXGET_TOKEN (sxplocals.Mtok_no).lahead != EOL_t ||
 	    SXGET_TOKEN (sxplocals.Mtok_no-1).lahead != END_t) {
 	  if (is_extension) {
-	       /* on insère END %EOL devant EOF... */
-	       sxsvar.sxlv.terminal_token.lahead = END_t;
+	       /* on insère !END (le zombie de END) %EOL devant EOF... */
+	       sxsvar.sxlv.terminal_token.lahead = END_EP_t;
 	       f77put_token (sxsvar.sxlv.terminal_token);
 	       sxsvar.sxlv.terminal_token.lahead = EOL_t;
 	       f77put_token (sxsvar.sxlv.terminal_token);
