@@ -6,4 +6,4 @@ C       INTEGER LONG
 C    ENDSEGMENT
 
       SEGMENT , SEGM(LONG)
-      ENDSEGMENT
+      END
