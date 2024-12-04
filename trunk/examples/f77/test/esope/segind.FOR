@@ -1,2 +1,0 @@
-      SEGIND M3CP=CHARA, CHAINE
-      END

@@ -1,2 +1,0 @@
-      POINTEUR foo.bar
-      end
