@@ -2407,3 +2407,22 @@ SXML_TYPE_LIST ast_segdes_argument_parametrized(
       )
   );
 }
+
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_segment_implicit_variable(
+              SXML_TYPE_LIST location,
+              SXML_TYPE_LIST variable,
+              SXML_TYPE_LIST implicit_type
+              ) {
+  
+    return JSON_MAP(
+      SXML_LTLL(
+        ast_abstract_statement("segment_implicit_variable", location),
+        ",\n", 
+        JSON_KU_("variable", variable),
+        JSON_KU("implicit_type", implicit_type)
+      )
+  );
+}

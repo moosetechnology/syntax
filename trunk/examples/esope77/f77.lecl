@@ -10,7 +10,7 @@ Abbreviations
 
 Zombies
    -- these are "dummy" tokens", with no lexical specification, but useful
-   "!DO", %ENDDO, "!FORMAT", BACKSPACEkw, ENDFILEkw, REWINDkw, READkw, "!DEAD_END", "!END";
+   "!DO", %ENDDO, "!FORMAT", BACKSPACEkw, ENDFILEkw, REWINDkw, READkw, "!END";
 
 Tokens
    %label	= DIGIT &0    -- colonne entre 1 et 5?
@@ -95,16 +95,14 @@ Tokens
    format_kw	= (UPPER&Is_Set(0) | LOWER&Is_Set(0) @6) ;
 
    "."		= Union
-			ending_dot : "." id "."&True ; @11 ;
-				     -- Reconnait les mots-clefs logiques ou relationnels en premier
-				     -- (Ex : .EQ.)
-				     -- Sinon @11 décompose "." id "." en "." %symbolic_name et remet le '.'
-				     -- terminal dans le source
-							  
-			without_ending_dot :  "." id ; @10 ;
-				     -- @10 décompose ". {LETTER}+" en "." %symbolic_name
+			kw_or_dot : "." @10 id ["."&True -- Pour les mots-clés
+						|"*"|"=" -- Contextes droits spécifiques à id
+					       ] ; @11 ;
+			-- Reconnait les mots-clefs logiques ou relationnels en premier (Ex : .EQ.)
+			-- Sinon @11 remet le source manager dans l'état où il était en @10
+			-- Le "." de gauche est reconnu (pointeur), le contexte droit (id ["."]) sera lu deux fois 
 				Priority Shift > Reduce ;
-
+							  
 			in_a_format : -"." &Is_set(0) ;
 		  End;
    
@@ -113,3 +111,9 @@ Tokens
 			       -- [ <123c:mode> | ( <123c:mode> , <123c:mode> { , <123c:mode> } ) ]
 			       -- On positionne star_flag_mode_tok_no
 
+   old_seg_kw_type
+		= "*"&Is_Set(2) (UPPER | LOWER @6) [UPPER | LOWER @6 | digit] ;
+		  	       -- Si le * suit "SEGMENT /"
+			       -- On reconnait un mot-clé désignant un type, par exemple "*R8" dans
+			       -- SEGMENT /myptr/ (..., X*R8, ...)
+			       

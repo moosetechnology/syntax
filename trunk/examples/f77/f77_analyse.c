@@ -89,7 +89,7 @@ static char ME [] = "f77_analyse.c";
 #include "f77_td.h"
 #include <ctype.h>
 
-char WHAT_F77ANALYSE[] = "@(#)SYNTAX - $Id: f77_analyse.c 4514 2024-11-21 15:19:11Z garavel $";
+char WHAT_F77ANALYSE[] = "@(#)SYNTAX - $Id: f77_analyse.c 4529 2024-12-02 19:02:20Z garavel $";
 
 /* Il faudrait INTERDIRE l'insertion d'un EOL par le rattrapage d'erreur
    du scanner. Utiliser sxs_srcvr? */
@@ -1041,7 +1041,7 @@ static void print_sxsvar (void)
   print_tok (&(sxsvar.sxlv.terminal_token));
       
   fprintf (stdout,
-	   "sxsvar.sxlv.terminal_token.previous_char = '%c'_0x%x",
+	   "sxsvar.sxlv.previous_char = '%c'_0x%x",
 	   sxsvar.sxlv.previous_char,
 	   (unsigned short)sxsvar.sxlv.previous_char);
 }
@@ -1152,8 +1152,9 @@ static void get_next_source_item_from_stmts (void)
 static void put_source_item (void)
 {
     if (++source_line->bufused >= source_line->buflength) {
-	source_line->buffer = (short*) sxrealloc (source_line->buffer, source_line->buflength *= 2, sizeof (short));
-	source_line->bufcoords = (struct sxsource_coord*) sxrealloc (source_line->bufcoords, source_line->buflength,
+        /* On se laisse une marge de 1 afin de pouvoir toujour ajouter un caractère sans vérification */
+        source_line->buffer = (short*) sxrealloc (source_line->buffer, (source_line->buflength *= 2)+1, sizeof (short));
+	source_line->bufcoords = (struct sxsource_coord*) sxrealloc (source_line->bufcoords, source_line->buflength+1,
 								  sizeof (struct sxsource_coord));
     }
 
@@ -1714,7 +1715,30 @@ static struct sxsource_coord *get_source_index (struct sxsource_coord *coord,
 #define	LOCALBUFLENGTH	256	/* Smallest buffer allocated */
 #endif
 
+static struct sxsource_coord sxsrcmngr_source_coord;
+static short                 sxsrcmngr_previous_char;
+static short                 sxsrcmngr_current_char;
+static SXINT                 sxsrcmngr_bufused;
+static SXINT                 sxsrcmngr_bufindex;
 
+/* Attention : on ne store/restore pas buflength car si le buffer de sxsrcmngr 
+   a changé (longueur, emplacement, ...) on conserve cette nouvelle def */
+
+static void restore_sxsrcmngr (void) {
+     sxsrcmngr.source_coord = sxsrcmngr_source_coord;
+     sxsrcmngr.previous_char = sxsrcmngr_previous_char;
+     sxsrcmngr.current_char = sxsrcmngr_current_char;
+     sxsrcmngr.bufused = sxsrcmngr_bufused;
+     sxsrcmngr.bufindex = sxsrcmngr_bufindex;
+}
+
+static void save_sxsrcmngr (void) {
+     sxsrcmngr_source_coord = sxsrcmngr.source_coord;
+     sxsrcmngr_previous_char = sxsrcmngr.previous_char;
+     sxsrcmngr_current_char = sxsrcmngr.current_char;
+     sxsrcmngr_bufused = sxsrcmngr.bufused;
+     sxsrcmngr_bufindex = sxsrcmngr.bufindex;
+}
 
 /* Acces au caractere suivant */
 
@@ -1946,8 +1970,9 @@ void	f77_src_mngr (SXINT what, FILE *infile, char *file_name)
   switch (what) {
   case SXINIT:
     for (i = 0; i < SOURCE_BUF_SIZE; i++) {
-      source_lines [i].buffer = (short*) sxalloc (source_lines [i].buflength = LOCALBUFLENGTH, sizeof (short));
-      source_lines [i].bufcoords = (struct sxsource_coord*) sxalloc (LOCALBUFLENGTH, sizeof (struct sxsource_coord));
+      /* On se laisse une marge de 1 afin de pouvoir toujour ajouter un caractère sans vérification */
+      source_lines [i].buffer = (short*) sxalloc ((source_lines [i].buflength = LOCALBUFLENGTH)+1, sizeof (short));
+      source_lines [i].bufcoords = (struct sxsource_coord*) sxalloc (LOCALBUFLENGTH+1, sizeof (struct sxsource_coord));
       source_lines [i].bufused = 0; /* Les buffers sont vides */
     }
 
@@ -1972,8 +1997,6 @@ void	f77_src_mngr (SXINT what, FILE *infile, char *file_name)
 
     for (i = Xlast_kind; i > 0; i--)
       extension_already_seen [i] = false;
-
-    head_tok_no = 0;
 
     /* Initialisation */
     varstr_catchar (stmts.string, SXNEWLINE); /* On suppose que toute nouvelle carte est précédée d'un EOL */
@@ -2367,12 +2390,15 @@ static SXINT seek_kw (char *string)
       /* Attention, avec l'extension du <do_statement>, on peut ne plus avoir de label et l'entête peut être
 	 DO  <99:symbolic_name>
 	 donc un "DOi" de longueur 3 */
-	if (strlen (string) > 3) {
-	    c = string [2];
-	    i = c == 'U' ? DOUBLEPRECISION_p : (c == 'M' ? DIMENSION_p : (c == 'T' ? DATA_p : DO_p));
-	}
-	else if (strlen (string) == 3 && string [1] == 'O') {
-	    i = DO_p;
+	if (strlen (string) >= 3) {
+	  if (string [1] == 'O') {
+	    /* DO_p ou DOUBLEPRECISION_p ? */
+	    /* PB : "DO UBLEPRECISION... = 1" */
+	    /* dans ces 2 cas on rend DO, si ce n'est pas un <do_statement>, on testera le cas DOUBLEPRECISION + tard */
+	      return DO_p;
+	  }
+
+	  i = (string [2] == 'M' ? DIMENSION_p : DATA_p);
 	}
 
 	break;
@@ -2399,8 +2425,8 @@ static SXINT seek_kw (char *string)
 
     case 'I': /* INTEGER or IMPLICIT or INTRINSIC */
 	if (strlen (string) > 6) {
-	    c = string [3];
-	    i = c == 'E' ? INTEGER_p : (c == 'L' ? IMPLICIT_p : INTRINSIC_p);
+	    c = string [6];
+	    i = c == 'R' ? INTEGER_p : (c == 'I' ? IMPLICIT_p : (c == 'S' ? INTRINSIC_p : UNKNOWN_p));
 	}
 
 	break;
@@ -2415,8 +2441,8 @@ static SXINT seek_kw (char *string)
 
     case 'P': /* PRINT or PAUSE or PROGRAM */
 	if (strlen (string) > 4) {
-	    c = string [2];
-	    i = c == 'I' ? PRINT_p : (c == 'U' ? PAUSE_p : PROGRAM_p);
+	    c = string [1];
+	    i = c == 'R' ? (string [2] == 'I' ? PRINT_p : PROGRAM_p) : (c == 'A' ? PAUSE_p : UNKNOWN_p);
 	}
 
 	break;
@@ -2432,9 +2458,10 @@ static SXINT seek_kw (char *string)
     case 'S': /* STOP or SAVE or SUBROUTINE */
 	if (strlen (string) > 3) {
 	    c = string [1];
-	    i = c == 'T' ? STOP_p : (c == 'A' ? SAVE_p : SUBROUTINE_p);
+	    i = c == 'T' ? STOP_p
+		         : (c == 'A' ? SAVE_p
+			             : (c == 'U' ? SUBROUTINE_p : UNKNOWN_p));
 	}
-
 	break;
 
     case 'U': /* UNDEFINED */
@@ -2467,14 +2494,23 @@ static bool check_for_a_lhs (SXINT tok_no)
        On en profite pour regarder si tok_no est un iokw.
        On a tok_no == sxplocals.Mtok_no
     */
-    SXINT lahead = sxget_token (tok_no + 1)->lahead;
+    SXINT lahead;
     bool  ret_val;
 #if EBUG
     SXINT ini_tok_no = tok_no;
 #endif
 
-    if (lahead == LEFTP_t) {
-	 switch (SXGET_TOKEN (tok_no).lahead) {
+#if EBUG
+    fprintf (stdout,
+	     "########################## Entering check_for_a_lhs (tok_no = %ld) ##########################",
+	     (SXINT) tok_no);
+    print_toks_buf (tok_no, tok_no);
+#endif
+
+    lahead = SXGET_TOKEN (tok_no).lahead;
+
+    if (sxget_token (tok_no + 1)->lahead == LEFTP_t) {
+	 switch (lahead) {
 	 case BACKSPACE_t:
 	 case CLOSE_t:
 	 case ENDFILE_t:
@@ -2495,6 +2531,10 @@ static bool check_for_a_lhs (SXINT tok_no)
 
     for (;;) /* Pour avoir un point de sortie unique de la fonction */
     {
+	 /* tok_no/lahead repèrent un id */
+	 lahead = sxget_token (tok_no+1)->lahead;
+	 /* lahead repère ce qui suit un id */
+
 	 if (lahead == LEFTP_t) {
 	      if (!check_balanced (&tok_no)) {
 		   is_iokw_allowed = false;
@@ -2502,8 +2542,7 @@ static bool check_for_a_lhs (SXINT tok_no)
 		   break;
 	      }
 
-	      /* Ici "id (...)" */
-
+	      /* Ici "id (...)" et tok_no repère la ")" */
 	      lahead = sxget_token (tok_no + 1)->lahead;
 
 	      if (lahead == EGAL_t) {
@@ -2525,11 +2564,20 @@ static bool check_for_a_lhs (SXINT tok_no)
 		   break;
 	      }
 
-	      /* Ici "id (...)(...) : substring name" */
-	      lahead = sxget_token (++tok_no)->lahead;
+	      /* Ici "id (...)(...)" : substring name et tok_no repère la ")" de droite */
+	      lahead = sxget_token (tok_no+1)->lahead;
 	 }
 
-	 ret_val = (lahead == EGAL_t);
+	 tok_no++; /* lahead/tok_no repère ce qui suit un [array_/substring_]name */
+
+	 if (lahead == EGAL_t) {
+	      /* "id ... =" : lhs */
+	      ret_val = true;
+	      break;
+	 }
+
+	 /* ... on boucle */
+	 ret_val = false;
 	 break;
     }
 
@@ -2786,6 +2834,14 @@ static bool check_IMPLICIT_stmt ()
 
   kw = seek_kw (str);
 
+  if (kw == DO_p) {
+       /* On regarde si ce n'est pas en fait DOUBLE PRECISION */
+       if (strncmp (str, "DOUBLEPRECISION", strlen ("DOUBLEPRECISION")) == 0) {
+	    /* En fait on est sur "IMPLICIT DOUBLE PRECISION" */
+	    kw = DOUBLEPRECISION_p;
+       }
+  }
+
   if (str [kw_lgth [kw]] != SXNUL)
       /* L'ID_t str etait de la forme "IMPLICITINTEGERblabla" => id, donc on ne fait rien!! */
     return false;
@@ -2899,7 +2955,7 @@ static bool check_IMPLICIT_stmt ()
 }
 
 
-static void process_initial_id (SXINT Mtok_no)
+static void process_initial_id (SXINT Mtok_no, bool is_a_lhs)
 {
     /* L'ident situe en Mtok_no est en debut d'instruction.
        On sait que ce n'est pas le debut d'un IMPLICIT statement
@@ -2913,6 +2969,7 @@ static void process_initial_id (SXINT Mtok_no)
     SXINT	lahead;
     SXINT	tok_no, strlgth, kw, l, kw_nb;
     struct sxtoken	tt [3];
+    bool        insert_a_token = false, extract_int_id = false, check_doubleprecision = false;
 
 #if EBUG
     SXINT	left_tok_no;
@@ -2920,8 +2977,9 @@ static void process_initial_id (SXINT Mtok_no)
     left_tok_no = Mtok_no;
 
     fprintf (stdout,
-	     "**************** Entering process_initial_id (after_logical_if = %s) ****************\n",
-	     after_logical_if ? "TRUE" : "FALSE");
+	     "**************** Entering process_initial_id (after_logical_if = %s, is_a_lhs = %s) ****************\n",
+	     after_logical_if ? "TRUE" : "FALSE",
+    	     is_a_lhs ? "TRUE" : "FALSE");
     print_toks_buf (left_tok_no, sxplocals.Mtok_no);
 #endif
 
@@ -2973,24 +3031,9 @@ static void process_initial_id (SXINT Mtok_no)
 	/* On retourne 2 tokens pour BLOCK DATA  */
 	lahead = DATA_t;
 	l = 5;
+	insert_a_token = true;
+	break;
 
-insert_a_token:
-	/* On change le %symbolic_name en kw */
-	PTOK->lahead = kw_codes [kw]; /* code des préfixes */
-	PTOK->string_table_entry  = SXEMPTY_STE;
-
-	/* On prépare l'insertion du 2ème kw */
-	tt [0].lahead = lahead;
-	tt [0].string_table_entry = SXEMPTY_STE;
-	tt [0].source_index =
-	    *get_source_index (&(PTOK->source_index), l);
-	tt [0].comment = NULL;
-	sxtknmdf (&(tt [0]), 1, Mtok_no+1, 0);
-	/* l doit indiquer le decalage depuis le debut de Mtok_no. */
-	l = kw_lgth [kw]; /* str et l représentent le kw total */
-	kw_nb = 2; /* nb de kw effectif */
-	goto extract_id_int;
-	
     case ELSEIF_p:
     case ENDDO_p: /* [[EXTENSION]] */
     case ENDIF_p:
@@ -3108,50 +3151,41 @@ a CONTINUE statement is gracefully inserted here.",
 	  lahead = IF_t;
 	  l = (kw == ELSEIF_p) ? 4 : 3;
 	}
-
-        goto insert_a_token;
+	insert_a_token = true;
+	break;
 
     case GOTO_p :
         /* str est de la forme "GOTO(label|(|variable_name)=> ... */
 	/* ...on retourne 2 tokens pour GO TO  */
 	lahead = TO_t;
 	l = 2;
-	goto insert_a_token;
+	insert_a_token = true;
+	break;
+
+    case DOUBLEPRECISION_p:
+	 /* Ce case ne peut (normalement) etre atteint par ici, il l'est dorenavant par l'intermédiaire du "case DO_p:" */
+	 sxtrap (ME, "process_initial_id for \"DOUBLE PRECISION\"");
+	 break;
 
     case CHARACTER_p:
     case COMPLEX_p:
-    case DOUBLEPRECISION_p:
     case INTEGER_p:
     case LOGICAL_p:
     case REAL_p:
 	PTOK->lahead = kw_codes [kw];
 	PTOK->string_table_entry  = SXEMPTY_STE;
-
-	if (kw == DOUBLEPRECISION_p) {
-	    /* On retourne 2 tokens pour DOUBLE PRECISION  */
-	    tt [0].lahead = PRECISION_t;
-	    tt [0].string_table_entry = SXEMPTY_STE;
-	    tt [0].source_index =
-		*get_source_index (&(PTOK->source_index), 6);
-	    tt [0].comment = NULL;
-	    sxtknmdf (&(tt [0]), 1, Mtok_no+1, 0);
-	    /* l doit indiquer le decalage depuis le debut de Mtok_no. */
-	    l = 15;
-	    kw_nb = 2; /* nb de kw effectif */
-	    tok_no = Mtok_no+1;
-	}
-	else {
-	    l = kw_lgth [kw];
-	    kw_nb = 1; /* nb de kw effectif */
-	    tok_no = Mtok_no;
-	}
+	l = kw_lgth [kw];
+	kw_nb = 1; /* nb de kw effectif */
+	tok_no = Mtok_no;
 	
 	if (check_FUNCTION (str, strlgth, l, tok_no)) {
 	    is_function_stmt = true;
 	    break;
 	}
 	
-	goto extract_id_int;
+	extract_int_id = true;
+
+	break;
 	
     case FUNCTION_p :
 	is_function_stmt = true;
@@ -3180,43 +3214,7 @@ a CONTINUE statement is gracefully inserted here.",
 	PTOK->string_table_entry  = SXEMPTY_STE;
 	l = kw_lgth [kw];
 	kw_nb = 1; /* nb de kw effectif */
-
-    extract_id_int:
-	str += l; /* On saute le(s) kw */
-
-	if (*str != SXNUL) {
-	    /* Il reste qqchose derrière le/les kw que l'on vient d'insérer */
-	    if (kw == RETURN_p && program_unit_kind == FUNCTION_SUBPROGRAM) {
-		/* alterate return in a FUNCTION */
-		SXINT eol_tok_no;
-
-		sxerror (*get_source_index (&(PTOK->source_index), l),
-			 sxsvar.sxtables->err_titles [2][0] /* error */,
-			 "%sAn alternate return is not allowed in a function subprogram,\n\
-this expression is erased.",
-			 sxsvar.sxtables->err_titles [2]+1 /* error */);
-		eol_tok_no = Mtok_no;
-
-		while (sxget_token (++eol_tok_no)->lahead != EOL_t);
-
-		if (eol_tok_no -= Mtok_no + 1)
-		    sxtknmdf (NULL, 0, Mtok_no + kw_nb, eol_tok_no);
-	    }
-	    else {
-		/* On extrait le suffixe qu'on insere ds le flot de tokens */
-		tt [0].lahead = isdigit (*str) ? ENTIER_t : ID_t;
-		tt [0].string_table_entry = sxstrsave (str);
-		tt [0].source_index = *get_source_index (&(PTOK->source_index), l);
-		tt [0].comment = NULL;
-		/* Attention check_for_a_lhs a lu le token suivant et peut-être beaucoup d'autres */
-
-		if (tt [0].lahead == ID_t)
-		    check_id (&(tt [0]));
-
-		sxtknmdf (&(tt [0]), 1, Mtok_no + kw_nb, 0);
-	    }
-	}
-
+	extract_int_id = true;
 	break;
 	
     case DO_p  :
@@ -3238,7 +3236,9 @@ this expression is erased.",
 	  str += strlen ("DO");
 	  str1 = skip_an_int (str);
 
-	  PTOK1 = &(SXGET_TOKEN (Mtok_no + 1)); /* safe */ /* VIRGULE_t, EGAL_t ou LEFTP_t */
+	  PTOK1 = &(SXGET_TOKEN (Mtok_no + 1)); /* safe */
+	  /* PTOK1 == VIRGULE_t, EGAL_t ou LEFTP_t (ou STAR_t)
+	     ou même EOL_t dans le cas DOUBLE PRECISION id */
 
 	  if (str1 > str
 	      && *str1 == SXNUL
@@ -3276,14 +3276,13 @@ this expression is erased.",
 	    /* Si OK on rend "do [%SXINT] %id". */
 	    /* On ne change rien dans le mode du scanner. */
 	    SXINT		      head;
-	    struct sxsrcmngr	      prev_sxsrcmngr;
 	    struct sxscan_mode        old_scan_mode;
 	    struct sxtoken	      TOK, TOK1;
 
 	    /* aucune modif sur sxsvar.sxlv_s.counters (aucune analyse lexicale particulière sur l'instruction DO) */
 	    /* On memorise où on en est dans le source (si on doit repartir d'ici). */
 	    head = source_line_head; /* No de buffer */
-	    prev_sxsrcmngr = sxsrcmngr;
+	    save_sxsrcmngr (); /* On ne sauve que les variables essentielles */
 
 	    /* PTOK et PTOK1 pointent sur ID_t et EGAL_t, on mémorise ces tokens au cas où do... n'est pas une do loop */
 	    TOK = *PTOK;
@@ -3351,8 +3350,6 @@ this expression is erased.",
 	      sxtrap (ME, "Illegal recursive call of sxparse_in_la.");
 
 	    {
-	      SXUINT local_errors_nb, global_errors_nb;
-
 	      /* Si, pendant sxparse_in_la on détecte une erreur que l'on peut corriger, on sort le message d'erreur
 		 à ce moment puis, au retour, on conservera les tokens corrigés.  L'analyse normale les utilisera et
 		 ça devrait bien se passer tout en exécutant en plus les actions sémantiques éventuelles.
@@ -3367,19 +3364,22 @@ this expression is erased.",
 		 cette correction validant le source comme étant une do loop!!
 		 Maintenant, s'il y a eu une détection d'erreur dans sxparse_in_la, ce n'est pas une do loop
 	      */
-	      local_errors_nb = sxplocals.mode.local_errors_nb;
-	      global_errors_nb = sxplocals.mode.global_errors_nb;
+	      /* dans sxparse_in_la
+		 on va uniquement (éventuellement) incrémenter do_parse_mode_noerr.mode.global_errors_nb
+		 On n'exécute pas de traitement d'erreur car kind == SXWITHOUT_ERROR */
 	      we_are_in_parse_in_la = true;
-	      is_do_stmt = sxparse_in_la (DO_EP_t, Mtok_no, &tok_no, &do_parse_mode_noerr /* détection mais aucun traitement des erreurs */);
+	      is_do_stmt = sxparse_in_la (DO_EP_t, Mtok_no, &tok_no,
+ 					  &do_parse_mode_noerr /* détection mais aucun traitement des erreurs */);
+	      /* is_do_stmt == true <=> pas de détection d'erreur */
+	      /* Dans tous les cas sxplocals.mode n'a pas été touché */
+	      /* ... en revanche do_parse_mode_noerr.global_errors_nb a pu l'être ssi is_do_stmt == false */
 	      we_are_in_parse_in_la = false;
 	      /* Remarque, le %EOL de la fin de carte logique n'a pas été rencontré et donc @3 non exécutée.*/
 
-	      if (sxplocals.mode.local_errors_nb > local_errors_nb || sxplocals.mode.global_errors_nb > global_errors_nb) {
-		is_do_stmt = false;
-		/* Les erreurs de la branche do loop doivent être oubliées */
-		sxplocals.mode.local_errors_nb = local_errors_nb;
-		sxplocals.mode.global_errors_nb = global_errors_nb;
-	      }
+	      /* Il faut bien voir ici que do_parse_mode_noerr.global_errors_nb > 0 n'indique pas une erreur
+		 (de syntaxe) mais uniquement qu'une construction de la forme DO... n'est pas un do-statement */
+	      /* Au cas où ... */
+	      do_parse_mode_noerr.global_errors_nb = 0;
 	    }	    
 
 		
@@ -3414,7 +3414,6 @@ this expression is erased.",
 		 ne sera détectée dans cette partie). */
 	      /* Il faut cependant supprimer le token bidon EOF. */
 	      sxplocals.Mtok_no = tok_no-1; /* Le dernier token devient le %EOL */
-	      /* prudence, il se peut qu'il y ait eu plusieurs tokens EOF de fabriqués, on les supprime (ils seront écrasés) */
 	      /* On ne relit pas le source, pas d'appel à restore_sxsrcmngr () */
 	      /* ... globalement sxsrcmngr est bon, excepté qu'on a lu eof qui n'existe pas dans la vraie vie!! */
 	      sxsrcmngr.current_char = SXNEWLINE; /* On doit avoir sxsrcmngr.previous_char == SXNEWLINE */
@@ -3437,7 +3436,7 @@ this expression is erased.",
 	      sxplocals.Mtok_no = Mtok_no+1;
 	      /* On remet le source "en place", on va tout relire */
 	      source_line_head = head;
-	      sxsrcmngr = prev_sxsrcmngr;
+	      restore_sxsrcmngr ();
 	      /* ... et on laisse l'analyse normale relire les tokens suivants */
 	    }
 	  }
@@ -3477,7 +3476,7 @@ this expression is erased.",
 	    }	    
 	  }
 	  else
-	    /* Ici l'id à la forme "do ...", et n'est pas un <do_statement> on ne change donc rien (on a un %id) */
+	    /* Ici l'id à la forme "do ...", et n'est pas un <do_statement> */
 	    is_do_stmt = false;
 
 	  if (is_do_stmt) {
@@ -3529,10 +3528,14 @@ a CONTINUE statement is gracefully inserted here.",
 	    /* on met à jour la do_stack */
 	    do_stack_mngr_push (str1 == str ? -1 : get_int_val (str), &(PTOK->source_index));
 	  }
+	  else {
+	       /* "do..." ce n'est pas un do stmt, on retourne donc sans rien changer... */
+	       /* ... sauf si on est dans le cas DOUBLEPRECISION[*len]id */
+	       /* ... on peut être en lhs */
+	       check_doubleprecision = (!is_a_lhs && strlgth >= (SXINT)strlen ("DOUBLEPRECISION"));
+	  }
 	}
-	/* else
-	   "do" ce n'est pas un do stmt, on retourne donc sans rien changer */
-	
+
 	break;
 	
 	
@@ -3545,7 +3548,88 @@ a CONTINUE statement is gracefully inserted here.",
 	break;
     }
     
+    if (check_doubleprecision) {
+	 /* initial_id est de la forme doblabla, ce n'est pas un do_statement, et sa longueur est suffisante pour etre
+	  un doubleprecision */
+	 /* On regarde si c'est le debut d'un <20:type_statement> de la forme doubleprecision ... */
+	 if (strncmp (str, "UBLEPRECISION", strlen ("UBLEPRECISION")) == 0) {
+	      /* On retourne 2 tokens pour DOUBLE PRECISION  */
+	      PTOK->lahead = DOUBLE_t;
+	      PTOK->string_table_entry  = SXEMPTY_STE;
+	      tt [0].lahead = PRECISION_t;
+	      tt [0].string_table_entry = SXEMPTY_STE;
+	      tt [0].source_index =
+		   *get_source_index (&(PTOK->source_index), strlen ("DOUBLE"));
+	      tt [0].comment = NULL;
+	      sxtknmdf (&(tt [0]), 1, Mtok_no+1, 0);
+	      str -= strlen ("DO"); /* On repointe vers le debut */
+	      /* l doit indiquer le decalage depuis le debut de Mtok_no. */
+	      l = strlen ("DOUBLEPRECISION");
+	      kw_nb = 2; /* nb de kw effectif */
+	      tok_no = Mtok_no+1;
 	
+	      if (check_FUNCTION (str, strlgth, l, tok_no))
+		   is_function_stmt = true;
+	      else
+		   extract_int_id = true;;
+	 }
+    }
+
+    if (insert_a_token) {
+	/* On change le %symbolic_name en kw */
+	PTOK->lahead = kw_codes [kw]; /* code des préfixes */
+	PTOK->string_table_entry  = SXEMPTY_STE;
+
+	/* On prépare l'insertion du 2ème kw */
+	tt [0].lahead = lahead;
+	tt [0].string_table_entry = SXEMPTY_STE;
+	tt [0].source_index =
+	    *get_source_index (&(PTOK->source_index), l);
+	tt [0].comment = NULL;
+	sxtknmdf (&(tt [0]), 1, Mtok_no+1, 0);
+	/* l doit indiquer le decalage depuis le debut de Mtok_no. */
+	l = kw_lgth [kw]; /* str et l représentent le kw total */
+	kw_nb = 2; /* nb de kw effectif */
+        extract_int_id = true;
+    }
+
+    if (extract_int_id) {
+	 str += l; /* On saute le(s) kw */
+
+	 if (*str != SXNUL) {
+	      /* Il reste qqchose derrière le/les kw que l'on vient d'insérer */
+	      if (kw == RETURN_p && program_unit_kind == FUNCTION_SUBPROGRAM) {
+		   /* alterate return in a FUNCTION */
+		   SXINT eol_tok_no;
+
+		   sxerror (*get_source_index (&(PTOK->source_index), l),
+			    sxsvar.sxtables->err_titles [2][0] /* error */,
+			    "%sAn alternate return is not allowed in a function subprogram,\n\
+this expression is erased.",
+			    sxsvar.sxtables->err_titles [2]+1 /* error */);
+		   eol_tok_no = Mtok_no;
+
+		   while (sxget_token (++eol_tok_no)->lahead != EOL_t);
+
+		   if (eol_tok_no -= Mtok_no + 1)
+			sxtknmdf (NULL, 0, Mtok_no + kw_nb, eol_tok_no);
+	      }
+	      else {
+		   /* On extrait le suffixe qu'on insere ds le flot de tokens */
+		   tt [0].lahead = isdigit (*str) ? ENTIER_t : ID_t;
+		   tt [0].string_table_entry = sxstrsave (str);
+		   tt [0].source_index = *get_source_index (&(PTOK->source_index), l);
+		   tt [0].comment = NULL;
+		   /* Attention check_for_a_lhs a lu le token suivant et peut-être beaucoup d'autres */
+
+		   if (tt [0].lahead == ID_t)
+			check_id (&(tt [0]));
+
+		   sxtknmdf (&(tt [0]), 1, Mtok_no + kw_nb, 0);
+	      }
+	 }
+    }
+
 #if EBUG
     fputs ("**************** Leaving process_initial_id ****************\n",
 	   stdout);
@@ -3711,7 +3795,7 @@ associated with the type CHARACTER.",
 	    return SXANY_BOOL;
 	    
 	case 2:
-	    /* @2 : on vient de detecter un <87:rel_op> non standard (<, <=, ==, !=, >=, >),
+	    /* @2 : on vient de detecter un <87:rel_op> non standard (<, <=, ==, /=, >=, >),
 	       cette [[EXTENSION]] est non valide en standard */
 	    extension_hit (X2relop_kind, SXGET_TOKEN (sxplocals.atok_no - 1).source_index);
 	    return SXANY_BOOL;
@@ -4116,6 +4200,20 @@ bool sxscanner_action (SXINT code, SXINT act_no) {
 
   switch (code) {
   case SXOPEN:
+
+#if EBUG
+  {
+       SXINT kw = (*sxsvar.SXS_tables.S_check_keyword) ("FORMAT", strlen ("FORMAT"));
+
+       if (kw != FORMAT_t) {
+	    fprintf (stdout, "\tf77_t.c et f77_td.h ne sont pas compatibles :\n\
+\tle mot-clé \"FORMAT\" vaut %ld (f77_t.c) et FORMAT_t vaut %ld (f77_td.h)\n",
+		     kw, (SXINT)FORMAT_t);
+	    sxtrap ("f77_analyse", "sxscanner_action (SXOPEN)");
+       }
+  }
+#endif
+
     if (is_pretty_printer)
       /* La gestion des commentaires finaux est assurée par sxcomment_mngr.c */
       sxcomment_mngr (SXOPEN, 1024);
@@ -4447,6 +4545,7 @@ bool sxscanner_action (SXINT code, SXINT act_no) {
 	    }
 	    else {
 	      if (lahead == ID_t)
+		/* suppose type affectation */
 		lahead = ASSIGN_t;
 	      else {
 		SXINT next_lahead;
@@ -4488,13 +4587,6 @@ bool sxscanner_action (SXINT code, SXINT act_no) {
 
 	  is_function_stmt = false;
 	  is_iokw_allowed = false;
-#if 0
-	  after_logical_if = true;
-		
-	  while (after_logical_if) {
-	    after_logical_if = false;
-	    iokw_stack_top = 0;
-#endif
 
 	    if (cur_lahead == FORMAT_t && prev_lahead == LABEL_t) {
 	      /* On a %symbolic_name = "format".  Est-ce le mot-clé ou un id (en lhs par exemple)
@@ -4502,7 +4594,6 @@ bool sxscanner_action (SXINT code, SXINT act_no) {
 		 plus facilement si on trouve des chaines Hollerith a l'exterieur des formats. */
 	      SXINT		head;
 	      short             *last_buffer_ptr;
-	      struct sxsrcmngr	prev_sxsrcmngr;
 	      struct sxscan_mode	old_scan_mode;
 	      bool		is_format_stmt;
 
@@ -4511,7 +4602,7 @@ bool sxscanner_action (SXINT code, SXINT act_no) {
 			
 	      /* On memorise où on en est dans le source. */
 	      head = source_line_head;
-	      prev_sxsrcmngr = sxsrcmngr;
+	      save_sxsrcmngr (); /* On ne sauve que les variables essentielles */
 	    
 	      /* Le "mode" actuel du scanner */
 	      old_scan_mode = sxsvar.sxlv.mode;
@@ -4549,8 +4640,24 @@ bool sxscanner_action (SXINT code, SXINT act_no) {
 		 se passer tout en exécutant en plus les actions sémantiques éventuelles. */
 	      we_are_in_parse_in_la = true;
 	      is_format_stmt = sxparse_in_la (FORMAT_EP_t, Mtok_no, &tok_no, &format_parse_mode_withmess);
+	      /* is_format_stmt => FORMAT... est un format-statement, soit tel quel, soit après correction
+		 !is_format_stmt => FORMAT... n'est pas un format statement (aucune correction n'a marché)
+		 il y a donc eu une détection d'erreur avec rattrapage global donc
+		 format_parse_mode_withmess.global_errors_nb == 1 */
 	      we_are_in_parse_in_la = false;
 		
+	      if (is_format_stmt) {
+		   if (format_parse_mode_withmess.local_errors_nb) {
+			/* ... donc FORMAT après correction */
+			sxplocals.mode.local_errors_nb++; /* On comptabilise (globalement) la correction */
+			format_parse_mode_withmess.local_errors_nb = 0; /* pour le coup d'après */
+		   }
+	      }
+	      else {
+		   /* Ici, rattrapage global, ce nest pas une erreur, "FORMAT ..." n'est pas un format-statement */
+		   format_parse_mode_withmess.global_errors_nb = 0; /* pour le coup d'après */
+	      }
+
 #if EBUG
 	      fprintf (stdout,
 		       "**************** Leaving sxparse_in_la (eol/eof_tok_no = %ld, Mtok_no = %ld) %s ****************\n",
@@ -4600,7 +4707,7 @@ bool sxscanner_action (SXINT code, SXINT act_no) {
 		sxplocals.Mtok_no = Mtok_no;
 		/* On remet le source "en place" */
 		source_line_head = head;
-		sxsrcmngr = prev_sxsrcmngr;
+		restore_sxsrcmngr ();
 		/* ... et on laisse l'analyse normale relire les tokens suivants */
 	      }
 
@@ -4633,9 +4740,18 @@ bool sxscanner_action (SXINT code, SXINT act_no) {
 		if (SXGET_TOKEN (TOK_i).lahead == EGAL_t) {
 		     SXINT kw = seek_kw (sxstrget (SXGET_TOKEN (Mtok_no).string_table_entry));
 
+#if EBUG
+		     fprintf (stdout,
+			      "**************** seek_kw (\"%s\") = %ld ****************\n",
+			      sxstrget (SXGET_TOKEN (Mtok_no).string_table_entry),
+			      kw);
+		     print_toks_buf (Mtok_no, Mtok_no);
+#endif
+
 		     if (kw == DO_p)
 			  /* ident est de la forme do... */
-			  process_initial_id (Mtok_no);
+			  /* Cet ident peut donc etre doubleprecision... */
+			  process_initial_id (Mtok_no, true /* is_a_lhs */);
 		}
 	      }
 	    }
@@ -4732,49 +4848,9 @@ bool sxscanner_action (SXINT code, SXINT act_no) {
 		break;
 			    
 	      case ID_t:
-		process_initial_id (Mtok_no);
+		process_initial_id (Mtok_no, false /* !is_a_lhs */);
 		break;
 
-#if 0			    
-	      case IF_t:
-		/* Instructions IF. */
-		/* Si on est dans un IF logique, l'instruction qui suit doit etre
-		   consideree comme etant en debut d'instruction. */
-		tok_no = Mtok_no;
-		check_balanced (&tok_no); /* Should be true! */
-		lahead = sxget_token (++tok_no)->lahead;
-			    
-		if (!((lahead == ENTIER_t && sxget_token (tok_no + 1)->lahead == VIRGULE_t ) ||
-		      (lahead == THEN_t && sxget_token (tok_no + 1)->lahead == EOL_t))) {
-		  /* c'est un IF logique */
-		  /* Le token lahead doit etre considere comme etant en debut
-		     d'instruction. */
-		  /* Malheureusement, si c'est un ident, c'est peut etre la
-		     lecture en avance (car il n'a pas alors ete considere
-		     comme etant en debut d'instruction) qui d'un mot-cle
-		     l'a change en ident.  On regarde donc si c'est un mot-cle. */
-				
-		  if (lahead == ID_t) {
-		    SXINT ste, kw;
-				    
-		    ste = SXGET_TOKEN (tok_no).string_table_entry;
-		    kw = (*sxsvar.SXS_tables.S_check_keyword) (sxstrget (ste), sxstrlen (ste));
-				    
-		    if (kw != 0) {
-		      SXGET_TOKEN (tok_no).lahead = lahead = kw;
-		      SXGET_TOKEN (tok_no).string_table_entry = SXEMPTY_STE;
-		    }
-		  }
-				
-		  /* on reboucle. */
-		  after_logical_if = true;
-		  cur_lahead = lahead;
-		  Mtok_no = tok_no;
-		}
-			    
-		break;
-#endif
-		
 	      case READ_t:
 		/* On differencie l'identifieur des mots-cles READ suivis soit de
 		   ( <control_info_list> ) cas READ_t, soit de <format_identifier>
@@ -4831,9 +4907,6 @@ this expression is erased.",
 		break;
 	      }
 	    }
-#if 0
-	  }
-#endif
 
 	  /* On sort du scanner sans retourner aucun token */
 	  sxsvar.sxlv.terminal_token.lahead = 0;
@@ -5394,6 +5467,7 @@ This one, and all others in the sequel, are converted into the corresponding upp
 	
 #if EBUG
     if (act_no != 6) {
+      /* Seulement sur les post-actions */
       print_sxsvar ();
       fputs ("\n", stdout);
       print_srcmngr_curchar ();
