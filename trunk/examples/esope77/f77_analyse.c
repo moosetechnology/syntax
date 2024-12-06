@@ -153,8 +153,15 @@ extern bool		is_ansi, is_json, is_pretty_printer, is_input_free_fortran, is_exte
 #define ENDSEGMENT_p	38 /* [[ESOPE]] */
 #define IMPLIED_p	39 /* [[ESOPE]] */
 #define POINTEUR_p	40 /* [[ESOPE]] */
-#define SEGINA_p	41 /* [[ESOPE]] */
-#define SEGIND_p	42 /* [[ESOPE]] */
+#define SEGACT_p        41 /* [[ESOPE]] */
+#define SEGADJ_p        42 /* [[ESOPE]] */
+#define SEGDES_p        43 /* [[ESOPE]] */
+#define SEGINA_p        44 /* [[ESOPE]] */
+#define SEGIND_p        45 /* [[ESOPE]] */
+#define SEGINI_p        46 /* [[ESOPE]] */
+#define SEGMENT_p       47 /* [[ESOPE]] */
+#define SEGPRT_p        48 /* [[ESOPE]] */
+#define SEGSUP_p        49 /* [[ESOPE]] */
 #endif // [[ESOPE]]
 
 static char *kw_prefixes [] = {"", "DO", "ASSIGN", "CALL", "GOTO", "RETURN", "PRINT", "READ",
@@ -166,7 +173,8 @@ static char *kw_prefixes [] = {"", "DO", "ASSIGN", "CALL", "GOTO", "RETURN", "PR
 				   "IMPLICIT", "DIMENSION", "PROGRAM", "ELSEIF", "ENDIF"
 				   , "ENDDO", "NONE", "UNDEFINED"
 #ifdef ESOPE
-				   , "ENDSEGMENT", "IMPLIED", "POINTEUR", "SEGINA", "SEGIND"
+				   , "ENDSEGMENT", "IMPLIED", "POINTEUR", "SEGACT", "SEGADJ", "SEGDES"
+				   , "SEGINA", "SEGIND", "SEGINI", "SEGMENT", "SEGPRT", "SEGSUP"
 #endif // [[ESOPE]]
                               };
 static SXINT kw_codes [] = {0, DO_t, ASSIGN_t, CALL_t, GO_t, RETURN_t, PRINT_t, READ_KW_t,
@@ -178,7 +186,8 @@ static SXINT kw_codes [] = {0, DO_t, ASSIGN_t, CALL_t, GO_t, RETURN_t, PRINT_t, 
 			      IMPLICIT_t, DIMENSION_t, PROGRAM_t, ELSE_t, END_t
 			      , END_t, NONE_t, UNDEFINED_t
 #ifdef ESOPE
-			      , END_t, IMPLIED_t, POINTEUR_t, SEGINA_t, SEGIND_t
+			      , END_t, IMPLIED_t, POINTEUR_t, SEGACT_t, SEGADJ_t, SEGDES_t
+			      , SEGINA_t, SEGIND_t, SEGINI_t, SEGMENT_t, SEGPRT_t, SEGSUP_t
 #endif // [[ESOPE]]
                            };
 static SXINT kw_lgth [] = {0, 2, 6, 4, 4, 6, 5, 4,
@@ -190,7 +199,8 @@ static SXINT kw_lgth [] = {0, 2, 6, 4, 4, 6, 5, 4,
 			     8, 9, 7, 6, 5
 			     , 5, 4, 9
 #ifdef ESOPE
-			     , 10, 7, 8, 6, 6
+			     , 10, 7, 8, 6, 6, 6
+			     , 6, 6, 6, 7, 6, 6
 #endif // [[ESOPE]]
                            };
 
@@ -233,7 +243,9 @@ static struct source_line	*source_line;
 static struct source_line	source_lines [SOURCE_BUF_SIZE];
 static SXINT			source_line_head, source_line_tail;
 
+#ifdef ESOPE
 static SXINT                    star_flag_mode_tok_no;
+#endif // [[ESOPE]]
 
 static bool is_tab_already_met, is_hollerith_already_met, is_quoted_string_already_met,
   is_lower_to_upper_already_met, is_implicit_extension_already_met;
@@ -2402,7 +2414,7 @@ static SXINT seek_kw (char *string)
 
 	break;
 
-    case 'D': /* DO ou DOUBLEPRECISION ou DIMENSION or DATA */
+    case 'D': /* DO ou DOUBLEPRECISION ou DIMENSION ou DATA */
       /* Attention, avec l'extension du <do_statement>, on peut ne plus avoir de label et l'entête peut être
 	 DO  <99:symbolic_name>
 	 donc un "DOi" de longueur 3 */
@@ -2419,7 +2431,9 @@ static SXINT seek_kw (char *string)
 
 	break;
 
-    case 'E': /* ENDFILE ou ENTRY ou EXTERNAL ou ELSEIF ou ENDIF ou ENDDO [[EXTENSION]] ou ENDSEGMENT [[ESOPE]] */
+    case 'E': /* ENDFILE ou ENTRY ou EXTERNAL ou ELSEIF ou ENDIF ou
+		 [[EXTENSION]] ENDDO ou
+		 [[ESOPE]] ENDSEGMENT */
 	if (strlen (string) > 4) {
 	    c = string [3];
 	    i = c == 'F' ? ENDFILE_p :
@@ -2448,7 +2462,8 @@ static SXINT seek_kw (char *string)
 	i = GOTO_p;
 	break;
 
-    case 'I': /* INTEGER or IMPLICIT or INTRINSIC or IMPLIED [[ESOPE]] */
+    case 'I': /* INTEGER ou IMPLICIT ou INTRINSIC ou
+		 [[ESOPE]] IMPLIED */
 	if (strlen (string) > 6) {
 	    c = string [6];
 	    i = c == 'R' ? INTEGER_p : (c == 'I' ? IMPLICIT_p : (c == 'S' ? INTRINSIC_p :
@@ -2470,7 +2485,8 @@ static SXINT seek_kw (char *string)
         i = NONE_p;
         break;
 
-    case 'P': /* PRINT or PAUSE or PROGRAM or POINTEUR [[ESOPE]] */
+    case 'P': /* PRINT ou PAUSE ou PROGRAM ou
+		 [[ESOPE]] POINTEUR */
 	if (strlen (string) > 4) {
 	    c = string [1];
 	    i = c == 'R' ? (string [2] == 'I' ? PRINT_p : PROGRAM_p) : (c == 'A' ? PAUSE_p :
@@ -2492,7 +2508,8 @@ static SXINT seek_kw (char *string)
 
 	break;
 
-    case 'S': /* STOP or SAVE or SUBROUTINE or SEGINA [[ESOPE]] or SEGIND [[ESOPE]] */
+    case 'S': /* STOP ou SAVE ou SUBROUTINE ou
+		  [[ESOPE]] SEGINA ou SEGIND ou SEGMENT ou SEGINI ou SEGACT ou SEGDES ou SEGSUP ou SEGIADJ ou SEGPRT */
 	if (strlen (string) > 3) {
 	    c = string [1];
 	    i = c == 'T' ? STOP_p
@@ -2500,7 +2517,14 @@ static SXINT seek_kw (char *string)
 			             : (c == 'U' ? SUBROUTINE_p
 #ifdef ESOPE
 					         : ((strlen (string) > 5) ? (c = string [5], c == 'A' ? SEGINA_p
-								                                      : SEGIND_p)
+								                           : c == 'D' ? SEGIND_p
+									     : c == 'N' ? SEGMENT_p
+							                     : c == 'I' ? SEGINI_p
+							                     : c == 'S' ? SEGDES_p
+							                     : c == 'P' ? SEGSUP_p
+							                     : c == 'J' ? SEGADJ_p
+							                     : c == 'T' ? (c = string [4], c == 'C' ? SEGACT_p : SEGPRT_p)
+							                     : UNKNOWN_p)
 					                                  : UNKNOWN_p)
 #else // [[ESOPE]]
 					         : UNKNOWN_p
@@ -3269,14 +3293,21 @@ a CONTINUE statement is gracefully inserted here.",
 #ifdef ESOPE
     case IMPLIED_p: /* [[ESOPE]] */
     case POINTEUR_p: /* [[ESOPE]] */
+    case SEGACT_p: /* [[ESOPE]] */
+    case SEGADJ_p: /* [[ESOPE]] */
+    case SEGDES_p: /* [[ESOPE]] */
     case SEGINA_p: /* [[ESOPE]] */
     case SEGIND_p: /* [[ESOPE]] */
+    case SEGINI_p: /* [[ESOPE]] */
+    case SEGMENT_p: /* [[ESOPE]] */
+    case SEGPRT_p: /* [[ESOPE]] */
+    case SEGSUP_p: /* [[ESOPE]] */
     {
 	 char c = str [kw_lgth [kw]];
 
 	 if (c == SXNUL) {
-	      /* str est le kw IMPLIED ou POINTEUR ou SEGINA ou SEGIND
-		 en début d'instruction, ça semble une erreur, on le transforme en id
+	      /* str est exactement un des mots-clés ESOPE en début d'instruction,
+		 ça semble une erreur, on le transforme en id
 		 et on laisse le traitement des erreurs se débrouiller avec ça!! */
 	      PTOK->lahead = ID_t;
 	      PTOK->string_table_entry = sxstrsave (str);
@@ -3284,8 +3315,8 @@ a CONTINUE statement is gracefully inserted here.",
 	 }
 	 
 	 /* ici str est de la forme kwblabla */
-	 if (isalpha (c) || c == '_') {
-	      /* ici blabla est un id */
+	 if (isXalpha (c)) {
+	      /* ici, blabla est un id */
 	      if (kw == IMPLIED_p || kw == POINTEUR_p) {
 		   PTOK->lahead = kw_codes [kw];
 		   PTOK->string_table_entry = SXEMPTY_STE;
@@ -3295,49 +3326,107 @@ a CONTINUE statement is gracefully inserted here.",
 		   extract_int_id = true;
 	      }
 	      else {
-		   /* Ici on a (SEGINA|SEGIND)id, le préfixe est un mot-clé ssi le suffixe de str est de la forme
-		      = id , (CHAINE|BIN|XDR) %EOL */
-		   if (SXGET_TOKEN (Mtok_no+1).lahead != EGAL_t)
-			break;
+		   SXINT curtok_no = Mtok_no+1; /* Le tok_no suivant kwblabla */
+		   SXINT la1head = sxget_token (curtok_no)->lahead;
 
-		   lahead = sxget_token (Mtok_no+2)->lahead; /* le id Attention, on appelle (récursivement) la scanact @1 */
+		   if (kw != SEGINA_p && kw != SEGIND_p) {
+			/* Ici on est dans l'extension ESOPE qui permet la suppression de la ',' après le mot-clé
+			 et PTOK a la forme kw id */
+			/*
+			  SEGMENT id %EOL
+			  (SEGINI | SEGACT) id ['('...')'] (',' | '=' | '\n')
+                          SEGDES id ['('...')'] (',' | '*' | '\n')
+                          (SEGSUP | SEGADJ | SEGPRT) id ['('...')'] (',' | '\n')
+			*/
+			if (kw != SEGMENT_p) {
+			     if (la1head == LEFTP_t) {
+				  curtok_no = Mtok_no; /* Ne pas toucher à Mtok_no!! */
 
-		   if (lahead != ID_t && sxkeywordp (sxsvar.sxtables, lahead) == 0)
-			break;
+				  if (!check_balanced (&curtok_no))
+				       break;
+
+				  la1head = sxget_token (++curtok_no)->lahead; /* Le token après la ')' */
+			     }
 			     
-		   if (sxget_token (Mtok_no+3)->lahead != VIRGULE_t)
-			break;
-
-		   SEGINA_SEGIND_tok_no = Mtok_no+3; /* signale à la scanact @1 qu'on est dans le traitement SEGINA/SEGIND
-							et on repère la ',' */
-		   lahead = sxget_token (Mtok_no+4)->lahead; /* (CHAINE|BIN|XDR) Attention, on appelle (récursivement) la scanact @1 */
-		   SEGINA_SEGIND_tok_no = 0;
-		   
-		   if (lahead == CHAINE_t || lahead == BIN_t || lahead == XDR_t) {
-			/* On a reconnu une <123:segment_operation> */
-			/* Voir le traitement de ces tokens dans sxscanner_action (1).
-			   Le token suivant est %EOL */
-
-			if ((lahead = SXGET_TOKEN (Mtok_no+2).lahead) !=  ID_t) {
-			     /* c'est un kw (au cas où) qu'il faut changer en id */
-			     SXGET_TOKEN (Mtok_no+2).string_table_entry = sxstrsave (sxttext (sxsvar.sxtables, lahead));
-			     SXGET_TOKEN (Mtok_no+2).lahead = ID_t;
+			     if (la1head != VIRGULE_t && la1head != EOL_t) {
+				  if ((kw == SEGDES_p && la1head == STAR_t) || ((kw == SEGINI_p || kw == SEGACT_p) && la1head == EGAL_t)) {
+				  /* Ici
+				     SEGDES id ['('...')'] '*' ou
+				     (SEGINI | SEGACT) id ['('...')'] '='
+				  */
+				       if (kw == SEGDES_p) {
+					    /* On est dans le cas SEGDES non suivi d'une virgule, le token STAR_t a été reconnu mais l'exécution
+					       de sa post-action lexicale n'a pas pu positionner star_flag_mode_tok_no (pas encore de SEGDES, pas de ',', ...)
+					       On le fait donc ici. */
+					    star_flag_mode_tok_no = curtok_no;
+#if EBUG
+					    fprintf (stdout, "++++++++++++++ @12 : \"*\" is a star_flag_mode_tok_no at tok_no = %ld ++++++++++++++\n", curtok_no);
+#endif
+				       }
+				  }
+				  else
+				       break;
+			     }
+			     /* else OK */
 			}
-
-			PTOK->lahead = kw_codes [kw]; /* On change le ID_t initial en SEGINA_t ou SEGIND_t ... */
-			PTOK->string_table_entry = SXEMPTY_STE;
-			/* ... et on insère derrière son suffixe comme étant un ID_t */
-			l = kw_lgth [kw];
-			kw_nb = 1; /* nb de kw effectif */
-	
-			extract_int_id = true;
+			else {
+			     if (la1head != EOL_t)
+				  /* On laisse id */
+				  break;
+			}
 		   }
+		   else {
+			/* Ici on a (SEGINA|SEGIND)id, le préfixe est un mot-clé ssi le suffixe de str est de la forme
+			   = id , (CHAINE|BIN|XDR) %EOL */
+			if (la1head != EGAL_t)
+			     break;
+
+			la1head = sxget_token (Mtok_no+2)->lahead;
+
+			if (la1head != ID_t && sxkeywordp (sxsvar.sxtables, la1head) == 0)
+			     break;
+
+			/* Ici la1head est un id ou un mot-clé et sxsrcmngr.current_char contient le caractère suivant */
+			
+			if (sxget_token (Mtok_no+3)->lahead != VIRGULE_t)
+			     break;
+
+			SEGINA_SEGIND_tok_no = Mtok_no+3; /* signale à la scanact @1 qu'on est dans le traitement SEGINA/SEGIND
+							     et on repère la ',' */
+			lahead = sxget_token (Mtok_no+4)->lahead; /* (CHAINE|BIN|XDR) Attention, on appelle (récursivement) la scanact @1 */
+			SEGINA_SEGIND_tok_no = 0; /* La @1 associée au kw CHAINE|BIN|XDR a été appelée */
+		   
+			if (lahead == CHAINE_t || lahead == BIN_t || lahead == XDR_t) {
+			     /* On a reconnu une <123:segment_operation> */
+			     /* Voir le traitement de ces tokens dans sxscanner_action (1).
+				Le token suivant est %EOL */
+
+			     if (la1head != ID_t) {
+				  /* c'est un kw qu'il faut changer en id */
+				  SXGET_TOKEN (Mtok_no+2).string_table_entry = sxstrsave (sxttext (sxsvar.sxtables, la1head));
+				  SXGET_TOKEN (Mtok_no+2).lahead = ID_t;
+			     }
+			}
+			else {
+			     /* Ici incohérence, on choisit de reconnaître un SEGINA|SEGIND, on poursuit donc en séquence.
+				Pour laisser le id initial (et donc une affectation erronée "id = id|kw ,", faire un break; */
+			}
+		   }
+
+		   /* Ici on a reconnu kw id ctxt */
+		   PTOK->lahead = kw_codes [kw]; /* On change le ID_t initial en kw ... */
+		   PTOK->string_table_entry = SXEMPTY_STE;
+		   /* ... et on insère derrière son suffixe comme étant un ID_t */
+		   l = kw_lgth [kw];
+		   kw_nb = 1; /* nb de kw effectif */
+		   
+		   extract_int_id = true;
 	      }
 	 }
     }
-#endif // [[ESOPE]]
 
     break;
+#endif // [[ESOPE]]
 
     case FUNCTION_p :
 	is_function_stmt = true;
@@ -4440,7 +4529,10 @@ bool sxscanner_action (SXINT code, SXINT act_no) {
 
     ETAT = ETAT_0;
     
+#ifdef ESOPE
     star_flag_mode_tok_no = -1; /* Never seen */
+#endif // [[ESOPE]]
+
     head_tok_no = 0;
     after_logical_if = false;
     eol_flag.tok_no = 0;
@@ -4455,6 +4547,10 @@ bool sxscanner_action (SXINT code, SXINT act_no) {
     /* Raz des errors_nb qui peuvent provenir d'une exécution précédente */
     do_parse_mode_noerr.local_errors_nb = do_parse_mode_noerr.global_errors_nb = 0;
     format_parse_mode_withmess.local_errors_nb = format_parse_mode_withmess.global_errors_nb = 0;
+
+#ifdef PLUS_TARD
+    dont_is_mandatory = true; /* true <=> never select a Dont_Delete Dont_Insert */
+#endif
 
     /* On vide le string_mngr */
     sxstr_mngr (SXCLEAR);
@@ -4590,6 +4686,9 @@ bool sxscanner_action (SXINT code, SXINT act_no) {
 	  is_implicit_statement = false;
 	  sxsvar.sxlv_s.counters[0] = 0;
 	  sxsvar.sxlv_s.counters [1] = 0; /* Prudence */
+#ifdef ESOPE
+	  sxsvar.sxlv_s.counters [2] = 0; /* Pour les "old_seg_kw_type" Cf @8 et .lecl */
+#endif // [[ESOPE]]
 	  after_logical_if = false;
 	}
 	else if (!after_logical_if) {
@@ -5705,7 +5804,9 @@ This one, and all others in the sequel, are converted into the corresponding upp
       break;
 
     case 8:
-      /* @8 : On est sur "(", si is_implicit_statement => on fait @Set(1) */
+      /* @8 : On est sur "(",
+	 si is_implicit_statement =>  @Set(1)
+	 En [[ESOPE]], si SEGMENT / ... / ( => @Set(2) */
 #if EBUG
       print_srcmngr_curchar ();
 #endif
@@ -5713,7 +5814,13 @@ This one, and all others in the sequel, are converted into the corresponding upp
       if (is_implicit_statement) {
 	sxsvar.sxlv_s.counters [1] = 1;
       }
-
+#ifdef ESOPE
+      else if (SXGET_TOKEN (head_tok_no).lahead == SEGMENT_t &&
+	   SXGET_TOKEN (head_tok_no+1).lahead == SLASH_t &&
+	   SXGET_TOKEN (sxplocals.Mtok_no).lahead == SLASH_t) {
+	   sxsvar.sxlv_s.counters [2] = 1; /* @Set [2] */
+      }
+#endif // [[ESOPE]]
       break;
 
     case 9:
@@ -5792,7 +5899,7 @@ This one, and all others in the sequel, are converted into the corresponding upp
 	       is_well_balanced (head_tok_no+3, sxplocals.Mtok_no)))) {
 	      star_flag_mode_tok_no = sxplocals.Mtok_no+1;
 #if EBUG
-	      fprintf (stdout, "++++++++++++++ @12 : \"*\" is a star_flag_mode_tok_no at %ld ++++++++++++++\n", star_flag_mode_tok_no);
+	      fprintf (stdout, "++++++++++++++ @12 : \"*\" is a star_flag_mode_tok_no at tok_no = %ld ++++++++++++++\n", star_flag_mode_tok_no);
 #endif
 	 }
 	 

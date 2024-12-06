@@ -7352,8 +7352,6 @@ $LIST( <89a:substring_name>)
   );
 }    
 
-* [[RULE_MODIFIED]]
-
 *******************************************************************************
 
 *<90:constant_name>
@@ -7869,9 +7867,6 @@ $LIST( <117:segment>)
   );
 }
 
-* [[RULE_MODIFIED]]
-* old rule was: <117:segment> = SEGMENT ,  <99:symbolic_name> %EOL
-
 *------------------------------------------------------------------------------
 
 <117:segment> = SEGMENT / <117b:segment_pointer> / ( <117c:seg_var_decl_list> ) ;
@@ -7885,19 +7880,13 @@ $LIST( <117:segment>)
   );
 }
 
-* [[RULE_ADDED]] [[SEMC_ADDED]]
-
 *******************************************************************************
 
 <117a:segment_comma>	= ,  ;
 
-* [[RULE_ADDED]]
-
 *------------------------------------------------------------------------------
 
 <117a:segment_comma>	=   ;
-
-* [[RULE_ADDED]]
 
 *******************************************************************************
 
@@ -7930,8 +7919,6 @@ $LIST(<117c:seg_var_decl_list>)
                                              $LIST (<117d:seg_var_decl>));
 }
 	
-* [[RULE_ADDED]] [[SEMC_ADDED]]
-	
 *------------------------------------------------------------------------------
 
 <117c:seg_var_decl_list>
@@ -7941,8 +7928,6 @@ $LIST(<117c:seg_var_decl_list>)
 {
   $LIST(<117c:seg_var_decl_list>) = $LIST (<117d:seg_var_decl>);
 }
-
-* [[RULE_ADDED]] [[SEMC_ADDED]]
 		
 *******************************************************************************
 
@@ -7954,8 +7939,6 @@ $LIST(<117d:seg_var_decl>)
   $LIST(<117d:seg_var_decl>) = $LIST(<20b:scalar_name>);
 }
 
-* [[RULE_ADDED]] [[SEMC_ADDED]]
-		
 *------------------------------------------------------------------------------
 
 <117d:seg_var_decl>
@@ -7963,13 +7946,12 @@ $LIST(<117d:seg_var_decl>)
 
 $LIST(<117d:seg_var_decl>)
 {
-  $LIST(<117d:seg_var_decl>) = ast_segment_implicit_variable (LOCATION(0),
-  																			$LIST(<20b:scalar_name>),
-                                        $LIST(<117e:seg_type_spec>));
+  $LIST(<117d:seg_var_decl>) = ast_segment_implicit_variable (
+	LOCATION(0),
+	$LIST(<20b:scalar_name>),
+	$LIST(<117e:seg_type_spec>));
 }
 
-* [[RULE_ADDED]] [[SEMC_ADDED]]
-		
 *------------------------------------------------------------------------------
 
 <117d:seg_var_decl>
@@ -7980,9 +7962,7 @@ $LIST(<117d:seg_var_decl>)
   $LIST(<117d:seg_var_decl>) = ast_add_declarator_len ($LIST(<20b:scalar_name>),
                                         $LIST(<22:len_specification>));
 }
-
-* [[RULE_ADDED]] [[SEMC_ADDED]]
-		
+	
 *******************************************************************************
 
 * logical
@@ -7995,8 +7975,6 @@ $LIST(<117e:seg_type_spec>)
   $LIST(<117e:seg_type_spec>) = SXML_T ("*L");
 }
 
-* [[RULE_ADDED]] [[SEMC_ADDED]]
-		
 *------------------------------------------------------------------------------
 
 * logical*1
@@ -8009,8 +7987,6 @@ $LIST(<117e:seg_type_spec>)
   $LIST(<117e:seg_type_spec>) = SXML_T ("*L1");
 }
 
-* [[RULE_ADDED]] [[SEMC_ADDED]]
-		
 *------------------------------------------------------------------------------
 
 * logical*8
@@ -8023,8 +7999,6 @@ $LIST(<117e:seg_type_spec>)
   $LIST(<117e:seg_type_spec>) = SXML_T ("*L8");
 }
 
-* [[RULE_ADDED]] [[SEMC_ADDED]]
-		
 *------------------------------------------------------------------------------
 
 * integer
@@ -8036,9 +8010,7 @@ $LIST(<117e:seg_type_spec>)
 {
   $LIST(<117e:seg_type_spec>) = SXML_T ("*I");
 }
-
-* [[RULE_ADDED]] [[SEMC_ADDED]]
-		
+	
 *------------------------------------------------------------------------------
 
 * integer*2
@@ -8051,8 +8023,6 @@ $LIST(<117e:seg_type_spec>)
   $LIST(<117e:seg_type_spec>) = SXML_T ("*I2");
 }
 
-* [[RULE_ADDED]] [[SEMC_ADDED]]
-	
 *------------------------------------------------------------------------------
 
 * integer*8
@@ -8065,8 +8035,6 @@ $LIST(<117e:seg_type_spec>)
   $LIST(<117e:seg_type_spec>) = SXML_T ("*I8");
 }
 
-* [[RULE_ADDED]] [[SEMC_ADDED]]
-	
 *------------------------------------------------------------------------------
 
 * real
@@ -8079,8 +8047,6 @@ $LIST(<117e:seg_type_spec>)
   $LIST(<117e:seg_type_spec>) = SXML_T ("*R");
 }
 
-* [[RULE_ADDED]] [[SEMC_ADDED]]
-	
 *------------------------------------------------------------------------------
 
 * real*8
@@ -8093,8 +8059,6 @@ $LIST(<117e:seg_type_spec>)
   $LIST(<117e:seg_type_spec>) = SXML_T ("*D");
 }
 
-* [[RULE_ADDED]] [[SEMC_ADDED]]
-	
 *------------------------------------------------------------------------------
 
 * real*8
@@ -8106,8 +8070,6 @@ $LIST(<117e:seg_type_spec>)
 {
   $LIST(<117e:seg_type_spec>) = SXML_T ("*R8");
 }
-
-* [[RULE_ADDED]] [[SEMC_ADDED]]
 
 *------------------------------------------------------------------------------
 
@@ -8121,8 +8083,6 @@ $LIST(<117e:seg_type_spec>)
   $LIST(<117e:seg_type_spec>) = SXML_T ("*Q");
 }
 
-* [[RULE_ADDED]] [[SEMC_ADDED]]
-
 *------------------------------------------------------------------------------
 
 *complex
@@ -8134,8 +8094,6 @@ $LIST(<117e:seg_type_spec>)
 {
   $LIST(<117e:seg_type_spec>) = SXML_T ("*C");
 }
-
-* [[RULE_ADDED]] [[SEMC_ADDED]]
 
 *------------------------------------------------------------------------------
 
@@ -8149,8 +8107,6 @@ $LIST(<117e:seg_type_spec>)
   $LIST(<117e:seg_type_spec>) = SXML_T ("*CD");
 }
 
-* [[RULE_ADDED]] [[SEMC_ADDED]]
-
 *------------------------------------------------------------------------------
 
 *complex*32
@@ -8163,8 +8119,6 @@ $LIST(<117e:seg_type_spec>)
   $LIST(<117e:seg_type_spec>) = SXML_T ("*CQ");
 }
 
-* [[RULE_ADDED]] [[SEMC_ADDED]]
-
 *------------------------------------------------------------------------------
 
 *character*1
@@ -8176,8 +8130,6 @@ $LIST(<117e:seg_type_spec>)
 {
   $LIST(<117e:seg_type_spec>) = SXML_T ("*H");
 }
-
-* [[RULE_ADDED]] [[SEMC_ADDED]]
 
 *******************************************************************************
 
@@ -8360,9 +8312,6 @@ $LIST(<123:segment_operation>)
        $LIST(<123c:segini_args>));
 }
 
-* [[RULE_MODIFIED]]
-* old rule was: <123:segment_operation> = SEGINI ,  <123c:segini_args> ;
-
 *------------------------------------------------------------------------------
 
 <123:segment_operation> = SEGACT <117a:segment_comma>  <123e:segact_args> ;
@@ -8374,9 +8323,6 @@ $LIST(<123:segment_operation>)
        "SEGACT",
        $LIST(<123e:segact_args>));
 }
-
-* [[RULE_MODIFIED]]
-* old rule was: <123:segment_operation> = SEGACT ,  <123e:segact_args> ;
 
 *------------------------------------------------------------------------------
 
@@ -8390,9 +8336,6 @@ $LIST(<123:segment_operation>)
        $LIST(<123g:segdes_args>));
 }
 
-* [[RULE_MODIFIED]]
-* old rule was: <123:segment_operation> = SEGDES ,  <123g:segdes_args> ;
-
 *------------------------------------------------------------------------------
 
 <123:segment_operation> = <123a:segment_operation_name> <117a:segment_comma>  <20a:scalar_name_list> ;
@@ -8405,9 +8348,6 @@ $LIST(<123:segment_operation>)
   	$LIST(<20a:scalar_name_list>)
   );
 }
-
-* [[RULE_MODIFIED]]
-* old rule was: <123:segment_operation> = <123a:segment_operation_name> ,  <20a:scalar_name_list> ;
 
 *------------------------------------------------------------------------------
 

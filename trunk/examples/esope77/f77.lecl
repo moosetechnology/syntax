@@ -78,6 +78,7 @@ Tokens
 
    "("          = -"(" ; @8 ;
                   -- @8 : si is_implicit_statement => @Set(1)
+		  --      si SEGMENT / ... / ( => @Set(2)
 
    ")"          = -")" @Reset(1);
                   -- ... dans tous les cas

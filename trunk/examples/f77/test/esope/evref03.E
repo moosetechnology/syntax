@@ -7,5 +7,4 @@ C        ENDSEGMENT
 
       SEGMENT/PIBOUC/(IPOINT(MBOU))
 *:BOUCLE   POINTEUR ASSOCIE A CHAQUE BOUCLE
-        
-      END
+       
