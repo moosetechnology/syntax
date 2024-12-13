@@ -174,8 +174,8 @@ $(PUT_EDIT)		:	$(FORCE)
 $(EQ_SORT)		:	$(FORCE)	$(SXINCL)/sxba.h	$(SXINCL)/sxstack.h
 $(SX_VOID)		:	$(FORCE)
 
-$(SXINCL)/sxversion.h: 
-	$(SX)/etc/bin/make-sxversion $(SX)
+#$(SXINCL)/sxversion.h: 
+#	$(SX)/etc/bin/make-sxversion $(SX)
 
 .PHONY: $(SXINCL)/sxversion.h
 
