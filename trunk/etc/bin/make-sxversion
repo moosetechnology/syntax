@@ -46,7 +46,7 @@ fi
 # ----------------------------------------------------------------------------
 
 OUTPUT_FILE=$TOPDIR/incl/sxversion.h
-SVNVERSION=`svnversion $TOPDIR` || exit 1
+SVNVERSION="Unversioned directory"
 
 echo '#ifndef SVNVERSION' > $OUTPUT_FILE
 echo '#define SVNVERSION " (revision '$SVNVERSION')"' >> $OUTPUT_FILE
