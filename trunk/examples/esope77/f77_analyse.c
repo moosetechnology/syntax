@@ -145,23 +145,24 @@ extern bool		is_ansi, is_json, is_pretty_printer, is_input_free_fortran, is_exte
 #define PROGRAM_p	32
 #define ELSEIF_p	33
 #define ENDIF_p		34
-#define ENDDO_p		35 /* [[EXTENSION]] */
-#define NONE_p		36 /* [[EXTENSION]] */
-#define UNDEFINED_p	37 /* [[EXTENSION]] */
+#define DOUBLECOMPLEX_p	35 /* [[EXTENSION]] */
+#define ENDDO_p		36 /* [[EXTENSION]] */
+#define NONE_p		37 /* [[EXTENSION]] */
+#define UNDEFINED_p	38 /* [[EXTENSION]] */
 
 #ifdef ESOPE
-#define ENDSEGMENT_p	38 /* [[ESOPE]] */
-#define IMPLIED_p	39 /* [[ESOPE]] */
-#define POINTEUR_p	40 /* [[ESOPE]] */
-#define SEGACT_p        41 /* [[ESOPE]] */
-#define SEGADJ_p        42 /* [[ESOPE]] */
-#define SEGDES_p        43 /* [[ESOPE]] */
-#define SEGINA_p        44 /* [[ESOPE]] */
-#define SEGIND_p        45 /* [[ESOPE]] */
-#define SEGINI_p        46 /* [[ESOPE]] */
-#define SEGMENT_p       47 /* [[ESOPE]] */
-#define SEGPRT_p        48 /* [[ESOPE]] */
-#define SEGSUP_p        49 /* [[ESOPE]] */
+#define ENDSEGMENT_p	39 /* [[ESOPE]] */
+#define IMPLIED_p	40 /* [[ESOPE]] */
+#define POINTEUR_p	41 /* [[ESOPE]] */
+#define SEGACT_p        42 /* [[ESOPE]] */
+#define SEGADJ_p        43 /* [[ESOPE]] */
+#define SEGDES_p        44 /* [[ESOPE]] */
+#define SEGINA_p        45 /* [[ESOPE]] */
+#define SEGIND_p        46 /* [[ESOPE]] */
+#define SEGINI_p        47 /* [[ESOPE]] */
+#define SEGMENT_p       48 /* [[ESOPE]] */
+#define SEGPRT_p        49 /* [[ESOPE]] */
+#define SEGSUP_p        50 /* [[ESOPE]] */
 #endif // [[ESOPE]]
 
 static char *kw_prefixes [] = {"", "DO", "ASSIGN", "CALL", "GOTO", "RETURN", "PRINT", "READ",
@@ -171,7 +172,7 @@ static char *kw_prefixes [] = {"", "DO", "ASSIGN", "CALL", "GOTO", "RETURN", "PR
 				   "PARAMETER", "EXTERNAL", "INTRINSIC", "FUNCTION",
 				   "CONTINUE", "STOP", "PAUSE", "SAVE", "DATA",
 				   "IMPLICIT", "DIMENSION", "PROGRAM", "ELSEIF", "ENDIF"
-				   , "ENDDO", "NONE", "UNDEFINED"
+/* [[EXTENSION]] */		   , "DOUBLECOMPLEX", "ENDDO", "NONE", "UNDEFINED"
 #ifdef ESOPE
 				   , "ENDSEGMENT", "IMPLIED", "POINTEUR", "SEGACT", "SEGADJ", "SEGDES"
 				   , "SEGINA", "SEGIND", "SEGINI", "SEGMENT", "SEGPRT", "SEGSUP"
@@ -184,7 +185,7 @@ static SXINT kw_codes [] = {0, DO_t, ASSIGN_t, CALL_t, GO_t, RETURN_t, PRINT_t, 
 			      PARAMETER_t, EXTERNAL_t, INTRINSIC_t, FUNCTION_t,
 			      CONTINUE_t, STOP_t, PAUSE_t, SAVE_t, DATA_t,
 			      IMPLICIT_t, DIMENSION_t, PROGRAM_t, ELSE_t, END_t
-			      , END_t, NONE_t, UNDEFINED_t
+/* [[EXTENSION]] */           , DOUBLE_t, END_t, NONE_t, UNDEFINED_t
 #ifdef ESOPE
 			      , END_t, IMPLIED_t, POINTEUR_t, SEGACT_t, SEGADJ_t, SEGDES_t
 			      , SEGINA_t, SEGIND_t, SEGINI_t, SEGMENT_t, SEGPRT_t, SEGSUP_t
@@ -197,7 +198,7 @@ static SXINT kw_lgth [] = {0, 2, 6, 4, 4, 6, 5, 4,
 			     9, 8, 9, 8,
 			     8, 4, 5, 4, 4,
 			     8, 9, 7, 6, 5
-			     , 5, 4, 9
+/* [[EXTENSION]] */	     , 13, 5, 4, 9
 #ifdef ESOPE
 			     , 10, 7, 8, 6, 6, 6
 			     , 6, 6, 6, 7, 6, 6
@@ -1969,7 +1970,9 @@ static bool is_ansi_lgth_already_checked;
 #define XDO_WHILE_kind     5
 #define X2ops_kind         6
 #define X2relop_kind       7
-#define Xlast_kind         7
+#define X2dblcplx_kind     8
+#define X2ioidl_kind       9
+#define Xlast_kind         9
 
 static bool extension_already_seen [Xlast_kind+1];
 
@@ -1983,6 +1986,8 @@ static char *extension_mess [] =
     "DO-WHILE statement",
     "operator sequence",
     "relational operator",
+    "DOUBLE COMPLEX type",
+    "io_imply_do_list",
   };
 
 static SXINT head_tok_no; /* On se souvient du tok_no du 1er token d'une ligne */
@@ -2024,8 +2029,10 @@ void	f77_src_mngr (SXINT what, FILE *infile, char *file_name)
 
     is_ansi_lgth_already_checked = false;
 
-    for (i = Xlast_kind; i > 0; i--)
-      extension_already_seen [i] = false;
+//    Avec cet essai, au cours d'une analyse par lot (analyse de multiples programmes FORTRAN),
+//    sur la détection d'une extension (sans option -X), chaque warning n'est émis, au plus, qu'une seule fois.
+//    for (i = Xlast_kind; i > 0; i--)
+//      extension_already_seen [i] = false;
 
     /* Initialisation */
     varstr_catchar (stmts.string, SXNEWLINE); /* On suppose que toute nouvelle carte est précédée d'un EOL */
@@ -2329,6 +2336,113 @@ processing the enclosing do_loop labeled %i and terminated at the end of line %i
     do_stack_top = indx-1;
   }
 }
+/* ***************************************************************************** */
+/* Pour la version memoisée de check_balanced () */
+/* pour chaque '(' d'une carte logique, on note si ce token à une ')' et
+   si oui, son tok_no */
+
+#include "X.h"
+
+static struct {
+     X_header X_hd; /* tok_no --> pos */
+     SXINT    *toks;
+} memo_cb; /* memo_check_balanced */
+
+
+static void memo_cb_oflw (SXINT old_size, SXINT new_size) {
+  sxuse (old_size);
+  memo_cb.toks = (SXINT*) sxrealloc (memo_cb.toks, new_size + 1, sizeof (SXINT));
+}
+
+static void memo_cb_mngr (SXINT what) {
+     switch (what) {
+     case SXOPEN:
+	  /* Alloc */
+	  X_alloc (&memo_cb.X_hd, "memo_cb.X_hd", 23 /* why not? */, 1, memo_cb_oflw, (FILE *)NULL);
+	  memo_cb.toks = (SXINT*) sxalloc (X_size (memo_cb.X_hd) + 1, sizeof (SXINT));
+	  break;
+	  
+     case SXCLOSE:
+	  /* Free */
+	  sxfree (memo_cb.toks), memo_cb.toks = NULL;
+	  X_free (&memo_cb.X_hd);
+	  break;
+
+     case SXINIT:
+	  /* RAZ */
+	  X_clear (&memo_cb.X_hd);
+	  break;
+
+     default:
+#if EBUG
+	  sxtrap(ME, "memo_cb_mngr : unknown switch case #1");
+#endif
+	  break;
+     }
+}
+
+
+static bool check_balanced (SXINT *tok_no)
+{
+    /* tok_no designe un token (ident ou mot_cle) ou une "*".
+       Cette fonction verifie si la sequence de tokens tok_no+1 ...tok_no+n est
+       une structure bien parenthesee dans une carte logique.
+       Dans tous les cas retourne dans tok_no le numero du dernier token examine.
+       C'est la derniere parenthese fermante s'il y a eu succes.
+       Sur échec c'est soit le token qui suit id si ce n'est pas une "(" soit l'%eol de fin de carte.
+       Cette fonction est mémoisée */
+    SXINT     count, lahead, pos;
+    bool      save_is_implicit_statement;
+
+    count = (sxget_token (++*tok_no)->lahead == LEFTP_t) ? 1 : 0;
+
+    if (count == 0)
+      /* pas de "(" après l'id */
+      return false;
+
+    if (X_set (&memo_cb.X_hd, *tok_no, &pos)) {
+	 /* Cette '(' a été memoisée */
+	 SXINT right_tok_no = memo_cb.toks [pos];
+
+	 if (right_tok_no < 0)
+	      return false;
+
+	 *tok_no = right_tok_no;
+	 return true;
+    }
+
+    save_is_implicit_statement = is_implicit_statement;
+    is_implicit_statement = false; /* Les id entre les parenthèses doivent être traitées "normalement" */
+
+    while (count > 0) {
+      /* Excès de "(" */
+	lahead = sxget_token (++*tok_no)->lahead;
+
+	if (lahead == RIGHTP_t)
+	    count--;
+	else if (lahead == LEFTP_t)
+	    count++;
+	else if (lahead == EOL_t)
+	  break;
+    }
+
+    is_implicit_statement = save_is_implicit_statement;
+
+    memo_cb.toks [pos] = (count == 0) ? *tok_no /* balanced */ : -1 /* not balanced */;
+	 
+    return count == 0;
+}
+
+/* On a binf_tok_no < bsup_tok_no, binf_tok_no repère une "(" et bsup_tok_no une ")", on vérifie que ces parenthèses correspondent */
+static bool is_well_balanced (SXINT binf_tok_no, SXINT bsup_tok_no) {
+     SXINT pos;
+
+     return X_set (&memo_cb.X_hd, binf_tok_no, &pos) ? memo_cb.toks [pos] == bsup_tok_no : false /* Normalement jamais atteint!! */;
+}
+
+/* ***************************************************************************** */
+
+#if 0
 
 /* On a binf_tok_no < bsup_tok_no, binf_tok_no repère une "(" et bsup_tok_no une ")", on vérifie que les tokens internes, déjà lus,
    sont bien balancés */
@@ -2384,6 +2498,7 @@ static bool check_balanced (SXINT *tok_no)
 
     return count == 0;
 }
+#endif
 
 
 static SXINT seek_kw (char *string)
@@ -2414,15 +2529,16 @@ static SXINT seek_kw (char *string)
 
 	break;
 
-    case 'D': /* DO ou DOUBLEPRECISION ou DIMENSION ou DATA */
+    case 'D': /* DO ou DOUBLEPRECISION ou DIMENSION ou DATA ou DOUBLECOMPLEX ([[EXTENSION]]) */
       /* Attention, avec l'extension du <do_statement>, on peut ne plus avoir de label et l'entête peut être
 	 DO  <99:symbolic_name>
 	 donc un "DOi" de longueur 3 */
 	if (strlen (string) >= 3) {
 	  if (string [1] == 'O') {
-	    /* DO_p ou DOUBLEPRECISION_p ? */
-	    /* PB : "DO UBLEPRECISION... = 1" */
-	    /* dans ces 2 cas on rend DO, si ce n'est pas un <do_statement>, on testera le cas DOUBLEPRECISION + tard */
+	    /* DO_p ou DOUBLEPRECISION_p ou DOUBLECOMPLEX_p ? */
+	    /* PB : "DO UBLEPRECISION... = 1" ou "DO UBLECOMPLEX... = 1" */
+	    /* dans ces 3 cas on rend DO, si ce n'est pas un <do_statement>, on testera le cas DOUBLEPRECISION
+	       ou DOUBLECOMPLEX + tard */
 	      return DO_p;
 	  }
 
@@ -2579,6 +2695,8 @@ static bool check_for_a_lhs (SXINT tok_no)
     lahead = SXGET_TOKEN (tok_no).lahead;
 
     if (sxget_token (tok_no + 1)->lahead == LEFTP_t) {
+	 memo_cb_mngr (SXINIT); /* RAZ */
+
 	 switch (lahead) {
 	 case BACKSPACE_t:
 	 case CLOSE_t:
@@ -2884,7 +3002,7 @@ static bool check_FUNCTION (char *str, SXINT strlgth, SXINT l, SXINT Mtok_no)
    retourne vrai ssi la ligne courante est le debut d'un <21:implicit_statement> donc de la forme
    IMPLICIT (NONE EOL | xtype ('*' | suffixe) ...)
    avec
-       xtype = CHARACTER | COMPLEX | DOUBLE PRECISION | INTEGER | LOGICAL | REAL | UNDEFINED
+       xtype = CHARACTER | COMPLEX | DOUBLE PRECISION | INTEGER | LOGICAL | REAL | UNDEFINED | DOUBLE COMPLEX
        suffixe = '(' elem {',' elem} ')'
        elem = (LETTER | '_') ['-'(LETTER | '_')]
    
@@ -2921,11 +3039,17 @@ static bool check_IMPLICIT_stmt ()
   kw = seek_kw (str);
 
   if (kw == DO_p) {
-       /* On regarde si ce n'est pas en fait DOUBLE PRECISION */
+       /* On regarde si ce n'est pas en fait DOUBLE PRECISION... */
        if (strncmp (str, "DOUBLEPRECISION", strlen ("DOUBLEPRECISION")) == 0) {
 	    /* En fait on est sur "IMPLICIT DOUBLE PRECISION" */
 	    kw = DOUBLEPRECISION_p;
        }
+       /* ...ou DOUBLE COMPLEX */
+       else if (strncmp (str, "DOUBLECOMPLEX", strlen ("DOUBLECOMPLEX")) == 0) {
+	    /* En fait on est sur "IMPLICIT DOUBLE COMPLEX" */
+	    kw = DOUBLECOMPLEX_p;
+       }
+       
   }
 
   if (str [kw_lgth [kw]] != SXNUL)
@@ -2948,6 +3072,7 @@ static bool check_IMPLICIT_stmt ()
     break;
     
   case COMPLEX_p:
+  case DOUBLECOMPLEX_p:
   case DOUBLEPRECISION_p:
   case INTEGER_p:
   case LOGICAL_p:
@@ -3022,13 +3147,13 @@ static bool check_IMPLICIT_stmt ()
   sxsvar.sxlv.terminal_token.string_table_entry = SXEMPTY_STE;
   f77put_token (sxsvar.sxlv.terminal_token);
 
-  if (kw == DOUBLEPRECISION_p) {
+  if (kw == DOUBLEPRECISION_p || kw == DOUBLECOMPLEX_p) {
     sxsvar.sxlv.terminal_token.lahead = DOUBLE_t;
     sxsvar.sxlv.terminal_token.source_index =
       *get_source_index (&(sxsvar.sxlv.terminal_token.source_index), strlen ("IMPLICIT"));
     sxsvar.sxlv.terminal_token.comment = NULL;
     f77put_token (sxsvar.sxlv.terminal_token);
-    sxsvar.sxlv.terminal_token.lahead = PRECISION_t;
+    sxsvar.sxlv.terminal_token.lahead = kw == DOUBLEPRECISION_p ? PRECISION_t : COMPLEX_t;
   }
   else
     sxsvar.sxlv.terminal_token.lahead = kw_codes [kw];
@@ -3058,7 +3183,7 @@ static void process_initial_id (SXINT Mtok_no, bool is_a_lhs)
     SXINT	lahead;
     SXINT	tok_no, strlgth, kw, l, kw_nb;
     struct sxtoken	tt [3];
-    bool        insert_a_token = false, extract_int_id = false, check_doubleprecision = false;
+    bool        insert_a_token = false, extract_int_id = false, check_double_precision = false, check_double_complex = false;
 
 #if EBUG
     SXINT	left_tok_no;
@@ -3266,8 +3391,9 @@ a CONTINUE statement is gracefully inserted here.",
 	break;
 
     case DOUBLEPRECISION_p:
-	 /* Ce case ne peut (normalement) etre atteint par ici, il l'est dorenavant par l'intermédiaire du "case DO_p:" */
-	 sxtrap (ME, "process_initial_id for \"DOUBLE PRECISION\"");
+    case DOUBLECOMPLEX_p:
+	 /* Ce cas ne peut (normalement) etre atteint par ici, il l'est dorenavant par l'intermédiaire du "case DO_p:" */
+	 sxtrap (ME, "process_initial_id for \"DOUBLE PRECISION\" or \"DOUBLE COMPLEX\"");
 	 break;
 
     case CHARACTER_p:
@@ -3752,6 +3878,7 @@ a CONTINUE statement is gracefully inserted here.",
 		       );
 
 	      /* On génère CONTINUE_t EOL_t */
+
 	      tt_stack_mngr_clear();
 	      tok = *PTOK;
 	      tok.lahead = CONTINUE_t;
@@ -3772,9 +3899,10 @@ a CONTINUE statement is gracefully inserted here.",
 	  }
 	  else {
 	       /* "do..." ce n'est pas un do stmt, on retourne donc sans rien changer... */
-	       /* ... sauf si on est dans le cas DOUBLEPRECISION[*len]id */
+	       /* ... sauf si on est dans le cas DOUBLE(PRECISION|COMPLEX)[*len]id */
 	       /* ... on peut être en lhs */
-	       check_doubleprecision = (!is_a_lhs && strlgth >= (SXINT)strlen ("DOUBLEPRECISION"));
+	       check_double_precision = (!is_a_lhs && strlgth >= (SXINT)strlen ("DOUBLEPRECISION") && strncmp (str, "UBLEPRECISION", strlen ("UBLEPRECISION")) == 0);
+	       check_double_complex = (!is_a_lhs && strlgth >= (SXINT)strlen ("DOUBLECOMPLEX") && strncmp (str, "UBLECOMPLEX", strlen ("UBLECOMPLEX")) == 0);
 	  }
 	}
 	
@@ -3790,31 +3918,29 @@ a CONTINUE statement is gracefully inserted here.",
 	break;
     }
     
-    if (check_doubleprecision) {
-	 /* initial_id est de la forme doblabla, ce n'est pas un do_statement, et sa longueur est suffisante pour etre
-	  un doubleprecision */
-	 /* On regarde si c'est le debut d'un <20:type_statement> de la forme doubleprecision ... */
-	 if (strncmp (str, "UBLEPRECISION", strlen ("UBLEPRECISION")) == 0) {
-	      /* On retourne 2 tokens pour DOUBLE PRECISION  */
-	      PTOK->lahead = DOUBLE_t;
-	      PTOK->string_table_entry  = SXEMPTY_STE;
-	      tt [0].lahead = PRECISION_t;
-	      tt [0].string_table_entry = SXEMPTY_STE;
-	      tt [0].source_index =
-		   *get_source_index (&(PTOK->source_index), strlen ("DOUBLE"));
-	      tt [0].comment = NULL;
-	      sxtknmdf (&(tt [0]), 1, Mtok_no+1, 0);
-	      str -= strlen ("DO"); /* On repointe vers le debut */
-	      /* l doit indiquer le decalage depuis le debut de Mtok_no. */
-	      l = strlen ("DOUBLEPRECISION");
-	      kw_nb = 2; /* nb de kw effectif */
-	      tok_no = Mtok_no+1;
+    if (check_double_precision || check_double_complex) {
+	 /* initial_id est de la forme doblabla, ce n'est pas un do_statement,
+	    c'est un doublecomplex ou un doubleprecision */
+	 /* On retourne 2 tokens pour DOUBLE (PRECISION|COMPLEX) */
+	 PTOK->lahead = DOUBLE_t;
+	 PTOK->string_table_entry  = SXEMPTY_STE;
+	 
+	 tt [0].lahead = check_double_precision ? PRECISION_t : COMPLEX_t;
+	 tt [0].string_table_entry = SXEMPTY_STE;
+	 tt [0].source_index =
+	      *get_source_index (&(PTOK->source_index), strlen ("DOUBLE"));
+	 tt [0].comment = NULL;
+	 sxtknmdf (&(tt [0]), 1, Mtok_no+1, 0);
+	 str -= strlen ("DO"); /* On repointe vers le debut */
+	 /* l doit indiquer le decalage depuis le debut de Mtok_no. */
+	 l = check_double_precision ? strlen ("DOUBLEPRECISION") : strlen ("DOUBLECOMPLEX");
+	 kw_nb = 2; /* nb de kw effectif */
+	 tok_no = Mtok_no+1;
 	
-	      if (check_FUNCTION (str, strlgth, l, tok_no))
-		   is_function_stmt = true;
-	      else
-		   extract_int_id = true;;
-	 }
+	 if (check_FUNCTION (str, strlgth, l, tok_no))
+	      is_function_stmt = true;
+	 else
+	      extract_int_id = true;;
     }
 
     if (insert_a_token) {
@@ -4042,6 +4168,19 @@ associated with the type CHARACTER.",
 	    extension_hit (X2relop_kind, SXGET_TOKEN (sxplocals.atok_no - 1).source_index);
 	    return SXANY_BOOL;
 
+	case 3:
+	    /* @3 : on vient de detecter un <10b:scalar_type> = DOUBLE  COMPLEX @3 ;
+	       cette [[EXTENSION]] est non valide en standard */
+	    extension_hit (X2dblcplx_kind, SXGET_TOKEN (sxplocals.atok_no - 1).source_index);
+	    return SXANY_BOOL;
+
+	case 4:
+	    /* @4 : on vient de detecter un
+	       <49:io_imply_do_list> = ( ( <48:io_list> ) &2 , @4  <99:symbolic_name>  =  <40b:do_parameters> ) ;
+	       cette [[EXTENSION]] est non valide en standard */
+	    extension_hit (X2ioidl_kind, SXGET_TOKEN (sxplocals.atok_no - 2).source_index);
+	    return SXANY_BOOL;
+
           default:
 	    break;
 	}
@@ -4066,6 +4205,19 @@ associated with the type CHARACTER.",
 		return false;
 		
 	    return true;
+
+	case 2:
+	     /* [[EXTENSION]]
+		On vérifie qu'on est bien sur la ')' fermant l' <48:io_list> d'une <49:io_imply_do_list> :
+		<49:io_imply_do_list> = ( ( <48:io_list> ) &2 , @4  <99:symbolic_name>  =  <40b:do_parameters> ) ;
+	     */
+	    if (sxget_token (tok_no = sxplocals.ptok_no + 1)->lahead != VIRGULE_t)
+		return false;
+
+	    if (sxget_token (++tok_no)->lahead != ID_t)
+		return false;
+
+	    return sxget_token (++tok_no)->lahead == EGAL_t;
 
           default:
             break;
@@ -4516,6 +4668,9 @@ bool sxscanner_action (SXINT code, SXINT act_no) {
     stmt_kind [STOP_t] = executable_k;
     stmt_kind [WRITE_t] = executable_k;
 
+    /* Pour la mémoisation de check_balanced */
+    memo_cb_mngr (SXOPEN);
+
     break;
 
   case SXINIT:
@@ -4575,6 +4730,8 @@ bool sxscanner_action (SXINT code, SXINT act_no) {
     tt_stack_mngr_free();
     sxfree (iokw_stack);
     sxfree (t_stack);
+
+    memo_cb_mngr (SXCLOSE);
 
     break;
 
@@ -5069,7 +5226,7 @@ bool sxscanner_action (SXINT code, SXINT act_no) {
 			)
 			  /* ident est de la forme do..., segina... ou segind... (cas [[ESOPE]] et est suivi de = */
 			  /* ident est de la forme do...
-			   Cet ident peut donc etre doubleprecision... */
+			   Cet ident peut donc etre doubleprecision... ou doublecomplex... */
 			  process_initial_id (Mtok_no, true /* is_a_lhs */);
 		}
 	      }
@@ -5435,19 +5592,21 @@ this expression is erased.",
 	      SXINT ste = sxsvar.sxlv.terminal_token.string_table_entry;
 	      
 	      if (is_implicit_statement) {
-		/* On regarde si on est dans le cas DOUBLE PRECISION */
-		if (strcmp (sxstrget (ste), "DOUBLEPRECISION") == 0)	    {
+		bool is_double_precision = strcmp (sxstrget (ste), "DOUBLEPRECISION") == 0;
+
+		/* On regarde si on est dans le cas DOUBLE PRECISION ou DOUBLE COMPLEX */
+		if (is_double_precision || strcmp (sxstrget (ste), "DOUBLECOMPLEX") == 0)	    {
 		  sxsvar.sxlv.terminal_token.lahead = DOUBLE_t;
 		  sxsvar.sxlv.terminal_token.string_table_entry = SXEMPTY_STE;
 		  /* On range DOUBLE_t... */
 		  f77put_token (sxsvar.sxlv.terminal_token);
 		  /* ... en Mtok_no et ...*/
-		  sxsvar.sxlv.terminal_token.lahead = PRECISION_t;
+		  sxsvar.sxlv.terminal_token.lahead = is_double_precision ? PRECISION_t : COMPLEX_t;
 		  sxsvar.sxlv.terminal_token.string_table_entry = SXEMPTY_STE;
 		  sxsvar.sxlv.terminal_token.source_index =
 		    *get_source_index (&(sxsvar.sxlv.terminal_token.source_index), strlen ("DOUBLE"));
 		  sxsvar.sxlv.terminal_token.comment = NULL;
-		  /* ... on laisse PRECISION_t au scanner */
+		  /* ... on laisse PRECISION_t ou COMPLEX_t au scanner */
 		}
 	      }
 	      else if (check_inside_FUNCTION (sxplocals.Mtok_no, sxstrget (ste), sxstrlen (ste))) {

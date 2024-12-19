@@ -1164,6 +1164,22 @@ $LIST( <10b:scalar_type>)
 
 *------------------------------------------------------------------------------
 
+* [[EXTENSION]]
+
+* L'extension "DOUBLE COMPLEX" est traitee par l'action syntaxique @3
+
+<10b:scalar_type>
+		= DOUBLE  COMPLEX @3 ;
+
+$LIST( <10b:scalar_type>)
+{
+  $LIST( <10b:scalar_type>) = SXML_T("DOUBLE COMPLEX");
+}
+
+* [[NEW_RULE]] [[SEMC_ADDED]]
+
+*------------------------------------------------------------------------------
+
 <10b:scalar_type>
 		= LOGICAL ;
 
@@ -3037,6 +3053,7 @@ $LIST(<39:end_if_statement>)
 *******************************************************************************
 
 * [[EXTENSION]]
+
 * On introduit la notion de bloc <40a:do_loop> avec un header <40:do_statement>,
 * un corps <2c:statement_list> et une fin de bloc %ENDDO.
 * Ce %ENDDO est un dummy terminal zombie (voir f77.lecl) generique (il 
@@ -3084,6 +3101,7 @@ $LIST(<40a:do_loop>)
 *------------------------------------------------------------------------------
 
 * [[EXTENSION]]
+
 * Ci-apres, on a un "do_while" se terminant par un vrai END DO 
 * qui va aussi fermer tous les <40:do_statement> ouverts dans le "do_block".
 
@@ -3108,6 +3126,7 @@ $LIST(<40a:do_loop>)
 *------------------------------------------------------------------------------
 
 * [[EXTENSION]]
+
 * Ci-apres, on a un "do_block" se terminant par un vrai END DO 
 * qui va aussi fermer tous les <40:do_statement> ouverts dans le "do_block".
 
@@ -3165,6 +3184,7 @@ $LIST(<40:do_statement>)
 *------------------------------------------------------------------------------
 
 * [[EXTENSION]]
+
 <40:do_statement>
 		= DO  <110b:label_ref>  WHILE ( <84:logical_expression> ) %EOL ;
 
@@ -3181,6 +3201,7 @@ $LIST(<40:do_statement>)
 *------------------------------------------------------------------------------
 
 * [[EXTENSION]]
+
 <40:do_statement>
 		= DO  <110b:label_ref> ,  WHILE ( <84:logical_expression> ) %EOL ;
 
@@ -3197,6 +3218,7 @@ $LIST(<40:do_statement>)
 *******************************************************************************
 
 * [[EXTENSION]]
+
 <40c:end_do>    = END  DO ;
 
 $LIST(<40c:end_do>)
@@ -3672,7 +3694,7 @@ $LIST( <48:io_list>)
 *******************************************************************************
 
 <49:io_imply_do_list>
-		= ( <48:io_list> , &1  <99:symbolic_name>  =  <78:int_real_dp_expr> ,  <78:int_real_dp_expr> ,  <78:int_real_dp_expr> ) ;
+		= ( <48:io_list> , &1  <99:symbolic_name>  =  <40b:do_parameters> ) ;
 
 $LIST( <49:io_imply_do_list>)
 {
@@ -3682,17 +3704,21 @@ $LIST( <49:io_imply_do_list>)
       $LIST(<48:io_list>), 
       $LIST(<99:symbolic_name>)
     ),
-    ast_do_parameters(
-      $LIST(<78:int_real_dp_expr>),
-      $LIST(<78:int_real_dp_expr>'),
-      $LIST(<78:int_real_dp_expr>'') )
+    $LIST(<40b:do_parameters>)
   );
 }
+
+* [[RULE_MODIFIED]] [[SEMC_ADDED]]
 
 *------------------------------------------------------------------------------
 
+* [[EXTENSION]] 
+
+* Cette extension est traitee par l'action syntaxique @4
+* note: &2 <=> LA (,&1)
+
 <49:io_imply_do_list>
-		= ( <48:io_list> , &1  <99:symbolic_name>  =  <78:int_real_dp_expr> ,  <78:int_real_dp_expr> ) ;
+		= ( ( <48:io_list> ) &2 , @4  <99:symbolic_name>  =  <40b:do_parameters> ) ;
 
 $LIST( <49:io_imply_do_list>)
 {
@@ -3702,12 +3728,11 @@ $LIST( <49:io_imply_do_list>)
       $LIST(<48:io_list>), 
       $LIST(<99:symbolic_name>)
     ),
-    ast_do_parameters(
-      $LIST(<78:int_real_dp_expr>),
-      $LIST(<78:int_real_dp_expr>'),
-      NULL )
+    $LIST(<40b:do_parameters>)
   );
 }
+
+* [[RULE_MODIFIED]] [[SEMC_ADDED]]
 
 *******************************************************************************
 
@@ -7050,6 +7075,8 @@ $LIST( <87:rel_op>)
 *------------------------------------------------------------------------------
 
 * [[EXTENSION]]
+
+* Cette extension (et les suivantes) sont traitees par l'action syntaxique @2
 
 <87:rel_op>	= "<" @2 ;
 

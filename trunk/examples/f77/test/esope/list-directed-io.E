@@ -19,10 +19,11 @@
       
 *     >> inline function of type 'integer -> character*0'
       character*0 nils
-      nils(k) = ''
       
 *     >> inline function of type 'integer -> integer'
       integer nili
+
+      nils(k) = ''
       nili(k) = 0
      
       write(6,*) 
