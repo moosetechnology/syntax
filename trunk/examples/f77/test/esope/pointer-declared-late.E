@@ -5,6 +5,7 @@
         real value
       endsegment
       
+      pointeur p.node
 
       write(*,*) 'main: begin'
 
@@ -14,8 +15,8 @@
       call ooossg
       
 *     -- initialize segments
-* >>  is it accepted by the ESOPE translater ?
-      pointeur p.node
+* >>  a declaration of pointer here would be illegal
+
       segini, p
       p.value = 3.14
             

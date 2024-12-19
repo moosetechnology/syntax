@@ -4,9 +4,6 @@ This directory contains various for FORTRAN 77 tests.
 The evref/ directory contains (unitary) tests developed by
 the EVREF research team of INRIA Lille / Universite de Lille.
 
-The extensions/ directory contains tests with extensions that
-are not supported by the FORTRAN parser f77.
-
 The misc/ directory contains miscellaneous tests.
 
 Ths nist/ directory contains a test suite produced by NIST
