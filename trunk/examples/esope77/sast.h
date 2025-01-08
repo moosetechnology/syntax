@@ -2200,6 +2200,55 @@ SXML_TYPE_LIST ast_segment(
 
 /* -------------------------------------------------------------------------
  */
+SXML_TYPE_LIST ast_condensed_segment(
+              SXML_TYPE_LIST location,
+              SXML_TYPE_LIST variables
+              ) {
+  return
+    SXML_LTL(
+      ast_abstract_statement("condensed_segment", location),
+      ",\n",
+      JSON_KU("variables", variables)
+  );
+}
+
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_condensed_segment_variables(
+              SXML_TYPE_TEXT type,
+              SXML_TYPE_LIST array_declarator
+              ) {
+  return JSON_MAP(
+    SXML_LLL(
+      ast_tag_("condensed_segment_variables"),
+      JSON_KQ_("type", type),
+      JSON_KU("array_declarator", array_declarator)
+    )
+  );
+}
+
+
+/* -------------------------------------------------------------------------
+ */
+SXML_TYPE_LIST ast_condensed_segment_variables_spec(
+              SXML_TYPE_TEXT type,
+              SXML_TYPE_LIST array_declarator,
+              SXML_TYPE_LIST spec_definition
+              ) {
+  return JSON_MAP(
+    SXML_LLLL(
+      ast_tag_("condensed_segment_variables"),
+      JSON_KQ_("type", type),
+      JSON_KU_("array_declarator", array_declarator),
+      JSON_KU(type, spec_definition)
+    )
+  );
+}
+
+
+/* -------------------------------------------------------------------------
+ */
 SXML_TYPE_LIST ast_pointeur_name(
               SXML_TYPE_LIST pointeur_name,
               SXML_TYPE_LIST segment_name
