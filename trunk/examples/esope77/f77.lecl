@@ -76,16 +76,15 @@ Tokens
    "/"		= -"/" ;
 			Priority Shift > Reduce;
 
-   "("          = -"(" ; @8 ;
+-- Dans une ligne logique, le compteur no 2 contient le niveau de parenthesage
+   "("          = -"(" @Incr (2) ; @8 ;
                   -- @8 : si is_implicit_statement => @Set(1)
-		  --      si SEGMENT / ... / ( => @Set(2)
 
-   ")"          = -")" @Reset(1);
-                  -- ... dans tous les cas
+   ")"          = -")" @Reset(1) @Decr (2) ; -- ... dans tous les cas
 
-   %EOL		= -EOL ; @3 ; -- traitement du ENDDO
+   %EOL		= -EOL @Reset (2) ; @3 ; -- traitement du ENDDO
 
-   EOF		= -NUL &False ; @7 ; -- it exists one MAIN program
+   EOF		= -NUL &False ; @7 ; -- Verifications de fin de programme
 
 
 -- Format specification processing (see also %character_constant.Hollerith)
@@ -113,8 +112,6 @@ Tokens
 			       -- On positionne star_flag_mode_tok_no
 
    old_seg_kw_type
-		= "*"&Is_Set(2) (UPPER | LOWER @6) [UPPER | LOWER @6 | digit] ;
-		  	       -- Si le * suit "SEGMENT /"
-			       -- On reconnait un mot-clé désignant un type, par exemple "*R8" dans
-			       -- SEGMENT /myptr/ (..., X*R8, ...)
-			       
+		= "*"&1 (UPPER | LOWER @6) [UPPER | LOWER @6 | digit] ;
+		     -- &1 <=> On est dans une carte logique SEGMENT quelconque, et au bon niveau de parenthésage.
+		     --        On reconnait un mot-clé désignant un type, par exemple "*R8"

@@ -126,7 +126,7 @@ $LIST(<common_body>, <,common_body>,
 	<108:logical_constant>,
 	<109:character_constant>,
 	<110a:label_ref_list>, <110b:label_ref>, <114:sign>, 
-	<117:segment>, <117b:segment_pointer>, <117c:seg_var_decl_list>, <117d:seg_var_decl>, <117e:seg_type_spec>,
+	<117:segment>, <117b:segment_pointer>, <117c:seg_var_decl_list>, <117d:seg_var_decl>, <117e:seg_type_spec>, <117f:cond_seg_var_decl>,
 	<118a:segment_variables_list>, <118:segment_variable>,
 	<120:implied>,
 	<121:pointeur>, <121a:pointeurs_seq>, <121c:array_size>,
@@ -1175,8 +1175,6 @@ $LIST( <10b:scalar_type>)
 {
   $LIST( <10b:scalar_type>) = SXML_T("DOUBLE COMPLEX");
 }
-
-* [[NEW_RULE]] [[SEMC_ADDED]]
 
 *------------------------------------------------------------------------------
 
@@ -3708,14 +3706,12 @@ $LIST( <49:io_imply_do_list>)
   );
 }
 
-* [[RULE_MODIFIED]] [[SEMC_ADDED]]
-
 *------------------------------------------------------------------------------
 
 * [[EXTENSION]] 
 
 * Cette extension est traitee par l'action syntaxique @4
-* note: &2 <=> LA (,&1)
+* note: &2 <=> LA (3) = ", id ="
 
 <49:io_imply_do_list>
 		= ( ( <48:io_list> ) &2 , @4  <99:symbolic_name>  =  <40b:do_parameters> ) ;
@@ -3731,8 +3727,6 @@ $LIST( <49:io_imply_do_list>)
     $LIST(<40b:do_parameters>)
   );
 }
-
-* [[RULE_MODIFIED]] [[SEMC_ADDED]]
 
 *******************************************************************************
 
@@ -6457,6 +6451,21 @@ $LIST( <80a:int_constant_expr>)
     $LIST( <80:int_constant_expr>) );
 }
 
+*------------------------------------------------------------------------------
+
+* [[ESOPE]]
+
+<80a:int_constant_expr>
+		= <88b:function_reference_or_array_element_name> ;
+
+$LIST( <80a:int_constant_expr>)
+{
+  $LIST( <80a:int_constant_expr>) =
+    $LIST(<88b:function_reference_or_array_element_name>);
+}
+
+* [[ADD_RULE]] [[SEMC_ADDED]]
+
 *******************************************************************************
 
 * Each variable name in a dimension bound expression must be of type integer and
@@ -7881,6 +7890,22 @@ $LIST(<114:sign>)
 * [[ESOPE]] rules
 *******************************************************************************
 
+* Empty segment
+
+<117:segment> = SEGMENT <117a:segment_comma> <99:symbolic_name> %EOL 
+	        END  SEGMENT ;
+
+$LIST( <117:segment>)
+{
+  $LIST( <117:segment>) = ast_segment(
+  	LOCATION(0),
+  	$LIST(<99:symbolic_name>),
+    SXML_T("")
+  );
+}
+
+*------------------------------------------------------------------------------
+
 <117:segment> = SEGMENT <117a:segment_comma> <99:symbolic_name> %EOL 
 	           <118a:segment_variables_list> %EOL
 	        END  SEGMENT ;
@@ -7904,6 +7929,20 @@ $LIST( <117:segment>)
   	LOCATION(0),
   	$LIST(<117b:segment_pointer>),
   	$LIST(<117c:seg_var_decl_list>)
+  );
+}
+
+*------------------------------------------------------------------------------
+
+* Condensed segment (cf ESOPE manual 15.1.3, p. 58)
+
+<117:segment> = SEGMENT <117a:segment_comma>  <117f:cond_seg_var_decl> ;
+
+$LIST( <117:segment>)
+{
+  $LIST( <117:segment>) = ast_condensed_segment(
+    LOCATION(0),
+  	$LIST(<117f:cond_seg_var_decl>)    
   );
 }
 
@@ -8156,6 +8195,61 @@ $LIST(<117e:seg_type_spec>)
 $LIST(<117e:seg_type_spec>)
 {
   $LIST(<117e:seg_type_spec>) = SXML_T ("*H");
+}
+
+*******************************************************************************
+
+<117f:cond_seg_var_decl>
+	      = <16:array_declarator> ;
+
+$LIST(<117f:cond_seg_var_decl>)
+{
+  $LIST(<117f:cond_seg_var_decl>) = ast_condensed_segment_variables (
+    "array_declarator",
+    $LIST(<16:array_declarator>)
+  );
+}
+
+*------------------------------------------------------------------------------
+
+<117f:cond_seg_var_decl>
+	      = <16:array_declarator> <117e:seg_type_spec> ;
+
+$LIST(<117f:cond_seg_var_decl>)
+{
+  $LIST(<117f:cond_seg_var_decl>) = ast_condensed_segment_variables_spec (
+    "seg_type_spec",
+    $LIST(<16:array_declarator>),
+    $LIST(<117e:seg_type_spec>)
+  );
+}
+
+*------------------------------------------------------------------------------
+
+<117f:cond_seg_var_decl>
+	      = <16:array_declarator> * <22:len_specification> ;
+
+$LIST(<117f:cond_seg_var_decl>)
+{
+  $LIST(<117f:cond_seg_var_decl>) = ast_condensed_segment_variables_spec (
+    "len_specification",
+    $LIST(<16:array_declarator>),
+    $LIST(<22:len_specification>)
+  );
+}
+
+*------------------------------------------------------------------------------
+
+<117f:cond_seg_var_decl>
+	      = <16:array_declarator> . <99:symbolic_name> ;
+
+$LIST(<117f:cond_seg_var_decl>)
+{
+  $LIST(<117f:cond_seg_var_decl>) = ast_condensed_segment_variables_spec (
+    "symbolic_name",
+    $LIST(<16:array_declarator>),
+    $LIST(<99:symbolic_name>)
+  );
 }
 
 *******************************************************************************
