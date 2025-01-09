@@ -369,6 +369,79 @@ In this program, each such tabulation character is replaced by spaces.",
 
 static unsigned int COL_MAX;
 
+#if EBUG
+static void print_tok (struct sxtoken	*pt)
+{
+  fprintf (stdout,
+	   "\ttoken = (%ld, \"%s\")\n\
+\t\t\tste = (%ld, \"%s\")\n\
+\t\t\tsource_index = (%s, %ld, %ld)\n\
+\t\t\tcomment = \"%s\"\n\
+",
+	   pt->lahead,
+	   sxttext (sxsvar.sxtables, pt->lahead),
+	   pt->string_table_entry,
+	   pt->string_table_entry > 1 ? sxstrget (pt->string_table_entry) : (pt->string_table_entry == 1 ?
+									     "SXEMPTY_STE" : "SXERROR_STE"),
+	   pt->source_index.file_name,
+	   (SXUINT) pt->source_index.line,
+	   (SXUINT) pt->source_index.column,
+	   (pt->comment != NULL) ? pt->comment : "(NULL)");
+}
+
+static void print_toks_buf (SXINT min, SXINT max)
+{
+    SXINT i;
+    
+    fprintf (stdout, "\n%s (print_toks_buf [%ld:%ld])\n", ME, min, max);
+
+    for (i = min; i <= max ; i++) {
+	fprintf (stdout,
+		 "toks_buf [%ld(%ld, %ld)]",
+		 (SXINT) i,
+		 (SXINT) SXTOKEN_PAGE(i),
+		 (SXINT) SXTOKEN_INDX(i));
+	print_tok (&(SXGET_TOKEN (i)));
+    }
+    
+    fputs ("\n", stdout);
+}
+
+static void print_sxsvar (void)
+{
+  SXINT i;
+      
+  fprintf (stdout,
+	   "sxsvar.sxlv_s.token_string [%ld] = \"", (SXUINT) sxsvar.sxlv.ts_lgth);
+    
+  for (i = 0; i < sxsvar.sxlv.ts_lgth ; i++) {
+    fprintf (stdout,
+	     "%c", 
+	     sxsvar.sxlv_s.token_string [i]);
+  }
+  
+  fputs ("\"\n", stdout);
+
+  print_tok (&(sxsvar.sxlv.terminal_token));
+      
+  fprintf (stdout,
+	   "sxsvar.sxlv.previous_char = '%c'_0x%x",
+	   sxsvar.sxlv.previous_char,
+	   (unsigned short)sxsvar.sxlv.previous_char);
+}
+
+static void print_srcmngr_curchar (void)
+{
+  fprintf (stdout,
+	   "\tsxsrcmngr.previous_char = '%c'_0x%x,\n\tsxsrcmngr.current_char = '%c'_0x%x, sxsrcmngr.source_coord = (%s, %ld, %ld)\n",
+	   (char)sxsrcmngr.previous_char, (unsigned short)sxsrcmngr.previous_char,
+	   (char)sxsrcmngr.current_char, (unsigned short)sxsrcmngr.current_char,
+	   sxsrcmngr.source_coord.file_name,
+	   (SXUINT) sxsrcmngr.source_coord.line,
+	   (SXUINT) sxsrcmngr.source_coord.column);
+}
+#endif
+
 static void dump_comment_char (char c)
 {
     /* assert is_json && (json_pipe != NULL) */
@@ -389,22 +462,16 @@ static bool is_a_comment_flag (short c) {
 	  ;
 }
 
-/* Lit le caractère suivant de infile. Ce caractère est éliminé ssi c'est un '\r' (carriage return).
-   Dans ce cas, le caractère suivant doit être un '\n' qui est retourné */
+/* Lit le caractère suivant de infile */
+#if EBUG
+// Pour lldb
 static short f77getc (FILE *infile) {
-     short c;
-
-     c = getc (infile);
-
-     if (c == '\r') {
-	  c = getc (infile);
-
-	  if (c != '\n')
-	       sxtrap (ME, "Illegal carriage return detected in f77getc");
-     }
-
+     short c = getc (infile);
      return c;
 }
+#else
+#define f77getc(f) getc(f)
+#endif
 
 
 /* Remplit la structure stmts avec la prochaine carte stmt (initiale ou continuation) suivante.
@@ -419,10 +486,11 @@ static short f77getc (FILE *infile) {
 
 static void fill_comments_and_stmts (void)
 {
-  short       c, cc;
+  short         c, cc;
+  char          prev_c;
   SXUINT        x;
   SXINT         contiguous_empty_lines_nb, first_non_blank_col, last_non_blank_col;
-  bool	ligne_vide = false, is_header_empty;
+  bool	        ligne_vide = false, is_header_empty;
 
 #if EBUG
   SXINT prev_comments_top;
@@ -547,15 +615,28 @@ static void fill_comments_and_stmts (void)
 
 	  break;
 	}
-	else {
-	  sxerror (source_item.source_index,
-		   sxsvar.sxtables->err_titles [2][0] /* error */,
-		   "%sThe illegal character \"%s\" is changed into blank.",
-		   sxsvar.sxtables->err_titles [2]+1 /* error */,
-		   SXCHAR_TO_STRING (c));
-	}
+	prev_c = c;
 
-	c = ' ';
+        if (prev_c == '\r') { // carriage return
+	  stmts_put_a_char (x++, ' '); // On range un blanc
+
+	  if ((c = f77getc (sxsrcmngr.infile)) == SXNEWLINE)
+	    break; // Le '\r' est licite
+
+	  // Le '\r' est illicite => sxerror
+        }
+
+	sxerror (source_item.source_index,
+		 sxsvar.sxtables->err_titles [2][0] /* error */,
+		 "%sThe illegal character \"%s\" is changed into blank.",
+		 sxsvar.sxtables->err_titles [2]+1 /* error */,
+		 SXCHAR_TO_STRING (prev_c));
+	
+        if (prev_c == '\r')
+	  continue; // Rangement+lecture de c deja faites
+
+	c = ' '; // On va ranger le c
+
       }
 
       stmts_put_a_char (x++, (char)c);
@@ -583,7 +664,7 @@ static void fill_comments_and_stmts (void)
       cc = stmts_put_a_char (6, ' ');
 
     /* c contient le caractère de la colonne 6, on est sur une carte stmt, initiale ou continuation */
-    stmts.is_a_continuation_card = (cc != ' ');
+    stmts.is_a_continuation_card = (cc != ' '); // meme si cc est un caractère interdit!!
 
     if (!stmts.is_a_continuation_card) {
       stmts.continuation_line_no = 0;
@@ -617,6 +698,7 @@ static void fill_comments_and_stmts (void)
     }
 
     ligne_vide = is_header_empty;
+    prev_c = cc;
 
     while (c != SXNEWLINE && c != EOF && x <= COL_MAX) {
       if (c != ' ') {
@@ -628,9 +710,12 @@ static void fill_comments_and_stmts (void)
 	  first_non_blank_col = x;
       }
 
-      stmts_put_a_char (x++, (char)c);	    
+      prev_c = stmts_put_a_char (x++, (char)c);	    
       c = f77getc (sxsrcmngr.infile);
     }
+
+    if (prev_c == '\r') // On suppose que c'est un carriage return licite ...
+	stmts_put_a_char (x-1, ' '); // ... on le transforme en blanc
 
     /* Ici soit on a rencontré un eol (ou eof) soit x == 73, la ligne est donc finie */
     if (!is_input_free_fortran) {
@@ -1022,79 +1107,6 @@ static void	CLEAR (SXINT *T)
 }
 
 
-
-#if EBUG
-static void print_tok (struct sxtoken	*pt)
-{
-  fprintf (stdout,
-	   "\ttoken = (%ld, \"%s\")\n\
-\t\t\tste = (%ld, \"%s\")\n\
-\t\t\tsource_index = (%s, %ld, %ld)\n\
-\t\t\tcomment = \"%s\"\n\
-",
-	   pt->lahead,
-	   sxttext (sxsvar.sxtables, pt->lahead),
-	   pt->string_table_entry,
-	   pt->string_table_entry > 1 ? sxstrget (pt->string_table_entry) : (pt->string_table_entry == 1 ?
-									     "SXEMPTY_STE" : "SXERROR_STE"),
-	   pt->source_index.file_name,
-	   (SXUINT) pt->source_index.line,
-	   (SXUINT) pt->source_index.column,
-	   (pt->comment != NULL) ? pt->comment : "(NULL)");
-}
-
-static void print_toks_buf (SXINT min, SXINT max)
-{
-    SXINT i;
-    
-    fprintf (stdout, "\n%s (print_toks_buf [%ld:%ld])\n", ME, min, max);
-
-    for (i = min; i <= max ; i++) {
-	fprintf (stdout,
-		 "toks_buf [%ld(%ld, %ld)]",
-		 (SXINT) i,
-		 (SXINT) SXTOKEN_PAGE(i),
-		 (SXINT) SXTOKEN_INDX(i));
-	print_tok (&(SXGET_TOKEN (i)));
-    }
-    
-    fputs ("\n", stdout);
-}
-
-static void print_sxsvar (void)
-{
-  SXINT i;
-      
-  fprintf (stdout,
-	   "sxsvar.sxlv_s.token_string [%ld] = \"", (SXUINT) sxsvar.sxlv.ts_lgth);
-    
-  for (i = 0; i < sxsvar.sxlv.ts_lgth ; i++) {
-    fprintf (stdout,
-	     "%c", 
-	     sxsvar.sxlv_s.token_string [i]);
-  }
-  
-  fputs ("\"\n", stdout);
-
-  print_tok (&(sxsvar.sxlv.terminal_token));
-      
-  fprintf (stdout,
-	   "sxsvar.sxlv.previous_char = '%c'_0x%x",
-	   sxsvar.sxlv.previous_char,
-	   (unsigned short)sxsvar.sxlv.previous_char);
-}
-
-static void print_srcmngr_curchar (void)
-{
-  fprintf (stdout,
-	   "\tsxsrcmngr.previous_char = '%c'_0x%x,\n\tsxsrcmngr.current_char = '%c'_0x%x, sxsrcmngr.source_coord = (%s, %ld, %ld)\n",
-	   (char)sxsrcmngr.previous_char, (unsigned short)sxsrcmngr.previous_char,
-	   (char)sxsrcmngr.current_char, (unsigned short)sxsrcmngr.current_char,
-	   sxsrcmngr.source_coord.file_name,
-	   (SXUINT) sxsrcmngr.source_coord.line,
-	   (SXUINT) sxsrcmngr.source_coord.column);
-}
-#endif
 
 static void f77put_token (struct sxtoken tok) {
   sxput_token (tok);
@@ -2903,14 +2915,17 @@ static void check_scalar_type_repr_lgth (SXINT type, struct sxtoken *int_ptok) {
     extension_hit (XLENGTH_kind, int_ptok->source_index);
 }
 
-static bool check_FUNCTION (char *str, SXINT strlgth, SXINT l, SXINT Mtok_no)
+static bool check_FUNCTION (char *str, SXINT strlgth, SXINT l, SXINT Mtok_no, SXINT kw_nb)
 {
-    /* On est sur un type en debut d'instruction,
-       on regarde si ce token est suivi par FUNCTION id. */
+    /* On est sur un type en debut d'instruction (Mtok_no) qui tient sur kw_nb token(s),
+       on regarde si ce type est suivi par FUNCTION id (qui semble valide vu
+       le contexte -- ETAT --). */
     struct sxtoken	tt [2];
-    SXINT	l1 = l+8;
+    SXINT	        l1 = l+strlen ("FUNCTION");
 
-    if (strlgth > l1 && strncmp (str + l, "FUNCTION", 8) == 0 && isXalpha (str [l1])) {
+    if (strlgth > l1 && strncmp (str + l, "FUNCTION", 8) == 0 &&
+	isXalpha (str [l1]) &&
+	 ETAT == ETAT_0) {
 	PTOK = &(SXGET_TOKEN (Mtok_no));
 	PTOK->string_table_entry = SXEMPTY_STE;
 	tt [0].lahead = FUNCTION_t;
@@ -2926,7 +2941,7 @@ static bool check_FUNCTION (char *str, SXINT strlgth, SXINT l, SXINT Mtok_no)
 
 	check_id (&(tt [1]));
 
-	sxtknmdf (&(tt [0]), 2, Mtok_no + 1, 0);
+	sxtknmdf (&(tt [0]), 2, Mtok_no + kw_nb, 0);
 	return true;
     }
 
@@ -3341,9 +3356,9 @@ a CONTINUE statement is gracefully inserted here.",
 	PTOK->string_table_entry  = SXEMPTY_STE;
 	l = kw_lgth [kw];
 	kw_nb = 1; /* nb de kw effectif */
-	tok_no = Mtok_no;
-	
-	if (check_FUNCTION (str, strlgth, l, tok_no)) {
+//	tok_no = Mtok_no;
+
+	if (check_FUNCTION (str, strlgth, l, Mtok_no, kw_nb)) {
 	    is_function_stmt = true;
 	    break;
 	}
@@ -3869,9 +3884,9 @@ a CONTINUE statement is gracefully inserted here.",
 	 /* l doit indiquer le decalage depuis le debut de Mtok_no. */
 	 l = check_double_precision ? strlen ("DOUBLEPRECISION") : strlen ("DOUBLECOMPLEX");
 	 kw_nb = 2; /* nb de kw effectif */
-	 tok_no = Mtok_no+1;
+//	 tok_no = Mtok_no+1;
 	
-	 if (check_FUNCTION (str, strlgth, l, tok_no))
+	 if (check_FUNCTION (str, strlgth, l, Mtok_no, kw_nb))
 	      is_function_stmt = true;
 	 else
 	      extract_int_id = true;;
@@ -4473,6 +4488,13 @@ static void check_sequence (void)
      /* Tout ce qui suit a été déplacé et s'applique donc à la ligne précédente */
      SXINT lahead;
 
+#if EBUG
+    fprintf (stdout,
+	   "================ Entering check_sequence () ETAT = %ld ================\n",
+	   ETAT
+	 );
+#endif
+
      lahead = SXGET_TOKEN (head_tok_no).lahead; /* C'est donc le token de tête de la ligne précédente */
 
      if (ETAT == ETAT_0) {
@@ -4536,6 +4558,13 @@ static void check_sequence (void)
 
      if (SXGET_TOKEN (head_tok_no).lahead == ID_t)
 	  check_id (&(SXGET_TOKEN (head_tok_no)));
+
+#if EBUG
+  fprintf (stdout,
+	   "================ Leaving check_sequence () ETAT = %ld ================\n",
+	   ETAT
+       );
+#endif
 }
 
 bool sxscanner_action (SXINT code, SXINT act_no) {

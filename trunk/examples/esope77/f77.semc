@@ -6451,6 +6451,21 @@ $LIST( <80a:int_constant_expr>)
     $LIST( <80:int_constant_expr>) );
 }
 
+*------------------------------------------------------------------------------
+
+* [[ESOPE]]
+
+<80a:int_constant_expr>
+		= <88b:function_reference_or_array_element_name> ;
+
+$LIST( <80a:int_constant_expr>)
+{
+  $LIST( <80a:int_constant_expr>) =
+    $LIST(<88b:function_reference_or_array_element_name>);
+}
+
+* [[ADD_RULE]] [[SEMC_ADDED]]
+
 *******************************************************************************
 
 * Each variable name in a dimension bound expression must be of type integer and
